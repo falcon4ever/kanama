@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
      */
     fun setHeldModificationStack(heldModificationStack: SkeletonModificationStack2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setHeldModificationStackBind, segment, listOf(heldModificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setHeldModificationStackBind, segment, listOf(heldModificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -29,7 +30,7 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
      */
     fun getHeldModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, segment))
+        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHeldModificationStackBind, segment))
     }
 
     companion object {
@@ -42,15 +43,17 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DStackHolder? =
             if (handle.address() == 0L) null else SkeletonModification2DStackHolder(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HELD_MODIFICATION_STACK_HASH = 3907307132L
-        private val setHeldModificationStackBind by lazy {
+        @JvmField
+        val setHeldModificationStackBind =
             ObjectCalls.getMethodBind("SkeletonModification2DStackHolder", "set_held_modification_stack", SET_HELD_MODIFICATION_STACK_HASH)
-        }
 
         private const val GET_HELD_MODIFICATION_STACK_HASH = 2107508396L
-        private val getHeldModificationStackBind by lazy {
+        @JvmField
+        val getHeldModificationStackBind =
             ObjectCalls.getMethodBind("SkeletonModification2DStackHolder", "get_held_modification_stack", GET_HELD_MODIFICATION_STACK_HASH)
-        }
     }
 }

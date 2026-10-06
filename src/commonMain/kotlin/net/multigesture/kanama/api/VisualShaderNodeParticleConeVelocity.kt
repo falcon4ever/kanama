@@ -20,7 +20,5 @@ class VisualShaderNodeParticleConeVelocity(handle: GodotHandle) : VisualShaderNo
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleConeVelocity? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleConeVelocity(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

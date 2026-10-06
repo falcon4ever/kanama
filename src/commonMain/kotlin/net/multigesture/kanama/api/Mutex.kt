@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
      */
     fun lock() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(lockBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.lockBind, segment)
     }
 
     /**
@@ -29,7 +30,7 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tryLock(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(tryLockBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.tryLockBind, segment)
     }
 
     /**
@@ -43,7 +44,7 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
      */
     fun unlock() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(unlockBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.unlockBind, segment)
     }
 
     companion object {
@@ -56,20 +57,22 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Mutex? =
             if (handle.address() == 0L) null else Mutex(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LOCK_HASH = 3218959716L
-        private val lockBind by lazy {
+        @JvmField
+        val lockBind =
             ObjectCalls.getMethodBind("Mutex", "lock", LOCK_HASH)
-        }
 
         private const val TRY_LOCK_HASH = 2240911060L
-        private val tryLockBind by lazy {
+        @JvmField
+        val tryLockBind =
             ObjectCalls.getMethodBind("Mutex", "try_lock", TRY_LOCK_HASH)
-        }
 
         private const val UNLOCK_HASH = 3218959716L
-        private val unlockBind by lazy {
+        @JvmField
+        val unlockBind =
             ObjectCalls.getMethodBind("Mutex", "unlock", UNLOCK_HASH)
-        }
     }
 }

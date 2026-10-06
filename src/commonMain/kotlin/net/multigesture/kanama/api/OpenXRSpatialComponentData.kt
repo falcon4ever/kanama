@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,12 +11,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) {
     fun setCapacity(capacity: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCapacityBind, segment, capacity)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCapacityBind, segment, capacity)
     }
 
     fun getComponentType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment)
     }
 
     companion object {
@@ -28,15 +29,17 @@ open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentData? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentData(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CAPACITY_HASH = 1286410249L
-        private val setCapacityBind by lazy {
+        @JvmField
+        val setCapacityBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentData", "set_capacity", SET_CAPACITY_HASH)
-        }
 
         private const val GET_COMPONENT_TYPE_HASH = 3905245786L
-        private val getComponentTypeBind by lazy {
+        @JvmField
+        val getComponentTypeBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentData", "get_component_type", GET_COMPONENT_TYPE_HASH)
-        }
     }
 }

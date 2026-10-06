@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -21,7 +22,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFormat(format: DrawableTexture2D.DrawableFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, format.value)
     }
 
     /**
@@ -31,7 +32,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setUseMipmaps(mipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, segment, mipmaps)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseMipmapsBind, segment, mipmaps)
     }
 
     /**
@@ -41,7 +42,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getUseMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseMipmapsBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setup(width: Int, height: Int, format: DrawableTexture2D.DrawableFormat, color: Color, useMipmaps: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, segment, width, height, format.value, color, useMipmaps)
+        ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(Binds.setupBind, segment, width, height, format.value, color, useMipmaps)
     }
 
     /**
@@ -64,7 +65,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun blitRect(rect: Rect2i, source: Texture2D?, modulate: Color, mipmap: Int = 0, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(blitRectBind, segment, rect, source?.requireOpenHandle() ?: NULL_SEGMENT, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithRect2iObjectColorIntObjectArgs(Binds.blitRectBind, segment, rect, source?.requireOpenHandle() ?: NULL_SEGMENT, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -77,7 +78,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun blitRectMulti(rect: Rect2i, sources: List<Texture2D>, extraTargets: List<DrawableTexture2D>, modulate: Color, mipmap: Int = 0, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(blitRectMultiBind, segment, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithRect2iTwoObjectListColorIntObjectArgs(Binds.blitRectMultiBind, segment, rect, sources, extraTargets, modulate, mipmap, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -87,7 +88,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun generateMipmaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(generateMipmapsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.generateMipmapsBind, segment)
     }
 
     /**
@@ -140,40 +141,42 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): DrawableTexture2D? =
             if (handle.address() == 0L) null else DrawableTexture2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FORMAT_HASH = 2875673594L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "set_format", SET_FORMAT_HASH)
-        }
 
         private const val SET_USE_MIPMAPS_HASH = 2586408642L
-        private val setUseMipmapsBind by lazy {
+        @JvmField
+        val setUseMipmapsBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "set_use_mipmaps", SET_USE_MIPMAPS_HASH)
-        }
 
         private const val GET_USE_MIPMAPS_HASH = 36873697L
-        private val getUseMipmapsBind by lazy {
+        @JvmField
+        val getUseMipmapsBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "get_use_mipmaps", GET_USE_MIPMAPS_HASH)
-        }
 
         private const val SETUP_HASH = 674365339L
-        private val setupBind by lazy {
+        @JvmField
+        val setupBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "setup", SETUP_HASH)
-        }
 
         private const val BLIT_RECT_HASH = 319217173L
-        private val blitRectBind by lazy {
+        @JvmField
+        val blitRectBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "blit_rect", BLIT_RECT_HASH)
-        }
 
         private const val BLIT_RECT_MULTI_HASH = 3074783066L
-        private val blitRectMultiBind by lazy {
+        @JvmField
+        val blitRectMultiBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "blit_rect_multi", BLIT_RECT_MULTI_HASH)
-        }
 
         private const val GENERATE_MIPMAPS_HASH = 3218959716L
-        private val generateMipmapsBind by lazy {
+        @JvmField
+        val generateMipmapsBind =
             ObjectCalls.getMethodBind("DrawableTexture2D", "generate_mipmaps", GENERATE_MIPMAPS_HASH)
-        }
     }
 }

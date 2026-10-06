@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_render_scene_buffers
      */
     fun getRenderSceneBuffers(): RenderSceneBuffers? {
-        return RenderSceneBuffers.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneBuffersBind, segment))
+        return RenderSceneBuffers.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRenderSceneBuffersBind, segment))
     }
 
     /**
@@ -26,7 +27,7 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_render_scene_data
      */
     fun getRenderSceneData(): RenderSceneData? {
-        return RenderSceneData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneDataBind, segment))
+        return RenderSceneData.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRenderSceneDataBind, segment))
     }
 
     /**
@@ -36,7 +37,7 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_environment
      */
     fun getEnvironment(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getEnvironmentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getEnvironmentBind, segment)
     }
 
     /**
@@ -46,7 +47,7 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_camera_attributes
      */
     fun getCameraAttributes(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCameraAttributesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCameraAttributesBind, segment)
     }
 
     companion object {
@@ -56,25 +57,27 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): RenderData? =
             if (handle.address() == 0L) null else RenderData(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RENDER_SCENE_BUFFERS_HASH = 2793216201L
-        private val getRenderSceneBuffersBind by lazy {
+        @JvmField
+        val getRenderSceneBuffersBind =
             ObjectCalls.getMethodBind("RenderData", "get_render_scene_buffers", GET_RENDER_SCENE_BUFFERS_HASH)
-        }
 
         private const val GET_RENDER_SCENE_DATA_HASH = 1288715698L
-        private val getRenderSceneDataBind by lazy {
+        @JvmField
+        val getRenderSceneDataBind =
             ObjectCalls.getMethodBind("RenderData", "get_render_scene_data", GET_RENDER_SCENE_DATA_HASH)
-        }
 
         private const val GET_ENVIRONMENT_HASH = 2944877500L
-        private val getEnvironmentBind by lazy {
+        @JvmField
+        val getEnvironmentBind =
             ObjectCalls.getMethodBind("RenderData", "get_environment", GET_ENVIRONMENT_HASH)
-        }
 
         private const val GET_CAMERA_ATTRIBUTES_HASH = 2944877500L
-        private val getCameraAttributesBind by lazy {
+        @JvmField
+        val getCameraAttributesBind =
             ObjectCalls.getMethodBind("RenderData", "get_camera_attributes", GET_CAMERA_ATTRIBUTES_HASH)
-        }
     }
 }

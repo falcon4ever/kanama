@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -118,7 +119,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.create_item
      */
     fun createItem(parent: TreeItem, index: Int = -1): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(createItemBind, segment, parent.segment, index))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectAndIntArgRetObject(Binds.createItemBind, segment, parent.segment, index))
     }
 
     /**
@@ -141,7 +142,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_root
      */
     fun getRoot(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRootBind, segment))
     }
 
     /**
@@ -152,7 +153,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_custom_minimum_width
      */
     fun setColumnCustomMinimumWidth(column: Int, minWidth: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setColumnCustomMinimumWidthBind, segment, column, minWidth)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setColumnCustomMinimumWidthBind, segment, column, minWidth)
     }
 
     /**
@@ -163,7 +164,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_expand
      */
     fun setColumnExpand(column: Int, expand: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnExpandBind, segment, column, expand)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setColumnExpandBind, segment, column, expand)
     }
 
     /**
@@ -172,7 +173,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_expand_ratio
      */
     fun setColumnExpandRatio(column: Int, ratio: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setColumnExpandRatioBind, segment, column, ratio)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setColumnExpandRatioBind, segment, column, ratio)
     }
 
     /**
@@ -181,7 +182,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_clip_content
      */
     fun setColumnClipContent(column: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setColumnClipContentBind, segment, column, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setColumnClipContentBind, segment, column, enable)
     }
 
     /**
@@ -190,7 +191,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_column_expanding
      */
     fun isColumnExpanding(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isColumnExpandingBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isColumnExpandingBind, segment, column)
     }
 
     /**
@@ -199,7 +200,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_column_clipping_content
      */
     fun isColumnClippingContent(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isColumnClippingContentBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isColumnClippingContentBind, segment, column)
     }
 
     /**
@@ -208,7 +209,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_expand_ratio
      */
     fun getColumnExpandRatio(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColumnExpandRatioBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getColumnExpandRatioBind, segment, column)
     }
 
     /**
@@ -217,7 +218,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_width
      */
     fun getColumnWidth(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColumnWidthBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getColumnWidthBind, segment, column)
     }
 
     /**
@@ -228,7 +229,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_custom_drawing_canvas_item
      */
     fun getCustomDrawingCanvasItem(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCustomDrawingCanvasItemBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCustomDrawingCanvasItemBind, segment)
     }
 
     /**
@@ -237,7 +238,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_hide_root
      */
     fun setHideRoot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideRootBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideRootBind, segment, enable)
     }
 
     /**
@@ -246,7 +247,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_root_hidden
      */
     fun isRootHidden(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRootHiddenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRootHiddenBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_next_selected
      */
     fun getNextSelected(from: TreeItem): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getNextSelectedBind, segment, from.segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getNextSelectedBind, segment, from.segment))
     }
 
     /**
@@ -268,7 +269,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_selected
      */
     fun getSelected(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSelectedBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSelectedBind, segment))
     }
 
     /**
@@ -277,7 +278,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_selected
      */
     fun setSelected(item: TreeItem, column: Int) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(setSelectedBind, segment, item.segment, column)
+        ObjectCalls.ptrcallWithObjectAndIntArg(Binds.setSelectedBind, segment, item.segment, column)
     }
 
     /**
@@ -290,7 +291,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_selected_column
      */
     fun getSelectedColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedColumnBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSelectedColumnBind, segment)
     }
 
     /**
@@ -299,7 +300,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_pressed_button
      */
     fun getPressedButton(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPressedButtonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPressedButtonBind, segment)
     }
 
     /**
@@ -308,7 +309,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_select_mode
      */
     fun setSelectMode(mode: Tree.SelectMode) {
-        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSelectModeBind, segment, mode.value)
     }
 
     /**
@@ -317,7 +318,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_select_mode
      */
     fun getSelectMode(): Tree.SelectMode {
-        return Tree.SelectMode(ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment))
+        return Tree.SelectMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSelectModeBind, segment))
     }
 
     /**
@@ -327,7 +328,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.deselect_all
      */
     fun deselectAll() {
-        ObjectCalls.ptrcallNoArgs(deselectAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.deselectAllBind, segment)
     }
 
     /**
@@ -337,7 +338,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_columns
      */
     fun setColumns(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setColumnsBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setColumnsBind, segment, amount)
     }
 
     /**
@@ -347,7 +348,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_columns
      */
     fun getColumns(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getColumnsBind, segment)
     }
 
     /**
@@ -357,7 +358,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_edited
      */
     fun getEdited(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditedBind, segment))
     }
 
     /**
@@ -366,7 +367,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_edited_column
      */
     fun getEditedColumn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getEditedColumnBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEditedColumnBind, segment)
     }
 
     /**
@@ -377,7 +378,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.edit_selected
      */
     fun editSelected(forceEdit: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithBoolArgRetBool(editSelectedBind, segment, forceEdit)
+        return ObjectCalls.ptrcallWithBoolArgRetBool(Binds.editSelectedBind, segment, forceEdit)
     }
 
     /**
@@ -387,7 +388,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_custom_popup_rect
      */
     fun getCustomPopupRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getCustomPopupRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getCustomPopupRectBind, segment)
     }
 
     /**
@@ -398,7 +399,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_item_area_rect
      */
     fun getItemAreaRect(item: TreeItem, column: Int = -1, buttonIndex: Int = -1): Rect2 {
-        return ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(getItemAreaRectBind, segment, item.segment, column, buttonIndex)
+        return ObjectCalls.ptrcallWithObjectAndTwoIntArgsRetRect2(Binds.getItemAreaRectBind, segment, item.segment, column, buttonIndex)
     }
 
     /**
@@ -407,7 +408,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_item_at_position
      */
     fun getItemAtPosition(position: Vector2): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithVector2ArgRetObject(getItemAtPositionBind, segment, position))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithVector2ArgRetObject(Binds.getItemAtPositionBind, segment, position))
     }
 
     /**
@@ -416,7 +417,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_at_position
      */
     fun getColumnAtPosition(position: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getColumnAtPositionBind, segment, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.getColumnAtPositionBind, segment, position)
     }
 
     /**
@@ -434,7 +435,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_drop_section_at_position
      */
     fun getDropSectionAtPosition(position: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getDropSectionAtPositionBind, segment, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.getDropSectionAtPositionBind, segment, position)
     }
 
     /**
@@ -443,7 +444,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_button_id_at_position
      */
     fun getButtonIdAtPosition(position: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getButtonIdAtPositionBind, segment, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.getButtonIdAtPositionBind, segment, position)
     }
 
     /**
@@ -455,7 +456,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.ensure_cursor_is_visible
      */
     fun ensureCursorIsVisible() {
-        ObjectCalls.ptrcallNoArgs(ensureCursorIsVisibleBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.ensureCursorIsVisibleBind, segment)
     }
 
     /**
@@ -464,7 +465,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_titles_visible
      */
     fun setColumnTitlesVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setColumnTitlesVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setColumnTitlesVisibleBind, segment, visible)
     }
 
     /**
@@ -473,7 +474,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.are_column_titles_visible
      */
     fun areColumnTitlesVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areColumnTitlesVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areColumnTitlesVisibleBind, segment)
     }
 
     /**
@@ -482,7 +483,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title
      */
     fun setColumnTitle(column: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleBind, segment, column, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setColumnTitleBind, segment, column, title)
     }
 
     /**
@@ -491,7 +492,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title
      */
     fun getColumnTitle(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getColumnTitleBind, segment, column)
     }
 
     /**
@@ -500,7 +501,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_tooltip_text
      */
     fun setColumnTitleTooltipText(column: Int, tooltipText: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleTooltipTextBind, segment, column, tooltipText)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setColumnTitleTooltipTextBind, segment, column, tooltipText)
     }
 
     /**
@@ -509,7 +510,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_tooltip_text
      */
     fun getColumnTitleTooltipText(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleTooltipTextBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getColumnTitleTooltipTextBind, segment, column)
     }
 
     /**
@@ -519,7 +520,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_alignment
      */
     fun setColumnTitleAlignment(column: Int, titleAlignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleAlignmentBind, segment, column, titleAlignment.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setColumnTitleAlignmentBind, segment, column, titleAlignment.value)
     }
 
     /**
@@ -528,7 +529,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_alignment
      */
     fun getColumnTitleAlignment(column: Int): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleAlignmentBind, segment, column))
+        return HorizontalAlignment(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getColumnTitleAlignmentBind, segment, column))
     }
 
     /**
@@ -537,7 +538,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_direction
      */
     fun setColumnTitleDirection(column: Int, direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleDirectionBind, segment, column, direction.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setColumnTitleDirectionBind, segment, column, direction.value)
     }
 
     /**
@@ -546,7 +547,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_direction
      */
     fun getColumnTitleDirection(column: Int): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleDirectionBind, segment, column))
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getColumnTitleDirectionBind, segment, column))
     }
 
     /**
@@ -556,7 +557,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_column_title_language
      */
     fun setColumnTitleLanguage(column: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setColumnTitleLanguageBind, segment, column, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setColumnTitleLanguageBind, segment, column, language)
     }
 
     /**
@@ -565,7 +566,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_column_title_language
      */
     fun getColumnTitleLanguage(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getColumnTitleLanguageBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getColumnTitleLanguageBind, segment, column)
     }
 
     /**
@@ -574,7 +575,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_scroll
      */
     fun getScroll(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScrollBind, segment)
     }
 
     /**
@@ -583,7 +584,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.scroll_to_item
      */
     fun scrollToItem(item: TreeItem, centerOnItem: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(scrollToItemBind, segment, item.segment, centerOnItem)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.scrollToItemBind, segment, item.segment, centerOnItem)
     }
 
     /**
@@ -592,7 +593,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_h_scroll_enabled
      */
     fun setHScrollEnabled(hScroll: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHScrollEnabledBind, segment, hScroll)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHScrollEnabledBind, segment, hScroll)
     }
 
     /**
@@ -601,7 +602,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_h_scroll_enabled
      */
     fun isHScrollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHScrollEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHScrollEnabledBind, segment)
     }
 
     /**
@@ -610,7 +611,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_v_scroll_enabled
      */
     fun setVScrollEnabled(hScroll: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVScrollEnabledBind, segment, hScroll)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVScrollEnabledBind, segment, hScroll)
     }
 
     /**
@@ -619,7 +620,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_v_scroll_enabled
      */
     fun isVScrollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVScrollEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVScrollEnabledBind, segment)
     }
 
     /**
@@ -629,7 +630,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_scroll_hint_mode
      */
     fun setScrollHintMode(scrollHintMode: Tree.ScrollHintMode) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScrollHintModeBind, segment, scrollHintMode.value)
     }
 
     /**
@@ -639,7 +640,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_scroll_hint_mode
      */
     fun getScrollHintMode(): Tree.ScrollHintMode {
-        return Tree.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment))
+        return Tree.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScrollHintModeBind, segment))
     }
 
     /**
@@ -648,7 +649,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_tile_scroll_hint
      */
     fun setTileScrollHint(tileScrollHint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, segment, tileScrollHint)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTileScrollHintBind, segment, tileScrollHint)
     }
 
     /**
@@ -657,7 +658,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_scroll_hint_tiled
      */
     fun isScrollHintTiled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollHintTiledBind, segment)
     }
 
     /**
@@ -666,7 +667,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_hide_folding
      */
     fun setHideFolding(hide: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideFoldingBind, segment, hide)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideFoldingBind, segment, hide)
     }
 
     /**
@@ -675,7 +676,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_folding_hidden
      */
     fun isFoldingHidden(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoldingHiddenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFoldingHiddenBind, segment)
     }
 
     /**
@@ -686,7 +687,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_enable_recursive_folding
      */
     fun setEnableRecursiveFolding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableRecursiveFoldingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableRecursiveFoldingBind, segment, enable)
     }
 
     /**
@@ -697,7 +698,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_recursive_folding_enabled
      */
     fun isRecursiveFoldingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecursiveFoldingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecursiveFoldingEnabledBind, segment)
     }
 
     /**
@@ -707,7 +708,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_enable_drag_unfolding
      */
     fun setEnableDragUnfolding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDragUnfoldingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDragUnfoldingBind, segment, enable)
     }
 
     /**
@@ -717,7 +718,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_drag_unfolding_enabled
      */
     fun isDragUnfoldingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragUnfoldingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragUnfoldingEnabledBind, segment)
     }
 
     /**
@@ -729,7 +730,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_drop_mode_flags
      */
     fun setDropModeFlags(flags: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDropModeFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDropModeFlagsBind, segment, flags)
     }
 
     /**
@@ -741,7 +742,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_drop_mode_flags
      */
     fun getDropModeFlags(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDropModeFlagsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDropModeFlagsBind, segment)
     }
 
     /**
@@ -750,7 +751,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_allow_rmb_select
      */
     fun setAllowRmbSelect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowRmbSelectBind, segment, allow)
     }
 
     /**
@@ -759,7 +760,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_allow_rmb_select
      */
     fun getAllowRmbSelect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowRmbSelectBind, segment)
     }
 
     /**
@@ -768,7 +769,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_allow_reselect
      */
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowReselectBind, segment, allow)
     }
 
     /**
@@ -777,7 +778,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_allow_reselect
      */
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowReselectBind, segment)
     }
 
     /**
@@ -786,7 +787,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_allow_search
      */
     fun setAllowSearch(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSearchBind, segment, allow)
     }
 
     /**
@@ -795,7 +796,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.get_allow_search
      */
     fun getAllowSearch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowSearchBind, segment)
     }
 
     /**
@@ -805,7 +806,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.set_auto_tooltip
      */
     fun setAutoTooltip(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoTooltipBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoTooltipBind, segment, enable)
     }
 
     /**
@@ -815,7 +816,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Tree.is_auto_tooltip_enabled
      */
     fun isAutoTooltipEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTooltipEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoTooltipEnabledBind, segment)
     }
 
     /** Signal `item_selected()`; see [TypedSignal]. */
@@ -1028,365 +1029,367 @@ class Tree(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Tree? =
             if (handle.address() == 0L) null else Tree(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("Tree", "clear", CLEAR_HASH)
-        }
 
         private const val CREATE_ITEM_HASH = 528467046L
-        private val createItemBind by lazy {
+        @JvmField
+        val createItemBind =
             ObjectCalls.getMethodBind("Tree", "create_item", CREATE_ITEM_HASH)
-        }
 
         private const val GET_ROOT_HASH = 1514277247L
-        private val getRootBind by lazy {
+        @JvmField
+        val getRootBind =
             ObjectCalls.getMethodBind("Tree", "get_root", GET_ROOT_HASH)
-        }
 
         private const val SET_COLUMN_CUSTOM_MINIMUM_WIDTH_HASH = 3937882851L
-        private val setColumnCustomMinimumWidthBind by lazy {
+        @JvmField
+        val setColumnCustomMinimumWidthBind =
             ObjectCalls.getMethodBind("Tree", "set_column_custom_minimum_width", SET_COLUMN_CUSTOM_MINIMUM_WIDTH_HASH)
-        }
 
         private const val SET_COLUMN_EXPAND_HASH = 300928843L
-        private val setColumnExpandBind by lazy {
+        @JvmField
+        val setColumnExpandBind =
             ObjectCalls.getMethodBind("Tree", "set_column_expand", SET_COLUMN_EXPAND_HASH)
-        }
 
         private const val SET_COLUMN_EXPAND_RATIO_HASH = 3937882851L
-        private val setColumnExpandRatioBind by lazy {
+        @JvmField
+        val setColumnExpandRatioBind =
             ObjectCalls.getMethodBind("Tree", "set_column_expand_ratio", SET_COLUMN_EXPAND_RATIO_HASH)
-        }
 
         private const val SET_COLUMN_CLIP_CONTENT_HASH = 300928843L
-        private val setColumnClipContentBind by lazy {
+        @JvmField
+        val setColumnClipContentBind =
             ObjectCalls.getMethodBind("Tree", "set_column_clip_content", SET_COLUMN_CLIP_CONTENT_HASH)
-        }
 
         private const val IS_COLUMN_EXPANDING_HASH = 1116898809L
-        private val isColumnExpandingBind by lazy {
+        @JvmField
+        val isColumnExpandingBind =
             ObjectCalls.getMethodBind("Tree", "is_column_expanding", IS_COLUMN_EXPANDING_HASH)
-        }
 
         private const val IS_COLUMN_CLIPPING_CONTENT_HASH = 1116898809L
-        private val isColumnClippingContentBind by lazy {
+        @JvmField
+        val isColumnClippingContentBind =
             ObjectCalls.getMethodBind("Tree", "is_column_clipping_content", IS_COLUMN_CLIPPING_CONTENT_HASH)
-        }
 
         private const val GET_COLUMN_EXPAND_RATIO_HASH = 923996154L
-        private val getColumnExpandRatioBind by lazy {
+        @JvmField
+        val getColumnExpandRatioBind =
             ObjectCalls.getMethodBind("Tree", "get_column_expand_ratio", GET_COLUMN_EXPAND_RATIO_HASH)
-        }
 
         private const val GET_COLUMN_WIDTH_HASH = 923996154L
-        private val getColumnWidthBind by lazy {
+        @JvmField
+        val getColumnWidthBind =
             ObjectCalls.getMethodBind("Tree", "get_column_width", GET_COLUMN_WIDTH_HASH)
-        }
 
         private const val GET_CUSTOM_DRAWING_CANVAS_ITEM_HASH = 2944877500L
-        private val getCustomDrawingCanvasItemBind by lazy {
+        @JvmField
+        val getCustomDrawingCanvasItemBind =
             ObjectCalls.getMethodBind("Tree", "get_custom_drawing_canvas_item", GET_CUSTOM_DRAWING_CANVAS_ITEM_HASH)
-        }
 
         private const val SET_HIDE_ROOT_HASH = 2586408642L
-        private val setHideRootBind by lazy {
+        @JvmField
+        val setHideRootBind =
             ObjectCalls.getMethodBind("Tree", "set_hide_root", SET_HIDE_ROOT_HASH)
-        }
 
         private const val IS_ROOT_HIDDEN_HASH = 36873697L
-        private val isRootHiddenBind by lazy {
+        @JvmField
+        val isRootHiddenBind =
             ObjectCalls.getMethodBind("Tree", "is_root_hidden", IS_ROOT_HIDDEN_HASH)
-        }
 
         private const val GET_NEXT_SELECTED_HASH = 873446299L
-        private val getNextSelectedBind by lazy {
+        @JvmField
+        val getNextSelectedBind =
             ObjectCalls.getMethodBind("Tree", "get_next_selected", GET_NEXT_SELECTED_HASH)
-        }
 
         private const val GET_SELECTED_HASH = 1514277247L
-        private val getSelectedBind by lazy {
+        @JvmField
+        val getSelectedBind =
             ObjectCalls.getMethodBind("Tree", "get_selected", GET_SELECTED_HASH)
-        }
 
         private const val SET_SELECTED_HASH = 2662547442L
-        private val setSelectedBind by lazy {
+        @JvmField
+        val setSelectedBind =
             ObjectCalls.getMethodBind("Tree", "set_selected", SET_SELECTED_HASH)
-        }
 
         private const val GET_SELECTED_COLUMN_HASH = 3905245786L
-        private val getSelectedColumnBind by lazy {
+        @JvmField
+        val getSelectedColumnBind =
             ObjectCalls.getMethodBind("Tree", "get_selected_column", GET_SELECTED_COLUMN_HASH)
-        }
 
         private const val GET_PRESSED_BUTTON_HASH = 3905245786L
-        private val getPressedButtonBind by lazy {
+        @JvmField
+        val getPressedButtonBind =
             ObjectCalls.getMethodBind("Tree", "get_pressed_button", GET_PRESSED_BUTTON_HASH)
-        }
 
         private const val SET_SELECT_MODE_HASH = 3223887270L
-        private val setSelectModeBind by lazy {
+        @JvmField
+        val setSelectModeBind =
             ObjectCalls.getMethodBind("Tree", "set_select_mode", SET_SELECT_MODE_HASH)
-        }
 
         private const val GET_SELECT_MODE_HASH = 100748571L
-        private val getSelectModeBind by lazy {
+        @JvmField
+        val getSelectModeBind =
             ObjectCalls.getMethodBind("Tree", "get_select_mode", GET_SELECT_MODE_HASH)
-        }
 
         private const val DESELECT_ALL_HASH = 3218959716L
-        private val deselectAllBind by lazy {
+        @JvmField
+        val deselectAllBind =
             ObjectCalls.getMethodBind("Tree", "deselect_all", DESELECT_ALL_HASH)
-        }
 
         private const val SET_COLUMNS_HASH = 1286410249L
-        private val setColumnsBind by lazy {
+        @JvmField
+        val setColumnsBind =
             ObjectCalls.getMethodBind("Tree", "set_columns", SET_COLUMNS_HASH)
-        }
 
         private const val GET_COLUMNS_HASH = 3905245786L
-        private val getColumnsBind by lazy {
+        @JvmField
+        val getColumnsBind =
             ObjectCalls.getMethodBind("Tree", "get_columns", GET_COLUMNS_HASH)
-        }
 
         private const val GET_EDITED_HASH = 1514277247L
-        private val getEditedBind by lazy {
+        @JvmField
+        val getEditedBind =
             ObjectCalls.getMethodBind("Tree", "get_edited", GET_EDITED_HASH)
-        }
 
         private const val GET_EDITED_COLUMN_HASH = 3905245786L
-        private val getEditedColumnBind by lazy {
+        @JvmField
+        val getEditedColumnBind =
             ObjectCalls.getMethodBind("Tree", "get_edited_column", GET_EDITED_COLUMN_HASH)
-        }
 
         private const val EDIT_SELECTED_HASH = 2595650253L
-        private val editSelectedBind by lazy {
+        @JvmField
+        val editSelectedBind =
             ObjectCalls.getMethodBind("Tree", "edit_selected", EDIT_SELECTED_HASH)
-        }
 
         private const val GET_CUSTOM_POPUP_RECT_HASH = 1639390495L
-        private val getCustomPopupRectBind by lazy {
+        @JvmField
+        val getCustomPopupRectBind =
             ObjectCalls.getMethodBind("Tree", "get_custom_popup_rect", GET_CUSTOM_POPUP_RECT_HASH)
-        }
 
         private const val GET_ITEM_AREA_RECT_HASH = 47968679L
-        private val getItemAreaRectBind by lazy {
+        @JvmField
+        val getItemAreaRectBind =
             ObjectCalls.getMethodBind("Tree", "get_item_area_rect", GET_ITEM_AREA_RECT_HASH)
-        }
 
         private const val GET_ITEM_AT_POSITION_HASH = 4193340126L
-        private val getItemAtPositionBind by lazy {
+        @JvmField
+        val getItemAtPositionBind =
             ObjectCalls.getMethodBind("Tree", "get_item_at_position", GET_ITEM_AT_POSITION_HASH)
-        }
 
         private const val GET_COLUMN_AT_POSITION_HASH = 3820158470L
-        private val getColumnAtPositionBind by lazy {
+        @JvmField
+        val getColumnAtPositionBind =
             ObjectCalls.getMethodBind("Tree", "get_column_at_position", GET_COLUMN_AT_POSITION_HASH)
-        }
 
         private const val GET_DROP_SECTION_AT_POSITION_HASH = 3820158470L
-        private val getDropSectionAtPositionBind by lazy {
+        @JvmField
+        val getDropSectionAtPositionBind =
             ObjectCalls.getMethodBind("Tree", "get_drop_section_at_position", GET_DROP_SECTION_AT_POSITION_HASH)
-        }
 
         private const val GET_BUTTON_ID_AT_POSITION_HASH = 3820158470L
-        private val getButtonIdAtPositionBind by lazy {
+        @JvmField
+        val getButtonIdAtPositionBind =
             ObjectCalls.getMethodBind("Tree", "get_button_id_at_position", GET_BUTTON_ID_AT_POSITION_HASH)
-        }
 
         private const val ENSURE_CURSOR_IS_VISIBLE_HASH = 3218959716L
-        private val ensureCursorIsVisibleBind by lazy {
+        @JvmField
+        val ensureCursorIsVisibleBind =
             ObjectCalls.getMethodBind("Tree", "ensure_cursor_is_visible", ENSURE_CURSOR_IS_VISIBLE_HASH)
-        }
 
         private const val SET_COLUMN_TITLES_VISIBLE_HASH = 2586408642L
-        private val setColumnTitlesVisibleBind by lazy {
+        @JvmField
+        val setColumnTitlesVisibleBind =
             ObjectCalls.getMethodBind("Tree", "set_column_titles_visible", SET_COLUMN_TITLES_VISIBLE_HASH)
-        }
 
         private const val ARE_COLUMN_TITLES_VISIBLE_HASH = 36873697L
-        private val areColumnTitlesVisibleBind by lazy {
+        @JvmField
+        val areColumnTitlesVisibleBind =
             ObjectCalls.getMethodBind("Tree", "are_column_titles_visible", ARE_COLUMN_TITLES_VISIBLE_HASH)
-        }
 
         private const val SET_COLUMN_TITLE_HASH = 501894301L
-        private val setColumnTitleBind by lazy {
+        @JvmField
+        val setColumnTitleBind =
             ObjectCalls.getMethodBind("Tree", "set_column_title", SET_COLUMN_TITLE_HASH)
-        }
 
         private const val GET_COLUMN_TITLE_HASH = 844755477L
-        private val getColumnTitleBind by lazy {
+        @JvmField
+        val getColumnTitleBind =
             ObjectCalls.getMethodBind("Tree", "get_column_title", GET_COLUMN_TITLE_HASH)
-        }
 
         private const val SET_COLUMN_TITLE_TOOLTIP_TEXT_HASH = 501894301L
-        private val setColumnTitleTooltipTextBind by lazy {
+        @JvmField
+        val setColumnTitleTooltipTextBind =
             ObjectCalls.getMethodBind("Tree", "set_column_title_tooltip_text", SET_COLUMN_TITLE_TOOLTIP_TEXT_HASH)
-        }
 
         private const val GET_COLUMN_TITLE_TOOLTIP_TEXT_HASH = 844755477L
-        private val getColumnTitleTooltipTextBind by lazy {
+        @JvmField
+        val getColumnTitleTooltipTextBind =
             ObjectCalls.getMethodBind("Tree", "get_column_title_tooltip_text", GET_COLUMN_TITLE_TOOLTIP_TEXT_HASH)
-        }
 
         private const val SET_COLUMN_TITLE_ALIGNMENT_HASH = 3276431499L
-        private val setColumnTitleAlignmentBind by lazy {
+        @JvmField
+        val setColumnTitleAlignmentBind =
             ObjectCalls.getMethodBind("Tree", "set_column_title_alignment", SET_COLUMN_TITLE_ALIGNMENT_HASH)
-        }
 
         private const val GET_COLUMN_TITLE_ALIGNMENT_HASH = 4171562184L
-        private val getColumnTitleAlignmentBind by lazy {
+        @JvmField
+        val getColumnTitleAlignmentBind =
             ObjectCalls.getMethodBind("Tree", "get_column_title_alignment", GET_COLUMN_TITLE_ALIGNMENT_HASH)
-        }
 
         private const val SET_COLUMN_TITLE_DIRECTION_HASH = 1707680378L
-        private val setColumnTitleDirectionBind by lazy {
+        @JvmField
+        val setColumnTitleDirectionBind =
             ObjectCalls.getMethodBind("Tree", "set_column_title_direction", SET_COLUMN_TITLE_DIRECTION_HASH)
-        }
 
         private const val GET_COLUMN_TITLE_DIRECTION_HASH = 4235602388L
-        private val getColumnTitleDirectionBind by lazy {
+        @JvmField
+        val getColumnTitleDirectionBind =
             ObjectCalls.getMethodBind("Tree", "get_column_title_direction", GET_COLUMN_TITLE_DIRECTION_HASH)
-        }
 
         private const val SET_COLUMN_TITLE_LANGUAGE_HASH = 501894301L
-        private val setColumnTitleLanguageBind by lazy {
+        @JvmField
+        val setColumnTitleLanguageBind =
             ObjectCalls.getMethodBind("Tree", "set_column_title_language", SET_COLUMN_TITLE_LANGUAGE_HASH)
-        }
 
         private const val GET_COLUMN_TITLE_LANGUAGE_HASH = 844755477L
-        private val getColumnTitleLanguageBind by lazy {
+        @JvmField
+        val getColumnTitleLanguageBind =
             ObjectCalls.getMethodBind("Tree", "get_column_title_language", GET_COLUMN_TITLE_LANGUAGE_HASH)
-        }
 
         private const val GET_SCROLL_HASH = 3341600327L
-        private val getScrollBind by lazy {
+        @JvmField
+        val getScrollBind =
             ObjectCalls.getMethodBind("Tree", "get_scroll", GET_SCROLL_HASH)
-        }
 
         private const val SCROLL_TO_ITEM_HASH = 1314737213L
-        private val scrollToItemBind by lazy {
+        @JvmField
+        val scrollToItemBind =
             ObjectCalls.getMethodBind("Tree", "scroll_to_item", SCROLL_TO_ITEM_HASH)
-        }
 
         private const val SET_H_SCROLL_ENABLED_HASH = 2586408642L
-        private val setHScrollEnabledBind by lazy {
+        @JvmField
+        val setHScrollEnabledBind =
             ObjectCalls.getMethodBind("Tree", "set_h_scroll_enabled", SET_H_SCROLL_ENABLED_HASH)
-        }
 
         private const val IS_H_SCROLL_ENABLED_HASH = 36873697L
-        private val isHScrollEnabledBind by lazy {
+        @JvmField
+        val isHScrollEnabledBind =
             ObjectCalls.getMethodBind("Tree", "is_h_scroll_enabled", IS_H_SCROLL_ENABLED_HASH)
-        }
 
         private const val SET_V_SCROLL_ENABLED_HASH = 2586408642L
-        private val setVScrollEnabledBind by lazy {
+        @JvmField
+        val setVScrollEnabledBind =
             ObjectCalls.getMethodBind("Tree", "set_v_scroll_enabled", SET_V_SCROLL_ENABLED_HASH)
-        }
 
         private const val IS_V_SCROLL_ENABLED_HASH = 36873697L
-        private val isVScrollEnabledBind by lazy {
+        @JvmField
+        val isVScrollEnabledBind =
             ObjectCalls.getMethodBind("Tree", "is_v_scroll_enabled", IS_V_SCROLL_ENABLED_HASH)
-        }
 
         private const val SET_SCROLL_HINT_MODE_HASH = 415911924L
-        private val setScrollHintModeBind by lazy {
+        @JvmField
+        val setScrollHintModeBind =
             ObjectCalls.getMethodBind("Tree", "set_scroll_hint_mode", SET_SCROLL_HINT_MODE_HASH)
-        }
 
         private const val GET_SCROLL_HINT_MODE_HASH = 553087187L
-        private val getScrollHintModeBind by lazy {
+        @JvmField
+        val getScrollHintModeBind =
             ObjectCalls.getMethodBind("Tree", "get_scroll_hint_mode", GET_SCROLL_HINT_MODE_HASH)
-        }
 
         private const val SET_TILE_SCROLL_HINT_HASH = 2586408642L
-        private val setTileScrollHintBind by lazy {
+        @JvmField
+        val setTileScrollHintBind =
             ObjectCalls.getMethodBind("Tree", "set_tile_scroll_hint", SET_TILE_SCROLL_HINT_HASH)
-        }
 
         private const val IS_SCROLL_HINT_TILED_HASH = 2240911060L
-        private val isScrollHintTiledBind by lazy {
+        @JvmField
+        val isScrollHintTiledBind =
             ObjectCalls.getMethodBind("Tree", "is_scroll_hint_tiled", IS_SCROLL_HINT_TILED_HASH)
-        }
 
         private const val SET_HIDE_FOLDING_HASH = 2586408642L
-        private val setHideFoldingBind by lazy {
+        @JvmField
+        val setHideFoldingBind =
             ObjectCalls.getMethodBind("Tree", "set_hide_folding", SET_HIDE_FOLDING_HASH)
-        }
 
         private const val IS_FOLDING_HIDDEN_HASH = 36873697L
-        private val isFoldingHiddenBind by lazy {
+        @JvmField
+        val isFoldingHiddenBind =
             ObjectCalls.getMethodBind("Tree", "is_folding_hidden", IS_FOLDING_HIDDEN_HASH)
-        }
 
         private const val SET_ENABLE_RECURSIVE_FOLDING_HASH = 2586408642L
-        private val setEnableRecursiveFoldingBind by lazy {
+        @JvmField
+        val setEnableRecursiveFoldingBind =
             ObjectCalls.getMethodBind("Tree", "set_enable_recursive_folding", SET_ENABLE_RECURSIVE_FOLDING_HASH)
-        }
 
         private const val IS_RECURSIVE_FOLDING_ENABLED_HASH = 36873697L
-        private val isRecursiveFoldingEnabledBind by lazy {
+        @JvmField
+        val isRecursiveFoldingEnabledBind =
             ObjectCalls.getMethodBind("Tree", "is_recursive_folding_enabled", IS_RECURSIVE_FOLDING_ENABLED_HASH)
-        }
 
         private const val SET_ENABLE_DRAG_UNFOLDING_HASH = 2586408642L
-        private val setEnableDragUnfoldingBind by lazy {
+        @JvmField
+        val setEnableDragUnfoldingBind =
             ObjectCalls.getMethodBind("Tree", "set_enable_drag_unfolding", SET_ENABLE_DRAG_UNFOLDING_HASH)
-        }
 
         private const val IS_DRAG_UNFOLDING_ENABLED_HASH = 36873697L
-        private val isDragUnfoldingEnabledBind by lazy {
+        @JvmField
+        val isDragUnfoldingEnabledBind =
             ObjectCalls.getMethodBind("Tree", "is_drag_unfolding_enabled", IS_DRAG_UNFOLDING_ENABLED_HASH)
-        }
 
         private const val SET_DROP_MODE_FLAGS_HASH = 1286410249L
-        private val setDropModeFlagsBind by lazy {
+        @JvmField
+        val setDropModeFlagsBind =
             ObjectCalls.getMethodBind("Tree", "set_drop_mode_flags", SET_DROP_MODE_FLAGS_HASH)
-        }
 
         private const val GET_DROP_MODE_FLAGS_HASH = 3905245786L
-        private val getDropModeFlagsBind by lazy {
+        @JvmField
+        val getDropModeFlagsBind =
             ObjectCalls.getMethodBind("Tree", "get_drop_mode_flags", GET_DROP_MODE_FLAGS_HASH)
-        }
 
         private const val SET_ALLOW_RMB_SELECT_HASH = 2586408642L
-        private val setAllowRmbSelectBind by lazy {
+        @JvmField
+        val setAllowRmbSelectBind =
             ObjectCalls.getMethodBind("Tree", "set_allow_rmb_select", SET_ALLOW_RMB_SELECT_HASH)
-        }
 
         private const val GET_ALLOW_RMB_SELECT_HASH = 36873697L
-        private val getAllowRmbSelectBind by lazy {
+        @JvmField
+        val getAllowRmbSelectBind =
             ObjectCalls.getMethodBind("Tree", "get_allow_rmb_select", GET_ALLOW_RMB_SELECT_HASH)
-        }
 
         private const val SET_ALLOW_RESELECT_HASH = 2586408642L
-        private val setAllowReselectBind by lazy {
+        @JvmField
+        val setAllowReselectBind =
             ObjectCalls.getMethodBind("Tree", "set_allow_reselect", SET_ALLOW_RESELECT_HASH)
-        }
 
         private const val GET_ALLOW_RESELECT_HASH = 36873697L
-        private val getAllowReselectBind by lazy {
+        @JvmField
+        val getAllowReselectBind =
             ObjectCalls.getMethodBind("Tree", "get_allow_reselect", GET_ALLOW_RESELECT_HASH)
-        }
 
         private const val SET_ALLOW_SEARCH_HASH = 2586408642L
-        private val setAllowSearchBind by lazy {
+        @JvmField
+        val setAllowSearchBind =
             ObjectCalls.getMethodBind("Tree", "set_allow_search", SET_ALLOW_SEARCH_HASH)
-        }
 
         private const val GET_ALLOW_SEARCH_HASH = 36873697L
-        private val getAllowSearchBind by lazy {
+        @JvmField
+        val getAllowSearchBind =
             ObjectCalls.getMethodBind("Tree", "get_allow_search", GET_ALLOW_SEARCH_HASH)
-        }
 
         private const val SET_AUTO_TOOLTIP_HASH = 2586408642L
-        private val setAutoTooltipBind by lazy {
+        @JvmField
+        val setAutoTooltipBind =
             ObjectCalls.getMethodBind("Tree", "set_auto_tooltip", SET_AUTO_TOOLTIP_HASH)
-        }
 
         private const val IS_AUTO_TOOLTIP_ENABLED_HASH = 36873697L
-        private val isAutoTooltipEnabledBind by lazy {
+        @JvmField
+        val isAutoTooltipEnabledBind =
             ObjectCalls.getMethodBind("Tree", "is_auto_tooltip_enabled", IS_AUTO_TOOLTIP_ENABLED_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,47 +28,47 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
         get() = getSpawnFunction()
 
     fun addSpawnableScene(path: String) {
-        ObjectCalls.ptrcallWithStringArg(addSpawnableSceneBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addSpawnableSceneBind, segment, path)
     }
 
     fun getSpawnableSceneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSpawnableSceneCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSpawnableSceneCountBind, segment)
     }
 
     fun getSpawnableScene(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getSpawnableSceneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getSpawnableSceneBind, segment, index)
     }
 
     fun clearSpawnableScenes() {
-        ObjectCalls.ptrcallNoArgs(clearSpawnableScenesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearSpawnableScenesBind, segment)
     }
 
     fun spawn(data: Any? = null): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(spawnBind, segment, data))
+        return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(Binds.spawnBind, segment, data))
     }
 
     fun getSpawnPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSpawnPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getSpawnPathBind, segment)
     }
 
     fun setSpawnPath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSpawnPathBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setSpawnPathBind, segment, path)
     }
 
     fun getSpawnLimit(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSpawnLimitBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getSpawnLimitBind, segment)
     }
 
     fun setSpawnLimit(limit: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSpawnLimitBind, segment, limit)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setSpawnLimitBind, segment, limit)
     }
 
     fun getSpawnFunction(): GodotCallable? {
-        return ObjectCalls.ptrcallNoArgsRetCallable(getSpawnFunctionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetCallable(Binds.getSpawnFunctionBind, segment)
     }
 
     fun setSpawnFunction(spawnFunction: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(setSpawnFunctionBind, segment, spawnFunction.target.segment, spawnFunction.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.setSpawnFunctionBind, segment, spawnFunction.target.segment, spawnFunction.method)
     }
 
     /** Signal `despawned(node: Node)`; see [TypedSignal]. */
@@ -92,60 +93,62 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): MultiplayerSpawner? =
             if (handle.address() == 0L) null else MultiplayerSpawner(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_SPAWNABLE_SCENE_HASH = 83702148L
-        private val addSpawnableSceneBind by lazy {
+        @JvmField
+        val addSpawnableSceneBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "add_spawnable_scene", ADD_SPAWNABLE_SCENE_HASH)
-        }
 
         private const val GET_SPAWNABLE_SCENE_COUNT_HASH = 3905245786L
-        private val getSpawnableSceneCountBind by lazy {
+        @JvmField
+        val getSpawnableSceneCountBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawnable_scene_count", GET_SPAWNABLE_SCENE_COUNT_HASH)
-        }
 
         private const val GET_SPAWNABLE_SCENE_HASH = 844755477L
-        private val getSpawnableSceneBind by lazy {
+        @JvmField
+        val getSpawnableSceneBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawnable_scene", GET_SPAWNABLE_SCENE_HASH)
-        }
 
         private const val CLEAR_SPAWNABLE_SCENES_HASH = 3218959716L
-        private val clearSpawnableScenesBind by lazy {
+        @JvmField
+        val clearSpawnableScenesBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "clear_spawnable_scenes", CLEAR_SPAWNABLE_SCENES_HASH)
-        }
 
         private const val SPAWN_HASH = 1991184589L
-        private val spawnBind by lazy {
+        @JvmField
+        val spawnBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "spawn", SPAWN_HASH)
-        }
 
         private const val GET_SPAWN_PATH_HASH = 4075236667L
-        private val getSpawnPathBind by lazy {
+        @JvmField
+        val getSpawnPathBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_path", GET_SPAWN_PATH_HASH)
-        }
 
         private const val SET_SPAWN_PATH_HASH = 1348162250L
-        private val setSpawnPathBind by lazy {
+        @JvmField
+        val setSpawnPathBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "set_spawn_path", SET_SPAWN_PATH_HASH)
-        }
 
         private const val GET_SPAWN_LIMIT_HASH = 3905245786L
-        private val getSpawnLimitBind by lazy {
+        @JvmField
+        val getSpawnLimitBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_limit", GET_SPAWN_LIMIT_HASH)
-        }
 
         private const val SET_SPAWN_LIMIT_HASH = 1286410249L
-        private val setSpawnLimitBind by lazy {
+        @JvmField
+        val setSpawnLimitBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "set_spawn_limit", SET_SPAWN_LIMIT_HASH)
-        }
 
         private const val GET_SPAWN_FUNCTION_HASH = 1307783378L
-        private val getSpawnFunctionBind by lazy {
+        @JvmField
+        val getSpawnFunctionBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "get_spawn_function", GET_SPAWN_FUNCTION_HASH)
-        }
 
         private const val SET_SPAWN_FUNCTION_HASH = 1611583062L
-        private val setSpawnFunctionBind by lazy {
+        @JvmField
+        val setSpawnFunctionBind =
             ObjectCalls.getMethodBind("MultiplayerSpawner", "set_spawn_function", SET_SPAWN_FUNCTION_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setObjectId(id: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setObjectIdBind, segment, id)
+        ObjectCalls.ptrcallWithLongArg(Binds.setObjectIdBind, segment, id)
     }
 
     /**
@@ -36,7 +37,7 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getObjectId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getObjectIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectIdBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EncodedObjectAsID? =
             if (handle.address() == 0L) null else EncodedObjectAsID(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OBJECT_ID_HASH = 1286410249L
-        private val setObjectIdBind by lazy {
+        @JvmField
+        val setObjectIdBind =
             ObjectCalls.getMethodBind("EncodedObjectAsID", "set_object_id", SET_OBJECT_ID_HASH)
-        }
 
         private const val GET_OBJECT_ID_HASH = 3905245786L
-        private val getObjectIdBind by lazy {
+        @JvmField
+        val getObjectIdBind =
             ObjectCalls.getMethodBind("EncodedObjectAsID", "get_object_id", GET_OBJECT_ID_HASH)
-        }
     }
 }

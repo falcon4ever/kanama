@@ -22,7 +22,5 @@ class StyleBoxEmpty(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxEmpty? =
             if (handle.address() == 0L) null else StyleBoxEmpty(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

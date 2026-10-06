@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -20,7 +21,7 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createFromFaces(faces: List<Vector3>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(createFromFacesBind, segment, faces)
+        return ObjectCalls.ptrcallWithPackedVector3ListArgRetBool(Binds.createFromFacesBind, segment, faces)
     }
 
     /**
@@ -31,7 +32,7 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun intersectSegment(begin: Vector3, end: Vector3): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectSegmentBind, segment, begin, end)
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(Binds.intersectSegmentBind, segment, begin, end)
     }
 
     /**
@@ -60,7 +61,7 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
      */
     fun intersectRay(begin: Vector3, dir: Vector3): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(intersectRayBind, segment, begin, dir)
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetDictionary(Binds.intersectRayBind, segment, begin, dir)
     }
 
     companion object {
@@ -73,25 +74,27 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TriangleMesh? =
             if (handle.address() == 0L) null else TriangleMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_FROM_FACES_HASH = 2637816732L
-        private val createFromFacesBind by lazy {
+        @JvmField
+        val createFromFacesBind =
             ObjectCalls.getMethodBind("TriangleMesh", "create_from_faces", CREATE_FROM_FACES_HASH)
-        }
 
         private const val GET_FACES_HASH = 497664490L
-        private val getFacesBind by lazy {
+        @JvmField
+        val getFacesBind =
             ObjectCalls.getMethodBind("TriangleMesh", "get_faces", GET_FACES_HASH)
-        }
 
         private const val INTERSECT_SEGMENT_HASH = 3648293151L
-        private val intersectSegmentBind by lazy {
+        @JvmField
+        val intersectSegmentBind =
             ObjectCalls.getMethodBind("TriangleMesh", "intersect_segment", INTERSECT_SEGMENT_HASH)
-        }
 
         private const val INTERSECT_RAY_HASH = 3648293151L
-        private val intersectRayBind by lazy {
+        @JvmField
+        val intersectRayBind =
             ObjectCalls.getMethodBind("TriangleMesh", "intersect_ray", INTERSECT_RAY_HASH)
-        }
     }
 }

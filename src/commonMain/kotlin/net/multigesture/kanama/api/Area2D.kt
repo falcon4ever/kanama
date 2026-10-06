@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -110,7 +111,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_gravity_space_override_mode
      */
     fun setGravitySpaceOverrideMode(spaceOverrideMode: Area2D.SpaceOverride) {
-        ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, segment, spaceOverrideMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGravitySpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -119,7 +120,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_gravity_space_override_mode
      */
     fun getGravitySpaceOverrideMode(): Area2D.SpaceOverride {
-        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, segment))
+        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGravitySpaceOverrideModeBind, segment))
     }
 
     /**
@@ -129,7 +130,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_gravity_is_point
      */
     fun setGravityIsPoint(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setGravityIsPointBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGravityIsPointBind, segment, enable)
     }
 
     /**
@@ -139,7 +140,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.is_gravity_a_point
      */
     fun isGravityAPoint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGravityAPointBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGravityAPointBind, segment)
     }
 
     /**
@@ -154,7 +155,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_gravity_point_unit_distance
      */
     fun setGravityPointUnitDistance(distanceScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityPointUnitDistanceBind, segment, distanceScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGravityPointUnitDistanceBind, segment, distanceScale)
     }
 
     /**
@@ -169,7 +170,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_gravity_point_unit_distance
      */
     fun getGravityPointUnitDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityPointUnitDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGravityPointUnitDistanceBind, segment)
     }
 
     /**
@@ -178,7 +179,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_gravity_point_center
      */
     fun setGravityPointCenter(center: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGravityPointCenterBind, segment, center)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGravityPointCenterBind, segment, center)
     }
 
     /**
@@ -187,7 +188,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_gravity_point_center
      */
     fun getGravityPointCenter(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityPointCenterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGravityPointCenterBind, segment)
     }
 
     /**
@@ -196,7 +197,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_gravity_direction
      */
     fun setGravityDirection(direction: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGravityDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGravityDirectionBind, segment, direction)
     }
 
     /**
@@ -205,7 +206,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_gravity_direction
      */
     fun getGravityDirection(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGravityDirectionBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_gravity
      */
     fun setGravity(gravity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityBind, segment, gravity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGravityBind, segment, gravity)
     }
 
     /**
@@ -225,7 +226,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_gravity
      */
     fun getGravity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGravityBind, segment)
     }
 
     /**
@@ -234,7 +235,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_linear_damp_space_override_mode
      */
     fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Area2D.SpaceOverride) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -243,7 +244,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_linear_damp_space_override_mode
      */
     fun getLinearDampSpaceOverrideMode(): Area2D.SpaceOverride {
-        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, segment))
+        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLinearDampSpaceOverrideModeBind, segment))
     }
 
     /**
@@ -252,7 +253,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_angular_damp_space_override_mode
      */
     fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Area2D.SpaceOverride) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -261,7 +262,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_angular_damp_space_override_mode
      */
     fun getAngularDampSpaceOverrideMode(): Area2D.SpaceOverride {
-        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, segment))
+        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAngularDampSpaceOverrideModeBind, segment))
     }
 
     /**
@@ -271,7 +272,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -281,7 +282,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLinearDampBind, segment)
     }
 
     /**
@@ -291,7 +292,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -301,7 +302,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularDampBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_priority
      */
     fun setPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
     }
 
     /**
@@ -321,7 +322,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_priority
      */
     fun getPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
     }
 
     /**
@@ -330,7 +331,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_monitoring
      */
     fun setMonitoring(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitoringBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMonitoringBind, segment, enable)
     }
 
     /**
@@ -339,7 +340,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.is_monitoring
      */
     fun isMonitoring(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonitoringBind, segment)
     }
 
     /**
@@ -348,7 +349,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_monitorable
      */
     fun setMonitorable(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitorableBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMonitorableBind, segment, enable)
     }
 
     /**
@@ -357,7 +358,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.is_monitorable
      */
     fun isMonitorable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitorableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonitorableBind, segment)
     }
 
     /**
@@ -370,7 +371,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_overlapping_bodies
      */
     fun getOverlappingBodies(): List<Node2D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingBodiesBind, segment, Node2D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOverlappingBodiesBind, segment, Node2D::wrap)
     }
 
     /**
@@ -383,7 +384,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_overlapping_areas
      */
     fun getOverlappingAreas(): List<Area2D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingAreasBind, segment, Area2D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOverlappingAreasBind, segment, Area2D::wrap)
     }
 
     /**
@@ -396,7 +397,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.has_overlapping_bodies
      */
     fun hasOverlappingBodies(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingBodiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasOverlappingBodiesBind, segment)
     }
 
     /**
@@ -409,7 +410,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.has_overlapping_areas
      */
     fun hasOverlappingAreas(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingAreasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasOverlappingAreasBind, segment)
     }
 
     /**
@@ -423,7 +424,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.overlaps_body
      */
     fun overlapsBody(body: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsBodyBind, segment, body.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsBodyBind, segment, body.segment)
     }
 
     /**
@@ -435,7 +436,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.overlaps_area
      */
     fun overlapsArea(area: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsAreaBind, segment, area.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsAreaBind, segment, area.segment)
     }
 
     /**
@@ -444,7 +445,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_audio_bus_name
      */
     fun setAudioBusName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAudioBusNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAudioBusNameBind, segment, name)
     }
 
     /**
@@ -453,7 +454,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.get_audio_bus_name
      */
     fun getAudioBusName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAudioBusNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAudioBusNameBind, segment)
     }
 
     /**
@@ -462,7 +463,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.set_audio_bus_override
      */
     fun setAudioBusOverride(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAudioBusOverrideBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAudioBusOverrideBind, segment, enable)
     }
 
     /**
@@ -471,7 +472,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: Area2D.is_overriding_audio_bus
      */
     fun isOverridingAudioBus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOverridingAudioBusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOverridingAudioBusBind, segment)
     }
 
     /** Signal `body_shape_entered(body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
@@ -577,185 +578,187 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
 
         internal fun wrap(handle: RawSegment): Area2D? =
             if (handle.address() == 0L) null else Area2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 2879900038L
-        private val setGravitySpaceOverrideModeBind by lazy {
+        @JvmField
+        val setGravitySpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area2D", "set_gravity_space_override_mode", SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val GET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 3990256304L
-        private val getGravitySpaceOverrideModeBind by lazy {
+        @JvmField
+        val getGravitySpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area2D", "get_gravity_space_override_mode", GET_GRAVITY_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val SET_GRAVITY_IS_POINT_HASH = 2586408642L
-        private val setGravityIsPointBind by lazy {
+        @JvmField
+        val setGravityIsPointBind =
             ObjectCalls.getMethodBind("Area2D", "set_gravity_is_point", SET_GRAVITY_IS_POINT_HASH)
-        }
 
         private const val IS_GRAVITY_A_POINT_HASH = 36873697L
-        private val isGravityAPointBind by lazy {
+        @JvmField
+        val isGravityAPointBind =
             ObjectCalls.getMethodBind("Area2D", "is_gravity_a_point", IS_GRAVITY_A_POINT_HASH)
-        }
 
         private const val SET_GRAVITY_POINT_UNIT_DISTANCE_HASH = 373806689L
-        private val setGravityPointUnitDistanceBind by lazy {
+        @JvmField
+        val setGravityPointUnitDistanceBind =
             ObjectCalls.getMethodBind("Area2D", "set_gravity_point_unit_distance", SET_GRAVITY_POINT_UNIT_DISTANCE_HASH)
-        }
 
         private const val GET_GRAVITY_POINT_UNIT_DISTANCE_HASH = 1740695150L
-        private val getGravityPointUnitDistanceBind by lazy {
+        @JvmField
+        val getGravityPointUnitDistanceBind =
             ObjectCalls.getMethodBind("Area2D", "get_gravity_point_unit_distance", GET_GRAVITY_POINT_UNIT_DISTANCE_HASH)
-        }
 
         private const val SET_GRAVITY_POINT_CENTER_HASH = 743155724L
-        private val setGravityPointCenterBind by lazy {
+        @JvmField
+        val setGravityPointCenterBind =
             ObjectCalls.getMethodBind("Area2D", "set_gravity_point_center", SET_GRAVITY_POINT_CENTER_HASH)
-        }
 
         private const val GET_GRAVITY_POINT_CENTER_HASH = 3341600327L
-        private val getGravityPointCenterBind by lazy {
+        @JvmField
+        val getGravityPointCenterBind =
             ObjectCalls.getMethodBind("Area2D", "get_gravity_point_center", GET_GRAVITY_POINT_CENTER_HASH)
-        }
 
         private const val SET_GRAVITY_DIRECTION_HASH = 743155724L
-        private val setGravityDirectionBind by lazy {
+        @JvmField
+        val setGravityDirectionBind =
             ObjectCalls.getMethodBind("Area2D", "set_gravity_direction", SET_GRAVITY_DIRECTION_HASH)
-        }
 
         private const val GET_GRAVITY_DIRECTION_HASH = 3341600327L
-        private val getGravityDirectionBind by lazy {
+        @JvmField
+        val getGravityDirectionBind =
             ObjectCalls.getMethodBind("Area2D", "get_gravity_direction", GET_GRAVITY_DIRECTION_HASH)
-        }
 
         private const val SET_GRAVITY_HASH = 373806689L
-        private val setGravityBind by lazy {
+        @JvmField
+        val setGravityBind =
             ObjectCalls.getMethodBind("Area2D", "set_gravity", SET_GRAVITY_HASH)
-        }
 
         private const val GET_GRAVITY_HASH = 1740695150L
-        private val getGravityBind by lazy {
+        @JvmField
+        val getGravityBind =
             ObjectCalls.getMethodBind("Area2D", "get_gravity", GET_GRAVITY_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 2879900038L
-        private val setLinearDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val setLinearDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area2D", "set_linear_damp_space_override_mode", SET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 3990256304L
-        private val getLinearDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val getLinearDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area2D", "get_linear_damp_space_override_mode", GET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 2879900038L
-        private val setAngularDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val setAngularDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area2D", "set_angular_damp_space_override_mode", SET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 3990256304L
-        private val getAngularDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val getAngularDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area2D", "get_angular_damp_space_override_mode", GET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_HASH = 373806689L
-        private val setLinearDampBind by lazy {
+        @JvmField
+        val setLinearDampBind =
             ObjectCalls.getMethodBind("Area2D", "set_linear_damp", SET_LINEAR_DAMP_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_HASH = 1740695150L
-        private val getLinearDampBind by lazy {
+        @JvmField
+        val getLinearDampBind =
             ObjectCalls.getMethodBind("Area2D", "get_linear_damp", GET_LINEAR_DAMP_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_HASH = 373806689L
-        private val setAngularDampBind by lazy {
+        @JvmField
+        val setAngularDampBind =
             ObjectCalls.getMethodBind("Area2D", "set_angular_damp", SET_ANGULAR_DAMP_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_HASH = 1740695150L
-        private val getAngularDampBind by lazy {
+        @JvmField
+        val getAngularDampBind =
             ObjectCalls.getMethodBind("Area2D", "get_angular_damp", GET_ANGULAR_DAMP_HASH)
-        }
 
         private const val SET_PRIORITY_HASH = 1286410249L
-        private val setPriorityBind by lazy {
+        @JvmField
+        val setPriorityBind =
             ObjectCalls.getMethodBind("Area2D", "set_priority", SET_PRIORITY_HASH)
-        }
 
         private const val GET_PRIORITY_HASH = 3905245786L
-        private val getPriorityBind by lazy {
+        @JvmField
+        val getPriorityBind =
             ObjectCalls.getMethodBind("Area2D", "get_priority", GET_PRIORITY_HASH)
-        }
 
         private const val SET_MONITORING_HASH = 2586408642L
-        private val setMonitoringBind by lazy {
+        @JvmField
+        val setMonitoringBind =
             ObjectCalls.getMethodBind("Area2D", "set_monitoring", SET_MONITORING_HASH)
-        }
 
         private const val IS_MONITORING_HASH = 36873697L
-        private val isMonitoringBind by lazy {
+        @JvmField
+        val isMonitoringBind =
             ObjectCalls.getMethodBind("Area2D", "is_monitoring", IS_MONITORING_HASH)
-        }
 
         private const val SET_MONITORABLE_HASH = 2586408642L
-        private val setMonitorableBind by lazy {
+        @JvmField
+        val setMonitorableBind =
             ObjectCalls.getMethodBind("Area2D", "set_monitorable", SET_MONITORABLE_HASH)
-        }
 
         private const val IS_MONITORABLE_HASH = 36873697L
-        private val isMonitorableBind by lazy {
+        @JvmField
+        val isMonitorableBind =
             ObjectCalls.getMethodBind("Area2D", "is_monitorable", IS_MONITORABLE_HASH)
-        }
 
         private const val GET_OVERLAPPING_BODIES_HASH = 3995934104L
-        private val getOverlappingBodiesBind by lazy {
+        @JvmField
+        val getOverlappingBodiesBind =
             ObjectCalls.getMethodBind("Area2D", "get_overlapping_bodies", GET_OVERLAPPING_BODIES_HASH)
-        }
 
         private const val GET_OVERLAPPING_AREAS_HASH = 3995934104L
-        private val getOverlappingAreasBind by lazy {
+        @JvmField
+        val getOverlappingAreasBind =
             ObjectCalls.getMethodBind("Area2D", "get_overlapping_areas", GET_OVERLAPPING_AREAS_HASH)
-        }
 
         private const val HAS_OVERLAPPING_BODIES_HASH = 36873697L
-        private val hasOverlappingBodiesBind by lazy {
+        @JvmField
+        val hasOverlappingBodiesBind =
             ObjectCalls.getMethodBind("Area2D", "has_overlapping_bodies", HAS_OVERLAPPING_BODIES_HASH)
-        }
 
         private const val HAS_OVERLAPPING_AREAS_HASH = 36873697L
-        private val hasOverlappingAreasBind by lazy {
+        @JvmField
+        val hasOverlappingAreasBind =
             ObjectCalls.getMethodBind("Area2D", "has_overlapping_areas", HAS_OVERLAPPING_AREAS_HASH)
-        }
 
         private const val OVERLAPS_BODY_HASH = 3093956946L
-        private val overlapsBodyBind by lazy {
+        @JvmField
+        val overlapsBodyBind =
             ObjectCalls.getMethodBind("Area2D", "overlaps_body", OVERLAPS_BODY_HASH)
-        }
 
         private const val OVERLAPS_AREA_HASH = 3093956946L
-        private val overlapsAreaBind by lazy {
+        @JvmField
+        val overlapsAreaBind =
             ObjectCalls.getMethodBind("Area2D", "overlaps_area", OVERLAPS_AREA_HASH)
-        }
 
         private const val SET_AUDIO_BUS_NAME_HASH = 3304788590L
-        private val setAudioBusNameBind by lazy {
+        @JvmField
+        val setAudioBusNameBind =
             ObjectCalls.getMethodBind("Area2D", "set_audio_bus_name", SET_AUDIO_BUS_NAME_HASH)
-        }
 
         private const val GET_AUDIO_BUS_NAME_HASH = 2002593661L
-        private val getAudioBusNameBind by lazy {
+        @JvmField
+        val getAudioBusNameBind =
             ObjectCalls.getMethodBind("Area2D", "get_audio_bus_name", GET_AUDIO_BUS_NAME_HASH)
-        }
 
         private const val SET_AUDIO_BUS_OVERRIDE_HASH = 2586408642L
-        private val setAudioBusOverrideBind by lazy {
+        @JvmField
+        val setAudioBusOverrideBind =
             ObjectCalls.getMethodBind("Area2D", "set_audio_bus_override", SET_AUDIO_BUS_OVERRIDE_HASH)
-        }
 
         private const val IS_OVERRIDING_AUDIO_BUS_HASH = 36873697L
-        private val isOverridingAudioBusBind by lazy {
+        @JvmField
+        val isOverridingAudioBusBind =
             ObjectCalls.getMethodBind("Area2D", "is_overriding_audio_bus", IS_OVERRIDING_AUDIO_BUS_HASH)
-        }
     }
 }

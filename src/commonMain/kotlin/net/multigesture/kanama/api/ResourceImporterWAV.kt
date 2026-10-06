@@ -22,7 +22,5 @@ class ResourceImporterWAV(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterWAV? =
             if (handle.address() == 0L) null else ResourceImporterWAV(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

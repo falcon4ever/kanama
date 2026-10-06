@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: ScriptCreateDialog.config
      */
     fun config(inherits: String, path: String, builtInEnabled: Boolean = true, loadEnabled: Boolean = true) {
-        ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgs(configBind, segment, inherits, path, builtInEnabled, loadEnabled)
+        ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgs(Binds.configBind, segment, inherits, path, builtInEnabled, loadEnabled)
     }
 
     /** Signal `script_created(script: Script)`; see [TypedSignal]. */
@@ -36,10 +37,12 @@ class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptCreateDialog? =
             if (handle.address() == 0L) null else ScriptCreateDialog(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CONFIG_HASH = 869314288L
-        private val configBind by lazy {
+        @JvmField
+        val configBind =
             ObjectCalls.getMethodBind("ScriptCreateDialog", "config", CONFIG_HASH)
-        }
     }
 }

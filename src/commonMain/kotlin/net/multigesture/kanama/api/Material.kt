@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -35,7 +36,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun setNextPass(nextPass: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, segment, listOf(nextPass?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNextPassBind, segment, listOf(nextPass?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -49,7 +50,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun getNextPass(): Material? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextPassBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -70,7 +71,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun setRenderPriority(priority: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -86,7 +87,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun getRenderPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderPriorityBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun inspectNativeShaderCode() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.inspectNativeShaderCodeBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -134,35 +135,37 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         @JvmStatic
         fun fromResource(value: Resource?): Material? =
             value?.takeIf { it.isClass("Material") }?.let { RefCounted.retained(Material(it.handle)) }
+    }
 
+    private object Binds {
         private const val SET_NEXT_PASS_HASH = 2757459619L
-        private val setNextPassBind by lazy {
+        @JvmField
+        val setNextPassBind =
             ObjectCalls.getMethodBind("Material", "set_next_pass", SET_NEXT_PASS_HASH)
-        }
 
         private const val GET_NEXT_PASS_HASH = 5934680L
-        private val getNextPassBind by lazy {
+        @JvmField
+        val getNextPassBind =
             ObjectCalls.getMethodBind("Material", "get_next_pass", GET_NEXT_PASS_HASH)
-        }
 
         private const val SET_RENDER_PRIORITY_HASH = 1286410249L
-        private val setRenderPriorityBind by lazy {
+        @JvmField
+        val setRenderPriorityBind =
             ObjectCalls.getMethodBind("Material", "set_render_priority", SET_RENDER_PRIORITY_HASH)
-        }
 
         private const val GET_RENDER_PRIORITY_HASH = 3905245786L
-        private val getRenderPriorityBind by lazy {
+        @JvmField
+        val getRenderPriorityBind =
             ObjectCalls.getMethodBind("Material", "get_render_priority", GET_RENDER_PRIORITY_HASH)
-        }
 
         private const val INSPECT_NATIVE_SHADER_CODE_HASH = 3218959716L
-        private val inspectNativeShaderCodeBind by lazy {
+        @JvmField
+        val inspectNativeShaderCodeBind =
             ObjectCalls.getMethodBind("Material", "inspect_native_shader_code", INSPECT_NATIVE_SHADER_CODE_HASH)
-        }
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
-        private val createPlaceholderBind by lazy {
+        @JvmField
+        val createPlaceholderBind =
             ObjectCalls.getMethodBind("Material", "create_placeholder", CREATE_PLACEHOLDER_HASH)
-        }
     }
 }

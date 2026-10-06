@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -269,7 +270,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, title)
     }
 
     /**
@@ -278,7 +279,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
     }
 
     /**
@@ -287,7 +288,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_initial_position
      */
     fun setInitialPosition(initialPosition: Window.WindowInitialPosition) {
-        ObjectCalls.ptrcallWithLongArg(setInitialPositionBind, segment, initialPosition.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setInitialPositionBind, segment, initialPosition.value)
     }
 
     /**
@@ -296,7 +297,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_initial_position
      */
     fun getInitialPosition(): Window.WindowInitialPosition {
-        return Window.WindowInitialPosition(ObjectCalls.ptrcallNoArgsRetLong(getInitialPositionBind, segment))
+        return Window.WindowInitialPosition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInitialPositionBind, segment))
     }
 
     /**
@@ -305,7 +306,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_current_screen
      */
     fun setCurrentScreen(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCurrentScreenBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCurrentScreenBind, segment, index)
     }
 
     /**
@@ -314,7 +315,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_current_screen
      */
     fun getCurrentScreen(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentScreenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentScreenBind, segment)
     }
 
     /**
@@ -327,7 +328,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_position
      */
     fun setPosition(position: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -340,7 +341,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_position
      */
     fun getPosition(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getPositionBind, segment)
     }
 
     /**
@@ -350,7 +351,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.move_to_center
      */
     fun moveToCenter() {
-        ObjectCalls.ptrcallNoArgs(moveToCenterBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.moveToCenterBind, segment)
     }
 
     /**
@@ -360,7 +361,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_size
      */
     fun setSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -370,7 +371,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_size
      */
     fun getSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -381,7 +382,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.reset_size
      */
     fun resetSize() {
-        ObjectCalls.ptrcallNoArgs(resetSizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetSizeBind, segment)
     }
 
     /**
@@ -391,7 +392,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_position_with_decorations
      */
     fun getPositionWithDecorations(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getPositionWithDecorationsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getPositionWithDecorationsBind, segment)
     }
 
     /**
@@ -401,7 +402,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_size_with_decorations
      */
     fun getSizeWithDecorations(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeWithDecorationsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeWithDecorationsBind, segment)
     }
 
     /**
@@ -411,7 +412,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_max_size
      */
     fun setMaxSize(maxSize: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setMaxSizeBind, segment, maxSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setMaxSizeBind, segment, maxSize)
     }
 
     /**
@@ -421,7 +422,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_max_size
      */
     fun getMaxSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getMaxSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getMaxSizeBind, segment)
     }
 
     /**
@@ -432,7 +433,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_min_size
      */
     fun setMinSize(minSize: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setMinSizeBind, segment, minSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setMinSizeBind, segment, minSize)
     }
 
     /**
@@ -443,7 +444,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_min_size
      */
     fun getMinSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getMinSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getMinSizeBind, segment)
     }
 
     /**
@@ -454,7 +455,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_mode
      */
     fun setMode(mode: Window.Mode) {
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
     }
 
     /**
@@ -465,7 +466,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_mode
      */
     fun getMode(): Window.Mode {
-        return Window.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
+        return Window.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
     }
 
     /**
@@ -474,7 +475,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_flag
      */
     fun setFlag(flag: Window.Flags, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag.value, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -483,7 +484,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_flag
      */
     fun getFlag(flag: Window.Flags): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagBind, segment, flag.value)
     }
 
     /**
@@ -496,7 +497,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_hdr_output_requested
      */
     fun setHdrOutputRequested(requested: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHdrOutputRequestedBind, segment, requested)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHdrOutputRequestedBind, segment, requested)
     }
 
     /**
@@ -509,7 +510,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_hdr_output_requested
      */
     fun isHdrOutputRequested(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHdrOutputRequestedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHdrOutputRequestedBind, segment)
     }
 
     /**
@@ -524,7 +525,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_output_max_linear_value
      */
     fun getOutputMaxLinearValue(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOutputMaxLinearValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOutputMaxLinearValueBind, segment)
     }
 
     /**
@@ -533,7 +534,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_maximize_allowed
      */
     fun isMaximizeAllowed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMaximizeAllowedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMaximizeAllowedBind, segment)
     }
 
     /**
@@ -543,7 +544,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.request_attention
      */
     fun requestAttention() {
-        ObjectCalls.ptrcallNoArgs(requestAttentionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.requestAttentionBind, segment)
     }
 
     /**
@@ -554,7 +555,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_taskbar_progress_value
      */
     fun setTaskbarProgressValue(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTaskbarProgressValueBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTaskbarProgressValueBind, segment, value)
     }
 
     /**
@@ -565,7 +566,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_taskbar_progress_state
      */
     fun setTaskbarProgressState(state: DisplayServer.ProgressState) {
-        ObjectCalls.ptrcallWithLongArg(setTaskbarProgressStateBind, segment, state.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTaskbarProgressStateBind, segment, state.value)
     }
 
     /**
@@ -574,7 +575,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.move_to_foreground
      */
     fun moveToForeground() {
-        ObjectCalls.ptrcallNoArgs(moveToForegroundBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.moveToForegroundBind, segment)
     }
 
     /**
@@ -583,7 +584,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, visible)
     }
 
     /**
@@ -592,7 +593,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -602,7 +603,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.hideBind, segment)
     }
 
     /**
@@ -612,7 +613,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.showBind, segment)
     }
 
     /**
@@ -625,7 +626,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_transient
      */
     fun setTransient(transient: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransientBind, segment, transient)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTransientBind, segment, transient)
     }
 
     /**
@@ -638,7 +639,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_transient
      */
     fun isTransient(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTransientBind, segment)
     }
 
     /**
@@ -650,7 +651,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_transient_to_focused
      */
     fun setTransientToFocused(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransientToFocusedBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTransientToFocusedBind, segment, enable)
     }
 
     /**
@@ -662,7 +663,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_transient_to_focused
      */
     fun isTransientToFocused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransientToFocusedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTransientToFocusedBind, segment)
     }
 
     /**
@@ -672,7 +673,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_exclusive
      */
     fun setExclusive(exclusive: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExclusiveBind, segment, exclusive)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExclusiveBind, segment, exclusive)
     }
 
     /**
@@ -682,7 +683,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_exclusive
      */
     fun isExclusive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isExclusiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isExclusiveBind, segment)
     }
 
     /**
@@ -693,7 +694,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_unparent_when_invisible
      */
     fun setUnparentWhenInvisible(unparent: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUnparentWhenInvisibleBind, segment, unparent)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUnparentWhenInvisibleBind, segment, unparent)
     }
 
     /**
@@ -702,7 +703,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.can_draw
      */
     fun canDraw(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(canDrawBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canDrawBind, segment)
     }
 
     /**
@@ -711,7 +712,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_focus
      */
     fun hasFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasFocusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasFocusBind, segment)
     }
 
     /**
@@ -720,7 +721,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.grab_focus
      */
     fun grabFocus() {
-        ObjectCalls.ptrcallNoArgs(grabFocusBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.grabFocusBind, segment)
     }
 
     /**
@@ -732,7 +733,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.start_drag
      */
     fun startDrag() {
-        ObjectCalls.ptrcallNoArgs(startDragBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.startDragBind, segment)
     }
 
     /**
@@ -743,7 +744,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.start_resize
      */
     fun startResize(edge: DisplayServer.WindowResizeEdge) {
-        ObjectCalls.ptrcallWithLongArg(startResizeBind, segment, edge.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.startResizeBind, segment, edge.value)
     }
 
     /**
@@ -752,7 +753,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_ime_active
      */
     fun setImeActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setImeActiveBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setImeActiveBind, segment, active)
     }
 
     /**
@@ -761,7 +762,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_ime_position
      */
     fun setImePosition(position: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setImePositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setImePositionBind, segment, position)
     }
 
     /**
@@ -770,7 +771,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_embedded
      */
     fun isEmbedded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmbeddedBind, segment)
     }
 
     /**
@@ -781,7 +782,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_contents_minimum_size
      */
     fun getContentsMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getContentsMinimumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getContentsMinimumSizeBind, segment)
     }
 
     /**
@@ -790,7 +791,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_force_native
      */
     fun setForceNative(forceNative: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setForceNativeBind, segment, forceNative)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setForceNativeBind, segment, forceNative)
     }
 
     /**
@@ -799,7 +800,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_force_native
      */
     fun getForceNative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getForceNativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getForceNativeBind, segment)
     }
 
     /**
@@ -819,7 +820,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_size
      */
     fun setContentScaleSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setContentScaleSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setContentScaleSizeBind, segment, size)
     }
 
     /**
@@ -839,7 +840,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_size
      */
     fun getContentScaleSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getContentScaleSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getContentScaleSizeBind, segment)
     }
 
     /**
@@ -848,7 +849,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_mode
      */
     fun setContentScaleMode(mode: Window.ContentScaleMode) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setContentScaleModeBind, segment, mode.value)
     }
 
     /**
@@ -857,7 +858,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_mode
      */
     fun getContentScaleMode(): Window.ContentScaleMode {
-        return Window.ContentScaleMode(ObjectCalls.ptrcallNoArgsRetLong(getContentScaleModeBind, segment))
+        return Window.ContentScaleMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getContentScaleModeBind, segment))
     }
 
     /**
@@ -867,7 +868,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_aspect
      */
     fun setContentScaleAspect(aspect: Window.ContentScaleAspect) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleAspectBind, segment, aspect.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setContentScaleAspectBind, segment, aspect.value)
     }
 
     /**
@@ -877,7 +878,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_aspect
      */
     fun getContentScaleAspect(): Window.ContentScaleAspect {
-        return Window.ContentScaleAspect(ObjectCalls.ptrcallNoArgsRetLong(getContentScaleAspectBind, segment))
+        return Window.ContentScaleAspect(ObjectCalls.ptrcallNoArgsRetLong(Binds.getContentScaleAspectBind, segment))
     }
 
     /**
@@ -888,7 +889,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_stretch
      */
     fun setContentScaleStretch(stretch: Window.ContentScaleStretch) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleStretchBind, segment, stretch.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setContentScaleStretchBind, segment, stretch.value)
     }
 
     /**
@@ -899,7 +900,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_stretch
      */
     fun getContentScaleStretch(): Window.ContentScaleStretch {
-        return Window.ContentScaleStretch(ObjectCalls.ptrcallNoArgsRetLong(getContentScaleStretchBind, segment))
+        return Window.ContentScaleStretch(ObjectCalls.ptrcallNoArgsRetLong(Binds.getContentScaleStretchBind, segment))
     }
 
     /**
@@ -910,7 +911,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_nonclient_area
      */
     fun setNonclientArea(area: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(setNonclientAreaBind, segment, area)
+        ObjectCalls.ptrcallWithRect2iArg(Binds.setNonclientAreaBind, segment, area)
     }
 
     /**
@@ -921,7 +922,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_nonclient_area
      */
     fun getNonclientArea(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getNonclientAreaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getNonclientAreaBind, segment)
     }
 
     /**
@@ -930,7 +931,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_keep_title_visible
      */
     fun setKeepTitleVisible(titleVisible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeepTitleVisibleBind, segment, titleVisible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepTitleVisibleBind, segment, titleVisible)
     }
 
     /**
@@ -939,7 +940,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_keep_title_visible
      */
     fun getKeepTitleVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getKeepTitleVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepTitleVisibleBind, segment)
     }
 
     /**
@@ -949,7 +950,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_content_scale_factor
      */
     fun setContentScaleFactor(factor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setContentScaleFactorBind, segment, factor)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setContentScaleFactorBind, segment, factor)
     }
 
     /**
@@ -959,7 +960,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_content_scale_factor
      */
     fun getContentScaleFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getContentScaleFactorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getContentScaleFactorBind, segment)
     }
 
     /**
@@ -970,7 +971,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_mouse_passthrough_polygon
      */
     fun setMousePassthroughPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setMousePassthroughPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setMousePassthroughPolygonBind, segment, polygon)
     }
 
     /**
@@ -981,7 +982,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_mouse_passthrough_polygon
      */
     fun getMousePassthroughPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getMousePassthroughPolygonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getMousePassthroughPolygonBind, segment)
     }
 
     /**
@@ -992,7 +993,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_wrap_controls
      */
     fun setWrapControls(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setWrapControlsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWrapControlsBind, segment, enable)
     }
 
     /**
@@ -1003,7 +1004,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_wrapping_controls
      */
     fun isWrappingControls(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isWrappingControlsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isWrappingControlsBind, segment)
     }
 
     /**
@@ -1012,7 +1013,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.child_controls_changed
      */
     fun childControlsChanged() {
-        ObjectCalls.ptrcallNoArgs(childControlsChangedBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.childControlsChangedBind, segment)
     }
 
     /**
@@ -1023,7 +1024,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_theme
      */
     fun setTheme(theme: Theme?) {
-        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1034,7 +1035,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme
      */
     fun getTheme(): Theme? {
-        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, segment))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getThemeBind, segment))
     }
 
     /**
@@ -1044,7 +1045,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_theme_type_variation
      */
     fun setThemeTypeVariation(themeType: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, segment, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setThemeTypeVariationBind, segment, themeType)
     }
 
     /**
@@ -1054,7 +1055,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_type_variation
      */
     fun getThemeTypeVariation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getThemeTypeVariationBind, segment)
     }
 
     /**
@@ -1064,7 +1065,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.begin_bulk_theme_override
      */
     fun beginBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.beginBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1073,7 +1074,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.end_bulk_theme_override
      */
     fun endBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1084,7 +1085,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_icon_override
      */
     fun addThemeIconOverride(name: String, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeIconOverrideBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1096,7 +1097,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_stylebox_override
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, segment, name, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeStyleboxOverrideBind, segment, name, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1107,7 +1108,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_font_override
      */
     fun addThemeFontOverride(name: String, font: Font?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, segment, name, font?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeFontOverrideBind, segment, name, font?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1118,7 +1119,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_font_size_override
      */
     fun addThemeFontSizeOverride(name: String, fontSize: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, segment, name, fontSize)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.addThemeFontSizeOverrideBind, segment, name, fontSize)
     }
 
     /**
@@ -1130,7 +1131,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_color_override
      */
     fun addThemeColorOverride(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, segment, name, color)
+        ObjectCalls.ptrcallWithStringNameAndColorArg(Binds.addThemeColorOverrideBind, segment, name, color)
     }
 
     /**
@@ -1141,7 +1142,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.add_theme_constant_override
      */
     fun addThemeConstantOverride(name: String, constant: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, segment, name, constant)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.addThemeConstantOverrideBind, segment, name, constant)
     }
 
     /**
@@ -1151,7 +1152,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_icon_override
      */
     fun removeThemeIconOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1161,7 +1162,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_stylebox_override
      */
     fun removeThemeStyleboxOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1171,7 +1172,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_font_override
      */
     fun removeThemeFontOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1181,7 +1182,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_font_size_override
      */
     fun removeThemeFontSizeOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1191,7 +1192,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_color_override
      */
     fun removeThemeColorOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1201,7 +1202,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.remove_theme_constant_override
      */
     fun removeThemeConstantOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1211,7 +1212,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_icon
      */
     fun getThemeIcon(name: String, themeType: String = ""): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, segment, name, themeType))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeIconBind, segment, name, themeType))
     }
 
     /**
@@ -1221,7 +1222,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_stylebox
      */
     fun getThemeStylebox(name: String, themeType: String = ""): StyleBox? {
-        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, segment, name, themeType))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -1231,7 +1232,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_font
      */
     fun getThemeFont(name: String, themeType: String = ""): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, segment, name, themeType))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeFontBind, segment, name, themeType))
     }
 
     /**
@@ -1241,7 +1242,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_font_size
      */
     fun getThemeFontSize(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1251,7 +1252,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_color
      */
     fun getThemeColor(name: String, themeType: String = ""): Color {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(Binds.getThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1261,7 +1262,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_constant
      */
     fun getThemeConstant(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1271,7 +1272,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_icon_override
      */
     fun hasThemeIconOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1281,7 +1282,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_stylebox_override
      */
     fun hasThemeStyleboxOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1291,7 +1292,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font_override
      */
     fun hasThemeFontOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1301,7 +1302,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font_size_override
      */
     fun hasThemeFontSizeOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1311,7 +1312,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_color_override
      */
     fun hasThemeColorOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1321,7 +1322,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_constant_override
      */
     fun hasThemeConstantOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1331,7 +1332,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_icon
      */
     fun hasThemeIcon(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeIconBind, segment, name, themeType)
     }
 
     /**
@@ -1341,7 +1342,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_stylebox
      */
     fun hasThemeStylebox(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -1351,7 +1352,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font
      */
     fun hasThemeFont(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeFontBind, segment, name, themeType)
     }
 
     /**
@@ -1361,7 +1362,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_font_size
      */
     fun hasThemeFontSize(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1371,7 +1372,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_color
      */
     fun hasThemeColor(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1381,7 +1382,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.has_theme_constant
      */
     fun hasThemeConstant(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1391,7 +1392,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_default_base_scale
      */
     fun getThemeDefaultBaseScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThemeDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -1401,7 +1402,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_default_font
      */
     fun getThemeDefaultFont(): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getThemeDefaultFontBind, segment))
     }
 
     /**
@@ -1411,7 +1412,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_theme_default_font_size
      */
     fun getThemeDefaultFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getThemeDefaultFontSizeBind, segment)
     }
 
     /**
@@ -1420,7 +1421,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_window_id
      */
     fun getWindowId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getWindowIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWindowIdBind, segment)
     }
 
     /**
@@ -1429,7 +1430,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_accessibility_name
      */
     fun setAccessibilityName(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAccessibilityNameBind, segment, name)
     }
 
     /**
@@ -1438,7 +1439,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_accessibility_name
      */
     fun getAccessibilityName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAccessibilityNameBind, segment)
     }
 
     /**
@@ -1447,7 +1448,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_accessibility_description
      */
     fun setAccessibilityDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, segment, description)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAccessibilityDescriptionBind, segment, description)
     }
 
     /**
@@ -1456,7 +1457,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_accessibility_description
      */
     fun getAccessibilityDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAccessibilityDescriptionBind, segment)
     }
 
     /**
@@ -1466,7 +1467,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_layout_direction
      */
     fun setLayoutDirection(direction: Window.LayoutDirection) {
-        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLayoutDirectionBind, segment, direction.value)
     }
 
     /**
@@ -1475,7 +1476,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.get_layout_direction
      */
     fun getLayoutDirection(): Window.LayoutDirection {
-        return Window.LayoutDirection(ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment))
+        return Window.LayoutDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLayoutDirectionBind, segment))
     }
 
     /**
@@ -1484,7 +1485,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_layout_rtl
      */
     fun isLayoutRtl(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLayoutRtlBind, segment)
     }
 
     /**
@@ -1494,7 +1495,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_auto_translate
      */
     fun setAutoTranslate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoTranslateBind, segment, enable)
     }
 
     /**
@@ -1504,7 +1505,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_auto_translating
      */
     fun isAutoTranslating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoTranslatingBind, segment)
     }
 
     /**
@@ -1513,7 +1514,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.set_use_font_oversampling
      */
     fun setUseFontOversampling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFontOversamplingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseFontOversamplingBind, segment, enable)
     }
 
     /**
@@ -1522,7 +1523,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.is_using_font_oversampling
      */
     fun isUsingFontOversampling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingFontOversamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingFontOversamplingBind, segment)
     }
 
     /**
@@ -1540,7 +1541,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup
      */
     fun popup(rect: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(popupBind, segment, rect)
+        ObjectCalls.ptrcallWithRect2iArg(Binds.popupBind, segment, rect)
     }
 
     /**
@@ -1550,7 +1551,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_on_parent
      */
     fun popupOnParent(parentRect: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(popupOnParentBind, segment, parentRect)
+        ObjectCalls.ptrcallWithRect2iArg(Binds.popupOnParentBind, segment, parentRect)
     }
 
     /**
@@ -1561,7 +1562,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_centered
      */
     fun popupCentered(minsize: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(popupCenteredBind, segment, minsize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.popupCenteredBind, segment, minsize)
     }
 
     /**
@@ -1572,7 +1573,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_centered_ratio
      */
     fun popupCenteredRatio(ratio: Double = 0.8) {
-        ObjectCalls.ptrcallWithDoubleArg(popupCenteredRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.popupCenteredRatioBind, segment, ratio)
     }
 
     /**
@@ -1583,7 +1584,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_centered_clamped
      */
     fun popupCenteredClamped(minsize: Vector2i, fallbackRatio: Double = 0.75) {
-        ObjectCalls.ptrcallWithVector2iAndDoubleArg(popupCenteredClampedBind, segment, minsize, fallbackRatio)
+        ObjectCalls.ptrcallWithVector2iAndDoubleArg(Binds.popupCenteredClampedBind, segment, minsize, fallbackRatio)
     }
 
     /**
@@ -1594,7 +1595,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive
      */
     fun popupExclusive(fromNode: Node, rect: Rect2i) {
-        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveBind, segment, fromNode.segment, rect)
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(Binds.popupExclusiveBind, segment, fromNode.segment, rect)
     }
 
     /**
@@ -1605,7 +1606,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_on_parent
      */
     fun popupExclusiveOnParent(fromNode: Node, parentRect: Rect2i) {
-        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupExclusiveOnParentBind, segment, fromNode.segment, parentRect)
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(Binds.popupExclusiveOnParentBind, segment, fromNode.segment, parentRect)
     }
 
     /**
@@ -1616,7 +1617,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_centered
      */
     fun popupExclusiveCentered(fromNode: Node, minsize: Vector2i) {
-        ObjectCalls.ptrcallWithObjectAndVector2iArg(popupExclusiveCenteredBind, segment, fromNode.segment, minsize)
+        ObjectCalls.ptrcallWithObjectAndVector2iArg(Binds.popupExclusiveCenteredBind, segment, fromNode.segment, minsize)
     }
 
     /**
@@ -1627,7 +1628,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_centered_ratio
      */
     fun popupExclusiveCenteredRatio(fromNode: Node, ratio: Double = 0.8) {
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(popupExclusiveCenteredRatioBind, segment, fromNode.segment, ratio)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(Binds.popupExclusiveCenteredRatioBind, segment, fromNode.segment, ratio)
     }
 
     /**
@@ -1638,7 +1639,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: Window.popup_exclusive_centered_clamped
      */
     fun popupExclusiveCenteredClamped(fromNode: Node, minsize: Vector2i, fallbackRatio: Double = 0.75) {
-        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupExclusiveCenteredClampedBind, segment, fromNode.segment, minsize, fallbackRatio)
+        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(Binds.popupExclusiveCenteredClampedBind, segment, fromNode.segment, minsize, fallbackRatio)
     }
 
     /** Signal `window_input(event: InputEvent)`; see [TypedSignal]. */
@@ -2138,7 +2139,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
          * Generated from Godot docs: Window.get_focused_window
          */
         fun getFocusedWindow(): Window? {
-            return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFocusedWindowBind, NULL_SEGMENT))
+            return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFocusedWindowBind, NULL_SEGMENT))
         }
 
         const val NOTIFICATION_VISIBILITY_CHANGED: Long = 30L
@@ -2150,670 +2151,672 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
         internal fun wrap(handle: RawSegment): Window? =
             if (handle.address() == 0L) null else Window(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TITLE_HASH = 83702148L
-        private val setTitleBind by lazy {
+        @JvmField
+        val setTitleBind =
             ObjectCalls.getMethodBind("Window", "set_title", SET_TITLE_HASH)
-        }
 
         private const val GET_TITLE_HASH = 201670096L
-        private val getTitleBind by lazy {
+        @JvmField
+        val getTitleBind =
             ObjectCalls.getMethodBind("Window", "get_title", GET_TITLE_HASH)
-        }
 
         private const val SET_INITIAL_POSITION_HASH = 4084468099L
-        private val setInitialPositionBind by lazy {
+        @JvmField
+        val setInitialPositionBind =
             ObjectCalls.getMethodBind("Window", "set_initial_position", SET_INITIAL_POSITION_HASH)
-        }
 
         private const val GET_INITIAL_POSITION_HASH = 4294066647L
-        private val getInitialPositionBind by lazy {
+        @JvmField
+        val getInitialPositionBind =
             ObjectCalls.getMethodBind("Window", "get_initial_position", GET_INITIAL_POSITION_HASH)
-        }
 
         private const val SET_CURRENT_SCREEN_HASH = 1286410249L
-        private val setCurrentScreenBind by lazy {
+        @JvmField
+        val setCurrentScreenBind =
             ObjectCalls.getMethodBind("Window", "set_current_screen", SET_CURRENT_SCREEN_HASH)
-        }
 
         private const val GET_CURRENT_SCREEN_HASH = 3905245786L
-        private val getCurrentScreenBind by lazy {
+        @JvmField
+        val getCurrentScreenBind =
             ObjectCalls.getMethodBind("Window", "get_current_screen", GET_CURRENT_SCREEN_HASH)
-        }
 
         private const val SET_POSITION_HASH = 1130785943L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("Window", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3690982128L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("Window", "get_position", GET_POSITION_HASH)
-        }
 
         private const val MOVE_TO_CENTER_HASH = 3218959716L
-        private val moveToCenterBind by lazy {
+        @JvmField
+        val moveToCenterBind =
             ObjectCalls.getMethodBind("Window", "move_to_center", MOVE_TO_CENTER_HASH)
-        }
 
         private const val SET_SIZE_HASH = 1130785943L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("Window", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("Window", "get_size", GET_SIZE_HASH)
-        }
 
         private const val RESET_SIZE_HASH = 3218959716L
-        private val resetSizeBind by lazy {
+        @JvmField
+        val resetSizeBind =
             ObjectCalls.getMethodBind("Window", "reset_size", RESET_SIZE_HASH)
-        }
 
         private const val GET_POSITION_WITH_DECORATIONS_HASH = 3690982128L
-        private val getPositionWithDecorationsBind by lazy {
+        @JvmField
+        val getPositionWithDecorationsBind =
             ObjectCalls.getMethodBind("Window", "get_position_with_decorations", GET_POSITION_WITH_DECORATIONS_HASH)
-        }
 
         private const val GET_SIZE_WITH_DECORATIONS_HASH = 3690982128L
-        private val getSizeWithDecorationsBind by lazy {
+        @JvmField
+        val getSizeWithDecorationsBind =
             ObjectCalls.getMethodBind("Window", "get_size_with_decorations", GET_SIZE_WITH_DECORATIONS_HASH)
-        }
 
         private const val SET_MAX_SIZE_HASH = 1130785943L
-        private val setMaxSizeBind by lazy {
+        @JvmField
+        val setMaxSizeBind =
             ObjectCalls.getMethodBind("Window", "set_max_size", SET_MAX_SIZE_HASH)
-        }
 
         private const val GET_MAX_SIZE_HASH = 3690982128L
-        private val getMaxSizeBind by lazy {
+        @JvmField
+        val getMaxSizeBind =
             ObjectCalls.getMethodBind("Window", "get_max_size", GET_MAX_SIZE_HASH)
-        }
 
         private const val SET_MIN_SIZE_HASH = 1130785943L
-        private val setMinSizeBind by lazy {
+        @JvmField
+        val setMinSizeBind =
             ObjectCalls.getMethodBind("Window", "set_min_size", SET_MIN_SIZE_HASH)
-        }
 
         private const val GET_MIN_SIZE_HASH = 3690982128L
-        private val getMinSizeBind by lazy {
+        @JvmField
+        val getMinSizeBind =
             ObjectCalls.getMethodBind("Window", "get_min_size", GET_MIN_SIZE_HASH)
-        }
 
         private const val SET_MODE_HASH = 3095236531L
-        private val setModeBind by lazy {
+        @JvmField
+        val setModeBind =
             ObjectCalls.getMethodBind("Window", "set_mode", SET_MODE_HASH)
-        }
 
         private const val GET_MODE_HASH = 2566346114L
-        private val getModeBind by lazy {
+        @JvmField
+        val getModeBind =
             ObjectCalls.getMethodBind("Window", "get_mode", GET_MODE_HASH)
-        }
 
         private const val SET_FLAG_HASH = 3426449779L
-        private val setFlagBind by lazy {
+        @JvmField
+        val setFlagBind =
             ObjectCalls.getMethodBind("Window", "set_flag", SET_FLAG_HASH)
-        }
 
         private const val GET_FLAG_HASH = 3062752289L
-        private val getFlagBind by lazy {
+        @JvmField
+        val getFlagBind =
             ObjectCalls.getMethodBind("Window", "get_flag", GET_FLAG_HASH)
-        }
 
         private const val SET_HDR_OUTPUT_REQUESTED_HASH = 2586408642L
-        private val setHdrOutputRequestedBind by lazy {
+        @JvmField
+        val setHdrOutputRequestedBind =
             ObjectCalls.getMethodBind("Window", "set_hdr_output_requested", SET_HDR_OUTPUT_REQUESTED_HASH)
-        }
 
         private const val IS_HDR_OUTPUT_REQUESTED_HASH = 36873697L
-        private val isHdrOutputRequestedBind by lazy {
+        @JvmField
+        val isHdrOutputRequestedBind =
             ObjectCalls.getMethodBind("Window", "is_hdr_output_requested", IS_HDR_OUTPUT_REQUESTED_HASH)
-        }
 
         private const val GET_OUTPUT_MAX_LINEAR_VALUE_HASH = 1740695150L
-        private val getOutputMaxLinearValueBind by lazy {
+        @JvmField
+        val getOutputMaxLinearValueBind =
             ObjectCalls.getMethodBind("Window", "get_output_max_linear_value", GET_OUTPUT_MAX_LINEAR_VALUE_HASH)
-        }
 
         private const val IS_MAXIMIZE_ALLOWED_HASH = 36873697L
-        private val isMaximizeAllowedBind by lazy {
+        @JvmField
+        val isMaximizeAllowedBind =
             ObjectCalls.getMethodBind("Window", "is_maximize_allowed", IS_MAXIMIZE_ALLOWED_HASH)
-        }
 
         private const val REQUEST_ATTENTION_HASH = 3218959716L
-        private val requestAttentionBind by lazy {
+        @JvmField
+        val requestAttentionBind =
             ObjectCalls.getMethodBind("Window", "request_attention", REQUEST_ATTENTION_HASH)
-        }
 
         private const val SET_TASKBAR_PROGRESS_VALUE_HASH = 373806689L
-        private val setTaskbarProgressValueBind by lazy {
+        @JvmField
+        val setTaskbarProgressValueBind =
             ObjectCalls.getMethodBind("Window", "set_taskbar_progress_value", SET_TASKBAR_PROGRESS_VALUE_HASH)
-        }
 
         private const val SET_TASKBAR_PROGRESS_STATE_HASH = 824071031L
-        private val setTaskbarProgressStateBind by lazy {
+        @JvmField
+        val setTaskbarProgressStateBind =
             ObjectCalls.getMethodBind("Window", "set_taskbar_progress_state", SET_TASKBAR_PROGRESS_STATE_HASH)
-        }
 
         private const val MOVE_TO_FOREGROUND_HASH = 3218959716L
-        private val moveToForegroundBind by lazy {
+        @JvmField
+        val moveToForegroundBind =
             ObjectCalls.getMethodBind("Window", "move_to_foreground", MOVE_TO_FOREGROUND_HASH)
-        }
 
         private const val SET_VISIBLE_HASH = 2586408642L
-        private val setVisibleBind by lazy {
+        @JvmField
+        val setVisibleBind =
             ObjectCalls.getMethodBind("Window", "set_visible", SET_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 36873697L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("Window", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val HIDE_HASH = 3218959716L
-        private val hideBind by lazy {
+        @JvmField
+        val hideBind =
             ObjectCalls.getMethodBind("Window", "hide", HIDE_HASH)
-        }
 
         private const val SHOW_HASH = 3218959716L
-        private val showBind by lazy {
+        @JvmField
+        val showBind =
             ObjectCalls.getMethodBind("Window", "show", SHOW_HASH)
-        }
 
         private const val SET_TRANSIENT_HASH = 2586408642L
-        private val setTransientBind by lazy {
+        @JvmField
+        val setTransientBind =
             ObjectCalls.getMethodBind("Window", "set_transient", SET_TRANSIENT_HASH)
-        }
 
         private const val IS_TRANSIENT_HASH = 36873697L
-        private val isTransientBind by lazy {
+        @JvmField
+        val isTransientBind =
             ObjectCalls.getMethodBind("Window", "is_transient", IS_TRANSIENT_HASH)
-        }
 
         private const val SET_TRANSIENT_TO_FOCUSED_HASH = 2586408642L
-        private val setTransientToFocusedBind by lazy {
+        @JvmField
+        val setTransientToFocusedBind =
             ObjectCalls.getMethodBind("Window", "set_transient_to_focused", SET_TRANSIENT_TO_FOCUSED_HASH)
-        }
 
         private const val IS_TRANSIENT_TO_FOCUSED_HASH = 36873697L
-        private val isTransientToFocusedBind by lazy {
+        @JvmField
+        val isTransientToFocusedBind =
             ObjectCalls.getMethodBind("Window", "is_transient_to_focused", IS_TRANSIENT_TO_FOCUSED_HASH)
-        }
 
         private const val SET_EXCLUSIVE_HASH = 2586408642L
-        private val setExclusiveBind by lazy {
+        @JvmField
+        val setExclusiveBind =
             ObjectCalls.getMethodBind("Window", "set_exclusive", SET_EXCLUSIVE_HASH)
-        }
 
         private const val IS_EXCLUSIVE_HASH = 36873697L
-        private val isExclusiveBind by lazy {
+        @JvmField
+        val isExclusiveBind =
             ObjectCalls.getMethodBind("Window", "is_exclusive", IS_EXCLUSIVE_HASH)
-        }
 
         private const val SET_UNPARENT_WHEN_INVISIBLE_HASH = 2586408642L
-        private val setUnparentWhenInvisibleBind by lazy {
+        @JvmField
+        val setUnparentWhenInvisibleBind =
             ObjectCalls.getMethodBind("Window", "set_unparent_when_invisible", SET_UNPARENT_WHEN_INVISIBLE_HASH)
-        }
 
         private const val CAN_DRAW_HASH = 36873697L
-        private val canDrawBind by lazy {
+        @JvmField
+        val canDrawBind =
             ObjectCalls.getMethodBind("Window", "can_draw", CAN_DRAW_HASH)
-        }
 
         private const val HAS_FOCUS_HASH = 36873697L
-        private val hasFocusBind by lazy {
+        @JvmField
+        val hasFocusBind =
             ObjectCalls.getMethodBind("Window", "has_focus", HAS_FOCUS_HASH)
-        }
 
         private const val GRAB_FOCUS_HASH = 3218959716L
-        private val grabFocusBind by lazy {
+        @JvmField
+        val grabFocusBind =
             ObjectCalls.getMethodBind("Window", "grab_focus", GRAB_FOCUS_HASH)
-        }
 
         private const val START_DRAG_HASH = 3218959716L
-        private val startDragBind by lazy {
+        @JvmField
+        val startDragBind =
             ObjectCalls.getMethodBind("Window", "start_drag", START_DRAG_HASH)
-        }
 
         private const val START_RESIZE_HASH = 122288853L
-        private val startResizeBind by lazy {
+        @JvmField
+        val startResizeBind =
             ObjectCalls.getMethodBind("Window", "start_resize", START_RESIZE_HASH)
-        }
 
         private const val SET_IME_ACTIVE_HASH = 2586408642L
-        private val setImeActiveBind by lazy {
+        @JvmField
+        val setImeActiveBind =
             ObjectCalls.getMethodBind("Window", "set_ime_active", SET_IME_ACTIVE_HASH)
-        }
 
         private const val SET_IME_POSITION_HASH = 1130785943L
-        private val setImePositionBind by lazy {
+        @JvmField
+        val setImePositionBind =
             ObjectCalls.getMethodBind("Window", "set_ime_position", SET_IME_POSITION_HASH)
-        }
 
         private const val IS_EMBEDDED_HASH = 36873697L
-        private val isEmbeddedBind by lazy {
+        @JvmField
+        val isEmbeddedBind =
             ObjectCalls.getMethodBind("Window", "is_embedded", IS_EMBEDDED_HASH)
-        }
 
         private const val GET_CONTENTS_MINIMUM_SIZE_HASH = 3341600327L
-        private val getContentsMinimumSizeBind by lazy {
+        @JvmField
+        val getContentsMinimumSizeBind =
             ObjectCalls.getMethodBind("Window", "get_contents_minimum_size", GET_CONTENTS_MINIMUM_SIZE_HASH)
-        }
 
         private const val SET_FORCE_NATIVE_HASH = 2586408642L
-        private val setForceNativeBind by lazy {
+        @JvmField
+        val setForceNativeBind =
             ObjectCalls.getMethodBind("Window", "set_force_native", SET_FORCE_NATIVE_HASH)
-        }
 
         private const val GET_FORCE_NATIVE_HASH = 36873697L
-        private val getForceNativeBind by lazy {
+        @JvmField
+        val getForceNativeBind =
             ObjectCalls.getMethodBind("Window", "get_force_native", GET_FORCE_NATIVE_HASH)
-        }
 
         private const val SET_CONTENT_SCALE_SIZE_HASH = 1130785943L
-        private val setContentScaleSizeBind by lazy {
+        @JvmField
+        val setContentScaleSizeBind =
             ObjectCalls.getMethodBind("Window", "set_content_scale_size", SET_CONTENT_SCALE_SIZE_HASH)
-        }
 
         private const val GET_CONTENT_SCALE_SIZE_HASH = 3690982128L
-        private val getContentScaleSizeBind by lazy {
+        @JvmField
+        val getContentScaleSizeBind =
             ObjectCalls.getMethodBind("Window", "get_content_scale_size", GET_CONTENT_SCALE_SIZE_HASH)
-        }
 
         private const val SET_CONTENT_SCALE_MODE_HASH = 2937716473L
-        private val setContentScaleModeBind by lazy {
+        @JvmField
+        val setContentScaleModeBind =
             ObjectCalls.getMethodBind("Window", "set_content_scale_mode", SET_CONTENT_SCALE_MODE_HASH)
-        }
 
         private const val GET_CONTENT_SCALE_MODE_HASH = 161585230L
-        private val getContentScaleModeBind by lazy {
+        @JvmField
+        val getContentScaleModeBind =
             ObjectCalls.getMethodBind("Window", "get_content_scale_mode", GET_CONTENT_SCALE_MODE_HASH)
-        }
 
         private const val SET_CONTENT_SCALE_ASPECT_HASH = 2370399418L
-        private val setContentScaleAspectBind by lazy {
+        @JvmField
+        val setContentScaleAspectBind =
             ObjectCalls.getMethodBind("Window", "set_content_scale_aspect", SET_CONTENT_SCALE_ASPECT_HASH)
-        }
 
         private const val GET_CONTENT_SCALE_ASPECT_HASH = 4158790715L
-        private val getContentScaleAspectBind by lazy {
+        @JvmField
+        val getContentScaleAspectBind =
             ObjectCalls.getMethodBind("Window", "get_content_scale_aspect", GET_CONTENT_SCALE_ASPECT_HASH)
-        }
 
         private const val SET_CONTENT_SCALE_STRETCH_HASH = 349355940L
-        private val setContentScaleStretchBind by lazy {
+        @JvmField
+        val setContentScaleStretchBind =
             ObjectCalls.getMethodBind("Window", "set_content_scale_stretch", SET_CONTENT_SCALE_STRETCH_HASH)
-        }
 
         private const val GET_CONTENT_SCALE_STRETCH_HASH = 536857316L
-        private val getContentScaleStretchBind by lazy {
+        @JvmField
+        val getContentScaleStretchBind =
             ObjectCalls.getMethodBind("Window", "get_content_scale_stretch", GET_CONTENT_SCALE_STRETCH_HASH)
-        }
 
         private const val SET_NONCLIENT_AREA_HASH = 1763793166L
-        private val setNonclientAreaBind by lazy {
+        @JvmField
+        val setNonclientAreaBind =
             ObjectCalls.getMethodBind("Window", "set_nonclient_area", SET_NONCLIENT_AREA_HASH)
-        }
 
         private const val GET_NONCLIENT_AREA_HASH = 410525958L
-        private val getNonclientAreaBind by lazy {
+        @JvmField
+        val getNonclientAreaBind =
             ObjectCalls.getMethodBind("Window", "get_nonclient_area", GET_NONCLIENT_AREA_HASH)
-        }
 
         private const val SET_KEEP_TITLE_VISIBLE_HASH = 2586408642L
-        private val setKeepTitleVisibleBind by lazy {
+        @JvmField
+        val setKeepTitleVisibleBind =
             ObjectCalls.getMethodBind("Window", "set_keep_title_visible", SET_KEEP_TITLE_VISIBLE_HASH)
-        }
 
         private const val GET_KEEP_TITLE_VISIBLE_HASH = 36873697L
-        private val getKeepTitleVisibleBind by lazy {
+        @JvmField
+        val getKeepTitleVisibleBind =
             ObjectCalls.getMethodBind("Window", "get_keep_title_visible", GET_KEEP_TITLE_VISIBLE_HASH)
-        }
 
         private const val SET_CONTENT_SCALE_FACTOR_HASH = 373806689L
-        private val setContentScaleFactorBind by lazy {
+        @JvmField
+        val setContentScaleFactorBind =
             ObjectCalls.getMethodBind("Window", "set_content_scale_factor", SET_CONTENT_SCALE_FACTOR_HASH)
-        }
 
         private const val GET_CONTENT_SCALE_FACTOR_HASH = 1740695150L
-        private val getContentScaleFactorBind by lazy {
+        @JvmField
+        val getContentScaleFactorBind =
             ObjectCalls.getMethodBind("Window", "get_content_scale_factor", GET_CONTENT_SCALE_FACTOR_HASH)
-        }
 
         private const val SET_MOUSE_PASSTHROUGH_POLYGON_HASH = 1509147220L
-        private val setMousePassthroughPolygonBind by lazy {
+        @JvmField
+        val setMousePassthroughPolygonBind =
             ObjectCalls.getMethodBind("Window", "set_mouse_passthrough_polygon", SET_MOUSE_PASSTHROUGH_POLYGON_HASH)
-        }
 
         private const val GET_MOUSE_PASSTHROUGH_POLYGON_HASH = 2961356807L
-        private val getMousePassthroughPolygonBind by lazy {
+        @JvmField
+        val getMousePassthroughPolygonBind =
             ObjectCalls.getMethodBind("Window", "get_mouse_passthrough_polygon", GET_MOUSE_PASSTHROUGH_POLYGON_HASH)
-        }
 
         private const val SET_WRAP_CONTROLS_HASH = 2586408642L
-        private val setWrapControlsBind by lazy {
+        @JvmField
+        val setWrapControlsBind =
             ObjectCalls.getMethodBind("Window", "set_wrap_controls", SET_WRAP_CONTROLS_HASH)
-        }
 
         private const val IS_WRAPPING_CONTROLS_HASH = 36873697L
-        private val isWrappingControlsBind by lazy {
+        @JvmField
+        val isWrappingControlsBind =
             ObjectCalls.getMethodBind("Window", "is_wrapping_controls", IS_WRAPPING_CONTROLS_HASH)
-        }
 
         private const val CHILD_CONTROLS_CHANGED_HASH = 3218959716L
-        private val childControlsChangedBind by lazy {
+        @JvmField
+        val childControlsChangedBind =
             ObjectCalls.getMethodBind("Window", "child_controls_changed", CHILD_CONTROLS_CHANGED_HASH)
-        }
 
         private const val SET_THEME_HASH = 2326690814L
-        private val setThemeBind by lazy {
+        @JvmField
+        val setThemeBind =
             ObjectCalls.getMethodBind("Window", "set_theme", SET_THEME_HASH)
-        }
 
         private const val GET_THEME_HASH = 3846893731L
-        private val getThemeBind by lazy {
+        @JvmField
+        val getThemeBind =
             ObjectCalls.getMethodBind("Window", "get_theme", GET_THEME_HASH)
-        }
 
         private const val SET_THEME_TYPE_VARIATION_HASH = 3304788590L
-        private val setThemeTypeVariationBind by lazy {
+        @JvmField
+        val setThemeTypeVariationBind =
             ObjectCalls.getMethodBind("Window", "set_theme_type_variation", SET_THEME_TYPE_VARIATION_HASH)
-        }
 
         private const val GET_THEME_TYPE_VARIATION_HASH = 2002593661L
-        private val getThemeTypeVariationBind by lazy {
+        @JvmField
+        val getThemeTypeVariationBind =
             ObjectCalls.getMethodBind("Window", "get_theme_type_variation", GET_THEME_TYPE_VARIATION_HASH)
-        }
 
         private const val BEGIN_BULK_THEME_OVERRIDE_HASH = 3218959716L
-        private val beginBulkThemeOverrideBind by lazy {
+        @JvmField
+        val beginBulkThemeOverrideBind =
             ObjectCalls.getMethodBind("Window", "begin_bulk_theme_override", BEGIN_BULK_THEME_OVERRIDE_HASH)
-        }
 
         private const val END_BULK_THEME_OVERRIDE_HASH = 3218959716L
-        private val endBulkThemeOverrideBind by lazy {
+        @JvmField
+        val endBulkThemeOverrideBind =
             ObjectCalls.getMethodBind("Window", "end_bulk_theme_override", END_BULK_THEME_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_ICON_OVERRIDE_HASH = 1373065600L
-        private val addThemeIconOverrideBind by lazy {
+        @JvmField
+        val addThemeIconOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_icon_override", ADD_THEME_ICON_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_STYLEBOX_OVERRIDE_HASH = 4188838905L
-        private val addThemeStyleboxOverrideBind by lazy {
+        @JvmField
+        val addThemeStyleboxOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_stylebox_override", ADD_THEME_STYLEBOX_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_FONT_OVERRIDE_HASH = 3518018674L
-        private val addThemeFontOverrideBind by lazy {
+        @JvmField
+        val addThemeFontOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_font_override", ADD_THEME_FONT_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_FONT_SIZE_OVERRIDE_HASH = 2415702435L
-        private val addThemeFontSizeOverrideBind by lazy {
+        @JvmField
+        val addThemeFontSizeOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_font_size_override", ADD_THEME_FONT_SIZE_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_COLOR_OVERRIDE_HASH = 4260178595L
-        private val addThemeColorOverrideBind by lazy {
+        @JvmField
+        val addThemeColorOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_color_override", ADD_THEME_COLOR_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_CONSTANT_OVERRIDE_HASH = 2415702435L
-        private val addThemeConstantOverrideBind by lazy {
+        @JvmField
+        val addThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_constant_override", ADD_THEME_CONSTANT_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_ICON_OVERRIDE_HASH = 3304788590L
-        private val removeThemeIconOverrideBind by lazy {
+        @JvmField
+        val removeThemeIconOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_icon_override", REMOVE_THEME_ICON_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_STYLEBOX_OVERRIDE_HASH = 3304788590L
-        private val removeThemeStyleboxOverrideBind by lazy {
+        @JvmField
+        val removeThemeStyleboxOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_stylebox_override", REMOVE_THEME_STYLEBOX_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_FONT_OVERRIDE_HASH = 3304788590L
-        private val removeThemeFontOverrideBind by lazy {
+        @JvmField
+        val removeThemeFontOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_font_override", REMOVE_THEME_FONT_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_FONT_SIZE_OVERRIDE_HASH = 3304788590L
-        private val removeThemeFontSizeOverrideBind by lazy {
+        @JvmField
+        val removeThemeFontSizeOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_font_size_override", REMOVE_THEME_FONT_SIZE_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_COLOR_OVERRIDE_HASH = 3304788590L
-        private val removeThemeColorOverrideBind by lazy {
+        @JvmField
+        val removeThemeColorOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_color_override", REMOVE_THEME_COLOR_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_CONSTANT_OVERRIDE_HASH = 3304788590L
-        private val removeThemeConstantOverrideBind by lazy {
+        @JvmField
+        val removeThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_constant_override", REMOVE_THEME_CONSTANT_OVERRIDE_HASH)
-        }
 
         private const val GET_THEME_ICON_HASH = 3163973443L
-        private val getThemeIconBind by lazy {
+        @JvmField
+        val getThemeIconBind =
             ObjectCalls.getMethodBind("Window", "get_theme_icon", GET_THEME_ICON_HASH)
-        }
 
         private const val GET_THEME_STYLEBOX_HASH = 604739069L
-        private val getThemeStyleboxBind by lazy {
+        @JvmField
+        val getThemeStyleboxBind =
             ObjectCalls.getMethodBind("Window", "get_theme_stylebox", GET_THEME_STYLEBOX_HASH)
-        }
 
         private const val GET_THEME_FONT_HASH = 2826986490L
-        private val getThemeFontBind by lazy {
+        @JvmField
+        val getThemeFontBind =
             ObjectCalls.getMethodBind("Window", "get_theme_font", GET_THEME_FONT_HASH)
-        }
 
         private const val GET_THEME_FONT_SIZE_HASH = 1327056374L
-        private val getThemeFontSizeBind by lazy {
+        @JvmField
+        val getThemeFontSizeBind =
             ObjectCalls.getMethodBind("Window", "get_theme_font_size", GET_THEME_FONT_SIZE_HASH)
-        }
 
         private const val GET_THEME_COLOR_HASH = 2798751242L
-        private val getThemeColorBind by lazy {
+        @JvmField
+        val getThemeColorBind =
             ObjectCalls.getMethodBind("Window", "get_theme_color", GET_THEME_COLOR_HASH)
-        }
 
         private const val GET_THEME_CONSTANT_HASH = 1327056374L
-        private val getThemeConstantBind by lazy {
+        @JvmField
+        val getThemeConstantBind =
             ObjectCalls.getMethodBind("Window", "get_theme_constant", GET_THEME_CONSTANT_HASH)
-        }
 
         private const val HAS_THEME_ICON_OVERRIDE_HASH = 2619796661L
-        private val hasThemeIconOverrideBind by lazy {
+        @JvmField
+        val hasThemeIconOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_icon_override", HAS_THEME_ICON_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_STYLEBOX_OVERRIDE_HASH = 2619796661L
-        private val hasThemeStyleboxOverrideBind by lazy {
+        @JvmField
+        val hasThemeStyleboxOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_stylebox_override", HAS_THEME_STYLEBOX_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_FONT_OVERRIDE_HASH = 2619796661L
-        private val hasThemeFontOverrideBind by lazy {
+        @JvmField
+        val hasThemeFontOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_font_override", HAS_THEME_FONT_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_FONT_SIZE_OVERRIDE_HASH = 2619796661L
-        private val hasThemeFontSizeOverrideBind by lazy {
+        @JvmField
+        val hasThemeFontSizeOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_font_size_override", HAS_THEME_FONT_SIZE_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_COLOR_OVERRIDE_HASH = 2619796661L
-        private val hasThemeColorOverrideBind by lazy {
+        @JvmField
+        val hasThemeColorOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_color_override", HAS_THEME_COLOR_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_CONSTANT_OVERRIDE_HASH = 2619796661L
-        private val hasThemeConstantOverrideBind by lazy {
+        @JvmField
+        val hasThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_constant_override", HAS_THEME_CONSTANT_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_ICON_HASH = 866386512L
-        private val hasThemeIconBind by lazy {
+        @JvmField
+        val hasThemeIconBind =
             ObjectCalls.getMethodBind("Window", "has_theme_icon", HAS_THEME_ICON_HASH)
-        }
 
         private const val HAS_THEME_STYLEBOX_HASH = 866386512L
-        private val hasThemeStyleboxBind by lazy {
+        @JvmField
+        val hasThemeStyleboxBind =
             ObjectCalls.getMethodBind("Window", "has_theme_stylebox", HAS_THEME_STYLEBOX_HASH)
-        }
 
         private const val HAS_THEME_FONT_HASH = 866386512L
-        private val hasThemeFontBind by lazy {
+        @JvmField
+        val hasThemeFontBind =
             ObjectCalls.getMethodBind("Window", "has_theme_font", HAS_THEME_FONT_HASH)
-        }
 
         private const val HAS_THEME_FONT_SIZE_HASH = 866386512L
-        private val hasThemeFontSizeBind by lazy {
+        @JvmField
+        val hasThemeFontSizeBind =
             ObjectCalls.getMethodBind("Window", "has_theme_font_size", HAS_THEME_FONT_SIZE_HASH)
-        }
 
         private const val HAS_THEME_COLOR_HASH = 866386512L
-        private val hasThemeColorBind by lazy {
+        @JvmField
+        val hasThemeColorBind =
             ObjectCalls.getMethodBind("Window", "has_theme_color", HAS_THEME_COLOR_HASH)
-        }
 
         private const val HAS_THEME_CONSTANT_HASH = 866386512L
-        private val hasThemeConstantBind by lazy {
+        @JvmField
+        val hasThemeConstantBind =
             ObjectCalls.getMethodBind("Window", "has_theme_constant", HAS_THEME_CONSTANT_HASH)
-        }
 
         private const val GET_THEME_DEFAULT_BASE_SCALE_HASH = 1740695150L
-        private val getThemeDefaultBaseScaleBind by lazy {
+        @JvmField
+        val getThemeDefaultBaseScaleBind =
             ObjectCalls.getMethodBind("Window", "get_theme_default_base_scale", GET_THEME_DEFAULT_BASE_SCALE_HASH)
-        }
 
         private const val GET_THEME_DEFAULT_FONT_HASH = 3229501585L
-        private val getThemeDefaultFontBind by lazy {
+        @JvmField
+        val getThemeDefaultFontBind =
             ObjectCalls.getMethodBind("Window", "get_theme_default_font", GET_THEME_DEFAULT_FONT_HASH)
-        }
 
         private const val GET_THEME_DEFAULT_FONT_SIZE_HASH = 3905245786L
-        private val getThemeDefaultFontSizeBind by lazy {
+        @JvmField
+        val getThemeDefaultFontSizeBind =
             ObjectCalls.getMethodBind("Window", "get_theme_default_font_size", GET_THEME_DEFAULT_FONT_SIZE_HASH)
-        }
 
         private const val GET_WINDOW_ID_HASH = 3905245786L
-        private val getWindowIdBind by lazy {
+        @JvmField
+        val getWindowIdBind =
             ObjectCalls.getMethodBind("Window", "get_window_id", GET_WINDOW_ID_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_NAME_HASH = 83702148L
-        private val setAccessibilityNameBind by lazy {
+        @JvmField
+        val setAccessibilityNameBind =
             ObjectCalls.getMethodBind("Window", "set_accessibility_name", SET_ACCESSIBILITY_NAME_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_NAME_HASH = 201670096L
-        private val getAccessibilityNameBind by lazy {
+        @JvmField
+        val getAccessibilityNameBind =
             ObjectCalls.getMethodBind("Window", "get_accessibility_name", GET_ACCESSIBILITY_NAME_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_DESCRIPTION_HASH = 83702148L
-        private val setAccessibilityDescriptionBind by lazy {
+        @JvmField
+        val setAccessibilityDescriptionBind =
             ObjectCalls.getMethodBind("Window", "set_accessibility_description", SET_ACCESSIBILITY_DESCRIPTION_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_DESCRIPTION_HASH = 201670096L
-        private val getAccessibilityDescriptionBind by lazy {
+        @JvmField
+        val getAccessibilityDescriptionBind =
             ObjectCalls.getMethodBind("Window", "get_accessibility_description", GET_ACCESSIBILITY_DESCRIPTION_HASH)
-        }
 
         private const val GET_FOCUSED_WINDOW_HASH = 1835468782L
-        private val getFocusedWindowBind by lazy {
+        @JvmField
+        val getFocusedWindowBind =
             ObjectCalls.getMethodBind("Window", "get_focused_window", GET_FOCUSED_WINDOW_HASH)
-        }
 
         private const val SET_LAYOUT_DIRECTION_HASH = 3094704184L
-        private val setLayoutDirectionBind by lazy {
+        @JvmField
+        val setLayoutDirectionBind =
             ObjectCalls.getMethodBind("Window", "set_layout_direction", SET_LAYOUT_DIRECTION_HASH)
-        }
 
         private const val GET_LAYOUT_DIRECTION_HASH = 3909617982L
-        private val getLayoutDirectionBind by lazy {
+        @JvmField
+        val getLayoutDirectionBind =
             ObjectCalls.getMethodBind("Window", "get_layout_direction", GET_LAYOUT_DIRECTION_HASH)
-        }
 
         private const val IS_LAYOUT_RTL_HASH = 36873697L
-        private val isLayoutRtlBind by lazy {
+        @JvmField
+        val isLayoutRtlBind =
             ObjectCalls.getMethodBind("Window", "is_layout_rtl", IS_LAYOUT_RTL_HASH)
-        }
 
         private const val SET_AUTO_TRANSLATE_HASH = 2586408642L
-        private val setAutoTranslateBind by lazy {
+        @JvmField
+        val setAutoTranslateBind =
             ObjectCalls.getMethodBind("Window", "set_auto_translate", SET_AUTO_TRANSLATE_HASH)
-        }
 
         private const val IS_AUTO_TRANSLATING_HASH = 36873697L
-        private val isAutoTranslatingBind by lazy {
+        @JvmField
+        val isAutoTranslatingBind =
             ObjectCalls.getMethodBind("Window", "is_auto_translating", IS_AUTO_TRANSLATING_HASH)
-        }
 
         private const val SET_USE_FONT_OVERSAMPLING_HASH = 2586408642L
-        private val setUseFontOversamplingBind by lazy {
+        @JvmField
+        val setUseFontOversamplingBind =
             ObjectCalls.getMethodBind("Window", "set_use_font_oversampling", SET_USE_FONT_OVERSAMPLING_HASH)
-        }
 
         private const val IS_USING_FONT_OVERSAMPLING_HASH = 36873697L
-        private val isUsingFontOversamplingBind by lazy {
+        @JvmField
+        val isUsingFontOversamplingBind =
             ObjectCalls.getMethodBind("Window", "is_using_font_oversampling", IS_USING_FONT_OVERSAMPLING_HASH)
-        }
 
         private const val POPUP_HASH = 1680304321L
-        private val popupBind by lazy {
+        @JvmField
+        val popupBind =
             ObjectCalls.getMethodBind("Window", "popup", POPUP_HASH)
-        }
 
         private const val POPUP_ON_PARENT_HASH = 1763793166L
-        private val popupOnParentBind by lazy {
+        @JvmField
+        val popupOnParentBind =
             ObjectCalls.getMethodBind("Window", "popup_on_parent", POPUP_ON_PARENT_HASH)
-        }
 
         private const val POPUP_CENTERED_HASH = 3447975422L
-        private val popupCenteredBind by lazy {
+        @JvmField
+        val popupCenteredBind =
             ObjectCalls.getMethodBind("Window", "popup_centered", POPUP_CENTERED_HASH)
-        }
 
         private const val POPUP_CENTERED_RATIO_HASH = 1014814997L
-        private val popupCenteredRatioBind by lazy {
+        @JvmField
+        val popupCenteredRatioBind =
             ObjectCalls.getMethodBind("Window", "popup_centered_ratio", POPUP_CENTERED_RATIO_HASH)
-        }
 
         private const val POPUP_CENTERED_CLAMPED_HASH = 2613752477L
-        private val popupCenteredClampedBind by lazy {
+        @JvmField
+        val popupCenteredClampedBind =
             ObjectCalls.getMethodBind("Window", "popup_centered_clamped", POPUP_CENTERED_CLAMPED_HASH)
-        }
 
         private const val POPUP_EXCLUSIVE_HASH = 2134721627L
-        private val popupExclusiveBind by lazy {
+        @JvmField
+        val popupExclusiveBind =
             ObjectCalls.getMethodBind("Window", "popup_exclusive", POPUP_EXCLUSIVE_HASH)
-        }
 
         private const val POPUP_EXCLUSIVE_ON_PARENT_HASH = 2344671043L
-        private val popupExclusiveOnParentBind by lazy {
+        @JvmField
+        val popupExclusiveOnParentBind =
             ObjectCalls.getMethodBind("Window", "popup_exclusive_on_parent", POPUP_EXCLUSIVE_ON_PARENT_HASH)
-        }
 
         private const val POPUP_EXCLUSIVE_CENTERED_HASH = 3357594017L
-        private val popupExclusiveCenteredBind by lazy {
+        @JvmField
+        val popupExclusiveCenteredBind =
             ObjectCalls.getMethodBind("Window", "popup_exclusive_centered", POPUP_EXCLUSIVE_CENTERED_HASH)
-        }
 
         private const val POPUP_EXCLUSIVE_CENTERED_RATIO_HASH = 2284776287L
-        private val popupExclusiveCenteredRatioBind by lazy {
+        @JvmField
+        val popupExclusiveCenteredRatioBind =
             ObjectCalls.getMethodBind("Window", "popup_exclusive_centered_ratio", POPUP_EXCLUSIVE_CENTERED_RATIO_HASH)
-        }
 
         private const val POPUP_EXCLUSIVE_CENTERED_CLAMPED_HASH = 2612708785L
-        private val popupExclusiveCenteredClampedBind by lazy {
+        @JvmField
+        val popupExclusiveCenteredClampedBind =
             ObjectCalls.getMethodBind("Window", "popup_exclusive_centered_clamped", POPUP_EXCLUSIVE_CENTERED_CLAMPED_HASH)
-        }
     }
 }

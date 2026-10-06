@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -55,7 +56,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_depth
      */
     fun setDepth(depth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBind, segment, depth)
     }
 
     /**
@@ -64,7 +65,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_depth
      */
     fun getDepth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
     }
 
     /**
@@ -73,7 +74,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPolygonBind, segment, polygon)
     }
 
     /**
@@ -82,7 +83,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisabledBind, segment, disabled)
     }
 
     /**
@@ -102,7 +103,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDisabledBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_debug_color
      */
     fun setDebugColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDebugColorBind, segment, color)
     }
 
     /**
@@ -126,7 +127,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_debug_color
      */
     fun getDebugColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDebugColorBind, segment)
     }
 
     /**
@@ -136,7 +137,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_enable_debug_fill
      */
     fun setEnableDebugFill(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDebugFillBind, segment, enable)
     }
 
     /**
@@ -146,7 +147,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_enable_debug_fill
      */
     fun getEnableDebugFill(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDebugFillBind, segment)
     }
 
     /**
@@ -155,7 +156,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.set_margin
      */
     fun setMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMarginBind, segment, margin)
     }
 
     /**
@@ -164,7 +165,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionPolygon3D.get_margin
      */
     fun getMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
     }
 
     companion object {
@@ -174,65 +175,67 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionPolygon3D? =
             if (handle.address() == 0L) null else CollisionPolygon3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DEPTH_HASH = 373806689L
-        private val setDepthBind by lazy {
+        @JvmField
+        val setDepthBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_depth", SET_DEPTH_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 1740695150L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val SET_POLYGON_HASH = 1509147220L
-        private val setPolygonBind by lazy {
+        @JvmField
+        val setPolygonBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_polygon", SET_POLYGON_HASH)
-        }
 
         private const val GET_POLYGON_HASH = 2961356807L
-        private val getPolygonBind by lazy {
+        @JvmField
+        val getPolygonBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "get_polygon", GET_POLYGON_HASH)
-        }
 
         private const val SET_DISABLED_HASH = 2586408642L
-        private val setDisabledBind by lazy {
+        @JvmField
+        val setDisabledBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_disabled", SET_DISABLED_HASH)
-        }
 
         private const val IS_DISABLED_HASH = 36873697L
-        private val isDisabledBind by lazy {
+        @JvmField
+        val isDisabledBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "is_disabled", IS_DISABLED_HASH)
-        }
 
         private const val SET_DEBUG_COLOR_HASH = 2920490490L
-        private val setDebugColorBind by lazy {
+        @JvmField
+        val setDebugColorBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_debug_color", SET_DEBUG_COLOR_HASH)
-        }
 
         private const val GET_DEBUG_COLOR_HASH = 3444240500L
-        private val getDebugColorBind by lazy {
+        @JvmField
+        val getDebugColorBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "get_debug_color", GET_DEBUG_COLOR_HASH)
-        }
 
         private const val SET_ENABLE_DEBUG_FILL_HASH = 2586408642L
-        private val setEnableDebugFillBind by lazy {
+        @JvmField
+        val setEnableDebugFillBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_enable_debug_fill", SET_ENABLE_DEBUG_FILL_HASH)
-        }
 
         private const val GET_ENABLE_DEBUG_FILL_HASH = 36873697L
-        private val getEnableDebugFillBind by lazy {
+        @JvmField
+        val getEnableDebugFillBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "get_enable_debug_fill", GET_ENABLE_DEBUG_FILL_HASH)
-        }
 
         private const val SET_MARGIN_HASH = 373806689L
-        private val setMarginBind by lazy {
+        @JvmField
+        val setMarginBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "set_margin", SET_MARGIN_HASH)
-        }
 
         private const val GET_MARGIN_HASH = 1740695150L
-        private val getMarginBind by lazy {
+        @JvmField
+        val getMarginBind =
             ObjectCalls.getMethodBind("CollisionPolygon3D", "get_margin", GET_MARGIN_HASH)
-        }
     }
 }

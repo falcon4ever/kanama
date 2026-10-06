@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,12 +11,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getPersistentUuid(index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getPersistentUuidBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getPersistentUuidBind, segment, index)
     }
 
     fun getPersistentState(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getPersistentStateBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPersistentStateBind, segment, index)
     }
 
     companion object {
@@ -28,15 +29,17 @@ class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatial
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPersistenceList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPersistenceList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PERSISTENT_UUID_HASH = 844755477L
-        private val getPersistentUuidBind by lazy {
+        @JvmField
+        val getPersistentUuidBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentPersistenceList", "get_persistent_uuid", GET_PERSISTENT_UUID_HASH)
-        }
 
         private const val GET_PERSISTENT_STATE_HASH = 923996154L
-        private val getPersistentStateBind by lazy {
+        @JvmField
+        val getPersistentStateBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentPersistenceList", "get_persistent_state", GET_PERSISTENT_STATE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -29,7 +30,7 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getExternalTextureId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getExternalTextureIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getExternalTextureIdBind, segment)
     }
 
     /**
@@ -40,7 +41,7 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setExternalBufferId(externalBufferId: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setExternalBufferIdBind, segment, externalBufferId)
+        ObjectCalls.ptrcallWithLongArg(Binds.setExternalBufferIdBind, segment, externalBufferId)
     }
 
     companion object {
@@ -53,20 +54,22 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ExternalTexture? =
             if (handle.address() == 0L) null else ExternalTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 743155724L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("ExternalTexture", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_EXTERNAL_TEXTURE_ID_HASH = 3905245786L
-        private val getExternalTextureIdBind by lazy {
+        @JvmField
+        val getExternalTextureIdBind =
             ObjectCalls.getMethodBind("ExternalTexture", "get_external_texture_id", GET_EXTERNAL_TEXTURE_ID_HASH)
-        }
 
         private const val SET_EXTERNAL_BUFFER_ID_HASH = 1286410249L
-        private val setExternalBufferIdBind by lazy {
+        @JvmField
+        val setExternalBufferIdBind =
             ObjectCalls.getMethodBind("ExternalTexture", "set_external_buffer_id", SET_EXTERNAL_BUFFER_ID_HASH)
-        }
     }
 }

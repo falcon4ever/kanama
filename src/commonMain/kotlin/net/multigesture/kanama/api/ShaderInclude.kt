@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
      */
     fun setCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setCodeBind, segment, code)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCodeBind, segment, code)
     }
 
     /**
@@ -36,7 +37,7 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
      */
     fun getCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCodeBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ShaderInclude? =
             if (handle.address() == 0L) null else ShaderInclude(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CODE_HASH = 83702148L
-        private val setCodeBind by lazy {
+        @JvmField
+        val setCodeBind =
             ObjectCalls.getMethodBind("ShaderInclude", "set_code", SET_CODE_HASH)
-        }
 
         private const val GET_CODE_HASH = 201670096L
-        private val getCodeBind by lazy {
+        @JvmField
+        val getCodeBind =
             ObjectCalls.getMethodBind("ShaderInclude", "get_code", GET_CODE_HASH)
-        }
     }
 }

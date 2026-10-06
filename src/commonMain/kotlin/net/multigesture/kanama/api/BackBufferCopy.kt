@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -31,7 +32,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.set_rect
      */
     fun setRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRectBind, segment, rect)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setRectBind, segment, rect)
     }
 
     /**
@@ -40,7 +41,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRectBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.set_copy_mode
      */
     fun setCopyMode(copyMode: BackBufferCopy.CopyMode) {
-        ObjectCalls.ptrcallWithLongArg(setCopyModeBind, segment, copyMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCopyModeBind, segment, copyMode.value)
     }
 
     /**
@@ -58,7 +59,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: BackBufferCopy.get_copy_mode
      */
     fun getCopyMode(): BackBufferCopy.CopyMode {
-        return BackBufferCopy.CopyMode(ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, segment))
+        return BackBufferCopy.CopyMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCopyModeBind, segment))
     }
 
     /**
@@ -99,25 +100,27 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): BackBufferCopy? =
             if (handle.address() == 0L) null else BackBufferCopy(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RECT_HASH = 2046264180L
-        private val setRectBind by lazy {
+        @JvmField
+        val setRectBind =
             ObjectCalls.getMethodBind("BackBufferCopy", "set_rect", SET_RECT_HASH)
-        }
 
         private const val GET_RECT_HASH = 1639390495L
-        private val getRectBind by lazy {
+        @JvmField
+        val getRectBind =
             ObjectCalls.getMethodBind("BackBufferCopy", "get_rect", GET_RECT_HASH)
-        }
 
         private const val SET_COPY_MODE_HASH = 1713538590L
-        private val setCopyModeBind by lazy {
+        @JvmField
+        val setCopyModeBind =
             ObjectCalls.getMethodBind("BackBufferCopy", "set_copy_mode", SET_COPY_MODE_HASH)
-        }
 
         private const val GET_COPY_MODE_HASH = 3271169440L
-        private val getCopyModeBind by lazy {
+        @JvmField
+        val getCopyModeBind =
             ObjectCalls.getMethodBind("BackBufferCopy", "get_copy_mode", GET_COPY_MODE_HASH)
-        }
     }
 }

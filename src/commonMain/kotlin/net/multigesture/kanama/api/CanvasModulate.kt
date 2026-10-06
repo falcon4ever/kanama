@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class CanvasModulate(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasModulate.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -33,7 +34,7 @@ class CanvasModulate(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasModulate.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     companion object {
@@ -43,15 +44,17 @@ class CanvasModulate(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasModulate? =
             if (handle.address() == 0L) null else CanvasModulate(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("CanvasModulate", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("CanvasModulate", "get_color", GET_COLOR_HASH)
-        }
     }
 }

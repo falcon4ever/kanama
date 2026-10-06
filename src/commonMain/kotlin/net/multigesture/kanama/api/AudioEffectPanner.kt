@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPan(cpanume: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPanBind, segment, cpanume)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPanBind, segment, cpanume)
     }
 
     /**
@@ -36,7 +37,7 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPanBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPanner? =
             if (handle.address() == 0L) null else AudioEffectPanner(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PAN_HASH = 373806689L
-        private val setPanBind by lazy {
+        @JvmField
+        val setPanBind =
             ObjectCalls.getMethodBind("AudioEffectPanner", "set_pan", SET_PAN_HASH)
-        }
 
         private const val GET_PAN_HASH = 1740695150L
-        private val getPanBind by lazy {
+        @JvmField
+        val getPanBind =
             ObjectCalls.getMethodBind("AudioEffectPanner", "get_pan", GET_PAN_HASH)
-        }
     }
 }

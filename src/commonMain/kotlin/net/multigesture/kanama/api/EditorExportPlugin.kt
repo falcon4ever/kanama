@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -20,7 +21,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addSharedObject(path: String, tags: List<String>, target: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(addSharedObjectBind, segment, path, tags, target)
+        ObjectCalls.ptrcallWithStringPackedStringListAndStringArgs(Binds.addSharedObjectBind, segment, path, tags, target)
     }
 
     /**
@@ -34,7 +35,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFile(path: String, file: ByteArray, remap: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringByteArrayBoolArgs(addFileBind, segment, path, file, remap)
+        ObjectCalls.ptrcallWithStringByteArrayBoolArgs(Binds.addFileBind, segment, path, file, remap)
     }
 
     /**
@@ -44,7 +45,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformProjectStaticLib(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformProjectStaticLibBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformProjectStaticLibBind, segment, path)
     }
 
     /**
@@ -55,7 +56,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformFrameworkBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformFrameworkBind, segment, path)
     }
 
     /**
@@ -68,7 +69,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformEmbeddedFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformEmbeddedFrameworkBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformEmbeddedFrameworkBind, segment, path)
     }
 
     /**
@@ -78,7 +79,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformPlistContent(plistContent: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformPlistContentBind, segment, plistContent)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformPlistContentBind, segment, plistContent)
     }
 
     /**
@@ -88,7 +89,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformLinkerFlags(flags: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformLinkerFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformLinkerFlagsBind, segment, flags)
     }
 
     /**
@@ -98,7 +99,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformBundleFile(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformBundleFileBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformBundleFileBind, segment, path)
     }
 
     /**
@@ -109,7 +110,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addAppleEmbeddedPlatformCppCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addAppleEmbeddedPlatformCppCodeBind, segment, code)
+        ObjectCalls.ptrcallWithStringArg(Binds.addAppleEmbeddedPlatformCppCodeBind, segment, code)
     }
 
     /**
@@ -119,7 +120,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosProjectStaticLib(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosProjectStaticLibBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosProjectStaticLibBind, segment, path)
     }
 
     /**
@@ -130,7 +131,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosFrameworkBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosFrameworkBind, segment, path)
     }
 
     /**
@@ -143,7 +144,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosEmbeddedFramework(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosEmbeddedFrameworkBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosEmbeddedFrameworkBind, segment, path)
     }
 
     /**
@@ -153,7 +154,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosPlistContent(plistContent: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosPlistContentBind, segment, plistContent)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosPlistContentBind, segment, plistContent)
     }
 
     /**
@@ -163,7 +164,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosLinkerFlags(flags: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosLinkerFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosLinkerFlagsBind, segment, flags)
     }
 
     /**
@@ -173,7 +174,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosBundleFile(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosBundleFileBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosBundleFileBind, segment, path)
     }
 
     /**
@@ -184,7 +185,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addIosCppCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addIosCppCodeBind, segment, code)
+        ObjectCalls.ptrcallWithStringArg(Binds.addIosCppCodeBind, segment, code)
     }
 
     /**
@@ -195,7 +196,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addMacosPluginFile(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addMacosPluginFileBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.addMacosPluginFileBind, segment, path)
     }
 
     /**
@@ -205,7 +206,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun skip() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(skipBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.skipBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOption(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getOptionBind, segment, name)
     }
 
     /**
@@ -225,7 +226,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, segment))
+        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportPresetBind, segment))
     }
 
     /**
@@ -235,7 +236,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPlatform(): EditorExportPlatform? {
         checkOpen()
-        return EditorExportPlatform.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, segment))
+        return EditorExportPlatform.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportPlatformBind, segment))
     }
 
     companion object {
@@ -248,110 +249,112 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlugin? =
             if (handle.address() == 0L) null else EditorExportPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_SHARED_OBJECT_HASH = 3098291045L
-        private val addSharedObjectBind by lazy {
+        @JvmField
+        val addSharedObjectBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_shared_object", ADD_SHARED_OBJECT_HASH)
-        }
 
         private const val ADD_FILE_HASH = 527928637L
-        private val addFileBind by lazy {
+        @JvmField
+        val addFileBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_file", ADD_FILE_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_PROJECT_STATIC_LIB_HASH = 83702148L
-        private val addAppleEmbeddedPlatformProjectStaticLibBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformProjectStaticLibBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_project_static_lib", ADD_APPLE_EMBEDDED_PLATFORM_PROJECT_STATIC_LIB_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_FRAMEWORK_HASH = 83702148L
-        private val addAppleEmbeddedPlatformFrameworkBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformFrameworkBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_framework", ADD_APPLE_EMBEDDED_PLATFORM_FRAMEWORK_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_EMBEDDED_FRAMEWORK_HASH = 83702148L
-        private val addAppleEmbeddedPlatformEmbeddedFrameworkBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformEmbeddedFrameworkBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_embedded_framework", ADD_APPLE_EMBEDDED_PLATFORM_EMBEDDED_FRAMEWORK_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_PLIST_CONTENT_HASH = 83702148L
-        private val addAppleEmbeddedPlatformPlistContentBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformPlistContentBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_plist_content", ADD_APPLE_EMBEDDED_PLATFORM_PLIST_CONTENT_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_LINKER_FLAGS_HASH = 83702148L
-        private val addAppleEmbeddedPlatformLinkerFlagsBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformLinkerFlagsBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_linker_flags", ADD_APPLE_EMBEDDED_PLATFORM_LINKER_FLAGS_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_BUNDLE_FILE_HASH = 83702148L
-        private val addAppleEmbeddedPlatformBundleFileBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformBundleFileBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_bundle_file", ADD_APPLE_EMBEDDED_PLATFORM_BUNDLE_FILE_HASH)
-        }
 
         private const val ADD_APPLE_EMBEDDED_PLATFORM_CPP_CODE_HASH = 83702148L
-        private val addAppleEmbeddedPlatformCppCodeBind by lazy {
+        @JvmField
+        val addAppleEmbeddedPlatformCppCodeBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_cpp_code", ADD_APPLE_EMBEDDED_PLATFORM_CPP_CODE_HASH)
-        }
 
         private const val ADD_IOS_PROJECT_STATIC_LIB_HASH = 83702148L
-        private val addIosProjectStaticLibBind by lazy {
+        @JvmField
+        val addIosProjectStaticLibBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_project_static_lib", ADD_IOS_PROJECT_STATIC_LIB_HASH)
-        }
 
         private const val ADD_IOS_FRAMEWORK_HASH = 83702148L
-        private val addIosFrameworkBind by lazy {
+        @JvmField
+        val addIosFrameworkBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_framework", ADD_IOS_FRAMEWORK_HASH)
-        }
 
         private const val ADD_IOS_EMBEDDED_FRAMEWORK_HASH = 83702148L
-        private val addIosEmbeddedFrameworkBind by lazy {
+        @JvmField
+        val addIosEmbeddedFrameworkBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_embedded_framework", ADD_IOS_EMBEDDED_FRAMEWORK_HASH)
-        }
 
         private const val ADD_IOS_PLIST_CONTENT_HASH = 83702148L
-        private val addIosPlistContentBind by lazy {
+        @JvmField
+        val addIosPlistContentBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_plist_content", ADD_IOS_PLIST_CONTENT_HASH)
-        }
 
         private const val ADD_IOS_LINKER_FLAGS_HASH = 83702148L
-        private val addIosLinkerFlagsBind by lazy {
+        @JvmField
+        val addIosLinkerFlagsBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_linker_flags", ADD_IOS_LINKER_FLAGS_HASH)
-        }
 
         private const val ADD_IOS_BUNDLE_FILE_HASH = 83702148L
-        private val addIosBundleFileBind by lazy {
+        @JvmField
+        val addIosBundleFileBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_bundle_file", ADD_IOS_BUNDLE_FILE_HASH)
-        }
 
         private const val ADD_IOS_CPP_CODE_HASH = 83702148L
-        private val addIosCppCodeBind by lazy {
+        @JvmField
+        val addIosCppCodeBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_ios_cpp_code", ADD_IOS_CPP_CODE_HASH)
-        }
 
         private const val ADD_MACOS_PLUGIN_FILE_HASH = 83702148L
-        private val addMacosPluginFileBind by lazy {
+        @JvmField
+        val addMacosPluginFileBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_macos_plugin_file", ADD_MACOS_PLUGIN_FILE_HASH)
-        }
 
         private const val SKIP_HASH = 3218959716L
-        private val skipBind by lazy {
+        @JvmField
+        val skipBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "skip", SKIP_HASH)
-        }
 
         private const val GET_OPTION_HASH = 2760726917L
-        private val getOptionBind by lazy {
+        @JvmField
+        val getOptionBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "get_option", GET_OPTION_HASH)
-        }
 
         private const val GET_EXPORT_PRESET_HASH = 1610607222L
-        private val getExportPresetBind by lazy {
+        @JvmField
+        val getExportPresetBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "get_export_preset", GET_EXPORT_PRESET_HASH)
-        }
 
         private const val GET_EXPORT_PLATFORM_HASH = 282254641L
-        private val getExportPlatformBind by lazy {
+        @JvmField
+        val getExportPlatformBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "get_export_platform", GET_EXPORT_PLATFORM_HASH)
-        }
     }
 }

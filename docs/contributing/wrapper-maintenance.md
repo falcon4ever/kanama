@@ -62,7 +62,38 @@ Kotlin/Native shim — so
 `RawSegment` *is* the platform pointer type and the two spellings interoperate
 freely. The generator emits it in the only three shared-tree shapes that name the
 pointer at all: `internal fun wrap(handle: RawSegment)`, `NULL_SEGMENT` for a static
-receiver or a null object argument, and `private val singleton: RawSegment by lazy`.
+receiver or a null object argument, and a singleton's `private inline val singleton:
+RawSegment` (read from its bind holder, below; `by lazy` in a singleton with no binds).
+
+**MethodBind holders (task 131 item 18).** A generated class keeps every MethodBind it
+calls in one `private object Binds` nested in the class (a singleton object's holder
+also carries the engine singleton handle), each one a
+`@JvmField val xBind = ObjectCalls.getMethodBind("Class", "method", HASH)`, and a
+method passes `Binds.xBind` to its `ObjectCalls` helper. The holder's class
+initialisation is the laziness: it runs on the first call through any method of that
+class, so a class no script calls binds nothing and an engine class absent from the
+running build is never looked up; after it each bind is a `static final` field the JIT
+folds into the call (the per-method `by lazy` it replaced cost a `Lazy.getValue` -- a
+volatile read and a cast -- on every call, and one lambda per method at class init:
+Bunnymark V3 frames −5 %, example project first frame −16 %). A desktop-only
+companion (`<Class>.jvm.kt`) has a file-level `<Class>JvmBinds` (a top-level `private
+object` still compiles to a package-level class, so the name must be unique); the iOS
+per-platform files keep `by lazy`. A failed lookup still prints `FAULT
+bind-lookup-failed <Class>.<method>`, now for every bind of the class when its holder is
+first used, called or not. With Godot's official editor and export templates no
+generated bind is missing (the methods Godot binds only in `TOOLS_ENABLED` or
+`DEBUG_ENABLED` builds are not in the generated set); in a custom engine built with
+`deprecated=no`, every deprecated bind of a class reports `FAULT` the first time anything
+calls that class, whether or not the deprecated method itself is called. Hand code in a
+generator section refers to a generated bind as `Binds.xBind`.
+
+The holder also changes how a lookup *failure* surfaces. `getMethodBind` itself does not
+throw (a missing bind is the `FAULT` line and a null pointer), but if the holder's
+initialiser does throw -- only possible before `GodotFFI.bootstrap`, e.g. a wrapper called
+from a unit test with no engine -- the first call fails with `ExceptionInInitializerError`
+and every later call through that class with `NoClassDefFoundError`, where the `by lazy`
+retried on each call. Within a running engine that cannot happen: bootstrap precedes the
+first script call.
 
 `NULL_SEGMENT` in the *receiver* position is the tree's static-method marker
 (`_null_segment()` for an `is_static` method), and the two backends read it

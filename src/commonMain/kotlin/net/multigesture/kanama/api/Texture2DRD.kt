@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class Texture2DRD(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setTextureRdRid(textureRdRid: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setTextureRdRidBind, segment, textureRdRid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setTextureRdRidBind, segment, textureRdRid)
     }
 
     /**
@@ -35,7 +36,7 @@ class Texture2DRD(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureRdRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getTextureRdRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getTextureRdRidBind, segment)
     }
 
     companion object {
@@ -48,15 +49,17 @@ class Texture2DRD(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture2DRD? =
             if (handle.address() == 0L) null else Texture2DRD(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_RD_RID_HASH = 2722037293L
-        private val setTextureRdRidBind by lazy {
+        @JvmField
+        val setTextureRdRidBind =
             ObjectCalls.getMethodBind("Texture2DRD", "set_texture_rd_rid", SET_TEXTURE_RD_RID_HASH)
-        }
 
         private const val GET_TEXTURE_RD_RID_HASH = 2944877500L
-        private val getTextureRdRidBind by lazy {
+        @JvmField
+        val getTextureRdRidBind =
             ObjectCalls.getMethodBind("Texture2DRD", "get_texture_rd_rid", GET_TEXTURE_RD_RID_HASH)
-        }
     }
 }

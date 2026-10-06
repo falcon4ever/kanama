@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -97,7 +98,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDry(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDryBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDryBind, segment, amount)
     }
 
     /**
@@ -107,7 +108,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap1Active(amount: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTap1ActiveBind, segment, amount)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTap1ActiveBind, segment, amount)
     }
 
     /**
@@ -127,7 +128,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun isTap1Active(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isTap1ActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTap1ActiveBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap1DelayMs(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap1DelayMsBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTap1DelayMsBind, segment, amount)
     }
 
     /**
@@ -149,7 +150,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTap1DelayMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1DelayMsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTap1DelayMsBind, segment)
     }
 
     /**
@@ -159,7 +160,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap1LevelDb(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap1LevelDbBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTap1LevelDbBind, segment, amount)
     }
 
     /**
@@ -169,7 +170,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTap1LevelDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1LevelDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTap1LevelDbBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap1Pan(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap1PanBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTap1PanBind, segment, amount)
     }
 
     /**
@@ -191,7 +192,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTap1Pan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap1PanBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTap1PanBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap2Active(amount: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTap2ActiveBind, segment, amount)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTap2ActiveBind, segment, amount)
     }
 
     /**
@@ -211,7 +212,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun isTap2Active(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isTap2ActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTap2ActiveBind, segment)
     }
 
     /**
@@ -222,7 +223,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap2DelayMs(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap2DelayMsBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTap2DelayMsBind, segment, amount)
     }
 
     /**
@@ -233,7 +234,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTap2DelayMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2DelayMsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTap2DelayMsBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap2LevelDb(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap2LevelDbBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTap2LevelDbBind, segment, amount)
     }
 
     /**
@@ -253,7 +254,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTap2LevelDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2LevelDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTap2LevelDbBind, segment)
     }
 
     /**
@@ -264,7 +265,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTap2Pan(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTap2PanBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTap2PanBind, segment, amount)
     }
 
     /**
@@ -275,7 +276,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTap2Pan(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTap2PanBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTap2PanBind, segment)
     }
 
     /**
@@ -285,7 +286,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFeedbackActive(amount: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFeedbackActiveBind, segment, amount)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFeedbackActiveBind, segment, amount)
     }
 
     /**
@@ -295,7 +296,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun isFeedbackActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFeedbackActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFeedbackActiveBind, segment)
     }
 
     /**
@@ -305,7 +306,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFeedbackDelayMs(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackDelayMsBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFeedbackDelayMsBind, segment, amount)
     }
 
     /**
@@ -315,7 +316,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFeedbackDelayMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackDelayMsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFeedbackDelayMsBind, segment)
     }
 
     /**
@@ -325,7 +326,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFeedbackLevelDb(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackLevelDbBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFeedbackLevelDbBind, segment, amount)
     }
 
     /**
@@ -335,7 +336,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFeedbackLevelDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLevelDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFeedbackLevelDbBind, segment)
     }
 
     /**
@@ -346,7 +347,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFeedbackLowpass(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackLowpassBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFeedbackLowpassBind, segment, amount)
     }
 
     /**
@@ -357,7 +358,7 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFeedbackLowpass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackLowpassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFeedbackLowpassBind, segment)
     }
 
     companion object {
@@ -370,135 +371,137 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectDelay? =
             if (handle.address() == 0L) null else AudioEffectDelay(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DRY_HASH = 373806689L
-        private val setDryBind by lazy {
+        @JvmField
+        val setDryBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_dry", SET_DRY_HASH)
-        }
 
         private const val GET_DRY_HASH = 191475506L
-        private val getDryBind by lazy {
+        @JvmField
+        val getDryBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_dry", GET_DRY_HASH)
-        }
 
         private const val SET_TAP1_ACTIVE_HASH = 2586408642L
-        private val setTap1ActiveBind by lazy {
+        @JvmField
+        val setTap1ActiveBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap1_active", SET_TAP1_ACTIVE_HASH)
-        }
 
         private const val IS_TAP1_ACTIVE_HASH = 36873697L
-        private val isTap1ActiveBind by lazy {
+        @JvmField
+        val isTap1ActiveBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "is_tap1_active", IS_TAP1_ACTIVE_HASH)
-        }
 
         private const val SET_TAP1_DELAY_MS_HASH = 373806689L
-        private val setTap1DelayMsBind by lazy {
+        @JvmField
+        val setTap1DelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap1_delay_ms", SET_TAP1_DELAY_MS_HASH)
-        }
 
         private const val GET_TAP1_DELAY_MS_HASH = 1740695150L
-        private val getTap1DelayMsBind by lazy {
+        @JvmField
+        val getTap1DelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_tap1_delay_ms", GET_TAP1_DELAY_MS_HASH)
-        }
 
         private const val SET_TAP1_LEVEL_DB_HASH = 373806689L
-        private val setTap1LevelDbBind by lazy {
+        @JvmField
+        val setTap1LevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap1_level_db", SET_TAP1_LEVEL_DB_HASH)
-        }
 
         private const val GET_TAP1_LEVEL_DB_HASH = 1740695150L
-        private val getTap1LevelDbBind by lazy {
+        @JvmField
+        val getTap1LevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_tap1_level_db", GET_TAP1_LEVEL_DB_HASH)
-        }
 
         private const val SET_TAP1_PAN_HASH = 373806689L
-        private val setTap1PanBind by lazy {
+        @JvmField
+        val setTap1PanBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap1_pan", SET_TAP1_PAN_HASH)
-        }
 
         private const val GET_TAP1_PAN_HASH = 1740695150L
-        private val getTap1PanBind by lazy {
+        @JvmField
+        val getTap1PanBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_tap1_pan", GET_TAP1_PAN_HASH)
-        }
 
         private const val SET_TAP2_ACTIVE_HASH = 2586408642L
-        private val setTap2ActiveBind by lazy {
+        @JvmField
+        val setTap2ActiveBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap2_active", SET_TAP2_ACTIVE_HASH)
-        }
 
         private const val IS_TAP2_ACTIVE_HASH = 36873697L
-        private val isTap2ActiveBind by lazy {
+        @JvmField
+        val isTap2ActiveBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "is_tap2_active", IS_TAP2_ACTIVE_HASH)
-        }
 
         private const val SET_TAP2_DELAY_MS_HASH = 373806689L
-        private val setTap2DelayMsBind by lazy {
+        @JvmField
+        val setTap2DelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap2_delay_ms", SET_TAP2_DELAY_MS_HASH)
-        }
 
         private const val GET_TAP2_DELAY_MS_HASH = 1740695150L
-        private val getTap2DelayMsBind by lazy {
+        @JvmField
+        val getTap2DelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_tap2_delay_ms", GET_TAP2_DELAY_MS_HASH)
-        }
 
         private const val SET_TAP2_LEVEL_DB_HASH = 373806689L
-        private val setTap2LevelDbBind by lazy {
+        @JvmField
+        val setTap2LevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap2_level_db", SET_TAP2_LEVEL_DB_HASH)
-        }
 
         private const val GET_TAP2_LEVEL_DB_HASH = 1740695150L
-        private val getTap2LevelDbBind by lazy {
+        @JvmField
+        val getTap2LevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_tap2_level_db", GET_TAP2_LEVEL_DB_HASH)
-        }
 
         private const val SET_TAP2_PAN_HASH = 373806689L
-        private val setTap2PanBind by lazy {
+        @JvmField
+        val setTap2PanBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_tap2_pan", SET_TAP2_PAN_HASH)
-        }
 
         private const val GET_TAP2_PAN_HASH = 1740695150L
-        private val getTap2PanBind by lazy {
+        @JvmField
+        val getTap2PanBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_tap2_pan", GET_TAP2_PAN_HASH)
-        }
 
         private const val SET_FEEDBACK_ACTIVE_HASH = 2586408642L
-        private val setFeedbackActiveBind by lazy {
+        @JvmField
+        val setFeedbackActiveBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_feedback_active", SET_FEEDBACK_ACTIVE_HASH)
-        }
 
         private const val IS_FEEDBACK_ACTIVE_HASH = 36873697L
-        private val isFeedbackActiveBind by lazy {
+        @JvmField
+        val isFeedbackActiveBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "is_feedback_active", IS_FEEDBACK_ACTIVE_HASH)
-        }
 
         private const val SET_FEEDBACK_DELAY_MS_HASH = 373806689L
-        private val setFeedbackDelayMsBind by lazy {
+        @JvmField
+        val setFeedbackDelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_feedback_delay_ms", SET_FEEDBACK_DELAY_MS_HASH)
-        }
 
         private const val GET_FEEDBACK_DELAY_MS_HASH = 1740695150L
-        private val getFeedbackDelayMsBind by lazy {
+        @JvmField
+        val getFeedbackDelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_feedback_delay_ms", GET_FEEDBACK_DELAY_MS_HASH)
-        }
 
         private const val SET_FEEDBACK_LEVEL_DB_HASH = 373806689L
-        private val setFeedbackLevelDbBind by lazy {
+        @JvmField
+        val setFeedbackLevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_feedback_level_db", SET_FEEDBACK_LEVEL_DB_HASH)
-        }
 
         private const val GET_FEEDBACK_LEVEL_DB_HASH = 1740695150L
-        private val getFeedbackLevelDbBind by lazy {
+        @JvmField
+        val getFeedbackLevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_feedback_level_db", GET_FEEDBACK_LEVEL_DB_HASH)
-        }
 
         private const val SET_FEEDBACK_LOWPASS_HASH = 373806689L
-        private val setFeedbackLowpassBind by lazy {
+        @JvmField
+        val setFeedbackLowpassBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "set_feedback_lowpass", SET_FEEDBACK_LOWPASS_HASH)
-        }
 
         private const val GET_FEEDBACK_LOWPASS_HASH = 1740695150L
-        private val getFeedbackLowpassBind by lazy {
+        @JvmField
+        val getFeedbackLowpassBind =
             ObjectCalls.getMethodBind("AudioEffectDelay", "get_feedback_lowpass", GET_FEEDBACK_LOWPASS_HASH)
-        }
     }
 }

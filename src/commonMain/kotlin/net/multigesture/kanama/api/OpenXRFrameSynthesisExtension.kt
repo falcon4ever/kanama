@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -22,27 +23,27 @@ class OpenXRFrameSynthesisExtension(handle: GodotHandle) : OpenXRExtensionWrappe
         set(value) = setRelaxFrameInterval(value)
 
     fun isAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAvailableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAvailableBind, segment)
     }
 
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     fun setEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enable)
     }
 
     fun getRelaxFrameInterval(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getRelaxFrameIntervalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getRelaxFrameIntervalBind, segment)
     }
 
     fun setRelaxFrameInterval(relaxFrameInterval: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRelaxFrameIntervalBind, segment, relaxFrameInterval)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRelaxFrameIntervalBind, segment, relaxFrameInterval)
     }
 
     fun skipNextFrame() {
-        ObjectCalls.ptrcallNoArgs(skipNextFrameBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.skipNextFrameBind, segment)
     }
 
     companion object {
@@ -52,35 +53,37 @@ class OpenXRFrameSynthesisExtension(handle: GodotHandle) : OpenXRExtensionWrappe
 
         internal fun wrap(handle: RawSegment): OpenXRFrameSynthesisExtension? =
             if (handle.address() == 0L) null else OpenXRFrameSynthesisExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_AVAILABLE_HASH = 36873697L
-        private val isAvailableBind by lazy {
+        @JvmField
+        val isAvailableBind =
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "is_available", IS_AVAILABLE_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val GET_RELAX_FRAME_INTERVAL_HASH = 36873697L
-        private val getRelaxFrameIntervalBind by lazy {
+        @JvmField
+        val getRelaxFrameIntervalBind =
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "get_relax_frame_interval", GET_RELAX_FRAME_INTERVAL_HASH)
-        }
 
         private const val SET_RELAX_FRAME_INTERVAL_HASH = 2586408642L
-        private val setRelaxFrameIntervalBind by lazy {
+        @JvmField
+        val setRelaxFrameIntervalBind =
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "set_relax_frame_interval", SET_RELAX_FRAME_INTERVAL_HASH)
-        }
 
         private const val SKIP_NEXT_FRAME_HASH = 3218959716L
-        private val skipNextFrameBind by lazy {
+        @JvmField
+        val skipNextFrameBind =
             ObjectCalls.getMethodBind("OpenXRFrameSynthesisExtension", "skip_next_frame", SKIP_NEXT_FRAME_HASH)
-        }
     }
 }

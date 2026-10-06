@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -12,12 +13,12 @@ import net.multigesture.kanama.types.Vector3
 class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getCenterPose(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getCenterPoseBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getCenterPoseBind, segment, index)
     }
 
     fun getSize(index: Long): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getSizeBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getSizeBind, segment, index)
     }
 
     companion object {
@@ -30,15 +31,17 @@ class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialCo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentBounded3DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentBounded3DList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CENTER_POSE_HASH = 1965739696L
-        private val getCenterPoseBind by lazy {
+        @JvmField
+        val getCenterPoseBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentBounded3DList", "get_center_pose", GET_CENTER_POSE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 711720468L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentBounded3DList", "get_size", GET_SIZE_HASH)
-        }
     }
 }

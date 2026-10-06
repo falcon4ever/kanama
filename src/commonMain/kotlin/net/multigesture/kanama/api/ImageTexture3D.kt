@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
      */
     fun create(format: Image.Format, width: Int, height: Int, depth: Int, useMipmaps: Boolean, data: List<Image>): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(createBind, segment, format.value, width, height, depth, useMipmaps, data))
+        return GodotError(ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetLong(Binds.createBind, segment, format.value, width, height, depth, useMipmaps, data))
     }
 
     /**
@@ -30,7 +31,7 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
      */
     fun update(data: List<Image>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(updateBind, segment, data)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.updateBind, segment, data)
     }
 
     companion object {
@@ -43,15 +44,17 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImageTexture3D? =
             if (handle.address() == 0L) null else ImageTexture3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_HASH = 1130379827L
-        private val createBind by lazy {
+        @JvmField
+        val createBind =
             ObjectCalls.getMethodBind("ImageTexture3D", "create", CREATE_HASH)
-        }
 
         private const val UPDATE_HASH = 381264803L
-        private val updateBind by lazy {
+        @JvmField
+        val updateBind =
             ObjectCalls.getMethodBind("ImageTexture3D", "update", UPDATE_HASH)
-        }
     }
 }

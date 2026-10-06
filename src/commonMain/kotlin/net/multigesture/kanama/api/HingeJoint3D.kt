@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: HingeJoint3D.set_param
      */
     fun setParam(param: HingeJoint3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamBind, segment, param.value, value)
     }
 
     /**
@@ -27,7 +28,7 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: HingeJoint3D.get_param
      */
     fun getParam(param: HingeJoint3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamBind, segment, param.value)
     }
 
     /**
@@ -36,7 +37,7 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: HingeJoint3D.set_flag
      */
     fun setFlag(flag: HingeJoint3D.Flag, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag.value, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -45,7 +46,7 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: HingeJoint3D.get_flag
      */
     fun getFlag(flag: HingeJoint3D.Flag): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagBind, segment, flag.value)
     }
 
     /**
@@ -147,25 +148,27 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): HingeJoint3D? =
             if (handle.address() == 0L) null else HingeJoint3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PARAM_HASH = 3082977519L
-        private val setParamBind by lazy {
+        @JvmField
+        val setParamBind =
             ObjectCalls.getMethodBind("HingeJoint3D", "set_param", SET_PARAM_HASH)
-        }
 
         private const val GET_PARAM_HASH = 4066002676L
-        private val getParamBind by lazy {
+        @JvmField
+        val getParamBind =
             ObjectCalls.getMethodBind("HingeJoint3D", "get_param", GET_PARAM_HASH)
-        }
 
         private const val SET_FLAG_HASH = 1083494620L
-        private val setFlagBind by lazy {
+        @JvmField
+        val setFlagBind =
             ObjectCalls.getMethodBind("HingeJoint3D", "set_flag", SET_FLAG_HASH)
-        }
 
         private const val GET_FLAG_HASH = 2841369610L
-        private val getFlagBind by lazy {
+        @JvmField
+        val getFlagBind =
             ObjectCalls.getMethodBind("HingeJoint3D", "get_flag", GET_FLAG_HASH)
-        }
     }
 }

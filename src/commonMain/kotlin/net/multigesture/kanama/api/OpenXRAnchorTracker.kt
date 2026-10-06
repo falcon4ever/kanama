@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,17 +18,17 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
 
     fun hasUuid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUuidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasUuidBind, segment)
     }
 
     fun setUuid(uuid: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setUuidBind, segment, uuid)
+        ObjectCalls.ptrcallWithStringArg(Binds.setUuidBind, segment, uuid)
     }
 
     fun getUuid(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getUuidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getUuidBind, segment)
     }
 
     /** Signal `uuid_changed()`; see [TypedSignal]. */
@@ -49,20 +50,22 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAnchorTracker? =
             if (handle.address() == 0L) null else OpenXRAnchorTracker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val HAS_UUID_HASH = 36873697L
-        private val hasUuidBind by lazy {
+        @JvmField
+        val hasUuidBind =
             ObjectCalls.getMethodBind("OpenXRAnchorTracker", "has_uuid", HAS_UUID_HASH)
-        }
 
         private const val SET_UUID_HASH = 83702148L
-        private val setUuidBind by lazy {
+        @JvmField
+        val setUuidBind =
             ObjectCalls.getMethodBind("OpenXRAnchorTracker", "set_uuid", SET_UUID_HASH)
-        }
 
         private const val GET_UUID_HASH = 201670096L
-        private val getUuidBind by lazy {
+        @JvmField
+        val getUuidBind =
             ObjectCalls.getMethodBind("OpenXRAnchorTracker", "get_uuid", GET_UUID_HASH)
-        }
     }
 }

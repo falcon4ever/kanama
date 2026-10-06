@@ -20,7 +20,5 @@ class AudioStreamPlaybackSynchronized(handle: GodotHandle) : AudioStreamPlayback
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackSynchronized? =
             if (handle.address() == 0L) null else AudioStreamPlaybackSynchronized(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

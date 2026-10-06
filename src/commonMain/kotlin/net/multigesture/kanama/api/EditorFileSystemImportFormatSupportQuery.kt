@@ -22,7 +22,5 @@ class EditorFileSystemImportFormatSupportQuery(handle: GodotHandle) : RefCounted
 
         internal fun wrapBorrowed(handle: RawSegment): EditorFileSystemImportFormatSupportQuery? =
             if (handle.address() == 0L) null else EditorFileSystemImportFormatSupportQuery(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

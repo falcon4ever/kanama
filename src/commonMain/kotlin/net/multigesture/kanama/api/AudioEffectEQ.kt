@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setBandGainDb(bandIdx: Int, volumeDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBandGainDbBind, segment, bandIdx, volumeDb)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setBandGainDbBind, segment, bandIdx, volumeDb)
     }
 
     /**
@@ -29,7 +30,7 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBandGainDb(bandIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getBandGainDbBind, segment, bandIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getBandGainDbBind, segment, bandIdx)
     }
 
     /**
@@ -39,7 +40,7 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBandCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBandCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBandCountBind, segment)
     }
 
     companion object {
@@ -52,20 +53,22 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ? =
             if (handle.address() == 0L) null else AudioEffectEQ(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BAND_GAIN_DB_HASH = 1602489585L
-        private val setBandGainDbBind by lazy {
+        @JvmField
+        val setBandGainDbBind =
             ObjectCalls.getMethodBind("AudioEffectEQ", "set_band_gain_db", SET_BAND_GAIN_DB_HASH)
-        }
 
         private const val GET_BAND_GAIN_DB_HASH = 2339986948L
-        private val getBandGainDbBind by lazy {
+        @JvmField
+        val getBandGainDbBind =
             ObjectCalls.getMethodBind("AudioEffectEQ", "get_band_gain_db", GET_BAND_GAIN_DB_HASH)
-        }
 
         private const val GET_BAND_COUNT_HASH = 3905245786L
-        private val getBandCountBind by lazy {
+        @JvmField
+        val getBandCountBind =
             ObjectCalls.getMethodBind("AudioEffectEQ", "get_band_count", GET_BAND_COUNT_HASH)
-        }
     }
 }

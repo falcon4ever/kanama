@@ -20,7 +20,5 @@ open class VisualShaderNodeConstant(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeConstant(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

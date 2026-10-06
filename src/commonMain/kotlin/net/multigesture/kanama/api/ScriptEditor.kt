@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,7 +19,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_current_editor
      */
     fun getCurrentEditor(): ScriptEditorBase? {
-        return ScriptEditorBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentEditorBind, segment))
+        return ScriptEditorBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentEditorBind, segment))
     }
 
     /**
@@ -27,7 +28,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_open_script_editors
      */
     fun getOpenScriptEditors(): List<ScriptEditorBase> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptEditorsBind, segment, ScriptEditorBase::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOpenScriptEditorsBind, segment, ScriptEditorBase::wrap)
     }
 
     /**
@@ -36,7 +37,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_breakpoints
      */
     fun getBreakpoints(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getBreakpointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getBreakpointsBind, segment)
     }
 
     /**
@@ -46,7 +47,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.register_syntax_highlighter
      */
     fun registerSyntaxHighlighter(syntaxHighlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(registerSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.registerSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -56,7 +57,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.unregister_syntax_highlighter
      */
     fun unregisterSyntaxHighlighter(syntaxHighlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(unregisterSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -65,7 +66,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.goto_line
      */
     fun gotoLine(lineNumber: Int) {
-        ObjectCalls.ptrcallWithIntArg(gotoLineBind, segment, lineNumber)
+        ObjectCalls.ptrcallWithIntArg(Binds.gotoLineBind, segment, lineNumber)
     }
 
     /**
@@ -74,7 +75,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_current_script
      */
     fun getCurrentScript(): Script? {
-        return Script.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurrentScriptBind, segment))
+        return Script.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentScriptBind, segment))
     }
 
     /**
@@ -83,7 +84,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_open_scripts
      */
     fun getOpenScripts(): List<Script> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptsBind, segment, Script::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOpenScriptsBind, segment, Script::wrapBorrowed)
     }
 
     /**
@@ -93,7 +94,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.open_script_create_dialog
      */
     fun openScriptCreateDialog(baseName: String, basePath: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(openScriptCreateDialogBind, segment, baseName, basePath)
+        ObjectCalls.ptrcallWithTwoStringArgs(Binds.openScriptCreateDialogBind, segment, baseName, basePath)
     }
 
     /**
@@ -104,7 +105,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.reload_open_files
      */
     fun reloadOpenFiles() {
-        ObjectCalls.ptrcallNoArgs(reloadOpenFilesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.reloadOpenFilesBind, segment)
     }
 
     /**
@@ -120,7 +121,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.goto_help
      */
     fun gotoHelp(topic: String) {
-        ObjectCalls.ptrcallWithStringArg(gotoHelpBind, segment, topic)
+        ObjectCalls.ptrcallWithStringArg(Binds.gotoHelpBind, segment, topic)
     }
 
     /**
@@ -130,7 +131,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.update_docs_from_script
      */
     fun updateDocsFromScript(script: Script?) {
-        ObjectCalls.ptrcallWithObjectArgs(updateDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.updateDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -140,7 +141,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.clear_docs_from_script
      */
     fun clearDocsFromScript(script: Script?) {
-        ObjectCalls.ptrcallWithObjectArgs(clearDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.clearDocsFromScriptBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -149,7 +150,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_unsaved_files
      */
     fun getUnsavedFiles(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getUnsavedFilesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getUnsavedFilesBind, segment)
     }
 
     /**
@@ -158,7 +159,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.save_all_scripts
      */
     fun saveAllScripts() {
-        ObjectCalls.ptrcallNoArgs(saveAllScriptsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.saveAllScriptsBind, segment)
     }
 
     /**
@@ -168,7 +169,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.close_file
      */
     fun closeFile(path: String): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(closeFileBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.closeFileBind, segment, path))
     }
 
     /** Signal `editor_script_changed(script: Script)`; see [TypedSignal]. */
@@ -193,85 +194,87 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptEditor? =
             if (handle.address() == 0L) null else ScriptEditor(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CURRENT_EDITOR_HASH = 1906266726L
-        private val getCurrentEditorBind by lazy {
+        @JvmField
+        val getCurrentEditorBind =
             ObjectCalls.getMethodBind("ScriptEditor", "get_current_editor", GET_CURRENT_EDITOR_HASH)
-        }
 
         private const val GET_OPEN_SCRIPT_EDITORS_HASH = 3995934104L
-        private val getOpenScriptEditorsBind by lazy {
+        @JvmField
+        val getOpenScriptEditorsBind =
             ObjectCalls.getMethodBind("ScriptEditor", "get_open_script_editors", GET_OPEN_SCRIPT_EDITORS_HASH)
-        }
 
         private const val GET_BREAKPOINTS_HASH = 2981934095L
-        private val getBreakpointsBind by lazy {
+        @JvmField
+        val getBreakpointsBind =
             ObjectCalls.getMethodBind("ScriptEditor", "get_breakpoints", GET_BREAKPOINTS_HASH)
-        }
 
         private const val REGISTER_SYNTAX_HIGHLIGHTER_HASH = 1092774468L
-        private val registerSyntaxHighlighterBind by lazy {
+        @JvmField
+        val registerSyntaxHighlighterBind =
             ObjectCalls.getMethodBind("ScriptEditor", "register_syntax_highlighter", REGISTER_SYNTAX_HIGHLIGHTER_HASH)
-        }
 
         private const val UNREGISTER_SYNTAX_HIGHLIGHTER_HASH = 1092774468L
-        private val unregisterSyntaxHighlighterBind by lazy {
+        @JvmField
+        val unregisterSyntaxHighlighterBind =
             ObjectCalls.getMethodBind("ScriptEditor", "unregister_syntax_highlighter", UNREGISTER_SYNTAX_HIGHLIGHTER_HASH)
-        }
 
         private const val GOTO_LINE_HASH = 1286410249L
-        private val gotoLineBind by lazy {
+        @JvmField
+        val gotoLineBind =
             ObjectCalls.getMethodBind("ScriptEditor", "goto_line", GOTO_LINE_HASH)
-        }
 
         private const val GET_CURRENT_SCRIPT_HASH = 2146468882L
-        private val getCurrentScriptBind by lazy {
+        @JvmField
+        val getCurrentScriptBind =
             ObjectCalls.getMethodBind("ScriptEditor", "get_current_script", GET_CURRENT_SCRIPT_HASH)
-        }
 
         private const val GET_OPEN_SCRIPTS_HASH = 3995934104L
-        private val getOpenScriptsBind by lazy {
+        @JvmField
+        val getOpenScriptsBind =
             ObjectCalls.getMethodBind("ScriptEditor", "get_open_scripts", GET_OPEN_SCRIPTS_HASH)
-        }
 
         private const val OPEN_SCRIPT_CREATE_DIALOG_HASH = 3186203200L
-        private val openScriptCreateDialogBind by lazy {
+        @JvmField
+        val openScriptCreateDialogBind =
             ObjectCalls.getMethodBind("ScriptEditor", "open_script_create_dialog", OPEN_SCRIPT_CREATE_DIALOG_HASH)
-        }
 
         private const val RELOAD_OPEN_FILES_HASH = 3218959716L
-        private val reloadOpenFilesBind by lazy {
+        @JvmField
+        val reloadOpenFilesBind =
             ObjectCalls.getMethodBind("ScriptEditor", "reload_open_files", RELOAD_OPEN_FILES_HASH)
-        }
 
         private const val GOTO_HELP_HASH = 83702148L
-        private val gotoHelpBind by lazy {
+        @JvmField
+        val gotoHelpBind =
             ObjectCalls.getMethodBind("ScriptEditor", "goto_help", GOTO_HELP_HASH)
-        }
 
         private const val UPDATE_DOCS_FROM_SCRIPT_HASH = 3657522847L
-        private val updateDocsFromScriptBind by lazy {
+        @JvmField
+        val updateDocsFromScriptBind =
             ObjectCalls.getMethodBind("ScriptEditor", "update_docs_from_script", UPDATE_DOCS_FROM_SCRIPT_HASH)
-        }
 
         private const val CLEAR_DOCS_FROM_SCRIPT_HASH = 3657522847L
-        private val clearDocsFromScriptBind by lazy {
+        @JvmField
+        val clearDocsFromScriptBind =
             ObjectCalls.getMethodBind("ScriptEditor", "clear_docs_from_script", CLEAR_DOCS_FROM_SCRIPT_HASH)
-        }
 
         private const val GET_UNSAVED_FILES_HASH = 1139954409L
-        private val getUnsavedFilesBind by lazy {
+        @JvmField
+        val getUnsavedFilesBind =
             ObjectCalls.getMethodBind("ScriptEditor", "get_unsaved_files", GET_UNSAVED_FILES_HASH)
-        }
 
         private const val SAVE_ALL_SCRIPTS_HASH = 3218959716L
-        private val saveAllScriptsBind by lazy {
+        @JvmField
+        val saveAllScriptsBind =
             ObjectCalls.getMethodBind("ScriptEditor", "save_all_scripts", SAVE_ALL_SCRIPTS_HASH)
-        }
 
         private const val CLOSE_FILE_HASH = 166001499L
-        private val closeFileBind by lazy {
+        @JvmField
+        val closeFileBind =
             ObjectCalls.getMethodBind("ScriptEditor", "close_file", CLOSE_FILE_HASH)
-        }
     }
 }

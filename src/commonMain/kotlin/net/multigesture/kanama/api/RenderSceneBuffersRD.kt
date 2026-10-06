@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun hasTexture(context: String, name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTextureBind, segment, context, name)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasTextureBind, segment, context, name)
     }
 
     /**
@@ -31,7 +32,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun createTexture(context: String, name: String, dataFormat: RenderingDevice.DataFormat, usageBits: Long, textureSamples: RenderingDevice.TextureSamples, size: Vector2i, layers: Long, mipmaps: Long, unique: Boolean, discardable: Boolean): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(createTextureBind, segment, context, name, dataFormat.value, usageBits, textureSamples.value, size, layers, mipmaps, unique, discardable)
+        return ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(Binds.createTextureBind, segment, context, name, dataFormat.value, usageBits, textureSamples.value, size, layers, mipmaps, unique, discardable)
     }
 
     /**
@@ -42,7 +43,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun createTextureFromFormat(context: String, name: String, format: RDTextureFormat?, view: RDTextureView?, unique: Boolean): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(createTextureFromFormatBind, segment, context, name, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, unique)
+        return ObjectCalls.ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(Binds.createTextureFromFormatBind, segment, context, name, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, unique)
     }
 
     /**
@@ -54,7 +55,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun createTextureView(context: String, name: String, viewName: String, view: RDTextureView?): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeStringNameObjectArgsRetRID(createTextureViewBind, segment, context, name, viewName, view?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithThreeStringNameObjectArgsRetRID(Binds.createTextureViewBind, segment, context, name, viewName, view?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -64,7 +65,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTexture(context: String, name: String): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetRID(getTextureBind, segment, context, name)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetRID(Binds.getTextureBind, segment, context, name)
     }
 
     /**
@@ -74,7 +75,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureFormat(context: String, name: String): RDTextureFormat? {
         checkOpen()
-        return RDTextureFormat.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getTextureFormatBind, segment, context, name))
+        return RDTextureFormat.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getTextureFormatBind, segment, context, name))
     }
 
     /**
@@ -84,7 +85,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureSlice(context: String, name: String, layer: Long, mipmap: Long, layers: Long, mipmaps: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ArgsRetRID(getTextureSliceBind, segment, context, name, layer, mipmap, layers, mipmaps)
+        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ArgsRetRID(Binds.getTextureSliceBind, segment, context, name, layer, mipmap, layers, mipmaps)
     }
 
     /**
@@ -94,7 +95,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureSliceView(context: String, name: String, layer: Long, mipmap: Long, layers: Long, mipmaps: Long, view: RDTextureView?): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(getTextureSliceViewBind, segment, context, name, layer, mipmap, layers, mipmaps, view?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(Binds.getTextureSliceViewBind, segment, context, name, layer, mipmap, layers, mipmaps, view?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -104,7 +105,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureSliceSize(context: String, name: String, mipmap: Long): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameUInt32ArgRetVector2i(getTextureSliceSizeBind, segment, context, name, mipmap)
+        return ObjectCalls.ptrcallWithTwoStringNameUInt32ArgRetVector2i(Binds.getTextureSliceSizeBind, segment, context, name, mipmap)
     }
 
     /**
@@ -114,7 +115,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun clearContext(context: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(clearContextBind, segment, context)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.clearContextBind, segment, context)
     }
 
     /**
@@ -126,7 +127,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getColorTexture(msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetRID(getColorTextureBind, segment, msaa)
+        return ObjectCalls.ptrcallWithBoolArgRetRID(Binds.getColorTextureBind, segment, msaa)
     }
 
     /**
@@ -137,7 +138,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getColorLayer(layer: Long, msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getColorLayerBind, segment, layer, msaa)
+        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(Binds.getColorLayerBind, segment, layer, msaa)
     }
 
     /**
@@ -149,7 +150,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getDepthTexture(msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetRID(getDepthTextureBind, segment, msaa)
+        return ObjectCalls.ptrcallWithBoolArgRetRID(Binds.getDepthTextureBind, segment, msaa)
     }
 
     /**
@@ -160,7 +161,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getDepthLayer(layer: Long, msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getDepthLayerBind, segment, layer, msaa)
+        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(Binds.getDepthLayerBind, segment, layer, msaa)
     }
 
     /**
@@ -172,7 +173,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getVelocityTexture(msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetRID(getVelocityTextureBind, segment, msaa)
+        return ObjectCalls.ptrcallWithBoolArgRetRID(Binds.getVelocityTextureBind, segment, msaa)
     }
 
     /**
@@ -182,7 +183,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getVelocityLayer(layer: Long, msaa: Boolean = false): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(getVelocityLayerBind, segment, layer, msaa)
+        return ObjectCalls.ptrcallWithUInt32AndBoolArgRetRID(Binds.getVelocityLayerBind, segment, layer, msaa)
     }
 
     /**
@@ -192,7 +193,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getRenderTarget(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRenderTargetBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
     }
 
     /**
@@ -213,7 +214,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getInternalSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getInternalSizeBind, segment)
     }
 
     /**
@@ -223,7 +224,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTargetSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTargetSizeBind, segment)
     }
 
     /**
@@ -233,7 +234,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getScaling3dMode(): RenderingServer.ViewportScaling3DMode {
         checkOpen()
-        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment))
+        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScaling3dModeBind, segment))
     }
 
     /**
@@ -244,7 +245,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getFsrSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFsrSharpnessBind, segment)
     }
 
     /**
@@ -254,7 +255,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getMsaa3d(): RenderingServer.ViewportMSAA {
         checkOpen()
-        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment))
+        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMsaa3dBind, segment))
     }
 
     /**
@@ -264,7 +265,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getTextureSamplesBind, segment))
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureSamplesBind, segment))
     }
 
     /**
@@ -274,7 +275,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getScreenSpaceAa(): RenderingServer.ViewportScreenSpaceAA {
         checkOpen()
-        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment))
+        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScreenSpaceAaBind, segment))
     }
 
     /**
@@ -284,7 +285,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getUseTaa(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseTaaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseTaaBind, segment)
     }
 
     /**
@@ -294,7 +295,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
     }
 
     companion object {
@@ -307,140 +308,142 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersRD? =
             if (handle.address() == 0L) null else RenderSceneBuffersRD(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val HAS_TEXTURE_HASH = 471820014L
-        private val hasTextureBind by lazy {
+        @JvmField
+        val hasTextureBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "has_texture", HAS_TEXTURE_HASH)
-        }
 
         private const val CREATE_TEXTURE_HASH = 2950875024L
-        private val createTextureBind by lazy {
+        @JvmField
+        val createTextureBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "create_texture", CREATE_TEXTURE_HASH)
-        }
 
         private const val CREATE_TEXTURE_FROM_FORMAT_HASH = 3344669382L
-        private val createTextureFromFormatBind by lazy {
+        @JvmField
+        val createTextureFromFormatBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "create_texture_from_format", CREATE_TEXTURE_FROM_FORMAT_HASH)
-        }
 
         private const val CREATE_TEXTURE_VIEW_HASH = 283055834L
-        private val createTextureViewBind by lazy {
+        @JvmField
+        val createTextureViewBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "create_texture_view", CREATE_TEXTURE_VIEW_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 750006389L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_FORMAT_HASH = 371461758L
-        private val getTextureFormatBind by lazy {
+        @JvmField
+        val getTextureFormatBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_texture_format", GET_TEXTURE_FORMAT_HASH)
-        }
 
         private const val GET_TEXTURE_SLICE_HASH = 588440706L
-        private val getTextureSliceBind by lazy {
+        @JvmField
+        val getTextureSliceBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_texture_slice", GET_TEXTURE_SLICE_HASH)
-        }
 
         private const val GET_TEXTURE_SLICE_VIEW_HASH = 682451778L
-        private val getTextureSliceViewBind by lazy {
+        @JvmField
+        val getTextureSliceViewBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_texture_slice_view", GET_TEXTURE_SLICE_VIEW_HASH)
-        }
 
         private const val GET_TEXTURE_SLICE_SIZE_HASH = 2617625368L
-        private val getTextureSliceSizeBind by lazy {
+        @JvmField
+        val getTextureSliceSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_texture_slice_size", GET_TEXTURE_SLICE_SIZE_HASH)
-        }
 
         private const val CLEAR_CONTEXT_HASH = 3304788590L
-        private val clearContextBind by lazy {
+        @JvmField
+        val clearContextBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "clear_context", CLEAR_CONTEXT_HASH)
-        }
 
         private const val GET_COLOR_TEXTURE_HASH = 3050822880L
-        private val getColorTextureBind by lazy {
+        @JvmField
+        val getColorTextureBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_color_texture", GET_COLOR_TEXTURE_HASH)
-        }
 
         private const val GET_COLOR_LAYER_HASH = 3087988589L
-        private val getColorLayerBind by lazy {
+        @JvmField
+        val getColorLayerBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_color_layer", GET_COLOR_LAYER_HASH)
-        }
 
         private const val GET_DEPTH_TEXTURE_HASH = 3050822880L
-        private val getDepthTextureBind by lazy {
+        @JvmField
+        val getDepthTextureBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_depth_texture", GET_DEPTH_TEXTURE_HASH)
-        }
 
         private const val GET_DEPTH_LAYER_HASH = 3087988589L
-        private val getDepthLayerBind by lazy {
+        @JvmField
+        val getDepthLayerBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_depth_layer", GET_DEPTH_LAYER_HASH)
-        }
 
         private const val GET_VELOCITY_TEXTURE_HASH = 3050822880L
-        private val getVelocityTextureBind by lazy {
+        @JvmField
+        val getVelocityTextureBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_velocity_texture", GET_VELOCITY_TEXTURE_HASH)
-        }
 
         private const val GET_VELOCITY_LAYER_HASH = 3087988589L
-        private val getVelocityLayerBind by lazy {
+        @JvmField
+        val getVelocityLayerBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_velocity_layer", GET_VELOCITY_LAYER_HASH)
-        }
 
         private const val GET_RENDER_TARGET_HASH = 2944877500L
-        private val getRenderTargetBind by lazy {
+        @JvmField
+        val getRenderTargetBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_render_target", GET_RENDER_TARGET_HASH)
-        }
 
         private const val GET_VIEW_COUNT_HASH = 3905245786L
-        private val getViewCountBind by lazy {
+        @JvmField
+        val getViewCountBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_view_count", GET_VIEW_COUNT_HASH)
-        }
 
         private const val GET_INTERNAL_SIZE_HASH = 3690982128L
-        private val getInternalSizeBind by lazy {
+        @JvmField
+        val getInternalSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_internal_size", GET_INTERNAL_SIZE_HASH)
-        }
 
         private const val GET_TARGET_SIZE_HASH = 3690982128L
-        private val getTargetSizeBind by lazy {
+        @JvmField
+        val getTargetSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_target_size", GET_TARGET_SIZE_HASH)
-        }
 
         private const val GET_SCALING_3D_MODE_HASH = 976778074L
-        private val getScaling3dModeBind by lazy {
+        @JvmField
+        val getScaling3dModeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_scaling_3d_mode", GET_SCALING_3D_MODE_HASH)
-        }
 
         private const val GET_FSR_SHARPNESS_HASH = 1740695150L
-        private val getFsrSharpnessBind by lazy {
+        @JvmField
+        val getFsrSharpnessBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_fsr_sharpness", GET_FSR_SHARPNESS_HASH)
-        }
 
         private const val GET_MSAA_3D_HASH = 3109158617L
-        private val getMsaa3dBind by lazy {
+        @JvmField
+        val getMsaa3dBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_msaa_3d", GET_MSAA_3D_HASH)
-        }
 
         private const val GET_TEXTURE_SAMPLES_HASH = 407791724L
-        private val getTextureSamplesBind by lazy {
+        @JvmField
+        val getTextureSamplesBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_texture_samples", GET_TEXTURE_SAMPLES_HASH)
-        }
 
         private const val GET_SCREEN_SPACE_AA_HASH = 641513172L
-        private val getScreenSpaceAaBind by lazy {
+        @JvmField
+        val getScreenSpaceAaBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_screen_space_aa", GET_SCREEN_SPACE_AA_HASH)
-        }
 
         private const val GET_USE_TAA_HASH = 36873697L
-        private val getUseTaaBind by lazy {
+        @JvmField
+        val getUseTaaBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_use_taa", GET_USE_TAA_HASH)
-        }
 
         private const val GET_USE_DEBANDING_HASH = 36873697L
-        private val getUseDebandingBind by lazy {
+        @JvmField
+        val getUseDebandingBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersRD", "get_use_debanding", GET_USE_DEBANDING_HASH)
-        }
     }
 }

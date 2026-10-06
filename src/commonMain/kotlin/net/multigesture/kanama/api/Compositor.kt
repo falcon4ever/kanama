@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
      */
     fun setCompositorEffects(compositorEffects: List<CompositorEffect>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setCompositorEffectsBind, segment, compositorEffects)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setCompositorEffectsBind, segment, compositorEffects)
     }
 
     /**
@@ -36,7 +37,7 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
      */
     fun getCompositorEffects(): List<CompositorEffect> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, segment, CompositorEffect::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCompositorEffectsBind, segment, CompositorEffect::wrapBorrowed)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Compositor? =
             if (handle.address() == 0L) null else Compositor(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COMPOSITOR_EFFECTS_HASH = 381264803L
-        private val setCompositorEffectsBind by lazy {
+        @JvmField
+        val setCompositorEffectsBind =
             ObjectCalls.getMethodBind("Compositor", "set_compositor_effects", SET_COMPOSITOR_EFFECTS_HASH)
-        }
 
         private const val GET_COMPOSITOR_EFFECTS_HASH = 3995934104L
-        private val getCompositorEffectsBind by lazy {
+        @JvmField
+        val getCompositorEffectsBind =
             ObjectCalls.getMethodBind("Compositor", "get_compositor_effects", GET_COMPOSITOR_EFFECTS_HASH)
-        }
     }
 }

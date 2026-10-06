@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -49,91 +50,91 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
 
     fun toNode(): Light3D? {
         checkOpen()
-        return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, segment))
+        return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     fun getIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIntensityBind, segment)
     }
 
     fun setIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, segment, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setIntensityBind, segment, intensity)
     }
 
     fun getLightType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLightTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLightTypeBind, segment)
     }
 
     fun setLightType(lightType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLightTypeBind, segment, lightType)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLightTypeBind, segment, lightType)
     }
 
     fun getRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeBind, segment)
     }
 
     fun setRange(range: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRangeBind, segment, range)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeBind, segment, range)
     }
 
     fun getInnerConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerConeAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerConeAngleBind, segment)
     }
 
     fun setInnerConeAngle(innerConeAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setInnerConeAngleBind, segment, innerConeAngle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerConeAngleBind, segment, innerConeAngle)
     }
 
     fun getOuterConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterConeAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterConeAngleBind, segment)
     }
 
     fun setOuterConeAngle(outerConeAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOuterConeAngleBind, segment, outerConeAngle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterConeAngleBind, segment, outerConeAngle)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     companion object {
         fun fromNode(lightNode: Light3D): GLTFLight? {
-            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, lightNode.segment))
+            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, lightNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFLight? {
-            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
@@ -145,95 +146,97 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFLight? =
             if (handle.address() == 0L) null else GLTFLight(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FROM_NODE_HASH = 3907677874L
-        private val fromNodeBind by lazy {
+        @JvmField
+        val fromNodeBind =
             ObjectCalls.getMethodBind("GLTFLight", "from_node", FROM_NODE_HASH)
-        }
 
         private const val TO_NODE_HASH = 2040811672L
-        private val toNodeBind by lazy {
+        @JvmField
+        val toNodeBind =
             ObjectCalls.getMethodBind("GLTFLight", "to_node", TO_NODE_HASH)
-        }
 
         private const val FROM_DICTIONARY_HASH = 4057087208L
-        private val fromDictionaryBind by lazy {
+        @JvmField
+        val fromDictionaryBind =
             ObjectCalls.getMethodBind("GLTFLight", "from_dictionary", FROM_DICTIONARY_HASH)
-        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
-        private val toDictionaryBind by lazy {
+        @JvmField
+        val toDictionaryBind =
             ObjectCalls.getMethodBind("GLTFLight", "to_dictionary", TO_DICTIONARY_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3200896285L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_INTENSITY_HASH = 191475506L
-        private val getIntensityBind by lazy {
+        @JvmField
+        val getIntensityBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_intensity", GET_INTENSITY_HASH)
-        }
 
         private const val SET_INTENSITY_HASH = 373806689L
-        private val setIntensityBind by lazy {
+        @JvmField
+        val setIntensityBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_intensity", SET_INTENSITY_HASH)
-        }
 
         private const val GET_LIGHT_TYPE_HASH = 2841200299L
-        private val getLightTypeBind by lazy {
+        @JvmField
+        val getLightTypeBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_light_type", GET_LIGHT_TYPE_HASH)
-        }
 
         private const val SET_LIGHT_TYPE_HASH = 83702148L
-        private val setLightTypeBind by lazy {
+        @JvmField
+        val setLightTypeBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_light_type", SET_LIGHT_TYPE_HASH)
-        }
 
         private const val GET_RANGE_HASH = 191475506L
-        private val getRangeBind by lazy {
+        @JvmField
+        val getRangeBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_range", GET_RANGE_HASH)
-        }
 
         private const val SET_RANGE_HASH = 373806689L
-        private val setRangeBind by lazy {
+        @JvmField
+        val setRangeBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_range", SET_RANGE_HASH)
-        }
 
         private const val GET_INNER_CONE_ANGLE_HASH = 191475506L
-        private val getInnerConeAngleBind by lazy {
+        @JvmField
+        val getInnerConeAngleBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_inner_cone_angle", GET_INNER_CONE_ANGLE_HASH)
-        }
 
         private const val SET_INNER_CONE_ANGLE_HASH = 373806689L
-        private val setInnerConeAngleBind by lazy {
+        @JvmField
+        val setInnerConeAngleBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_inner_cone_angle", SET_INNER_CONE_ANGLE_HASH)
-        }
 
         private const val GET_OUTER_CONE_ANGLE_HASH = 191475506L
-        private val getOuterConeAngleBind by lazy {
+        @JvmField
+        val getOuterConeAngleBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_outer_cone_angle", GET_OUTER_CONE_ANGLE_HASH)
-        }
 
         private const val SET_OUTER_CONE_ANGLE_HASH = 373806689L
-        private val setOuterConeAngleBind by lazy {
+        @JvmField
+        val setOuterConeAngleBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_outer_cone_angle", SET_OUTER_CONE_ANGLE_HASH)
-        }
 
         private const val GET_ADDITIONAL_DATA_HASH = 2138907829L
-        private val getAdditionalDataBind by lazy {
+        @JvmField
+        val getAdditionalDataBind =
             ObjectCalls.getMethodBind("GLTFLight", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
-        }
 
         private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
-        private val setAdditionalDataBind by lazy {
+        @JvmField
+        val setAdditionalDataBind =
             ObjectCalls.getMethodBind("GLTFLight", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
-        }
     }
 }

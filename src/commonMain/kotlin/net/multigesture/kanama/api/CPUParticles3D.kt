@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -487,7 +488,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emitting
      */
     fun setEmitting(emitting: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmittingBind, segment, emitting)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmittingBind, segment, emitting)
     }
 
     /**
@@ -496,7 +497,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_amount
      */
     fun setAmount(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAmountBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setAmountBind, segment, amount)
     }
 
     /**
@@ -505,7 +506,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_lifetime
      */
     fun setLifetime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, segment, secs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLifetimeBind, segment, secs)
     }
 
     /**
@@ -515,7 +516,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_one_shot
      */
     fun setOneShot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOneShotBind, segment, enable)
     }
 
     /**
@@ -524,7 +525,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_pre_process_time
      */
     fun setPreProcessTime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, segment, secs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPreProcessTimeBind, segment, secs)
     }
 
     /**
@@ -534,7 +535,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_explosiveness_ratio
      */
     fun setExplosivenessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExplosivenessRatioBind, segment, ratio)
     }
 
     /**
@@ -543,7 +544,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_randomness_ratio
      */
     fun setRandomnessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomnessRatioBind, segment, ratio)
     }
 
     /**
@@ -555,7 +556,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_visibility_aabb
      */
     fun setVisibilityAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setVisibilityAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setVisibilityAabbBind, segment, aabb)
     }
 
     /**
@@ -564,7 +565,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_lifetime_randomness
      */
     fun setLifetimeRandomness(random: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, segment, random)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLifetimeRandomnessBind, segment, random)
     }
 
     /**
@@ -576,7 +577,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_use_local_coordinates
      */
     fun setUseLocalCoordinates(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseLocalCoordinatesBind, segment, enable)
     }
 
     /**
@@ -587,7 +588,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_fixed_fps
      */
     fun setFixedFps(fps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, segment, fps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFixedFpsBind, segment, fps)
     }
 
     /**
@@ -597,7 +598,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_fractional_delta
      */
     fun setFractionalDelta(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFractionalDeltaBind, segment, enable)
     }
 
     /**
@@ -607,7 +608,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_speed_scale
      */
     fun setSpeedScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, scale)
     }
 
     /**
@@ -619,7 +620,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.is_emitting
      */
     fun isEmitting(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmittingBind, segment)
     }
 
     /**
@@ -628,7 +629,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_amount
      */
     fun getAmount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAmountBind, segment)
     }
 
     /**
@@ -637,7 +638,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_lifetime
      */
     fun getLifetime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLifetimeBind, segment)
     }
 
     /**
@@ -647,7 +648,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_one_shot
      */
     fun getOneShot(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getOneShotBind, segment)
     }
 
     /**
@@ -656,7 +657,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_pre_process_time
      */
     fun getPreProcessTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreProcessTimeBind, segment)
     }
 
     /**
@@ -666,7 +667,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_explosiveness_ratio
      */
     fun getExplosivenessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExplosivenessRatioBind, segment)
     }
 
     /**
@@ -675,7 +676,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_randomness_ratio
      */
     fun getRandomnessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomnessRatioBind, segment)
     }
 
     /**
@@ -687,7 +688,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_visibility_aabb
      */
     fun getVisibilityAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getVisibilityAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getVisibilityAabbBind, segment)
     }
 
     /**
@@ -696,7 +697,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_lifetime_randomness
      */
     fun getLifetimeRandomness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLifetimeRandomnessBind, segment)
     }
 
     /**
@@ -708,7 +709,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_use_local_coordinates
      */
     fun getUseLocalCoordinates(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseLocalCoordinatesBind, segment)
     }
 
     /**
@@ -719,7 +720,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_fixed_fps
      */
     fun getFixedFps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFixedFpsBind, segment)
     }
 
     /**
@@ -729,7 +730,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_fractional_delta
      */
     fun getFractionalDelta(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFractionalDeltaBind, segment)
     }
 
     /**
@@ -739,7 +740,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -748,7 +749,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_draw_order
      */
     fun setDrawOrder(order: CPUParticles3D.DrawOrder) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDrawOrderBind, segment, order.value)
     }
 
     /**
@@ -757,7 +758,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_draw_order
      */
     fun getDrawOrder(): CPUParticles3D.DrawOrder {
-        return CPUParticles3D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment))
+        return CPUParticles3D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDrawOrderBind, segment))
     }
 
     /**
@@ -766,7 +767,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -775,7 +776,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
     /**
@@ -786,7 +787,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_use_fixed_seed
      */
     fun setUseFixedSeed(useFixedSeed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, segment, useFixedSeed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseFixedSeedBind, segment, useFixedSeed)
     }
 
     /**
@@ -797,7 +798,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_use_fixed_seed
      */
     fun getUseFixedSeed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseFixedSeedBind, segment)
     }
 
     /**
@@ -806,7 +807,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_seed
      */
     fun setSeed(seed: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, segment, seed)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setSeedBind, segment, seed)
     }
 
     /**
@@ -815,7 +816,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_seed
      */
     fun getSeed(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getSeedBind, segment)
     }
 
     /**
@@ -825,7 +826,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.restart
      */
     fun restart(keepSeed: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(restartBind, segment, keepSeed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.restartBind, segment, keepSeed)
     }
 
     /**
@@ -838,7 +839,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.request_particles_process
      */
     fun requestParticlesProcess(processTime: Double, processTimeResidual: Double = 0.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, segment, processTime, processTimeResidual)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(Binds.requestParticlesProcessBind, segment, processTime, processTimeResidual)
     }
 
     /**
@@ -848,7 +849,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.capture_aabb
      */
     fun captureAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(captureAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.captureAabbBind, segment)
     }
 
     /**
@@ -857,7 +858,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_direction
      */
     fun setDirection(direction: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setDirectionBind, segment, direction)
     }
 
     /**
@@ -866,7 +867,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_direction
      */
     fun getDirection(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getDirectionBind, segment)
     }
 
     /**
@@ -876,7 +877,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_spread
      */
     fun setSpread(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpreadBind, segment, degrees)
     }
 
     /**
@@ -886,7 +887,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_spread
      */
     fun getSpread(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
     }
 
     /**
@@ -895,7 +896,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_flatness
      */
     fun setFlatness(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFlatnessBind, segment, amount)
     }
 
     /**
@@ -904,7 +905,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_flatness
      */
     fun getFlatness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFlatnessBind, segment)
     }
 
     /**
@@ -913,7 +914,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_min
      */
     fun setParamMin(param: CPUParticles3D.Parameter, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamMinBind, segment, param.value, value)
     }
 
     /**
@@ -922,7 +923,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_min
      */
     fun getParamMin(param: CPUParticles3D.Parameter): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMinBind, segment, param.value)
     }
 
     /**
@@ -931,7 +932,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_max
      */
     fun setParamMax(param: CPUParticles3D.Parameter, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamMaxBind, segment, param.value, value)
     }
 
     /**
@@ -940,7 +941,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_max
      */
     fun getParamMax(param: CPUParticles3D.Parameter): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMaxBind, segment, param.value)
     }
 
     /**
@@ -949,7 +950,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_curve
      */
     fun setParamCurve(param: CPUParticles3D.Parameter, curve: Curve?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param.value, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamCurveBind, segment, param.value, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -958,7 +959,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_curve
      */
     fun getParamCurve(param: CPUParticles3D.Parameter): Curve? {
-        return Curve.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param.value))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getParamCurveBind, segment, param.value))
     }
 
     /**
@@ -970,7 +971,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -982,7 +983,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -995,7 +996,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color_ramp
      */
     fun setColorRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1008,7 +1009,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color_ramp
      */
     fun getColorRamp(): Gradient? {
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
     }
 
     /**
@@ -1021,7 +1022,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color_initial_ramp
      */
     fun setColorInitialRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1034,7 +1035,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color_initial_ramp
      */
     fun getColorInitialRamp(): Gradient? {
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorInitialRampBind, segment))
     }
 
     /**
@@ -1043,7 +1044,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_particle_flag
      */
     fun setParticleFlag(particleFlag: CPUParticles3D.ParticleFlags, enable: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag.value, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setParticleFlagBind, segment, particleFlag.value, enable)
     }
 
     /**
@@ -1052,7 +1053,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_particle_flag
      */
     fun getParticleFlag(particleFlag: CPUParticles3D.ParticleFlags): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getParticleFlagBind, segment, particleFlag.value)
     }
 
     /**
@@ -1061,7 +1062,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_shape
      */
     fun setEmissionShape(shape: CPUParticles3D.EmissionShape) {
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEmissionShapeBind, segment, shape.value)
     }
 
     /**
@@ -1070,7 +1071,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_shape
      */
     fun getEmissionShape(): CPUParticles3D.EmissionShape {
-        return CPUParticles3D.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment))
+        return CPUParticles3D.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionShapeBind, segment))
     }
 
     /**
@@ -1079,7 +1080,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_sphere_radius
      */
     fun setEmissionSphereRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionSphereRadiusBind, segment, radius)
     }
 
     /**
@@ -1088,7 +1089,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_sphere_radius
      */
     fun getEmissionSphereRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionSphereRadiusBind, segment)
     }
 
     /**
@@ -1097,7 +1098,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_box_extents
      */
     fun setEmissionBoxExtents(extents: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, segment, extents)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionBoxExtentsBind, segment, extents)
     }
 
     /**
@@ -1106,7 +1107,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_box_extents
      */
     fun getEmissionBoxExtents(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionBoxExtentsBind, segment)
     }
 
     /**
@@ -1116,7 +1117,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_points
      */
     fun setEmissionPoints(array: List<Vector3>) {
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setEmissionPointsBind, segment, array)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setEmissionPointsBind, segment, array)
     }
 
     /**
@@ -1126,7 +1127,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_points
      */
     fun getEmissionPoints(): List<Vector3> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getEmissionPointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getEmissionPointsBind, segment)
     }
 
     /**
@@ -1135,7 +1136,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_normals
      */
     fun setEmissionNormals(array: List<Vector3>) {
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setEmissionNormalsBind, segment, array)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setEmissionNormalsBind, segment, array)
     }
 
     /**
@@ -1144,7 +1145,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_normals
      */
     fun getEmissionNormals(): List<Vector3> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getEmissionNormalsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getEmissionNormalsBind, segment)
     }
 
     /**
@@ -1158,7 +1159,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_colors
      */
     fun setEmissionColors(array: List<Color>) {
-        ObjectCalls.ptrcallWithPackedColorListArg(setEmissionColorsBind, segment, array)
+        ObjectCalls.ptrcallWithPackedColorListArg(Binds.setEmissionColorsBind, segment, array)
     }
 
     /**
@@ -1172,7 +1173,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_colors
      */
     fun getEmissionColors(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getEmissionColorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getEmissionColorsBind, segment)
     }
 
     /**
@@ -1181,7 +1182,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_axis
      */
     fun setEmissionRingAxis(axis: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, segment, axis)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionRingAxisBind, segment, axis)
     }
 
     /**
@@ -1190,7 +1191,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_axis
      */
     fun getEmissionRingAxis(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionRingAxisBind, segment)
     }
 
     /**
@@ -1199,7 +1200,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_height
      */
     fun setEmissionRingHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingHeightBind, segment, height)
     }
 
     /**
@@ -1208,7 +1209,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_height
      */
     fun getEmissionRingHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingHeightBind, segment)
     }
 
     /**
@@ -1217,7 +1218,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_radius
      */
     fun setEmissionRingRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingRadiusBind, segment, radius)
     }
 
     /**
@@ -1226,7 +1227,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_radius
      */
     fun getEmissionRingRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingRadiusBind, segment)
     }
 
     /**
@@ -1235,7 +1236,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_inner_radius
      */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, segment, innerRadius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingInnerRadiusBind, segment, innerRadius)
     }
 
     /**
@@ -1244,7 +1245,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_inner_radius
      */
     fun getEmissionRingInnerRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingInnerRadiusBind, segment)
     }
 
     /**
@@ -1257,7 +1258,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_cone_angle
      */
     fun setEmissionRingConeAngle(coneAngle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, segment, coneAngle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingConeAngleBind, segment, coneAngle)
     }
 
     /**
@@ -1270,7 +1271,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_cone_angle
      */
     fun getEmissionRingConeAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingConeAngleBind, segment)
     }
 
     /**
@@ -1279,7 +1280,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_gravity
      */
     fun getGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityBind, segment)
     }
 
     /**
@@ -1288,7 +1289,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_gravity
      */
     fun setGravity(accelVec: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, segment, accelVec)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGravityBind, segment, accelVec)
     }
 
     /**
@@ -1297,7 +1298,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_split_scale
      */
     fun getSplitScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSplitScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSplitScaleBind, segment)
     }
 
     /**
@@ -1306,7 +1307,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_split_scale
      */
     fun setSplitScale(splitScale: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSplitScaleBind, segment, splitScale)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSplitScaleBind, segment, splitScale)
     }
 
     /**
@@ -1315,7 +1316,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_x
      */
     fun getScaleCurveX(): Curve? {
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScaleCurveXBind, segment))
     }
 
     /**
@@ -1324,7 +1325,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_x
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1333,7 +1334,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_y
      */
     fun getScaleCurveY(): Curve? {
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScaleCurveYBind, segment))
     }
 
     /**
@@ -1342,7 +1343,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_y
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1351,7 +1352,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_z
      */
     fun getScaleCurveZ(): Curve? {
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveZBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScaleCurveZBind, segment))
     }
 
     /**
@@ -1360,7 +1361,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_z
      */
     fun setScaleCurveZ(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveZBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setScaleCurveZBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1370,7 +1371,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.convert_from_particles
      */
     fun convertFromParticles(particles: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, segment, listOf(particles.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.convertFromParticlesBind, segment, listOf(particles.segment))
     }
 
     /** Signal `finished()`; see [TypedSignal]. */
@@ -1618,455 +1619,457 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): CPUParticles3D? =
             if (handle.address() == 0L) null else CPUParticles3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EMITTING_HASH = 2586408642L
-        private val setEmittingBind by lazy {
+        @JvmField
+        val setEmittingBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emitting", SET_EMITTING_HASH)
-        }
 
         private const val SET_AMOUNT_HASH = 1286410249L
-        private val setAmountBind by lazy {
+        @JvmField
+        val setAmountBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_amount", SET_AMOUNT_HASH)
-        }
 
         private const val SET_LIFETIME_HASH = 373806689L
-        private val setLifetimeBind by lazy {
+        @JvmField
+        val setLifetimeBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_lifetime", SET_LIFETIME_HASH)
-        }
 
         private const val SET_ONE_SHOT_HASH = 2586408642L
-        private val setOneShotBind by lazy {
+        @JvmField
+        val setOneShotBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_one_shot", SET_ONE_SHOT_HASH)
-        }
 
         private const val SET_PRE_PROCESS_TIME_HASH = 373806689L
-        private val setPreProcessTimeBind by lazy {
+        @JvmField
+        val setPreProcessTimeBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_pre_process_time", SET_PRE_PROCESS_TIME_HASH)
-        }
 
         private const val SET_EXPLOSIVENESS_RATIO_HASH = 373806689L
-        private val setExplosivenessRatioBind by lazy {
+        @JvmField
+        val setExplosivenessRatioBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_explosiveness_ratio", SET_EXPLOSIVENESS_RATIO_HASH)
-        }
 
         private const val SET_RANDOMNESS_RATIO_HASH = 373806689L
-        private val setRandomnessRatioBind by lazy {
+        @JvmField
+        val setRandomnessRatioBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_randomness_ratio", SET_RANDOMNESS_RATIO_HASH)
-        }
 
         private const val SET_VISIBILITY_AABB_HASH = 259215842L
-        private val setVisibilityAabbBind by lazy {
+        @JvmField
+        val setVisibilityAabbBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_visibility_aabb", SET_VISIBILITY_AABB_HASH)
-        }
 
         private const val SET_LIFETIME_RANDOMNESS_HASH = 373806689L
-        private val setLifetimeRandomnessBind by lazy {
+        @JvmField
+        val setLifetimeRandomnessBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_lifetime_randomness", SET_LIFETIME_RANDOMNESS_HASH)
-        }
 
         private const val SET_USE_LOCAL_COORDINATES_HASH = 2586408642L
-        private val setUseLocalCoordinatesBind by lazy {
+        @JvmField
+        val setUseLocalCoordinatesBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_use_local_coordinates", SET_USE_LOCAL_COORDINATES_HASH)
-        }
 
         private const val SET_FIXED_FPS_HASH = 1286410249L
-        private val setFixedFpsBind by lazy {
+        @JvmField
+        val setFixedFpsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_fixed_fps", SET_FIXED_FPS_HASH)
-        }
 
         private const val SET_FRACTIONAL_DELTA_HASH = 2586408642L
-        private val setFractionalDeltaBind by lazy {
+        @JvmField
+        val setFractionalDeltaBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_fractional_delta", SET_FRACTIONAL_DELTA_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val IS_EMITTING_HASH = 36873697L
-        private val isEmittingBind by lazy {
+        @JvmField
+        val isEmittingBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "is_emitting", IS_EMITTING_HASH)
-        }
 
         private const val GET_AMOUNT_HASH = 3905245786L
-        private val getAmountBind by lazy {
+        @JvmField
+        val getAmountBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_amount", GET_AMOUNT_HASH)
-        }
 
         private const val GET_LIFETIME_HASH = 1740695150L
-        private val getLifetimeBind by lazy {
+        @JvmField
+        val getLifetimeBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_lifetime", GET_LIFETIME_HASH)
-        }
 
         private const val GET_ONE_SHOT_HASH = 36873697L
-        private val getOneShotBind by lazy {
+        @JvmField
+        val getOneShotBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_one_shot", GET_ONE_SHOT_HASH)
-        }
 
         private const val GET_PRE_PROCESS_TIME_HASH = 1740695150L
-        private val getPreProcessTimeBind by lazy {
+        @JvmField
+        val getPreProcessTimeBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_pre_process_time", GET_PRE_PROCESS_TIME_HASH)
-        }
 
         private const val GET_EXPLOSIVENESS_RATIO_HASH = 1740695150L
-        private val getExplosivenessRatioBind by lazy {
+        @JvmField
+        val getExplosivenessRatioBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_explosiveness_ratio", GET_EXPLOSIVENESS_RATIO_HASH)
-        }
 
         private const val GET_RANDOMNESS_RATIO_HASH = 1740695150L
-        private val getRandomnessRatioBind by lazy {
+        @JvmField
+        val getRandomnessRatioBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_randomness_ratio", GET_RANDOMNESS_RATIO_HASH)
-        }
 
         private const val GET_VISIBILITY_AABB_HASH = 1068685055L
-        private val getVisibilityAabbBind by lazy {
+        @JvmField
+        val getVisibilityAabbBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_visibility_aabb", GET_VISIBILITY_AABB_HASH)
-        }
 
         private const val GET_LIFETIME_RANDOMNESS_HASH = 1740695150L
-        private val getLifetimeRandomnessBind by lazy {
+        @JvmField
+        val getLifetimeRandomnessBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_lifetime_randomness", GET_LIFETIME_RANDOMNESS_HASH)
-        }
 
         private const val GET_USE_LOCAL_COORDINATES_HASH = 36873697L
-        private val getUseLocalCoordinatesBind by lazy {
+        @JvmField
+        val getUseLocalCoordinatesBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_use_local_coordinates", GET_USE_LOCAL_COORDINATES_HASH)
-        }
 
         private const val GET_FIXED_FPS_HASH = 3905245786L
-        private val getFixedFpsBind by lazy {
+        @JvmField
+        val getFixedFpsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_fixed_fps", GET_FIXED_FPS_HASH)
-        }
 
         private const val GET_FRACTIONAL_DELTA_HASH = 36873697L
-        private val getFractionalDeltaBind by lazy {
+        @JvmField
+        val getFractionalDeltaBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_fractional_delta", GET_FRACTIONAL_DELTA_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val SET_DRAW_ORDER_HASH = 1427401774L
-        private val setDrawOrderBind by lazy {
+        @JvmField
+        val setDrawOrderBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_draw_order", SET_DRAW_ORDER_HASH)
-        }
 
         private const val GET_DRAW_ORDER_HASH = 1321900776L
-        private val getDrawOrderBind by lazy {
+        @JvmField
+        val getDrawOrderBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_draw_order", GET_DRAW_ORDER_HASH)
-        }
 
         private const val SET_MESH_HASH = 194775623L
-        private val setMeshBind by lazy {
+        @JvmField
+        val setMeshBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_mesh", SET_MESH_HASH)
-        }
 
         private const val GET_MESH_HASH = 1808005922L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val SET_USE_FIXED_SEED_HASH = 2586408642L
-        private val setUseFixedSeedBind by lazy {
+        @JvmField
+        val setUseFixedSeedBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_use_fixed_seed", SET_USE_FIXED_SEED_HASH)
-        }
 
         private const val GET_USE_FIXED_SEED_HASH = 36873697L
-        private val getUseFixedSeedBind by lazy {
+        @JvmField
+        val getUseFixedSeedBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_use_fixed_seed", GET_USE_FIXED_SEED_HASH)
-        }
 
         private const val SET_SEED_HASH = 1286410249L
-        private val setSeedBind by lazy {
+        @JvmField
+        val setSeedBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_seed", SET_SEED_HASH)
-        }
 
         private const val GET_SEED_HASH = 3905245786L
-        private val getSeedBind by lazy {
+        @JvmField
+        val getSeedBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_seed", GET_SEED_HASH)
-        }
 
         private const val RESTART_HASH = 107499316L
-        private val restartBind by lazy {
+        @JvmField
+        val restartBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "restart", RESTART_HASH)
-        }
 
         private const val REQUEST_PARTICLES_PROCESS_HASH = 66938510L
-        private val requestParticlesProcessBind by lazy {
+        @JvmField
+        val requestParticlesProcessBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "request_particles_process", REQUEST_PARTICLES_PROCESS_HASH)
-        }
 
         private const val CAPTURE_AABB_HASH = 1068685055L
-        private val captureAabbBind by lazy {
+        @JvmField
+        val captureAabbBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "capture_aabb", CAPTURE_AABB_HASH)
-        }
 
         private const val SET_DIRECTION_HASH = 3460891852L
-        private val setDirectionBind by lazy {
+        @JvmField
+        val setDirectionBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_direction", SET_DIRECTION_HASH)
-        }
 
         private const val GET_DIRECTION_HASH = 3360562783L
-        private val getDirectionBind by lazy {
+        @JvmField
+        val getDirectionBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_direction", GET_DIRECTION_HASH)
-        }
 
         private const val SET_SPREAD_HASH = 373806689L
-        private val setSpreadBind by lazy {
+        @JvmField
+        val setSpreadBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_spread", SET_SPREAD_HASH)
-        }
 
         private const val GET_SPREAD_HASH = 1740695150L
-        private val getSpreadBind by lazy {
+        @JvmField
+        val getSpreadBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_spread", GET_SPREAD_HASH)
-        }
 
         private const val SET_FLATNESS_HASH = 373806689L
-        private val setFlatnessBind by lazy {
+        @JvmField
+        val setFlatnessBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_flatness", SET_FLATNESS_HASH)
-        }
 
         private const val GET_FLATNESS_HASH = 1740695150L
-        private val getFlatnessBind by lazy {
+        @JvmField
+        val getFlatnessBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_flatness", GET_FLATNESS_HASH)
-        }
 
         private const val SET_PARAM_MIN_HASH = 557936109L
-        private val setParamMinBind by lazy {
+        @JvmField
+        val setParamMinBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_param_min", SET_PARAM_MIN_HASH)
-        }
 
         private const val GET_PARAM_MIN_HASH = 597646162L
-        private val getParamMinBind by lazy {
+        @JvmField
+        val getParamMinBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_param_min", GET_PARAM_MIN_HASH)
-        }
 
         private const val SET_PARAM_MAX_HASH = 557936109L
-        private val setParamMaxBind by lazy {
+        @JvmField
+        val setParamMaxBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_param_max", SET_PARAM_MAX_HASH)
-        }
 
         private const val GET_PARAM_MAX_HASH = 597646162L
-        private val getParamMaxBind by lazy {
+        @JvmField
+        val getParamMaxBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_param_max", GET_PARAM_MAX_HASH)
-        }
 
         private const val SET_PARAM_CURVE_HASH = 4044142537L
-        private val setParamCurveBind by lazy {
+        @JvmField
+        val setParamCurveBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_param_curve", SET_PARAM_CURVE_HASH)
-        }
 
         private const val GET_PARAM_CURVE_HASH = 4132790277L
-        private val getParamCurveBind by lazy {
+        @JvmField
+        val getParamCurveBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_param_curve", GET_PARAM_CURVE_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_COLOR_RAMP_HASH = 2756054477L
-        private val setColorRampBind by lazy {
+        @JvmField
+        val setColorRampBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_color_ramp", SET_COLOR_RAMP_HASH)
-        }
 
         private const val GET_COLOR_RAMP_HASH = 132272999L
-        private val getColorRampBind by lazy {
+        @JvmField
+        val getColorRampBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_color_ramp", GET_COLOR_RAMP_HASH)
-        }
 
         private const val SET_COLOR_INITIAL_RAMP_HASH = 2756054477L
-        private val setColorInitialRampBind by lazy {
+        @JvmField
+        val setColorInitialRampBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_color_initial_ramp", SET_COLOR_INITIAL_RAMP_HASH)
-        }
 
         private const val GET_COLOR_INITIAL_RAMP_HASH = 132272999L
-        private val getColorInitialRampBind by lazy {
+        @JvmField
+        val getColorInitialRampBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_color_initial_ramp", GET_COLOR_INITIAL_RAMP_HASH)
-        }
 
         private const val SET_PARTICLE_FLAG_HASH = 3515406498L
-        private val setParticleFlagBind by lazy {
+        @JvmField
+        val setParticleFlagBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_particle_flag", SET_PARTICLE_FLAG_HASH)
-        }
 
         private const val GET_PARTICLE_FLAG_HASH = 2845201987L
-        private val getParticleFlagBind by lazy {
+        @JvmField
+        val getParticleFlagBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_particle_flag", GET_PARTICLE_FLAG_HASH)
-        }
 
         private const val SET_EMISSION_SHAPE_HASH = 491823814L
-        private val setEmissionShapeBind by lazy {
+        @JvmField
+        val setEmissionShapeBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_shape", SET_EMISSION_SHAPE_HASH)
-        }
 
         private const val GET_EMISSION_SHAPE_HASH = 2961454842L
-        private val getEmissionShapeBind by lazy {
+        @JvmField
+        val getEmissionShapeBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_shape", GET_EMISSION_SHAPE_HASH)
-        }
 
         private const val SET_EMISSION_SPHERE_RADIUS_HASH = 373806689L
-        private val setEmissionSphereRadiusBind by lazy {
+        @JvmField
+        val setEmissionSphereRadiusBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_sphere_radius", SET_EMISSION_SPHERE_RADIUS_HASH)
-        }
 
         private const val GET_EMISSION_SPHERE_RADIUS_HASH = 1740695150L
-        private val getEmissionSphereRadiusBind by lazy {
+        @JvmField
+        val getEmissionSphereRadiusBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_sphere_radius", GET_EMISSION_SPHERE_RADIUS_HASH)
-        }
 
         private const val SET_EMISSION_BOX_EXTENTS_HASH = 3460891852L
-        private val setEmissionBoxExtentsBind by lazy {
+        @JvmField
+        val setEmissionBoxExtentsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_box_extents", SET_EMISSION_BOX_EXTENTS_HASH)
-        }
 
         private const val GET_EMISSION_BOX_EXTENTS_HASH = 3360562783L
-        private val getEmissionBoxExtentsBind by lazy {
+        @JvmField
+        val getEmissionBoxExtentsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_box_extents", GET_EMISSION_BOX_EXTENTS_HASH)
-        }
 
         private const val SET_EMISSION_POINTS_HASH = 334873810L
-        private val setEmissionPointsBind by lazy {
+        @JvmField
+        val setEmissionPointsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_points", SET_EMISSION_POINTS_HASH)
-        }
 
         private const val GET_EMISSION_POINTS_HASH = 497664490L
-        private val getEmissionPointsBind by lazy {
+        @JvmField
+        val getEmissionPointsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_points", GET_EMISSION_POINTS_HASH)
-        }
 
         private const val SET_EMISSION_NORMALS_HASH = 334873810L
-        private val setEmissionNormalsBind by lazy {
+        @JvmField
+        val setEmissionNormalsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_normals", SET_EMISSION_NORMALS_HASH)
-        }
 
         private const val GET_EMISSION_NORMALS_HASH = 497664490L
-        private val getEmissionNormalsBind by lazy {
+        @JvmField
+        val getEmissionNormalsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_normals", GET_EMISSION_NORMALS_HASH)
-        }
 
         private const val SET_EMISSION_COLORS_HASH = 3546319833L
-        private val setEmissionColorsBind by lazy {
+        @JvmField
+        val setEmissionColorsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_colors", SET_EMISSION_COLORS_HASH)
-        }
 
         private const val GET_EMISSION_COLORS_HASH = 1392750486L
-        private val getEmissionColorsBind by lazy {
+        @JvmField
+        val getEmissionColorsBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_colors", GET_EMISSION_COLORS_HASH)
-        }
 
         private const val SET_EMISSION_RING_AXIS_HASH = 3460891852L
-        private val setEmissionRingAxisBind by lazy {
+        @JvmField
+        val setEmissionRingAxisBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_ring_axis", SET_EMISSION_RING_AXIS_HASH)
-        }
 
         private const val GET_EMISSION_RING_AXIS_HASH = 3360562783L
-        private val getEmissionRingAxisBind by lazy {
+        @JvmField
+        val getEmissionRingAxisBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_ring_axis", GET_EMISSION_RING_AXIS_HASH)
-        }
 
         private const val SET_EMISSION_RING_HEIGHT_HASH = 373806689L
-        private val setEmissionRingHeightBind by lazy {
+        @JvmField
+        val setEmissionRingHeightBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_ring_height", SET_EMISSION_RING_HEIGHT_HASH)
-        }
 
         private const val GET_EMISSION_RING_HEIGHT_HASH = 1740695150L
-        private val getEmissionRingHeightBind by lazy {
+        @JvmField
+        val getEmissionRingHeightBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_ring_height", GET_EMISSION_RING_HEIGHT_HASH)
-        }
 
         private const val SET_EMISSION_RING_RADIUS_HASH = 373806689L
-        private val setEmissionRingRadiusBind by lazy {
+        @JvmField
+        val setEmissionRingRadiusBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_ring_radius", SET_EMISSION_RING_RADIUS_HASH)
-        }
 
         private const val GET_EMISSION_RING_RADIUS_HASH = 1740695150L
-        private val getEmissionRingRadiusBind by lazy {
+        @JvmField
+        val getEmissionRingRadiusBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_ring_radius", GET_EMISSION_RING_RADIUS_HASH)
-        }
 
         private const val SET_EMISSION_RING_INNER_RADIUS_HASH = 373806689L
-        private val setEmissionRingInnerRadiusBind by lazy {
+        @JvmField
+        val setEmissionRingInnerRadiusBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_ring_inner_radius", SET_EMISSION_RING_INNER_RADIUS_HASH)
-        }
 
         private const val GET_EMISSION_RING_INNER_RADIUS_HASH = 1740695150L
-        private val getEmissionRingInnerRadiusBind by lazy {
+        @JvmField
+        val getEmissionRingInnerRadiusBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_ring_inner_radius", GET_EMISSION_RING_INNER_RADIUS_HASH)
-        }
 
         private const val SET_EMISSION_RING_CONE_ANGLE_HASH = 373806689L
-        private val setEmissionRingConeAngleBind by lazy {
+        @JvmField
+        val setEmissionRingConeAngleBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_emission_ring_cone_angle", SET_EMISSION_RING_CONE_ANGLE_HASH)
-        }
 
         private const val GET_EMISSION_RING_CONE_ANGLE_HASH = 1740695150L
-        private val getEmissionRingConeAngleBind by lazy {
+        @JvmField
+        val getEmissionRingConeAngleBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_emission_ring_cone_angle", GET_EMISSION_RING_CONE_ANGLE_HASH)
-        }
 
         private const val GET_GRAVITY_HASH = 3360562783L
-        private val getGravityBind by lazy {
+        @JvmField
+        val getGravityBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_gravity", GET_GRAVITY_HASH)
-        }
 
         private const val SET_GRAVITY_HASH = 3460891852L
-        private val setGravityBind by lazy {
+        @JvmField
+        val setGravityBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_gravity", SET_GRAVITY_HASH)
-        }
 
         private const val GET_SPLIT_SCALE_HASH = 2240911060L
-        private val getSplitScaleBind by lazy {
+        @JvmField
+        val getSplitScaleBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_split_scale", GET_SPLIT_SCALE_HASH)
-        }
 
         private const val SET_SPLIT_SCALE_HASH = 2586408642L
-        private val setSplitScaleBind by lazy {
+        @JvmField
+        val setSplitScaleBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_split_scale", SET_SPLIT_SCALE_HASH)
-        }
 
         private const val GET_SCALE_CURVE_X_HASH = 2460114913L
-        private val getScaleCurveXBind by lazy {
+        @JvmField
+        val getScaleCurveXBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_scale_curve_x", GET_SCALE_CURVE_X_HASH)
-        }
 
         private const val SET_SCALE_CURVE_X_HASH = 270443179L
-        private val setScaleCurveXBind by lazy {
+        @JvmField
+        val setScaleCurveXBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_scale_curve_x", SET_SCALE_CURVE_X_HASH)
-        }
 
         private const val GET_SCALE_CURVE_Y_HASH = 2460114913L
-        private val getScaleCurveYBind by lazy {
+        @JvmField
+        val getScaleCurveYBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_scale_curve_y", GET_SCALE_CURVE_Y_HASH)
-        }
 
         private const val SET_SCALE_CURVE_Y_HASH = 270443179L
-        private val setScaleCurveYBind by lazy {
+        @JvmField
+        val setScaleCurveYBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_scale_curve_y", SET_SCALE_CURVE_Y_HASH)
-        }
 
         private const val GET_SCALE_CURVE_Z_HASH = 2460114913L
-        private val getScaleCurveZBind by lazy {
+        @JvmField
+        val getScaleCurveZBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "get_scale_curve_z", GET_SCALE_CURVE_Z_HASH)
-        }
 
         private const val SET_SCALE_CURVE_Z_HASH = 270443179L
-        private val setScaleCurveZBind by lazy {
+        @JvmField
+        val setScaleCurveZBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "set_scale_curve_z", SET_SCALE_CURVE_Z_HASH)
-        }
 
         private const val CONVERT_FROM_PARTICLES_HASH = 1078189570L
-        private val convertFromParticlesBind by lazy {
+        @JvmField
+        val convertFromParticlesBind =
             ObjectCalls.getMethodBind("CPUParticles3D", "convert_from_particles", CONVERT_FROM_PARTICLES_HASH)
-        }
     }
 }

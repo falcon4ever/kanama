@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -12,47 +13,47 @@ import net.multigesture.kanama.types.Vector3
 open class Noise(handle: GodotHandle) : Resource(handle) {
     fun getNoise1d(x: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(getNoise1dBind, segment, x)
+        return ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.getNoise1dBind, segment, x)
     }
 
     fun getNoise2d(x: Double, y: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(getNoise2dBind, segment, x, y)
+        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.getNoise2dBind, segment, x, y)
     }
 
     fun getNoise2dv(v: Vector2): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getNoise2dvBind, segment, v)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getNoise2dvBind, segment, v)
     }
 
     fun getNoise3d(x: Double, y: Double, z: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(getNoise3dBind, segment, x, y, z)
+        return ObjectCalls.ptrcallWithThreeDoubleArgsRetDouble(Binds.getNoise3dBind, segment, x, y, z)
     }
 
     fun getNoise3dv(v: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector3ArgRetDouble(getNoise3dvBind, segment, v)
+        return ObjectCalls.ptrcallWithVector3ArgRetDouble(Binds.getNoise3dvBind, segment, v)
     }
 
     fun getImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getImageBind, segment, width, height, invert, in3dSpace, normalize))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(Binds.getImageBind, segment, width, height, invert, in3dSpace, normalize))
     }
 
     fun getSeamlessImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(Binds.getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
     }
 
     fun getImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrapBorrowed)
+        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(Binds.getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrapBorrowed)
     }
 
     fun getSeamlessImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrapBorrowed)
+        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(Binds.getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrapBorrowed)
     }
 
     companion object {
@@ -65,50 +66,52 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Noise? =
             if (handle.address() == 0L) null else Noise(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_NOISE_1D_HASH = 3919130443L
-        private val getNoise1dBind by lazy {
+        @JvmField
+        val getNoise1dBind =
             ObjectCalls.getMethodBind("Noise", "get_noise_1d", GET_NOISE_1D_HASH)
-        }
 
         private const val GET_NOISE_2D_HASH = 2753205203L
-        private val getNoise2dBind by lazy {
+        @JvmField
+        val getNoise2dBind =
             ObjectCalls.getMethodBind("Noise", "get_noise_2d", GET_NOISE_2D_HASH)
-        }
 
         private const val GET_NOISE_2DV_HASH = 2276447920L
-        private val getNoise2dvBind by lazy {
+        @JvmField
+        val getNoise2dvBind =
             ObjectCalls.getMethodBind("Noise", "get_noise_2dv", GET_NOISE_2DV_HASH)
-        }
 
         private const val GET_NOISE_3D_HASH = 973811851L
-        private val getNoise3dBind by lazy {
+        @JvmField
+        val getNoise3dBind =
             ObjectCalls.getMethodBind("Noise", "get_noise_3d", GET_NOISE_3D_HASH)
-        }
 
         private const val GET_NOISE_3DV_HASH = 1109078154L
-        private val getNoise3dvBind by lazy {
+        @JvmField
+        val getNoise3dvBind =
             ObjectCalls.getMethodBind("Noise", "get_noise_3dv", GET_NOISE_3DV_HASH)
-        }
 
         private const val GET_IMAGE_HASH = 3180683109L
-        private val getImageBind by lazy {
+        @JvmField
+        val getImageBind =
             ObjectCalls.getMethodBind("Noise", "get_image", GET_IMAGE_HASH)
-        }
 
         private const val GET_SEAMLESS_IMAGE_HASH = 2770743602L
-        private val getSeamlessImageBind by lazy {
+        @JvmField
+        val getSeamlessImageBind =
             ObjectCalls.getMethodBind("Noise", "get_seamless_image", GET_SEAMLESS_IMAGE_HASH)
-        }
 
         private const val GET_IMAGE_3D_HASH = 3977814329L
-        private val getImage3dBind by lazy {
+        @JvmField
+        val getImage3dBind =
             ObjectCalls.getMethodBind("Noise", "get_image_3d", GET_IMAGE_3D_HASH)
-        }
 
         private const val GET_SEAMLESS_IMAGE_3D_HASH = 451006340L
-        private val getSeamlessImage3dBind by lazy {
+        @JvmField
+        val getSeamlessImage3dBind =
             ObjectCalls.getMethodBind("Noise", "get_seamless_image_3d", GET_SEAMLESS_IMAGE_3D_HASH)
-        }
     }
 }

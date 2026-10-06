@@ -22,7 +22,5 @@ open class EditorExportPlatformAppleEmbedded(handle: GodotHandle) : EditorExport
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformAppleEmbedded? =
             if (handle.address() == 0L) null else EditorExportPlatformAppleEmbedded(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

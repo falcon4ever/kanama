@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -26,7 +27,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getMode(): Shader.Mode {
         checkOpen()
-        return Shader.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
+        return Shader.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
     }
 
     /**
@@ -37,7 +38,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun setCode(code: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setCodeBind, segment, code)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCodeBind, segment, code)
     }
 
     /**
@@ -48,7 +49,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCodeBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, index)
+        ObjectCalls.ptrcallWithStringNameObjectIntArgs(Binds.setDefaultTextureParameterBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, index)
     }
 
     /**
@@ -72,7 +73,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
         checkOpen()
-        return Texture.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, segment, name, index))
+        return Texture.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(Binds.getDefaultTextureParameterBind, segment, name, index))
     }
 
     /**
@@ -86,7 +87,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getShaderUniformList(getGroups: Boolean = false): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetArray(getShaderUniformListBind, segment, getGroups)
+        return ObjectCalls.ptrcallWithBoolArgRetArray(Binds.getShaderUniformListBind, segment, getGroups)
     }
 
     /**
@@ -98,7 +99,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun inspectNativeShaderCode() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.inspectNativeShaderCodeBind, segment)
     }
 
     /**
@@ -159,40 +160,42 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shader? =
             if (handle.address() == 0L) null else Shader(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_MODE_HASH = 3392948163L
-        private val getModeBind by lazy {
+        @JvmField
+        val getModeBind =
             ObjectCalls.getMethodBind("Shader", "get_mode", GET_MODE_HASH)
-        }
 
         private const val SET_CODE_HASH = 83702148L
-        private val setCodeBind by lazy {
+        @JvmField
+        val setCodeBind =
             ObjectCalls.getMethodBind("Shader", "set_code", SET_CODE_HASH)
-        }
 
         private const val GET_CODE_HASH = 201670096L
-        private val getCodeBind by lazy {
+        @JvmField
+        val getCodeBind =
             ObjectCalls.getMethodBind("Shader", "get_code", GET_CODE_HASH)
-        }
 
         private const val SET_DEFAULT_TEXTURE_PARAMETER_HASH = 3850209648L
-        private val setDefaultTextureParameterBind by lazy {
+        @JvmField
+        val setDefaultTextureParameterBind =
             ObjectCalls.getMethodBind("Shader", "set_default_texture_parameter", SET_DEFAULT_TEXTURE_PARAMETER_HASH)
-        }
 
         private const val GET_DEFAULT_TEXTURE_PARAMETER_HASH = 4213877425L
-        private val getDefaultTextureParameterBind by lazy {
+        @JvmField
+        val getDefaultTextureParameterBind =
             ObjectCalls.getMethodBind("Shader", "get_default_texture_parameter", GET_DEFAULT_TEXTURE_PARAMETER_HASH)
-        }
 
         private const val GET_SHADER_UNIFORM_LIST_HASH = 1230511656L
-        private val getShaderUniformListBind by lazy {
+        @JvmField
+        val getShaderUniformListBind =
             ObjectCalls.getMethodBind("Shader", "get_shader_uniform_list", GET_SHADER_UNIFORM_LIST_HASH)
-        }
 
         private const val INSPECT_NATIVE_SHADER_CODE_HASH = 3218959716L
-        private val inspectNativeShaderCodeBind by lazy {
+        @JvmField
+        val inspectNativeShaderCodeBind =
             ObjectCalls.getMethodBind("Shader", "inspect_native_shader_code", INSPECT_NATIVE_SHADER_CODE_HASH)
-        }
     }
 }

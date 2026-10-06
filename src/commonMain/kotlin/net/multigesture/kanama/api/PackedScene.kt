@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun pack(path: Node): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(packBind, segment, path.segment))
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.packBind, segment, path.segment))
     }
 
     /**
@@ -30,7 +31,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun instantiate(editState: PackedScene.GenEditState = PackedScene.GenEditState.DISABLED): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, segment, editState.value))
+        return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(Binds.instantiateBind, segment, editState.value))
     }
 
     /**
@@ -40,7 +41,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun canInstantiate(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canInstantiateBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun getState(): SceneState? {
         checkOpen()
-        return SceneState.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
+        return SceneState.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStateBind, segment))
     }
 
     /**
@@ -107,25 +108,27 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         @JvmStatic
         fun create(): PackedScene =
             RefCounted.owned(PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene"))))
+    }
 
+    private object Binds {
         private const val PACK_HASH = 2584678054L
-        private val packBind by lazy {
+        @JvmField
+        val packBind =
             ObjectCalls.getMethodBind("PackedScene", "pack", PACK_HASH)
-        }
 
         private const val INSTANTIATE_HASH = 2628778455L
-        private val instantiateBind by lazy {
+        @JvmField
+        val instantiateBind =
             ObjectCalls.getMethodBind("PackedScene", "instantiate", INSTANTIATE_HASH)
-        }
 
         private const val CAN_INSTANTIATE_HASH = 36873697L
-        private val canInstantiateBind by lazy {
+        @JvmField
+        val canInstantiateBind =
             ObjectCalls.getMethodBind("PackedScene", "can_instantiate", CAN_INSTANTIATE_HASH)
-        }
 
         private const val GET_STATE_HASH = 3479783971L
-        private val getStateBind by lazy {
+        @JvmField
+        val getStateBind =
             ObjectCalls.getMethodBind("PackedScene", "get_state", GET_STATE_HASH)
-        }
     }
 }

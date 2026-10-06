@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -96,7 +97,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -105,7 +106,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -123,7 +124,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -133,7 +134,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -143,7 +144,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_autowrap_mode
      */
     fun getAutowrapMode(): TextServer.AutowrapMode {
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
     }
 
     /**
@@ -153,7 +154,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
@@ -163,7 +164,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
-        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -172,7 +173,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text_direction
      */
     fun setTextDirection(direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -181,7 +182,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text_direction
      */
     fun getTextDirection(): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
     }
 
     /**
@@ -191,7 +192,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -201,7 +202,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_button_icon
      */
     fun setButtonIcon(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setButtonIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setButtonIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -223,7 +224,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_button_icon
      */
     fun getButtonIcon(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getButtonIconBind, segment))
     }
 
     /**
@@ -232,7 +233,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_flat
      */
     fun setFlat(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlatBind, segment, enabled)
     }
 
     /**
@@ -241,7 +242,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.is_flat
      */
     fun isFlat(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlatBind, segment)
     }
 
     /**
@@ -252,7 +253,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_clip_text
      */
     fun setClipText(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTextBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setClipTextBind, segment, enabled)
     }
 
     /**
@@ -263,7 +264,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_clip_text
      */
     fun getClipText(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getClipTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getClipTextBind, segment)
     }
 
     /**
@@ -272,7 +273,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_text_alignment
      */
     fun setTextAlignment(alignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -281,7 +282,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_text_alignment
      */
     fun getTextAlignment(): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextAlignmentBind, segment))
     }
 
     /**
@@ -292,7 +293,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_icon_alignment
      */
     fun setIconAlignment(iconAlignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, segment, iconAlignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setIconAlignmentBind, segment, iconAlignment.value)
     }
 
     /**
@@ -303,7 +304,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_icon_alignment
      */
     fun getIconAlignment(): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getIconAlignmentBind, segment))
     }
 
     /**
@@ -314,7 +315,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_vertical_icon_alignment
      */
     fun setVerticalIconAlignment(verticalIconAlignment: VerticalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, segment, verticalIconAlignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVerticalIconAlignmentBind, segment, verticalIconAlignment.value)
     }
 
     /**
@@ -325,7 +326,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_vertical_icon_alignment
      */
     fun getVerticalIconAlignment(): VerticalAlignment {
-        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, segment))
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalIconAlignmentBind, segment))
     }
 
     /**
@@ -335,7 +336,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.set_expand_icon
      */
     fun setExpandIcon(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandIconBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExpandIconBind, segment, enabled)
     }
 
     /**
@@ -345,7 +346,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.is_expand_icon
      */
     fun isExpandIcon(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isExpandIconBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isExpandIconBind, segment)
     }
 
     companion object {
@@ -355,135 +356,137 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): Button? =
             if (handle.address() == 0L) null else Button(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("Button", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("Button", "get_text", GET_TEXT_HASH)
-        }
 
         private const val SET_TEXT_OVERRUN_BEHAVIOR_HASH = 1008890932L
-        private val setTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("Button", "set_text_overrun_behavior", SET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TEXT_OVERRUN_BEHAVIOR_HASH = 3779142101L
-        private val getTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("Button", "get_text_overrun_behavior", GET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_AUTOWRAP_MODE_HASH = 3289138044L
-        private val setAutowrapModeBind by lazy {
+        @JvmField
+        val setAutowrapModeBind =
             ObjectCalls.getMethodBind("Button", "set_autowrap_mode", SET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val GET_AUTOWRAP_MODE_HASH = 1549071663L
-        private val getAutowrapModeBind by lazy {
+        @JvmField
+        val getAutowrapModeBind =
             ObjectCalls.getMethodBind("Button", "get_autowrap_mode", GET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val SET_AUTOWRAP_TRIM_FLAGS_HASH = 2809697122L
-        private val setAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val setAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("Button", "set_autowrap_trim_flags", SET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val GET_AUTOWRAP_TRIM_FLAGS_HASH = 2340632602L
-        private val getAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val getAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("Button", "get_autowrap_trim_flags", GET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 119160795L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("Button", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 797257663L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("Button", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("Button", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("Button", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_BUTTON_ICON_HASH = 4051416890L
-        private val setButtonIconBind by lazy {
+        @JvmField
+        val setButtonIconBind =
             ObjectCalls.getMethodBind("Button", "set_button_icon", SET_BUTTON_ICON_HASH)
-        }
 
         private const val GET_BUTTON_ICON_HASH = 3635182373L
-        private val getButtonIconBind by lazy {
+        @JvmField
+        val getButtonIconBind =
             ObjectCalls.getMethodBind("Button", "get_button_icon", GET_BUTTON_ICON_HASH)
-        }
 
         private const val SET_FLAT_HASH = 2586408642L
-        private val setFlatBind by lazy {
+        @JvmField
+        val setFlatBind =
             ObjectCalls.getMethodBind("Button", "set_flat", SET_FLAT_HASH)
-        }
 
         private const val IS_FLAT_HASH = 36873697L
-        private val isFlatBind by lazy {
+        @JvmField
+        val isFlatBind =
             ObjectCalls.getMethodBind("Button", "is_flat", IS_FLAT_HASH)
-        }
 
         private const val SET_CLIP_TEXT_HASH = 2586408642L
-        private val setClipTextBind by lazy {
+        @JvmField
+        val setClipTextBind =
             ObjectCalls.getMethodBind("Button", "set_clip_text", SET_CLIP_TEXT_HASH)
-        }
 
         private const val GET_CLIP_TEXT_HASH = 36873697L
-        private val getClipTextBind by lazy {
+        @JvmField
+        val getClipTextBind =
             ObjectCalls.getMethodBind("Button", "get_clip_text", GET_CLIP_TEXT_HASH)
-        }
 
         private const val SET_TEXT_ALIGNMENT_HASH = 2312603777L
-        private val setTextAlignmentBind by lazy {
+        @JvmField
+        val setTextAlignmentBind =
             ObjectCalls.getMethodBind("Button", "set_text_alignment", SET_TEXT_ALIGNMENT_HASH)
-        }
 
         private const val GET_TEXT_ALIGNMENT_HASH = 341400642L
-        private val getTextAlignmentBind by lazy {
+        @JvmField
+        val getTextAlignmentBind =
             ObjectCalls.getMethodBind("Button", "get_text_alignment", GET_TEXT_ALIGNMENT_HASH)
-        }
 
         private const val SET_ICON_ALIGNMENT_HASH = 2312603777L
-        private val setIconAlignmentBind by lazy {
+        @JvmField
+        val setIconAlignmentBind =
             ObjectCalls.getMethodBind("Button", "set_icon_alignment", SET_ICON_ALIGNMENT_HASH)
-        }
 
         private const val GET_ICON_ALIGNMENT_HASH = 341400642L
-        private val getIconAlignmentBind by lazy {
+        @JvmField
+        val getIconAlignmentBind =
             ObjectCalls.getMethodBind("Button", "get_icon_alignment", GET_ICON_ALIGNMENT_HASH)
-        }
 
         private const val SET_VERTICAL_ICON_ALIGNMENT_HASH = 1796458609L
-        private val setVerticalIconAlignmentBind by lazy {
+        @JvmField
+        val setVerticalIconAlignmentBind =
             ObjectCalls.getMethodBind("Button", "set_vertical_icon_alignment", SET_VERTICAL_ICON_ALIGNMENT_HASH)
-        }
 
         private const val GET_VERTICAL_ICON_ALIGNMENT_HASH = 3274884059L
-        private val getVerticalIconAlignmentBind by lazy {
+        @JvmField
+        val getVerticalIconAlignmentBind =
             ObjectCalls.getMethodBind("Button", "get_vertical_icon_alignment", GET_VERTICAL_ICON_ALIGNMENT_HASH)
-        }
 
         private const val SET_EXPAND_ICON_HASH = 2586408642L
-        private val setExpandIconBind by lazy {
+        @JvmField
+        val setExpandIconBind =
             ObjectCalls.getMethodBind("Button", "set_expand_icon", SET_EXPAND_ICON_HASH)
-        }
 
         private const val IS_EXPAND_ICON_HASH = 36873697L
-        private val isExpandIconBind by lazy {
+        @JvmField
+        val isExpandIconBind =
             ObjectCalls.getMethodBind("Button", "is_expand_icon", IS_EXPAND_ICON_HASH)
-        }
     }
 }

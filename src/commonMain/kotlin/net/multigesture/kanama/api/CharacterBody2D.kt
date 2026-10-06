@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -121,7 +122,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.move_and_slide
      */
     fun moveAndSlide(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(moveAndSlideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.moveAndSlideBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.apply_floor_snap
      */
     fun applyFloorSnap() {
-        ObjectCalls.ptrcallNoArgs(applyFloorSnapBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.applyFloorSnapBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityBind, segment, velocity)
     }
 
     /**
@@ -153,7 +154,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_velocity
      */
     fun getVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
     }
 
     /**
@@ -168,7 +169,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_safe_margin
      */
     fun setSafeMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSafeMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSafeMarginBind, segment, margin)
     }
 
     /**
@@ -183,7 +184,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_safe_margin
      */
     fun getSafeMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSafeMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSafeMarginBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_floor_stop_on_slope_enabled
      */
     fun isFloorStopOnSlopeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFloorStopOnSlopeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFloorStopOnSlopeEnabledBind, segment)
     }
 
     /**
@@ -205,7 +206,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_floor_stop_on_slope_enabled
      */
     fun setFloorStopOnSlopeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFloorStopOnSlopeEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFloorStopOnSlopeEnabledBind, segment, enabled)
     }
 
     /**
@@ -217,7 +218,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_floor_constant_speed_enabled
      */
     fun setFloorConstantSpeedEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFloorConstantSpeedEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFloorConstantSpeedEnabledBind, segment, enabled)
     }
 
     /**
@@ -229,7 +230,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_floor_constant_speed_enabled
      */
     fun isFloorConstantSpeedEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFloorConstantSpeedEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFloorConstantSpeedEnabledBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_floor_block_on_wall_enabled
      */
     fun setFloorBlockOnWallEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFloorBlockOnWallEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFloorBlockOnWallEnabledBind, segment, enabled)
     }
 
     /**
@@ -249,7 +250,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_floor_block_on_wall_enabled
      */
     fun isFloorBlockOnWallEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFloorBlockOnWallEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFloorBlockOnWallEnabledBind, segment)
     }
 
     /**
@@ -259,7 +260,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_slide_on_ceiling_enabled
      */
     fun setSlideOnCeilingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSlideOnCeilingEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSlideOnCeilingEnabledBind, segment, enabled)
     }
 
     /**
@@ -269,7 +270,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_slide_on_ceiling_enabled
      */
     fun isSlideOnCeilingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSlideOnCeilingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSlideOnCeilingEnabledBind, segment)
     }
 
     /**
@@ -280,7 +281,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_platform_floor_layers
      */
     fun setPlatformFloorLayers(excludeLayer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setPlatformFloorLayersBind, segment, excludeLayer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setPlatformFloorLayersBind, segment, excludeLayer)
     }
 
     /**
@@ -291,7 +292,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_platform_floor_layers
      */
     fun getPlatformFloorLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlatformFloorLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPlatformFloorLayersBind, segment)
     }
 
     /**
@@ -301,7 +302,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_platform_wall_layers
      */
     fun setPlatformWallLayers(excludeLayer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setPlatformWallLayersBind, segment, excludeLayer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setPlatformWallLayersBind, segment, excludeLayer)
     }
 
     /**
@@ -311,7 +312,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_platform_wall_layers
      */
     fun getPlatformWallLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlatformWallLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPlatformWallLayersBind, segment)
     }
 
     /**
@@ -321,7 +322,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_max_slides
      */
     fun getMaxSlides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxSlidesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxSlidesBind, segment)
     }
 
     /**
@@ -331,7 +332,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_max_slides
      */
     fun setMaxSlides(maxSlides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxSlidesBind, segment, maxSlides)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxSlidesBind, segment, maxSlides)
     }
 
     /**
@@ -341,7 +342,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_floor_max_angle
      */
     fun getFloorMaxAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFloorMaxAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloorMaxAngleBind, segment)
     }
 
     /**
@@ -351,7 +352,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_floor_max_angle
      */
     fun setFloorMaxAngle(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFloorMaxAngleBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFloorMaxAngleBind, segment, radians)
     }
 
     /**
@@ -367,7 +368,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_floor_snap_length
      */
     fun getFloorSnapLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFloorSnapLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloorSnapLengthBind, segment)
     }
 
     /**
@@ -383,7 +384,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_floor_snap_length
      */
     fun setFloorSnapLength(floorSnapLength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFloorSnapLengthBind, segment, floorSnapLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFloorSnapLengthBind, segment, floorSnapLength)
     }
 
     /**
@@ -394,7 +395,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_wall_min_slide_angle
      */
     fun getWallMinSlideAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWallMinSlideAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWallMinSlideAngleBind, segment)
     }
 
     /**
@@ -405,7 +406,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_wall_min_slide_angle
      */
     fun setWallMinSlideAngle(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWallMinSlideAngleBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWallMinSlideAngleBind, segment, radians)
     }
 
     /**
@@ -417,7 +418,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_up_direction
      */
     fun getUpDirection(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getUpDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getUpDirectionBind, segment)
     }
 
     /**
@@ -429,7 +430,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_up_direction
      */
     fun setUpDirection(upDirection: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setUpDirectionBind, segment, upDirection)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setUpDirectionBind, segment, upDirection)
     }
 
     /**
@@ -438,7 +439,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_motion_mode
      */
     fun setMotionMode(mode: CharacterBody2D.MotionMode) {
-        ObjectCalls.ptrcallWithLongArg(setMotionModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMotionModeBind, segment, mode.value)
     }
 
     /**
@@ -447,7 +448,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_motion_mode
      */
     fun getMotionMode(): CharacterBody2D.MotionMode {
-        return CharacterBody2D.MotionMode(ObjectCalls.ptrcallNoArgsRetLong(getMotionModeBind, segment))
+        return CharacterBody2D.MotionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMotionModeBind, segment))
     }
 
     /**
@@ -457,7 +458,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.set_platform_on_leave
      */
     fun setPlatformOnLeave(onLeaveApplyVelocity: CharacterBody2D.PlatformOnLeave) {
-        ObjectCalls.ptrcallWithLongArg(setPlatformOnLeaveBind, segment, onLeaveApplyVelocity.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPlatformOnLeaveBind, segment, onLeaveApplyVelocity.value)
     }
 
     /**
@@ -467,7 +468,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_platform_on_leave
      */
     fun getPlatformOnLeave(): CharacterBody2D.PlatformOnLeave {
-        return CharacterBody2D.PlatformOnLeave(ObjectCalls.ptrcallNoArgsRetLong(getPlatformOnLeaveBind, segment))
+        return CharacterBody2D.PlatformOnLeave(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlatformOnLeaveBind, segment))
     }
 
     /**
@@ -478,7 +479,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_on_floor
      */
     fun isOnFloor(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnFloorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnFloorBind, segment)
     }
 
     /**
@@ -489,7 +490,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_on_floor_only
      */
     fun isOnFloorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnFloorOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnFloorOnlyBind, segment)
     }
 
     /**
@@ -500,7 +501,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_on_ceiling
      */
     fun isOnCeiling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnCeilingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnCeilingBind, segment)
     }
 
     /**
@@ -511,7 +512,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_on_ceiling_only
      */
     fun isOnCeilingOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnCeilingOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnCeilingOnlyBind, segment)
     }
 
     /**
@@ -522,7 +523,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_on_wall
      */
     fun isOnWall(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnWallBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnWallBind, segment)
     }
 
     /**
@@ -533,7 +534,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.is_on_wall_only
      */
     fun isOnWallOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnWallOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnWallOnlyBind, segment)
     }
 
     /**
@@ -544,7 +545,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_floor_normal
      */
     fun getFloorNormal(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFloorNormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFloorNormalBind, segment)
     }
 
     /**
@@ -555,7 +556,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_wall_normal
      */
     fun getWallNormal(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getWallNormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getWallNormalBind, segment)
     }
 
     /**
@@ -566,7 +567,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_last_motion
      */
     fun getLastMotion(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLastMotionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLastMotionBind, segment)
     }
 
     /**
@@ -575,7 +576,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_position_delta
      */
     fun getPositionDelta(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionDeltaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionDeltaBind, segment)
     }
 
     /**
@@ -586,7 +587,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_real_velocity
      */
     fun getRealVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRealVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRealVelocityBind, segment)
     }
 
     /**
@@ -597,7 +598,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_floor_angle
      */
     fun getFloorAngle(upDirection: Vector2): Double {
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getFloorAngleBind, segment, upDirection)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getFloorAngleBind, segment, upDirection)
     }
 
     /**
@@ -607,7 +608,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_platform_velocity
      */
     fun getPlatformVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPlatformVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPlatformVelocityBind, segment)
     }
 
     /**
@@ -617,7 +618,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_slide_collision_count
      */
     fun getSlideCollisionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSlideCollisionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSlideCollisionCountBind, segment)
     }
 
     /**
@@ -629,7 +630,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_slide_collision
      */
     fun getSlideCollision(slideIdx: Int): KinematicCollision2D? {
-        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, segment, slideIdx))
+        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSlideCollisionBind, segment, slideIdx))
     }
 
     /**
@@ -640,7 +641,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_last_slide_collision
      */
     fun getLastSlideCollision(): KinematicCollision2D? {
-        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
+        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLastSlideCollisionBind, segment))
     }
 
     /**
@@ -709,245 +710,247 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): CharacterBody2D? =
             if (handle.address() == 0L) null else CharacterBody2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val MOVE_AND_SLIDE_HASH = 2240911060L
-        private val moveAndSlideBind by lazy {
+        @JvmField
+        val moveAndSlideBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "move_and_slide", MOVE_AND_SLIDE_HASH)
-        }
 
         private const val APPLY_FLOOR_SNAP_HASH = 3218959716L
-        private val applyFloorSnapBind by lazy {
+        @JvmField
+        val applyFloorSnapBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "apply_floor_snap", APPLY_FLOOR_SNAP_HASH)
-        }
 
         private const val SET_VELOCITY_HASH = 743155724L
-        private val setVelocityBind by lazy {
+        @JvmField
+        val setVelocityBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_velocity", SET_VELOCITY_HASH)
-        }
 
         private const val GET_VELOCITY_HASH = 3341600327L
-        private val getVelocityBind by lazy {
+        @JvmField
+        val getVelocityBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_velocity", GET_VELOCITY_HASH)
-        }
 
         private const val SET_SAFE_MARGIN_HASH = 373806689L
-        private val setSafeMarginBind by lazy {
+        @JvmField
+        val setSafeMarginBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_safe_margin", SET_SAFE_MARGIN_HASH)
-        }
 
         private const val GET_SAFE_MARGIN_HASH = 1740695150L
-        private val getSafeMarginBind by lazy {
+        @JvmField
+        val getSafeMarginBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_safe_margin", GET_SAFE_MARGIN_HASH)
-        }
 
         private const val IS_FLOOR_STOP_ON_SLOPE_ENABLED_HASH = 36873697L
-        private val isFloorStopOnSlopeEnabledBind by lazy {
+        @JvmField
+        val isFloorStopOnSlopeEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_floor_stop_on_slope_enabled", IS_FLOOR_STOP_ON_SLOPE_ENABLED_HASH)
-        }
 
         private const val SET_FLOOR_STOP_ON_SLOPE_ENABLED_HASH = 2586408642L
-        private val setFloorStopOnSlopeEnabledBind by lazy {
+        @JvmField
+        val setFloorStopOnSlopeEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_floor_stop_on_slope_enabled", SET_FLOOR_STOP_ON_SLOPE_ENABLED_HASH)
-        }
 
         private const val SET_FLOOR_CONSTANT_SPEED_ENABLED_HASH = 2586408642L
-        private val setFloorConstantSpeedEnabledBind by lazy {
+        @JvmField
+        val setFloorConstantSpeedEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_floor_constant_speed_enabled", SET_FLOOR_CONSTANT_SPEED_ENABLED_HASH)
-        }
 
         private const val IS_FLOOR_CONSTANT_SPEED_ENABLED_HASH = 36873697L
-        private val isFloorConstantSpeedEnabledBind by lazy {
+        @JvmField
+        val isFloorConstantSpeedEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_floor_constant_speed_enabled", IS_FLOOR_CONSTANT_SPEED_ENABLED_HASH)
-        }
 
         private const val SET_FLOOR_BLOCK_ON_WALL_ENABLED_HASH = 2586408642L
-        private val setFloorBlockOnWallEnabledBind by lazy {
+        @JvmField
+        val setFloorBlockOnWallEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_floor_block_on_wall_enabled", SET_FLOOR_BLOCK_ON_WALL_ENABLED_HASH)
-        }
 
         private const val IS_FLOOR_BLOCK_ON_WALL_ENABLED_HASH = 36873697L
-        private val isFloorBlockOnWallEnabledBind by lazy {
+        @JvmField
+        val isFloorBlockOnWallEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_floor_block_on_wall_enabled", IS_FLOOR_BLOCK_ON_WALL_ENABLED_HASH)
-        }
 
         private const val SET_SLIDE_ON_CEILING_ENABLED_HASH = 2586408642L
-        private val setSlideOnCeilingEnabledBind by lazy {
+        @JvmField
+        val setSlideOnCeilingEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_slide_on_ceiling_enabled", SET_SLIDE_ON_CEILING_ENABLED_HASH)
-        }
 
         private const val IS_SLIDE_ON_CEILING_ENABLED_HASH = 36873697L
-        private val isSlideOnCeilingEnabledBind by lazy {
+        @JvmField
+        val isSlideOnCeilingEnabledBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_slide_on_ceiling_enabled", IS_SLIDE_ON_CEILING_ENABLED_HASH)
-        }
 
         private const val SET_PLATFORM_FLOOR_LAYERS_HASH = 1286410249L
-        private val setPlatformFloorLayersBind by lazy {
+        @JvmField
+        val setPlatformFloorLayersBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_platform_floor_layers", SET_PLATFORM_FLOOR_LAYERS_HASH)
-        }
 
         private const val GET_PLATFORM_FLOOR_LAYERS_HASH = 3905245786L
-        private val getPlatformFloorLayersBind by lazy {
+        @JvmField
+        val getPlatformFloorLayersBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_platform_floor_layers", GET_PLATFORM_FLOOR_LAYERS_HASH)
-        }
 
         private const val SET_PLATFORM_WALL_LAYERS_HASH = 1286410249L
-        private val setPlatformWallLayersBind by lazy {
+        @JvmField
+        val setPlatformWallLayersBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_platform_wall_layers", SET_PLATFORM_WALL_LAYERS_HASH)
-        }
 
         private const val GET_PLATFORM_WALL_LAYERS_HASH = 3905245786L
-        private val getPlatformWallLayersBind by lazy {
+        @JvmField
+        val getPlatformWallLayersBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_platform_wall_layers", GET_PLATFORM_WALL_LAYERS_HASH)
-        }
 
         private const val GET_MAX_SLIDES_HASH = 3905245786L
-        private val getMaxSlidesBind by lazy {
+        @JvmField
+        val getMaxSlidesBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_max_slides", GET_MAX_SLIDES_HASH)
-        }
 
         private const val SET_MAX_SLIDES_HASH = 1286410249L
-        private val setMaxSlidesBind by lazy {
+        @JvmField
+        val setMaxSlidesBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_max_slides", SET_MAX_SLIDES_HASH)
-        }
 
         private const val GET_FLOOR_MAX_ANGLE_HASH = 1740695150L
-        private val getFloorMaxAngleBind by lazy {
+        @JvmField
+        val getFloorMaxAngleBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_floor_max_angle", GET_FLOOR_MAX_ANGLE_HASH)
-        }
 
         private const val SET_FLOOR_MAX_ANGLE_HASH = 373806689L
-        private val setFloorMaxAngleBind by lazy {
+        @JvmField
+        val setFloorMaxAngleBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_floor_max_angle", SET_FLOOR_MAX_ANGLE_HASH)
-        }
 
         private const val GET_FLOOR_SNAP_LENGTH_HASH = 191475506L
-        private val getFloorSnapLengthBind by lazy {
+        @JvmField
+        val getFloorSnapLengthBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_floor_snap_length", GET_FLOOR_SNAP_LENGTH_HASH)
-        }
 
         private const val SET_FLOOR_SNAP_LENGTH_HASH = 373806689L
-        private val setFloorSnapLengthBind by lazy {
+        @JvmField
+        val setFloorSnapLengthBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_floor_snap_length", SET_FLOOR_SNAP_LENGTH_HASH)
-        }
 
         private const val GET_WALL_MIN_SLIDE_ANGLE_HASH = 1740695150L
-        private val getWallMinSlideAngleBind by lazy {
+        @JvmField
+        val getWallMinSlideAngleBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_wall_min_slide_angle", GET_WALL_MIN_SLIDE_ANGLE_HASH)
-        }
 
         private const val SET_WALL_MIN_SLIDE_ANGLE_HASH = 373806689L
-        private val setWallMinSlideAngleBind by lazy {
+        @JvmField
+        val setWallMinSlideAngleBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_wall_min_slide_angle", SET_WALL_MIN_SLIDE_ANGLE_HASH)
-        }
 
         private const val GET_UP_DIRECTION_HASH = 3341600327L
-        private val getUpDirectionBind by lazy {
+        @JvmField
+        val getUpDirectionBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_up_direction", GET_UP_DIRECTION_HASH)
-        }
 
         private const val SET_UP_DIRECTION_HASH = 743155724L
-        private val setUpDirectionBind by lazy {
+        @JvmField
+        val setUpDirectionBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_up_direction", SET_UP_DIRECTION_HASH)
-        }
 
         private const val SET_MOTION_MODE_HASH = 1224392233L
-        private val setMotionModeBind by lazy {
+        @JvmField
+        val setMotionModeBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_motion_mode", SET_MOTION_MODE_HASH)
-        }
 
         private const val GET_MOTION_MODE_HASH = 1160151236L
-        private val getMotionModeBind by lazy {
+        @JvmField
+        val getMotionModeBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_motion_mode", GET_MOTION_MODE_HASH)
-        }
 
         private const val SET_PLATFORM_ON_LEAVE_HASH = 2423324375L
-        private val setPlatformOnLeaveBind by lazy {
+        @JvmField
+        val setPlatformOnLeaveBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "set_platform_on_leave", SET_PLATFORM_ON_LEAVE_HASH)
-        }
 
         private const val GET_PLATFORM_ON_LEAVE_HASH = 4054324341L
-        private val getPlatformOnLeaveBind by lazy {
+        @JvmField
+        val getPlatformOnLeaveBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_platform_on_leave", GET_PLATFORM_ON_LEAVE_HASH)
-        }
 
         private const val IS_ON_FLOOR_HASH = 36873697L
-        private val isOnFloorBind by lazy {
+        @JvmField
+        val isOnFloorBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_on_floor", IS_ON_FLOOR_HASH)
-        }
 
         private const val IS_ON_FLOOR_ONLY_HASH = 36873697L
-        private val isOnFloorOnlyBind by lazy {
+        @JvmField
+        val isOnFloorOnlyBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_on_floor_only", IS_ON_FLOOR_ONLY_HASH)
-        }
 
         private const val IS_ON_CEILING_HASH = 36873697L
-        private val isOnCeilingBind by lazy {
+        @JvmField
+        val isOnCeilingBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_on_ceiling", IS_ON_CEILING_HASH)
-        }
 
         private const val IS_ON_CEILING_ONLY_HASH = 36873697L
-        private val isOnCeilingOnlyBind by lazy {
+        @JvmField
+        val isOnCeilingOnlyBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_on_ceiling_only", IS_ON_CEILING_ONLY_HASH)
-        }
 
         private const val IS_ON_WALL_HASH = 36873697L
-        private val isOnWallBind by lazy {
+        @JvmField
+        val isOnWallBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_on_wall", IS_ON_WALL_HASH)
-        }
 
         private const val IS_ON_WALL_ONLY_HASH = 36873697L
-        private val isOnWallOnlyBind by lazy {
+        @JvmField
+        val isOnWallOnlyBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "is_on_wall_only", IS_ON_WALL_ONLY_HASH)
-        }
 
         private const val GET_FLOOR_NORMAL_HASH = 3341600327L
-        private val getFloorNormalBind by lazy {
+        @JvmField
+        val getFloorNormalBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_floor_normal", GET_FLOOR_NORMAL_HASH)
-        }
 
         private const val GET_WALL_NORMAL_HASH = 3341600327L
-        private val getWallNormalBind by lazy {
+        @JvmField
+        val getWallNormalBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_wall_normal", GET_WALL_NORMAL_HASH)
-        }
 
         private const val GET_LAST_MOTION_HASH = 3341600327L
-        private val getLastMotionBind by lazy {
+        @JvmField
+        val getLastMotionBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_last_motion", GET_LAST_MOTION_HASH)
-        }
 
         private const val GET_POSITION_DELTA_HASH = 3341600327L
-        private val getPositionDeltaBind by lazy {
+        @JvmField
+        val getPositionDeltaBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_position_delta", GET_POSITION_DELTA_HASH)
-        }
 
         private const val GET_REAL_VELOCITY_HASH = 3341600327L
-        private val getRealVelocityBind by lazy {
+        @JvmField
+        val getRealVelocityBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_real_velocity", GET_REAL_VELOCITY_HASH)
-        }
 
         private const val GET_FLOOR_ANGLE_HASH = 2841063350L
-        private val getFloorAngleBind by lazy {
+        @JvmField
+        val getFloorAngleBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_floor_angle", GET_FLOOR_ANGLE_HASH)
-        }
 
         private const val GET_PLATFORM_VELOCITY_HASH = 3341600327L
-        private val getPlatformVelocityBind by lazy {
+        @JvmField
+        val getPlatformVelocityBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_platform_velocity", GET_PLATFORM_VELOCITY_HASH)
-        }
 
         private const val GET_SLIDE_COLLISION_COUNT_HASH = 3905245786L
-        private val getSlideCollisionCountBind by lazy {
+        @JvmField
+        val getSlideCollisionCountBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_slide_collision_count", GET_SLIDE_COLLISION_COUNT_HASH)
-        }
 
         private const val GET_SLIDE_COLLISION_HASH = 860659811L
-        private val getSlideCollisionBind by lazy {
+        @JvmField
+        val getSlideCollisionBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_slide_collision", GET_SLIDE_COLLISION_HASH)
-        }
 
         private const val GET_LAST_SLIDE_COLLISION_HASH = 2161834755L
-        private val getLastSlideCollisionBind by lazy {
+        @JvmField
+        val getLastSlideCollisionBind =
             ObjectCalls.getMethodBind("CharacterBody2D", "get_last_slide_collision", GET_LAST_SLIDE_COLLISION_HASH)
-        }
     }
 }

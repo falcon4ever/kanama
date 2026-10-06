@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -68,7 +69,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPredelayMsec(msec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPredelayMsecBind, segment, msec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPredelayMsecBind, segment, msec)
     }
 
     /**
@@ -79,7 +80,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPredelayMsec(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayMsecBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPredelayMsecBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPredelayFeedback(feedback: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPredelayFeedbackBind, segment, feedback)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPredelayFeedbackBind, segment, feedback)
     }
 
     /**
@@ -101,7 +102,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPredelayFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPredelayFeedbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPredelayFeedbackBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRoomSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRoomSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRoomSizeBind, segment, size)
     }
 
     /**
@@ -121,7 +122,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRoomSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRoomSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRoomSizeBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDamping(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDampingBind, segment, amount)
     }
 
     /**
@@ -143,7 +144,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDamping(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingBind, segment)
     }
 
     /**
@@ -154,7 +155,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setSpread(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpreadBind, segment, amount)
     }
 
     /**
@@ -165,7 +166,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDry(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDryBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDryBind, segment, amount)
     }
 
     /**
@@ -187,7 +188,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setWet(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWetBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWetBind, segment, amount)
     }
 
     /**
@@ -209,7 +210,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getWet(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWetBind, segment)
     }
 
     /**
@@ -220,7 +221,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setHpf(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHpfBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHpfBind, segment, amount)
     }
 
     /**
@@ -231,7 +232,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getHpf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHpfBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHpfBind, segment)
     }
 
     companion object {
@@ -244,85 +245,87 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectReverb? =
             if (handle.address() == 0L) null else AudioEffectReverb(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PREDELAY_MSEC_HASH = 373806689L
-        private val setPredelayMsecBind by lazy {
+        @JvmField
+        val setPredelayMsecBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_predelay_msec", SET_PREDELAY_MSEC_HASH)
-        }
 
         private const val GET_PREDELAY_MSEC_HASH = 1740695150L
-        private val getPredelayMsecBind by lazy {
+        @JvmField
+        val getPredelayMsecBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_predelay_msec", GET_PREDELAY_MSEC_HASH)
-        }
 
         private const val SET_PREDELAY_FEEDBACK_HASH = 373806689L
-        private val setPredelayFeedbackBind by lazy {
+        @JvmField
+        val setPredelayFeedbackBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_predelay_feedback", SET_PREDELAY_FEEDBACK_HASH)
-        }
 
         private const val GET_PREDELAY_FEEDBACK_HASH = 1740695150L
-        private val getPredelayFeedbackBind by lazy {
+        @JvmField
+        val getPredelayFeedbackBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_predelay_feedback", GET_PREDELAY_FEEDBACK_HASH)
-        }
 
         private const val SET_ROOM_SIZE_HASH = 373806689L
-        private val setRoomSizeBind by lazy {
+        @JvmField
+        val setRoomSizeBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_room_size", SET_ROOM_SIZE_HASH)
-        }
 
         private const val GET_ROOM_SIZE_HASH = 1740695150L
-        private val getRoomSizeBind by lazy {
+        @JvmField
+        val getRoomSizeBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_room_size", GET_ROOM_SIZE_HASH)
-        }
 
         private const val SET_DAMPING_HASH = 373806689L
-        private val setDampingBind by lazy {
+        @JvmField
+        val setDampingBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_damping", SET_DAMPING_HASH)
-        }
 
         private const val GET_DAMPING_HASH = 1740695150L
-        private val getDampingBind by lazy {
+        @JvmField
+        val getDampingBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_damping", GET_DAMPING_HASH)
-        }
 
         private const val SET_SPREAD_HASH = 373806689L
-        private val setSpreadBind by lazy {
+        @JvmField
+        val setSpreadBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_spread", SET_SPREAD_HASH)
-        }
 
         private const val GET_SPREAD_HASH = 1740695150L
-        private val getSpreadBind by lazy {
+        @JvmField
+        val getSpreadBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_spread", GET_SPREAD_HASH)
-        }
 
         private const val SET_DRY_HASH = 373806689L
-        private val setDryBind by lazy {
+        @JvmField
+        val setDryBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_dry", SET_DRY_HASH)
-        }
 
         private const val GET_DRY_HASH = 1740695150L
-        private val getDryBind by lazy {
+        @JvmField
+        val getDryBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_dry", GET_DRY_HASH)
-        }
 
         private const val SET_WET_HASH = 373806689L
-        private val setWetBind by lazy {
+        @JvmField
+        val setWetBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_wet", SET_WET_HASH)
-        }
 
         private const val GET_WET_HASH = 1740695150L
-        private val getWetBind by lazy {
+        @JvmField
+        val getWetBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_wet", GET_WET_HASH)
-        }
 
         private const val SET_HPF_HASH = 373806689L
-        private val setHpfBind by lazy {
+        @JvmField
+        val setHpfBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "set_hpf", SET_HPF_HASH)
-        }
 
         private const val GET_HPF_HASH = 1740695150L
-        private val getHpfBind by lazy {
+        @JvmField
+        val getHpfBind =
             ObjectCalls.getMethodBind("AudioEffectReverb", "get_hpf", GET_HPF_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(type: HashingContext.HashType): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(startBind, segment, type.value))
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.startBind, segment, type.value))
     }
 
     /**
@@ -29,7 +30,7 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update(chunk: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, chunk))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.updateBind, segment, chunk))
     }
 
     /**
@@ -39,7 +40,7 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun finish(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.finishBind, segment)
     }
 
     /**
@@ -82,20 +83,22 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HashingContext? =
             if (handle.address() == 0L) null else HashingContext(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val START_HASH = 3940338335L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("HashingContext", "start", START_HASH)
-        }
 
         private const val UPDATE_HASH = 680677267L
-        private val updateBind by lazy {
+        @JvmField
+        val updateBind =
             ObjectCalls.getMethodBind("HashingContext", "update", UPDATE_HASH)
-        }
 
         private const val FINISH_HASH = 2115431945L
-        private val finishBind by lazy {
+        @JvmField
+        val finishBind =
             ObjectCalls.getMethodBind("HashingContext", "finish", FINISH_HASH)
-        }
     }
 }

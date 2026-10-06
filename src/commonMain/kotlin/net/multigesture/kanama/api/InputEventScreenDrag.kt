@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -73,7 +74,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setIndexBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.setIndexBind, segment, index)
     }
 
     /**
@@ -83,7 +84,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIndexBind, segment)
     }
 
     /**
@@ -95,7 +96,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setTilt(tilt: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setTiltBind, segment, tilt)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setTiltBind, segment, tilt)
     }
 
     /**
@@ -107,7 +108,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getTilt(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTiltBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setPressure(pressure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, segment, pressure)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPressureBind, segment, pressure)
     }
 
     /**
@@ -127,7 +128,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setPenInverted(penInverted: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, segment, penInverted)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPenInvertedBind, segment, penInverted)
     }
 
     /**
@@ -147,7 +148,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getPenInverted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPenInvertedBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -167,7 +168,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, segment, relative)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setRelativeBind, segment, relative)
     }
 
     /**
@@ -195,7 +196,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRelativeBind, segment)
     }
 
     /**
@@ -208,7 +209,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setScreenRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, segment, relative)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenRelativeBind, segment, relative)
     }
 
     /**
@@ -221,7 +222,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getScreenRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenRelativeBind, segment)
     }
 
     /**
@@ -234,7 +235,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityBind, segment, velocity)
     }
 
     /**
@@ -247,7 +248,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
     }
 
     /**
@@ -259,7 +260,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun setScreenVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenVelocityBind, segment, velocity)
     }
 
     /**
@@ -271,7 +272,7 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
      */
     fun getScreenVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenVelocityBind, segment)
     }
 
     companion object {
@@ -284,95 +285,97 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventScreenDrag? =
             if (handle.address() == 0L) null else InputEventScreenDrag(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INDEX_HASH = 1286410249L
-        private val setIndexBind by lazy {
+        @JvmField
+        val setIndexBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_index", SET_INDEX_HASH)
-        }
 
         private const val GET_INDEX_HASH = 3905245786L
-        private val getIndexBind by lazy {
+        @JvmField
+        val getIndexBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_index", GET_INDEX_HASH)
-        }
 
         private const val SET_TILT_HASH = 743155724L
-        private val setTiltBind by lazy {
+        @JvmField
+        val setTiltBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_tilt", SET_TILT_HASH)
-        }
 
         private const val GET_TILT_HASH = 3341600327L
-        private val getTiltBind by lazy {
+        @JvmField
+        val getTiltBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_tilt", GET_TILT_HASH)
-        }
 
         private const val SET_PRESSURE_HASH = 373806689L
-        private val setPressureBind by lazy {
+        @JvmField
+        val setPressureBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_pressure", SET_PRESSURE_HASH)
-        }
 
         private const val GET_PRESSURE_HASH = 1740695150L
-        private val getPressureBind by lazy {
+        @JvmField
+        val getPressureBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_pressure", GET_PRESSURE_HASH)
-        }
 
         private const val SET_PEN_INVERTED_HASH = 2586408642L
-        private val setPenInvertedBind by lazy {
+        @JvmField
+        val setPenInvertedBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_pen_inverted", SET_PEN_INVERTED_HASH)
-        }
 
         private const val GET_PEN_INVERTED_HASH = 36873697L
-        private val getPenInvertedBind by lazy {
+        @JvmField
+        val getPenInvertedBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_pen_inverted", GET_PEN_INVERTED_HASH)
-        }
 
         private const val SET_POSITION_HASH = 743155724L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_position", GET_POSITION_HASH)
-        }
 
         private const val SET_RELATIVE_HASH = 743155724L
-        private val setRelativeBind by lazy {
+        @JvmField
+        val setRelativeBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_relative", SET_RELATIVE_HASH)
-        }
 
         private const val GET_RELATIVE_HASH = 3341600327L
-        private val getRelativeBind by lazy {
+        @JvmField
+        val getRelativeBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_relative", GET_RELATIVE_HASH)
-        }
 
         private const val SET_SCREEN_RELATIVE_HASH = 743155724L
-        private val setScreenRelativeBind by lazy {
+        @JvmField
+        val setScreenRelativeBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_screen_relative", SET_SCREEN_RELATIVE_HASH)
-        }
 
         private const val GET_SCREEN_RELATIVE_HASH = 3341600327L
-        private val getScreenRelativeBind by lazy {
+        @JvmField
+        val getScreenRelativeBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_screen_relative", GET_SCREEN_RELATIVE_HASH)
-        }
 
         private const val SET_VELOCITY_HASH = 743155724L
-        private val setVelocityBind by lazy {
+        @JvmField
+        val setVelocityBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_velocity", SET_VELOCITY_HASH)
-        }
 
         private const val GET_VELOCITY_HASH = 3341600327L
-        private val getVelocityBind by lazy {
+        @JvmField
+        val getVelocityBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_velocity", GET_VELOCITY_HASH)
-        }
 
         private const val SET_SCREEN_VELOCITY_HASH = 743155724L
-        private val setScreenVelocityBind by lazy {
+        @JvmField
+        val setScreenVelocityBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "set_screen_velocity", SET_SCREEN_VELOCITY_HASH)
-        }
 
         private const val GET_SCREEN_VELOCITY_HASH = 3341600327L
-        private val getScreenVelocityBind by lazy {
+        @JvmField
+        val getScreenVelocityBind =
             ObjectCalls.getMethodBind("InputEventScreenDrag", "get_screen_velocity", GET_SCREEN_VELOCITY_HASH)
-        }
     }
 }

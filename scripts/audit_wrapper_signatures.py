@@ -32,14 +32,18 @@ CONST_RE = re.compile(
     r"(?:[ \t]*:[^\n=]+?)?[ \t]*=[ \t]*(\d+)L?",
     re.MULTILINE,
 )
+# A MethodBind declaration: the per-method `private val xBind by lazy { getMethodBind(...) }`, or
+# a field of a bind holder object (`@JvmField val xBind = getMethodBind(...)`, task 131 item 18).
 BIND_RE = re.compile(
-    r"private\s+val\s+([A-Za-z_][A-Za-z0-9_]*)\s+by\s+lazy\s*\{\s*"
+    r"(?:private\s+)?(?:@JvmField\s+)?val\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:by\s+lazy\s*\{|=)\s*"
     r"ObjectCalls\.getMethodBind\(\s*"
     r'"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*([A-Z0-9_]+|\d+L?)',
     re.DOTALL,
 )
+# The bind argument of a ptrcall, bare or through its holder (`Binds.xBind`, `<Class>JvmBinds.xBind`).
+BIND_HOLDER_PREFIX = r"(?:Binds\.|[A-Za-z0-9_]+JvmBinds\.)?"
 CALL_RE = re.compile(
-    r"ObjectCalls\.(ptrcall[A-Za-z0-9_]+)\(\s*([A-Za-z_][A-Za-z0-9_]*)\b",
+    r"ObjectCalls\.(ptrcall[A-Za-z0-9_]+)\(\s*" + BIND_HOLDER_PREFIX + r"([A-Za-z_][A-Za-z0-9_]*)\b",
 )
 JVM_OBJECT_METHOD_RE = re.compile(
     r"^\s*fun\s+(wait|notify|notifyAll|getClass)\s*\(\s*\)",

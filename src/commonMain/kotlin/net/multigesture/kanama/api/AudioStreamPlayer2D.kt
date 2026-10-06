@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -102,7 +103,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_stream
      */
     fun setStream(stream: AudioStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -111,7 +112,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream
      */
     fun getStream(): AudioStream? {
-        return AudioStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
+        return AudioStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamBind, segment))
     }
 
     /**
@@ -120,7 +121,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_volume_db
      */
     fun setVolumeDb(volumeDb: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, volumeDb)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeDbBind, segment, volumeDb)
     }
 
     /**
@@ -129,7 +130,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_volume_db
      */
     fun getVolumeDb(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeDbBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_volume_linear
      */
     fun setVolumeLinear(volumeLinear: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, segment, volumeLinear)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeLinearBind, segment, volumeLinear)
     }
 
     /**
@@ -153,7 +154,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_volume_linear
      */
     fun getVolumeLinear(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeLinearBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_pitch_scale
      */
     fun setPitchScale(pitchScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, segment, pitchScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPitchScaleBind, segment, pitchScale)
     }
 
     /**
@@ -171,7 +172,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_pitch_scale
      */
     fun getPitchScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPitchScaleBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.play
      */
     fun play(fromPosition: Double = 0.0) {
-        ObjectCalls.ptrcallWithDoubleArg(playBind, segment, fromPosition)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.playBind, segment, fromPosition)
     }
 
     /**
@@ -190,7 +191,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.seek
      */
     fun seek(toPosition: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(seekBind, segment, toPosition)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.seekBind, segment, toPosition)
     }
 
     /**
@@ -199,7 +200,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -208,7 +209,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_playback_position
      */
     fun getPlaybackPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlaybackPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPlaybackPositionBind, segment)
     }
 
     /**
@@ -229,7 +230,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_bus
      */
     fun setBus(bus: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBusBind, segment, bus)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setBusBind, segment, bus)
     }
 
     /**
@@ -241,7 +242,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_bus
      */
     fun getBus(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getBusBind, segment)
     }
 
     /**
@@ -250,7 +251,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_autoplay
      */
     fun setAutoplay(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoplayBind, segment, enable)
     }
 
     /**
@@ -259,7 +260,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.is_autoplay_enabled
      */
     fun isAutoplayEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoplayEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoplayEnabledBind, segment)
     }
 
     /**
@@ -268,7 +269,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_playing
      */
     fun setPlaying(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPlayingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPlayingBind, segment, enable)
     }
 
     /**
@@ -277,7 +278,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_max_distance
      */
     fun setMaxDistance(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, segment, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxDistanceBind, segment, pixels)
     }
 
     /**
@@ -286,7 +287,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_max_distance
      */
     fun getMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxDistanceBind, segment)
     }
 
     /**
@@ -295,7 +296,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_attenuation
      */
     fun setAttenuation(curve: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAttenuationBind, segment, curve)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAttenuationBind, segment, curve)
     }
 
     /**
@@ -304,7 +305,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_attenuation
      */
     fun getAttenuation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAttenuationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAttenuationBind, segment)
     }
 
     /**
@@ -316,7 +317,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_area_mask
      */
     fun setAreaMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAreaMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setAreaMaskBind, segment, mask)
     }
 
     /**
@@ -328,7 +329,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_area_mask
      */
     fun getAreaMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAreaMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getAreaMaskBind, segment)
     }
 
     /**
@@ -337,7 +338,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_stream_paused
      */
     fun setStreamPaused(pause: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setStreamPausedBind, segment, pause)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setStreamPausedBind, segment, pause)
     }
 
     /**
@@ -346,7 +347,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream_paused
      */
     fun getStreamPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getStreamPausedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getStreamPausedBind, segment)
     }
 
     /**
@@ -356,7 +357,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_max_polyphony
      */
     fun setMaxPolyphony(maxPolyphony: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxPolyphonyBind, segment, maxPolyphony)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxPolyphonyBind, segment, maxPolyphony)
     }
 
     /**
@@ -366,7 +367,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_max_polyphony
      */
     fun getMaxPolyphony(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPolyphonyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPolyphonyBind, segment)
     }
 
     /**
@@ -377,7 +378,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_panning_strength
      */
     fun setPanningStrength(panningStrength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPanningStrengthBind, segment, panningStrength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPanningStrengthBind, segment, panningStrength)
     }
 
     /**
@@ -388,7 +389,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_panning_strength
      */
     fun getPanningStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPanningStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanningStrengthBind, segment)
     }
 
     /**
@@ -397,7 +398,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.has_stream_playback
      */
     fun hasStreamPlayback(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasStreamPlaybackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasStreamPlaybackBind, segment)
     }
 
     /**
@@ -406,7 +407,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream_playback
      */
     fun getStreamPlayback(): AudioStreamPlayback? {
-        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
+        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamPlaybackBind, segment))
     }
 
     /**
@@ -416,7 +417,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_playback_type
      */
     fun setPlaybackType(playbackType: AudioServer.PlaybackType) {
-        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPlaybackTypeBind, segment, playbackType.value)
     }
 
     /**
@@ -426,7 +427,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_playback_type
      */
     fun getPlaybackType(): AudioServer.PlaybackType {
-        return AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment))
+        return AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaybackTypeBind, segment))
     }
 
     /** Signal `finished()`; see [TypedSignal]. */
@@ -445,175 +446,177 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): AudioStreamPlayer2D? =
             if (handle.address() == 0L) null else AudioStreamPlayer2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STREAM_HASH = 2210767741L
-        private val setStreamBind by lazy {
+        @JvmField
+        val setStreamBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_stream", SET_STREAM_HASH)
-        }
 
         private const val GET_STREAM_HASH = 160907539L
-        private val getStreamBind by lazy {
+        @JvmField
+        val getStreamBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_stream", GET_STREAM_HASH)
-        }
 
         private const val SET_VOLUME_DB_HASH = 373806689L
-        private val setVolumeDbBind by lazy {
+        @JvmField
+        val setVolumeDbBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_volume_db", SET_VOLUME_DB_HASH)
-        }
 
         private const val GET_VOLUME_DB_HASH = 1740695150L
-        private val getVolumeDbBind by lazy {
+        @JvmField
+        val getVolumeDbBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_volume_db", GET_VOLUME_DB_HASH)
-        }
 
         private const val SET_VOLUME_LINEAR_HASH = 373806689L
-        private val setVolumeLinearBind by lazy {
+        @JvmField
+        val setVolumeLinearBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_volume_linear", SET_VOLUME_LINEAR_HASH)
-        }
 
         private const val GET_VOLUME_LINEAR_HASH = 1740695150L
-        private val getVolumeLinearBind by lazy {
+        @JvmField
+        val getVolumeLinearBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_volume_linear", GET_VOLUME_LINEAR_HASH)
-        }
 
         private const val SET_PITCH_SCALE_HASH = 373806689L
-        private val setPitchScaleBind by lazy {
+        @JvmField
+        val setPitchScaleBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_pitch_scale", SET_PITCH_SCALE_HASH)
-        }
 
         private const val GET_PITCH_SCALE_HASH = 1740695150L
-        private val getPitchScaleBind by lazy {
+        @JvmField
+        val getPitchScaleBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_pitch_scale", GET_PITCH_SCALE_HASH)
-        }
 
         private const val PLAY_HASH = 1958160172L
-        private val playBind by lazy {
+        @JvmField
+        val playBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "play", PLAY_HASH)
-        }
 
         private const val SEEK_HASH = 373806689L
-        private val seekBind by lazy {
+        @JvmField
+        val seekBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "seek", SEEK_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "stop", STOP_HASH)
-        }
 
         private const val IS_PLAYING_HASH = 36873697L
-        private val isPlayingBind by lazy {
+        @JvmField
+        val isPlayingBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "is_playing", IS_PLAYING_HASH)
-        }
 
         private const val GET_PLAYBACK_POSITION_HASH = 191475506L
-        private val getPlaybackPositionBind by lazy {
+        @JvmField
+        val getPlaybackPositionBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_playback_position", GET_PLAYBACK_POSITION_HASH)
-        }
 
         private const val SET_BUS_HASH = 3304788590L
-        private val setBusBind by lazy {
+        @JvmField
+        val setBusBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_bus", SET_BUS_HASH)
-        }
 
         private const val GET_BUS_HASH = 2002593661L
-        private val getBusBind by lazy {
+        @JvmField
+        val getBusBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_bus", GET_BUS_HASH)
-        }
 
         private const val SET_AUTOPLAY_HASH = 2586408642L
-        private val setAutoplayBind by lazy {
+        @JvmField
+        val setAutoplayBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_autoplay", SET_AUTOPLAY_HASH)
-        }
 
         private const val IS_AUTOPLAY_ENABLED_HASH = 36873697L
-        private val isAutoplayEnabledBind by lazy {
+        @JvmField
+        val isAutoplayEnabledBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "is_autoplay_enabled", IS_AUTOPLAY_ENABLED_HASH)
-        }
 
         private const val SET_PLAYING_HASH = 2586408642L
-        private val setPlayingBind by lazy {
+        @JvmField
+        val setPlayingBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_playing", SET_PLAYING_HASH)
-        }
 
         private const val SET_MAX_DISTANCE_HASH = 373806689L
-        private val setMaxDistanceBind by lazy {
+        @JvmField
+        val setMaxDistanceBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_max_distance", SET_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_MAX_DISTANCE_HASH = 1740695150L
-        private val getMaxDistanceBind by lazy {
+        @JvmField
+        val getMaxDistanceBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_max_distance", GET_MAX_DISTANCE_HASH)
-        }
 
         private const val SET_ATTENUATION_HASH = 373806689L
-        private val setAttenuationBind by lazy {
+        @JvmField
+        val setAttenuationBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_attenuation", SET_ATTENUATION_HASH)
-        }
 
         private const val GET_ATTENUATION_HASH = 1740695150L
-        private val getAttenuationBind by lazy {
+        @JvmField
+        val getAttenuationBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_attenuation", GET_ATTENUATION_HASH)
-        }
 
         private const val SET_AREA_MASK_HASH = 1286410249L
-        private val setAreaMaskBind by lazy {
+        @JvmField
+        val setAreaMaskBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_area_mask", SET_AREA_MASK_HASH)
-        }
 
         private const val GET_AREA_MASK_HASH = 3905245786L
-        private val getAreaMaskBind by lazy {
+        @JvmField
+        val getAreaMaskBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_area_mask", GET_AREA_MASK_HASH)
-        }
 
         private const val SET_STREAM_PAUSED_HASH = 2586408642L
-        private val setStreamPausedBind by lazy {
+        @JvmField
+        val setStreamPausedBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_stream_paused", SET_STREAM_PAUSED_HASH)
-        }
 
         private const val GET_STREAM_PAUSED_HASH = 36873697L
-        private val getStreamPausedBind by lazy {
+        @JvmField
+        val getStreamPausedBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_stream_paused", GET_STREAM_PAUSED_HASH)
-        }
 
         private const val SET_MAX_POLYPHONY_HASH = 1286410249L
-        private val setMaxPolyphonyBind by lazy {
+        @JvmField
+        val setMaxPolyphonyBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_max_polyphony", SET_MAX_POLYPHONY_HASH)
-        }
 
         private const val GET_MAX_POLYPHONY_HASH = 3905245786L
-        private val getMaxPolyphonyBind by lazy {
+        @JvmField
+        val getMaxPolyphonyBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_max_polyphony", GET_MAX_POLYPHONY_HASH)
-        }
 
         private const val SET_PANNING_STRENGTH_HASH = 373806689L
-        private val setPanningStrengthBind by lazy {
+        @JvmField
+        val setPanningStrengthBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_panning_strength", SET_PANNING_STRENGTH_HASH)
-        }
 
         private const val GET_PANNING_STRENGTH_HASH = 1740695150L
-        private val getPanningStrengthBind by lazy {
+        @JvmField
+        val getPanningStrengthBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_panning_strength", GET_PANNING_STRENGTH_HASH)
-        }
 
         private const val HAS_STREAM_PLAYBACK_HASH = 2240911060L
-        private val hasStreamPlaybackBind by lazy {
+        @JvmField
+        val hasStreamPlaybackBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "has_stream_playback", HAS_STREAM_PLAYBACK_HASH)
-        }
 
         private const val GET_STREAM_PLAYBACK_HASH = 210135309L
-        private val getStreamPlaybackBind by lazy {
+        @JvmField
+        val getStreamPlaybackBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_stream_playback", GET_STREAM_PLAYBACK_HASH)
-        }
 
         private const val SET_PLAYBACK_TYPE_HASH = 725473817L
-        private val setPlaybackTypeBind by lazy {
+        @JvmField
+        val setPlaybackTypeBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "set_playback_type", SET_PLAYBACK_TYPE_HASH)
-        }
 
         private const val GET_PLAYBACK_TYPE_HASH = 4011264623L
-        private val getPlaybackTypeBind by lazy {
+        @JvmField
+        val getPlaybackTypeBind =
             ObjectCalls.getMethodBind("AudioStreamPlayer2D", "get_playback_type", GET_PLAYBACK_TYPE_HASH)
-        }
     }
 }

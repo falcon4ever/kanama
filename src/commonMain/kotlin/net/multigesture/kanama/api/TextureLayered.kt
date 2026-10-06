@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -30,7 +31,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayeredType(): TextureLayered.LayeredType {
         checkOpen()
-        return TextureLayered.LayeredType(ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, segment))
+        return TextureLayered.LayeredType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLayeredTypeBind, segment))
     }
 
     /**
@@ -40,7 +41,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLayersBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayerData(layer: Int): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, segment, layer))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getLayerDataBind, segment, layer))
     }
 
     /**
@@ -123,40 +124,42 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextureLayered? =
             if (handle.address() == 0L) null else TextureLayered(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_FORMAT_HASH = 3847873762L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("TextureLayered", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val GET_LAYERED_TYPE_HASH = 518123893L
-        private val getLayeredTypeBind by lazy {
+        @JvmField
+        val getLayeredTypeBind =
             ObjectCalls.getMethodBind("TextureLayered", "get_layered_type", GET_LAYERED_TYPE_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 3905245786L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("TextureLayered", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 3905245786L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("TextureLayered", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val GET_LAYERS_HASH = 3905245786L
-        private val getLayersBind by lazy {
+        @JvmField
+        val getLayersBind =
             ObjectCalls.getMethodBind("TextureLayered", "get_layers", GET_LAYERS_HASH)
-        }
 
         private const val HAS_MIPMAPS_HASH = 36873697L
-        private val hasMipmapsBind by lazy {
+        @JvmField
+        val hasMipmapsBind =
             ObjectCalls.getMethodBind("TextureLayered", "has_mipmaps", HAS_MIPMAPS_HASH)
-        }
 
         private const val GET_LAYER_DATA_HASH = 3655284255L
-        private val getLayerDataBind by lazy {
+        @JvmField
+        val getLayerDataBind =
             ObjectCalls.getMethodBind("TextureLayered", "get_layer_data", GET_LAYER_DATA_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,12 +19,12 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
 
     fun setConstant(constant: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setConstantBind, segment, constant)
+        ObjectCalls.ptrcallWithColorArg(Binds.setConstantBind, segment, constant)
     }
 
     fun getConstant(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getConstantBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getConstantBind, segment)
     }
 
     companion object {
@@ -36,15 +37,17 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeColorConstant(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CONSTANT_HASH = 2920490490L
-        private val setConstantBind by lazy {
+        @JvmField
+        val setConstantBind =
             ObjectCalls.getMethodBind("VisualShaderNodeColorConstant", "set_constant", SET_CONSTANT_HASH)
-        }
 
         private const val GET_CONSTANT_HASH = 3444240500L
-        private val getConstantBind by lazy {
+        @JvmField
+        val getConstantBind =
             ObjectCalls.getMethodBind("VisualShaderNodeColorConstant", "get_constant", GET_CONSTANT_HASH)
-        }
     }
 }

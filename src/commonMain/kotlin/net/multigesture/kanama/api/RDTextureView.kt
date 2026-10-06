@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -50,7 +51,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFormatOverride(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatOverrideBind, segment, pMember.value)
     }
 
     /**
@@ -62,7 +63,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormatOverride(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, segment))
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatOverrideBind, segment))
     }
 
     /**
@@ -72,7 +73,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSwizzleR(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSwizzleRBind, segment, pMember.value)
     }
 
     /**
@@ -82,7 +83,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSwizzleR(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, segment))
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwizzleRBind, segment))
     }
 
     /**
@@ -92,7 +93,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSwizzleG(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSwizzleGBind, segment, pMember.value)
     }
 
     /**
@@ -102,7 +103,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSwizzleG(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, segment))
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwizzleGBind, segment))
     }
 
     /**
@@ -112,7 +113,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSwizzleB(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSwizzleBBind, segment, pMember.value)
     }
 
     /**
@@ -122,7 +123,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSwizzleB(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, segment))
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwizzleBBind, segment))
     }
 
     /**
@@ -132,7 +133,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSwizzleA(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleABind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSwizzleABind, segment, pMember.value)
     }
 
     /**
@@ -142,7 +143,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSwizzleA(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, segment))
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwizzleABind, segment))
     }
 
     companion object {
@@ -155,55 +156,57 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDTextureView? =
             if (handle.address() == 0L) null else RDTextureView(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FORMAT_OVERRIDE_HASH = 565531219L
-        private val setFormatOverrideBind by lazy {
+        @JvmField
+        val setFormatOverrideBind =
             ObjectCalls.getMethodBind("RDTextureView", "set_format_override", SET_FORMAT_OVERRIDE_HASH)
-        }
 
         private const val GET_FORMAT_OVERRIDE_HASH = 2235804183L
-        private val getFormatOverrideBind by lazy {
+        @JvmField
+        val getFormatOverrideBind =
             ObjectCalls.getMethodBind("RDTextureView", "get_format_override", GET_FORMAT_OVERRIDE_HASH)
-        }
 
         private const val SET_SWIZZLE_R_HASH = 3833362581L
-        private val setSwizzleRBind by lazy {
+        @JvmField
+        val setSwizzleRBind =
             ObjectCalls.getMethodBind("RDTextureView", "set_swizzle_r", SET_SWIZZLE_R_HASH)
-        }
 
         private const val GET_SWIZZLE_R_HASH = 4150792614L
-        private val getSwizzleRBind by lazy {
+        @JvmField
+        val getSwizzleRBind =
             ObjectCalls.getMethodBind("RDTextureView", "get_swizzle_r", GET_SWIZZLE_R_HASH)
-        }
 
         private const val SET_SWIZZLE_G_HASH = 3833362581L
-        private val setSwizzleGBind by lazy {
+        @JvmField
+        val setSwizzleGBind =
             ObjectCalls.getMethodBind("RDTextureView", "set_swizzle_g", SET_SWIZZLE_G_HASH)
-        }
 
         private const val GET_SWIZZLE_G_HASH = 4150792614L
-        private val getSwizzleGBind by lazy {
+        @JvmField
+        val getSwizzleGBind =
             ObjectCalls.getMethodBind("RDTextureView", "get_swizzle_g", GET_SWIZZLE_G_HASH)
-        }
 
         private const val SET_SWIZZLE_B_HASH = 3833362581L
-        private val setSwizzleBBind by lazy {
+        @JvmField
+        val setSwizzleBBind =
             ObjectCalls.getMethodBind("RDTextureView", "set_swizzle_b", SET_SWIZZLE_B_HASH)
-        }
 
         private const val GET_SWIZZLE_B_HASH = 4150792614L
-        private val getSwizzleBBind by lazy {
+        @JvmField
+        val getSwizzleBBind =
             ObjectCalls.getMethodBind("RDTextureView", "get_swizzle_b", GET_SWIZZLE_B_HASH)
-        }
 
         private const val SET_SWIZZLE_A_HASH = 3833362581L
-        private val setSwizzleABind by lazy {
+        @JvmField
+        val setSwizzleABind =
             ObjectCalls.getMethodBind("RDTextureView", "set_swizzle_a", SET_SWIZZLE_A_HASH)
-        }
 
         private const val GET_SWIZZLE_A_HASH = 4150792614L
-        private val getSwizzleABind by lazy {
+        @JvmField
+        val getSwizzleABind =
             ObjectCalls.getMethodBind("RDTextureView", "get_swizzle_a", GET_SWIZZLE_A_HASH)
-        }
     }
 }

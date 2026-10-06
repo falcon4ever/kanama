@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Container.queue_sort
      */
     fun queueSort() {
-        ObjectCalls.ptrcallNoArgs(queueSortBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.queueSortBind, segment)
     }
 
     /**
@@ -35,7 +36,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Container.fit_child_in_rect
      */
     fun fitChildInRect(child: Control, rect: Rect2) {
-        ObjectCalls.ptrcallWithObjectAndRect2Arg(fitChildInRectBind, segment, child.segment, rect)
+        ObjectCalls.ptrcallWithObjectAndRect2Arg(Binds.fitChildInRectBind, segment, child.segment, rect)
     }
 
     /**
@@ -46,7 +47,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Container.set_accessibility_region
      */
     fun setAccessibilityRegion(region: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAccessibilityRegionBind, segment, region)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAccessibilityRegionBind, segment, region)
     }
 
     /**
@@ -57,7 +58,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Container.is_accessibility_region
      */
     fun isAccessibilityRegion(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilityRegionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAccessibilityRegionBind, segment)
     }
 
     /** Signal `pre_sort_children()`; see [TypedSignal]. */
@@ -85,25 +86,27 @@ open class Container(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Container? =
             if (handle.address() == 0L) null else Container(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val QUEUE_SORT_HASH = 3218959716L
-        private val queueSortBind by lazy {
+        @JvmField
+        val queueSortBind =
             ObjectCalls.getMethodBind("Container", "queue_sort", QUEUE_SORT_HASH)
-        }
 
         private const val FIT_CHILD_IN_RECT_HASH = 1993438598L
-        private val fitChildInRectBind by lazy {
+        @JvmField
+        val fitChildInRectBind =
             ObjectCalls.getMethodBind("Container", "fit_child_in_rect", FIT_CHILD_IN_RECT_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_REGION_HASH = 2586408642L
-        private val setAccessibilityRegionBind by lazy {
+        @JvmField
+        val setAccessibilityRegionBind =
             ObjectCalls.getMethodBind("Container", "set_accessibility_region", SET_ACCESSIBILITY_REGION_HASH)
-        }
 
         private const val IS_ACCESSIBILITY_REGION_HASH = 36873697L
-        private val isAccessibilityRegionBind by lazy {
+        @JvmField
+        val isAccessibilityRegionBind =
             ObjectCalls.getMethodBind("Container", "is_accessibility_region", IS_ACCESSIBILITY_REGION_HASH)
-        }
     }
 }

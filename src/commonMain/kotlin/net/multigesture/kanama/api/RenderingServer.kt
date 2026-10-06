@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -26,9 +27,8 @@ import net.multigesture.kanama.types.Vector3i
  * Generated from Godot docs: RenderingServer
  */
 object RenderingServer {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("RenderingServer")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     const val NO_INDEX_ARRAY: Long = -1L
     const val ARRAY_WEIGHTS_SIZE: Long = 4L
@@ -67,7 +67,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dCreate(image: Image?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(texture2dCreateBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetRID(Binds.texture2dCreateBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -80,7 +80,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dLayeredCreate(layers: List<Image>, layeredType: RenderingServer.TextureLayeredType): RID {
-        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(texture2dLayeredCreateBind, singleton, layers, layeredType.value)
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(Binds.texture2dLayeredCreateBind, singleton, layers, layeredType.value)
     }
 
     /**
@@ -90,7 +90,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture3dCreate(format: Image.Format, width: Int, height: Int, depth: Int, mipmaps: Boolean, data: List<Image>): RID {
-        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetRID(texture3dCreateBind, singleton, format.value, width, height, depth, mipmaps, data)
+        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetRID(Binds.texture3dCreateBind, singleton, format.value, width, height, depth, mipmaps, data)
     }
 
     /**
@@ -100,7 +100,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureProxyCreate(base: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(textureProxyCreateBind, singleton, base)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.textureProxyCreateBind, singleton, base)
     }
 
     /**
@@ -114,7 +114,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureCreateFromNativeHandle(type: RenderingServer.TextureType, format: Image.Format, nativeHandle: Long, width: Int, height: Int, depth: Int, layers: Int = 1, layeredType: RenderingServer.TextureLayeredType = RenderingServer.TextureLayeredType.LAYERED_2D_ARRAY): RID {
-        return ObjectCalls.ptrcallWithThreeLongFourIntLongArgsRetRID(textureCreateFromNativeHandleBind, singleton, type.value, format.value, nativeHandle, width, height, depth, layers, layeredType.value)
+        return ObjectCalls.ptrcallWithThreeLongFourIntLongArgsRetRID(Binds.textureCreateFromNativeHandleBind, singleton, type.value, format.value, nativeHandle, width, height, depth, layers, layeredType.value)
     }
 
     /**
@@ -127,7 +127,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureDrawableCreate(width: Int, height: Int, format: RenderingServer.TextureDrawableFormat, color: Color, withMipmaps: Boolean = false): RID {
-        return ObjectCalls.ptrcallWithTwoIntLongColorBoolArgsRetRID(textureDrawableCreateBind, singleton, width, height, format.value, color, withMipmaps)
+        return ObjectCalls.ptrcallWithTwoIntLongColorBoolArgsRetRID(Binds.textureDrawableCreateBind, singleton, width, height, format.value, color, withMipmaps)
     }
 
     /**
@@ -141,7 +141,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dUpdate(texture: RID, image: Image?, layer: Int) {
-        ObjectCalls.ptrcallWithRIDObjectIntArgs(texture2dUpdateBind, singleton, texture, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
+        ObjectCalls.ptrcallWithRIDObjectIntArgs(Binds.texture2dUpdateBind, singleton, texture, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
     }
 
     /**
@@ -155,7 +155,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture3dUpdate(texture: RID, data: List<Image>) {
-        ObjectCalls.ptrcallWithRIDAndObjectListArgs(texture3dUpdateBind, singleton, texture, data)
+        ObjectCalls.ptrcallWithRIDAndObjectListArgs(Binds.texture3dUpdateBind, singleton, texture, data)
     }
 
     /**
@@ -165,7 +165,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureProxyUpdate(texture: RID, proxyTo: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(textureProxyUpdateBind, singleton, texture, proxyTo)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.textureProxyUpdateBind, singleton, texture, proxyTo)
     }
 
     /**
@@ -178,7 +178,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureDrawableBlitRect(textures: List<RID>, rect: Rect2i, material: RID, modulate: Color, sourceTextures: List<RID>, toMipmap: Int = 0) {
-        ObjectCalls.ptrcallWithRIDListRect2iRIDColorRIDListIntArgs(textureDrawableBlitRectBind, singleton, textures, rect, material, modulate, sourceTextures, toMipmap)
+        ObjectCalls.ptrcallWithRIDListRect2iRIDColorRIDListIntArgs(Binds.textureDrawableBlitRectBind, singleton, textures, rect, material, modulate, sourceTextures, toMipmap)
     }
 
     /**
@@ -193,7 +193,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dPlaceholderCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(texture2dPlaceholderCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.texture2dPlaceholderCreateBind, singleton)
     }
 
     /**
@@ -206,7 +206,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dLayeredPlaceholderCreate(layeredType: RenderingServer.TextureLayeredType): RID {
-        return ObjectCalls.ptrcallWithLongArgRetRID(texture2dLayeredPlaceholderCreateBind, singleton, layeredType.value)
+        return ObjectCalls.ptrcallWithLongArgRetRID(Binds.texture2dLayeredPlaceholderCreateBind, singleton, layeredType.value)
     }
 
     /**
@@ -220,7 +220,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture3dPlaceholderCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(texture3dPlaceholderCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.texture3dPlaceholderCreateBind, singleton)
     }
 
     /**
@@ -230,7 +230,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dGet(texture: RID): Image? {
-        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDArgRetObject(texture2dGetBind, singleton, texture))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.texture2dGetBind, singleton, texture))
     }
 
     /**
@@ -240,7 +240,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dLayerGet(texture: RID, layer: Int): Image? {
-        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(texture2dLayerGetBind, singleton, texture, layer))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(Binds.texture2dLayerGetBind, singleton, texture, layer))
     }
 
     /**
@@ -250,7 +250,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture3dGet(texture: RID): List<Image> {
-        return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, singleton, texture, Image::wrapBorrowed)
+        return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(Binds.texture3dGetBind, singleton, texture, Image::wrapBorrowed)
     }
 
     /**
@@ -260,7 +260,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureDrawableGenerateMipmaps(texture: RID) {
-        ObjectCalls.ptrcallWithRIDArg(textureDrawableGenerateMipmapsBind, singleton, texture)
+        ObjectCalls.ptrcallWithRIDArg(Binds.textureDrawableGenerateMipmapsBind, singleton, texture)
     }
 
     /**
@@ -270,7 +270,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureDrawableGetDefaultMaterial(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(textureDrawableGetDefaultMaterialBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.textureDrawableGetDefaultMaterialBind, singleton)
     }
 
     /**
@@ -281,7 +281,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureReplace(texture: RID, byTexture: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(textureReplaceBind, singleton, texture, byTexture)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.textureReplaceBind, singleton, texture, byTexture)
     }
 
     /**
@@ -293,7 +293,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureSetSizeOverride(texture: RID, width: Int, height: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(textureSetSizeOverrideBind, singleton, texture, width, height)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.textureSetSizeOverrideBind, singleton, texture, width, height)
     }
 
     /**
@@ -304,7 +304,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureSetPath(texture: RID, path: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(textureSetPathBind, singleton, texture, path)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.textureSetPathBind, singleton, texture, path)
     }
 
     /**
@@ -315,7 +315,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureGetPath(texture: RID): String {
-        return ObjectCalls.ptrcallWithRIDArgRetString(textureGetPathBind, singleton, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.textureGetPathBind, singleton, texture)
     }
 
     /**
@@ -325,7 +325,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureGetFormat(texture: RID): Image.Format {
-        return Image.Format(ObjectCalls.ptrcallWithRIDArgRetLong(textureGetFormatBind, singleton, texture))
+        return Image.Format(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.textureGetFormatBind, singleton, texture))
     }
 
     /**
@@ -336,7 +336,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureSetForceRedrawIfVisible(texture: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(textureSetForceRedrawIfVisibleBind, singleton, texture, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.textureSetForceRedrawIfVisibleBind, singleton, texture, enable)
     }
 
     /**
@@ -350,7 +350,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureRdCreate(rdTexture: RID, layerType: RenderingServer.TextureLayeredType = RenderingServer.TextureLayeredType.LAYERED_2D_ARRAY): RID {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(textureRdCreateBind, singleton, rdTexture, layerType.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(Binds.textureRdCreateBind, singleton, rdTexture, layerType.value)
     }
 
     /**
@@ -361,7 +361,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureGetRdTexture(texture: RID, srgb: Boolean = false): RID {
-        return ObjectCalls.ptrcallWithRIDAndBoolArgRetRID(textureGetRdTextureBind, singleton, texture, srgb)
+        return ObjectCalls.ptrcallWithRIDAndBoolArgRetRID(Binds.textureGetRdTextureBind, singleton, texture, srgb)
     }
 
     /**
@@ -374,7 +374,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun textureGetNativeHandle(texture: RID, srgb: Boolean = false): Long {
-        return ObjectCalls.ptrcallWithRIDAndBoolArgRetLong(textureGetNativeHandleBind, singleton, texture, srgb)
+        return ObjectCalls.ptrcallWithRIDAndBoolArgRetLong(Binds.textureGetNativeHandleBind, singleton, texture, srgb)
     }
 
     /**
@@ -387,7 +387,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(shaderCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.shaderCreateBind, singleton)
     }
 
     /**
@@ -397,7 +397,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderSetCode(shader: RID, code: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(shaderSetCodeBind, singleton, shader, code)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.shaderSetCodeBind, singleton, shader, code)
     }
 
     /**
@@ -408,7 +408,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderSetPathHint(shader: RID, path: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(shaderSetPathHintBind, singleton, shader, path)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.shaderSetPathHintBind, singleton, shader, path)
     }
 
     /**
@@ -418,7 +418,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderGetCode(shader: RID): String {
-        return ObjectCalls.ptrcallWithRIDArgRetString(shaderGetCodeBind, singleton, shader)
+        return ObjectCalls.ptrcallWithRIDArgRetString(Binds.shaderGetCodeBind, singleton, shader)
     }
 
     /**
@@ -428,7 +428,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getShaderParameterList(shader: RID): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(getShaderParameterListBind, singleton, shader)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.getShaderParameterListBind, singleton, shader)
     }
 
     /**
@@ -439,7 +439,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderGetParameterDefault(shader: RID, name: String): Any? {
-        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(shaderGetParameterDefaultBind, singleton, shader, name)
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(Binds.shaderGetParameterDefaultBind, singleton, shader, name)
     }
 
     /**
@@ -450,7 +450,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderSetDefaultTextureParameter(shader: RID, name: String, texture: RID, index: Int = 0) {
-        ObjectCalls.ptrcallWithRIDStringNameRIDIntArgs(shaderSetDefaultTextureParameterBind, singleton, shader, name, texture, index)
+        ObjectCalls.ptrcallWithRIDStringNameRIDIntArgs(Binds.shaderSetDefaultTextureParameterBind, singleton, shader, name, texture, index)
     }
 
     /**
@@ -461,7 +461,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun shaderGetDefaultTextureParameter(shader: RID, name: String, index: Int = 0): RID {
-        return ObjectCalls.ptrcallWithRIDStringNameAndIntArgRetRID(shaderGetDefaultTextureParameterBind, singleton, shader, name, index)
+        return ObjectCalls.ptrcallWithRIDStringNameAndIntArgRetRID(Binds.shaderGetDefaultTextureParameterBind, singleton, shader, name, index)
     }
 
     /**
@@ -474,7 +474,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(materialCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.materialCreateBind, singleton)
     }
 
     /**
@@ -484,7 +484,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialSetShader(shaderMaterial: RID, shader: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(materialSetShaderBind, singleton, shaderMaterial, shader)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.materialSetShaderBind, singleton, shaderMaterial, shader)
     }
 
     /**
@@ -494,7 +494,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialSetParam(material: RID, parameter: String, value: Any?) {
-        ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(materialSetParamBind, singleton, material, parameter, value)
+        ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(Binds.materialSetParamBind, singleton, material, parameter, value)
     }
 
     /**
@@ -504,7 +504,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialGetParam(material: RID, parameter: String): Any? {
-        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(materialGetParamBind, singleton, material, parameter)
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(Binds.materialGetParamBind, singleton, material, parameter)
     }
 
     /**
@@ -514,7 +514,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialSetRenderPriority(material: RID, priority: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(materialSetRenderPriorityBind, singleton, material, priority)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.materialSetRenderPriorityBind, singleton, material, priority)
     }
 
     /**
@@ -524,7 +524,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialSetNextPass(material: RID, nextMaterial: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(materialSetNextPassBind, singleton, material, nextMaterial)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.materialSetNextPassBind, singleton, material, nextMaterial)
     }
 
     /**
@@ -539,7 +539,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun materialSetUseDebanding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(materialSetUseDebandingBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.materialSetUseDebandingBind, singleton, enable)
     }
 
     /**
@@ -557,7 +557,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshCreateFromSurfaces(surfaces: List<Map<String, Any?>>, blendShapeCount: Int = 0): RID {
-        return ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(meshCreateFromSurfacesBind, singleton, surfaces, blendShapeCount)
+        return ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(Binds.meshCreateFromSurfacesBind, singleton, surfaces, blendShapeCount)
     }
 
     /**
@@ -571,7 +571,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(meshCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.meshCreateBind, singleton)
     }
 
     /**
@@ -581,7 +581,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetFormatOffset(format: RenderingServer.ArrayFormat, vertexCount: Int, arrayIndex: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndTwoIntArgsRetUInt32(meshSurfaceGetFormatOffsetBind, singleton, format.value, vertexCount, arrayIndex)
+        return ObjectCalls.ptrcallWithLongAndTwoIntArgsRetUInt32(Binds.meshSurfaceGetFormatOffsetBind, singleton, format.value, vertexCount, arrayIndex)
     }
 
     /**
@@ -593,7 +593,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetFormatVertexStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatVertexStrideBind, singleton, format.value, vertexCount)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(Binds.meshSurfaceGetFormatVertexStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -605,7 +605,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetFormatNormalTangentStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatNormalTangentStrideBind, singleton, format.value, vertexCount)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(Binds.meshSurfaceGetFormatNormalTangentStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -615,7 +615,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetFormatAttributeStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatAttributeStrideBind, singleton, format.value, vertexCount)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(Binds.meshSurfaceGetFormatAttributeStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -625,7 +625,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetFormatSkinStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatSkinStrideBind, singleton, format.value, vertexCount)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(Binds.meshSurfaceGetFormatSkinStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -635,7 +635,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetFormatIndexStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatIndexStrideBind, singleton, format.value, vertexCount)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(Binds.meshSurfaceGetFormatIndexStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -646,7 +646,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshAddSurface(mesh: RID, surface: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithRIDAndDictionaryArg(meshAddSurfaceBind, singleton, mesh, surface)
+        ObjectCalls.ptrcallWithRIDAndDictionaryArg(Binds.meshAddSurfaceBind, singleton, mesh, surface)
     }
 
     /**
@@ -680,7 +680,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshAddSurfaceFromArrays(mesh: RID, primitive: RenderingServer.PrimitiveType, arrays: List<Any?>, blendShapes: List<Any?> = emptyList(), lods: Map<String, Any?> = emptyMap(), compressFormat: RenderingServer.ArrayFormat = RenderingServer.ArrayFormat.FLAG_FORMAT_VERSION_1) {
-        ObjectCalls.ptrcallWithRIDLongTwoArrayDictionaryLongArgs(meshAddSurfaceFromArraysBind, singleton, mesh, primitive.value, arrays, blendShapes, lods, compressFormat.value)
+        ObjectCalls.ptrcallWithRIDLongTwoArrayDictionaryLongArgs(Binds.meshAddSurfaceFromArraysBind, singleton, mesh, primitive.value, arrays, blendShapes, lods, compressFormat.value)
     }
 
     /**
@@ -690,7 +690,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshGetBlendShapeCount(mesh: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(meshGetBlendShapeCountBind, singleton, mesh)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.meshGetBlendShapeCountBind, singleton, mesh)
     }
 
     /**
@@ -700,7 +700,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSetBlendShapeMode(mesh: RID, mode: RenderingServer.BlendShapeMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(meshSetBlendShapeModeBind, singleton, mesh, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.meshSetBlendShapeModeBind, singleton, mesh, mode.value)
     }
 
     /**
@@ -710,7 +710,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshGetBlendShapeMode(mesh: RID): RenderingServer.BlendShapeMode {
-        return RenderingServer.BlendShapeMode(ObjectCalls.ptrcallWithRIDArgRetLong(meshGetBlendShapeModeBind, singleton, mesh))
+        return RenderingServer.BlendShapeMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.meshGetBlendShapeModeBind, singleton, mesh))
     }
 
     /**
@@ -720,7 +720,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceSetMaterial(mesh: RID, surface: Int, material: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(meshSurfaceSetMaterialBind, singleton, mesh, surface, material)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.meshSurfaceSetMaterialBind, singleton, mesh, surface, material)
     }
 
     /**
@@ -730,7 +730,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetMaterial(mesh: RID, surface: Int): RID {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(meshSurfaceGetMaterialBind, singleton, mesh, surface)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.meshSurfaceGetMaterialBind, singleton, mesh, surface)
     }
 
     /**
@@ -741,7 +741,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshGetSurface(mesh: RID, surface: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetDictionary(meshGetSurfaceBind, singleton, mesh, surface)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetDictionary(Binds.meshGetSurfaceBind, singleton, mesh, surface)
     }
 
     /**
@@ -751,7 +751,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetArrays(mesh: RID, surface: Int): List<Any?> {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetArray(meshSurfaceGetArraysBind, singleton, mesh, surface)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetArray(Binds.meshSurfaceGetArraysBind, singleton, mesh, surface)
     }
 
     /**
@@ -761,7 +761,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceGetBlendShapeArrays(mesh: RID, surface: Int): List<List<Any?>> {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetArrayList(meshSurfaceGetBlendShapeArraysBind, singleton, mesh, surface)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetArrayList(Binds.meshSurfaceGetBlendShapeArraysBind, singleton, mesh, surface)
     }
 
     /**
@@ -771,7 +771,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshGetSurfaceCount(mesh: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(meshGetSurfaceCountBind, singleton, mesh)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.meshGetSurfaceCountBind, singleton, mesh)
     }
 
     /**
@@ -781,7 +781,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSetCustomAabb(mesh: RID, aabb: AABB) {
-        ObjectCalls.ptrcallWithRIDAndAABBArg(meshSetCustomAabbBind, singleton, mesh, aabb)
+        ObjectCalls.ptrcallWithRIDAndAABBArg(Binds.meshSetCustomAabbBind, singleton, mesh, aabb)
     }
 
     /**
@@ -791,7 +791,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshGetCustomAabb(mesh: RID): AABB {
-        return ObjectCalls.ptrcallWithRIDArgRetAABB(meshGetCustomAabbBind, singleton, mesh)
+        return ObjectCalls.ptrcallWithRIDArgRetAABB(Binds.meshGetCustomAabbBind, singleton, mesh)
     }
 
     /**
@@ -802,7 +802,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceRemove(mesh: RID, surface: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(meshSurfaceRemoveBind, singleton, mesh, surface)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.meshSurfaceRemoveBind, singleton, mesh, surface)
     }
 
     /**
@@ -812,7 +812,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshClear(mesh: RID) {
-        ObjectCalls.ptrcallWithRIDArg(meshClearBind, singleton, mesh)
+        ObjectCalls.ptrcallWithRIDArg(Binds.meshClearBind, singleton, mesh)
     }
 
     /**
@@ -828,7 +828,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceUpdateVertexRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateVertexRegionBind, singleton, mesh, surface, offset, data)
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(Binds.meshSurfaceUpdateVertexRegionBind, singleton, mesh, surface, offset, data)
     }
 
     /**
@@ -844,7 +844,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceUpdateAttributeRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateAttributeRegionBind, singleton, mesh, surface, offset, data)
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(Binds.meshSurfaceUpdateAttributeRegionBind, singleton, mesh, surface, offset, data)
     }
 
     /**
@@ -860,7 +860,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceUpdateSkinRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateSkinRegionBind, singleton, mesh, surface, offset, data)
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(Binds.meshSurfaceUpdateSkinRegionBind, singleton, mesh, surface, offset, data)
     }
 
     /**
@@ -871,7 +871,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSurfaceUpdateIndexRegion(mesh: RID, surface: Int, offset: Int, data: ByteArray) {
-        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(meshSurfaceUpdateIndexRegionBind, singleton, mesh, surface, offset, data)
+        ObjectCalls.ptrcallWithRIDIntIntAndByteArrayArgs(Binds.meshSurfaceUpdateIndexRegionBind, singleton, mesh, surface, offset, data)
     }
 
     /**
@@ -885,7 +885,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun meshSetShadowMesh(mesh: RID, shadowMesh: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(meshSetShadowMeshBind, singleton, mesh, shadowMesh)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.meshSetShadowMeshBind, singleton, mesh, shadowMesh)
     }
 
     /**
@@ -899,7 +899,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(multimeshCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.multimeshCreateBind, singleton)
     }
 
     /**
@@ -915,7 +915,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshAllocateData(multimesh: RID, instances: Int, transformFormat: RenderingServer.MultimeshTransformFormat, colorFormat: Boolean = false, customDataFormat: Boolean = false, useIndirect: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDIntLongThreeBoolArgs(multimeshAllocateDataBind, singleton, multimesh, instances, transformFormat.value, colorFormat, customDataFormat, useIndirect)
+        ObjectCalls.ptrcallWithRIDIntLongThreeBoolArgs(Binds.multimeshAllocateDataBind, singleton, multimesh, instances, transformFormat.value, colorFormat, customDataFormat, useIndirect)
     }
 
     /**
@@ -925,7 +925,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetInstanceCount(multimesh: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(multimeshGetInstanceCountBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.multimeshGetInstanceCountBind, singleton, multimesh)
     }
 
     /**
@@ -935,7 +935,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetMesh(multimesh: RID, mesh: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(multimeshSetMeshBind, singleton, multimesh, mesh)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.multimeshSetMeshBind, singleton, multimesh, mesh)
     }
 
     /**
@@ -945,7 +945,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceSetTransform(multimesh: RID, index: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(multimeshInstanceSetTransformBind, singleton, multimesh, index, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(Binds.multimeshInstanceSetTransformBind, singleton, multimesh, index, transform)
     }
 
     /**
@@ -956,7 +956,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceSetTransform2d(multimesh: RID, index: Int, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(multimeshInstanceSetTransform2dBind, singleton, multimesh, index, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(Binds.multimeshInstanceSetTransform2dBind, singleton, multimesh, index, transform)
     }
 
     /**
@@ -967,7 +967,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceSetColor(multimesh: RID, index: Int, color: Color) {
-        ObjectCalls.ptrcallWithRIDIntAndColorArgs(multimeshInstanceSetColorBind, singleton, multimesh, index, color)
+        ObjectCalls.ptrcallWithRIDIntAndColorArgs(Binds.multimeshInstanceSetColorBind, singleton, multimesh, index, color)
     }
 
     /**
@@ -978,7 +978,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceSetCustomData(multimesh: RID, index: Int, customData: Color) {
-        ObjectCalls.ptrcallWithRIDIntAndColorArgs(multimeshInstanceSetCustomDataBind, singleton, multimesh, index, customData)
+        ObjectCalls.ptrcallWithRIDIntAndColorArgs(Binds.multimeshInstanceSetCustomDataBind, singleton, multimesh, index, customData)
     }
 
     /**
@@ -988,7 +988,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetMesh(multimesh: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(multimeshGetMeshBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.multimeshGetMeshBind, singleton, multimesh)
     }
 
     /**
@@ -999,7 +999,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetAabb(multimesh: RID): AABB {
-        return ObjectCalls.ptrcallWithRIDArgRetAABB(multimeshGetAabbBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetAABB(Binds.multimeshGetAabbBind, singleton, multimesh)
     }
 
     /**
@@ -1009,7 +1009,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetCustomAabb(multimesh: RID, aabb: AABB) {
-        ObjectCalls.ptrcallWithRIDAndAABBArg(multimeshSetCustomAabbBind, singleton, multimesh, aabb)
+        ObjectCalls.ptrcallWithRIDAndAABBArg(Binds.multimeshSetCustomAabbBind, singleton, multimesh, aabb)
     }
 
     /**
@@ -1019,7 +1019,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetCustomAabb(multimesh: RID): AABB {
-        return ObjectCalls.ptrcallWithRIDArgRetAABB(multimeshGetCustomAabbBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetAABB(Binds.multimeshGetCustomAabbBind, singleton, multimesh)
     }
 
     /**
@@ -1029,7 +1029,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceGetTransform(multimesh: RID, index: Int): Transform3D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(multimeshInstanceGetTransformBind, singleton, multimesh, index)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(Binds.multimeshInstanceGetTransformBind, singleton, multimesh, index)
     }
 
     /**
@@ -1040,7 +1040,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceGetTransform2d(multimesh: RID, index: Int): Transform2D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(multimeshInstanceGetTransform2dBind, singleton, multimesh, index)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(Binds.multimeshInstanceGetTransform2dBind, singleton, multimesh, index)
     }
 
     /**
@@ -1050,7 +1050,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceGetColor(multimesh: RID, index: Int): Color {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetColor(multimeshInstanceGetColorBind, singleton, multimesh, index)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetColor(Binds.multimeshInstanceGetColorBind, singleton, multimesh, index)
     }
 
     /**
@@ -1060,7 +1060,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceGetCustomData(multimesh: RID, index: Int): Color {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetColor(multimeshInstanceGetCustomDataBind, singleton, multimesh, index)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetColor(Binds.multimeshInstanceGetCustomDataBind, singleton, multimesh, index)
     }
 
     /**
@@ -1071,7 +1071,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetVisibleInstances(multimesh: RID, visible: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(multimeshSetVisibleInstancesBind, singleton, multimesh, visible)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.multimeshSetVisibleInstancesBind, singleton, multimesh, visible)
     }
 
     /**
@@ -1081,7 +1081,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetVisibleInstances(multimesh: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(multimeshGetVisibleInstancesBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.multimeshGetVisibleInstancesBind, singleton, multimesh)
     }
 
     /**
@@ -1094,7 +1094,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetBuffer(multimesh: RID, buffer: List<Float>) {
-        ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArg(multimeshSetBufferBind, singleton, multimesh, buffer)
+        ObjectCalls.ptrcallWithRIDAndPackedFloat32ListArg(Binds.multimeshSetBufferBind, singleton, multimesh, buffer)
     }
 
     /**
@@ -1108,7 +1108,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetCommandBufferRdRid(multimesh: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(multimeshGetCommandBufferRdRidBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.multimeshGetCommandBufferRdRidBind, singleton, multimesh)
     }
 
     /**
@@ -1119,7 +1119,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetBufferRdRid(multimesh: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(multimeshGetBufferRdRidBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.multimeshGetBufferRdRidBind, singleton, multimesh)
     }
 
     /**
@@ -1132,7 +1132,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshGetBuffer(multimesh: RID): List<Float> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedFloat32List(multimeshGetBufferBind, singleton, multimesh)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedFloat32List(Binds.multimeshGetBufferBind, singleton, multimesh)
     }
 
     /**
@@ -1143,7 +1143,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetBufferInterpolated(multimesh: RID, buffer: List<Float>, bufferPrevious: List<Float>) {
-        ObjectCalls.ptrcallWithRIDAndTwoPackedFloat32ListArgs(multimeshSetBufferInterpolatedBind, singleton, multimesh, buffer, bufferPrevious)
+        ObjectCalls.ptrcallWithRIDAndTwoPackedFloat32ListArgs(Binds.multimeshSetBufferInterpolatedBind, singleton, multimesh, buffer, bufferPrevious)
     }
 
     /**
@@ -1153,7 +1153,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetPhysicsInterpolated(multimesh: RID, interpolated: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(multimeshSetPhysicsInterpolatedBind, singleton, multimesh, interpolated)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.multimeshSetPhysicsInterpolatedBind, singleton, multimesh, interpolated)
     }
 
     /**
@@ -1165,7 +1165,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshSetPhysicsInterpolationQuality(multimesh: RID, quality: RenderingServer.MultimeshPhysicsInterpolationQuality) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(multimeshSetPhysicsInterpolationQualityBind, singleton, multimesh, quality.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.multimeshSetPhysicsInterpolationQualityBind, singleton, multimesh, quality.value)
     }
 
     /**
@@ -1177,7 +1177,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstanceResetPhysicsInterpolation(multimesh: RID, index: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(multimeshInstanceResetPhysicsInterpolationBind, singleton, multimesh, index)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.multimeshInstanceResetPhysicsInterpolationBind, singleton, multimesh, index)
     }
 
     /**
@@ -1189,7 +1189,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun multimeshInstancesResetPhysicsInterpolation(multimesh: RID) {
-        ObjectCalls.ptrcallWithRIDArg(multimeshInstancesResetPhysicsInterpolationBind, singleton, multimesh)
+        ObjectCalls.ptrcallWithRIDArg(Binds.multimeshInstancesResetPhysicsInterpolationBind, singleton, multimesh)
     }
 
     /**
@@ -1201,7 +1201,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(skeletonCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.skeletonCreateBind, singleton)
     }
 
     /**
@@ -1213,7 +1213,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonAllocateData(skeleton: RID, bones: Int, is2dSkeleton: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(skeletonAllocateDataBind, singleton, skeleton, bones, is2dSkeleton)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.skeletonAllocateDataBind, singleton, skeleton, bones, is2dSkeleton)
     }
 
     /**
@@ -1223,7 +1223,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonGetBoneCount(skeleton: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(skeletonGetBoneCountBind, singleton, skeleton)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.skeletonGetBoneCountBind, singleton, skeleton)
     }
 
     /**
@@ -1233,7 +1233,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonBoneSetTransform(skeleton: RID, bone: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(skeletonBoneSetTransformBind, singleton, skeleton, bone, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(Binds.skeletonBoneSetTransformBind, singleton, skeleton, bone, transform)
     }
 
     /**
@@ -1243,7 +1243,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonBoneGetTransform(skeleton: RID, bone: Int): Transform3D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(skeletonBoneGetTransformBind, singleton, skeleton, bone)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(Binds.skeletonBoneGetTransformBind, singleton, skeleton, bone)
     }
 
     /**
@@ -1253,7 +1253,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonBoneSetTransform2d(skeleton: RID, bone: Int, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(skeletonBoneSetTransform2dBind, singleton, skeleton, bone, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(Binds.skeletonBoneSetTransform2dBind, singleton, skeleton, bone, transform)
     }
 
     /**
@@ -1263,7 +1263,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonBoneGetTransform2d(skeleton: RID, bone: Int): Transform2D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(skeletonBoneGetTransform2dBind, singleton, skeleton, bone)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(Binds.skeletonBoneGetTransform2dBind, singleton, skeleton, bone)
     }
 
     /**
@@ -1273,7 +1273,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skeletonSetBaseTransform2d(skeleton: RID, baseTransform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(skeletonSetBaseTransform2dBind, singleton, skeleton, baseTransform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.skeletonSetBaseTransform2dBind, singleton, skeleton, baseTransform)
     }
 
     /**
@@ -1287,7 +1287,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun directionalLightCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(directionalLightCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.directionalLightCreateBind, singleton)
     }
 
     /**
@@ -1301,7 +1301,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun omniLightCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(omniLightCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.omniLightCreateBind, singleton)
     }
 
     /**
@@ -1315,7 +1315,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun spotLightCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(spotLightCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.spotLightCreateBind, singleton)
     }
 
     /**
@@ -1329,7 +1329,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun areaLightCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(areaLightCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.areaLightCreateBind, singleton)
     }
 
     /**
@@ -1339,7 +1339,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetColor(light: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(lightSetColorBind, singleton, light, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.lightSetColorBind, singleton, light, color)
     }
 
     /**
@@ -1349,7 +1349,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetParam(light: RID, param: RenderingServer.LightParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(lightSetParamBind, singleton, light, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.lightSetParamBind, singleton, light, param.value, value)
     }
 
     /**
@@ -1359,7 +1359,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetShadow(light: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(lightSetShadowBind, singleton, light, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightSetShadowBind, singleton, light, enabled)
     }
 
     /**
@@ -1370,7 +1370,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetProjector(light: RID, texture: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(lightSetProjectorBind, singleton, light, texture)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.lightSetProjectorBind, singleton, light, texture)
     }
 
     /**
@@ -1381,7 +1381,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetNegative(light: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(lightSetNegativeBind, singleton, light, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightSetNegativeBind, singleton, light, enable)
     }
 
     /**
@@ -1392,7 +1392,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetCullMask(light: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(lightSetCullMaskBind, singleton, light, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.lightSetCullMaskBind, singleton, light, mask)
     }
 
     /**
@@ -1405,7 +1405,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetDistanceFade(decal: RID, enabled: Boolean, begin: Double, shadow: Double, length: Double) {
-        ObjectCalls.ptrcallWithRIDBoolThreeDoubleArgs(lightSetDistanceFadeBind, singleton, decal, enabled, begin, shadow, length)
+        ObjectCalls.ptrcallWithRIDBoolThreeDoubleArgs(Binds.lightSetDistanceFadeBind, singleton, decal, enabled, begin, shadow, length)
     }
 
     /**
@@ -1418,7 +1418,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetReverseCullFaceMode(light: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(lightSetReverseCullFaceModeBind, singleton, light, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightSetReverseCullFaceModeBind, singleton, light, enabled)
     }
 
     /**
@@ -1429,7 +1429,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetShadowCasterMask(light: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(lightSetShadowCasterMaskBind, singleton, light, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.lightSetShadowCasterMaskBind, singleton, light, mask)
     }
 
     /**
@@ -1439,7 +1439,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetBakeMode(light: RID, bakeMode: RenderingServer.LightBakeMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightSetBakeModeBind, singleton, light, bakeMode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.lightSetBakeModeBind, singleton, light, bakeMode.value)
     }
 
     /**
@@ -1450,7 +1450,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightSetMaxSdfgiCascade(light: RID, cascade: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(lightSetMaxSdfgiCascadeBind, singleton, light, cascade)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.lightSetMaxSdfgiCascadeBind, singleton, light, cascade)
     }
 
     /**
@@ -1461,7 +1461,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightOmniSetShadowMode(light: RID, mode: RenderingServer.LightOmniShadowMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightOmniSetShadowModeBind, singleton, light, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.lightOmniSetShadowModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -1472,7 +1472,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightDirectionalSetShadowMode(light: RID, mode: RenderingServer.LightDirectionalShadowMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightDirectionalSetShadowModeBind, singleton, light, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.lightDirectionalSetShadowModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -1483,7 +1483,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightDirectionalSetBlendSplits(light: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(lightDirectionalSetBlendSplitsBind, singleton, light, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightDirectionalSetBlendSplitsBind, singleton, light, enable)
     }
 
     /**
@@ -1495,7 +1495,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightDirectionalSetSkyMode(light: RID, mode: RenderingServer.LightDirectionalSkyMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightDirectionalSetSkyModeBind, singleton, light, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.lightDirectionalSetSkyModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -1506,7 +1506,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightAreaSetSize(light: RID, size: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(lightAreaSetSizeBind, singleton, light, size)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.lightAreaSetSizeBind, singleton, light, size)
     }
 
     /**
@@ -1518,7 +1518,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightAreaSetNormalizeEnergy(light: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(lightAreaSetNormalizeEnergyBind, singleton, light, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightAreaSetNormalizeEnergyBind, singleton, light, enable)
     }
 
     /**
@@ -1529,7 +1529,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightProjectorsSetFilter(filter: RenderingServer.LightProjectorFilter) {
-        ObjectCalls.ptrcallWithLongArg(lightProjectorsSetFilterBind, singleton, filter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.lightProjectorsSetFilterBind, singleton, filter.value)
     }
 
     /**
@@ -1540,7 +1540,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapsSetBicubicFilter(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(lightmapsSetBicubicFilterBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.lightmapsSetBicubicFilterBind, singleton, enable)
     }
 
     /**
@@ -1552,7 +1552,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun positionalSoftShadowFilterSetQuality(quality: RenderingServer.ShadowQuality) {
-        ObjectCalls.ptrcallWithLongArg(positionalSoftShadowFilterSetQualityBind, singleton, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.positionalSoftShadowFilterSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -1564,7 +1564,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun directionalSoftShadowFilterSetQuality(quality: RenderingServer.ShadowQuality) {
-        ObjectCalls.ptrcallWithLongArg(directionalSoftShadowFilterSetQualityBind, singleton, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.directionalSoftShadowFilterSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -1576,7 +1576,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun directionalShadowAtlasSetSize(size: Int, is16bits: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(directionalShadowAtlasSetSizeBind, singleton, size, is16bits)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.directionalShadowAtlasSetSizeBind, singleton, size, is16bits)
     }
 
     /**
@@ -1590,7 +1590,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(reflectionProbeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.reflectionProbeCreateBind, singleton)
     }
 
     /**
@@ -1600,7 +1600,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetUpdateMode(probe: RID, mode: RenderingServer.ReflectionProbeUpdateMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(reflectionProbeSetUpdateModeBind, singleton, probe, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.reflectionProbeSetUpdateModeBind, singleton, probe, mode.value)
     }
 
     /**
@@ -1611,7 +1611,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetIntensity(probe: RID, intensity: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(reflectionProbeSetIntensityBind, singleton, probe, intensity)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.reflectionProbeSetIntensityBind, singleton, probe, intensity)
     }
 
     /**
@@ -1621,7 +1621,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetBlendDistance(probe: RID, blendDistance: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(reflectionProbeSetBlendDistanceBind, singleton, probe, blendDistance)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.reflectionProbeSetBlendDistanceBind, singleton, probe, blendDistance)
     }
 
     /**
@@ -1631,7 +1631,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetAmbientMode(probe: RID, mode: RenderingServer.ReflectionProbeAmbientMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(reflectionProbeSetAmbientModeBind, singleton, probe, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.reflectionProbeSetAmbientModeBind, singleton, probe, mode.value)
     }
 
     /**
@@ -1642,7 +1642,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetAmbientColor(probe: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(reflectionProbeSetAmbientColorBind, singleton, probe, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.reflectionProbeSetAmbientColorBind, singleton, probe, color)
     }
 
     /**
@@ -1653,7 +1653,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetAmbientEnergy(probe: RID, energy: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(reflectionProbeSetAmbientEnergyBind, singleton, probe, energy)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.reflectionProbeSetAmbientEnergyBind, singleton, probe, energy)
     }
 
     /**
@@ -1664,7 +1664,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetMaxDistance(probe: RID, distance: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(reflectionProbeSetMaxDistanceBind, singleton, probe, distance)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.reflectionProbeSetMaxDistanceBind, singleton, probe, distance)
     }
 
     /**
@@ -1675,7 +1675,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetSize(probe: RID, size: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(reflectionProbeSetSizeBind, singleton, probe, size)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.reflectionProbeSetSizeBind, singleton, probe, size)
     }
 
     /**
@@ -1686,7 +1686,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetOriginOffset(probe: RID, offset: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(reflectionProbeSetOriginOffsetBind, singleton, probe, offset)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.reflectionProbeSetOriginOffsetBind, singleton, probe, offset)
     }
 
     /**
@@ -1696,7 +1696,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetAsInterior(probe: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(reflectionProbeSetAsInteriorBind, singleton, probe, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.reflectionProbeSetAsInteriorBind, singleton, probe, enable)
     }
 
     /**
@@ -1707,7 +1707,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetEnableBoxProjection(probe: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(reflectionProbeSetEnableBoxProjectionBind, singleton, probe, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.reflectionProbeSetEnableBoxProjectionBind, singleton, probe, enable)
     }
 
     /**
@@ -1718,7 +1718,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetEnableShadows(probe: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(reflectionProbeSetEnableShadowsBind, singleton, probe, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.reflectionProbeSetEnableShadowsBind, singleton, probe, enable)
     }
 
     /**
@@ -1729,7 +1729,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetCullMask(probe: RID, layers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(reflectionProbeSetCullMaskBind, singleton, probe, layers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.reflectionProbeSetCullMaskBind, singleton, probe, layers)
     }
 
     /**
@@ -1740,7 +1740,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetReflectionMask(probe: RID, layers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(reflectionProbeSetReflectionMaskBind, singleton, probe, layers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.reflectionProbeSetReflectionMaskBind, singleton, probe, layers)
     }
 
     /**
@@ -1750,7 +1750,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetResolution(probe: RID, resolution: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(reflectionProbeSetResolutionBind, singleton, probe, resolution)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.reflectionProbeSetResolutionBind, singleton, probe, resolution)
     }
 
     /**
@@ -1762,7 +1762,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun reflectionProbeSetMeshLodThreshold(probe: RID, pixels: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(reflectionProbeSetMeshLodThresholdBind, singleton, probe, pixels)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.reflectionProbeSetMeshLodThresholdBind, singleton, probe, pixels)
     }
 
     /**
@@ -1776,7 +1776,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(decalCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.decalCreateBind, singleton)
     }
 
     /**
@@ -1786,7 +1786,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetSize(decal: RID, size: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(decalSetSizeBind, singleton, decal, size)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.decalSetSizeBind, singleton, decal, size)
     }
 
     /**
@@ -1797,7 +1797,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetTexture(decal: RID, type: RenderingServer.DecalTexture, texture: RID) {
-        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(decalSetTextureBind, singleton, decal, type.value, texture)
+        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(Binds.decalSetTextureBind, singleton, decal, type.value, texture)
     }
 
     /**
@@ -1808,7 +1808,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetEmissionEnergy(decal: RID, energy: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(decalSetEmissionEnergyBind, singleton, decal, energy)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.decalSetEmissionEnergyBind, singleton, decal, energy)
     }
 
     /**
@@ -1819,7 +1819,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetAlbedoMix(decal: RID, albedoMix: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(decalSetAlbedoMixBind, singleton, decal, albedoMix)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.decalSetAlbedoMixBind, singleton, decal, albedoMix)
     }
 
     /**
@@ -1830,7 +1830,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetModulate(decal: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(decalSetModulateBind, singleton, decal, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.decalSetModulateBind, singleton, decal, color)
     }
 
     /**
@@ -1840,7 +1840,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetCullMask(decal: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(decalSetCullMaskBind, singleton, decal, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.decalSetCullMaskBind, singleton, decal, mask)
     }
 
     /**
@@ -1851,7 +1851,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetDistanceFade(decal: RID, enabled: Boolean, begin: Double, length: Double) {
-        ObjectCalls.ptrcallWithRIDBoolTwoDoubleArgs(decalSetDistanceFadeBind, singleton, decal, enabled, begin, length)
+        ObjectCalls.ptrcallWithRIDBoolTwoDoubleArgs(Binds.decalSetDistanceFadeBind, singleton, decal, enabled, begin, length)
     }
 
     /**
@@ -1862,7 +1862,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetFade(decal: RID, above: Double, below: Double) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(decalSetFadeBind, singleton, decal, above, below)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.decalSetFadeBind, singleton, decal, above, below)
     }
 
     /**
@@ -1873,7 +1873,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalSetNormalFade(decal: RID, fade: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(decalSetNormalFadeBind, singleton, decal, fade)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.decalSetNormalFadeBind, singleton, decal, fade)
     }
 
     /**
@@ -1884,7 +1884,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun decalsSetFilter(filter: RenderingServer.DecalFilter) {
-        ObjectCalls.ptrcallWithLongArg(decalsSetFilterBind, singleton, filter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.decalsSetFilterBind, singleton, filter.value)
     }
 
     /**
@@ -1899,7 +1899,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun giSetUseHalfResolution(halfResolution: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(giSetUseHalfResolutionBind, singleton, halfResolution)
+        ObjectCalls.ptrcallWithBoolArg(Binds.giSetUseHalfResolutionBind, singleton, halfResolution)
     }
 
     /**
@@ -1912,7 +1912,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(voxelGiCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.voxelGiCreateBind, singleton)
     }
 
     /**
@@ -1924,7 +1924,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiAllocateData(voxelGi: RID, toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3i, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
-        ObjectCalls.ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs(voxelGiAllocateDataBind, singleton, voxelGi, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
+        ObjectCalls.ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs(Binds.voxelGiAllocateDataBind, singleton, voxelGi, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
     }
 
     /**
@@ -1937,7 +1937,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiGetOctreeSize(voxelGi: RID): Vector3i {
-        return ObjectCalls.ptrcallWithRIDArgRetVector3i(voxelGiGetOctreeSizeBind, singleton, voxelGi)
+        return ObjectCalls.ptrcallWithRIDArgRetVector3i(Binds.voxelGiGetOctreeSizeBind, singleton, voxelGi)
     }
 
     /**
@@ -1948,7 +1948,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiGetOctreeCells(voxelGi: RID): ByteArray {
-        return ObjectCalls.ptrcallWithRIDArgRetByteArray(voxelGiGetOctreeCellsBind, singleton, voxelGi)
+        return ObjectCalls.ptrcallWithRIDArgRetByteArray(Binds.voxelGiGetOctreeCellsBind, singleton, voxelGi)
     }
 
     /**
@@ -1959,7 +1959,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiGetDataCells(voxelGi: RID): ByteArray {
-        return ObjectCalls.ptrcallWithRIDArgRetByteArray(voxelGiGetDataCellsBind, singleton, voxelGi)
+        return ObjectCalls.ptrcallWithRIDArgRetByteArray(Binds.voxelGiGetDataCellsBind, singleton, voxelGi)
     }
 
     /**
@@ -1970,7 +1970,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiGetDistanceField(voxelGi: RID): ByteArray {
-        return ObjectCalls.ptrcallWithRIDArgRetByteArray(voxelGiGetDistanceFieldBind, singleton, voxelGi)
+        return ObjectCalls.ptrcallWithRIDArgRetByteArray(Binds.voxelGiGetDistanceFieldBind, singleton, voxelGi)
     }
 
     /**
@@ -1981,7 +1981,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiGetLevelCounts(voxelGi: RID): List<Int> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(voxelGiGetLevelCountsBind, singleton, voxelGi)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.voxelGiGetLevelCountsBind, singleton, voxelGi)
     }
 
     /**
@@ -1992,7 +1992,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiGetToCellXform(voxelGi: RID): Transform3D {
-        return ObjectCalls.ptrcallWithRIDArgRetTransform3D(voxelGiGetToCellXformBind, singleton, voxelGi)
+        return ObjectCalls.ptrcallWithRIDArgRetTransform3D(Binds.voxelGiGetToCellXformBind, singleton, voxelGi)
     }
 
     /**
@@ -2002,7 +2002,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetDynamicRange(voxelGi: RID, range: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(voxelGiSetDynamicRangeBind, singleton, voxelGi, range)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.voxelGiSetDynamicRangeBind, singleton, voxelGi, range)
     }
 
     /**
@@ -2012,7 +2012,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetPropagation(voxelGi: RID, amount: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(voxelGiSetPropagationBind, singleton, voxelGi, amount)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.voxelGiSetPropagationBind, singleton, voxelGi, amount)
     }
 
     /**
@@ -2022,7 +2022,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetEnergy(voxelGi: RID, energy: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(voxelGiSetEnergyBind, singleton, voxelGi, energy)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.voxelGiSetEnergyBind, singleton, voxelGi, energy)
     }
 
     /**
@@ -2035,7 +2035,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetBakedExposureNormalization(voxelGi: RID, bakedExposure: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(voxelGiSetBakedExposureNormalizationBind, singleton, voxelGi, bakedExposure)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.voxelGiSetBakedExposureNormalizationBind, singleton, voxelGi, bakedExposure)
     }
 
     /**
@@ -2045,7 +2045,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetBias(voxelGi: RID, bias: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(voxelGiSetBiasBind, singleton, voxelGi, bias)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.voxelGiSetBiasBind, singleton, voxelGi, bias)
     }
 
     /**
@@ -2055,7 +2055,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetNormalBias(voxelGi: RID, bias: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(voxelGiSetNormalBiasBind, singleton, voxelGi, bias)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.voxelGiSetNormalBiasBind, singleton, voxelGi, bias)
     }
 
     /**
@@ -2065,7 +2065,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetInterior(voxelGi: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(voxelGiSetInteriorBind, singleton, voxelGi, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.voxelGiSetInteriorBind, singleton, voxelGi, enable)
     }
 
     /**
@@ -2075,7 +2075,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetUseTwoBounces(voxelGi: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(voxelGiSetUseTwoBouncesBind, singleton, voxelGi, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.voxelGiSetUseTwoBouncesBind, singleton, voxelGi, enable)
     }
 
     /**
@@ -2086,7 +2086,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun voxelGiSetQuality(quality: RenderingServer.VoxelGIQuality) {
-        ObjectCalls.ptrcallWithLongArg(voxelGiSetQualityBind, singleton, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.voxelGiSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -2099,7 +2099,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(lightmapCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.lightmapCreateBind, singleton)
     }
 
     /**
@@ -2111,7 +2111,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapSetTextures(lightmap: RID, light: RID, usesSh: Boolean) {
-        ObjectCalls.ptrcallWithTwoRIDBoolArgs(lightmapSetTexturesBind, singleton, lightmap, light, usesSh)
+        ObjectCalls.ptrcallWithTwoRIDBoolArgs(Binds.lightmapSetTexturesBind, singleton, lightmap, light, usesSh)
     }
 
     /**
@@ -2122,7 +2122,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapSetProbeBounds(lightmap: RID, bounds: AABB) {
-        ObjectCalls.ptrcallWithRIDAndAABBArg(lightmapSetProbeBoundsBind, singleton, lightmap, bounds)
+        ObjectCalls.ptrcallWithRIDAndAABBArg(Binds.lightmapSetProbeBoundsBind, singleton, lightmap, bounds)
     }
 
     /**
@@ -2133,7 +2133,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapSetProbeInterior(lightmap: RID, interior: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(lightmapSetProbeInteriorBind, singleton, lightmap, interior)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightmapSetProbeInteriorBind, singleton, lightmap, interior)
     }
 
     /**
@@ -2146,7 +2146,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapSetProbeCaptureData(lightmap: RID, points: List<Vector3>, pointSh: List<Color>, tetrahedra: List<Int>, bspTree: List<Int>) {
-        ObjectCalls.ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(lightmapSetProbeCaptureDataBind, singleton, lightmap, points, pointSh, tetrahedra, bspTree)
+        ObjectCalls.ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(Binds.lightmapSetProbeCaptureDataBind, singleton, lightmap, points, pointSh, tetrahedra, bspTree)
     }
 
     /**
@@ -2158,7 +2158,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapGetProbeCapturePoints(lightmap: RID): List<Vector3> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedVector3List(lightmapGetProbeCapturePointsBind, singleton, lightmap)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedVector3List(Binds.lightmapGetProbeCapturePointsBind, singleton, lightmap)
     }
 
     /**
@@ -2171,7 +2171,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapGetProbeCaptureSh(lightmap: RID): List<Color> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(lightmapGetProbeCaptureShBind, singleton, lightmap)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedColorList(Binds.lightmapGetProbeCaptureShBind, singleton, lightmap)
     }
 
     /**
@@ -2184,7 +2184,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapGetProbeCaptureTetrahedra(lightmap: RID): List<Int> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(lightmapGetProbeCaptureTetrahedraBind, singleton, lightmap)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.lightmapGetProbeCaptureTetrahedraBind, singleton, lightmap)
     }
 
     /**
@@ -2198,7 +2198,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapGetProbeCaptureBspTree(lightmap: RID): List<Int> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(lightmapGetProbeCaptureBspTreeBind, singleton, lightmap)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedInt32List(Binds.lightmapGetProbeCaptureBspTreeBind, singleton, lightmap)
     }
 
     /**
@@ -2211,7 +2211,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapSetBakedExposureNormalization(lightmap: RID, bakedExposure: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(lightmapSetBakedExposureNormalizationBind, singleton, lightmap, bakedExposure)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.lightmapSetBakedExposureNormalizationBind, singleton, lightmap, bakedExposure)
     }
 
     /**
@@ -2225,7 +2225,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun lightmapSetProbeCaptureUpdateSpeed(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(lightmapSetProbeCaptureUpdateSpeedBind, singleton, speed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.lightmapSetProbeCaptureUpdateSpeedBind, singleton, speed)
     }
 
     /**
@@ -2243,7 +2243,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(particlesCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.particlesCreateBind, singleton)
     }
 
     /**
@@ -2254,7 +2254,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetMode(particles: RID, mode: RenderingServer.ParticlesMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetModeBind, singleton, particles, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesSetModeBind, singleton, particles, mode.value)
     }
 
     /**
@@ -2265,7 +2265,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetEmitting(particles: RID, emitting: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(particlesSetEmittingBind, singleton, particles, emitting)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.particlesSetEmittingBind, singleton, particles, emitting)
     }
 
     /**
@@ -2275,7 +2275,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesGetEmitting(particles: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(particlesGetEmittingBind, singleton, particles)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.particlesGetEmittingBind, singleton, particles)
     }
 
     /**
@@ -2286,7 +2286,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetAmount(particles: RID, amount: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(particlesSetAmountBind, singleton, particles, amount)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.particlesSetAmountBind, singleton, particles, amount)
     }
 
     /**
@@ -2296,7 +2296,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetAmountRatio(particles: RID, ratio: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetAmountRatioBind, singleton, particles, ratio)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetAmountRatioBind, singleton, particles, ratio)
     }
 
     /**
@@ -2306,7 +2306,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetLifetime(particles: RID, lifetime: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetLifetimeBind, singleton, particles, lifetime)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetLifetimeBind, singleton, particles, lifetime)
     }
 
     /**
@@ -2316,7 +2316,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetOneShot(particles: RID, oneShot: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(particlesSetOneShotBind, singleton, particles, oneShot)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.particlesSetOneShotBind, singleton, particles, oneShot)
     }
 
     /**
@@ -2327,7 +2327,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetPreProcessTime(particles: RID, time: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetPreProcessTimeBind, singleton, particles, time)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetPreProcessTimeBind, singleton, particles, time)
     }
 
     /**
@@ -2341,7 +2341,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesRequestProcessTime(particles: RID, processTime: Double, processTimeResidual: Double = 0.0) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(particlesRequestProcessTimeBind, singleton, particles, processTime, processTimeResidual)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.particlesRequestProcessTimeBind, singleton, particles, processTime, processTimeResidual)
     }
 
     /**
@@ -2351,7 +2351,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetExplosivenessRatio(particles: RID, ratio: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetExplosivenessRatioBind, singleton, particles, ratio)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetExplosivenessRatioBind, singleton, particles, ratio)
     }
 
     /**
@@ -2362,7 +2362,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetRandomnessRatio(particles: RID, ratio: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetRandomnessRatioBind, singleton, particles, ratio)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetRandomnessRatioBind, singleton, particles, ratio)
     }
 
     /**
@@ -2373,7 +2373,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetInterpToEnd(particles: RID, factor: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetInterpToEndBind, singleton, particles, factor)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetInterpToEndBind, singleton, particles, factor)
     }
 
     /**
@@ -2384,7 +2384,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetEmitterVelocity(particles: RID, velocity: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(particlesSetEmitterVelocityBind, singleton, particles, velocity)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.particlesSetEmitterVelocityBind, singleton, particles, velocity)
     }
 
     /**
@@ -2395,7 +2395,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetCustomAabb(particles: RID, aabb: AABB) {
-        ObjectCalls.ptrcallWithRIDAndAABBArg(particlesSetCustomAabbBind, singleton, particles, aabb)
+        ObjectCalls.ptrcallWithRIDAndAABBArg(Binds.particlesSetCustomAabbBind, singleton, particles, aabb)
     }
 
     /**
@@ -2405,7 +2405,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetSpeedScale(particles: RID, scale: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetSpeedScaleBind, singleton, particles, scale)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetSpeedScaleBind, singleton, particles, scale)
     }
 
     /**
@@ -2416,7 +2416,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetUseLocalCoordinates(particles: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(particlesSetUseLocalCoordinatesBind, singleton, particles, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.particlesSetUseLocalCoordinatesBind, singleton, particles, enable)
     }
 
     /**
@@ -2427,7 +2427,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetProcessMaterial(particles: RID, material: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(particlesSetProcessMaterialBind, singleton, particles, material)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.particlesSetProcessMaterialBind, singleton, particles, material)
     }
 
     /**
@@ -2438,7 +2438,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetFixedFps(particles: RID, fps: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(particlesSetFixedFpsBind, singleton, particles, fps)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.particlesSetFixedFpsBind, singleton, particles, fps)
     }
 
     /**
@@ -2449,7 +2449,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetInterpolate(particles: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(particlesSetInterpolateBind, singleton, particles, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.particlesSetInterpolateBind, singleton, particles, enable)
     }
 
     /**
@@ -2460,7 +2460,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetFractionalDelta(particles: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(particlesSetFractionalDeltaBind, singleton, particles, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.particlesSetFractionalDeltaBind, singleton, particles, enable)
     }
 
     /**
@@ -2470,7 +2470,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetCollisionBaseSize(particles: RID, size: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesSetCollisionBaseSizeBind, singleton, particles, size)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesSetCollisionBaseSizeBind, singleton, particles, size)
     }
 
     /**
@@ -2481,7 +2481,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetTransformAlign(particles: RID, align: RenderingServer.ParticlesTransformAlign) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignBind, singleton, particles, align.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesSetTransformAlignBind, singleton, particles, align.value)
     }
 
     /**
@@ -2491,7 +2491,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetTransformAlignChannelFilter(particles: RID, channelFilter: RenderingServer.ParticlesTransformAlignCustomSrc) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignChannelFilterBind, singleton, particles, channelFilter.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesSetTransformAlignChannelFilterBind, singleton, particles, channelFilter.value)
     }
 
     /**
@@ -2501,7 +2501,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetTransformAlignAxis(particles: RID, rotationAxis: RenderingServer.ParticlesTransformAlignAxis) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignAxisBind, singleton, particles, rotationAxis.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesSetTransformAlignAxisBind, singleton, particles, rotationAxis.value)
     }
 
     /**
@@ -2512,7 +2512,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetTrails(particles: RID, enable: Boolean, lengthSec: Double) {
-        ObjectCalls.ptrcallWithRIDBoolDoubleArgs(particlesSetTrailsBind, singleton, particles, enable, lengthSec)
+        ObjectCalls.ptrcallWithRIDBoolDoubleArgs(Binds.particlesSetTrailsBind, singleton, particles, enable, lengthSec)
     }
 
     /**
@@ -2526,7 +2526,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetTrailBindPoses(particles: RID, bindPoses: List<Transform3D>) {
-        ObjectCalls.ptrcallWithRIDAndTransform3DListArgs(particlesSetTrailBindPosesBind, singleton, particles, bindPoses)
+        ObjectCalls.ptrcallWithRIDAndTransform3DListArgs(Binds.particlesSetTrailBindPosesBind, singleton, particles, bindPoses)
     }
 
     /**
@@ -2536,7 +2536,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesIsInactive(particles: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(particlesIsInactiveBind, singleton, particles)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.particlesIsInactiveBind, singleton, particles)
     }
 
     /**
@@ -2548,7 +2548,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesRequestProcess(particles: RID) {
-        ObjectCalls.ptrcallWithRIDArg(particlesRequestProcessBind, singleton, particles)
+        ObjectCalls.ptrcallWithRIDArg(Binds.particlesRequestProcessBind, singleton, particles)
     }
 
     /**
@@ -2558,7 +2558,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesRestart(particles: RID) {
-        ObjectCalls.ptrcallWithRIDArg(particlesRestartBind, singleton, particles)
+        ObjectCalls.ptrcallWithRIDArg(Binds.particlesRestartBind, singleton, particles)
     }
 
     /**
@@ -2569,7 +2569,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetSubemitter(particles: RID, subemitterParticles: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(particlesSetSubemitterBind, singleton, particles, subemitterParticles)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.particlesSetSubemitterBind, singleton, particles, subemitterParticles)
     }
 
     /**
@@ -2579,7 +2579,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesEmit(particles: RID, transform: Transform3D, velocity: Vector3, color: Color, custom: Color, emitFlags: Long) {
-        ObjectCalls.ptrcallWithRIDTransform3DVector3TwoColorUInt32Args(particlesEmitBind, singleton, particles, transform, velocity, color, custom, emitFlags)
+        ObjectCalls.ptrcallWithRIDTransform3DVector3TwoColorUInt32Args(Binds.particlesEmitBind, singleton, particles, transform, velocity, color, custom, emitFlags)
     }
 
     /**
@@ -2589,7 +2589,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetDrawOrder(particles: RID, order: RenderingServer.ParticlesDrawOrder) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetDrawOrderBind, singleton, particles, order.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesSetDrawOrderBind, singleton, particles, order.value)
     }
 
     /**
@@ -2599,7 +2599,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetDrawPasses(particles: RID, count: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(particlesSetDrawPassesBind, singleton, particles, count)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.particlesSetDrawPassesBind, singleton, particles, count)
     }
 
     /**
@@ -2611,7 +2611,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetDrawPassMesh(particles: RID, pass: Int, mesh: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(particlesSetDrawPassMeshBind, singleton, particles, pass, mesh)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.particlesSetDrawPassMeshBind, singleton, particles, pass, mesh)
     }
 
     /**
@@ -2622,7 +2622,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesGetCurrentAabb(particles: RID): AABB {
-        return ObjectCalls.ptrcallWithRIDArgRetAABB(particlesGetCurrentAabbBind, singleton, particles)
+        return ObjectCalls.ptrcallWithRIDArgRetAABB(Binds.particlesGetCurrentAabbBind, singleton, particles)
     }
 
     /**
@@ -2632,7 +2632,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesSetEmissionTransform(particles: RID, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDAndTransform3DArg(particlesSetEmissionTransformBind, singleton, particles, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform3DArg(Binds.particlesSetEmissionTransformBind, singleton, particles, transform)
     }
 
     /**
@@ -2645,7 +2645,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(particlesCollisionCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.particlesCollisionCreateBind, singleton)
     }
 
     /**
@@ -2656,7 +2656,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetCollisionType(particlesCollision: RID, type: RenderingServer.ParticlesCollisionType) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesCollisionSetCollisionTypeBind, singleton, particlesCollision, type.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesCollisionSetCollisionTypeBind, singleton, particlesCollision, type.value)
     }
 
     /**
@@ -2668,7 +2668,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetCullMask(particlesCollision: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(particlesCollisionSetCullMaskBind, singleton, particlesCollision, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.particlesCollisionSetCullMaskBind, singleton, particlesCollision, mask)
     }
 
     /**
@@ -2680,7 +2680,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetSphereRadius(particlesCollision: RID, radius: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesCollisionSetSphereRadiusBind, singleton, particlesCollision, radius)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesCollisionSetSphereRadiusBind, singleton, particlesCollision, radius)
     }
 
     /**
@@ -2693,7 +2693,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetBoxExtents(particlesCollision: RID, extents: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(particlesCollisionSetBoxExtentsBind, singleton, particlesCollision, extents)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.particlesCollisionSetBoxExtentsBind, singleton, particlesCollision, extents)
     }
 
     /**
@@ -2704,7 +2704,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetAttractorStrength(particlesCollision: RID, strength: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesCollisionSetAttractorStrengthBind, singleton, particlesCollision, strength)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesCollisionSetAttractorStrengthBind, singleton, particlesCollision, strength)
     }
 
     /**
@@ -2716,7 +2716,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetAttractorDirectionality(particlesCollision: RID, amount: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesCollisionSetAttractorDirectionalityBind, singleton, particlesCollision, amount)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesCollisionSetAttractorDirectionalityBind, singleton, particlesCollision, amount)
     }
 
     /**
@@ -2728,7 +2728,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetAttractorAttenuation(particlesCollision: RID, curve: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(particlesCollisionSetAttractorAttenuationBind, singleton, particlesCollision, curve)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.particlesCollisionSetAttractorAttenuationBind, singleton, particlesCollision, curve)
     }
 
     /**
@@ -2740,7 +2740,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetFieldTexture(particlesCollision: RID, texture: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(particlesCollisionSetFieldTextureBind, singleton, particlesCollision, texture)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.particlesCollisionSetFieldTextureBind, singleton, particlesCollision, texture)
     }
 
     /**
@@ -2752,7 +2752,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionHeightFieldUpdate(particlesCollision: RID) {
-        ObjectCalls.ptrcallWithRIDArg(particlesCollisionHeightFieldUpdateBind, singleton, particlesCollision)
+        ObjectCalls.ptrcallWithRIDArg(Binds.particlesCollisionHeightFieldUpdateBind, singleton, particlesCollision)
     }
 
     /**
@@ -2763,7 +2763,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetHeightFieldResolution(particlesCollision: RID, resolution: RenderingServer.ParticlesCollisionHeightfieldResolution) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesCollisionSetHeightFieldResolutionBind, singleton, particlesCollision, resolution.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.particlesCollisionSetHeightFieldResolutionBind, singleton, particlesCollision, resolution.value)
     }
 
     /**
@@ -2774,7 +2774,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun particlesCollisionSetHeightFieldMask(particlesCollision: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(particlesCollisionSetHeightFieldMaskBind, singleton, particlesCollision, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.particlesCollisionSetHeightFieldMaskBind, singleton, particlesCollision, mask)
     }
 
     /**
@@ -2787,7 +2787,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun fogVolumeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(fogVolumeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.fogVolumeCreateBind, singleton)
     }
 
     /**
@@ -2799,7 +2799,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun fogVolumeSetShape(fogVolume: RID, shape: RenderingServer.FogVolumeShape) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(fogVolumeSetShapeBind, singleton, fogVolume, shape.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.fogVolumeSetShapeBind, singleton, fogVolume, shape.value)
     }
 
     /**
@@ -2811,7 +2811,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun fogVolumeSetSize(fogVolume: RID, size: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(fogVolumeSetSizeBind, singleton, fogVolume, size)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.fogVolumeSetSizeBind, singleton, fogVolume, size)
     }
 
     /**
@@ -2822,7 +2822,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun fogVolumeSetMaterial(fogVolume: RID, material: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(fogVolumeSetMaterialBind, singleton, fogVolume, material)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.fogVolumeSetMaterialBind, singleton, fogVolume, material)
     }
 
     /**
@@ -2837,7 +2837,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun visibilityNotifierCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(visibilityNotifierCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.visibilityNotifierCreateBind, singleton)
     }
 
     /**
@@ -2847,7 +2847,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun visibilityNotifierSetAabb(notifier: RID, aabb: AABB) {
-        ObjectCalls.ptrcallWithRIDAndAABBArg(visibilityNotifierSetAabbBind, singleton, notifier, aabb)
+        ObjectCalls.ptrcallWithRIDAndAABBArg(Binds.visibilityNotifierSetAabbBind, singleton, notifier, aabb)
     }
 
     /**
@@ -2857,7 +2857,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun visibilityNotifierSetCallbacks(notifier: RID, enterCallable: GodotCallable, exitCallable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDTwoCallableArgs(visibilityNotifierSetCallbacksBind, singleton, notifier, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
+        ObjectCalls.ptrcallWithRIDTwoCallableArgs(Binds.visibilityNotifierSetCallbacksBind, singleton, notifier, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
     }
 
     /**
@@ -2871,7 +2871,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun occluderCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(occluderCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.occluderCreateBind, singleton)
     }
 
     /**
@@ -2882,7 +2882,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun occluderSetMesh(occluder: RID, vertices: List<Vector3>, indices: List<Int>) {
-        ObjectCalls.ptrcallWithRIDPackedVector3ListPackedInt32ListArgs(occluderSetMeshBind, singleton, occluder, vertices, indices)
+        ObjectCalls.ptrcallWithRIDPackedVector3ListPackedInt32ListArgs(Binds.occluderSetMeshBind, singleton, occluder, vertices, indices)
     }
 
     /**
@@ -2895,7 +2895,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(cameraCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.cameraCreateBind, singleton)
     }
 
     /**
@@ -2906,7 +2906,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetPerspective(camera: RID, fovyDegrees: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithRIDAndThreeDoubleArgs(cameraSetPerspectiveBind, singleton, camera, fovyDegrees, zNear, zFar)
+        ObjectCalls.ptrcallWithRIDAndThreeDoubleArgs(Binds.cameraSetPerspectiveBind, singleton, camera, fovyDegrees, zNear, zFar)
     }
 
     /**
@@ -2917,7 +2917,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetOrthogonal(camera: RID, size: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithRIDAndThreeDoubleArgs(cameraSetOrthogonalBind, singleton, camera, size, zNear, zFar)
+        ObjectCalls.ptrcallWithRIDAndThreeDoubleArgs(Binds.cameraSetOrthogonalBind, singleton, camera, size, zNear, zFar)
     }
 
     /**
@@ -2928,7 +2928,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetFrustum(camera: RID, size: Double, offset: Vector2, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithRIDDoubleVector2TwoDoubleArgs(cameraSetFrustumBind, singleton, camera, size, offset, zNear, zFar)
+        ObjectCalls.ptrcallWithRIDDoubleVector2TwoDoubleArgs(Binds.cameraSetFrustumBind, singleton, camera, size, offset, zNear, zFar)
     }
 
     /**
@@ -2938,7 +2938,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetTransform(camera: RID, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDAndTransform3DArg(cameraSetTransformBind, singleton, camera, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform3DArg(Binds.cameraSetTransformBind, singleton, camera, transform)
     }
 
     /**
@@ -2949,7 +2949,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetCullMask(camera: RID, layers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(cameraSetCullMaskBind, singleton, camera, layers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.cameraSetCullMaskBind, singleton, camera, layers)
     }
 
     /**
@@ -2959,7 +2959,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetEnvironment(camera: RID, env: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(cameraSetEnvironmentBind, singleton, camera, env)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.cameraSetEnvironmentBind, singleton, camera, env)
     }
 
     /**
@@ -2969,7 +2969,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetCameraAttributes(camera: RID, effects: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(cameraSetCameraAttributesBind, singleton, camera, effects)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.cameraSetCameraAttributesBind, singleton, camera, effects)
     }
 
     /**
@@ -2979,7 +2979,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetCompositor(camera: RID, compositor: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(cameraSetCompositorBind, singleton, camera, compositor)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.cameraSetCompositorBind, singleton, camera, compositor)
     }
 
     /**
@@ -2991,7 +2991,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraSetUseVerticalAspect(camera: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(cameraSetUseVerticalAspectBind, singleton, camera, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.cameraSetUseVerticalAspectBind, singleton, camera, enable)
     }
 
     /**
@@ -3004,7 +3004,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(viewportCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.viewportCreateBind, singleton)
     }
 
     /**
@@ -3014,7 +3014,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetUseXr(viewport: RID, useXr: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetUseXrBind, singleton, viewport, useXr)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetUseXrBind, singleton, viewport, useXr)
     }
 
     /**
@@ -3025,7 +3025,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetSize(viewport: RID, width: Int, height: Int, viewCount: Int = 1) {
-        ObjectCalls.ptrcallWithRIDAndThreeIntArgs(viewportSetSizeBind, singleton, viewport, width, height, viewCount)
+        ObjectCalls.ptrcallWithRIDAndThreeIntArgs(Binds.viewportSetSizeBind, singleton, viewport, width, height, viewCount)
     }
 
     /**
@@ -3035,7 +3035,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetActive(viewport: RID, active: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetActiveBind, singleton, viewport, active)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetActiveBind, singleton, viewport, active)
     }
 
     /**
@@ -3045,7 +3045,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetParentViewport(viewport: RID, parentViewport: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(viewportSetParentViewportBind, singleton, viewport, parentViewport)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.viewportSetParentViewportBind, singleton, viewport, parentViewport)
     }
 
     /**
@@ -3059,7 +3059,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportAttachToScreen(viewport: RID, rect: Rect2, screen: Int = 0) {
-        ObjectCalls.ptrcallWithRIDRect2IntArgs(viewportAttachToScreenBind, singleton, viewport, rect, screen)
+        ObjectCalls.ptrcallWithRIDRect2IntArgs(Binds.viewportAttachToScreenBind, singleton, viewport, rect, screen)
     }
 
     /**
@@ -3077,7 +3077,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetRenderDirectToScreen(viewport: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetRenderDirectToScreenBind, singleton, viewport, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetRenderDirectToScreenBind, singleton, viewport, enabled)
     }
 
     /**
@@ -3088,7 +3088,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetCanvasCullMask(viewport: RID, canvasCullMask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(viewportSetCanvasCullMaskBind, singleton, viewport, canvasCullMask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.viewportSetCanvasCullMaskBind, singleton, viewport, canvasCullMask)
     }
 
     /**
@@ -3102,7 +3102,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetScaling3dMode(viewport: RID, scaling3dMode: RenderingServer.ViewportScaling3DMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetScaling3dModeBind, singleton, viewport, scaling3dMode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetScaling3dModeBind, singleton, viewport, scaling3dMode.value)
     }
 
     /**
@@ -3120,7 +3120,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetScaling3dScale(viewport: RID, scale: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(viewportSetScaling3dScaleBind, singleton, viewport, scale)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.viewportSetScaling3dScaleBind, singleton, viewport, scale)
     }
 
     /**
@@ -3132,7 +3132,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetFsrSharpness(viewport: RID, sharpness: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(viewportSetFsrSharpnessBind, singleton, viewport, sharpness)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.viewportSetFsrSharpnessBind, singleton, viewport, sharpness)
     }
 
     /**
@@ -3152,7 +3152,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetTextureMipmapBias(viewport: RID, mipmapBias: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(viewportSetTextureMipmapBiasBind, singleton, viewport, mipmapBias)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.viewportSetTextureMipmapBiasBind, singleton, viewport, mipmapBias)
     }
 
     /**
@@ -3176,7 +3176,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetAnisotropicFilteringLevel(viewport: RID, anisotropicFilteringLevel: RenderingServer.ViewportAnisotropicFiltering) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetAnisotropicFilteringLevelBind, singleton, viewport, anisotropicFilteringLevel.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetAnisotropicFilteringLevelBind, singleton, viewport, anisotropicFilteringLevel.value)
     }
 
     /**
@@ -3186,7 +3186,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetUpdateMode(viewport: RID, updateMode: RenderingServer.ViewportUpdateMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetUpdateModeBind, singleton, viewport, updateMode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetUpdateModeBind, singleton, viewport, updateMode.value)
     }
 
     /**
@@ -3197,7 +3197,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportGetUpdateMode(viewport: RID): RenderingServer.ViewportUpdateMode {
-        return RenderingServer.ViewportUpdateMode(ObjectCalls.ptrcallWithRIDArgRetLong(viewportGetUpdateModeBind, singleton, viewport))
+        return RenderingServer.ViewportUpdateMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.viewportGetUpdateModeBind, singleton, viewport))
     }
 
     /**
@@ -3207,7 +3207,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetClearMode(viewport: RID, clearMode: RenderingServer.ViewportClearMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetClearModeBind, singleton, viewport, clearMode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetClearModeBind, singleton, viewport, clearMode.value)
     }
 
     /**
@@ -3217,7 +3217,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportGetRenderTarget(viewport: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(viewportGetRenderTargetBind, singleton, viewport)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.viewportGetRenderTargetBind, singleton, viewport)
     }
 
     /**
@@ -3227,7 +3227,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportGetTexture(viewport: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(viewportGetTextureBind, singleton, viewport)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.viewportGetTextureBind, singleton, viewport)
     }
 
     /**
@@ -3237,7 +3237,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetDisable3d(viewport: RID, disable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetDisable3dBind, singleton, viewport, disable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetDisable3dBind, singleton, viewport, disable)
     }
 
     /**
@@ -3247,7 +3247,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetDisable2d(viewport: RID, disable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetDisable2dBind, singleton, viewport, disable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetDisable2dBind, singleton, viewport, disable)
     }
 
     /**
@@ -3262,7 +3262,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetEnvironmentMode(viewport: RID, mode: RenderingServer.ViewportEnvironmentMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetEnvironmentModeBind, singleton, viewport, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetEnvironmentModeBind, singleton, viewport, mode.value)
     }
 
     /**
@@ -3272,7 +3272,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportAttachCamera(viewport: RID, camera: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(viewportAttachCameraBind, singleton, viewport, camera)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.viewportAttachCameraBind, singleton, viewport, camera)
     }
 
     /**
@@ -3283,7 +3283,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetScenario(viewport: RID, scenario: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(viewportSetScenarioBind, singleton, viewport, scenario)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.viewportSetScenarioBind, singleton, viewport, scenario)
     }
 
     /**
@@ -3293,7 +3293,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportAttachCanvas(viewport: RID, canvas: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(viewportAttachCanvasBind, singleton, viewport, canvas)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.viewportAttachCanvasBind, singleton, viewport, canvas)
     }
 
     /**
@@ -3303,7 +3303,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportRemoveCanvas(viewport: RID, canvas: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(viewportRemoveCanvasBind, singleton, viewport, canvas)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.viewportRemoveCanvasBind, singleton, viewport, canvas)
     }
 
     /**
@@ -3316,7 +3316,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetSnap2dTransformsToPixel(viewport: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetSnap2dTransformsToPixelBind, singleton, viewport, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetSnap2dTransformsToPixelBind, singleton, viewport, enabled)
     }
 
     /**
@@ -3329,7 +3329,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetSnap2dVerticesToPixel(viewport: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetSnap2dVerticesToPixelBind, singleton, viewport, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetSnap2dVerticesToPixelBind, singleton, viewport, enabled)
     }
 
     /**
@@ -3339,7 +3339,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetDefaultCanvasItemTextureFilter(viewport: RID, filter: RenderingServer.CanvasItemTextureFilter) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDefaultCanvasItemTextureFilterBind, singleton, viewport, filter.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetDefaultCanvasItemTextureFilterBind, singleton, viewport, filter.value)
     }
 
     /**
@@ -3349,7 +3349,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetDefaultCanvasItemTextureRepeat(viewport: RID, repeat: RenderingServer.CanvasItemTextureRepeat) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDefaultCanvasItemTextureRepeatBind, singleton, viewport, repeat.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetDefaultCanvasItemTextureRepeatBind, singleton, viewport, repeat.value)
     }
 
     /**
@@ -3359,7 +3359,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetCanvasTransform(viewport: RID, canvas: RID, offset: Transform2D) {
-        ObjectCalls.ptrcallWithTwoRIDAndTransform2DArg(viewportSetCanvasTransformBind, singleton, viewport, canvas, offset)
+        ObjectCalls.ptrcallWithTwoRIDAndTransform2DArg(Binds.viewportSetCanvasTransformBind, singleton, viewport, canvas, offset)
     }
 
     /**
@@ -3372,7 +3372,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetCanvasStacking(viewport: RID, canvas: RID, layer: Int, sublayer: Int) {
-        ObjectCalls.ptrcallWithTwoRIDTwoIntArgs(viewportSetCanvasStackingBind, singleton, viewport, canvas, layer, sublayer)
+        ObjectCalls.ptrcallWithTwoRIDTwoIntArgs(Binds.viewportSetCanvasStackingBind, singleton, viewport, canvas, layer, sublayer)
     }
 
     /**
@@ -3382,7 +3382,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetTransparentBackground(viewport: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetTransparentBackgroundBind, singleton, viewport, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetTransparentBackgroundBind, singleton, viewport, enabled)
     }
 
     /**
@@ -3392,7 +3392,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetGlobalCanvasTransform(viewport: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(viewportSetGlobalCanvasTransformBind, singleton, viewport, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.viewportSetGlobalCanvasTransformBind, singleton, viewport, transform)
     }
 
     /**
@@ -3405,7 +3405,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetSdfOversizeAndScale(viewport: RID, oversize: RenderingServer.ViewportSDFOversize, scale: RenderingServer.ViewportSDFScale) {
-        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(viewportSetSdfOversizeAndScaleBind, singleton, viewport, oversize.value, scale.value)
+        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(Binds.viewportSetSdfOversizeAndScaleBind, singleton, viewport, oversize.value, scale.value)
     }
 
     /**
@@ -3421,7 +3421,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetPositionalShadowAtlasSize(viewport: RID, size: Int, use16Bits: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(viewportSetPositionalShadowAtlasSizeBind, singleton, viewport, size, use16Bits)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.viewportSetPositionalShadowAtlasSizeBind, singleton, viewport, size, use16Bits)
     }
 
     /**
@@ -3432,7 +3432,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetPositionalShadowAtlasQuadrantSubdivision(viewport: RID, quadrant: Int, subdivision: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(viewportSetPositionalShadowAtlasQuadrantSubdivisionBind, singleton, viewport, quadrant, subdivision)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.viewportSetPositionalShadowAtlasQuadrantSubdivisionBind, singleton, viewport, quadrant, subdivision)
     }
 
     /**
@@ -3443,7 +3443,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetMsaa3d(viewport: RID, msaa: RenderingServer.ViewportMSAA) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetMsaa3dBind, singleton, viewport, msaa.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetMsaa3dBind, singleton, viewport, msaa.value)
     }
 
     /**
@@ -3454,7 +3454,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetMsaa2d(viewport: RID, msaa: RenderingServer.ViewportMSAA) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetMsaa2dBind, singleton, viewport, msaa.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetMsaa2dBind, singleton, viewport, msaa.value)
     }
 
     /**
@@ -3471,7 +3471,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetUseHdr2d(viewport: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetUseHdr2dBind, singleton, viewport, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetUseHdr2dBind, singleton, viewport, enabled)
     }
 
     /**
@@ -3482,7 +3482,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetScreenSpaceAa(viewport: RID, mode: RenderingServer.ViewportScreenSpaceAA) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetScreenSpaceAaBind, singleton, viewport, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetScreenSpaceAaBind, singleton, viewport, mode.value)
     }
 
     /**
@@ -3493,7 +3493,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetUseTaa(viewport: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetUseTaaBind, singleton, viewport, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetUseTaaBind, singleton, viewport, enable)
     }
 
     /**
@@ -3504,7 +3504,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetUseDebanding(viewport: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetUseDebandingBind, singleton, viewport, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetUseDebandingBind, singleton, viewport, enable)
     }
 
     /**
@@ -3515,7 +3515,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetUseOcclusionCulling(viewport: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetUseOcclusionCullingBind, singleton, viewport, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetUseOcclusionCullingBind, singleton, viewport, enable)
     }
 
     /**
@@ -3526,7 +3526,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetOcclusionRaysPerThread(raysPerThread: Int) {
-        ObjectCalls.ptrcallWithIntArg(viewportSetOcclusionRaysPerThreadBind, singleton, raysPerThread)
+        ObjectCalls.ptrcallWithIntArg(Binds.viewportSetOcclusionRaysPerThreadBind, singleton, raysPerThread)
     }
 
     /**
@@ -3537,7 +3537,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetOcclusionCullingBuildQuality(quality: RenderingServer.ViewportOcclusionCullingBuildQuality) {
-        ObjectCalls.ptrcallWithLongArg(viewportSetOcclusionCullingBuildQualityBind, singleton, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.viewportSetOcclusionCullingBuildQualityBind, singleton, quality.value)
     }
 
     /**
@@ -3552,7 +3552,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportGetRenderInfo(viewport: RID, type: RenderingServer.ViewportRenderInfoType, info: RenderingServer.ViewportRenderInfo): Int {
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetInt(viewportGetRenderInfoBind, singleton, viewport, type.value, info.value)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetInt(Binds.viewportGetRenderInfoBind, singleton, viewport, type.value, info.value)
     }
 
     /**
@@ -3562,7 +3562,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetDebugDraw(viewport: RID, draw: RenderingServer.ViewportDebugDraw) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDebugDrawBind, singleton, viewport, draw.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetDebugDrawBind, singleton, viewport, draw.value)
     }
 
     /**
@@ -3575,7 +3575,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetMeasureRenderTime(viewport: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(viewportSetMeasureRenderTimeBind, singleton, viewport, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.viewportSetMeasureRenderTimeBind, singleton, viewport, enable)
     }
 
     /**
@@ -3593,7 +3593,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportGetMeasuredRenderTimeCpu(viewport: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(viewportGetMeasuredRenderTimeCpuBind, singleton, viewport)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.viewportGetMeasuredRenderTimeCpuBind, singleton, viewport)
     }
 
     /**
@@ -3614,7 +3614,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportGetMeasuredRenderTimeGpu(viewport: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(viewportGetMeasuredRenderTimeGpuBind, singleton, viewport)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.viewportGetMeasuredRenderTimeGpuBind, singleton, viewport)
     }
 
     /**
@@ -3625,7 +3625,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetVrsMode(viewport: RID, mode: RenderingServer.ViewportVRSMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetVrsModeBind, singleton, viewport, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetVrsModeBind, singleton, viewport, mode.value)
     }
 
     /**
@@ -3640,7 +3640,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetVrsUpdateMode(viewport: RID, mode: RenderingServer.ViewportVRSUpdateMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetVrsUpdateModeBind, singleton, viewport, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.viewportSetVrsUpdateModeBind, singleton, viewport, mode.value)
     }
 
     /**
@@ -3651,7 +3651,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun viewportSetVrsTexture(viewport: RID, texture: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(viewportSetVrsTextureBind, singleton, viewport, texture)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.viewportSetVrsTextureBind, singleton, viewport, texture)
     }
 
     /**
@@ -3663,7 +3663,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skyCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(skyCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.skyCreateBind, singleton)
     }
 
     /**
@@ -3674,7 +3674,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skySetRadianceSize(sky: RID, radianceSize: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(skySetRadianceSizeBind, singleton, sky, radianceSize)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.skySetRadianceSizeBind, singleton, sky, radianceSize)
     }
 
     /**
@@ -3684,7 +3684,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skySetMode(sky: RID, mode: RenderingServer.SkyMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(skySetModeBind, singleton, sky, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.skySetModeBind, singleton, sky, mode.value)
     }
 
     /**
@@ -3694,7 +3694,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skySetMaterial(sky: RID, material: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(skySetMaterialBind, singleton, sky, material)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.skySetMaterialBind, singleton, sky, material)
     }
 
     /**
@@ -3714,7 +3714,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skyBakePanorama(sky: RID, energy: Double, bakeIrradiance: Boolean, size: Vector2i): Image? {
-        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDDoubleBoolVector2iArgsRetObject(skyBakePanoramaBind, singleton, sky, energy, bakeIrradiance, size))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDDoubleBoolVector2iArgsRetObject(Binds.skyBakePanoramaBind, singleton, sky, energy, bakeIrradiance, size))
     }
 
     /**
@@ -3726,7 +3726,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorEffectCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(compositorEffectCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.compositorEffectCreateBind, singleton)
     }
 
     /**
@@ -3736,7 +3736,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorEffectSetEnabled(effect: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(compositorEffectSetEnabledBind, singleton, effect, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.compositorEffectSetEnabledBind, singleton, effect, enabled)
     }
 
     /**
@@ -3747,7 +3747,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorEffectSetCallback(effect: RID, callbackType: RenderingServer.CompositorEffectCallbackType, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(compositorEffectSetCallbackBind, singleton, effect, callbackType.value, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(Binds.compositorEffectSetCallbackBind, singleton, effect, callbackType.value, callback.target.segment, callback.method)
     }
 
     /**
@@ -3757,7 +3757,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorEffectSetFlag(effect: RID, flag: RenderingServer.CompositorEffectFlags, set: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(compositorEffectSetFlagBind, singleton, effect, flag.value, set)
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(Binds.compositorEffectSetFlagBind, singleton, effect, flag.value, set)
     }
 
     /**
@@ -3769,7 +3769,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(compositorCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.compositorCreateBind, singleton)
     }
 
     /**
@@ -3780,7 +3780,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun compositorSetCompositorEffects(compositor: RID, effects: List<RID>) {
-        ObjectCalls.ptrcallWithRIDAndRIDListArgs(compositorSetCompositorEffectsBind, singleton, compositor, effects)
+        ObjectCalls.ptrcallWithRIDAndRIDListArgs(Binds.compositorSetCompositorEffectsBind, singleton, compositor, effects)
     }
 
     /**
@@ -3793,7 +3793,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(environmentCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.environmentCreateBind, singleton)
     }
 
     /**
@@ -3803,7 +3803,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetBackground(env: RID, bg: RenderingServer.EnvironmentBG) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(environmentSetBackgroundBind, singleton, env, bg.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.environmentSetBackgroundBind, singleton, env, bg.value)
     }
 
     /**
@@ -3813,7 +3813,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetCameraId(env: RID, id: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(environmentSetCameraIdBind, singleton, env, id)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.environmentSetCameraIdBind, singleton, env, id)
     }
 
     /**
@@ -3824,7 +3824,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSky(env: RID, sky: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(environmentSetSkyBind, singleton, env, sky)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.environmentSetSkyBind, singleton, env, sky)
     }
 
     /**
@@ -3835,7 +3835,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSkyCustomFov(env: RID, scale: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(environmentSetSkyCustomFovBind, singleton, env, scale)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.environmentSetSkyCustomFovBind, singleton, env, scale)
     }
 
     /**
@@ -3846,7 +3846,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSkyOrientation(env: RID, orientation: Basis) {
-        ObjectCalls.ptrcallWithRIDAndBasisArg(environmentSetSkyOrientationBind, singleton, env, orientation)
+        ObjectCalls.ptrcallWithRIDAndBasisArg(Binds.environmentSetSkyOrientationBind, singleton, env, orientation)
     }
 
     /**
@@ -3857,7 +3857,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetBgColor(env: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(environmentSetBgColorBind, singleton, env, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.environmentSetBgColorBind, singleton, env, color)
     }
 
     /**
@@ -3867,7 +3867,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetBgEnergy(env: RID, multiplier: Double, exposureValue: Double) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(environmentSetBgEnergyBind, singleton, env, multiplier, exposureValue)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.environmentSetBgEnergyBind, singleton, env, multiplier, exposureValue)
     }
 
     /**
@@ -3877,7 +3877,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetCanvasMaxLayer(env: RID, maxLayer: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(environmentSetCanvasMaxLayerBind, singleton, env, maxLayer)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.environmentSetCanvasMaxLayerBind, singleton, env, maxLayer)
     }
 
     /**
@@ -3887,7 +3887,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetAmbientLight(env: RID, color: Color, ambient: RenderingServer.EnvironmentAmbientSource = RenderingServer.EnvironmentAmbientSource.BG, energy: Double = 1.0, skyContribution: Double = 0.0, reflectionSource: RenderingServer.EnvironmentReflectionSource = RenderingServer.EnvironmentReflectionSource.BG) {
-        ObjectCalls.ptrcallWithRIDColorLongTwoDoubleLongArgs(environmentSetAmbientLightBind, singleton, env, color, ambient.value, energy, skyContribution, reflectionSource.value)
+        ObjectCalls.ptrcallWithRIDColorLongTwoDoubleLongArgs(Binds.environmentSetAmbientLightBind, singleton, env, color, ambient.value, energy, skyContribution, reflectionSource.value)
     }
 
     /**
@@ -3898,7 +3898,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetGlow(env: RID, enable: Boolean, levels: List<Float>, intensity: Double, strength: Double, mix: Double, bloomThreshold: Double, blendMode: RenderingServer.EnvironmentGlowBlendMode, hdrBleedThreshold: Double, hdrBleedScale: Double, hdrLuminanceCap: Double, glowMapStrength: Double, glowMap: RID) {
-        ObjectCalls.ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(environmentSetGlowBind, singleton, env, enable, levels, intensity, strength, mix, bloomThreshold, blendMode.value, hdrBleedThreshold, hdrBleedScale, hdrLuminanceCap, glowMapStrength, glowMap)
+        ObjectCalls.ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(Binds.environmentSetGlowBind, singleton, env, enable, levels, intensity, strength, mix, bloomThreshold, blendMode.value, hdrBleedThreshold, hdrBleedScale, hdrLuminanceCap, glowMapStrength, glowMap)
     }
 
     /**
@@ -3909,7 +3909,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetTonemap(env: RID, toneMapper: RenderingServer.EnvironmentToneMapper, exposure: Double, white: Double) {
-        ObjectCalls.ptrcallWithRIDLongTwoDoubleArgs(environmentSetTonemapBind, singleton, env, toneMapper.value, exposure, white)
+        ObjectCalls.ptrcallWithRIDLongTwoDoubleArgs(Binds.environmentSetTonemapBind, singleton, env, toneMapper.value, exposure, white)
     }
 
     /**
@@ -3919,7 +3919,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetTonemapAgxContrast(env: RID, agxContrast: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(environmentSetTonemapAgxContrastBind, singleton, env, agxContrast)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.environmentSetTonemapAgxContrastBind, singleton, env, agxContrast)
     }
 
     /**
@@ -3930,7 +3930,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetAdjustment(env: RID, enable: Boolean, brightness: Double, contrast: Double, saturation: Double, use1dColorCorrection: Boolean, colorCorrection: RID) {
-        ObjectCalls.ptrcallWithRIDBoolThreeDoubleBoolRIDArgs(environmentSetAdjustmentBind, singleton, env, enable, brightness, contrast, saturation, use1dColorCorrection, colorCorrection)
+        ObjectCalls.ptrcallWithRIDBoolThreeDoubleBoolRIDArgs(Binds.environmentSetAdjustmentBind, singleton, env, enable, brightness, contrast, saturation, use1dColorCorrection, colorCorrection)
     }
 
     /**
@@ -3941,7 +3941,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSsr(env: RID, enable: Boolean, maxSteps: Int, fadeIn: Double, fadeOut: Double, depthTolerance: Double) {
-        ObjectCalls.ptrcallWithRIDBoolIntThreeDoubleArgs(environmentSetSsrBind, singleton, env, enable, maxSteps, fadeIn, fadeOut, depthTolerance)
+        ObjectCalls.ptrcallWithRIDBoolIntThreeDoubleArgs(Binds.environmentSetSsrBind, singleton, env, enable, maxSteps, fadeIn, fadeOut, depthTolerance)
     }
 
     /**
@@ -3952,7 +3952,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSsao(env: RID, enable: Boolean, radius: Double, intensity: Double, power: Double, detail: Double, horizon: Double, sharpness: Double, lightAffect: Double, aoChannelAffect: Double) {
-        ObjectCalls.ptrcallWithRIDBoolDoubleDoubleDoubleDoubleDoubleDoubleDoubleDoubleArgs(environmentSetSsaoBind, singleton, env, enable, radius, intensity, power, detail, horizon, sharpness, lightAffect, aoChannelAffect)
+        ObjectCalls.ptrcallWithRIDBoolDoubleDoubleDoubleDoubleDoubleDoubleDoubleDoubleArgs(Binds.environmentSetSsaoBind, singleton, env, enable, radius, intensity, power, detail, horizon, sharpness, lightAffect, aoChannelAffect)
     }
 
     /**
@@ -3963,7 +3963,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetFog(env: RID, enable: Boolean, lightColor: Color, lightEnergy: Double, sunScatter: Double, density: Double, height: Double, heightDensity: Double, aerialPerspective: Double, skyAffect: Double, fogMode: RenderingServer.EnvironmentFogMode = RenderingServer.EnvironmentFogMode.EXPONENTIAL) {
-        ObjectCalls.ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs(environmentSetFogBind, singleton, env, enable, lightColor, lightEnergy, sunScatter, density, height, heightDensity, aerialPerspective, skyAffect, fogMode.value)
+        ObjectCalls.ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs(Binds.environmentSetFogBind, singleton, env, enable, lightColor, lightEnergy, sunScatter, density, height, heightDensity, aerialPerspective, skyAffect, fogMode.value)
     }
 
     /**
@@ -3975,7 +3975,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetFogDepth(env: RID, curve: Double, begin: Double, end: Double) {
-        ObjectCalls.ptrcallWithRIDAndThreeDoubleArgs(environmentSetFogDepthBind, singleton, env, curve, begin, end)
+        ObjectCalls.ptrcallWithRIDAndThreeDoubleArgs(Binds.environmentSetFogDepthBind, singleton, env, curve, begin, end)
     }
 
     /**
@@ -3986,7 +3986,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSdfgi(env: RID, enable: Boolean, cascades: Int, minCellSize: Double, yScale: RenderingServer.EnvironmentSDFGIYScale, useOcclusion: Boolean, bounceFeedback: Double, readSky: Boolean, energy: Double, normalBias: Double, probeBias: Double) {
-        ObjectCalls.ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs(environmentSetSdfgiBind, singleton, env, enable, cascades, minCellSize, yScale.value, useOcclusion, bounceFeedback, readSky, energy, normalBias, probeBias)
+        ObjectCalls.ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs(Binds.environmentSetSdfgiBind, singleton, env, enable, cascades, minCellSize, yScale.value, useOcclusion, bounceFeedback, readSky, energy, normalBias, probeBias)
     }
 
     /**
@@ -3997,7 +3997,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetVolumetricFog(env: RID, enable: Boolean, density: Double, albedo: Color, emission: Color, emissionEnergy: Double, anisotropy: Double, length: Double, detailSpread: Double, giInject: Double, temporalReprojection: Boolean, temporalReprojectionAmount: Double, ambientInject: Double, skyAffect: Double) {
-        ObjectCalls.ptrcallWithRIDBoolDoubleTwoColorDoubleDoubleDoubleDoubleDoubleBoolThreeDoubleArgs(environmentSetVolumetricFogBind, singleton, env, enable, density, albedo, emission, emissionEnergy, anisotropy, length, detailSpread, giInject, temporalReprojection, temporalReprojectionAmount, ambientInject, skyAffect)
+        ObjectCalls.ptrcallWithRIDBoolDoubleTwoColorDoubleDoubleDoubleDoubleDoubleBoolThreeDoubleArgs(Binds.environmentSetVolumetricFogBind, singleton, env, enable, density, albedo, emission, emissionEnergy, anisotropy, length, detailSpread, giInject, temporalReprojection, temporalReprojectionAmount, ambientInject, skyAffect)
     }
 
     /**
@@ -4010,7 +4010,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentGlowSetUseBicubicUpscale(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(environmentGlowSetUseBicubicUpscaleBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.environmentGlowSetUseBicubicUpscaleBind, singleton, enable)
     }
 
     /**
@@ -4021,12 +4021,12 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSsrHalfSize(halfSize: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(environmentSetSsrHalfSizeBind, singleton, halfSize)
+        ObjectCalls.ptrcallWithBoolArg(Binds.environmentSetSsrHalfSizeBind, singleton, halfSize)
     }
 
     @JvmStatic
     fun environmentSetSsrRoughnessQuality(quality: RenderingServer.EnvironmentSSRRoughnessQuality) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSsrRoughnessQualityBind, singleton, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.environmentSetSsrRoughnessQualityBind, singleton, quality.value)
     }
 
     /**
@@ -4037,7 +4037,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSsaoQuality(quality: RenderingServer.EnvironmentSSAOQuality, halfSize: Boolean, adaptiveTarget: Double, blurPasses: Int, fadeoutFrom: Double, fadeoutTo: Double) {
-        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(environmentSetSsaoQualityBind, singleton, quality.value, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(Binds.environmentSetSsaoQualityBind, singleton, quality.value, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
     }
 
     /**
@@ -4048,7 +4048,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSsilQuality(quality: RenderingServer.EnvironmentSSILQuality, halfSize: Boolean, adaptiveTarget: Double, blurPasses: Int, fadeoutFrom: Double, fadeoutTo: Double) {
-        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(environmentSetSsilQualityBind, singleton, quality.value, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(Binds.environmentSetSsilQualityBind, singleton, quality.value, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
     }
 
     /**
@@ -4060,7 +4060,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSdfgiRayCount(rayCount: RenderingServer.EnvironmentSDFGIRayCount) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiRayCountBind, singleton, rayCount.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.environmentSetSdfgiRayCountBind, singleton, rayCount.value)
     }
 
     /**
@@ -4071,7 +4071,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSdfgiFramesToConverge(frames: RenderingServer.EnvironmentSDFGIFramesToConverge) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiFramesToConvergeBind, singleton, frames.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.environmentSetSdfgiFramesToConvergeBind, singleton, frames.value)
     }
 
     /**
@@ -4083,7 +4083,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetSdfgiFramesToUpdateLight(frames: RenderingServer.EnvironmentSDFGIFramesToUpdateLight) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiFramesToUpdateLightBind, singleton, frames.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.environmentSetSdfgiFramesToUpdateLightBind, singleton, frames.value)
     }
 
     /**
@@ -4095,7 +4095,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetVolumetricFogVolumeSize(size: Int, depth: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(environmentSetVolumetricFogVolumeSizeBind, singleton, size, depth)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.environmentSetVolumetricFogVolumeSizeBind, singleton, size, depth)
     }
 
     /**
@@ -4106,7 +4106,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentSetVolumetricFogFilterActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(environmentSetVolumetricFogFilterActiveBind, singleton, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.environmentSetVolumetricFogFilterActiveBind, singleton, active)
     }
 
     /**
@@ -4125,7 +4125,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentBakePanorama(environment: RID, bakeIrradiance: Boolean, size: Vector2i): Image? {
-        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDBoolVector2iArgsRetObject(environmentBakePanoramaBind, singleton, environment, bakeIrradiance, size))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDBoolVector2iArgsRetObject(Binds.environmentBakePanoramaBind, singleton, environment, bakeIrradiance, size))
     }
 
     /**
@@ -4139,7 +4139,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun screenSpaceRoughnessLimiterSetActive(enable: Boolean, amount: Double, limit: Double) {
-        ObjectCalls.ptrcallWithBoolTwoDoubleArgs(screenSpaceRoughnessLimiterSetActiveBind, singleton, enable, amount, limit)
+        ObjectCalls.ptrcallWithBoolTwoDoubleArgs(Binds.screenSpaceRoughnessLimiterSetActiveBind, singleton, enable, amount, limit)
     }
 
     /**
@@ -4150,7 +4150,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun subSurfaceScatteringSetQuality(quality: RenderingServer.SubSurfaceScatteringQuality) {
-        ObjectCalls.ptrcallWithLongArg(subSurfaceScatteringSetQualityBind, singleton, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.subSurfaceScatteringSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -4163,7 +4163,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun subSurfaceScatteringSetScale(scale: Double, depthScale: Double) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(subSurfaceScatteringSetScaleBind, singleton, scale, depthScale)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(Binds.subSurfaceScatteringSetScaleBind, singleton, scale, depthScale)
     }
 
     /**
@@ -4176,7 +4176,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraAttributesCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(cameraAttributesCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.cameraAttributesCreateBind, singleton)
     }
 
     /**
@@ -4187,7 +4187,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraAttributesSetDofBlurQuality(quality: RenderingServer.DOFBlurQuality, useJitter: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(cameraAttributesSetDofBlurQualityBind, singleton, quality.value, useJitter)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.cameraAttributesSetDofBlurQualityBind, singleton, quality.value, useJitter)
     }
 
     /**
@@ -4198,7 +4198,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraAttributesSetDofBlurBokehShape(shape: RenderingServer.DOFBokehShape) {
-        ObjectCalls.ptrcallWithLongArg(cameraAttributesSetDofBlurBokehShapeBind, singleton, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.cameraAttributesSetDofBlurBokehShapeBind, singleton, shape.value)
     }
 
     /**
@@ -4209,7 +4209,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraAttributesSetDofBlur(cameraAttributes: RID, farEnable: Boolean, farDistance: Double, farTransition: Double, nearEnable: Boolean, nearDistance: Double, nearTransition: Double, amount: Double) {
-        ObjectCalls.ptrcallWithRIDBoolTwoDoubleBoolThreeDoubleArgs(cameraAttributesSetDofBlurBind, singleton, cameraAttributes, farEnable, farDistance, farTransition, nearEnable, nearDistance, nearTransition, amount)
+        ObjectCalls.ptrcallWithRIDBoolTwoDoubleBoolThreeDoubleArgs(Binds.cameraAttributesSetDofBlurBind, singleton, cameraAttributes, farEnable, farDistance, farTransition, nearEnable, nearDistance, nearTransition, amount)
     }
 
     /**
@@ -4221,7 +4221,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraAttributesSetExposure(cameraAttributes: RID, multiplier: Double, normalization: Double) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(cameraAttributesSetExposureBind, singleton, cameraAttributes, multiplier, normalization)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.cameraAttributesSetExposureBind, singleton, cameraAttributes, multiplier, normalization)
     }
 
     /**
@@ -4232,7 +4232,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun cameraAttributesSetAutoExposure(cameraAttributes: RID, enable: Boolean, minSensitivity: Double, maxSensitivity: Double, speed: Double, scale: Double) {
-        ObjectCalls.ptrcallWithRIDBoolFourDoubleArgs(cameraAttributesSetAutoExposureBind, singleton, cameraAttributes, enable, minSensitivity, maxSensitivity, speed, scale)
+        ObjectCalls.ptrcallWithRIDBoolFourDoubleArgs(Binds.cameraAttributesSetAutoExposureBind, singleton, cameraAttributes, enable, minSensitivity, maxSensitivity, speed, scale)
     }
 
     /**
@@ -4245,7 +4245,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun scenarioCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(scenarioCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.scenarioCreateBind, singleton)
     }
 
     /**
@@ -4255,7 +4255,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun scenarioSetEnvironment(scenario: RID, environment: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(scenarioSetEnvironmentBind, singleton, scenario, environment)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.scenarioSetEnvironmentBind, singleton, scenario, environment)
     }
 
     /**
@@ -4266,7 +4266,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun scenarioSetFallbackEnvironment(scenario: RID, environment: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(scenarioSetFallbackEnvironmentBind, singleton, scenario, environment)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.scenarioSetFallbackEnvironmentBind, singleton, scenario, environment)
     }
 
     /**
@@ -4277,7 +4277,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun scenarioSetCameraAttributes(scenario: RID, effects: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(scenarioSetCameraAttributesBind, singleton, scenario, effects)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.scenarioSetCameraAttributesBind, singleton, scenario, effects)
     }
 
     /**
@@ -4287,7 +4287,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun scenarioSetCompositor(scenario: RID, compositor: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(scenarioSetCompositorBind, singleton, scenario, compositor)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.scenarioSetCompositorBind, singleton, scenario, compositor)
     }
 
     /**
@@ -4301,7 +4301,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceCreate2(base: RID, scenario: RID): RID {
-        return ObjectCalls.ptrcallWithTwoRIDArgsRetRID(instanceCreate2Bind, singleton, base, scenario)
+        return ObjectCalls.ptrcallWithTwoRIDArgsRetRID(Binds.instanceCreate2Bind, singleton, base, scenario)
     }
 
     /**
@@ -4316,7 +4316,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(instanceCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.instanceCreateBind, singleton)
     }
 
     /**
@@ -4329,7 +4329,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetBase(instance: RID, base: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(instanceSetBaseBind, singleton, instance, base)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.instanceSetBaseBind, singleton, instance, base)
     }
 
     /**
@@ -4340,7 +4340,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetScenario(instance: RID, scenario: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(instanceSetScenarioBind, singleton, instance, scenario)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.instanceSetScenarioBind, singleton, instance, scenario)
     }
 
     /**
@@ -4351,7 +4351,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetLayerMask(instance: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(instanceSetLayerMaskBind, singleton, instance, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.instanceSetLayerMaskBind, singleton, instance, mask)
     }
 
     /**
@@ -4362,7 +4362,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetPivotData(instance: RID, sortingOffset: Double, useAabbCenter: Boolean) {
-        ObjectCalls.ptrcallWithRIDDoubleBoolArgs(instanceSetPivotDataBind, singleton, instance, sortingOffset, useAabbCenter)
+        ObjectCalls.ptrcallWithRIDDoubleBoolArgs(Binds.instanceSetPivotDataBind, singleton, instance, sortingOffset, useAabbCenter)
     }
 
     /**
@@ -4372,7 +4372,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetTransform(instance: RID, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDAndTransform3DArg(instanceSetTransformBind, singleton, instance, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform3DArg(Binds.instanceSetTransformBind, singleton, instance, transform)
     }
 
     /**
@@ -4383,7 +4383,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceAttachObjectInstanceId(instance: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(instanceAttachObjectInstanceIdBind, singleton, instance, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.instanceAttachObjectInstanceIdBind, singleton, instance, id)
     }
 
     /**
@@ -4393,7 +4393,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetBlendShapeWeight(instance: RID, shape: Int, weight: Double) {
-        ObjectCalls.ptrcallWithRIDIntDoubleArgs(instanceSetBlendShapeWeightBind, singleton, instance, shape, weight)
+        ObjectCalls.ptrcallWithRIDIntDoubleArgs(Binds.instanceSetBlendShapeWeightBind, singleton, instance, shape, weight)
     }
 
     /**
@@ -4404,7 +4404,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetSurfaceOverrideMaterial(instance: RID, surface: Int, material: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(instanceSetSurfaceOverrideMaterialBind, singleton, instance, surface, material)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.instanceSetSurfaceOverrideMaterialBind, singleton, instance, surface, material)
     }
 
     /**
@@ -4414,7 +4414,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetVisible(instance: RID, visible: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(instanceSetVisibleBind, singleton, instance, visible)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.instanceSetVisibleBind, singleton, instance, visible)
     }
 
     /**
@@ -4432,7 +4432,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetTransparency(instance: RID, transparency: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(instanceGeometrySetTransparencyBind, singleton, instance, transparency)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.instanceGeometrySetTransparencyBind, singleton, instance, transparency)
     }
 
     /**
@@ -4443,7 +4443,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceTeleport(instance: RID) {
-        ObjectCalls.ptrcallWithRIDArg(instanceTeleportBind, singleton, instance)
+        ObjectCalls.ptrcallWithRIDArg(Binds.instanceTeleportBind, singleton, instance)
     }
 
     /**
@@ -4454,7 +4454,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetCustomAabb(instance: RID, aabb: AABB) {
-        ObjectCalls.ptrcallWithRIDAndAABBArg(instanceSetCustomAabbBind, singleton, instance, aabb)
+        ObjectCalls.ptrcallWithRIDAndAABBArg(Binds.instanceSetCustomAabbBind, singleton, instance, aabb)
     }
 
     /**
@@ -4464,7 +4464,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceAttachSkeleton(instance: RID, skeleton: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(instanceAttachSkeletonBind, singleton, instance, skeleton)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.instanceAttachSkeletonBind, singleton, instance, skeleton)
     }
 
     /**
@@ -4476,7 +4476,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetExtraVisibilityMargin(instance: RID, margin: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(instanceSetExtraVisibilityMarginBind, singleton, instance, margin)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.instanceSetExtraVisibilityMarginBind, singleton, instance, margin)
     }
 
     /**
@@ -4486,7 +4486,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetVisibilityParent(instance: RID, parent: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(instanceSetVisibilityParentBind, singleton, instance, parent)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.instanceSetVisibilityParentBind, singleton, instance, parent)
     }
 
     /**
@@ -4499,7 +4499,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceSetIgnoreCulling(instance: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(instanceSetIgnoreCullingBind, singleton, instance, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.instanceSetIgnoreCullingBind, singleton, instance, enabled)
     }
 
     /**
@@ -4509,7 +4509,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetFlag(instance: RID, flag: RenderingServer.InstanceFlags, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(instanceGeometrySetFlagBind, singleton, instance, flag.value, enabled)
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(Binds.instanceGeometrySetFlagBind, singleton, instance, flag.value, enabled)
     }
 
     /**
@@ -4519,7 +4519,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetCastShadowsSetting(instance: RID, shadowCastingSetting: RenderingServer.ShadowCastingSetting) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(instanceGeometrySetCastShadowsSettingBind, singleton, instance, shadowCastingSetting.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.instanceGeometrySetCastShadowsSettingBind, singleton, instance, shadowCastingSetting.value)
     }
 
     /**
@@ -4530,7 +4530,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetMaterialOverride(instance: RID, material: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(instanceGeometrySetMaterialOverrideBind, singleton, instance, material)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.instanceGeometrySetMaterialOverrideBind, singleton, instance, material)
     }
 
     /**
@@ -4541,7 +4541,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetMaterialOverlay(instance: RID, material: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(instanceGeometrySetMaterialOverlayBind, singleton, instance, material)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.instanceGeometrySetMaterialOverlayBind, singleton, instance, material)
     }
 
     /**
@@ -4552,7 +4552,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetVisibilityRange(instance: RID, min: Double, max: Double, minMargin: Double, maxMargin: Double, fadeMode: RenderingServer.VisibilityRangeFadeMode) {
-        ObjectCalls.ptrcallWithRIDFourDoubleLongArgs(instanceGeometrySetVisibilityRangeBind, singleton, instance, min, max, minMargin, maxMargin, fadeMode.value)
+        ObjectCalls.ptrcallWithRIDFourDoubleLongArgs(Binds.instanceGeometrySetVisibilityRangeBind, singleton, instance, min, max, minMargin, maxMargin, fadeMode.value)
     }
 
     /**
@@ -4564,7 +4564,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetLightmap(instance: RID, lightmap: RID, lightmapUvScale: Rect2, lightmapSlice: Int) {
-        ObjectCalls.ptrcallWithTwoRIDRect2IntArgs(instanceGeometrySetLightmapBind, singleton, instance, lightmap, lightmapUvScale, lightmapSlice)
+        ObjectCalls.ptrcallWithTwoRIDRect2IntArgs(Binds.instanceGeometrySetLightmapBind, singleton, instance, lightmap, lightmapUvScale, lightmapSlice)
     }
 
     /**
@@ -4575,7 +4575,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetLodBias(instance: RID, lodBias: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(instanceGeometrySetLodBiasBind, singleton, instance, lodBias)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.instanceGeometrySetLodBiasBind, singleton, instance, lodBias)
     }
 
     /**
@@ -4586,7 +4586,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometrySetShaderParameter(instance: RID, parameter: String, value: Any?) {
-        ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(instanceGeometrySetShaderParameterBind, singleton, instance, parameter, value)
+        ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(Binds.instanceGeometrySetShaderParameterBind, singleton, instance, parameter, value)
     }
 
     /**
@@ -4598,7 +4598,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometryGetShaderParameter(instance: RID, parameter: String): Any? {
-        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(instanceGeometryGetShaderParameterBind, singleton, instance, parameter)
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(Binds.instanceGeometryGetShaderParameterBind, singleton, instance, parameter)
     }
 
     /**
@@ -4609,7 +4609,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometryGetShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
-        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(instanceGeometryGetShaderParameterDefaultValueBind, singleton, instance, parameter)
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(Binds.instanceGeometryGetShaderParameterDefaultValueBind, singleton, instance, parameter)
     }
 
     /**
@@ -4622,7 +4622,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instanceGeometryGetShaderParameterList(instance: RID): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(instanceGeometryGetShaderParameterListBind, singleton, instance)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.instanceGeometryGetShaderParameterListBind, singleton, instance)
     }
 
     /**
@@ -4637,7 +4637,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instancesCullAabb(aabb: AABB, scenario: RID): List<Long> {
-        return ObjectCalls.ptrcallWithAABBRIDArgsRetPackedInt64List(instancesCullAabbBind, singleton, aabb, scenario)
+        return ObjectCalls.ptrcallWithAABBRIDArgsRetPackedInt64List(Binds.instancesCullAabbBind, singleton, aabb, scenario)
     }
 
     /**
@@ -4652,7 +4652,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instancesCullRay(from: Vector3, to: Vector3, scenario: RID): List<Long> {
-        return ObjectCalls.ptrcallWithTwoVector3RIDArgsRetPackedInt64List(instancesCullRayBind, singleton, from, to, scenario)
+        return ObjectCalls.ptrcallWithTwoVector3RIDArgsRetPackedInt64List(Binds.instancesCullRayBind, singleton, from, to, scenario)
     }
 
     /**
@@ -4667,7 +4667,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun instancesCullConvex(convex: List<Plane>, scenario: RID): List<Long> {
-        return ObjectCalls.ptrcallWithPlaneListAndRIDArgsRetPackedInt64List(instancesCullConvexBind, singleton, convex, scenario)
+        return ObjectCalls.ptrcallWithPlaneListAndRIDArgsRetPackedInt64List(Binds.instancesCullConvexBind, singleton, convex, scenario)
     }
 
     /**
@@ -4679,7 +4679,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun bakeRenderUv2(base: RID, materialOverrides: List<RID>, imageSize: Vector2i): List<Image> {
-        return ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(bakeRenderUv2Bind, singleton, base, materialOverrides, imageSize, Image::wrapBorrowed)
+        return ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(Binds.bakeRenderUv2Bind, singleton, base, materialOverrides, imageSize, Image::wrapBorrowed)
     }
 
     /**
@@ -4692,7 +4692,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(canvasCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.canvasCreateBind, singleton)
     }
 
     /**
@@ -4704,7 +4704,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasSetItemMirroring(canvas: RID, item: RID, mirroring: Vector2) {
-        ObjectCalls.ptrcallWithTwoRIDAndVector2Arg(canvasSetItemMirroringBind, singleton, canvas, item, mirroring)
+        ObjectCalls.ptrcallWithTwoRIDAndVector2Arg(Binds.canvasSetItemMirroringBind, singleton, canvas, item, mirroring)
     }
 
     /**
@@ -4716,7 +4716,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasSetItemRepeat(item: RID, repeatSize: Vector2, repeatTimes: Int) {
-        ObjectCalls.ptrcallWithRIDVector2IntArgs(canvasSetItemRepeatBind, singleton, item, repeatSize, repeatTimes)
+        ObjectCalls.ptrcallWithRIDVector2IntArgs(Binds.canvasSetItemRepeatBind, singleton, item, repeatSize, repeatTimes)
     }
 
     /**
@@ -4726,7 +4726,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasSetModulate(canvas: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(canvasSetModulateBind, singleton, canvas, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.canvasSetModulateBind, singleton, canvas, color)
     }
 
     /**
@@ -4740,7 +4740,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasSetDisableScale(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(canvasSetDisableScaleBind, singleton, disable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.canvasSetDisableScaleBind, singleton, disable)
     }
 
     /**
@@ -4754,7 +4754,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasTextureCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(canvasTextureCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.canvasTextureCreateBind, singleton)
     }
 
     /**
@@ -4766,7 +4766,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasTextureSetChannel(canvasTexture: RID, channel: RenderingServer.CanvasTextureChannel, texture: RID) {
-        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(canvasTextureSetChannelBind, singleton, canvasTexture, channel.value, texture)
+        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(Binds.canvasTextureSetChannelBind, singleton, canvasTexture, channel.value, texture)
     }
 
     /**
@@ -4778,7 +4778,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasTextureSetShadingParameters(canvasTexture: RID, baseColor: Color, shininess: Double) {
-        ObjectCalls.ptrcallWithRIDColorDoubleArgs(canvasTextureSetShadingParametersBind, singleton, canvasTexture, baseColor, shininess)
+        ObjectCalls.ptrcallWithRIDColorDoubleArgs(Binds.canvasTextureSetShadingParametersBind, singleton, canvasTexture, baseColor, shininess)
     }
 
     /**
@@ -4789,7 +4789,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasTextureSetTextureFilter(canvasTexture: RID, filter: RenderingServer.CanvasItemTextureFilter) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasTextureSetTextureFilterBind, singleton, canvasTexture, filter.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasTextureSetTextureFilterBind, singleton, canvasTexture, filter.value)
     }
 
     /**
@@ -4800,7 +4800,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasTextureSetTextureRepeat(canvasTexture: RID, repeat: RenderingServer.CanvasItemTextureRepeat) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasTextureSetTextureRepeatBind, singleton, canvasTexture, repeat.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasTextureSetTextureRepeatBind, singleton, canvasTexture, repeat.value)
     }
 
     /**
@@ -4813,7 +4813,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(canvasItemCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.canvasItemCreateBind, singleton)
     }
 
     /**
@@ -4824,7 +4824,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetParent(item: RID, parent: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasItemSetParentBind, singleton, item, parent)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasItemSetParentBind, singleton, item, parent)
     }
 
     /**
@@ -4835,7 +4835,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetDefaultTextureFilter(item: RID, filter: RenderingServer.CanvasItemTextureFilter) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasItemSetDefaultTextureFilterBind, singleton, item, filter.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasItemSetDefaultTextureFilterBind, singleton, item, filter.value)
     }
 
     /**
@@ -4846,7 +4846,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetDefaultTextureRepeat(item: RID, repeat: RenderingServer.CanvasItemTextureRepeat) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasItemSetDefaultTextureRepeatBind, singleton, item, repeat.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasItemSetDefaultTextureRepeatBind, singleton, item, repeat.value)
     }
 
     /**
@@ -4856,7 +4856,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetVisible(item: RID, visible: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetVisibleBind, singleton, item, visible)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetVisibleBind, singleton, item, visible)
     }
 
     /**
@@ -4867,7 +4867,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetLightMask(item: RID, mask: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(canvasItemSetLightMaskBind, singleton, item, mask)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.canvasItemSetLightMaskBind, singleton, item, mask)
     }
 
     /**
@@ -4878,7 +4878,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetVisibilityLayer(item: RID, visibilityLayer: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(canvasItemSetVisibilityLayerBind, singleton, item, visibilityLayer)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.canvasItemSetVisibilityLayerBind, singleton, item, visibilityLayer)
     }
 
     /**
@@ -4890,7 +4890,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetTransform(item: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasItemSetTransformBind, singleton, item, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasItemSetTransformBind, singleton, item, transform)
     }
 
     /**
@@ -4904,7 +4904,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetClip(item: RID, clip: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetClipBind, singleton, item, clip)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetClipBind, singleton, item, clip)
     }
 
     /**
@@ -4916,7 +4916,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetDistanceFieldMode(item: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetDistanceFieldModeBind, singleton, item, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetDistanceFieldModeBind, singleton, item, enabled)
     }
 
     /**
@@ -4929,7 +4929,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetCustomRect(item: RID, useCustomRect: Boolean, rect: Rect2) {
-        ObjectCalls.ptrcallWithRIDBoolRect2Args(canvasItemSetCustomRectBind, singleton, item, useCustomRect, rect)
+        ObjectCalls.ptrcallWithRIDBoolRect2Args(Binds.canvasItemSetCustomRectBind, singleton, item, useCustomRect, rect)
     }
 
     /**
@@ -4940,7 +4940,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetModulate(item: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(canvasItemSetModulateBind, singleton, item, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.canvasItemSetModulateBind, singleton, item, color)
     }
 
     /**
@@ -4951,7 +4951,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetSelfModulate(item: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(canvasItemSetSelfModulateBind, singleton, item, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.canvasItemSetSelfModulateBind, singleton, item, color)
     }
 
     /**
@@ -4962,7 +4962,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetDrawBehindParent(item: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetDrawBehindParentBind, singleton, item, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetDrawBehindParentBind, singleton, item, enabled)
     }
 
     /**
@@ -4972,7 +4972,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetInterpolated(item: RID, interpolated: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetInterpolatedBind, singleton, item, interpolated)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetInterpolatedBind, singleton, item, interpolated)
     }
 
     /**
@@ -4984,7 +4984,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemResetPhysicsInterpolation(item: RID) {
-        ObjectCalls.ptrcallWithRIDArg(canvasItemResetPhysicsInterpolationBind, singleton, item)
+        ObjectCalls.ptrcallWithRIDArg(Binds.canvasItemResetPhysicsInterpolationBind, singleton, item)
     }
 
     /**
@@ -4996,7 +4996,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemTransformPhysicsInterpolation(item: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasItemTransformPhysicsInterpolationBind, singleton, item, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasItemTransformPhysicsInterpolationBind, singleton, item, transform)
     }
 
     /**
@@ -5007,7 +5007,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddLine(item: RID, from: Vector2, to: Vector2, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDTwoVector2ColorDoubleBoolArgs(canvasItemAddLineBind, singleton, item, from, to, color, width, antialiased)
+        ObjectCalls.ptrcallWithRIDTwoVector2ColorDoubleBoolArgs(Binds.canvasItemAddLineBind, singleton, item, from, to, color, width, antialiased)
     }
 
     /**
@@ -5018,7 +5018,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddPolyline(item: RID, points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(canvasItemAddPolylineBind, singleton, item, points, colors, width, antialiased)
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(Binds.canvasItemAddPolylineBind, singleton, item, points, colors, width, antialiased)
     }
 
     /**
@@ -5029,7 +5029,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddMultiline(item: RID, points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(canvasItemAddMultilineBind, singleton, item, points, colors, width, antialiased)
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(Binds.canvasItemAddMultilineBind, singleton, item, points, colors, width, antialiased)
     }
 
     /**
@@ -5040,7 +5040,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddRect(item: RID, rect: Rect2, color: Color, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDRect2ColorBoolArgs(canvasItemAddRectBind, singleton, item, rect, color, antialiased)
+        ObjectCalls.ptrcallWithRIDRect2ColorBoolArgs(Binds.canvasItemAddRectBind, singleton, item, rect, color, antialiased)
     }
 
     /**
@@ -5051,7 +5051,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddCircle(item: RID, pos: Vector2, radius: Double, color: Color, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDVector2DoubleColorBoolArgs(canvasItemAddCircleBind, singleton, item, pos, radius, color, antialiased)
+        ObjectCalls.ptrcallWithRIDVector2DoubleColorBoolArgs(Binds.canvasItemAddCircleBind, singleton, item, pos, radius, color, antialiased)
     }
 
     /**
@@ -5062,7 +5062,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddEllipse(item: RID, pos: Vector2, major: Double, minor: Double, color: Color, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDVector2TwoDoubleColorBoolArgs(canvasItemAddEllipseBind, singleton, item, pos, major, minor, color, antialiased)
+        ObjectCalls.ptrcallWithRIDVector2TwoDoubleColorBoolArgs(Binds.canvasItemAddEllipseBind, singleton, item, pos, major, minor, color, antialiased)
     }
 
     /**
@@ -5073,7 +5073,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddTextureRect(item: RID, rect: Rect2, texture: RID, tile: Boolean = false, modulate: Color, transpose: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDRect2RIDBoolColorBoolArgs(canvasItemAddTextureRectBind, singleton, item, rect, texture, tile, modulate, transpose)
+        ObjectCalls.ptrcallWithRIDRect2RIDBoolColorBoolArgs(Binds.canvasItemAddTextureRectBind, singleton, item, rect, texture, tile, modulate, transpose)
     }
 
     /**
@@ -5083,7 +5083,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddMsdfTextureRectRegion(item: RID, rect: Rect2, texture: RID, srcRect: Rect2, modulate: Color, outlineSize: Int = 0, pxRange: Double = 1.0, scale: Double = 1.0) {
-        ObjectCalls.ptrcallWithRIDRect2RIDRect2ColorIntTwoDoubleArgs(canvasItemAddMsdfTextureRectRegionBind, singleton, item, rect, texture, srcRect, modulate, outlineSize, pxRange, scale)
+        ObjectCalls.ptrcallWithRIDRect2RIDRect2ColorIntTwoDoubleArgs(Binds.canvasItemAddMsdfTextureRectRegionBind, singleton, item, rect, texture, srcRect, modulate, outlineSize, pxRange, scale)
     }
 
     /**
@@ -5093,7 +5093,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddLcdTextureRectRegion(item: RID, rect: Rect2, texture: RID, srcRect: Rect2, modulate: Color) {
-        ObjectCalls.ptrcallWithRIDRect2RIDRect2ColorArgs(canvasItemAddLcdTextureRectRegionBind, singleton, item, rect, texture, srcRect, modulate)
+        ObjectCalls.ptrcallWithRIDRect2RIDRect2ColorArgs(Binds.canvasItemAddLcdTextureRectRegionBind, singleton, item, rect, texture, srcRect, modulate)
     }
 
     /**
@@ -5104,7 +5104,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddTextureRectRegion(item: RID, rect: Rect2, texture: RID, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
-        ObjectCalls.ptrcallWithRIDRect2RIDRect2ColorTwoBoolArgs(canvasItemAddTextureRectRegionBind, singleton, item, rect, texture, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.ptrcallWithRIDRect2RIDRect2ColorTwoBoolArgs(Binds.canvasItemAddTextureRectRegionBind, singleton, item, rect, texture, srcRect, modulate, transpose, clipUv)
     }
 
     /**
@@ -5114,7 +5114,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddNinePatch(item: RID, rect: Rect2, source: Rect2, texture: RID, topleft: Vector2, bottomright: Vector2, xAxisMode: RenderingServer.NinePatchAxisMode = RenderingServer.NinePatchAxisMode.STRETCH, yAxisMode: RenderingServer.NinePatchAxisMode = RenderingServer.NinePatchAxisMode.STRETCH, drawCenter: Boolean = true, modulate: Color) {
-        ObjectCalls.ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(canvasItemAddNinePatchBind, singleton, item, rect, source, texture, topleft, bottomright, xAxisMode.value, yAxisMode.value, drawCenter, modulate)
+        ObjectCalls.ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(Binds.canvasItemAddNinePatchBind, singleton, item, rect, source, texture, topleft, bottomright, xAxisMode.value, yAxisMode.value, drawCenter, modulate)
     }
 
     /**
@@ -5125,7 +5125,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddPrimitive(item: RID, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: RID) {
-        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(canvasItemAddPrimitiveBind, singleton, item, points, colors, uvs, texture)
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(Binds.canvasItemAddPrimitiveBind, singleton, item, points, colors, uvs, texture)
     }
 
     /**
@@ -5140,7 +5140,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddPolygon(item: RID, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: RID) {
-        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(canvasItemAddPolygonBind, singleton, item, points, colors, uvs, texture)
+        ObjectCalls.ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(Binds.canvasItemAddPolygonBind, singleton, item, points, colors, uvs, texture)
     }
 
     /**
@@ -5154,7 +5154,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddTriangleArray(item: RID, indices: List<Int>, points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, bones: List<Int>, weights: List<Float>, texture: RID, count: Int = -1) {
-        ObjectCalls.ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs(canvasItemAddTriangleArrayBind, singleton, item, indices, points, colors, uvs, bones, weights, texture, count)
+        ObjectCalls.ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs(Binds.canvasItemAddTriangleArrayBind, singleton, item, indices, points, colors, uvs, bones, weights, texture, count)
     }
 
     /**
@@ -5165,7 +5165,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddMesh(item: RID, mesh: RID, transform: Transform2D, modulate: Color, texture: RID) {
-        ObjectCalls.ptrcallWithTwoRIDTransform2DColorRIDArgs(canvasItemAddMeshBind, singleton, item, mesh, transform, modulate, texture)
+        ObjectCalls.ptrcallWithTwoRIDTransform2DColorRIDArgs(Binds.canvasItemAddMeshBind, singleton, item, mesh, transform, modulate, texture)
     }
 
     /**
@@ -5176,7 +5176,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddMultimesh(item: RID, mesh: RID, texture: RID) {
-        ObjectCalls.ptrcallWithThreeRIDArgs(canvasItemAddMultimeshBind, singleton, item, mesh, texture)
+        ObjectCalls.ptrcallWithThreeRIDArgs(Binds.canvasItemAddMultimeshBind, singleton, item, mesh, texture)
     }
 
     /**
@@ -5186,7 +5186,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddParticles(item: RID, particles: RID, texture: RID) {
-        ObjectCalls.ptrcallWithThreeRIDArgs(canvasItemAddParticlesBind, singleton, item, particles, texture)
+        ObjectCalls.ptrcallWithThreeRIDArgs(Binds.canvasItemAddParticlesBind, singleton, item, particles, texture)
     }
 
     /**
@@ -5196,7 +5196,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddSetTransform(item: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasItemAddSetTransformBind, singleton, item, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasItemAddSetTransformBind, singleton, item, transform)
     }
 
     /**
@@ -5207,7 +5207,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddClipIgnore(item: RID, ignore: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemAddClipIgnoreBind, singleton, item, ignore)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemAddClipIgnoreBind, singleton, item, ignore)
     }
 
     /**
@@ -5219,7 +5219,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAddAnimationSlice(item: RID, animationLength: Double, sliceBegin: Double, sliceEnd: Double, offset: Double = 0.0) {
-        ObjectCalls.ptrcallWithRIDFourDoubleArgs(canvasItemAddAnimationSliceBind, singleton, item, animationLength, sliceBegin, sliceEnd, offset)
+        ObjectCalls.ptrcallWithRIDFourDoubleArgs(Binds.canvasItemAddAnimationSliceBind, singleton, item, animationLength, sliceBegin, sliceEnd, offset)
     }
 
     /**
@@ -5231,7 +5231,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetSortChildrenByY(item: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetSortChildrenByYBind, singleton, item, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetSortChildrenByYBind, singleton, item, enabled)
     }
 
     /**
@@ -5241,7 +5241,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetZIndex(item: RID, zIndex: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(canvasItemSetZIndexBind, singleton, item, zIndex)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.canvasItemSetZIndexBind, singleton, item, zIndex)
     }
 
     /**
@@ -5251,7 +5251,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetZAsRelativeToParent(item: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetZAsRelativeToParentBind, singleton, item, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetZAsRelativeToParentBind, singleton, item, enabled)
     }
 
     /**
@@ -5261,7 +5261,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetCopyToBackbuffer(item: RID, enabled: Boolean, rect: Rect2) {
-        ObjectCalls.ptrcallWithRIDBoolRect2Args(canvasItemSetCopyToBackbufferBind, singleton, item, enabled, rect)
+        ObjectCalls.ptrcallWithRIDBoolRect2Args(Binds.canvasItemSetCopyToBackbufferBind, singleton, item, enabled, rect)
     }
 
     /**
@@ -5271,7 +5271,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemAttachSkeleton(item: RID, skeleton: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasItemAttachSkeletonBind, singleton, item, skeleton)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasItemAttachSkeletonBind, singleton, item, skeleton)
     }
 
     /**
@@ -5281,7 +5281,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemClear(item: RID) {
-        ObjectCalls.ptrcallWithRIDArg(canvasItemClearBind, singleton, item)
+        ObjectCalls.ptrcallWithRIDArg(Binds.canvasItemClearBind, singleton, item)
     }
 
     /**
@@ -5291,7 +5291,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetDrawIndex(item: RID, index: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(canvasItemSetDrawIndexBind, singleton, item, index)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.canvasItemSetDrawIndexBind, singleton, item, index)
     }
 
     /**
@@ -5302,7 +5302,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetMaterial(item: RID, material: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasItemSetMaterialBind, singleton, item, material)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasItemSetMaterialBind, singleton, item, material)
     }
 
     /**
@@ -5312,7 +5312,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetUseParentMaterial(item: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasItemSetUseParentMaterialBind, singleton, item, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasItemSetUseParentMaterialBind, singleton, item, enabled)
     }
 
     /**
@@ -5323,7 +5323,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetInstanceShaderParameter(instance: RID, parameter: String, value: Any?) {
-        ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(canvasItemSetInstanceShaderParameterBind, singleton, instance, parameter, value)
+        ObjectCalls.ptrcallWithRIDStringNameAndVariantArgs(Binds.canvasItemSetInstanceShaderParameterBind, singleton, instance, parameter, value)
     }
 
     /**
@@ -5334,7 +5334,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemGetInstanceShaderParameter(instance: RID, parameter: String): Any? {
-        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterBind, singleton, instance, parameter)
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(Binds.canvasItemGetInstanceShaderParameterBind, singleton, instance, parameter)
     }
 
     /**
@@ -5345,7 +5345,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemGetInstanceShaderParameterDefaultValue(instance: RID, parameter: String): Any? {
-        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(canvasItemGetInstanceShaderParameterDefaultValueBind, singleton, instance, parameter)
+        return ObjectCalls.ptrcallWithRIDAndStringNameArgRetVariantScalar(Binds.canvasItemGetInstanceShaderParameterDefaultValueBind, singleton, instance, parameter)
     }
 
     /**
@@ -5357,7 +5357,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemGetInstanceShaderParameterList(instance: RID): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(canvasItemGetInstanceShaderParameterListBind, singleton, instance)
+        return ObjectCalls.ptrcallWithRIDArgRetDictionaryList(Binds.canvasItemGetInstanceShaderParameterListBind, singleton, instance)
     }
 
     /**
@@ -5371,7 +5371,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetVisibilityNotifier(item: RID, enable: Boolean, area: Rect2, enterCallable: GodotCallable, exitCallable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDBoolRect2TwoCallableArgs(canvasItemSetVisibilityNotifierBind, singleton, item, enable, area, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
+        ObjectCalls.ptrcallWithRIDBoolRect2TwoCallableArgs(Binds.canvasItemSetVisibilityNotifierBind, singleton, item, enable, area, enterCallable.target.segment, enterCallable.method, exitCallable.target.segment, exitCallable.method)
     }
 
     /**
@@ -5383,7 +5383,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasItemSetCanvasGroupMode(item: RID, mode: RenderingServer.CanvasGroupMode, clearMargin: Double = 5.0, fitEmpty: Boolean = false, fitMargin: Double = 0.0, blurMipmaps: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(canvasItemSetCanvasGroupModeBind, singleton, item, mode.value, clearMargin, fitEmpty, fitMargin, blurMipmaps)
+        ObjectCalls.ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(Binds.canvasItemSetCanvasGroupModeBind, singleton, item, mode.value, clearMargin, fitEmpty, fitMargin, blurMipmaps)
     }
 
     /**
@@ -5395,7 +5395,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun debugCanvasItemGetRect(item: RID): Rect2 {
-        return ObjectCalls.ptrcallWithRIDArgRetRect2(debugCanvasItemGetRectBind, singleton, item)
+        return ObjectCalls.ptrcallWithRIDArgRetRect2(Binds.debugCanvasItemGetRectBind, singleton, item)
     }
 
     /**
@@ -5408,7 +5408,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(canvasLightCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.canvasLightCreateBind, singleton)
     }
 
     /**
@@ -5418,7 +5418,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightAttachToCanvas(light: RID, canvas: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasLightAttachToCanvasBind, singleton, light, canvas)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasLightAttachToCanvasBind, singleton, light, canvas)
     }
 
     /**
@@ -5428,7 +5428,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetEnabled(light: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasLightSetEnabledBind, singleton, light, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasLightSetEnabledBind, singleton, light, enabled)
     }
 
     /**
@@ -5438,7 +5438,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetTextureScale(light: RID, scale: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(canvasLightSetTextureScaleBind, singleton, light, scale)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.canvasLightSetTextureScaleBind, singleton, light, scale)
     }
 
     /**
@@ -5448,7 +5448,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetTransform(light: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasLightSetTransformBind, singleton, light, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasLightSetTransformBind, singleton, light, transform)
     }
 
     /**
@@ -5458,7 +5458,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetTexture(light: RID, texture: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasLightSetTextureBind, singleton, light, texture)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasLightSetTextureBind, singleton, light, texture)
     }
 
     /**
@@ -5468,7 +5468,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetTextureOffset(light: RID, offset: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(canvasLightSetTextureOffsetBind, singleton, light, offset)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.canvasLightSetTextureOffsetBind, singleton, light, offset)
     }
 
     /**
@@ -5478,7 +5478,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetColor(light: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(canvasLightSetColorBind, singleton, light, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.canvasLightSetColorBind, singleton, light, color)
     }
 
     /**
@@ -5488,7 +5488,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetHeight(light: RID, height: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(canvasLightSetHeightBind, singleton, light, height)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.canvasLightSetHeightBind, singleton, light, height)
     }
 
     /**
@@ -5498,7 +5498,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetEnergy(light: RID, energy: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(canvasLightSetEnergyBind, singleton, light, energy)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.canvasLightSetEnergyBind, singleton, light, energy)
     }
 
     /**
@@ -5509,7 +5509,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetZRange(light: RID, minZ: Int, maxZ: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(canvasLightSetZRangeBind, singleton, light, minZ, maxZ)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.canvasLightSetZRangeBind, singleton, light, minZ, maxZ)
     }
 
     /**
@@ -5519,7 +5519,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetLayerRange(light: RID, minLayer: Int, maxLayer: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(canvasLightSetLayerRangeBind, singleton, light, minLayer, maxLayer)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.canvasLightSetLayerRangeBind, singleton, light, minLayer, maxLayer)
     }
 
     /**
@@ -5529,7 +5529,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetItemCullMask(light: RID, mask: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(canvasLightSetItemCullMaskBind, singleton, light, mask)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.canvasLightSetItemCullMaskBind, singleton, light, mask)
     }
 
     /**
@@ -5540,7 +5540,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetItemShadowCullMask(light: RID, mask: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(canvasLightSetItemShadowCullMaskBind, singleton, light, mask)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.canvasLightSetItemShadowCullMaskBind, singleton, light, mask)
     }
 
     /**
@@ -5550,7 +5550,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetMode(light: RID, mode: RenderingServer.CanvasLightMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetModeBind, singleton, light, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasLightSetModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -5560,7 +5560,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetShadowEnabled(light: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasLightSetShadowEnabledBind, singleton, light, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasLightSetShadowEnabledBind, singleton, light, enabled)
     }
 
     /**
@@ -5570,7 +5570,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetShadowFilter(light: RID, filter: RenderingServer.CanvasLightShadowFilter) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetShadowFilterBind, singleton, light, filter.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasLightSetShadowFilterBind, singleton, light, filter.value)
     }
 
     /**
@@ -5580,7 +5580,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetShadowColor(light: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(canvasLightSetShadowColorBind, singleton, light, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.canvasLightSetShadowColorBind, singleton, light, color)
     }
 
     /**
@@ -5590,7 +5590,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetShadowSmooth(light: RID, smooth: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(canvasLightSetShadowSmoothBind, singleton, light, smooth)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.canvasLightSetShadowSmoothBind, singleton, light, smooth)
     }
 
     /**
@@ -5600,7 +5600,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetBlendMode(light: RID, mode: RenderingServer.CanvasLightBlendMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetBlendModeBind, singleton, light, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasLightSetBlendModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -5610,7 +5610,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightSetInterpolated(light: RID, interpolated: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasLightSetInterpolatedBind, singleton, light, interpolated)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasLightSetInterpolatedBind, singleton, light, interpolated)
     }
 
     /**
@@ -5622,7 +5622,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightResetPhysicsInterpolation(light: RID) {
-        ObjectCalls.ptrcallWithRIDArg(canvasLightResetPhysicsInterpolationBind, singleton, light)
+        ObjectCalls.ptrcallWithRIDArg(Binds.canvasLightResetPhysicsInterpolationBind, singleton, light)
     }
 
     /**
@@ -5634,7 +5634,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightTransformPhysicsInterpolation(light: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasLightTransformPhysicsInterpolationBind, singleton, light, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasLightTransformPhysicsInterpolationBind, singleton, light, transform)
     }
 
     /**
@@ -5647,7 +5647,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(canvasLightOccluderCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.canvasLightOccluderCreateBind, singleton)
     }
 
     /**
@@ -5657,7 +5657,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderAttachToCanvas(occluder: RID, canvas: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasLightOccluderAttachToCanvasBind, singleton, occluder, canvas)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasLightOccluderAttachToCanvasBind, singleton, occluder, canvas)
     }
 
     /**
@@ -5667,7 +5667,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderSetEnabled(occluder: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasLightOccluderSetEnabledBind, singleton, occluder, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasLightOccluderSetEnabledBind, singleton, occluder, enabled)
     }
 
     /**
@@ -5677,7 +5677,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderSetPolygon(occluder: RID, polygon: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(canvasLightOccluderSetPolygonBind, singleton, occluder, polygon)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.canvasLightOccluderSetPolygonBind, singleton, occluder, polygon)
     }
 
     /**
@@ -5688,7 +5688,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderSetAsSdfCollision(occluder: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasLightOccluderSetAsSdfCollisionBind, singleton, occluder, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasLightOccluderSetAsSdfCollisionBind, singleton, occluder, enable)
     }
 
     /**
@@ -5698,7 +5698,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderSetTransform(occluder: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasLightOccluderSetTransformBind, singleton, occluder, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasLightOccluderSetTransformBind, singleton, occluder, transform)
     }
 
     /**
@@ -5708,7 +5708,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderSetLightMask(occluder: RID, mask: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(canvasLightOccluderSetLightMaskBind, singleton, occluder, mask)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.canvasLightOccluderSetLightMaskBind, singleton, occluder, mask)
     }
 
     /**
@@ -5718,7 +5718,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderSetInterpolated(occluder: RID, interpolated: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(canvasLightOccluderSetInterpolatedBind, singleton, occluder, interpolated)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.canvasLightOccluderSetInterpolatedBind, singleton, occluder, interpolated)
     }
 
     /**
@@ -5730,7 +5730,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderResetPhysicsInterpolation(occluder: RID) {
-        ObjectCalls.ptrcallWithRIDArg(canvasLightOccluderResetPhysicsInterpolationBind, singleton, occluder)
+        ObjectCalls.ptrcallWithRIDArg(Binds.canvasLightOccluderResetPhysicsInterpolationBind, singleton, occluder)
     }
 
     /**
@@ -5742,7 +5742,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasLightOccluderTransformPhysicsInterpolation(occluder: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(canvasLightOccluderTransformPhysicsInterpolationBind, singleton, occluder, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.canvasLightOccluderTransformPhysicsInterpolationBind, singleton, occluder, transform)
     }
 
     /**
@@ -5755,7 +5755,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasOccluderPolygonCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(canvasOccluderPolygonCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.canvasOccluderPolygonCreateBind, singleton)
     }
 
     /**
@@ -5765,7 +5765,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasOccluderPolygonSetShape(occluderPolygon: RID, shape: List<Vector2>, closed: Boolean) {
-        ObjectCalls.ptrcallWithRIDPackedVector2ListAndBoolArg(canvasOccluderPolygonSetShapeBind, singleton, occluderPolygon, shape, closed)
+        ObjectCalls.ptrcallWithRIDPackedVector2ListAndBoolArg(Binds.canvasOccluderPolygonSetShapeBind, singleton, occluderPolygon, shape, closed)
     }
 
     /**
@@ -5775,7 +5775,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasOccluderPolygonSetCullMode(occluderPolygon: RID, mode: RenderingServer.CanvasOccluderPolygonCullMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasOccluderPolygonSetCullModeBind, singleton, occluderPolygon, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.canvasOccluderPolygonSetCullModeBind, singleton, occluderPolygon, mode.value)
     }
 
     /**
@@ -5786,7 +5786,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun canvasSetShadowTextureSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(canvasSetShadowTextureSizeBind, singleton, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.canvasSetShadowTextureSizeBind, singleton, size)
     }
 
     /**
@@ -5796,7 +5796,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterAdd(name: String, type: RenderingServer.GlobalShaderParameterType, defaultValue: Any?) {
-        ObjectCalls.ptrcallWithStringNameLongVariantArgs(globalShaderParameterAddBind, singleton, name, type.value, defaultValue)
+        ObjectCalls.ptrcallWithStringNameLongVariantArgs(Binds.globalShaderParameterAddBind, singleton, name, type.value, defaultValue)
     }
 
     /**
@@ -5806,7 +5806,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterRemove(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(globalShaderParameterRemoveBind, singleton, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.globalShaderParameterRemoveBind, singleton, name)
     }
 
     /**
@@ -5820,7 +5820,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterGetList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(globalShaderParameterGetListBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.globalShaderParameterGetListBind, singleton)
     }
 
     /**
@@ -5830,7 +5830,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterSet(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(globalShaderParameterSetBind, singleton, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.globalShaderParameterSetBind, singleton, name, value)
     }
 
     /**
@@ -5841,7 +5841,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterSetOverride(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(globalShaderParameterSetOverrideBind, singleton, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.globalShaderParameterSetOverrideBind, singleton, name, value)
     }
 
     /**
@@ -5856,7 +5856,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterGet(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(globalShaderParameterGetBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.globalShaderParameterGetBind, singleton, name)
     }
 
     /**
@@ -5871,7 +5871,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun globalShaderParameterGetType(name: String): RenderingServer.GlobalShaderParameterType {
-        return RenderingServer.GlobalShaderParameterType(ObjectCalls.ptrcallWithStringNameArgRetLong(globalShaderParameterGetTypeBind, singleton, name))
+        return RenderingServer.GlobalShaderParameterType(ObjectCalls.ptrcallWithStringNameArgRetLong(Binds.globalShaderParameterGetTypeBind, singleton, name))
     }
 
     /**
@@ -5883,7 +5883,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun freeRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, singleton, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeRidBind, singleton, rid)
     }
 
     /**
@@ -5893,7 +5893,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun requestFrameDrawnCallback(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(requestFrameDrawnCallbackBind, singleton, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.requestFrameDrawnCallbackBind, singleton, callable.target.segment, callable.method)
     }
 
     /**
@@ -5904,7 +5904,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun hasChanged(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasChangedBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasChangedBind, singleton)
     }
 
     /**
@@ -5918,7 +5918,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getRenderingInfo(info: RenderingServer.RenderingInfo): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(getRenderingInfoBind, singleton, info.value)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getRenderingInfoBind, singleton, info.value)
     }
 
     /**
@@ -5931,7 +5931,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getVideoAdapterName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getVideoAdapterNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVideoAdapterNameBind, singleton)
     }
 
     /**
@@ -5942,7 +5942,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getVideoAdapterVendor(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getVideoAdapterVendorBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVideoAdapterVendorBind, singleton)
     }
 
     /**
@@ -5957,7 +5957,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getVideoAdapterType(): RenderingDevice.DeviceType {
-        return RenderingDevice.DeviceType(ObjectCalls.ptrcallNoArgsRetLong(getVideoAdapterTypeBind, singleton))
+        return RenderingDevice.DeviceType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVideoAdapterTypeBind, singleton))
     }
 
     /**
@@ -5971,7 +5971,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getVideoAdapterApiVersion(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getVideoAdapterApiVersionBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVideoAdapterApiVersionBind, singleton)
     }
 
     /**
@@ -5988,7 +5988,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getCurrentRenderingDriverName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentRenderingDriverNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentRenderingDriverNameBind, singleton)
     }
 
     /**
@@ -6002,7 +6002,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getCurrentRenderingMethod(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentRenderingMethodBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentRenderingMethodBind, singleton)
     }
 
     /**
@@ -6013,7 +6013,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun makeSphereMesh(latitudes: Int, longitudes: Int, radius: Double): RID {
-        return ObjectCalls.ptrcallWithTwoIntDoubleArgsRetRID(makeSphereMeshBind, singleton, latitudes, longitudes, radius)
+        return ObjectCalls.ptrcallWithTwoIntDoubleArgsRetRID(Binds.makeSphereMeshBind, singleton, latitudes, longitudes, radius)
     }
 
     /**
@@ -6024,7 +6024,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getTestCube(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getTestCubeBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getTestCubeBind, singleton)
     }
 
     /**
@@ -6036,7 +6036,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getTestTexture(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getTestTextureBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getTestTextureBind, singleton)
     }
 
     /**
@@ -6048,7 +6048,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getWhiteTexture(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getWhiteTextureBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getWhiteTextureBind, singleton)
     }
 
     /**
@@ -6061,7 +6061,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setBootImageWithStretch(image: Image?, color: Color, stretchMode: RenderingServer.SplashStretchMode, useFilter: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectColorLongBoolArgs(setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, stretchMode.value, useFilter)
+        ObjectCalls.ptrcallWithObjectColorLongBoolArgs(Binds.setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, stretchMode.value, useFilter)
     }
 
     /**
@@ -6074,7 +6074,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setBootImage(image: Image?, color: Color, scale: Boolean, useFilter: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectColorTwoBoolArgs(setBootImageBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, scale, useFilter)
+        ObjectCalls.ptrcallWithObjectColorTwoBoolArgs(Binds.setBootImageBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, scale, useFilter)
     }
 
     /**
@@ -6085,7 +6085,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getDefaultClearColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDefaultClearColorBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDefaultClearColorBind, singleton)
     }
 
     /**
@@ -6096,7 +6096,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setDefaultClearColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDefaultClearColorBind, singleton, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDefaultClearColorBind, singleton, color)
     }
 
     /**
@@ -6107,7 +6107,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun hasOsFeature(feature: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasOsFeatureBind, singleton, feature)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasOsFeatureBind, singleton, feature)
     }
 
     /**
@@ -6121,7 +6121,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setDebugGenerateWireframes(generate: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugGenerateWireframesBind, singleton, generate)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugGenerateWireframesBind, singleton, generate)
     }
 
     /**
@@ -6132,7 +6132,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun isRenderLoopEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRenderLoopEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRenderLoopEnabledBind, singleton)
     }
 
     /**
@@ -6143,7 +6143,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun setRenderLoopEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRenderLoopEnabledBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRenderLoopEnabledBind, singleton, enabled)
     }
 
     /**
@@ -6155,7 +6155,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getFrameSetupTimeCpu(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameSetupTimeCpuBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrameSetupTimeCpuBind, singleton)
     }
 
     /**
@@ -6166,7 +6166,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun forceSync() {
-        ObjectCalls.ptrcallNoArgs(forceSyncBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.forceSyncBind, singleton)
     }
 
     /**
@@ -6176,7 +6176,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun forceDraw(swapBuffers: Boolean = true, frameStep: Double = 0.0) {
-        ObjectCalls.ptrcallWithBoolAndDoubleArgs(forceDrawBind, singleton, swapBuffers, frameStep)
+        ObjectCalls.ptrcallWithBoolAndDoubleArgs(Binds.forceDrawBind, singleton, swapBuffers, frameStep)
     }
 
     /**
@@ -6187,7 +6187,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun getRenderingDevice(): RenderingDevice? {
-        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderingDeviceBind, singleton))
+        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRenderingDeviceBind, singleton))
     }
 
     /**
@@ -6200,7 +6200,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun createLocalRenderingDevice(): RenderingDevice? {
-        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(createLocalRenderingDeviceBind, singleton))
+        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.createLocalRenderingDeviceBind, singleton))
     }
 
     /**
@@ -6210,7 +6210,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun isOnRenderThread(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnRenderThreadBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnRenderThreadBind, singleton)
     }
 
     /**
@@ -6223,7 +6223,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun callOnRenderThread(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(callOnRenderThreadBind, singleton, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.callOnRenderThreadBind, singleton, callable.target.segment, callable.method)
     }
 
     /**
@@ -6233,7 +6233,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun hasFeature(feature: RenderingServer.Features): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasFeatureBind, singleton, feature.value)
     }
 
     /** Signal `frame_pre_draw()`; see [TypedSignal]. */
@@ -10671,2678 +10671,2683 @@ object RenderingServer {
     internal fun wrap(handle: RawSegment): RenderingServer? =
         if (handle.address() == 0L) null else this
 
-    private const val TEXTURE_2D_CREATE_HASH = 2010018390L
-    private val texture2dCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_create", TEXTURE_2D_CREATE_HASH)
-    }
-
-    private const val TEXTURE_2D_LAYERED_CREATE_HASH = 913689023L
-    private val texture2dLayeredCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layered_create", TEXTURE_2D_LAYERED_CREATE_HASH)
-    }
-
-    private const val TEXTURE_3D_CREATE_HASH = 4036838706L
-    private val texture3dCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_3d_create", TEXTURE_3D_CREATE_HASH)
-    }
-
-    private const val TEXTURE_PROXY_CREATE_HASH = 41030802L
-    private val textureProxyCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_proxy_create", TEXTURE_PROXY_CREATE_HASH)
-    }
-
-    private const val TEXTURE_CREATE_FROM_NATIVE_HANDLE_HASH = 1682977582L
-    private val textureCreateFromNativeHandleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_create_from_native_handle", TEXTURE_CREATE_FROM_NATIVE_HANDLE_HASH)
-    }
-
-    private const val TEXTURE_DRAWABLE_CREATE_HASH = 1993613667L
-    private val textureDrawableCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_create", TEXTURE_DRAWABLE_CREATE_HASH)
-    }
-
-    private const val TEXTURE_2D_UPDATE_HASH = 999539803L
-    private val texture2dUpdateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_update", TEXTURE_2D_UPDATE_HASH)
-    }
-
-    private const val TEXTURE_3D_UPDATE_HASH = 684822712L
-    private val texture3dUpdateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_3d_update", TEXTURE_3D_UPDATE_HASH)
-    }
-
-    private const val TEXTURE_PROXY_UPDATE_HASH = 395945892L
-    private val textureProxyUpdateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_proxy_update", TEXTURE_PROXY_UPDATE_HASH)
-    }
-
-    private const val TEXTURE_DRAWABLE_BLIT_RECT_HASH = 4077763890L
-    private val textureDrawableBlitRectBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_blit_rect", TEXTURE_DRAWABLE_BLIT_RECT_HASH)
-    }
-
-    private const val TEXTURE_2D_PLACEHOLDER_CREATE_HASH = 529393457L
-    private val texture2dPlaceholderCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_placeholder_create", TEXTURE_2D_PLACEHOLDER_CREATE_HASH)
-    }
-
-    private const val TEXTURE_2D_LAYERED_PLACEHOLDER_CREATE_HASH = 1394585590L
-    private val texture2dLayeredPlaceholderCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layered_placeholder_create", TEXTURE_2D_LAYERED_PLACEHOLDER_CREATE_HASH)
-    }
-
-    private const val TEXTURE_3D_PLACEHOLDER_CREATE_HASH = 529393457L
-    private val texture3dPlaceholderCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_3d_placeholder_create", TEXTURE_3D_PLACEHOLDER_CREATE_HASH)
-    }
-
-    private const val TEXTURE_2D_GET_HASH = 4206205781L
-    private val texture2dGetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_get", TEXTURE_2D_GET_HASH)
-    }
-
-    private const val TEXTURE_2D_LAYER_GET_HASH = 2705440895L
-    private val texture2dLayerGetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layer_get", TEXTURE_2D_LAYER_GET_HASH)
-    }
-
-    private const val TEXTURE_3D_GET_HASH = 2684255073L
-    private val texture3dGetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_3d_get", TEXTURE_3D_GET_HASH)
-    }
-
-    private const val TEXTURE_DRAWABLE_GENERATE_MIPMAPS_HASH = 2722037293L
-    private val textureDrawableGenerateMipmapsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_generate_mipmaps", TEXTURE_DRAWABLE_GENERATE_MIPMAPS_HASH)
-    }
-
-    private const val TEXTURE_DRAWABLE_GET_DEFAULT_MATERIAL_HASH = 2944877500L
-    private val textureDrawableGetDefaultMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_get_default_material", TEXTURE_DRAWABLE_GET_DEFAULT_MATERIAL_HASH)
-    }
-
-    private const val TEXTURE_REPLACE_HASH = 395945892L
-    private val textureReplaceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_replace", TEXTURE_REPLACE_HASH)
-    }
-
-    private const val TEXTURE_SET_SIZE_OVERRIDE_HASH = 4288446313L
-    private val textureSetSizeOverrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_set_size_override", TEXTURE_SET_SIZE_OVERRIDE_HASH)
-    }
-
-    private const val TEXTURE_SET_PATH_HASH = 2726140452L
-    private val textureSetPathBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_set_path", TEXTURE_SET_PATH_HASH)
-    }
-
-    private const val TEXTURE_GET_PATH_HASH = 642473191L
-    private val textureGetPathBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_get_path", TEXTURE_GET_PATH_HASH)
-    }
-
-    private const val TEXTURE_GET_FORMAT_HASH = 1932918979L
-    private val textureGetFormatBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_get_format", TEXTURE_GET_FORMAT_HASH)
-    }
-
-    private const val TEXTURE_SET_FORCE_REDRAW_IF_VISIBLE_HASH = 1265174801L
-    private val textureSetForceRedrawIfVisibleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_set_force_redraw_if_visible", TEXTURE_SET_FORCE_REDRAW_IF_VISIBLE_HASH)
-    }
-
-    private const val TEXTURE_RD_CREATE_HASH = 1434128712L
-    private val textureRdCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_rd_create", TEXTURE_RD_CREATE_HASH)
-    }
-
-    private const val TEXTURE_GET_RD_TEXTURE_HASH = 2790148051L
-    private val textureGetRdTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_get_rd_texture", TEXTURE_GET_RD_TEXTURE_HASH)
-    }
-
-    private const val TEXTURE_GET_NATIVE_HANDLE_HASH = 1834114100L
-    private val textureGetNativeHandleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "texture_get_native_handle", TEXTURE_GET_NATIVE_HANDLE_HASH)
-    }
-
-    private const val SHADER_CREATE_HASH = 529393457L
-    private val shaderCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_create", SHADER_CREATE_HASH)
-    }
-
-    private const val SHADER_SET_CODE_HASH = 2726140452L
-    private val shaderSetCodeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_set_code", SHADER_SET_CODE_HASH)
-    }
-
-    private const val SHADER_SET_PATH_HINT_HASH = 2726140452L
-    private val shaderSetPathHintBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_set_path_hint", SHADER_SET_PATH_HINT_HASH)
-    }
-
-    private const val SHADER_GET_CODE_HASH = 642473191L
-    private val shaderGetCodeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_get_code", SHADER_GET_CODE_HASH)
-    }
-
-    private const val GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
-    private val getShaderParameterListBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_shader_parameter_list", GET_SHADER_PARAMETER_LIST_HASH)
-    }
-
-    private const val SHADER_GET_PARAMETER_DEFAULT_HASH = 2621281810L
-    private val shaderGetParameterDefaultBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_get_parameter_default", SHADER_GET_PARAMETER_DEFAULT_HASH)
-    }
-
-    private const val SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH = 4094001817L
-    private val shaderSetDefaultTextureParameterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_set_default_texture_parameter", SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH)
-    }
-
-    private const val SHADER_GET_DEFAULT_TEXTURE_PARAMETER_HASH = 1464608890L
-    private val shaderGetDefaultTextureParameterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "shader_get_default_texture_parameter", SHADER_GET_DEFAULT_TEXTURE_PARAMETER_HASH)
-    }
-
-    private const val MATERIAL_CREATE_HASH = 529393457L
-    private val materialCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_create", MATERIAL_CREATE_HASH)
-    }
-
-    private const val MATERIAL_SET_SHADER_HASH = 395945892L
-    private val materialSetShaderBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_set_shader", MATERIAL_SET_SHADER_HASH)
-    }
-
-    private const val MATERIAL_SET_PARAM_HASH = 3477296213L
-    private val materialSetParamBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_set_param", MATERIAL_SET_PARAM_HASH)
-    }
-
-    private const val MATERIAL_GET_PARAM_HASH = 2621281810L
-    private val materialGetParamBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_get_param", MATERIAL_GET_PARAM_HASH)
-    }
-
-    private const val MATERIAL_SET_RENDER_PRIORITY_HASH = 3411492887L
-    private val materialSetRenderPriorityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_set_render_priority", MATERIAL_SET_RENDER_PRIORITY_HASH)
-    }
-
-    private const val MATERIAL_SET_NEXT_PASS_HASH = 395945892L
-    private val materialSetNextPassBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_set_next_pass", MATERIAL_SET_NEXT_PASS_HASH)
-    }
-
-    private const val MATERIAL_SET_USE_DEBANDING_HASH = 2586408642L
-    private val materialSetUseDebandingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "material_set_use_debanding", MATERIAL_SET_USE_DEBANDING_HASH)
-    }
-
-    private const val MESH_CREATE_FROM_SURFACES_HASH = 4291747531L
-    private val meshCreateFromSurfacesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_create_from_surfaces", MESH_CREATE_FROM_SURFACES_HASH)
-    }
-
-    private const val MESH_CREATE_HASH = 529393457L
-    private val meshCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_create", MESH_CREATE_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_FORMAT_OFFSET_HASH = 2981368685L
-    private val meshSurfaceGetFormatOffsetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_offset", MESH_SURFACE_GET_FORMAT_OFFSET_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_FORMAT_VERTEX_STRIDE_HASH = 3188363337L
-    private val meshSurfaceGetFormatVertexStrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_vertex_stride", MESH_SURFACE_GET_FORMAT_VERTEX_STRIDE_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_FORMAT_NORMAL_TANGENT_STRIDE_HASH = 3188363337L
-    private val meshSurfaceGetFormatNormalTangentStrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_normal_tangent_stride", MESH_SURFACE_GET_FORMAT_NORMAL_TANGENT_STRIDE_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_FORMAT_ATTRIBUTE_STRIDE_HASH = 3188363337L
-    private val meshSurfaceGetFormatAttributeStrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_attribute_stride", MESH_SURFACE_GET_FORMAT_ATTRIBUTE_STRIDE_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_FORMAT_SKIN_STRIDE_HASH = 3188363337L
-    private val meshSurfaceGetFormatSkinStrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_skin_stride", MESH_SURFACE_GET_FORMAT_SKIN_STRIDE_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_FORMAT_INDEX_STRIDE_HASH = 3188363337L
-    private val meshSurfaceGetFormatIndexStrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_index_stride", MESH_SURFACE_GET_FORMAT_INDEX_STRIDE_HASH)
-    }
-
-    private const val MESH_ADD_SURFACE_HASH = 1217542888L
-    private val meshAddSurfaceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_add_surface", MESH_ADD_SURFACE_HASH)
-    }
-
-    private const val MESH_ADD_SURFACE_FROM_ARRAYS_HASH = 2342446560L
-    private val meshAddSurfaceFromArraysBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_add_surface_from_arrays", MESH_ADD_SURFACE_FROM_ARRAYS_HASH)
-    }
-
-    private const val MESH_GET_BLEND_SHAPE_COUNT_HASH = 2198884583L
-    private val meshGetBlendShapeCountBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_get_blend_shape_count", MESH_GET_BLEND_SHAPE_COUNT_HASH)
-    }
-
-    private const val MESH_SET_BLEND_SHAPE_MODE_HASH = 1294662092L
-    private val meshSetBlendShapeModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_set_blend_shape_mode", MESH_SET_BLEND_SHAPE_MODE_HASH)
-    }
-
-    private const val MESH_GET_BLEND_SHAPE_MODE_HASH = 4282291819L
-    private val meshGetBlendShapeModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_get_blend_shape_mode", MESH_GET_BLEND_SHAPE_MODE_HASH)
-    }
-
-    private const val MESH_SURFACE_SET_MATERIAL_HASH = 2310537182L
-    private val meshSurfaceSetMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_set_material", MESH_SURFACE_SET_MATERIAL_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_MATERIAL_HASH = 1066463050L
-    private val meshSurfaceGetMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_material", MESH_SURFACE_GET_MATERIAL_HASH)
-    }
-
-    private const val MESH_GET_SURFACE_HASH = 186674697L
-    private val meshGetSurfaceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface", MESH_GET_SURFACE_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_ARRAYS_HASH = 1778388067L
-    private val meshSurfaceGetArraysBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_arrays", MESH_SURFACE_GET_ARRAYS_HASH)
-    }
-
-    private const val MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH = 1778388067L
-    private val meshSurfaceGetBlendShapeArraysBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_blend_shape_arrays", MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH)
-    }
-
-    private const val MESH_GET_SURFACE_COUNT_HASH = 2198884583L
-    private val meshGetSurfaceCountBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface_count", MESH_GET_SURFACE_COUNT_HASH)
-    }
-
-    private const val MESH_SET_CUSTOM_AABB_HASH = 3696536120L
-    private val meshSetCustomAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_set_custom_aabb", MESH_SET_CUSTOM_AABB_HASH)
-    }
-
-    private const val MESH_GET_CUSTOM_AABB_HASH = 974181306L
-    private val meshGetCustomAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_get_custom_aabb", MESH_GET_CUSTOM_AABB_HASH)
-    }
-
-    private const val MESH_SURFACE_REMOVE_HASH = 3411492887L
-    private val meshSurfaceRemoveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_remove", MESH_SURFACE_REMOVE_HASH)
-    }
-
-    private const val MESH_CLEAR_HASH = 2722037293L
-    private val meshClearBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_clear", MESH_CLEAR_HASH)
-    }
-
-    private const val MESH_SURFACE_UPDATE_VERTEX_REGION_HASH = 2900195149L
-    private val meshSurfaceUpdateVertexRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_vertex_region", MESH_SURFACE_UPDATE_VERTEX_REGION_HASH)
-    }
-
-    private const val MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH = 2900195149L
-    private val meshSurfaceUpdateAttributeRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_attribute_region", MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH)
-    }
-
-    private const val MESH_SURFACE_UPDATE_SKIN_REGION_HASH = 2900195149L
-    private val meshSurfaceUpdateSkinRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_skin_region", MESH_SURFACE_UPDATE_SKIN_REGION_HASH)
-    }
-
-    private const val MESH_SURFACE_UPDATE_INDEX_REGION_HASH = 2900195149L
-    private val meshSurfaceUpdateIndexRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_index_region", MESH_SURFACE_UPDATE_INDEX_REGION_HASH)
-    }
-
-    private const val MESH_SET_SHADOW_MESH_HASH = 395945892L
-    private val meshSetShadowMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "mesh_set_shadow_mesh", MESH_SET_SHADOW_MESH_HASH)
-    }
-
-    private const val MULTIMESH_CREATE_HASH = 529393457L
-    private val multimeshCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_create", MULTIMESH_CREATE_HASH)
-    }
-
-    private const val MULTIMESH_ALLOCATE_DATA_HASH = 557240154L
-    private val multimeshAllocateDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_allocate_data", MULTIMESH_ALLOCATE_DATA_HASH)
-    }
-
-    private const val MULTIMESH_GET_INSTANCE_COUNT_HASH = 2198884583L
-    private val multimeshGetInstanceCountBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_instance_count", MULTIMESH_GET_INSTANCE_COUNT_HASH)
-    }
-
-    private const val MULTIMESH_SET_MESH_HASH = 395945892L
-    private val multimeshSetMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_mesh", MULTIMESH_SET_MESH_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_SET_TRANSFORM_HASH = 675327471L
-    private val multimeshInstanceSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_transform", MULTIMESH_INSTANCE_SET_TRANSFORM_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_SET_TRANSFORM_2D_HASH = 736082694L
-    private val multimeshInstanceSetTransform2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_transform_2d", MULTIMESH_INSTANCE_SET_TRANSFORM_2D_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_SET_COLOR_HASH = 176975443L
-    private val multimeshInstanceSetColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_color", MULTIMESH_INSTANCE_SET_COLOR_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_SET_CUSTOM_DATA_HASH = 176975443L
-    private val multimeshInstanceSetCustomDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_custom_data", MULTIMESH_INSTANCE_SET_CUSTOM_DATA_HASH)
-    }
-
-    private const val MULTIMESH_GET_MESH_HASH = 3814569979L
-    private val multimeshGetMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_mesh", MULTIMESH_GET_MESH_HASH)
-    }
-
-    private const val MULTIMESH_GET_AABB_HASH = 974181306L
-    private val multimeshGetAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_aabb", MULTIMESH_GET_AABB_HASH)
-    }
-
-    private const val MULTIMESH_SET_CUSTOM_AABB_HASH = 3696536120L
-    private val multimeshSetCustomAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_custom_aabb", MULTIMESH_SET_CUSTOM_AABB_HASH)
-    }
-
-    private const val MULTIMESH_GET_CUSTOM_AABB_HASH = 974181306L
-    private val multimeshGetCustomAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_custom_aabb", MULTIMESH_GET_CUSTOM_AABB_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_GET_TRANSFORM_HASH = 1050775521L
-    private val multimeshInstanceGetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_transform", MULTIMESH_INSTANCE_GET_TRANSFORM_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_GET_TRANSFORM_2D_HASH = 1324854622L
-    private val multimeshInstanceGetTransform2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_transform_2d", MULTIMESH_INSTANCE_GET_TRANSFORM_2D_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_GET_COLOR_HASH = 2946315076L
-    private val multimeshInstanceGetColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_color", MULTIMESH_INSTANCE_GET_COLOR_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_GET_CUSTOM_DATA_HASH = 2946315076L
-    private val multimeshInstanceGetCustomDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_custom_data", MULTIMESH_INSTANCE_GET_CUSTOM_DATA_HASH)
-    }
-
-    private const val MULTIMESH_SET_VISIBLE_INSTANCES_HASH = 3411492887L
-    private val multimeshSetVisibleInstancesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_visible_instances", MULTIMESH_SET_VISIBLE_INSTANCES_HASH)
-    }
-
-    private const val MULTIMESH_GET_VISIBLE_INSTANCES_HASH = 2198884583L
-    private val multimeshGetVisibleInstancesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_visible_instances", MULTIMESH_GET_VISIBLE_INSTANCES_HASH)
-    }
-
-    private const val MULTIMESH_SET_BUFFER_HASH = 2960552364L
-    private val multimeshSetBufferBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer", MULTIMESH_SET_BUFFER_HASH)
-    }
-
-    private const val MULTIMESH_GET_COMMAND_BUFFER_RD_RID_HASH = 3814569979L
-    private val multimeshGetCommandBufferRdRidBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_command_buffer_rd_rid", MULTIMESH_GET_COMMAND_BUFFER_RD_RID_HASH)
-    }
-
-    private const val MULTIMESH_GET_BUFFER_RD_RID_HASH = 3814569979L
-    private val multimeshGetBufferRdRidBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_buffer_rd_rid", MULTIMESH_GET_BUFFER_RD_RID_HASH)
-    }
-
-    private const val MULTIMESH_GET_BUFFER_HASH = 3964669176L
-    private val multimeshGetBufferBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_buffer", MULTIMESH_GET_BUFFER_HASH)
-    }
-
-    private const val MULTIMESH_SET_BUFFER_INTERPOLATED_HASH = 659844711L
-    private val multimeshSetBufferInterpolatedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer_interpolated", MULTIMESH_SET_BUFFER_INTERPOLATED_HASH)
-    }
-
-    private const val MULTIMESH_SET_PHYSICS_INTERPOLATED_HASH = 1265174801L
-    private val multimeshSetPhysicsInterpolatedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_physics_interpolated", MULTIMESH_SET_PHYSICS_INTERPOLATED_HASH)
-    }
-
-    private const val MULTIMESH_SET_PHYSICS_INTERPOLATION_QUALITY_HASH = 3934808223L
-    private val multimeshSetPhysicsInterpolationQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_physics_interpolation_quality", MULTIMESH_SET_PHYSICS_INTERPOLATION_QUALITY_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCE_RESET_PHYSICS_INTERPOLATION_HASH = 3411492887L
-    private val multimeshInstanceResetPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_reset_physics_interpolation", MULTIMESH_INSTANCE_RESET_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val MULTIMESH_INSTANCES_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
-    private val multimeshInstancesResetPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "multimesh_instances_reset_physics_interpolation", MULTIMESH_INSTANCES_RESET_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val SKELETON_CREATE_HASH = 529393457L
-    private val skeletonCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_create", SKELETON_CREATE_HASH)
-    }
-
-    private const val SKELETON_ALLOCATE_DATA_HASH = 1904426712L
-    private val skeletonAllocateDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_allocate_data", SKELETON_ALLOCATE_DATA_HASH)
-    }
-
-    private const val SKELETON_GET_BONE_COUNT_HASH = 2198884583L
-    private val skeletonGetBoneCountBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_get_bone_count", SKELETON_GET_BONE_COUNT_HASH)
-    }
-
-    private const val SKELETON_BONE_SET_TRANSFORM_HASH = 675327471L
-    private val skeletonBoneSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_set_transform", SKELETON_BONE_SET_TRANSFORM_HASH)
-    }
-
-    private const val SKELETON_BONE_GET_TRANSFORM_HASH = 1050775521L
-    private val skeletonBoneGetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_get_transform", SKELETON_BONE_GET_TRANSFORM_HASH)
-    }
-
-    private const val SKELETON_BONE_SET_TRANSFORM_2D_HASH = 736082694L
-    private val skeletonBoneSetTransform2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_set_transform_2d", SKELETON_BONE_SET_TRANSFORM_2D_HASH)
-    }
-
-    private const val SKELETON_BONE_GET_TRANSFORM_2D_HASH = 1324854622L
-    private val skeletonBoneGetTransform2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_get_transform_2d", SKELETON_BONE_GET_TRANSFORM_2D_HASH)
-    }
-
-    private const val SKELETON_SET_BASE_TRANSFORM_2D_HASH = 1246044741L
-    private val skeletonSetBaseTransform2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "skeleton_set_base_transform_2d", SKELETON_SET_BASE_TRANSFORM_2D_HASH)
-    }
-
-    private const val DIRECTIONAL_LIGHT_CREATE_HASH = 529393457L
-    private val directionalLightCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "directional_light_create", DIRECTIONAL_LIGHT_CREATE_HASH)
-    }
-
-    private const val OMNI_LIGHT_CREATE_HASH = 529393457L
-    private val omniLightCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "omni_light_create", OMNI_LIGHT_CREATE_HASH)
-    }
-
-    private const val SPOT_LIGHT_CREATE_HASH = 529393457L
-    private val spotLightCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "spot_light_create", SPOT_LIGHT_CREATE_HASH)
-    }
-
-    private const val AREA_LIGHT_CREATE_HASH = 529393457L
-    private val areaLightCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "area_light_create", AREA_LIGHT_CREATE_HASH)
-    }
-
-    private const val LIGHT_SET_COLOR_HASH = 2948539648L
-    private val lightSetColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_color", LIGHT_SET_COLOR_HASH)
-    }
-
-    private const val LIGHT_SET_PARAM_HASH = 501936875L
-    private val lightSetParamBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_param", LIGHT_SET_PARAM_HASH)
-    }
-
-    private const val LIGHT_SET_SHADOW_HASH = 1265174801L
-    private val lightSetShadowBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_shadow", LIGHT_SET_SHADOW_HASH)
-    }
-
-    private const val LIGHT_SET_PROJECTOR_HASH = 395945892L
-    private val lightSetProjectorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_projector", LIGHT_SET_PROJECTOR_HASH)
-    }
-
-    private const val LIGHT_SET_NEGATIVE_HASH = 1265174801L
-    private val lightSetNegativeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_negative", LIGHT_SET_NEGATIVE_HASH)
-    }
-
-    private const val LIGHT_SET_CULL_MASK_HASH = 3411492887L
-    private val lightSetCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_cull_mask", LIGHT_SET_CULL_MASK_HASH)
-    }
-
-    private const val LIGHT_SET_DISTANCE_FADE_HASH = 1622292572L
-    private val lightSetDistanceFadeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_distance_fade", LIGHT_SET_DISTANCE_FADE_HASH)
-    }
-
-    private const val LIGHT_SET_REVERSE_CULL_FACE_MODE_HASH = 1265174801L
-    private val lightSetReverseCullFaceModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_reverse_cull_face_mode", LIGHT_SET_REVERSE_CULL_FACE_MODE_HASH)
-    }
-
-    private const val LIGHT_SET_SHADOW_CASTER_MASK_HASH = 3411492887L
-    private val lightSetShadowCasterMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_shadow_caster_mask", LIGHT_SET_SHADOW_CASTER_MASK_HASH)
-    }
-
-    private const val LIGHT_SET_BAKE_MODE_HASH = 1048525260L
-    private val lightSetBakeModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_bake_mode", LIGHT_SET_BAKE_MODE_HASH)
-    }
-
-    private const val LIGHT_SET_MAX_SDFGI_CASCADE_HASH = 3411492887L
-    private val lightSetMaxSdfgiCascadeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_set_max_sdfgi_cascade", LIGHT_SET_MAX_SDFGI_CASCADE_HASH)
-    }
-
-    private const val LIGHT_OMNI_SET_SHADOW_MODE_HASH = 2552677200L
-    private val lightOmniSetShadowModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_omni_set_shadow_mode", LIGHT_OMNI_SET_SHADOW_MODE_HASH)
-    }
-
-    private const val LIGHT_DIRECTIONAL_SET_SHADOW_MODE_HASH = 380462970L
-    private val lightDirectionalSetShadowModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_directional_set_shadow_mode", LIGHT_DIRECTIONAL_SET_SHADOW_MODE_HASH)
-    }
-
-    private const val LIGHT_DIRECTIONAL_SET_BLEND_SPLITS_HASH = 1265174801L
-    private val lightDirectionalSetBlendSplitsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_directional_set_blend_splits", LIGHT_DIRECTIONAL_SET_BLEND_SPLITS_HASH)
-    }
-
-    private const val LIGHT_DIRECTIONAL_SET_SKY_MODE_HASH = 2559740754L
-    private val lightDirectionalSetSkyModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_directional_set_sky_mode", LIGHT_DIRECTIONAL_SET_SKY_MODE_HASH)
-    }
-
-    private const val LIGHT_AREA_SET_SIZE_HASH = 3201125042L
-    private val lightAreaSetSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_area_set_size", LIGHT_AREA_SET_SIZE_HASH)
-    }
-
-    private const val LIGHT_AREA_SET_NORMALIZE_ENERGY_HASH = 1265174801L
-    private val lightAreaSetNormalizeEnergyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_area_set_normalize_energy", LIGHT_AREA_SET_NORMALIZE_ENERGY_HASH)
-    }
-
-    private const val LIGHT_PROJECTORS_SET_FILTER_HASH = 43944325L
-    private val lightProjectorsSetFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "light_projectors_set_filter", LIGHT_PROJECTORS_SET_FILTER_HASH)
-    }
-
-    private const val LIGHTMAPS_SET_BICUBIC_FILTER_HASH = 2586408642L
-    private val lightmapsSetBicubicFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmaps_set_bicubic_filter", LIGHTMAPS_SET_BICUBIC_FILTER_HASH)
-    }
-
-    private const val POSITIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH = 3613045266L
-    private val positionalSoftShadowFilterSetQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "positional_soft_shadow_filter_set_quality", POSITIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH)
-    }
-
-    private const val DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH = 3613045266L
-    private val directionalSoftShadowFilterSetQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "directional_soft_shadow_filter_set_quality", DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH)
-    }
-
-    private const val DIRECTIONAL_SHADOW_ATLAS_SET_SIZE_HASH = 300928843L
-    private val directionalShadowAtlasSetSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "directional_shadow_atlas_set_size", DIRECTIONAL_SHADOW_ATLAS_SET_SIZE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_CREATE_HASH = 529393457L
-    private val reflectionProbeCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_create", REFLECTION_PROBE_CREATE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_UPDATE_MODE_HASH = 3853670147L
-    private val reflectionProbeSetUpdateModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_update_mode", REFLECTION_PROBE_SET_UPDATE_MODE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_INTENSITY_HASH = 1794382983L
-    private val reflectionProbeSetIntensityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_intensity", REFLECTION_PROBE_SET_INTENSITY_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_BLEND_DISTANCE_HASH = 1794382983L
-    private val reflectionProbeSetBlendDistanceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_blend_distance", REFLECTION_PROBE_SET_BLEND_DISTANCE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_AMBIENT_MODE_HASH = 184163074L
-    private val reflectionProbeSetAmbientModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_ambient_mode", REFLECTION_PROBE_SET_AMBIENT_MODE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_AMBIENT_COLOR_HASH = 2948539648L
-    private val reflectionProbeSetAmbientColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_ambient_color", REFLECTION_PROBE_SET_AMBIENT_COLOR_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_AMBIENT_ENERGY_HASH = 1794382983L
-    private val reflectionProbeSetAmbientEnergyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_ambient_energy", REFLECTION_PROBE_SET_AMBIENT_ENERGY_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_MAX_DISTANCE_HASH = 1794382983L
-    private val reflectionProbeSetMaxDistanceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_max_distance", REFLECTION_PROBE_SET_MAX_DISTANCE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_SIZE_HASH = 3227306858L
-    private val reflectionProbeSetSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_size", REFLECTION_PROBE_SET_SIZE_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_ORIGIN_OFFSET_HASH = 3227306858L
-    private val reflectionProbeSetOriginOffsetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_origin_offset", REFLECTION_PROBE_SET_ORIGIN_OFFSET_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_AS_INTERIOR_HASH = 1265174801L
-    private val reflectionProbeSetAsInteriorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_as_interior", REFLECTION_PROBE_SET_AS_INTERIOR_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_ENABLE_BOX_PROJECTION_HASH = 1265174801L
-    private val reflectionProbeSetEnableBoxProjectionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_enable_box_projection", REFLECTION_PROBE_SET_ENABLE_BOX_PROJECTION_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_ENABLE_SHADOWS_HASH = 1265174801L
-    private val reflectionProbeSetEnableShadowsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_enable_shadows", REFLECTION_PROBE_SET_ENABLE_SHADOWS_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_CULL_MASK_HASH = 3411492887L
-    private val reflectionProbeSetCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_cull_mask", REFLECTION_PROBE_SET_CULL_MASK_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_REFLECTION_MASK_HASH = 3411492887L
-    private val reflectionProbeSetReflectionMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_reflection_mask", REFLECTION_PROBE_SET_REFLECTION_MASK_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_RESOLUTION_HASH = 3411492887L
-    private val reflectionProbeSetResolutionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_resolution", REFLECTION_PROBE_SET_RESOLUTION_HASH)
-    }
-
-    private const val REFLECTION_PROBE_SET_MESH_LOD_THRESHOLD_HASH = 1794382983L
-    private val reflectionProbeSetMeshLodThresholdBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_mesh_lod_threshold", REFLECTION_PROBE_SET_MESH_LOD_THRESHOLD_HASH)
-    }
-
-    private const val DECAL_CREATE_HASH = 529393457L
-    private val decalCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_create", DECAL_CREATE_HASH)
-    }
-
-    private const val DECAL_SET_SIZE_HASH = 3227306858L
-    private val decalSetSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_size", DECAL_SET_SIZE_HASH)
-    }
-
-    private const val DECAL_SET_TEXTURE_HASH = 3953344054L
-    private val decalSetTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_texture", DECAL_SET_TEXTURE_HASH)
-    }
-
-    private const val DECAL_SET_EMISSION_ENERGY_HASH = 1794382983L
-    private val decalSetEmissionEnergyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_emission_energy", DECAL_SET_EMISSION_ENERGY_HASH)
-    }
-
-    private const val DECAL_SET_ALBEDO_MIX_HASH = 1794382983L
-    private val decalSetAlbedoMixBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_albedo_mix", DECAL_SET_ALBEDO_MIX_HASH)
-    }
-
-    private const val DECAL_SET_MODULATE_HASH = 2948539648L
-    private val decalSetModulateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_modulate", DECAL_SET_MODULATE_HASH)
-    }
-
-    private const val DECAL_SET_CULL_MASK_HASH = 3411492887L
-    private val decalSetCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_cull_mask", DECAL_SET_CULL_MASK_HASH)
-    }
-
-    private const val DECAL_SET_DISTANCE_FADE_HASH = 2972769666L
-    private val decalSetDistanceFadeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_distance_fade", DECAL_SET_DISTANCE_FADE_HASH)
-    }
-
-    private const val DECAL_SET_FADE_HASH = 2513314492L
-    private val decalSetFadeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_fade", DECAL_SET_FADE_HASH)
-    }
-
-    private const val DECAL_SET_NORMAL_FADE_HASH = 1794382983L
-    private val decalSetNormalFadeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decal_set_normal_fade", DECAL_SET_NORMAL_FADE_HASH)
-    }
-
-    private const val DECALS_SET_FILTER_HASH = 3519875702L
-    private val decalsSetFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "decals_set_filter", DECALS_SET_FILTER_HASH)
-    }
-
-    private const val GI_SET_USE_HALF_RESOLUTION_HASH = 2586408642L
-    private val giSetUseHalfResolutionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "gi_set_use_half_resolution", GI_SET_USE_HALF_RESOLUTION_HASH)
-    }
-
-    private const val VOXEL_GI_CREATE_HASH = 529393457L
-    private val voxelGiCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_create", VOXEL_GI_CREATE_HASH)
-    }
-
-    private const val VOXEL_GI_ALLOCATE_DATA_HASH = 4108223027L
-    private val voxelGiAllocateDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_allocate_data", VOXEL_GI_ALLOCATE_DATA_HASH)
-    }
-
-    private const val VOXEL_GI_GET_OCTREE_SIZE_HASH = 2607699645L
-    private val voxelGiGetOctreeSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_octree_size", VOXEL_GI_GET_OCTREE_SIZE_HASH)
-    }
-
-    private const val VOXEL_GI_GET_OCTREE_CELLS_HASH = 3348040486L
-    private val voxelGiGetOctreeCellsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_octree_cells", VOXEL_GI_GET_OCTREE_CELLS_HASH)
-    }
-
-    private const val VOXEL_GI_GET_DATA_CELLS_HASH = 3348040486L
-    private val voxelGiGetDataCellsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_data_cells", VOXEL_GI_GET_DATA_CELLS_HASH)
-    }
-
-    private const val VOXEL_GI_GET_DISTANCE_FIELD_HASH = 3348040486L
-    private val voxelGiGetDistanceFieldBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_distance_field", VOXEL_GI_GET_DISTANCE_FIELD_HASH)
-    }
-
-    private const val VOXEL_GI_GET_LEVEL_COUNTS_HASH = 788230395L
-    private val voxelGiGetLevelCountsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_level_counts", VOXEL_GI_GET_LEVEL_COUNTS_HASH)
-    }
-
-    private const val VOXEL_GI_GET_TO_CELL_XFORM_HASH = 1128465797L
-    private val voxelGiGetToCellXformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_to_cell_xform", VOXEL_GI_GET_TO_CELL_XFORM_HASH)
-    }
-
-    private const val VOXEL_GI_SET_DYNAMIC_RANGE_HASH = 1794382983L
-    private val voxelGiSetDynamicRangeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_dynamic_range", VOXEL_GI_SET_DYNAMIC_RANGE_HASH)
-    }
-
-    private const val VOXEL_GI_SET_PROPAGATION_HASH = 1794382983L
-    private val voxelGiSetPropagationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_propagation", VOXEL_GI_SET_PROPAGATION_HASH)
-    }
-
-    private const val VOXEL_GI_SET_ENERGY_HASH = 1794382983L
-    private val voxelGiSetEnergyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_energy", VOXEL_GI_SET_ENERGY_HASH)
-    }
-
-    private const val VOXEL_GI_SET_BAKED_EXPOSURE_NORMALIZATION_HASH = 1794382983L
-    private val voxelGiSetBakedExposureNormalizationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_baked_exposure_normalization", VOXEL_GI_SET_BAKED_EXPOSURE_NORMALIZATION_HASH)
-    }
-
-    private const val VOXEL_GI_SET_BIAS_HASH = 1794382983L
-    private val voxelGiSetBiasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_bias", VOXEL_GI_SET_BIAS_HASH)
-    }
-
-    private const val VOXEL_GI_SET_NORMAL_BIAS_HASH = 1794382983L
-    private val voxelGiSetNormalBiasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_normal_bias", VOXEL_GI_SET_NORMAL_BIAS_HASH)
-    }
-
-    private const val VOXEL_GI_SET_INTERIOR_HASH = 1265174801L
-    private val voxelGiSetInteriorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_interior", VOXEL_GI_SET_INTERIOR_HASH)
-    }
-
-    private const val VOXEL_GI_SET_USE_TWO_BOUNCES_HASH = 1265174801L
-    private val voxelGiSetUseTwoBouncesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_use_two_bounces", VOXEL_GI_SET_USE_TWO_BOUNCES_HASH)
-    }
-
-    private const val VOXEL_GI_SET_QUALITY_HASH = 1538689978L
-    private val voxelGiSetQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_quality", VOXEL_GI_SET_QUALITY_HASH)
-    }
-
-    private const val LIGHTMAP_CREATE_HASH = 529393457L
-    private val lightmapCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_create", LIGHTMAP_CREATE_HASH)
-    }
-
-    private const val LIGHTMAP_SET_TEXTURES_HASH = 2646464759L
-    private val lightmapSetTexturesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_textures", LIGHTMAP_SET_TEXTURES_HASH)
-    }
-
-    private const val LIGHTMAP_SET_PROBE_BOUNDS_HASH = 3696536120L
-    private val lightmapSetProbeBoundsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_bounds", LIGHTMAP_SET_PROBE_BOUNDS_HASH)
-    }
-
-    private const val LIGHTMAP_SET_PROBE_INTERIOR_HASH = 1265174801L
-    private val lightmapSetProbeInteriorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_interior", LIGHTMAP_SET_PROBE_INTERIOR_HASH)
-    }
-
-    private const val LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH = 3217845880L
-    private val lightmapSetProbeCaptureDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_data", LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH)
-    }
-
-    private const val LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH = 808965560L
-    private val lightmapGetProbeCapturePointsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_points", LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH)
-    }
-
-    private const val LIGHTMAP_GET_PROBE_CAPTURE_SH_HASH = 1569415609L
-    private val lightmapGetProbeCaptureShBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_sh", LIGHTMAP_GET_PROBE_CAPTURE_SH_HASH)
-    }
-
-    private const val LIGHTMAP_GET_PROBE_CAPTURE_TETRAHEDRA_HASH = 788230395L
-    private val lightmapGetProbeCaptureTetrahedraBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_tetrahedra", LIGHTMAP_GET_PROBE_CAPTURE_TETRAHEDRA_HASH)
-    }
-
-    private const val LIGHTMAP_GET_PROBE_CAPTURE_BSP_TREE_HASH = 788230395L
-    private val lightmapGetProbeCaptureBspTreeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_bsp_tree", LIGHTMAP_GET_PROBE_CAPTURE_BSP_TREE_HASH)
-    }
-
-    private const val LIGHTMAP_SET_BAKED_EXPOSURE_NORMALIZATION_HASH = 1794382983L
-    private val lightmapSetBakedExposureNormalizationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_baked_exposure_normalization", LIGHTMAP_SET_BAKED_EXPOSURE_NORMALIZATION_HASH)
-    }
-
-    private const val LIGHTMAP_SET_PROBE_CAPTURE_UPDATE_SPEED_HASH = 373806689L
-    private val lightmapSetProbeCaptureUpdateSpeedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_update_speed", LIGHTMAP_SET_PROBE_CAPTURE_UPDATE_SPEED_HASH)
-    }
-
-    private const val PARTICLES_CREATE_HASH = 529393457L
-    private val particlesCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_create", PARTICLES_CREATE_HASH)
-    }
-
-    private const val PARTICLES_SET_MODE_HASH = 3492270028L
-    private val particlesSetModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_mode", PARTICLES_SET_MODE_HASH)
-    }
-
-    private const val PARTICLES_SET_EMITTING_HASH = 1265174801L
-    private val particlesSetEmittingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_emitting", PARTICLES_SET_EMITTING_HASH)
-    }
-
-    private const val PARTICLES_GET_EMITTING_HASH = 3521089500L
-    private val particlesGetEmittingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_get_emitting", PARTICLES_GET_EMITTING_HASH)
-    }
-
-    private const val PARTICLES_SET_AMOUNT_HASH = 3411492887L
-    private val particlesSetAmountBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_amount", PARTICLES_SET_AMOUNT_HASH)
-    }
-
-    private const val PARTICLES_SET_AMOUNT_RATIO_HASH = 1794382983L
-    private val particlesSetAmountRatioBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_amount_ratio", PARTICLES_SET_AMOUNT_RATIO_HASH)
-    }
-
-    private const val PARTICLES_SET_LIFETIME_HASH = 1794382983L
-    private val particlesSetLifetimeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_lifetime", PARTICLES_SET_LIFETIME_HASH)
-    }
-
-    private const val PARTICLES_SET_ONE_SHOT_HASH = 1265174801L
-    private val particlesSetOneShotBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_one_shot", PARTICLES_SET_ONE_SHOT_HASH)
-    }
-
-    private const val PARTICLES_SET_PRE_PROCESS_TIME_HASH = 1794382983L
-    private val particlesSetPreProcessTimeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_pre_process_time", PARTICLES_SET_PRE_PROCESS_TIME_HASH)
-    }
-
-    private const val PARTICLES_REQUEST_PROCESS_TIME_HASH = 1515254041L
-    private val particlesRequestProcessTimeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_request_process_time", PARTICLES_REQUEST_PROCESS_TIME_HASH)
-    }
-
-    private const val PARTICLES_SET_EXPLOSIVENESS_RATIO_HASH = 1794382983L
-    private val particlesSetExplosivenessRatioBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_explosiveness_ratio", PARTICLES_SET_EXPLOSIVENESS_RATIO_HASH)
-    }
-
-    private const val PARTICLES_SET_RANDOMNESS_RATIO_HASH = 1794382983L
-    private val particlesSetRandomnessRatioBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_randomness_ratio", PARTICLES_SET_RANDOMNESS_RATIO_HASH)
-    }
-
-    private const val PARTICLES_SET_INTERP_TO_END_HASH = 1794382983L
-    private val particlesSetInterpToEndBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_interp_to_end", PARTICLES_SET_INTERP_TO_END_HASH)
-    }
-
-    private const val PARTICLES_SET_EMITTER_VELOCITY_HASH = 3227306858L
-    private val particlesSetEmitterVelocityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_emitter_velocity", PARTICLES_SET_EMITTER_VELOCITY_HASH)
-    }
-
-    private const val PARTICLES_SET_CUSTOM_AABB_HASH = 3696536120L
-    private val particlesSetCustomAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_custom_aabb", PARTICLES_SET_CUSTOM_AABB_HASH)
-    }
-
-    private const val PARTICLES_SET_SPEED_SCALE_HASH = 1794382983L
-    private val particlesSetSpeedScaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_speed_scale", PARTICLES_SET_SPEED_SCALE_HASH)
-    }
-
-    private const val PARTICLES_SET_USE_LOCAL_COORDINATES_HASH = 1265174801L
-    private val particlesSetUseLocalCoordinatesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_use_local_coordinates", PARTICLES_SET_USE_LOCAL_COORDINATES_HASH)
-    }
-
-    private const val PARTICLES_SET_PROCESS_MATERIAL_HASH = 395945892L
-    private val particlesSetProcessMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_process_material", PARTICLES_SET_PROCESS_MATERIAL_HASH)
-    }
-
-    private const val PARTICLES_SET_FIXED_FPS_HASH = 3411492887L
-    private val particlesSetFixedFpsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_fixed_fps", PARTICLES_SET_FIXED_FPS_HASH)
-    }
-
-    private const val PARTICLES_SET_INTERPOLATE_HASH = 1265174801L
-    private val particlesSetInterpolateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_interpolate", PARTICLES_SET_INTERPOLATE_HASH)
-    }
-
-    private const val PARTICLES_SET_FRACTIONAL_DELTA_HASH = 1265174801L
-    private val particlesSetFractionalDeltaBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_fractional_delta", PARTICLES_SET_FRACTIONAL_DELTA_HASH)
-    }
-
-    private const val PARTICLES_SET_COLLISION_BASE_SIZE_HASH = 1794382983L
-    private val particlesSetCollisionBaseSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_collision_base_size", PARTICLES_SET_COLLISION_BASE_SIZE_HASH)
-    }
-
-    private const val PARTICLES_SET_TRANSFORM_ALIGN_HASH = 3264971368L
-    private val particlesSetTransformAlignBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_transform_align", PARTICLES_SET_TRANSFORM_ALIGN_HASH)
-    }
-
-    private const val PARTICLES_SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH = 1303285813L
-    private val particlesSetTransformAlignChannelFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_transform_align_channel_filter", PARTICLES_SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH)
-    }
-
-    private const val PARTICLES_SET_TRANSFORM_ALIGN_AXIS_HASH = 3065310065L
-    private val particlesSetTransformAlignAxisBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_transform_align_axis", PARTICLES_SET_TRANSFORM_ALIGN_AXIS_HASH)
-    }
-
-    private const val PARTICLES_SET_TRAILS_HASH = 2010054925L
-    private val particlesSetTrailsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_trails", PARTICLES_SET_TRAILS_HASH)
-    }
-
-    private const val PARTICLES_SET_TRAIL_BIND_POSES_HASH = 684822712L
-    private val particlesSetTrailBindPosesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_trail_bind_poses", PARTICLES_SET_TRAIL_BIND_POSES_HASH)
-    }
-
-    private const val PARTICLES_IS_INACTIVE_HASH = 3521089500L
-    private val particlesIsInactiveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_is_inactive", PARTICLES_IS_INACTIVE_HASH)
-    }
-
-    private const val PARTICLES_REQUEST_PROCESS_HASH = 2722037293L
-    private val particlesRequestProcessBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_request_process", PARTICLES_REQUEST_PROCESS_HASH)
-    }
-
-    private const val PARTICLES_RESTART_HASH = 2722037293L
-    private val particlesRestartBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_restart", PARTICLES_RESTART_HASH)
-    }
-
-    private const val PARTICLES_SET_SUBEMITTER_HASH = 395945892L
-    private val particlesSetSubemitterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_subemitter", PARTICLES_SET_SUBEMITTER_HASH)
-    }
-
-    private const val PARTICLES_EMIT_HASH = 4043136117L
-    private val particlesEmitBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_emit", PARTICLES_EMIT_HASH)
-    }
-
-    private const val PARTICLES_SET_DRAW_ORDER_HASH = 935028487L
-    private val particlesSetDrawOrderBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_draw_order", PARTICLES_SET_DRAW_ORDER_HASH)
-    }
-
-    private const val PARTICLES_SET_DRAW_PASSES_HASH = 3411492887L
-    private val particlesSetDrawPassesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_draw_passes", PARTICLES_SET_DRAW_PASSES_HASH)
-    }
-
-    private const val PARTICLES_SET_DRAW_PASS_MESH_HASH = 2310537182L
-    private val particlesSetDrawPassMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_draw_pass_mesh", PARTICLES_SET_DRAW_PASS_MESH_HASH)
-    }
-
-    private const val PARTICLES_GET_CURRENT_AABB_HASH = 3952830260L
-    private val particlesGetCurrentAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_get_current_aabb", PARTICLES_GET_CURRENT_AABB_HASH)
-    }
-
-    private const val PARTICLES_SET_EMISSION_TRANSFORM_HASH = 3935195649L
-    private val particlesSetEmissionTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_set_emission_transform", PARTICLES_SET_EMISSION_TRANSFORM_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_CREATE_HASH = 529393457L
-    private val particlesCollisionCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_create", PARTICLES_COLLISION_CREATE_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_COLLISION_TYPE_HASH = 1497044930L
-    private val particlesCollisionSetCollisionTypeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_collision_type", PARTICLES_COLLISION_SET_COLLISION_TYPE_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_CULL_MASK_HASH = 3411492887L
-    private val particlesCollisionSetCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_cull_mask", PARTICLES_COLLISION_SET_CULL_MASK_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_SPHERE_RADIUS_HASH = 1794382983L
-    private val particlesCollisionSetSphereRadiusBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_sphere_radius", PARTICLES_COLLISION_SET_SPHERE_RADIUS_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_BOX_EXTENTS_HASH = 3227306858L
-    private val particlesCollisionSetBoxExtentsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_box_extents", PARTICLES_COLLISION_SET_BOX_EXTENTS_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_ATTRACTOR_STRENGTH_HASH = 1794382983L
-    private val particlesCollisionSetAttractorStrengthBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_attractor_strength", PARTICLES_COLLISION_SET_ATTRACTOR_STRENGTH_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_ATTRACTOR_DIRECTIONALITY_HASH = 1794382983L
-    private val particlesCollisionSetAttractorDirectionalityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_attractor_directionality", PARTICLES_COLLISION_SET_ATTRACTOR_DIRECTIONALITY_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_ATTRACTOR_ATTENUATION_HASH = 1794382983L
-    private val particlesCollisionSetAttractorAttenuationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_attractor_attenuation", PARTICLES_COLLISION_SET_ATTRACTOR_ATTENUATION_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_FIELD_TEXTURE_HASH = 395945892L
-    private val particlesCollisionSetFieldTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_field_texture", PARTICLES_COLLISION_SET_FIELD_TEXTURE_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_HEIGHT_FIELD_UPDATE_HASH = 2722037293L
-    private val particlesCollisionHeightFieldUpdateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_height_field_update", PARTICLES_COLLISION_HEIGHT_FIELD_UPDATE_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_HEIGHT_FIELD_RESOLUTION_HASH = 962977297L
-    private val particlesCollisionSetHeightFieldResolutionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_height_field_resolution", PARTICLES_COLLISION_SET_HEIGHT_FIELD_RESOLUTION_HASH)
-    }
-
-    private const val PARTICLES_COLLISION_SET_HEIGHT_FIELD_MASK_HASH = 3411492887L
-    private val particlesCollisionSetHeightFieldMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_height_field_mask", PARTICLES_COLLISION_SET_HEIGHT_FIELD_MASK_HASH)
-    }
-
-    private const val FOG_VOLUME_CREATE_HASH = 529393457L
-    private val fogVolumeCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "fog_volume_create", FOG_VOLUME_CREATE_HASH)
-    }
-
-    private const val FOG_VOLUME_SET_SHAPE_HASH = 3818703106L
-    private val fogVolumeSetShapeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "fog_volume_set_shape", FOG_VOLUME_SET_SHAPE_HASH)
-    }
-
-    private const val FOG_VOLUME_SET_SIZE_HASH = 3227306858L
-    private val fogVolumeSetSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "fog_volume_set_size", FOG_VOLUME_SET_SIZE_HASH)
-    }
-
-    private const val FOG_VOLUME_SET_MATERIAL_HASH = 395945892L
-    private val fogVolumeSetMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "fog_volume_set_material", FOG_VOLUME_SET_MATERIAL_HASH)
-    }
-
-    private const val VISIBILITY_NOTIFIER_CREATE_HASH = 529393457L
-    private val visibilityNotifierCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_create", VISIBILITY_NOTIFIER_CREATE_HASH)
-    }
-
-    private const val VISIBILITY_NOTIFIER_SET_AABB_HASH = 3696536120L
-    private val visibilityNotifierSetAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_set_aabb", VISIBILITY_NOTIFIER_SET_AABB_HASH)
-    }
-
-    private const val VISIBILITY_NOTIFIER_SET_CALLBACKS_HASH = 2689735388L
-    private val visibilityNotifierSetCallbacksBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_set_callbacks", VISIBILITY_NOTIFIER_SET_CALLBACKS_HASH)
-    }
-
-    private const val OCCLUDER_CREATE_HASH = 529393457L
-    private val occluderCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "occluder_create", OCCLUDER_CREATE_HASH)
-    }
-
-    private const val OCCLUDER_SET_MESH_HASH = 3854404263L
-    private val occluderSetMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "occluder_set_mesh", OCCLUDER_SET_MESH_HASH)
-    }
-
-    private const val CAMERA_CREATE_HASH = 529393457L
-    private val cameraCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_create", CAMERA_CREATE_HASH)
-    }
-
-    private const val CAMERA_SET_PERSPECTIVE_HASH = 157498339L
-    private val cameraSetPerspectiveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_perspective", CAMERA_SET_PERSPECTIVE_HASH)
-    }
-
-    private const val CAMERA_SET_ORTHOGONAL_HASH = 157498339L
-    private val cameraSetOrthogonalBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_orthogonal", CAMERA_SET_ORTHOGONAL_HASH)
-    }
-
-    private const val CAMERA_SET_FRUSTUM_HASH = 1889878953L
-    private val cameraSetFrustumBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_frustum", CAMERA_SET_FRUSTUM_HASH)
-    }
-
-    private const val CAMERA_SET_TRANSFORM_HASH = 3935195649L
-    private val cameraSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_transform", CAMERA_SET_TRANSFORM_HASH)
-    }
-
-    private const val CAMERA_SET_CULL_MASK_HASH = 3411492887L
-    private val cameraSetCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_cull_mask", CAMERA_SET_CULL_MASK_HASH)
-    }
-
-    private const val CAMERA_SET_ENVIRONMENT_HASH = 395945892L
-    private val cameraSetEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_environment", CAMERA_SET_ENVIRONMENT_HASH)
-    }
-
-    private const val CAMERA_SET_CAMERA_ATTRIBUTES_HASH = 395945892L
-    private val cameraSetCameraAttributesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_camera_attributes", CAMERA_SET_CAMERA_ATTRIBUTES_HASH)
-    }
-
-    private const val CAMERA_SET_COMPOSITOR_HASH = 395945892L
-    private val cameraSetCompositorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_compositor", CAMERA_SET_COMPOSITOR_HASH)
-    }
-
-    private const val CAMERA_SET_USE_VERTICAL_ASPECT_HASH = 1265174801L
-    private val cameraSetUseVerticalAspectBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_set_use_vertical_aspect", CAMERA_SET_USE_VERTICAL_ASPECT_HASH)
-    }
-
-    private const val VIEWPORT_CREATE_HASH = 529393457L
-    private val viewportCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_create", VIEWPORT_CREATE_HASH)
-    }
-
-    private const val VIEWPORT_SET_USE_XR_HASH = 1265174801L
-    private val viewportSetUseXrBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_xr", VIEWPORT_SET_USE_XR_HASH)
-    }
-
-    private const val VIEWPORT_SET_SIZE_HASH = 3313592705L
-    private val viewportSetSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_size", VIEWPORT_SET_SIZE_HASH)
-    }
-
-    private const val VIEWPORT_SET_ACTIVE_HASH = 1265174801L
-    private val viewportSetActiveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_active", VIEWPORT_SET_ACTIVE_HASH)
-    }
-
-    private const val VIEWPORT_SET_PARENT_VIEWPORT_HASH = 395945892L
-    private val viewportSetParentViewportBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_parent_viewport", VIEWPORT_SET_PARENT_VIEWPORT_HASH)
-    }
-
-    private const val VIEWPORT_ATTACH_TO_SCREEN_HASH = 1062245816L
-    private val viewportAttachToScreenBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_attach_to_screen", VIEWPORT_ATTACH_TO_SCREEN_HASH)
-    }
-
-    private const val VIEWPORT_SET_RENDER_DIRECT_TO_SCREEN_HASH = 1265174801L
-    private val viewportSetRenderDirectToScreenBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_render_direct_to_screen", VIEWPORT_SET_RENDER_DIRECT_TO_SCREEN_HASH)
-    }
-
-    private const val VIEWPORT_SET_CANVAS_CULL_MASK_HASH = 3411492887L
-    private val viewportSetCanvasCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_canvas_cull_mask", VIEWPORT_SET_CANVAS_CULL_MASK_HASH)
-    }
-
-    private const val VIEWPORT_SET_SCALING_3D_MODE_HASH = 2386524376L
-    private val viewportSetScaling3dModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_scaling_3d_mode", VIEWPORT_SET_SCALING_3D_MODE_HASH)
-    }
-
-    private const val VIEWPORT_SET_SCALING_3D_SCALE_HASH = 1794382983L
-    private val viewportSetScaling3dScaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_scaling_3d_scale", VIEWPORT_SET_SCALING_3D_SCALE_HASH)
-    }
-
-    private const val VIEWPORT_SET_FSR_SHARPNESS_HASH = 1794382983L
-    private val viewportSetFsrSharpnessBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_fsr_sharpness", VIEWPORT_SET_FSR_SHARPNESS_HASH)
-    }
-
-    private const val VIEWPORT_SET_TEXTURE_MIPMAP_BIAS_HASH = 1794382983L
-    private val viewportSetTextureMipmapBiasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_texture_mipmap_bias", VIEWPORT_SET_TEXTURE_MIPMAP_BIAS_HASH)
-    }
-
-    private const val VIEWPORT_SET_ANISOTROPIC_FILTERING_LEVEL_HASH = 3953214029L
-    private val viewportSetAnisotropicFilteringLevelBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_anisotropic_filtering_level", VIEWPORT_SET_ANISOTROPIC_FILTERING_LEVEL_HASH)
-    }
-
-    private const val VIEWPORT_SET_UPDATE_MODE_HASH = 3161116010L
-    private val viewportSetUpdateModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_update_mode", VIEWPORT_SET_UPDATE_MODE_HASH)
-    }
-
-    private const val VIEWPORT_GET_UPDATE_MODE_HASH = 3803901472L
-    private val viewportGetUpdateModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_get_update_mode", VIEWPORT_GET_UPDATE_MODE_HASH)
-    }
-
-    private const val VIEWPORT_SET_CLEAR_MODE_HASH = 3628367896L
-    private val viewportSetClearModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_clear_mode", VIEWPORT_SET_CLEAR_MODE_HASH)
-    }
-
-    private const val VIEWPORT_GET_RENDER_TARGET_HASH = 3814569979L
-    private val viewportGetRenderTargetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_get_render_target", VIEWPORT_GET_RENDER_TARGET_HASH)
-    }
-
-    private const val VIEWPORT_GET_TEXTURE_HASH = 3814569979L
-    private val viewportGetTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_get_texture", VIEWPORT_GET_TEXTURE_HASH)
-    }
-
-    private const val VIEWPORT_SET_DISABLE_3D_HASH = 1265174801L
-    private val viewportSetDisable3dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_disable_3d", VIEWPORT_SET_DISABLE_3D_HASH)
-    }
-
-    private const val VIEWPORT_SET_DISABLE_2D_HASH = 1265174801L
-    private val viewportSetDisable2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_disable_2d", VIEWPORT_SET_DISABLE_2D_HASH)
-    }
-
-    private const val VIEWPORT_SET_ENVIRONMENT_MODE_HASH = 2196892182L
-    private val viewportSetEnvironmentModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_environment_mode", VIEWPORT_SET_ENVIRONMENT_MODE_HASH)
-    }
-
-    private const val VIEWPORT_ATTACH_CAMERA_HASH = 395945892L
-    private val viewportAttachCameraBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_attach_camera", VIEWPORT_ATTACH_CAMERA_HASH)
-    }
-
-    private const val VIEWPORT_SET_SCENARIO_HASH = 395945892L
-    private val viewportSetScenarioBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_scenario", VIEWPORT_SET_SCENARIO_HASH)
-    }
-
-    private const val VIEWPORT_ATTACH_CANVAS_HASH = 395945892L
-    private val viewportAttachCanvasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_attach_canvas", VIEWPORT_ATTACH_CANVAS_HASH)
-    }
-
-    private const val VIEWPORT_REMOVE_CANVAS_HASH = 395945892L
-    private val viewportRemoveCanvasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_remove_canvas", VIEWPORT_REMOVE_CANVAS_HASH)
-    }
-
-    private const val VIEWPORT_SET_SNAP_2D_TRANSFORMS_TO_PIXEL_HASH = 1265174801L
-    private val viewportSetSnap2dTransformsToPixelBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_snap_2d_transforms_to_pixel", VIEWPORT_SET_SNAP_2D_TRANSFORMS_TO_PIXEL_HASH)
-    }
-
-    private const val VIEWPORT_SET_SNAP_2D_VERTICES_TO_PIXEL_HASH = 1265174801L
-    private val viewportSetSnap2dVerticesToPixelBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_snap_2d_vertices_to_pixel", VIEWPORT_SET_SNAP_2D_VERTICES_TO_PIXEL_HASH)
-    }
-
-    private const val VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH = 1155129294L
-    private val viewportSetDefaultCanvasItemTextureFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_default_canvas_item_texture_filter", VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH)
-    }
-
-    private const val VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH = 1652956681L
-    private val viewportSetDefaultCanvasItemTextureRepeatBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_default_canvas_item_texture_repeat", VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH)
-    }
-
-    private const val VIEWPORT_SET_CANVAS_TRANSFORM_HASH = 3608606053L
-    private val viewportSetCanvasTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_canvas_transform", VIEWPORT_SET_CANVAS_TRANSFORM_HASH)
-    }
-
-    private const val VIEWPORT_SET_CANVAS_STACKING_HASH = 3713930247L
-    private val viewportSetCanvasStackingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_canvas_stacking", VIEWPORT_SET_CANVAS_STACKING_HASH)
-    }
-
-    private const val VIEWPORT_SET_TRANSPARENT_BACKGROUND_HASH = 1265174801L
-    private val viewportSetTransparentBackgroundBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_transparent_background", VIEWPORT_SET_TRANSPARENT_BACKGROUND_HASH)
-    }
-
-    private const val VIEWPORT_SET_GLOBAL_CANVAS_TRANSFORM_HASH = 1246044741L
-    private val viewportSetGlobalCanvasTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_global_canvas_transform", VIEWPORT_SET_GLOBAL_CANVAS_TRANSFORM_HASH)
-    }
-
-    private const val VIEWPORT_SET_SDF_OVERSIZE_AND_SCALE_HASH = 1329198632L
-    private val viewportSetSdfOversizeAndScaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_sdf_oversize_and_scale", VIEWPORT_SET_SDF_OVERSIZE_AND_SCALE_HASH)
-    }
-
-    private const val VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH = 1904426712L
-    private val viewportSetPositionalShadowAtlasSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_positional_shadow_atlas_size", VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH)
-    }
-
-    private const val VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIVISION_HASH = 4288446313L
-    private val viewportSetPositionalShadowAtlasQuadrantSubdivisionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_positional_shadow_atlas_quadrant_subdivision", VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIVISION_HASH)
-    }
-
-    private const val VIEWPORT_SET_MSAA_3D_HASH = 3764433340L
-    private val viewportSetMsaa3dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_msaa_3d", VIEWPORT_SET_MSAA_3D_HASH)
-    }
-
-    private const val VIEWPORT_SET_MSAA_2D_HASH = 3764433340L
-    private val viewportSetMsaa2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_msaa_2d", VIEWPORT_SET_MSAA_2D_HASH)
-    }
-
-    private const val VIEWPORT_SET_USE_HDR_2D_HASH = 1265174801L
-    private val viewportSetUseHdr2dBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_hdr_2d", VIEWPORT_SET_USE_HDR_2D_HASH)
-    }
-
-    private const val VIEWPORT_SET_SCREEN_SPACE_AA_HASH = 1447279591L
-    private val viewportSetScreenSpaceAaBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_screen_space_aa", VIEWPORT_SET_SCREEN_SPACE_AA_HASH)
-    }
-
-    private const val VIEWPORT_SET_USE_TAA_HASH = 1265174801L
-    private val viewportSetUseTaaBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_taa", VIEWPORT_SET_USE_TAA_HASH)
-    }
-
-    private const val VIEWPORT_SET_USE_DEBANDING_HASH = 1265174801L
-    private val viewportSetUseDebandingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_debanding", VIEWPORT_SET_USE_DEBANDING_HASH)
-    }
-
-    private const val VIEWPORT_SET_USE_OCCLUSION_CULLING_HASH = 1265174801L
-    private val viewportSetUseOcclusionCullingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_occlusion_culling", VIEWPORT_SET_USE_OCCLUSION_CULLING_HASH)
-    }
-
-    private const val VIEWPORT_SET_OCCLUSION_RAYS_PER_THREAD_HASH = 1286410249L
-    private val viewportSetOcclusionRaysPerThreadBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_occlusion_rays_per_thread", VIEWPORT_SET_OCCLUSION_RAYS_PER_THREAD_HASH)
-    }
-
-    private const val VIEWPORT_SET_OCCLUSION_CULLING_BUILD_QUALITY_HASH = 2069725696L
-    private val viewportSetOcclusionCullingBuildQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_occlusion_culling_build_quality", VIEWPORT_SET_OCCLUSION_CULLING_BUILD_QUALITY_HASH)
-    }
-
-    private const val VIEWPORT_GET_RENDER_INFO_HASH = 2041262392L
-    private val viewportGetRenderInfoBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_get_render_info", VIEWPORT_GET_RENDER_INFO_HASH)
-    }
-
-    private const val VIEWPORT_SET_DEBUG_DRAW_HASH = 2089420930L
-    private val viewportSetDebugDrawBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_debug_draw", VIEWPORT_SET_DEBUG_DRAW_HASH)
-    }
-
-    private const val VIEWPORT_SET_MEASURE_RENDER_TIME_HASH = 1265174801L
-    private val viewportSetMeasureRenderTimeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_measure_render_time", VIEWPORT_SET_MEASURE_RENDER_TIME_HASH)
-    }
-
-    private const val VIEWPORT_GET_MEASURED_RENDER_TIME_CPU_HASH = 866169185L
-    private val viewportGetMeasuredRenderTimeCpuBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_get_measured_render_time_cpu", VIEWPORT_GET_MEASURED_RENDER_TIME_CPU_HASH)
-    }
-
-    private const val VIEWPORT_GET_MEASURED_RENDER_TIME_GPU_HASH = 866169185L
-    private val viewportGetMeasuredRenderTimeGpuBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_get_measured_render_time_gpu", VIEWPORT_GET_MEASURED_RENDER_TIME_GPU_HASH)
-    }
-
-    private const val VIEWPORT_SET_VRS_MODE_HASH = 398809874L
-    private val viewportSetVrsModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_vrs_mode", VIEWPORT_SET_VRS_MODE_HASH)
-    }
-
-    private const val VIEWPORT_SET_VRS_UPDATE_MODE_HASH = 2696154815L
-    private val viewportSetVrsUpdateModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_vrs_update_mode", VIEWPORT_SET_VRS_UPDATE_MODE_HASH)
-    }
-
-    private const val VIEWPORT_SET_VRS_TEXTURE_HASH = 395945892L
-    private val viewportSetVrsTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "viewport_set_vrs_texture", VIEWPORT_SET_VRS_TEXTURE_HASH)
-    }
-
-    private const val SKY_CREATE_HASH = 529393457L
-    private val skyCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sky_create", SKY_CREATE_HASH)
-    }
-
-    private const val SKY_SET_RADIANCE_SIZE_HASH = 3411492887L
-    private val skySetRadianceSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sky_set_radiance_size", SKY_SET_RADIANCE_SIZE_HASH)
-    }
-
-    private const val SKY_SET_MODE_HASH = 3279019937L
-    private val skySetModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sky_set_mode", SKY_SET_MODE_HASH)
-    }
-
-    private const val SKY_SET_MATERIAL_HASH = 395945892L
-    private val skySetMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sky_set_material", SKY_SET_MATERIAL_HASH)
-    }
-
-    private const val SKY_BAKE_PANORAMA_HASH = 3875285818L
-    private val skyBakePanoramaBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sky_bake_panorama", SKY_BAKE_PANORAMA_HASH)
-    }
-
-    private const val COMPOSITOR_EFFECT_CREATE_HASH = 529393457L
-    private val compositorEffectCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_create", COMPOSITOR_EFFECT_CREATE_HASH)
-    }
-
-    private const val COMPOSITOR_EFFECT_SET_ENABLED_HASH = 1265174801L
-    private val compositorEffectSetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_enabled", COMPOSITOR_EFFECT_SET_ENABLED_HASH)
-    }
-
-    private const val COMPOSITOR_EFFECT_SET_CALLBACK_HASH = 487412485L
-    private val compositorEffectSetCallbackBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_callback", COMPOSITOR_EFFECT_SET_CALLBACK_HASH)
-    }
-
-    private const val COMPOSITOR_EFFECT_SET_FLAG_HASH = 3659527075L
-    private val compositorEffectSetFlagBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_flag", COMPOSITOR_EFFECT_SET_FLAG_HASH)
-    }
-
-    private const val COMPOSITOR_CREATE_HASH = 529393457L
-    private val compositorCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "compositor_create", COMPOSITOR_CREATE_HASH)
-    }
-
-    private const val COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH = 684822712L
-    private val compositorSetCompositorEffectsBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "compositor_set_compositor_effects", COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH)
-    }
-
-    private const val ENVIRONMENT_CREATE_HASH = 529393457L
-    private val environmentCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_create", ENVIRONMENT_CREATE_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_BACKGROUND_HASH = 3937328877L
-    private val environmentSetBackgroundBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_background", ENVIRONMENT_SET_BACKGROUND_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_CAMERA_ID_HASH = 3411492887L
-    private val environmentSetCameraIdBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_camera_id", ENVIRONMENT_SET_CAMERA_ID_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SKY_HASH = 395945892L
-    private val environmentSetSkyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sky", ENVIRONMENT_SET_SKY_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SKY_CUSTOM_FOV_HASH = 1794382983L
-    private val environmentSetSkyCustomFovBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sky_custom_fov", ENVIRONMENT_SET_SKY_CUSTOM_FOV_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SKY_ORIENTATION_HASH = 1735850857L
-    private val environmentSetSkyOrientationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sky_orientation", ENVIRONMENT_SET_SKY_ORIENTATION_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_BG_COLOR_HASH = 2948539648L
-    private val environmentSetBgColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_bg_color", ENVIRONMENT_SET_BG_COLOR_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_BG_ENERGY_HASH = 2513314492L
-    private val environmentSetBgEnergyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_bg_energy", ENVIRONMENT_SET_BG_ENERGY_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_CANVAS_MAX_LAYER_HASH = 3411492887L
-    private val environmentSetCanvasMaxLayerBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_canvas_max_layer", ENVIRONMENT_SET_CANVAS_MAX_LAYER_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_AMBIENT_LIGHT_HASH = 1214961493L
-    private val environmentSetAmbientLightBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ambient_light", ENVIRONMENT_SET_AMBIENT_LIGHT_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_GLOW_HASH = 2421724940L
-    private val environmentSetGlowBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_glow", ENVIRONMENT_SET_GLOW_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_TONEMAP_HASH = 2914312638L
-    private val environmentSetTonemapBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_tonemap", ENVIRONMENT_SET_TONEMAP_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_TONEMAP_AGX_CONTRAST_HASH = 1794382983L
-    private val environmentSetTonemapAgxContrastBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_tonemap_agx_contrast", ENVIRONMENT_SET_TONEMAP_AGX_CONTRAST_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_ADJUSTMENT_HASH = 876799838L
-    private val environmentSetAdjustmentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_adjustment", ENVIRONMENT_SET_ADJUSTMENT_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SSR_HASH = 3607294374L
-    private val environmentSetSsrBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssr", ENVIRONMENT_SET_SSR_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SSAO_HASH = 3994732740L
-    private val environmentSetSsaoBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssao", ENVIRONMENT_SET_SSAO_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_FOG_HASH = 105051629L
-    private val environmentSetFogBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_fog", ENVIRONMENT_SET_FOG_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_FOG_DEPTH_HASH = 157498339L
-    private val environmentSetFogDepthBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_fog_depth", ENVIRONMENT_SET_FOG_DEPTH_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SDFGI_HASH = 3519144388L
-    private val environmentSetSdfgiBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi", ENVIRONMENT_SET_SDFGI_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_VOLUMETRIC_FOG_HASH = 1553633833L
-    private val environmentSetVolumetricFogBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_volumetric_fog", ENVIRONMENT_SET_VOLUMETRIC_FOG_HASH)
-    }
-
-    private const val ENVIRONMENT_GLOW_SET_USE_BICUBIC_UPSCALE_HASH = 2586408642L
-    private val environmentGlowSetUseBicubicUpscaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_glow_set_use_bicubic_upscale", ENVIRONMENT_GLOW_SET_USE_BICUBIC_UPSCALE_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SSR_HALF_SIZE_HASH = 2586408642L
-    private val environmentSetSsrHalfSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssr_half_size", ENVIRONMENT_SET_SSR_HALF_SIZE_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SSR_ROUGHNESS_QUALITY_HASH = 1190026788L
-    private val environmentSetSsrRoughnessQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssr_roughness_quality", ENVIRONMENT_SET_SSR_ROUGHNESS_QUALITY_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SSAO_QUALITY_HASH = 189753569L
-    private val environmentSetSsaoQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssao_quality", ENVIRONMENT_SET_SSAO_QUALITY_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SSIL_QUALITY_HASH = 1713836683L
-    private val environmentSetSsilQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssil_quality", ENVIRONMENT_SET_SSIL_QUALITY_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SDFGI_RAY_COUNT_HASH = 340137951L
-    private val environmentSetSdfgiRayCountBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi_ray_count", ENVIRONMENT_SET_SDFGI_RAY_COUNT_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SDFGI_FRAMES_TO_CONVERGE_HASH = 2182444374L
-    private val environmentSetSdfgiFramesToConvergeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi_frames_to_converge", ENVIRONMENT_SET_SDFGI_FRAMES_TO_CONVERGE_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_SDFGI_FRAMES_TO_UPDATE_LIGHT_HASH = 1251144068L
-    private val environmentSetSdfgiFramesToUpdateLightBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi_frames_to_update_light", ENVIRONMENT_SET_SDFGI_FRAMES_TO_UPDATE_LIGHT_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_VOLUMETRIC_FOG_VOLUME_SIZE_HASH = 3937882851L
-    private val environmentSetVolumetricFogVolumeSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_volumetric_fog_volume_size", ENVIRONMENT_SET_VOLUMETRIC_FOG_VOLUME_SIZE_HASH)
-    }
-
-    private const val ENVIRONMENT_SET_VOLUMETRIC_FOG_FILTER_ACTIVE_HASH = 2586408642L
-    private val environmentSetVolumetricFogFilterActiveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_set_volumetric_fog_filter_active", ENVIRONMENT_SET_VOLUMETRIC_FOG_FILTER_ACTIVE_HASH)
-    }
-
-    private const val ENVIRONMENT_BAKE_PANORAMA_HASH = 2452908646L
-    private val environmentBakePanoramaBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "environment_bake_panorama", ENVIRONMENT_BAKE_PANORAMA_HASH)
-    }
-
-    private const val SCREEN_SPACE_ROUGHNESS_LIMITER_SET_ACTIVE_HASH = 916716790L
-    private val screenSpaceRoughnessLimiterSetActiveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "screen_space_roughness_limiter_set_active", SCREEN_SPACE_ROUGHNESS_LIMITER_SET_ACTIVE_HASH)
-    }
-
-    private const val SUB_SURFACE_SCATTERING_SET_QUALITY_HASH = 64571803L
-    private val subSurfaceScatteringSetQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sub_surface_scattering_set_quality", SUB_SURFACE_SCATTERING_SET_QUALITY_HASH)
-    }
-
-    private const val SUB_SURFACE_SCATTERING_SET_SCALE_HASH = 1017552074L
-    private val subSurfaceScatteringSetScaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "sub_surface_scattering_set_scale", SUB_SURFACE_SCATTERING_SET_SCALE_HASH)
-    }
-
-    private const val CAMERA_ATTRIBUTES_CREATE_HASH = 529393457L
-    private val cameraAttributesCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_create", CAMERA_ATTRIBUTES_CREATE_HASH)
-    }
-
-    private const val CAMERA_ATTRIBUTES_SET_DOF_BLUR_QUALITY_HASH = 2220136795L
-    private val cameraAttributesSetDofBlurQualityBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_dof_blur_quality", CAMERA_ATTRIBUTES_SET_DOF_BLUR_QUALITY_HASH)
-    }
-
-    private const val CAMERA_ATTRIBUTES_SET_DOF_BLUR_BOKEH_SHAPE_HASH = 1205058394L
-    private val cameraAttributesSetDofBlurBokehShapeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_dof_blur_bokeh_shape", CAMERA_ATTRIBUTES_SET_DOF_BLUR_BOKEH_SHAPE_HASH)
-    }
-
-    private const val CAMERA_ATTRIBUTES_SET_DOF_BLUR_HASH = 316272616L
-    private val cameraAttributesSetDofBlurBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_dof_blur", CAMERA_ATTRIBUTES_SET_DOF_BLUR_HASH)
-    }
-
-    private const val CAMERA_ATTRIBUTES_SET_EXPOSURE_HASH = 2513314492L
-    private val cameraAttributesSetExposureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_exposure", CAMERA_ATTRIBUTES_SET_EXPOSURE_HASH)
-    }
-
-    private const val CAMERA_ATTRIBUTES_SET_AUTO_EXPOSURE_HASH = 4266986332L
-    private val cameraAttributesSetAutoExposureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_auto_exposure", CAMERA_ATTRIBUTES_SET_AUTO_EXPOSURE_HASH)
-    }
-
-    private const val SCENARIO_CREATE_HASH = 529393457L
-    private val scenarioCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "scenario_create", SCENARIO_CREATE_HASH)
-    }
-
-    private const val SCENARIO_SET_ENVIRONMENT_HASH = 395945892L
-    private val scenarioSetEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "scenario_set_environment", SCENARIO_SET_ENVIRONMENT_HASH)
-    }
-
-    private const val SCENARIO_SET_FALLBACK_ENVIRONMENT_HASH = 395945892L
-    private val scenarioSetFallbackEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "scenario_set_fallback_environment", SCENARIO_SET_FALLBACK_ENVIRONMENT_HASH)
-    }
-
-    private const val SCENARIO_SET_CAMERA_ATTRIBUTES_HASH = 395945892L
-    private val scenarioSetCameraAttributesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "scenario_set_camera_attributes", SCENARIO_SET_CAMERA_ATTRIBUTES_HASH)
-    }
-
-    private const val SCENARIO_SET_COMPOSITOR_HASH = 395945892L
-    private val scenarioSetCompositorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "scenario_set_compositor", SCENARIO_SET_COMPOSITOR_HASH)
-    }
-
-    private const val INSTANCE_CREATE2_HASH = 746547085L
-    private val instanceCreate2Bind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_create2", INSTANCE_CREATE2_HASH)
-    }
-
-    private const val INSTANCE_CREATE_HASH = 529393457L
-    private val instanceCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_create", INSTANCE_CREATE_HASH)
-    }
-
-    private const val INSTANCE_SET_BASE_HASH = 395945892L
-    private val instanceSetBaseBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_base", INSTANCE_SET_BASE_HASH)
-    }
-
-    private const val INSTANCE_SET_SCENARIO_HASH = 395945892L
-    private val instanceSetScenarioBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_scenario", INSTANCE_SET_SCENARIO_HASH)
-    }
-
-    private const val INSTANCE_SET_LAYER_MASK_HASH = 3411492887L
-    private val instanceSetLayerMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_layer_mask", INSTANCE_SET_LAYER_MASK_HASH)
-    }
-
-    private const val INSTANCE_SET_PIVOT_DATA_HASH = 1280615259L
-    private val instanceSetPivotDataBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_pivot_data", INSTANCE_SET_PIVOT_DATA_HASH)
-    }
-
-    private const val INSTANCE_SET_TRANSFORM_HASH = 3935195649L
-    private val instanceSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_transform", INSTANCE_SET_TRANSFORM_HASH)
-    }
-
-    private const val INSTANCE_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
-    private val instanceAttachObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_attach_object_instance_id", INSTANCE_ATTACH_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val INSTANCE_SET_BLEND_SHAPE_WEIGHT_HASH = 1892459533L
-    private val instanceSetBlendShapeWeightBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_blend_shape_weight", INSTANCE_SET_BLEND_SHAPE_WEIGHT_HASH)
-    }
-
-    private const val INSTANCE_SET_SURFACE_OVERRIDE_MATERIAL_HASH = 2310537182L
-    private val instanceSetSurfaceOverrideMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_surface_override_material", INSTANCE_SET_SURFACE_OVERRIDE_MATERIAL_HASH)
-    }
-
-    private const val INSTANCE_SET_VISIBLE_HASH = 1265174801L
-    private val instanceSetVisibleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_visible", INSTANCE_SET_VISIBLE_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_TRANSPARENCY_HASH = 1794382983L
-    private val instanceGeometrySetTransparencyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_transparency", INSTANCE_GEOMETRY_SET_TRANSPARENCY_HASH)
-    }
-
-    private const val INSTANCE_TELEPORT_HASH = 2722037293L
-    private val instanceTeleportBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_teleport", INSTANCE_TELEPORT_HASH)
-    }
-
-    private const val INSTANCE_SET_CUSTOM_AABB_HASH = 3696536120L
-    private val instanceSetCustomAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_custom_aabb", INSTANCE_SET_CUSTOM_AABB_HASH)
-    }
-
-    private const val INSTANCE_ATTACH_SKELETON_HASH = 395945892L
-    private val instanceAttachSkeletonBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_attach_skeleton", INSTANCE_ATTACH_SKELETON_HASH)
-    }
-
-    private const val INSTANCE_SET_EXTRA_VISIBILITY_MARGIN_HASH = 1794382983L
-    private val instanceSetExtraVisibilityMarginBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_extra_visibility_margin", INSTANCE_SET_EXTRA_VISIBILITY_MARGIN_HASH)
-    }
-
-    private const val INSTANCE_SET_VISIBILITY_PARENT_HASH = 395945892L
-    private val instanceSetVisibilityParentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_visibility_parent", INSTANCE_SET_VISIBILITY_PARENT_HASH)
-    }
-
-    private const val INSTANCE_SET_IGNORE_CULLING_HASH = 1265174801L
-    private val instanceSetIgnoreCullingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_set_ignore_culling", INSTANCE_SET_IGNORE_CULLING_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_FLAG_HASH = 1014989537L
-    private val instanceGeometrySetFlagBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_flag", INSTANCE_GEOMETRY_SET_FLAG_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_CAST_SHADOWS_SETTING_HASH = 3768836020L
-    private val instanceGeometrySetCastShadowsSettingBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_cast_shadows_setting", INSTANCE_GEOMETRY_SET_CAST_SHADOWS_SETTING_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_MATERIAL_OVERRIDE_HASH = 395945892L
-    private val instanceGeometrySetMaterialOverrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_material_override", INSTANCE_GEOMETRY_SET_MATERIAL_OVERRIDE_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_MATERIAL_OVERLAY_HASH = 395945892L
-    private val instanceGeometrySetMaterialOverlayBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_material_overlay", INSTANCE_GEOMETRY_SET_MATERIAL_OVERLAY_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_VISIBILITY_RANGE_HASH = 4263925858L
-    private val instanceGeometrySetVisibilityRangeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_visibility_range", INSTANCE_GEOMETRY_SET_VISIBILITY_RANGE_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_LIGHTMAP_HASH = 536974962L
-    private val instanceGeometrySetLightmapBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_lightmap", INSTANCE_GEOMETRY_SET_LIGHTMAP_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_LOD_BIAS_HASH = 1794382983L
-    private val instanceGeometrySetLodBiasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_lod_bias", INSTANCE_GEOMETRY_SET_LOD_BIAS_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH = 3477296213L
-    private val instanceGeometrySetShaderParameterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_shader_parameter", INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH = 2621281810L
-    private val instanceGeometryGetShaderParameterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
-    private val instanceGeometryGetShaderParameterDefaultValueBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_default_value", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
-    }
-
-    private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
-    private val instanceGeometryGetShaderParameterListBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
-    }
-
-    private const val INSTANCES_CULL_AABB_HASH = 2570105777L
-    private val instancesCullAabbBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instances_cull_aabb", INSTANCES_CULL_AABB_HASH)
-    }
-
-    private const val INSTANCES_CULL_RAY_HASH = 2208759584L
-    private val instancesCullRayBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instances_cull_ray", INSTANCES_CULL_RAY_HASH)
-    }
-
-    private const val INSTANCES_CULL_CONVEX_HASH = 2488539944L
-    private val instancesCullConvexBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "instances_cull_convex", INSTANCES_CULL_CONVEX_HASH)
-    }
-
-    private const val BAKE_RENDER_UV2_HASH = 1904608558L
-    private val bakeRenderUv2Bind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "bake_render_uv2", BAKE_RENDER_UV2_HASH)
-    }
-
-    private const val CANVAS_CREATE_HASH = 529393457L
-    private val canvasCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_create", CANVAS_CREATE_HASH)
-    }
-
-    private const val CANVAS_SET_ITEM_MIRRORING_HASH = 2343975398L
-    private val canvasSetItemMirroringBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_set_item_mirroring", CANVAS_SET_ITEM_MIRRORING_HASH)
-    }
-
-    private const val CANVAS_SET_ITEM_REPEAT_HASH = 1739512717L
-    private val canvasSetItemRepeatBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_set_item_repeat", CANVAS_SET_ITEM_REPEAT_HASH)
-    }
-
-    private const val CANVAS_SET_MODULATE_HASH = 2948539648L
-    private val canvasSetModulateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_set_modulate", CANVAS_SET_MODULATE_HASH)
-    }
-
-    private const val CANVAS_SET_DISABLE_SCALE_HASH = 2586408642L
-    private val canvasSetDisableScaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_set_disable_scale", CANVAS_SET_DISABLE_SCALE_HASH)
-    }
-
-    private const val CANVAS_TEXTURE_CREATE_HASH = 529393457L
-    private val canvasTextureCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_create", CANVAS_TEXTURE_CREATE_HASH)
-    }
-
-    private const val CANVAS_TEXTURE_SET_CHANNEL_HASH = 3822119138L
-    private val canvasTextureSetChannelBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_channel", CANVAS_TEXTURE_SET_CHANNEL_HASH)
-    }
-
-    private const val CANVAS_TEXTURE_SET_SHADING_PARAMETERS_HASH = 2124967469L
-    private val canvasTextureSetShadingParametersBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_shading_parameters", CANVAS_TEXTURE_SET_SHADING_PARAMETERS_HASH)
-    }
-
-    private const val CANVAS_TEXTURE_SET_TEXTURE_FILTER_HASH = 1155129294L
-    private val canvasTextureSetTextureFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_texture_filter", CANVAS_TEXTURE_SET_TEXTURE_FILTER_HASH)
-    }
-
-    private const val CANVAS_TEXTURE_SET_TEXTURE_REPEAT_HASH = 1652956681L
-    private val canvasTextureSetTextureRepeatBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_texture_repeat", CANVAS_TEXTURE_SET_TEXTURE_REPEAT_HASH)
-    }
-
-    private const val CANVAS_ITEM_CREATE_HASH = 529393457L
-    private val canvasItemCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_create", CANVAS_ITEM_CREATE_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_PARENT_HASH = 395945892L
-    private val canvasItemSetParentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_parent", CANVAS_ITEM_SET_PARENT_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_DEFAULT_TEXTURE_FILTER_HASH = 1155129294L
-    private val canvasItemSetDefaultTextureFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_default_texture_filter", CANVAS_ITEM_SET_DEFAULT_TEXTURE_FILTER_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_DEFAULT_TEXTURE_REPEAT_HASH = 1652956681L
-    private val canvasItemSetDefaultTextureRepeatBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_default_texture_repeat", CANVAS_ITEM_SET_DEFAULT_TEXTURE_REPEAT_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_VISIBLE_HASH = 1265174801L
-    private val canvasItemSetVisibleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visible", CANVAS_ITEM_SET_VISIBLE_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_LIGHT_MASK_HASH = 3411492887L
-    private val canvasItemSetLightMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_light_mask", CANVAS_ITEM_SET_LIGHT_MASK_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_VISIBILITY_LAYER_HASH = 3411492887L
-    private val canvasItemSetVisibilityLayerBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visibility_layer", CANVAS_ITEM_SET_VISIBILITY_LAYER_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_TRANSFORM_HASH = 1246044741L
-    private val canvasItemSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_transform", CANVAS_ITEM_SET_TRANSFORM_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_CLIP_HASH = 1265174801L
-    private val canvasItemSetClipBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_clip", CANVAS_ITEM_SET_CLIP_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_DISTANCE_FIELD_MODE_HASH = 1265174801L
-    private val canvasItemSetDistanceFieldModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_distance_field_mode", CANVAS_ITEM_SET_DISTANCE_FIELD_MODE_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_CUSTOM_RECT_HASH = 1333997032L
-    private val canvasItemSetCustomRectBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_custom_rect", CANVAS_ITEM_SET_CUSTOM_RECT_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_MODULATE_HASH = 2948539648L
-    private val canvasItemSetModulateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_modulate", CANVAS_ITEM_SET_MODULATE_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_SELF_MODULATE_HASH = 2948539648L
-    private val canvasItemSetSelfModulateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_self_modulate", CANVAS_ITEM_SET_SELF_MODULATE_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_DRAW_BEHIND_PARENT_HASH = 1265174801L
-    private val canvasItemSetDrawBehindParentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_draw_behind_parent", CANVAS_ITEM_SET_DRAW_BEHIND_PARENT_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_INTERPOLATED_HASH = 1265174801L
-    private val canvasItemSetInterpolatedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_interpolated", CANVAS_ITEM_SET_INTERPOLATED_HASH)
-    }
-
-    private const val CANVAS_ITEM_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
-    private val canvasItemResetPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_reset_physics_interpolation", CANVAS_ITEM_RESET_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val CANVAS_ITEM_TRANSFORM_PHYSICS_INTERPOLATION_HASH = 1246044741L
-    private val canvasItemTransformPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_transform_physics_interpolation", CANVAS_ITEM_TRANSFORM_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_LINE_HASH = 1819681853L
-    private val canvasItemAddLineBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_line", CANVAS_ITEM_ADD_LINE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_POLYLINE_HASH = 3098767073L
-    private val canvasItemAddPolylineBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polyline", CANVAS_ITEM_ADD_POLYLINE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_MULTILINE_HASH = 3098767073L
-    private val canvasItemAddMultilineBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_multiline", CANVAS_ITEM_ADD_MULTILINE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_RECT_HASH = 3523446176L
-    private val canvasItemAddRectBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_rect", CANVAS_ITEM_ADD_RECT_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_CIRCLE_HASH = 333077949L
-    private val canvasItemAddCircleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_circle", CANVAS_ITEM_ADD_CIRCLE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_ELLIPSE_HASH = 4188642757L
-    private val canvasItemAddEllipseBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_ellipse", CANVAS_ITEM_ADD_ELLIPSE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_TEXTURE_RECT_HASH = 324864032L
-    private val canvasItemAddTextureRectBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_texture_rect", CANVAS_ITEM_ADD_TEXTURE_RECT_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_MSDF_TEXTURE_RECT_REGION_HASH = 97408773L
-    private val canvasItemAddMsdfTextureRectRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_msdf_texture_rect_region", CANVAS_ITEM_ADD_MSDF_TEXTURE_RECT_REGION_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_LCD_TEXTURE_RECT_REGION_HASH = 359793297L
-    private val canvasItemAddLcdTextureRectRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_lcd_texture_rect_region", CANVAS_ITEM_ADD_LCD_TEXTURE_RECT_REGION_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_TEXTURE_RECT_REGION_HASH = 485157892L
-    private val canvasItemAddTextureRectRegionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_texture_rect_region", CANVAS_ITEM_ADD_TEXTURE_RECT_REGION_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_NINE_PATCH_HASH = 389957886L
-    private val canvasItemAddNinePatchBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_nine_patch", CANVAS_ITEM_ADD_NINE_PATCH_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_PRIMITIVE_HASH = 3731601077L
-    private val canvasItemAddPrimitiveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_primitive", CANVAS_ITEM_ADD_PRIMITIVE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_POLYGON_HASH = 3580000528L
-    private val canvasItemAddPolygonBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polygon", CANVAS_ITEM_ADD_POLYGON_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH = 660261329L
-    private val canvasItemAddTriangleArrayBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_triangle_array", CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_MESH_HASH = 316450961L
-    private val canvasItemAddMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_mesh", CANVAS_ITEM_ADD_MESH_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_MULTIMESH_HASH = 2131855138L
-    private val canvasItemAddMultimeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_multimesh", CANVAS_ITEM_ADD_MULTIMESH_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_PARTICLES_HASH = 2575754278L
-    private val canvasItemAddParticlesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_particles", CANVAS_ITEM_ADD_PARTICLES_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_SET_TRANSFORM_HASH = 1246044741L
-    private val canvasItemAddSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_set_transform", CANVAS_ITEM_ADD_SET_TRANSFORM_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_CLIP_IGNORE_HASH = 1265174801L
-    private val canvasItemAddClipIgnoreBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_clip_ignore", CANVAS_ITEM_ADD_CLIP_IGNORE_HASH)
-    }
-
-    private const val CANVAS_ITEM_ADD_ANIMATION_SLICE_HASH = 2646834499L
-    private val canvasItemAddAnimationSliceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_animation_slice", CANVAS_ITEM_ADD_ANIMATION_SLICE_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_SORT_CHILDREN_BY_Y_HASH = 1265174801L
-    private val canvasItemSetSortChildrenByYBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_sort_children_by_y", CANVAS_ITEM_SET_SORT_CHILDREN_BY_Y_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_Z_INDEX_HASH = 3411492887L
-    private val canvasItemSetZIndexBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_z_index", CANVAS_ITEM_SET_Z_INDEX_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_Z_AS_RELATIVE_TO_PARENT_HASH = 1265174801L
-    private val canvasItemSetZAsRelativeToParentBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_z_as_relative_to_parent", CANVAS_ITEM_SET_Z_AS_RELATIVE_TO_PARENT_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_COPY_TO_BACKBUFFER_HASH = 2429202503L
-    private val canvasItemSetCopyToBackbufferBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_copy_to_backbuffer", CANVAS_ITEM_SET_COPY_TO_BACKBUFFER_HASH)
-    }
-
-    private const val CANVAS_ITEM_ATTACH_SKELETON_HASH = 395945892L
-    private val canvasItemAttachSkeletonBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_attach_skeleton", CANVAS_ITEM_ATTACH_SKELETON_HASH)
-    }
-
-    private const val CANVAS_ITEM_CLEAR_HASH = 2722037293L
-    private val canvasItemClearBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_clear", CANVAS_ITEM_CLEAR_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_DRAW_INDEX_HASH = 3411492887L
-    private val canvasItemSetDrawIndexBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_draw_index", CANVAS_ITEM_SET_DRAW_INDEX_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_MATERIAL_HASH = 395945892L
-    private val canvasItemSetMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_material", CANVAS_ITEM_SET_MATERIAL_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH = 1265174801L
-    private val canvasItemSetUseParentMaterialBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_use_parent_material", CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH = 3477296213L
-    private val canvasItemSetInstanceShaderParameterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_instance_shader_parameter", CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH)
-    }
-
-    private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH = 2621281810L
-    private val canvasItemGetInstanceShaderParameterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH)
-    }
-
-    private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
-    private val canvasItemGetInstanceShaderParameterDefaultValueBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_default_value", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
-    }
-
-    private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH = 2684255073L
-    private val canvasItemGetInstanceShaderParameterListBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_list", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH = 3568945579L
-    private val canvasItemSetVisibilityNotifierBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visibility_notifier", CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH)
-    }
-
-    private const val CANVAS_ITEM_SET_CANVAS_GROUP_MODE_HASH = 3973586316L
-    private val canvasItemSetCanvasGroupModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_canvas_group_mode", CANVAS_ITEM_SET_CANVAS_GROUP_MODE_HASH)
-    }
-
-    private const val DEBUG_CANVAS_ITEM_GET_RECT_HASH = 624227424L
-    private val debugCanvasItemGetRectBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "debug_canvas_item_get_rect", DEBUG_CANVAS_ITEM_GET_RECT_HASH)
-    }
-
-    private const val CANVAS_LIGHT_CREATE_HASH = 529393457L
-    private val canvasLightCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_create", CANVAS_LIGHT_CREATE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_ATTACH_TO_CANVAS_HASH = 395945892L
-    private val canvasLightAttachToCanvasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_attach_to_canvas", CANVAS_LIGHT_ATTACH_TO_CANVAS_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_ENABLED_HASH = 1265174801L
-    private val canvasLightSetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_enabled", CANVAS_LIGHT_SET_ENABLED_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_TEXTURE_SCALE_HASH = 1794382983L
-    private val canvasLightSetTextureScaleBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_texture_scale", CANVAS_LIGHT_SET_TEXTURE_SCALE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_TRANSFORM_HASH = 1246044741L
-    private val canvasLightSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_transform", CANVAS_LIGHT_SET_TRANSFORM_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_TEXTURE_HASH = 395945892L
-    private val canvasLightSetTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_texture", CANVAS_LIGHT_SET_TEXTURE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_TEXTURE_OFFSET_HASH = 3201125042L
-    private val canvasLightSetTextureOffsetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_texture_offset", CANVAS_LIGHT_SET_TEXTURE_OFFSET_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_COLOR_HASH = 2948539648L
-    private val canvasLightSetColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_color", CANVAS_LIGHT_SET_COLOR_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_HEIGHT_HASH = 1794382983L
-    private val canvasLightSetHeightBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_height", CANVAS_LIGHT_SET_HEIGHT_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_ENERGY_HASH = 1794382983L
-    private val canvasLightSetEnergyBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_energy", CANVAS_LIGHT_SET_ENERGY_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_Z_RANGE_HASH = 4288446313L
-    private val canvasLightSetZRangeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_z_range", CANVAS_LIGHT_SET_Z_RANGE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_LAYER_RANGE_HASH = 4288446313L
-    private val canvasLightSetLayerRangeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_layer_range", CANVAS_LIGHT_SET_LAYER_RANGE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_ITEM_CULL_MASK_HASH = 3411492887L
-    private val canvasLightSetItemCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_item_cull_mask", CANVAS_LIGHT_SET_ITEM_CULL_MASK_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_ITEM_SHADOW_CULL_MASK_HASH = 3411492887L
-    private val canvasLightSetItemShadowCullMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_item_shadow_cull_mask", CANVAS_LIGHT_SET_ITEM_SHADOW_CULL_MASK_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_MODE_HASH = 2957564891L
-    private val canvasLightSetModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_mode", CANVAS_LIGHT_SET_MODE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_SHADOW_ENABLED_HASH = 1265174801L
-    private val canvasLightSetShadowEnabledBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_enabled", CANVAS_LIGHT_SET_SHADOW_ENABLED_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_SHADOW_FILTER_HASH = 393119659L
-    private val canvasLightSetShadowFilterBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_filter", CANVAS_LIGHT_SET_SHADOW_FILTER_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_SHADOW_COLOR_HASH = 2948539648L
-    private val canvasLightSetShadowColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_color", CANVAS_LIGHT_SET_SHADOW_COLOR_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_SHADOW_SMOOTH_HASH = 1794382983L
-    private val canvasLightSetShadowSmoothBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_smooth", CANVAS_LIGHT_SET_SHADOW_SMOOTH_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_BLEND_MODE_HASH = 804895945L
-    private val canvasLightSetBlendModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_blend_mode", CANVAS_LIGHT_SET_BLEND_MODE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_SET_INTERPOLATED_HASH = 1265174801L
-    private val canvasLightSetInterpolatedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_interpolated", CANVAS_LIGHT_SET_INTERPOLATED_HASH)
-    }
-
-    private const val CANVAS_LIGHT_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
-    private val canvasLightResetPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_reset_physics_interpolation", CANVAS_LIGHT_RESET_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val CANVAS_LIGHT_TRANSFORM_PHYSICS_INTERPOLATION_HASH = 1246044741L
-    private val canvasLightTransformPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_transform_physics_interpolation", CANVAS_LIGHT_TRANSFORM_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_CREATE_HASH = 529393457L
-    private val canvasLightOccluderCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_create", CANVAS_LIGHT_OCCLUDER_CREATE_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_ATTACH_TO_CANVAS_HASH = 395945892L
-    private val canvasLightOccluderAttachToCanvasBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_attach_to_canvas", CANVAS_LIGHT_OCCLUDER_ATTACH_TO_CANVAS_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_SET_ENABLED_HASH = 1265174801L
-    private val canvasLightOccluderSetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_enabled", CANVAS_LIGHT_OCCLUDER_SET_ENABLED_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_SET_POLYGON_HASH = 395945892L
-    private val canvasLightOccluderSetPolygonBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_polygon", CANVAS_LIGHT_OCCLUDER_SET_POLYGON_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_SET_AS_SDF_COLLISION_HASH = 1265174801L
-    private val canvasLightOccluderSetAsSdfCollisionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_as_sdf_collision", CANVAS_LIGHT_OCCLUDER_SET_AS_SDF_COLLISION_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_SET_TRANSFORM_HASH = 1246044741L
-    private val canvasLightOccluderSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_transform", CANVAS_LIGHT_OCCLUDER_SET_TRANSFORM_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_SET_LIGHT_MASK_HASH = 3411492887L
-    private val canvasLightOccluderSetLightMaskBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_light_mask", CANVAS_LIGHT_OCCLUDER_SET_LIGHT_MASK_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_SET_INTERPOLATED_HASH = 1265174801L
-    private val canvasLightOccluderSetInterpolatedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_interpolated", CANVAS_LIGHT_OCCLUDER_SET_INTERPOLATED_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
-    private val canvasLightOccluderResetPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_reset_physics_interpolation", CANVAS_LIGHT_OCCLUDER_RESET_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val CANVAS_LIGHT_OCCLUDER_TRANSFORM_PHYSICS_INTERPOLATION_HASH = 1246044741L
-    private val canvasLightOccluderTransformPhysicsInterpolationBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_transform_physics_interpolation", CANVAS_LIGHT_OCCLUDER_TRANSFORM_PHYSICS_INTERPOLATION_HASH)
-    }
-
-    private const val CANVAS_OCCLUDER_POLYGON_CREATE_HASH = 529393457L
-    private val canvasOccluderPolygonCreateBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_create", CANVAS_OCCLUDER_POLYGON_CREATE_HASH)
-    }
-
-    private const val CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH = 2103882027L
-    private val canvasOccluderPolygonSetShapeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_set_shape", CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH)
-    }
-
-    private const val CANVAS_OCCLUDER_POLYGON_SET_CULL_MODE_HASH = 1839404663L
-    private val canvasOccluderPolygonSetCullModeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_set_cull_mode", CANVAS_OCCLUDER_POLYGON_SET_CULL_MODE_HASH)
-    }
-
-    private const val CANVAS_SET_SHADOW_TEXTURE_SIZE_HASH = 1286410249L
-    private val canvasSetShadowTextureSizeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "canvas_set_shadow_texture_size", CANVAS_SET_SHADOW_TEXTURE_SIZE_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_ADD_HASH = 463390080L
-    private val globalShaderParameterAddBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_add", GLOBAL_SHADER_PARAMETER_ADD_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_REMOVE_HASH = 3304788590L
-    private val globalShaderParameterRemoveBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_remove", GLOBAL_SHADER_PARAMETER_REMOVE_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_GET_LIST_HASH = 3995934104L
-    private val globalShaderParameterGetListBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_get_list", GLOBAL_SHADER_PARAMETER_GET_LIST_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_SET_HASH = 3776071444L
-    private val globalShaderParameterSetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_set", GLOBAL_SHADER_PARAMETER_SET_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_SET_OVERRIDE_HASH = 3776071444L
-    private val globalShaderParameterSetOverrideBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_set_override", GLOBAL_SHADER_PARAMETER_SET_OVERRIDE_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_GET_HASH = 2760726917L
-    private val globalShaderParameterGetBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_get", GLOBAL_SHADER_PARAMETER_GET_HASH)
-    }
-
-    private const val GLOBAL_SHADER_PARAMETER_GET_TYPE_HASH = 1601414142L
-    private val globalShaderParameterGetTypeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_get_type", GLOBAL_SHADER_PARAMETER_GET_TYPE_HASH)
-    }
-
-    private const val FREE_RID_HASH = 2722037293L
-    private val freeRidBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "free_rid", FREE_RID_HASH)
-    }
-
-    private const val REQUEST_FRAME_DRAWN_CALLBACK_HASH = 1611583062L
-    private val requestFrameDrawnCallbackBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "request_frame_drawn_callback", REQUEST_FRAME_DRAWN_CALLBACK_HASH)
-    }
-
-    private const val HAS_CHANGED_HASH = 36873697L
-    private val hasChangedBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "has_changed", HAS_CHANGED_HASH)
-    }
-
-    private const val GET_RENDERING_INFO_HASH = 3763192241L
-    private val getRenderingInfoBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_rendering_info", GET_RENDERING_INFO_HASH)
-    }
-
-    private const val GET_VIDEO_ADAPTER_NAME_HASH = 201670096L
-    private val getVideoAdapterNameBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_name", GET_VIDEO_ADAPTER_NAME_HASH)
-    }
-
-    private const val GET_VIDEO_ADAPTER_VENDOR_HASH = 201670096L
-    private val getVideoAdapterVendorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_vendor", GET_VIDEO_ADAPTER_VENDOR_HASH)
-    }
-
-    private const val GET_VIDEO_ADAPTER_TYPE_HASH = 3099547011L
-    private val getVideoAdapterTypeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_type", GET_VIDEO_ADAPTER_TYPE_HASH)
-    }
-
-    private const val GET_VIDEO_ADAPTER_API_VERSION_HASH = 201670096L
-    private val getVideoAdapterApiVersionBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_api_version", GET_VIDEO_ADAPTER_API_VERSION_HASH)
-    }
-
-    private const val GET_CURRENT_RENDERING_DRIVER_NAME_HASH = 201670096L
-    private val getCurrentRenderingDriverNameBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_current_rendering_driver_name", GET_CURRENT_RENDERING_DRIVER_NAME_HASH)
-    }
-
-    private const val GET_CURRENT_RENDERING_METHOD_HASH = 201670096L
-    private val getCurrentRenderingMethodBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_current_rendering_method", GET_CURRENT_RENDERING_METHOD_HASH)
-    }
-
-    private const val MAKE_SPHERE_MESH_HASH = 2251015897L
-    private val makeSphereMeshBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "make_sphere_mesh", MAKE_SPHERE_MESH_HASH)
-    }
-
-    private const val GET_TEST_CUBE_HASH = 529393457L
-    private val getTestCubeBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_test_cube", GET_TEST_CUBE_HASH)
-    }
-
-    private const val GET_TEST_TEXTURE_HASH = 529393457L
-    private val getTestTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_test_texture", GET_TEST_TEXTURE_HASH)
-    }
-
-    private const val GET_WHITE_TEXTURE_HASH = 529393457L
-    private val getWhiteTextureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_white_texture", GET_WHITE_TEXTURE_HASH)
-    }
-
-    private const val SET_BOOT_IMAGE_WITH_STRETCH_HASH = 1104470771L
-    private val setBootImageWithStretchBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "set_boot_image_with_stretch", SET_BOOT_IMAGE_WITH_STRETCH_HASH)
-    }
-
-    private const val SET_BOOT_IMAGE_HASH = 3759744527L
-    private val setBootImageBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "set_boot_image", SET_BOOT_IMAGE_HASH)
-    }
-
-    private const val GET_DEFAULT_CLEAR_COLOR_HASH = 3200896285L
-    private val getDefaultClearColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_default_clear_color", GET_DEFAULT_CLEAR_COLOR_HASH)
-    }
-
-    private const val SET_DEFAULT_CLEAR_COLOR_HASH = 2920490490L
-    private val setDefaultClearColorBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "set_default_clear_color", SET_DEFAULT_CLEAR_COLOR_HASH)
-    }
-
-    private const val HAS_OS_FEATURE_HASH = 3927539163L
-    private val hasOsFeatureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "has_os_feature", HAS_OS_FEATURE_HASH)
-    }
-
-    private const val SET_DEBUG_GENERATE_WIREFRAMES_HASH = 2586408642L
-    private val setDebugGenerateWireframesBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "set_debug_generate_wireframes", SET_DEBUG_GENERATE_WIREFRAMES_HASH)
-    }
-
-    private const val IS_RENDER_LOOP_ENABLED_HASH = 36873697L
-    private val isRenderLoopEnabledBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "is_render_loop_enabled", IS_RENDER_LOOP_ENABLED_HASH)
-    }
-
-    private const val SET_RENDER_LOOP_ENABLED_HASH = 2586408642L
-    private val setRenderLoopEnabledBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "set_render_loop_enabled", SET_RENDER_LOOP_ENABLED_HASH)
-    }
-
-    private const val GET_FRAME_SETUP_TIME_CPU_HASH = 1740695150L
-    private val getFrameSetupTimeCpuBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_frame_setup_time_cpu", GET_FRAME_SETUP_TIME_CPU_HASH)
-    }
-
-    private const val FORCE_SYNC_HASH = 3218959716L
-    private val forceSyncBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "force_sync", FORCE_SYNC_HASH)
-    }
-
-    private const val FORCE_DRAW_HASH = 1076185472L
-    private val forceDrawBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "force_draw", FORCE_DRAW_HASH)
-    }
-
-    private const val GET_RENDERING_DEVICE_HASH = 1405107940L
-    private val getRenderingDeviceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "get_rendering_device", GET_RENDERING_DEVICE_HASH)
-    }
-
-    private const val CREATE_LOCAL_RENDERING_DEVICE_HASH = 1405107940L
-    private val createLocalRenderingDeviceBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "create_local_rendering_device", CREATE_LOCAL_RENDERING_DEVICE_HASH)
-    }
-
-    private const val IS_ON_RENDER_THREAD_HASH = 2240911060L
-    private val isOnRenderThreadBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "is_on_render_thread", IS_ON_RENDER_THREAD_HASH)
-    }
-
-    private const val CALL_ON_RENDER_THREAD_HASH = 1611583062L
-    private val callOnRenderThreadBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "call_on_render_thread", CALL_ON_RENDER_THREAD_HASH)
-    }
-
-    private const val HAS_FEATURE_HASH = 598462696L
-    private val hasFeatureBind by lazy {
-        ObjectCalls.getMethodBind("RenderingServer", "has_feature", HAS_FEATURE_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("RenderingServer")
+
+        private const val TEXTURE_2D_CREATE_HASH = 2010018390L
+        @JvmField
+        val texture2dCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_create", TEXTURE_2D_CREATE_HASH)
+
+        private const val TEXTURE_2D_LAYERED_CREATE_HASH = 913689023L
+        @JvmField
+        val texture2dLayeredCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layered_create", TEXTURE_2D_LAYERED_CREATE_HASH)
+
+        private const val TEXTURE_3D_CREATE_HASH = 4036838706L
+        @JvmField
+        val texture3dCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_3d_create", TEXTURE_3D_CREATE_HASH)
+
+        private const val TEXTURE_PROXY_CREATE_HASH = 41030802L
+        @JvmField
+        val textureProxyCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_proxy_create", TEXTURE_PROXY_CREATE_HASH)
+
+        private const val TEXTURE_CREATE_FROM_NATIVE_HANDLE_HASH = 1682977582L
+        @JvmField
+        val textureCreateFromNativeHandleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_create_from_native_handle", TEXTURE_CREATE_FROM_NATIVE_HANDLE_HASH)
+
+        private const val TEXTURE_DRAWABLE_CREATE_HASH = 1993613667L
+        @JvmField
+        val textureDrawableCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_create", TEXTURE_DRAWABLE_CREATE_HASH)
+
+        private const val TEXTURE_2D_UPDATE_HASH = 999539803L
+        @JvmField
+        val texture2dUpdateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_update", TEXTURE_2D_UPDATE_HASH)
+
+        private const val TEXTURE_3D_UPDATE_HASH = 684822712L
+        @JvmField
+        val texture3dUpdateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_3d_update", TEXTURE_3D_UPDATE_HASH)
+
+        private const val TEXTURE_PROXY_UPDATE_HASH = 395945892L
+        @JvmField
+        val textureProxyUpdateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_proxy_update", TEXTURE_PROXY_UPDATE_HASH)
+
+        private const val TEXTURE_DRAWABLE_BLIT_RECT_HASH = 4077763890L
+        @JvmField
+        val textureDrawableBlitRectBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_blit_rect", TEXTURE_DRAWABLE_BLIT_RECT_HASH)
+
+        private const val TEXTURE_2D_PLACEHOLDER_CREATE_HASH = 529393457L
+        @JvmField
+        val texture2dPlaceholderCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_placeholder_create", TEXTURE_2D_PLACEHOLDER_CREATE_HASH)
+
+        private const val TEXTURE_2D_LAYERED_PLACEHOLDER_CREATE_HASH = 1394585590L
+        @JvmField
+        val texture2dLayeredPlaceholderCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layered_placeholder_create", TEXTURE_2D_LAYERED_PLACEHOLDER_CREATE_HASH)
+
+        private const val TEXTURE_3D_PLACEHOLDER_CREATE_HASH = 529393457L
+        @JvmField
+        val texture3dPlaceholderCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_3d_placeholder_create", TEXTURE_3D_PLACEHOLDER_CREATE_HASH)
+
+        private const val TEXTURE_2D_GET_HASH = 4206205781L
+        @JvmField
+        val texture2dGetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_get", TEXTURE_2D_GET_HASH)
+
+        private const val TEXTURE_2D_LAYER_GET_HASH = 2705440895L
+        @JvmField
+        val texture2dLayerGetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_2d_layer_get", TEXTURE_2D_LAYER_GET_HASH)
+
+        private const val TEXTURE_3D_GET_HASH = 2684255073L
+        @JvmField
+        val texture3dGetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_3d_get", TEXTURE_3D_GET_HASH)
+
+        private const val TEXTURE_DRAWABLE_GENERATE_MIPMAPS_HASH = 2722037293L
+        @JvmField
+        val textureDrawableGenerateMipmapsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_generate_mipmaps", TEXTURE_DRAWABLE_GENERATE_MIPMAPS_HASH)
+
+        private const val TEXTURE_DRAWABLE_GET_DEFAULT_MATERIAL_HASH = 2944877500L
+        @JvmField
+        val textureDrawableGetDefaultMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_drawable_get_default_material", TEXTURE_DRAWABLE_GET_DEFAULT_MATERIAL_HASH)
+
+        private const val TEXTURE_REPLACE_HASH = 395945892L
+        @JvmField
+        val textureReplaceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_replace", TEXTURE_REPLACE_HASH)
+
+        private const val TEXTURE_SET_SIZE_OVERRIDE_HASH = 4288446313L
+        @JvmField
+        val textureSetSizeOverrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_set_size_override", TEXTURE_SET_SIZE_OVERRIDE_HASH)
+
+        private const val TEXTURE_SET_PATH_HASH = 2726140452L
+        @JvmField
+        val textureSetPathBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_set_path", TEXTURE_SET_PATH_HASH)
+
+        private const val TEXTURE_GET_PATH_HASH = 642473191L
+        @JvmField
+        val textureGetPathBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_get_path", TEXTURE_GET_PATH_HASH)
+
+        private const val TEXTURE_GET_FORMAT_HASH = 1932918979L
+        @JvmField
+        val textureGetFormatBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_get_format", TEXTURE_GET_FORMAT_HASH)
+
+        private const val TEXTURE_SET_FORCE_REDRAW_IF_VISIBLE_HASH = 1265174801L
+        @JvmField
+        val textureSetForceRedrawIfVisibleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_set_force_redraw_if_visible", TEXTURE_SET_FORCE_REDRAW_IF_VISIBLE_HASH)
+
+        private const val TEXTURE_RD_CREATE_HASH = 1434128712L
+        @JvmField
+        val textureRdCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_rd_create", TEXTURE_RD_CREATE_HASH)
+
+        private const val TEXTURE_GET_RD_TEXTURE_HASH = 2790148051L
+        @JvmField
+        val textureGetRdTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_get_rd_texture", TEXTURE_GET_RD_TEXTURE_HASH)
+
+        private const val TEXTURE_GET_NATIVE_HANDLE_HASH = 1834114100L
+        @JvmField
+        val textureGetNativeHandleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_get_native_handle", TEXTURE_GET_NATIVE_HANDLE_HASH)
+
+        private const val SHADER_CREATE_HASH = 529393457L
+        @JvmField
+        val shaderCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_create", SHADER_CREATE_HASH)
+
+        private const val SHADER_SET_CODE_HASH = 2726140452L
+        @JvmField
+        val shaderSetCodeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_set_code", SHADER_SET_CODE_HASH)
+
+        private const val SHADER_SET_PATH_HINT_HASH = 2726140452L
+        @JvmField
+        val shaderSetPathHintBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_set_path_hint", SHADER_SET_PATH_HINT_HASH)
+
+        private const val SHADER_GET_CODE_HASH = 642473191L
+        @JvmField
+        val shaderGetCodeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_get_code", SHADER_GET_CODE_HASH)
+
+        private const val GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
+        @JvmField
+        val getShaderParameterListBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_shader_parameter_list", GET_SHADER_PARAMETER_LIST_HASH)
+
+        private const val SHADER_GET_PARAMETER_DEFAULT_HASH = 2621281810L
+        @JvmField
+        val shaderGetParameterDefaultBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_get_parameter_default", SHADER_GET_PARAMETER_DEFAULT_HASH)
+
+        private const val SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH = 4094001817L
+        @JvmField
+        val shaderSetDefaultTextureParameterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_set_default_texture_parameter", SHADER_SET_DEFAULT_TEXTURE_PARAMETER_HASH)
+
+        private const val SHADER_GET_DEFAULT_TEXTURE_PARAMETER_HASH = 1464608890L
+        @JvmField
+        val shaderGetDefaultTextureParameterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "shader_get_default_texture_parameter", SHADER_GET_DEFAULT_TEXTURE_PARAMETER_HASH)
+
+        private const val MATERIAL_CREATE_HASH = 529393457L
+        @JvmField
+        val materialCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_create", MATERIAL_CREATE_HASH)
+
+        private const val MATERIAL_SET_SHADER_HASH = 395945892L
+        @JvmField
+        val materialSetShaderBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_set_shader", MATERIAL_SET_SHADER_HASH)
+
+        private const val MATERIAL_SET_PARAM_HASH = 3477296213L
+        @JvmField
+        val materialSetParamBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_set_param", MATERIAL_SET_PARAM_HASH)
+
+        private const val MATERIAL_GET_PARAM_HASH = 2621281810L
+        @JvmField
+        val materialGetParamBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_get_param", MATERIAL_GET_PARAM_HASH)
+
+        private const val MATERIAL_SET_RENDER_PRIORITY_HASH = 3411492887L
+        @JvmField
+        val materialSetRenderPriorityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_set_render_priority", MATERIAL_SET_RENDER_PRIORITY_HASH)
+
+        private const val MATERIAL_SET_NEXT_PASS_HASH = 395945892L
+        @JvmField
+        val materialSetNextPassBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_set_next_pass", MATERIAL_SET_NEXT_PASS_HASH)
+
+        private const val MATERIAL_SET_USE_DEBANDING_HASH = 2586408642L
+        @JvmField
+        val materialSetUseDebandingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "material_set_use_debanding", MATERIAL_SET_USE_DEBANDING_HASH)
+
+        private const val MESH_CREATE_FROM_SURFACES_HASH = 4291747531L
+        @JvmField
+        val meshCreateFromSurfacesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_create_from_surfaces", MESH_CREATE_FROM_SURFACES_HASH)
+
+        private const val MESH_CREATE_HASH = 529393457L
+        @JvmField
+        val meshCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_create", MESH_CREATE_HASH)
+
+        private const val MESH_SURFACE_GET_FORMAT_OFFSET_HASH = 2981368685L
+        @JvmField
+        val meshSurfaceGetFormatOffsetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_offset", MESH_SURFACE_GET_FORMAT_OFFSET_HASH)
+
+        private const val MESH_SURFACE_GET_FORMAT_VERTEX_STRIDE_HASH = 3188363337L
+        @JvmField
+        val meshSurfaceGetFormatVertexStrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_vertex_stride", MESH_SURFACE_GET_FORMAT_VERTEX_STRIDE_HASH)
+
+        private const val MESH_SURFACE_GET_FORMAT_NORMAL_TANGENT_STRIDE_HASH = 3188363337L
+        @JvmField
+        val meshSurfaceGetFormatNormalTangentStrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_normal_tangent_stride", MESH_SURFACE_GET_FORMAT_NORMAL_TANGENT_STRIDE_HASH)
+
+        private const val MESH_SURFACE_GET_FORMAT_ATTRIBUTE_STRIDE_HASH = 3188363337L
+        @JvmField
+        val meshSurfaceGetFormatAttributeStrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_attribute_stride", MESH_SURFACE_GET_FORMAT_ATTRIBUTE_STRIDE_HASH)
+
+        private const val MESH_SURFACE_GET_FORMAT_SKIN_STRIDE_HASH = 3188363337L
+        @JvmField
+        val meshSurfaceGetFormatSkinStrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_skin_stride", MESH_SURFACE_GET_FORMAT_SKIN_STRIDE_HASH)
+
+        private const val MESH_SURFACE_GET_FORMAT_INDEX_STRIDE_HASH = 3188363337L
+        @JvmField
+        val meshSurfaceGetFormatIndexStrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_format_index_stride", MESH_SURFACE_GET_FORMAT_INDEX_STRIDE_HASH)
+
+        private const val MESH_ADD_SURFACE_HASH = 1217542888L
+        @JvmField
+        val meshAddSurfaceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_add_surface", MESH_ADD_SURFACE_HASH)
+
+        private const val MESH_ADD_SURFACE_FROM_ARRAYS_HASH = 2342446560L
+        @JvmField
+        val meshAddSurfaceFromArraysBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_add_surface_from_arrays", MESH_ADD_SURFACE_FROM_ARRAYS_HASH)
+
+        private const val MESH_GET_BLEND_SHAPE_COUNT_HASH = 2198884583L
+        @JvmField
+        val meshGetBlendShapeCountBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_get_blend_shape_count", MESH_GET_BLEND_SHAPE_COUNT_HASH)
+
+        private const val MESH_SET_BLEND_SHAPE_MODE_HASH = 1294662092L
+        @JvmField
+        val meshSetBlendShapeModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_set_blend_shape_mode", MESH_SET_BLEND_SHAPE_MODE_HASH)
+
+        private const val MESH_GET_BLEND_SHAPE_MODE_HASH = 4282291819L
+        @JvmField
+        val meshGetBlendShapeModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_get_blend_shape_mode", MESH_GET_BLEND_SHAPE_MODE_HASH)
+
+        private const val MESH_SURFACE_SET_MATERIAL_HASH = 2310537182L
+        @JvmField
+        val meshSurfaceSetMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_set_material", MESH_SURFACE_SET_MATERIAL_HASH)
+
+        private const val MESH_SURFACE_GET_MATERIAL_HASH = 1066463050L
+        @JvmField
+        val meshSurfaceGetMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_material", MESH_SURFACE_GET_MATERIAL_HASH)
+
+        private const val MESH_GET_SURFACE_HASH = 186674697L
+        @JvmField
+        val meshGetSurfaceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface", MESH_GET_SURFACE_HASH)
+
+        private const val MESH_SURFACE_GET_ARRAYS_HASH = 1778388067L
+        @JvmField
+        val meshSurfaceGetArraysBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_arrays", MESH_SURFACE_GET_ARRAYS_HASH)
+
+        private const val MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH = 1778388067L
+        @JvmField
+        val meshSurfaceGetBlendShapeArraysBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_blend_shape_arrays", MESH_SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH)
+
+        private const val MESH_GET_SURFACE_COUNT_HASH = 2198884583L
+        @JvmField
+        val meshGetSurfaceCountBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_get_surface_count", MESH_GET_SURFACE_COUNT_HASH)
+
+        private const val MESH_SET_CUSTOM_AABB_HASH = 3696536120L
+        @JvmField
+        val meshSetCustomAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_set_custom_aabb", MESH_SET_CUSTOM_AABB_HASH)
+
+        private const val MESH_GET_CUSTOM_AABB_HASH = 974181306L
+        @JvmField
+        val meshGetCustomAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_get_custom_aabb", MESH_GET_CUSTOM_AABB_HASH)
+
+        private const val MESH_SURFACE_REMOVE_HASH = 3411492887L
+        @JvmField
+        val meshSurfaceRemoveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_remove", MESH_SURFACE_REMOVE_HASH)
+
+        private const val MESH_CLEAR_HASH = 2722037293L
+        @JvmField
+        val meshClearBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_clear", MESH_CLEAR_HASH)
+
+        private const val MESH_SURFACE_UPDATE_VERTEX_REGION_HASH = 2900195149L
+        @JvmField
+        val meshSurfaceUpdateVertexRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_vertex_region", MESH_SURFACE_UPDATE_VERTEX_REGION_HASH)
+
+        private const val MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH = 2900195149L
+        @JvmField
+        val meshSurfaceUpdateAttributeRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_attribute_region", MESH_SURFACE_UPDATE_ATTRIBUTE_REGION_HASH)
+
+        private const val MESH_SURFACE_UPDATE_SKIN_REGION_HASH = 2900195149L
+        @JvmField
+        val meshSurfaceUpdateSkinRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_skin_region", MESH_SURFACE_UPDATE_SKIN_REGION_HASH)
+
+        private const val MESH_SURFACE_UPDATE_INDEX_REGION_HASH = 2900195149L
+        @JvmField
+        val meshSurfaceUpdateIndexRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_index_region", MESH_SURFACE_UPDATE_INDEX_REGION_HASH)
+
+        private const val MESH_SET_SHADOW_MESH_HASH = 395945892L
+        @JvmField
+        val meshSetShadowMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_set_shadow_mesh", MESH_SET_SHADOW_MESH_HASH)
+
+        private const val MULTIMESH_CREATE_HASH = 529393457L
+        @JvmField
+        val multimeshCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_create", MULTIMESH_CREATE_HASH)
+
+        private const val MULTIMESH_ALLOCATE_DATA_HASH = 557240154L
+        @JvmField
+        val multimeshAllocateDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_allocate_data", MULTIMESH_ALLOCATE_DATA_HASH)
+
+        private const val MULTIMESH_GET_INSTANCE_COUNT_HASH = 2198884583L
+        @JvmField
+        val multimeshGetInstanceCountBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_instance_count", MULTIMESH_GET_INSTANCE_COUNT_HASH)
+
+        private const val MULTIMESH_SET_MESH_HASH = 395945892L
+        @JvmField
+        val multimeshSetMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_mesh", MULTIMESH_SET_MESH_HASH)
+
+        private const val MULTIMESH_INSTANCE_SET_TRANSFORM_HASH = 675327471L
+        @JvmField
+        val multimeshInstanceSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_transform", MULTIMESH_INSTANCE_SET_TRANSFORM_HASH)
+
+        private const val MULTIMESH_INSTANCE_SET_TRANSFORM_2D_HASH = 736082694L
+        @JvmField
+        val multimeshInstanceSetTransform2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_transform_2d", MULTIMESH_INSTANCE_SET_TRANSFORM_2D_HASH)
+
+        private const val MULTIMESH_INSTANCE_SET_COLOR_HASH = 176975443L
+        @JvmField
+        val multimeshInstanceSetColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_color", MULTIMESH_INSTANCE_SET_COLOR_HASH)
+
+        private const val MULTIMESH_INSTANCE_SET_CUSTOM_DATA_HASH = 176975443L
+        @JvmField
+        val multimeshInstanceSetCustomDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_set_custom_data", MULTIMESH_INSTANCE_SET_CUSTOM_DATA_HASH)
+
+        private const val MULTIMESH_GET_MESH_HASH = 3814569979L
+        @JvmField
+        val multimeshGetMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_mesh", MULTIMESH_GET_MESH_HASH)
+
+        private const val MULTIMESH_GET_AABB_HASH = 974181306L
+        @JvmField
+        val multimeshGetAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_aabb", MULTIMESH_GET_AABB_HASH)
+
+        private const val MULTIMESH_SET_CUSTOM_AABB_HASH = 3696536120L
+        @JvmField
+        val multimeshSetCustomAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_custom_aabb", MULTIMESH_SET_CUSTOM_AABB_HASH)
+
+        private const val MULTIMESH_GET_CUSTOM_AABB_HASH = 974181306L
+        @JvmField
+        val multimeshGetCustomAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_custom_aabb", MULTIMESH_GET_CUSTOM_AABB_HASH)
+
+        private const val MULTIMESH_INSTANCE_GET_TRANSFORM_HASH = 1050775521L
+        @JvmField
+        val multimeshInstanceGetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_transform", MULTIMESH_INSTANCE_GET_TRANSFORM_HASH)
+
+        private const val MULTIMESH_INSTANCE_GET_TRANSFORM_2D_HASH = 1324854622L
+        @JvmField
+        val multimeshInstanceGetTransform2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_transform_2d", MULTIMESH_INSTANCE_GET_TRANSFORM_2D_HASH)
+
+        private const val MULTIMESH_INSTANCE_GET_COLOR_HASH = 2946315076L
+        @JvmField
+        val multimeshInstanceGetColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_color", MULTIMESH_INSTANCE_GET_COLOR_HASH)
+
+        private const val MULTIMESH_INSTANCE_GET_CUSTOM_DATA_HASH = 2946315076L
+        @JvmField
+        val multimeshInstanceGetCustomDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_get_custom_data", MULTIMESH_INSTANCE_GET_CUSTOM_DATA_HASH)
+
+        private const val MULTIMESH_SET_VISIBLE_INSTANCES_HASH = 3411492887L
+        @JvmField
+        val multimeshSetVisibleInstancesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_visible_instances", MULTIMESH_SET_VISIBLE_INSTANCES_HASH)
+
+        private const val MULTIMESH_GET_VISIBLE_INSTANCES_HASH = 2198884583L
+        @JvmField
+        val multimeshGetVisibleInstancesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_visible_instances", MULTIMESH_GET_VISIBLE_INSTANCES_HASH)
+
+        private const val MULTIMESH_SET_BUFFER_HASH = 2960552364L
+        @JvmField
+        val multimeshSetBufferBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer", MULTIMESH_SET_BUFFER_HASH)
+
+        private const val MULTIMESH_GET_COMMAND_BUFFER_RD_RID_HASH = 3814569979L
+        @JvmField
+        val multimeshGetCommandBufferRdRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_command_buffer_rd_rid", MULTIMESH_GET_COMMAND_BUFFER_RD_RID_HASH)
+
+        private const val MULTIMESH_GET_BUFFER_RD_RID_HASH = 3814569979L
+        @JvmField
+        val multimeshGetBufferRdRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_buffer_rd_rid", MULTIMESH_GET_BUFFER_RD_RID_HASH)
+
+        private const val MULTIMESH_GET_BUFFER_HASH = 3964669176L
+        @JvmField
+        val multimeshGetBufferBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_get_buffer", MULTIMESH_GET_BUFFER_HASH)
+
+        private const val MULTIMESH_SET_BUFFER_INTERPOLATED_HASH = 659844711L
+        @JvmField
+        val multimeshSetBufferInterpolatedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_buffer_interpolated", MULTIMESH_SET_BUFFER_INTERPOLATED_HASH)
+
+        private const val MULTIMESH_SET_PHYSICS_INTERPOLATED_HASH = 1265174801L
+        @JvmField
+        val multimeshSetPhysicsInterpolatedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_physics_interpolated", MULTIMESH_SET_PHYSICS_INTERPOLATED_HASH)
+
+        private const val MULTIMESH_SET_PHYSICS_INTERPOLATION_QUALITY_HASH = 3934808223L
+        @JvmField
+        val multimeshSetPhysicsInterpolationQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_set_physics_interpolation_quality", MULTIMESH_SET_PHYSICS_INTERPOLATION_QUALITY_HASH)
+
+        private const val MULTIMESH_INSTANCE_RESET_PHYSICS_INTERPOLATION_HASH = 3411492887L
+        @JvmField
+        val multimeshInstanceResetPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instance_reset_physics_interpolation", MULTIMESH_INSTANCE_RESET_PHYSICS_INTERPOLATION_HASH)
+
+        private const val MULTIMESH_INSTANCES_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
+        @JvmField
+        val multimeshInstancesResetPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "multimesh_instances_reset_physics_interpolation", MULTIMESH_INSTANCES_RESET_PHYSICS_INTERPOLATION_HASH)
+
+        private const val SKELETON_CREATE_HASH = 529393457L
+        @JvmField
+        val skeletonCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_create", SKELETON_CREATE_HASH)
+
+        private const val SKELETON_ALLOCATE_DATA_HASH = 1904426712L
+        @JvmField
+        val skeletonAllocateDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_allocate_data", SKELETON_ALLOCATE_DATA_HASH)
+
+        private const val SKELETON_GET_BONE_COUNT_HASH = 2198884583L
+        @JvmField
+        val skeletonGetBoneCountBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_get_bone_count", SKELETON_GET_BONE_COUNT_HASH)
+
+        private const val SKELETON_BONE_SET_TRANSFORM_HASH = 675327471L
+        @JvmField
+        val skeletonBoneSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_set_transform", SKELETON_BONE_SET_TRANSFORM_HASH)
+
+        private const val SKELETON_BONE_GET_TRANSFORM_HASH = 1050775521L
+        @JvmField
+        val skeletonBoneGetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_get_transform", SKELETON_BONE_GET_TRANSFORM_HASH)
+
+        private const val SKELETON_BONE_SET_TRANSFORM_2D_HASH = 736082694L
+        @JvmField
+        val skeletonBoneSetTransform2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_set_transform_2d", SKELETON_BONE_SET_TRANSFORM_2D_HASH)
+
+        private const val SKELETON_BONE_GET_TRANSFORM_2D_HASH = 1324854622L
+        @JvmField
+        val skeletonBoneGetTransform2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_bone_get_transform_2d", SKELETON_BONE_GET_TRANSFORM_2D_HASH)
+
+        private const val SKELETON_SET_BASE_TRANSFORM_2D_HASH = 1246044741L
+        @JvmField
+        val skeletonSetBaseTransform2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "skeleton_set_base_transform_2d", SKELETON_SET_BASE_TRANSFORM_2D_HASH)
+
+        private const val DIRECTIONAL_LIGHT_CREATE_HASH = 529393457L
+        @JvmField
+        val directionalLightCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "directional_light_create", DIRECTIONAL_LIGHT_CREATE_HASH)
+
+        private const val OMNI_LIGHT_CREATE_HASH = 529393457L
+        @JvmField
+        val omniLightCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "omni_light_create", OMNI_LIGHT_CREATE_HASH)
+
+        private const val SPOT_LIGHT_CREATE_HASH = 529393457L
+        @JvmField
+        val spotLightCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "spot_light_create", SPOT_LIGHT_CREATE_HASH)
+
+        private const val AREA_LIGHT_CREATE_HASH = 529393457L
+        @JvmField
+        val areaLightCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "area_light_create", AREA_LIGHT_CREATE_HASH)
+
+        private const val LIGHT_SET_COLOR_HASH = 2948539648L
+        @JvmField
+        val lightSetColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_color", LIGHT_SET_COLOR_HASH)
+
+        private const val LIGHT_SET_PARAM_HASH = 501936875L
+        @JvmField
+        val lightSetParamBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_param", LIGHT_SET_PARAM_HASH)
+
+        private const val LIGHT_SET_SHADOW_HASH = 1265174801L
+        @JvmField
+        val lightSetShadowBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_shadow", LIGHT_SET_SHADOW_HASH)
+
+        private const val LIGHT_SET_PROJECTOR_HASH = 395945892L
+        @JvmField
+        val lightSetProjectorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_projector", LIGHT_SET_PROJECTOR_HASH)
+
+        private const val LIGHT_SET_NEGATIVE_HASH = 1265174801L
+        @JvmField
+        val lightSetNegativeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_negative", LIGHT_SET_NEGATIVE_HASH)
+
+        private const val LIGHT_SET_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val lightSetCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_cull_mask", LIGHT_SET_CULL_MASK_HASH)
+
+        private const val LIGHT_SET_DISTANCE_FADE_HASH = 1622292572L
+        @JvmField
+        val lightSetDistanceFadeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_distance_fade", LIGHT_SET_DISTANCE_FADE_HASH)
+
+        private const val LIGHT_SET_REVERSE_CULL_FACE_MODE_HASH = 1265174801L
+        @JvmField
+        val lightSetReverseCullFaceModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_reverse_cull_face_mode", LIGHT_SET_REVERSE_CULL_FACE_MODE_HASH)
+
+        private const val LIGHT_SET_SHADOW_CASTER_MASK_HASH = 3411492887L
+        @JvmField
+        val lightSetShadowCasterMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_shadow_caster_mask", LIGHT_SET_SHADOW_CASTER_MASK_HASH)
+
+        private const val LIGHT_SET_BAKE_MODE_HASH = 1048525260L
+        @JvmField
+        val lightSetBakeModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_bake_mode", LIGHT_SET_BAKE_MODE_HASH)
+
+        private const val LIGHT_SET_MAX_SDFGI_CASCADE_HASH = 3411492887L
+        @JvmField
+        val lightSetMaxSdfgiCascadeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_max_sdfgi_cascade", LIGHT_SET_MAX_SDFGI_CASCADE_HASH)
+
+        private const val LIGHT_OMNI_SET_SHADOW_MODE_HASH = 2552677200L
+        @JvmField
+        val lightOmniSetShadowModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_omni_set_shadow_mode", LIGHT_OMNI_SET_SHADOW_MODE_HASH)
+
+        private const val LIGHT_DIRECTIONAL_SET_SHADOW_MODE_HASH = 380462970L
+        @JvmField
+        val lightDirectionalSetShadowModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_directional_set_shadow_mode", LIGHT_DIRECTIONAL_SET_SHADOW_MODE_HASH)
+
+        private const val LIGHT_DIRECTIONAL_SET_BLEND_SPLITS_HASH = 1265174801L
+        @JvmField
+        val lightDirectionalSetBlendSplitsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_directional_set_blend_splits", LIGHT_DIRECTIONAL_SET_BLEND_SPLITS_HASH)
+
+        private const val LIGHT_DIRECTIONAL_SET_SKY_MODE_HASH = 2559740754L
+        @JvmField
+        val lightDirectionalSetSkyModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_directional_set_sky_mode", LIGHT_DIRECTIONAL_SET_SKY_MODE_HASH)
+
+        private const val LIGHT_AREA_SET_SIZE_HASH = 3201125042L
+        @JvmField
+        val lightAreaSetSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_area_set_size", LIGHT_AREA_SET_SIZE_HASH)
+
+        private const val LIGHT_AREA_SET_NORMALIZE_ENERGY_HASH = 1265174801L
+        @JvmField
+        val lightAreaSetNormalizeEnergyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_area_set_normalize_energy", LIGHT_AREA_SET_NORMALIZE_ENERGY_HASH)
+
+        private const val LIGHT_PROJECTORS_SET_FILTER_HASH = 43944325L
+        @JvmField
+        val lightProjectorsSetFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_projectors_set_filter", LIGHT_PROJECTORS_SET_FILTER_HASH)
+
+        private const val LIGHTMAPS_SET_BICUBIC_FILTER_HASH = 2586408642L
+        @JvmField
+        val lightmapsSetBicubicFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmaps_set_bicubic_filter", LIGHTMAPS_SET_BICUBIC_FILTER_HASH)
+
+        private const val POSITIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH = 3613045266L
+        @JvmField
+        val positionalSoftShadowFilterSetQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "positional_soft_shadow_filter_set_quality", POSITIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH)
+
+        private const val DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH = 3613045266L
+        @JvmField
+        val directionalSoftShadowFilterSetQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "directional_soft_shadow_filter_set_quality", DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY_HASH)
+
+        private const val DIRECTIONAL_SHADOW_ATLAS_SET_SIZE_HASH = 300928843L
+        @JvmField
+        val directionalShadowAtlasSetSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "directional_shadow_atlas_set_size", DIRECTIONAL_SHADOW_ATLAS_SET_SIZE_HASH)
+
+        private const val REFLECTION_PROBE_CREATE_HASH = 529393457L
+        @JvmField
+        val reflectionProbeCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_create", REFLECTION_PROBE_CREATE_HASH)
+
+        private const val REFLECTION_PROBE_SET_UPDATE_MODE_HASH = 3853670147L
+        @JvmField
+        val reflectionProbeSetUpdateModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_update_mode", REFLECTION_PROBE_SET_UPDATE_MODE_HASH)
+
+        private const val REFLECTION_PROBE_SET_INTENSITY_HASH = 1794382983L
+        @JvmField
+        val reflectionProbeSetIntensityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_intensity", REFLECTION_PROBE_SET_INTENSITY_HASH)
+
+        private const val REFLECTION_PROBE_SET_BLEND_DISTANCE_HASH = 1794382983L
+        @JvmField
+        val reflectionProbeSetBlendDistanceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_blend_distance", REFLECTION_PROBE_SET_BLEND_DISTANCE_HASH)
+
+        private const val REFLECTION_PROBE_SET_AMBIENT_MODE_HASH = 184163074L
+        @JvmField
+        val reflectionProbeSetAmbientModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_ambient_mode", REFLECTION_PROBE_SET_AMBIENT_MODE_HASH)
+
+        private const val REFLECTION_PROBE_SET_AMBIENT_COLOR_HASH = 2948539648L
+        @JvmField
+        val reflectionProbeSetAmbientColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_ambient_color", REFLECTION_PROBE_SET_AMBIENT_COLOR_HASH)
+
+        private const val REFLECTION_PROBE_SET_AMBIENT_ENERGY_HASH = 1794382983L
+        @JvmField
+        val reflectionProbeSetAmbientEnergyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_ambient_energy", REFLECTION_PROBE_SET_AMBIENT_ENERGY_HASH)
+
+        private const val REFLECTION_PROBE_SET_MAX_DISTANCE_HASH = 1794382983L
+        @JvmField
+        val reflectionProbeSetMaxDistanceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_max_distance", REFLECTION_PROBE_SET_MAX_DISTANCE_HASH)
+
+        private const val REFLECTION_PROBE_SET_SIZE_HASH = 3227306858L
+        @JvmField
+        val reflectionProbeSetSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_size", REFLECTION_PROBE_SET_SIZE_HASH)
+
+        private const val REFLECTION_PROBE_SET_ORIGIN_OFFSET_HASH = 3227306858L
+        @JvmField
+        val reflectionProbeSetOriginOffsetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_origin_offset", REFLECTION_PROBE_SET_ORIGIN_OFFSET_HASH)
+
+        private const val REFLECTION_PROBE_SET_AS_INTERIOR_HASH = 1265174801L
+        @JvmField
+        val reflectionProbeSetAsInteriorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_as_interior", REFLECTION_PROBE_SET_AS_INTERIOR_HASH)
+
+        private const val REFLECTION_PROBE_SET_ENABLE_BOX_PROJECTION_HASH = 1265174801L
+        @JvmField
+        val reflectionProbeSetEnableBoxProjectionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_enable_box_projection", REFLECTION_PROBE_SET_ENABLE_BOX_PROJECTION_HASH)
+
+        private const val REFLECTION_PROBE_SET_ENABLE_SHADOWS_HASH = 1265174801L
+        @JvmField
+        val reflectionProbeSetEnableShadowsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_enable_shadows", REFLECTION_PROBE_SET_ENABLE_SHADOWS_HASH)
+
+        private const val REFLECTION_PROBE_SET_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val reflectionProbeSetCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_cull_mask", REFLECTION_PROBE_SET_CULL_MASK_HASH)
+
+        private const val REFLECTION_PROBE_SET_REFLECTION_MASK_HASH = 3411492887L
+        @JvmField
+        val reflectionProbeSetReflectionMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_reflection_mask", REFLECTION_PROBE_SET_REFLECTION_MASK_HASH)
+
+        private const val REFLECTION_PROBE_SET_RESOLUTION_HASH = 3411492887L
+        @JvmField
+        val reflectionProbeSetResolutionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_resolution", REFLECTION_PROBE_SET_RESOLUTION_HASH)
+
+        private const val REFLECTION_PROBE_SET_MESH_LOD_THRESHOLD_HASH = 1794382983L
+        @JvmField
+        val reflectionProbeSetMeshLodThresholdBind =
+            ObjectCalls.getMethodBind("RenderingServer", "reflection_probe_set_mesh_lod_threshold", REFLECTION_PROBE_SET_MESH_LOD_THRESHOLD_HASH)
+
+        private const val DECAL_CREATE_HASH = 529393457L
+        @JvmField
+        val decalCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_create", DECAL_CREATE_HASH)
+
+        private const val DECAL_SET_SIZE_HASH = 3227306858L
+        @JvmField
+        val decalSetSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_size", DECAL_SET_SIZE_HASH)
+
+        private const val DECAL_SET_TEXTURE_HASH = 3953344054L
+        @JvmField
+        val decalSetTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_texture", DECAL_SET_TEXTURE_HASH)
+
+        private const val DECAL_SET_EMISSION_ENERGY_HASH = 1794382983L
+        @JvmField
+        val decalSetEmissionEnergyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_emission_energy", DECAL_SET_EMISSION_ENERGY_HASH)
+
+        private const val DECAL_SET_ALBEDO_MIX_HASH = 1794382983L
+        @JvmField
+        val decalSetAlbedoMixBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_albedo_mix", DECAL_SET_ALBEDO_MIX_HASH)
+
+        private const val DECAL_SET_MODULATE_HASH = 2948539648L
+        @JvmField
+        val decalSetModulateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_modulate", DECAL_SET_MODULATE_HASH)
+
+        private const val DECAL_SET_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val decalSetCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_cull_mask", DECAL_SET_CULL_MASK_HASH)
+
+        private const val DECAL_SET_DISTANCE_FADE_HASH = 2972769666L
+        @JvmField
+        val decalSetDistanceFadeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_distance_fade", DECAL_SET_DISTANCE_FADE_HASH)
+
+        private const val DECAL_SET_FADE_HASH = 2513314492L
+        @JvmField
+        val decalSetFadeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_fade", DECAL_SET_FADE_HASH)
+
+        private const val DECAL_SET_NORMAL_FADE_HASH = 1794382983L
+        @JvmField
+        val decalSetNormalFadeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decal_set_normal_fade", DECAL_SET_NORMAL_FADE_HASH)
+
+        private const val DECALS_SET_FILTER_HASH = 3519875702L
+        @JvmField
+        val decalsSetFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "decals_set_filter", DECALS_SET_FILTER_HASH)
+
+        private const val GI_SET_USE_HALF_RESOLUTION_HASH = 2586408642L
+        @JvmField
+        val giSetUseHalfResolutionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "gi_set_use_half_resolution", GI_SET_USE_HALF_RESOLUTION_HASH)
+
+        private const val VOXEL_GI_CREATE_HASH = 529393457L
+        @JvmField
+        val voxelGiCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_create", VOXEL_GI_CREATE_HASH)
+
+        private const val VOXEL_GI_ALLOCATE_DATA_HASH = 4108223027L
+        @JvmField
+        val voxelGiAllocateDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_allocate_data", VOXEL_GI_ALLOCATE_DATA_HASH)
+
+        private const val VOXEL_GI_GET_OCTREE_SIZE_HASH = 2607699645L
+        @JvmField
+        val voxelGiGetOctreeSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_octree_size", VOXEL_GI_GET_OCTREE_SIZE_HASH)
+
+        private const val VOXEL_GI_GET_OCTREE_CELLS_HASH = 3348040486L
+        @JvmField
+        val voxelGiGetOctreeCellsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_octree_cells", VOXEL_GI_GET_OCTREE_CELLS_HASH)
+
+        private const val VOXEL_GI_GET_DATA_CELLS_HASH = 3348040486L
+        @JvmField
+        val voxelGiGetDataCellsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_data_cells", VOXEL_GI_GET_DATA_CELLS_HASH)
+
+        private const val VOXEL_GI_GET_DISTANCE_FIELD_HASH = 3348040486L
+        @JvmField
+        val voxelGiGetDistanceFieldBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_distance_field", VOXEL_GI_GET_DISTANCE_FIELD_HASH)
+
+        private const val VOXEL_GI_GET_LEVEL_COUNTS_HASH = 788230395L
+        @JvmField
+        val voxelGiGetLevelCountsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_level_counts", VOXEL_GI_GET_LEVEL_COUNTS_HASH)
+
+        private const val VOXEL_GI_GET_TO_CELL_XFORM_HASH = 1128465797L
+        @JvmField
+        val voxelGiGetToCellXformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_get_to_cell_xform", VOXEL_GI_GET_TO_CELL_XFORM_HASH)
+
+        private const val VOXEL_GI_SET_DYNAMIC_RANGE_HASH = 1794382983L
+        @JvmField
+        val voxelGiSetDynamicRangeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_dynamic_range", VOXEL_GI_SET_DYNAMIC_RANGE_HASH)
+
+        private const val VOXEL_GI_SET_PROPAGATION_HASH = 1794382983L
+        @JvmField
+        val voxelGiSetPropagationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_propagation", VOXEL_GI_SET_PROPAGATION_HASH)
+
+        private const val VOXEL_GI_SET_ENERGY_HASH = 1794382983L
+        @JvmField
+        val voxelGiSetEnergyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_energy", VOXEL_GI_SET_ENERGY_HASH)
+
+        private const val VOXEL_GI_SET_BAKED_EXPOSURE_NORMALIZATION_HASH = 1794382983L
+        @JvmField
+        val voxelGiSetBakedExposureNormalizationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_baked_exposure_normalization", VOXEL_GI_SET_BAKED_EXPOSURE_NORMALIZATION_HASH)
+
+        private const val VOXEL_GI_SET_BIAS_HASH = 1794382983L
+        @JvmField
+        val voxelGiSetBiasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_bias", VOXEL_GI_SET_BIAS_HASH)
+
+        private const val VOXEL_GI_SET_NORMAL_BIAS_HASH = 1794382983L
+        @JvmField
+        val voxelGiSetNormalBiasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_normal_bias", VOXEL_GI_SET_NORMAL_BIAS_HASH)
+
+        private const val VOXEL_GI_SET_INTERIOR_HASH = 1265174801L
+        @JvmField
+        val voxelGiSetInteriorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_interior", VOXEL_GI_SET_INTERIOR_HASH)
+
+        private const val VOXEL_GI_SET_USE_TWO_BOUNCES_HASH = 1265174801L
+        @JvmField
+        val voxelGiSetUseTwoBouncesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_use_two_bounces", VOXEL_GI_SET_USE_TWO_BOUNCES_HASH)
+
+        private const val VOXEL_GI_SET_QUALITY_HASH = 1538689978L
+        @JvmField
+        val voxelGiSetQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "voxel_gi_set_quality", VOXEL_GI_SET_QUALITY_HASH)
+
+        private const val LIGHTMAP_CREATE_HASH = 529393457L
+        @JvmField
+        val lightmapCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_create", LIGHTMAP_CREATE_HASH)
+
+        private const val LIGHTMAP_SET_TEXTURES_HASH = 2646464759L
+        @JvmField
+        val lightmapSetTexturesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_textures", LIGHTMAP_SET_TEXTURES_HASH)
+
+        private const val LIGHTMAP_SET_PROBE_BOUNDS_HASH = 3696536120L
+        @JvmField
+        val lightmapSetProbeBoundsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_bounds", LIGHTMAP_SET_PROBE_BOUNDS_HASH)
+
+        private const val LIGHTMAP_SET_PROBE_INTERIOR_HASH = 1265174801L
+        @JvmField
+        val lightmapSetProbeInteriorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_interior", LIGHTMAP_SET_PROBE_INTERIOR_HASH)
+
+        private const val LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH = 3217845880L
+        @JvmField
+        val lightmapSetProbeCaptureDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_data", LIGHTMAP_SET_PROBE_CAPTURE_DATA_HASH)
+
+        private const val LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH = 808965560L
+        @JvmField
+        val lightmapGetProbeCapturePointsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_points", LIGHTMAP_GET_PROBE_CAPTURE_POINTS_HASH)
+
+        private const val LIGHTMAP_GET_PROBE_CAPTURE_SH_HASH = 1569415609L
+        @JvmField
+        val lightmapGetProbeCaptureShBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_sh", LIGHTMAP_GET_PROBE_CAPTURE_SH_HASH)
+
+        private const val LIGHTMAP_GET_PROBE_CAPTURE_TETRAHEDRA_HASH = 788230395L
+        @JvmField
+        val lightmapGetProbeCaptureTetrahedraBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_tetrahedra", LIGHTMAP_GET_PROBE_CAPTURE_TETRAHEDRA_HASH)
+
+        private const val LIGHTMAP_GET_PROBE_CAPTURE_BSP_TREE_HASH = 788230395L
+        @JvmField
+        val lightmapGetProbeCaptureBspTreeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_get_probe_capture_bsp_tree", LIGHTMAP_GET_PROBE_CAPTURE_BSP_TREE_HASH)
+
+        private const val LIGHTMAP_SET_BAKED_EXPOSURE_NORMALIZATION_HASH = 1794382983L
+        @JvmField
+        val lightmapSetBakedExposureNormalizationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_baked_exposure_normalization", LIGHTMAP_SET_BAKED_EXPOSURE_NORMALIZATION_HASH)
+
+        private const val LIGHTMAP_SET_PROBE_CAPTURE_UPDATE_SPEED_HASH = 373806689L
+        @JvmField
+        val lightmapSetProbeCaptureUpdateSpeedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "lightmap_set_probe_capture_update_speed", LIGHTMAP_SET_PROBE_CAPTURE_UPDATE_SPEED_HASH)
+
+        private const val PARTICLES_CREATE_HASH = 529393457L
+        @JvmField
+        val particlesCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_create", PARTICLES_CREATE_HASH)
+
+        private const val PARTICLES_SET_MODE_HASH = 3492270028L
+        @JvmField
+        val particlesSetModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_mode", PARTICLES_SET_MODE_HASH)
+
+        private const val PARTICLES_SET_EMITTING_HASH = 1265174801L
+        @JvmField
+        val particlesSetEmittingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_emitting", PARTICLES_SET_EMITTING_HASH)
+
+        private const val PARTICLES_GET_EMITTING_HASH = 3521089500L
+        @JvmField
+        val particlesGetEmittingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_get_emitting", PARTICLES_GET_EMITTING_HASH)
+
+        private const val PARTICLES_SET_AMOUNT_HASH = 3411492887L
+        @JvmField
+        val particlesSetAmountBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_amount", PARTICLES_SET_AMOUNT_HASH)
+
+        private const val PARTICLES_SET_AMOUNT_RATIO_HASH = 1794382983L
+        @JvmField
+        val particlesSetAmountRatioBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_amount_ratio", PARTICLES_SET_AMOUNT_RATIO_HASH)
+
+        private const val PARTICLES_SET_LIFETIME_HASH = 1794382983L
+        @JvmField
+        val particlesSetLifetimeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_lifetime", PARTICLES_SET_LIFETIME_HASH)
+
+        private const val PARTICLES_SET_ONE_SHOT_HASH = 1265174801L
+        @JvmField
+        val particlesSetOneShotBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_one_shot", PARTICLES_SET_ONE_SHOT_HASH)
+
+        private const val PARTICLES_SET_PRE_PROCESS_TIME_HASH = 1794382983L
+        @JvmField
+        val particlesSetPreProcessTimeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_pre_process_time", PARTICLES_SET_PRE_PROCESS_TIME_HASH)
+
+        private const val PARTICLES_REQUEST_PROCESS_TIME_HASH = 1515254041L
+        @JvmField
+        val particlesRequestProcessTimeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_request_process_time", PARTICLES_REQUEST_PROCESS_TIME_HASH)
+
+        private const val PARTICLES_SET_EXPLOSIVENESS_RATIO_HASH = 1794382983L
+        @JvmField
+        val particlesSetExplosivenessRatioBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_explosiveness_ratio", PARTICLES_SET_EXPLOSIVENESS_RATIO_HASH)
+
+        private const val PARTICLES_SET_RANDOMNESS_RATIO_HASH = 1794382983L
+        @JvmField
+        val particlesSetRandomnessRatioBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_randomness_ratio", PARTICLES_SET_RANDOMNESS_RATIO_HASH)
+
+        private const val PARTICLES_SET_INTERP_TO_END_HASH = 1794382983L
+        @JvmField
+        val particlesSetInterpToEndBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_interp_to_end", PARTICLES_SET_INTERP_TO_END_HASH)
+
+        private const val PARTICLES_SET_EMITTER_VELOCITY_HASH = 3227306858L
+        @JvmField
+        val particlesSetEmitterVelocityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_emitter_velocity", PARTICLES_SET_EMITTER_VELOCITY_HASH)
+
+        private const val PARTICLES_SET_CUSTOM_AABB_HASH = 3696536120L
+        @JvmField
+        val particlesSetCustomAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_custom_aabb", PARTICLES_SET_CUSTOM_AABB_HASH)
+
+        private const val PARTICLES_SET_SPEED_SCALE_HASH = 1794382983L
+        @JvmField
+        val particlesSetSpeedScaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_speed_scale", PARTICLES_SET_SPEED_SCALE_HASH)
+
+        private const val PARTICLES_SET_USE_LOCAL_COORDINATES_HASH = 1265174801L
+        @JvmField
+        val particlesSetUseLocalCoordinatesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_use_local_coordinates", PARTICLES_SET_USE_LOCAL_COORDINATES_HASH)
+
+        private const val PARTICLES_SET_PROCESS_MATERIAL_HASH = 395945892L
+        @JvmField
+        val particlesSetProcessMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_process_material", PARTICLES_SET_PROCESS_MATERIAL_HASH)
+
+        private const val PARTICLES_SET_FIXED_FPS_HASH = 3411492887L
+        @JvmField
+        val particlesSetFixedFpsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_fixed_fps", PARTICLES_SET_FIXED_FPS_HASH)
+
+        private const val PARTICLES_SET_INTERPOLATE_HASH = 1265174801L
+        @JvmField
+        val particlesSetInterpolateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_interpolate", PARTICLES_SET_INTERPOLATE_HASH)
+
+        private const val PARTICLES_SET_FRACTIONAL_DELTA_HASH = 1265174801L
+        @JvmField
+        val particlesSetFractionalDeltaBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_fractional_delta", PARTICLES_SET_FRACTIONAL_DELTA_HASH)
+
+        private const val PARTICLES_SET_COLLISION_BASE_SIZE_HASH = 1794382983L
+        @JvmField
+        val particlesSetCollisionBaseSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_collision_base_size", PARTICLES_SET_COLLISION_BASE_SIZE_HASH)
+
+        private const val PARTICLES_SET_TRANSFORM_ALIGN_HASH = 3264971368L
+        @JvmField
+        val particlesSetTransformAlignBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_transform_align", PARTICLES_SET_TRANSFORM_ALIGN_HASH)
+
+        private const val PARTICLES_SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH = 1303285813L
+        @JvmField
+        val particlesSetTransformAlignChannelFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_transform_align_channel_filter", PARTICLES_SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH)
+
+        private const val PARTICLES_SET_TRANSFORM_ALIGN_AXIS_HASH = 3065310065L
+        @JvmField
+        val particlesSetTransformAlignAxisBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_transform_align_axis", PARTICLES_SET_TRANSFORM_ALIGN_AXIS_HASH)
+
+        private const val PARTICLES_SET_TRAILS_HASH = 2010054925L
+        @JvmField
+        val particlesSetTrailsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_trails", PARTICLES_SET_TRAILS_HASH)
+
+        private const val PARTICLES_SET_TRAIL_BIND_POSES_HASH = 684822712L
+        @JvmField
+        val particlesSetTrailBindPosesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_trail_bind_poses", PARTICLES_SET_TRAIL_BIND_POSES_HASH)
+
+        private const val PARTICLES_IS_INACTIVE_HASH = 3521089500L
+        @JvmField
+        val particlesIsInactiveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_is_inactive", PARTICLES_IS_INACTIVE_HASH)
+
+        private const val PARTICLES_REQUEST_PROCESS_HASH = 2722037293L
+        @JvmField
+        val particlesRequestProcessBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_request_process", PARTICLES_REQUEST_PROCESS_HASH)
+
+        private const val PARTICLES_RESTART_HASH = 2722037293L
+        @JvmField
+        val particlesRestartBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_restart", PARTICLES_RESTART_HASH)
+
+        private const val PARTICLES_SET_SUBEMITTER_HASH = 395945892L
+        @JvmField
+        val particlesSetSubemitterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_subemitter", PARTICLES_SET_SUBEMITTER_HASH)
+
+        private const val PARTICLES_EMIT_HASH = 4043136117L
+        @JvmField
+        val particlesEmitBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_emit", PARTICLES_EMIT_HASH)
+
+        private const val PARTICLES_SET_DRAW_ORDER_HASH = 935028487L
+        @JvmField
+        val particlesSetDrawOrderBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_draw_order", PARTICLES_SET_DRAW_ORDER_HASH)
+
+        private const val PARTICLES_SET_DRAW_PASSES_HASH = 3411492887L
+        @JvmField
+        val particlesSetDrawPassesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_draw_passes", PARTICLES_SET_DRAW_PASSES_HASH)
+
+        private const val PARTICLES_SET_DRAW_PASS_MESH_HASH = 2310537182L
+        @JvmField
+        val particlesSetDrawPassMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_draw_pass_mesh", PARTICLES_SET_DRAW_PASS_MESH_HASH)
+
+        private const val PARTICLES_GET_CURRENT_AABB_HASH = 3952830260L
+        @JvmField
+        val particlesGetCurrentAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_get_current_aabb", PARTICLES_GET_CURRENT_AABB_HASH)
+
+        private const val PARTICLES_SET_EMISSION_TRANSFORM_HASH = 3935195649L
+        @JvmField
+        val particlesSetEmissionTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_set_emission_transform", PARTICLES_SET_EMISSION_TRANSFORM_HASH)
+
+        private const val PARTICLES_COLLISION_CREATE_HASH = 529393457L
+        @JvmField
+        val particlesCollisionCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_create", PARTICLES_COLLISION_CREATE_HASH)
+
+        private const val PARTICLES_COLLISION_SET_COLLISION_TYPE_HASH = 1497044930L
+        @JvmField
+        val particlesCollisionSetCollisionTypeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_collision_type", PARTICLES_COLLISION_SET_COLLISION_TYPE_HASH)
+
+        private const val PARTICLES_COLLISION_SET_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val particlesCollisionSetCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_cull_mask", PARTICLES_COLLISION_SET_CULL_MASK_HASH)
+
+        private const val PARTICLES_COLLISION_SET_SPHERE_RADIUS_HASH = 1794382983L
+        @JvmField
+        val particlesCollisionSetSphereRadiusBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_sphere_radius", PARTICLES_COLLISION_SET_SPHERE_RADIUS_HASH)
+
+        private const val PARTICLES_COLLISION_SET_BOX_EXTENTS_HASH = 3227306858L
+        @JvmField
+        val particlesCollisionSetBoxExtentsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_box_extents", PARTICLES_COLLISION_SET_BOX_EXTENTS_HASH)
+
+        private const val PARTICLES_COLLISION_SET_ATTRACTOR_STRENGTH_HASH = 1794382983L
+        @JvmField
+        val particlesCollisionSetAttractorStrengthBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_attractor_strength", PARTICLES_COLLISION_SET_ATTRACTOR_STRENGTH_HASH)
+
+        private const val PARTICLES_COLLISION_SET_ATTRACTOR_DIRECTIONALITY_HASH = 1794382983L
+        @JvmField
+        val particlesCollisionSetAttractorDirectionalityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_attractor_directionality", PARTICLES_COLLISION_SET_ATTRACTOR_DIRECTIONALITY_HASH)
+
+        private const val PARTICLES_COLLISION_SET_ATTRACTOR_ATTENUATION_HASH = 1794382983L
+        @JvmField
+        val particlesCollisionSetAttractorAttenuationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_attractor_attenuation", PARTICLES_COLLISION_SET_ATTRACTOR_ATTENUATION_HASH)
+
+        private const val PARTICLES_COLLISION_SET_FIELD_TEXTURE_HASH = 395945892L
+        @JvmField
+        val particlesCollisionSetFieldTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_field_texture", PARTICLES_COLLISION_SET_FIELD_TEXTURE_HASH)
+
+        private const val PARTICLES_COLLISION_HEIGHT_FIELD_UPDATE_HASH = 2722037293L
+        @JvmField
+        val particlesCollisionHeightFieldUpdateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_height_field_update", PARTICLES_COLLISION_HEIGHT_FIELD_UPDATE_HASH)
+
+        private const val PARTICLES_COLLISION_SET_HEIGHT_FIELD_RESOLUTION_HASH = 962977297L
+        @JvmField
+        val particlesCollisionSetHeightFieldResolutionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_height_field_resolution", PARTICLES_COLLISION_SET_HEIGHT_FIELD_RESOLUTION_HASH)
+
+        private const val PARTICLES_COLLISION_SET_HEIGHT_FIELD_MASK_HASH = 3411492887L
+        @JvmField
+        val particlesCollisionSetHeightFieldMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "particles_collision_set_height_field_mask", PARTICLES_COLLISION_SET_HEIGHT_FIELD_MASK_HASH)
+
+        private const val FOG_VOLUME_CREATE_HASH = 529393457L
+        @JvmField
+        val fogVolumeCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "fog_volume_create", FOG_VOLUME_CREATE_HASH)
+
+        private const val FOG_VOLUME_SET_SHAPE_HASH = 3818703106L
+        @JvmField
+        val fogVolumeSetShapeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "fog_volume_set_shape", FOG_VOLUME_SET_SHAPE_HASH)
+
+        private const val FOG_VOLUME_SET_SIZE_HASH = 3227306858L
+        @JvmField
+        val fogVolumeSetSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "fog_volume_set_size", FOG_VOLUME_SET_SIZE_HASH)
+
+        private const val FOG_VOLUME_SET_MATERIAL_HASH = 395945892L
+        @JvmField
+        val fogVolumeSetMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "fog_volume_set_material", FOG_VOLUME_SET_MATERIAL_HASH)
+
+        private const val VISIBILITY_NOTIFIER_CREATE_HASH = 529393457L
+        @JvmField
+        val visibilityNotifierCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_create", VISIBILITY_NOTIFIER_CREATE_HASH)
+
+        private const val VISIBILITY_NOTIFIER_SET_AABB_HASH = 3696536120L
+        @JvmField
+        val visibilityNotifierSetAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_set_aabb", VISIBILITY_NOTIFIER_SET_AABB_HASH)
+
+        private const val VISIBILITY_NOTIFIER_SET_CALLBACKS_HASH = 2689735388L
+        @JvmField
+        val visibilityNotifierSetCallbacksBind =
+            ObjectCalls.getMethodBind("RenderingServer", "visibility_notifier_set_callbacks", VISIBILITY_NOTIFIER_SET_CALLBACKS_HASH)
+
+        private const val OCCLUDER_CREATE_HASH = 529393457L
+        @JvmField
+        val occluderCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "occluder_create", OCCLUDER_CREATE_HASH)
+
+        private const val OCCLUDER_SET_MESH_HASH = 3854404263L
+        @JvmField
+        val occluderSetMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "occluder_set_mesh", OCCLUDER_SET_MESH_HASH)
+
+        private const val CAMERA_CREATE_HASH = 529393457L
+        @JvmField
+        val cameraCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_create", CAMERA_CREATE_HASH)
+
+        private const val CAMERA_SET_PERSPECTIVE_HASH = 157498339L
+        @JvmField
+        val cameraSetPerspectiveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_perspective", CAMERA_SET_PERSPECTIVE_HASH)
+
+        private const val CAMERA_SET_ORTHOGONAL_HASH = 157498339L
+        @JvmField
+        val cameraSetOrthogonalBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_orthogonal", CAMERA_SET_ORTHOGONAL_HASH)
+
+        private const val CAMERA_SET_FRUSTUM_HASH = 1889878953L
+        @JvmField
+        val cameraSetFrustumBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_frustum", CAMERA_SET_FRUSTUM_HASH)
+
+        private const val CAMERA_SET_TRANSFORM_HASH = 3935195649L
+        @JvmField
+        val cameraSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_transform", CAMERA_SET_TRANSFORM_HASH)
+
+        private const val CAMERA_SET_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val cameraSetCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_cull_mask", CAMERA_SET_CULL_MASK_HASH)
+
+        private const val CAMERA_SET_ENVIRONMENT_HASH = 395945892L
+        @JvmField
+        val cameraSetEnvironmentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_environment", CAMERA_SET_ENVIRONMENT_HASH)
+
+        private const val CAMERA_SET_CAMERA_ATTRIBUTES_HASH = 395945892L
+        @JvmField
+        val cameraSetCameraAttributesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_camera_attributes", CAMERA_SET_CAMERA_ATTRIBUTES_HASH)
+
+        private const val CAMERA_SET_COMPOSITOR_HASH = 395945892L
+        @JvmField
+        val cameraSetCompositorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_compositor", CAMERA_SET_COMPOSITOR_HASH)
+
+        private const val CAMERA_SET_USE_VERTICAL_ASPECT_HASH = 1265174801L
+        @JvmField
+        val cameraSetUseVerticalAspectBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_use_vertical_aspect", CAMERA_SET_USE_VERTICAL_ASPECT_HASH)
+
+        private const val VIEWPORT_CREATE_HASH = 529393457L
+        @JvmField
+        val viewportCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_create", VIEWPORT_CREATE_HASH)
+
+        private const val VIEWPORT_SET_USE_XR_HASH = 1265174801L
+        @JvmField
+        val viewportSetUseXrBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_xr", VIEWPORT_SET_USE_XR_HASH)
+
+        private const val VIEWPORT_SET_SIZE_HASH = 3313592705L
+        @JvmField
+        val viewportSetSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_size", VIEWPORT_SET_SIZE_HASH)
+
+        private const val VIEWPORT_SET_ACTIVE_HASH = 1265174801L
+        @JvmField
+        val viewportSetActiveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_active", VIEWPORT_SET_ACTIVE_HASH)
+
+        private const val VIEWPORT_SET_PARENT_VIEWPORT_HASH = 395945892L
+        @JvmField
+        val viewportSetParentViewportBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_parent_viewport", VIEWPORT_SET_PARENT_VIEWPORT_HASH)
+
+        private const val VIEWPORT_ATTACH_TO_SCREEN_HASH = 1062245816L
+        @JvmField
+        val viewportAttachToScreenBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_attach_to_screen", VIEWPORT_ATTACH_TO_SCREEN_HASH)
+
+        private const val VIEWPORT_SET_RENDER_DIRECT_TO_SCREEN_HASH = 1265174801L
+        @JvmField
+        val viewportSetRenderDirectToScreenBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_render_direct_to_screen", VIEWPORT_SET_RENDER_DIRECT_TO_SCREEN_HASH)
+
+        private const val VIEWPORT_SET_CANVAS_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val viewportSetCanvasCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_canvas_cull_mask", VIEWPORT_SET_CANVAS_CULL_MASK_HASH)
+
+        private const val VIEWPORT_SET_SCALING_3D_MODE_HASH = 2386524376L
+        @JvmField
+        val viewportSetScaling3dModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_scaling_3d_mode", VIEWPORT_SET_SCALING_3D_MODE_HASH)
+
+        private const val VIEWPORT_SET_SCALING_3D_SCALE_HASH = 1794382983L
+        @JvmField
+        val viewportSetScaling3dScaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_scaling_3d_scale", VIEWPORT_SET_SCALING_3D_SCALE_HASH)
+
+        private const val VIEWPORT_SET_FSR_SHARPNESS_HASH = 1794382983L
+        @JvmField
+        val viewportSetFsrSharpnessBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_fsr_sharpness", VIEWPORT_SET_FSR_SHARPNESS_HASH)
+
+        private const val VIEWPORT_SET_TEXTURE_MIPMAP_BIAS_HASH = 1794382983L
+        @JvmField
+        val viewportSetTextureMipmapBiasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_texture_mipmap_bias", VIEWPORT_SET_TEXTURE_MIPMAP_BIAS_HASH)
+
+        private const val VIEWPORT_SET_ANISOTROPIC_FILTERING_LEVEL_HASH = 3953214029L
+        @JvmField
+        val viewportSetAnisotropicFilteringLevelBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_anisotropic_filtering_level", VIEWPORT_SET_ANISOTROPIC_FILTERING_LEVEL_HASH)
+
+        private const val VIEWPORT_SET_UPDATE_MODE_HASH = 3161116010L
+        @JvmField
+        val viewportSetUpdateModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_update_mode", VIEWPORT_SET_UPDATE_MODE_HASH)
+
+        private const val VIEWPORT_GET_UPDATE_MODE_HASH = 3803901472L
+        @JvmField
+        val viewportGetUpdateModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_get_update_mode", VIEWPORT_GET_UPDATE_MODE_HASH)
+
+        private const val VIEWPORT_SET_CLEAR_MODE_HASH = 3628367896L
+        @JvmField
+        val viewportSetClearModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_clear_mode", VIEWPORT_SET_CLEAR_MODE_HASH)
+
+        private const val VIEWPORT_GET_RENDER_TARGET_HASH = 3814569979L
+        @JvmField
+        val viewportGetRenderTargetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_get_render_target", VIEWPORT_GET_RENDER_TARGET_HASH)
+
+        private const val VIEWPORT_GET_TEXTURE_HASH = 3814569979L
+        @JvmField
+        val viewportGetTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_get_texture", VIEWPORT_GET_TEXTURE_HASH)
+
+        private const val VIEWPORT_SET_DISABLE_3D_HASH = 1265174801L
+        @JvmField
+        val viewportSetDisable3dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_disable_3d", VIEWPORT_SET_DISABLE_3D_HASH)
+
+        private const val VIEWPORT_SET_DISABLE_2D_HASH = 1265174801L
+        @JvmField
+        val viewportSetDisable2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_disable_2d", VIEWPORT_SET_DISABLE_2D_HASH)
+
+        private const val VIEWPORT_SET_ENVIRONMENT_MODE_HASH = 2196892182L
+        @JvmField
+        val viewportSetEnvironmentModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_environment_mode", VIEWPORT_SET_ENVIRONMENT_MODE_HASH)
+
+        private const val VIEWPORT_ATTACH_CAMERA_HASH = 395945892L
+        @JvmField
+        val viewportAttachCameraBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_attach_camera", VIEWPORT_ATTACH_CAMERA_HASH)
+
+        private const val VIEWPORT_SET_SCENARIO_HASH = 395945892L
+        @JvmField
+        val viewportSetScenarioBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_scenario", VIEWPORT_SET_SCENARIO_HASH)
+
+        private const val VIEWPORT_ATTACH_CANVAS_HASH = 395945892L
+        @JvmField
+        val viewportAttachCanvasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_attach_canvas", VIEWPORT_ATTACH_CANVAS_HASH)
+
+        private const val VIEWPORT_REMOVE_CANVAS_HASH = 395945892L
+        @JvmField
+        val viewportRemoveCanvasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_remove_canvas", VIEWPORT_REMOVE_CANVAS_HASH)
+
+        private const val VIEWPORT_SET_SNAP_2D_TRANSFORMS_TO_PIXEL_HASH = 1265174801L
+        @JvmField
+        val viewportSetSnap2dTransformsToPixelBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_snap_2d_transforms_to_pixel", VIEWPORT_SET_SNAP_2D_TRANSFORMS_TO_PIXEL_HASH)
+
+        private const val VIEWPORT_SET_SNAP_2D_VERTICES_TO_PIXEL_HASH = 1265174801L
+        @JvmField
+        val viewportSetSnap2dVerticesToPixelBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_snap_2d_vertices_to_pixel", VIEWPORT_SET_SNAP_2D_VERTICES_TO_PIXEL_HASH)
+
+        private const val VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH = 1155129294L
+        @JvmField
+        val viewportSetDefaultCanvasItemTextureFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_default_canvas_item_texture_filter", VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH)
+
+        private const val VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH = 1652956681L
+        @JvmField
+        val viewportSetDefaultCanvasItemTextureRepeatBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_default_canvas_item_texture_repeat", VIEWPORT_SET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH)
+
+        private const val VIEWPORT_SET_CANVAS_TRANSFORM_HASH = 3608606053L
+        @JvmField
+        val viewportSetCanvasTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_canvas_transform", VIEWPORT_SET_CANVAS_TRANSFORM_HASH)
+
+        private const val VIEWPORT_SET_CANVAS_STACKING_HASH = 3713930247L
+        @JvmField
+        val viewportSetCanvasStackingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_canvas_stacking", VIEWPORT_SET_CANVAS_STACKING_HASH)
+
+        private const val VIEWPORT_SET_TRANSPARENT_BACKGROUND_HASH = 1265174801L
+        @JvmField
+        val viewportSetTransparentBackgroundBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_transparent_background", VIEWPORT_SET_TRANSPARENT_BACKGROUND_HASH)
+
+        private const val VIEWPORT_SET_GLOBAL_CANVAS_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val viewportSetGlobalCanvasTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_global_canvas_transform", VIEWPORT_SET_GLOBAL_CANVAS_TRANSFORM_HASH)
+
+        private const val VIEWPORT_SET_SDF_OVERSIZE_AND_SCALE_HASH = 1329198632L
+        @JvmField
+        val viewportSetSdfOversizeAndScaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_sdf_oversize_and_scale", VIEWPORT_SET_SDF_OVERSIZE_AND_SCALE_HASH)
+
+        private const val VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH = 1904426712L
+        @JvmField
+        val viewportSetPositionalShadowAtlasSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_positional_shadow_atlas_size", VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH)
+
+        private const val VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIVISION_HASH = 4288446313L
+        @JvmField
+        val viewportSetPositionalShadowAtlasQuadrantSubdivisionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_positional_shadow_atlas_quadrant_subdivision", VIEWPORT_SET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIVISION_HASH)
+
+        private const val VIEWPORT_SET_MSAA_3D_HASH = 3764433340L
+        @JvmField
+        val viewportSetMsaa3dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_msaa_3d", VIEWPORT_SET_MSAA_3D_HASH)
+
+        private const val VIEWPORT_SET_MSAA_2D_HASH = 3764433340L
+        @JvmField
+        val viewportSetMsaa2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_msaa_2d", VIEWPORT_SET_MSAA_2D_HASH)
+
+        private const val VIEWPORT_SET_USE_HDR_2D_HASH = 1265174801L
+        @JvmField
+        val viewportSetUseHdr2dBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_hdr_2d", VIEWPORT_SET_USE_HDR_2D_HASH)
+
+        private const val VIEWPORT_SET_SCREEN_SPACE_AA_HASH = 1447279591L
+        @JvmField
+        val viewportSetScreenSpaceAaBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_screen_space_aa", VIEWPORT_SET_SCREEN_SPACE_AA_HASH)
+
+        private const val VIEWPORT_SET_USE_TAA_HASH = 1265174801L
+        @JvmField
+        val viewportSetUseTaaBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_taa", VIEWPORT_SET_USE_TAA_HASH)
+
+        private const val VIEWPORT_SET_USE_DEBANDING_HASH = 1265174801L
+        @JvmField
+        val viewportSetUseDebandingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_debanding", VIEWPORT_SET_USE_DEBANDING_HASH)
+
+        private const val VIEWPORT_SET_USE_OCCLUSION_CULLING_HASH = 1265174801L
+        @JvmField
+        val viewportSetUseOcclusionCullingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_use_occlusion_culling", VIEWPORT_SET_USE_OCCLUSION_CULLING_HASH)
+
+        private const val VIEWPORT_SET_OCCLUSION_RAYS_PER_THREAD_HASH = 1286410249L
+        @JvmField
+        val viewportSetOcclusionRaysPerThreadBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_occlusion_rays_per_thread", VIEWPORT_SET_OCCLUSION_RAYS_PER_THREAD_HASH)
+
+        private const val VIEWPORT_SET_OCCLUSION_CULLING_BUILD_QUALITY_HASH = 2069725696L
+        @JvmField
+        val viewportSetOcclusionCullingBuildQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_occlusion_culling_build_quality", VIEWPORT_SET_OCCLUSION_CULLING_BUILD_QUALITY_HASH)
+
+        private const val VIEWPORT_GET_RENDER_INFO_HASH = 2041262392L
+        @JvmField
+        val viewportGetRenderInfoBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_get_render_info", VIEWPORT_GET_RENDER_INFO_HASH)
+
+        private const val VIEWPORT_SET_DEBUG_DRAW_HASH = 2089420930L
+        @JvmField
+        val viewportSetDebugDrawBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_debug_draw", VIEWPORT_SET_DEBUG_DRAW_HASH)
+
+        private const val VIEWPORT_SET_MEASURE_RENDER_TIME_HASH = 1265174801L
+        @JvmField
+        val viewportSetMeasureRenderTimeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_measure_render_time", VIEWPORT_SET_MEASURE_RENDER_TIME_HASH)
+
+        private const val VIEWPORT_GET_MEASURED_RENDER_TIME_CPU_HASH = 866169185L
+        @JvmField
+        val viewportGetMeasuredRenderTimeCpuBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_get_measured_render_time_cpu", VIEWPORT_GET_MEASURED_RENDER_TIME_CPU_HASH)
+
+        private const val VIEWPORT_GET_MEASURED_RENDER_TIME_GPU_HASH = 866169185L
+        @JvmField
+        val viewportGetMeasuredRenderTimeGpuBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_get_measured_render_time_gpu", VIEWPORT_GET_MEASURED_RENDER_TIME_GPU_HASH)
+
+        private const val VIEWPORT_SET_VRS_MODE_HASH = 398809874L
+        @JvmField
+        val viewportSetVrsModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_vrs_mode", VIEWPORT_SET_VRS_MODE_HASH)
+
+        private const val VIEWPORT_SET_VRS_UPDATE_MODE_HASH = 2696154815L
+        @JvmField
+        val viewportSetVrsUpdateModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_vrs_update_mode", VIEWPORT_SET_VRS_UPDATE_MODE_HASH)
+
+        private const val VIEWPORT_SET_VRS_TEXTURE_HASH = 395945892L
+        @JvmField
+        val viewportSetVrsTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "viewport_set_vrs_texture", VIEWPORT_SET_VRS_TEXTURE_HASH)
+
+        private const val SKY_CREATE_HASH = 529393457L
+        @JvmField
+        val skyCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sky_create", SKY_CREATE_HASH)
+
+        private const val SKY_SET_RADIANCE_SIZE_HASH = 3411492887L
+        @JvmField
+        val skySetRadianceSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sky_set_radiance_size", SKY_SET_RADIANCE_SIZE_HASH)
+
+        private const val SKY_SET_MODE_HASH = 3279019937L
+        @JvmField
+        val skySetModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sky_set_mode", SKY_SET_MODE_HASH)
+
+        private const val SKY_SET_MATERIAL_HASH = 395945892L
+        @JvmField
+        val skySetMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sky_set_material", SKY_SET_MATERIAL_HASH)
+
+        private const val SKY_BAKE_PANORAMA_HASH = 3875285818L
+        @JvmField
+        val skyBakePanoramaBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sky_bake_panorama", SKY_BAKE_PANORAMA_HASH)
+
+        private const val COMPOSITOR_EFFECT_CREATE_HASH = 529393457L
+        @JvmField
+        val compositorEffectCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_create", COMPOSITOR_EFFECT_CREATE_HASH)
+
+        private const val COMPOSITOR_EFFECT_SET_ENABLED_HASH = 1265174801L
+        @JvmField
+        val compositorEffectSetEnabledBind =
+            ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_enabled", COMPOSITOR_EFFECT_SET_ENABLED_HASH)
+
+        private const val COMPOSITOR_EFFECT_SET_CALLBACK_HASH = 487412485L
+        @JvmField
+        val compositorEffectSetCallbackBind =
+            ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_callback", COMPOSITOR_EFFECT_SET_CALLBACK_HASH)
+
+        private const val COMPOSITOR_EFFECT_SET_FLAG_HASH = 3659527075L
+        @JvmField
+        val compositorEffectSetFlagBind =
+            ObjectCalls.getMethodBind("RenderingServer", "compositor_effect_set_flag", COMPOSITOR_EFFECT_SET_FLAG_HASH)
+
+        private const val COMPOSITOR_CREATE_HASH = 529393457L
+        @JvmField
+        val compositorCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "compositor_create", COMPOSITOR_CREATE_HASH)
+
+        private const val COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH = 684822712L
+        @JvmField
+        val compositorSetCompositorEffectsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "compositor_set_compositor_effects", COMPOSITOR_SET_COMPOSITOR_EFFECTS_HASH)
+
+        private const val ENVIRONMENT_CREATE_HASH = 529393457L
+        @JvmField
+        val environmentCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_create", ENVIRONMENT_CREATE_HASH)
+
+        private const val ENVIRONMENT_SET_BACKGROUND_HASH = 3937328877L
+        @JvmField
+        val environmentSetBackgroundBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_background", ENVIRONMENT_SET_BACKGROUND_HASH)
+
+        private const val ENVIRONMENT_SET_CAMERA_ID_HASH = 3411492887L
+        @JvmField
+        val environmentSetCameraIdBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_camera_id", ENVIRONMENT_SET_CAMERA_ID_HASH)
+
+        private const val ENVIRONMENT_SET_SKY_HASH = 395945892L
+        @JvmField
+        val environmentSetSkyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sky", ENVIRONMENT_SET_SKY_HASH)
+
+        private const val ENVIRONMENT_SET_SKY_CUSTOM_FOV_HASH = 1794382983L
+        @JvmField
+        val environmentSetSkyCustomFovBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sky_custom_fov", ENVIRONMENT_SET_SKY_CUSTOM_FOV_HASH)
+
+        private const val ENVIRONMENT_SET_SKY_ORIENTATION_HASH = 1735850857L
+        @JvmField
+        val environmentSetSkyOrientationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sky_orientation", ENVIRONMENT_SET_SKY_ORIENTATION_HASH)
+
+        private const val ENVIRONMENT_SET_BG_COLOR_HASH = 2948539648L
+        @JvmField
+        val environmentSetBgColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_bg_color", ENVIRONMENT_SET_BG_COLOR_HASH)
+
+        private const val ENVIRONMENT_SET_BG_ENERGY_HASH = 2513314492L
+        @JvmField
+        val environmentSetBgEnergyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_bg_energy", ENVIRONMENT_SET_BG_ENERGY_HASH)
+
+        private const val ENVIRONMENT_SET_CANVAS_MAX_LAYER_HASH = 3411492887L
+        @JvmField
+        val environmentSetCanvasMaxLayerBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_canvas_max_layer", ENVIRONMENT_SET_CANVAS_MAX_LAYER_HASH)
+
+        private const val ENVIRONMENT_SET_AMBIENT_LIGHT_HASH = 1214961493L
+        @JvmField
+        val environmentSetAmbientLightBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ambient_light", ENVIRONMENT_SET_AMBIENT_LIGHT_HASH)
+
+        private const val ENVIRONMENT_SET_GLOW_HASH = 2421724940L
+        @JvmField
+        val environmentSetGlowBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_glow", ENVIRONMENT_SET_GLOW_HASH)
+
+        private const val ENVIRONMENT_SET_TONEMAP_HASH = 2914312638L
+        @JvmField
+        val environmentSetTonemapBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_tonemap", ENVIRONMENT_SET_TONEMAP_HASH)
+
+        private const val ENVIRONMENT_SET_TONEMAP_AGX_CONTRAST_HASH = 1794382983L
+        @JvmField
+        val environmentSetTonemapAgxContrastBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_tonemap_agx_contrast", ENVIRONMENT_SET_TONEMAP_AGX_CONTRAST_HASH)
+
+        private const val ENVIRONMENT_SET_ADJUSTMENT_HASH = 876799838L
+        @JvmField
+        val environmentSetAdjustmentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_adjustment", ENVIRONMENT_SET_ADJUSTMENT_HASH)
+
+        private const val ENVIRONMENT_SET_SSR_HASH = 3607294374L
+        @JvmField
+        val environmentSetSsrBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssr", ENVIRONMENT_SET_SSR_HASH)
+
+        private const val ENVIRONMENT_SET_SSAO_HASH = 3994732740L
+        @JvmField
+        val environmentSetSsaoBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssao", ENVIRONMENT_SET_SSAO_HASH)
+
+        private const val ENVIRONMENT_SET_FOG_HASH = 105051629L
+        @JvmField
+        val environmentSetFogBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_fog", ENVIRONMENT_SET_FOG_HASH)
+
+        private const val ENVIRONMENT_SET_FOG_DEPTH_HASH = 157498339L
+        @JvmField
+        val environmentSetFogDepthBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_fog_depth", ENVIRONMENT_SET_FOG_DEPTH_HASH)
+
+        private const val ENVIRONMENT_SET_SDFGI_HASH = 3519144388L
+        @JvmField
+        val environmentSetSdfgiBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi", ENVIRONMENT_SET_SDFGI_HASH)
+
+        private const val ENVIRONMENT_SET_VOLUMETRIC_FOG_HASH = 1553633833L
+        @JvmField
+        val environmentSetVolumetricFogBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_volumetric_fog", ENVIRONMENT_SET_VOLUMETRIC_FOG_HASH)
+
+        private const val ENVIRONMENT_GLOW_SET_USE_BICUBIC_UPSCALE_HASH = 2586408642L
+        @JvmField
+        val environmentGlowSetUseBicubicUpscaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_glow_set_use_bicubic_upscale", ENVIRONMENT_GLOW_SET_USE_BICUBIC_UPSCALE_HASH)
+
+        private const val ENVIRONMENT_SET_SSR_HALF_SIZE_HASH = 2586408642L
+        @JvmField
+        val environmentSetSsrHalfSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssr_half_size", ENVIRONMENT_SET_SSR_HALF_SIZE_HASH)
+
+        private const val ENVIRONMENT_SET_SSR_ROUGHNESS_QUALITY_HASH = 1190026788L
+        @JvmField
+        val environmentSetSsrRoughnessQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssr_roughness_quality", ENVIRONMENT_SET_SSR_ROUGHNESS_QUALITY_HASH)
+
+        private const val ENVIRONMENT_SET_SSAO_QUALITY_HASH = 189753569L
+        @JvmField
+        val environmentSetSsaoQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssao_quality", ENVIRONMENT_SET_SSAO_QUALITY_HASH)
+
+        private const val ENVIRONMENT_SET_SSIL_QUALITY_HASH = 1713836683L
+        @JvmField
+        val environmentSetSsilQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_ssil_quality", ENVIRONMENT_SET_SSIL_QUALITY_HASH)
+
+        private const val ENVIRONMENT_SET_SDFGI_RAY_COUNT_HASH = 340137951L
+        @JvmField
+        val environmentSetSdfgiRayCountBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi_ray_count", ENVIRONMENT_SET_SDFGI_RAY_COUNT_HASH)
+
+        private const val ENVIRONMENT_SET_SDFGI_FRAMES_TO_CONVERGE_HASH = 2182444374L
+        @JvmField
+        val environmentSetSdfgiFramesToConvergeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi_frames_to_converge", ENVIRONMENT_SET_SDFGI_FRAMES_TO_CONVERGE_HASH)
+
+        private const val ENVIRONMENT_SET_SDFGI_FRAMES_TO_UPDATE_LIGHT_HASH = 1251144068L
+        @JvmField
+        val environmentSetSdfgiFramesToUpdateLightBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_sdfgi_frames_to_update_light", ENVIRONMENT_SET_SDFGI_FRAMES_TO_UPDATE_LIGHT_HASH)
+
+        private const val ENVIRONMENT_SET_VOLUMETRIC_FOG_VOLUME_SIZE_HASH = 3937882851L
+        @JvmField
+        val environmentSetVolumetricFogVolumeSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_volumetric_fog_volume_size", ENVIRONMENT_SET_VOLUMETRIC_FOG_VOLUME_SIZE_HASH)
+
+        private const val ENVIRONMENT_SET_VOLUMETRIC_FOG_FILTER_ACTIVE_HASH = 2586408642L
+        @JvmField
+        val environmentSetVolumetricFogFilterActiveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_set_volumetric_fog_filter_active", ENVIRONMENT_SET_VOLUMETRIC_FOG_FILTER_ACTIVE_HASH)
+
+        private const val ENVIRONMENT_BAKE_PANORAMA_HASH = 2452908646L
+        @JvmField
+        val environmentBakePanoramaBind =
+            ObjectCalls.getMethodBind("RenderingServer", "environment_bake_panorama", ENVIRONMENT_BAKE_PANORAMA_HASH)
+
+        private const val SCREEN_SPACE_ROUGHNESS_LIMITER_SET_ACTIVE_HASH = 916716790L
+        @JvmField
+        val screenSpaceRoughnessLimiterSetActiveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "screen_space_roughness_limiter_set_active", SCREEN_SPACE_ROUGHNESS_LIMITER_SET_ACTIVE_HASH)
+
+        private const val SUB_SURFACE_SCATTERING_SET_QUALITY_HASH = 64571803L
+        @JvmField
+        val subSurfaceScatteringSetQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sub_surface_scattering_set_quality", SUB_SURFACE_SCATTERING_SET_QUALITY_HASH)
+
+        private const val SUB_SURFACE_SCATTERING_SET_SCALE_HASH = 1017552074L
+        @JvmField
+        val subSurfaceScatteringSetScaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "sub_surface_scattering_set_scale", SUB_SURFACE_SCATTERING_SET_SCALE_HASH)
+
+        private const val CAMERA_ATTRIBUTES_CREATE_HASH = 529393457L
+        @JvmField
+        val cameraAttributesCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_create", CAMERA_ATTRIBUTES_CREATE_HASH)
+
+        private const val CAMERA_ATTRIBUTES_SET_DOF_BLUR_QUALITY_HASH = 2220136795L
+        @JvmField
+        val cameraAttributesSetDofBlurQualityBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_dof_blur_quality", CAMERA_ATTRIBUTES_SET_DOF_BLUR_QUALITY_HASH)
+
+        private const val CAMERA_ATTRIBUTES_SET_DOF_BLUR_BOKEH_SHAPE_HASH = 1205058394L
+        @JvmField
+        val cameraAttributesSetDofBlurBokehShapeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_dof_blur_bokeh_shape", CAMERA_ATTRIBUTES_SET_DOF_BLUR_BOKEH_SHAPE_HASH)
+
+        private const val CAMERA_ATTRIBUTES_SET_DOF_BLUR_HASH = 316272616L
+        @JvmField
+        val cameraAttributesSetDofBlurBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_dof_blur", CAMERA_ATTRIBUTES_SET_DOF_BLUR_HASH)
+
+        private const val CAMERA_ATTRIBUTES_SET_EXPOSURE_HASH = 2513314492L
+        @JvmField
+        val cameraAttributesSetExposureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_exposure", CAMERA_ATTRIBUTES_SET_EXPOSURE_HASH)
+
+        private const val CAMERA_ATTRIBUTES_SET_AUTO_EXPOSURE_HASH = 4266986332L
+        @JvmField
+        val cameraAttributesSetAutoExposureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_attributes_set_auto_exposure", CAMERA_ATTRIBUTES_SET_AUTO_EXPOSURE_HASH)
+
+        private const val SCENARIO_CREATE_HASH = 529393457L
+        @JvmField
+        val scenarioCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "scenario_create", SCENARIO_CREATE_HASH)
+
+        private const val SCENARIO_SET_ENVIRONMENT_HASH = 395945892L
+        @JvmField
+        val scenarioSetEnvironmentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "scenario_set_environment", SCENARIO_SET_ENVIRONMENT_HASH)
+
+        private const val SCENARIO_SET_FALLBACK_ENVIRONMENT_HASH = 395945892L
+        @JvmField
+        val scenarioSetFallbackEnvironmentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "scenario_set_fallback_environment", SCENARIO_SET_FALLBACK_ENVIRONMENT_HASH)
+
+        private const val SCENARIO_SET_CAMERA_ATTRIBUTES_HASH = 395945892L
+        @JvmField
+        val scenarioSetCameraAttributesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "scenario_set_camera_attributes", SCENARIO_SET_CAMERA_ATTRIBUTES_HASH)
+
+        private const val SCENARIO_SET_COMPOSITOR_HASH = 395945892L
+        @JvmField
+        val scenarioSetCompositorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "scenario_set_compositor", SCENARIO_SET_COMPOSITOR_HASH)
+
+        private const val INSTANCE_CREATE2_HASH = 746547085L
+        @JvmField
+        val instanceCreate2Bind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_create2", INSTANCE_CREATE2_HASH)
+
+        private const val INSTANCE_CREATE_HASH = 529393457L
+        @JvmField
+        val instanceCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_create", INSTANCE_CREATE_HASH)
+
+        private const val INSTANCE_SET_BASE_HASH = 395945892L
+        @JvmField
+        val instanceSetBaseBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_base", INSTANCE_SET_BASE_HASH)
+
+        private const val INSTANCE_SET_SCENARIO_HASH = 395945892L
+        @JvmField
+        val instanceSetScenarioBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_scenario", INSTANCE_SET_SCENARIO_HASH)
+
+        private const val INSTANCE_SET_LAYER_MASK_HASH = 3411492887L
+        @JvmField
+        val instanceSetLayerMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_layer_mask", INSTANCE_SET_LAYER_MASK_HASH)
+
+        private const val INSTANCE_SET_PIVOT_DATA_HASH = 1280615259L
+        @JvmField
+        val instanceSetPivotDataBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_pivot_data", INSTANCE_SET_PIVOT_DATA_HASH)
+
+        private const val INSTANCE_SET_TRANSFORM_HASH = 3935195649L
+        @JvmField
+        val instanceSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_transform", INSTANCE_SET_TRANSFORM_HASH)
+
+        private const val INSTANCE_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val instanceAttachObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_attach_object_instance_id", INSTANCE_ATTACH_OBJECT_INSTANCE_ID_HASH)
+
+        private const val INSTANCE_SET_BLEND_SHAPE_WEIGHT_HASH = 1892459533L
+        @JvmField
+        val instanceSetBlendShapeWeightBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_blend_shape_weight", INSTANCE_SET_BLEND_SHAPE_WEIGHT_HASH)
+
+        private const val INSTANCE_SET_SURFACE_OVERRIDE_MATERIAL_HASH = 2310537182L
+        @JvmField
+        val instanceSetSurfaceOverrideMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_surface_override_material", INSTANCE_SET_SURFACE_OVERRIDE_MATERIAL_HASH)
+
+        private const val INSTANCE_SET_VISIBLE_HASH = 1265174801L
+        @JvmField
+        val instanceSetVisibleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_visible", INSTANCE_SET_VISIBLE_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_TRANSPARENCY_HASH = 1794382983L
+        @JvmField
+        val instanceGeometrySetTransparencyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_transparency", INSTANCE_GEOMETRY_SET_TRANSPARENCY_HASH)
+
+        private const val INSTANCE_TELEPORT_HASH = 2722037293L
+        @JvmField
+        val instanceTeleportBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_teleport", INSTANCE_TELEPORT_HASH)
+
+        private const val INSTANCE_SET_CUSTOM_AABB_HASH = 3696536120L
+        @JvmField
+        val instanceSetCustomAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_custom_aabb", INSTANCE_SET_CUSTOM_AABB_HASH)
+
+        private const val INSTANCE_ATTACH_SKELETON_HASH = 395945892L
+        @JvmField
+        val instanceAttachSkeletonBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_attach_skeleton", INSTANCE_ATTACH_SKELETON_HASH)
+
+        private const val INSTANCE_SET_EXTRA_VISIBILITY_MARGIN_HASH = 1794382983L
+        @JvmField
+        val instanceSetExtraVisibilityMarginBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_extra_visibility_margin", INSTANCE_SET_EXTRA_VISIBILITY_MARGIN_HASH)
+
+        private const val INSTANCE_SET_VISIBILITY_PARENT_HASH = 395945892L
+        @JvmField
+        val instanceSetVisibilityParentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_visibility_parent", INSTANCE_SET_VISIBILITY_PARENT_HASH)
+
+        private const val INSTANCE_SET_IGNORE_CULLING_HASH = 1265174801L
+        @JvmField
+        val instanceSetIgnoreCullingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_set_ignore_culling", INSTANCE_SET_IGNORE_CULLING_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_FLAG_HASH = 1014989537L
+        @JvmField
+        val instanceGeometrySetFlagBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_flag", INSTANCE_GEOMETRY_SET_FLAG_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_CAST_SHADOWS_SETTING_HASH = 3768836020L
+        @JvmField
+        val instanceGeometrySetCastShadowsSettingBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_cast_shadows_setting", INSTANCE_GEOMETRY_SET_CAST_SHADOWS_SETTING_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_MATERIAL_OVERRIDE_HASH = 395945892L
+        @JvmField
+        val instanceGeometrySetMaterialOverrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_material_override", INSTANCE_GEOMETRY_SET_MATERIAL_OVERRIDE_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_MATERIAL_OVERLAY_HASH = 395945892L
+        @JvmField
+        val instanceGeometrySetMaterialOverlayBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_material_overlay", INSTANCE_GEOMETRY_SET_MATERIAL_OVERLAY_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_VISIBILITY_RANGE_HASH = 4263925858L
+        @JvmField
+        val instanceGeometrySetVisibilityRangeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_visibility_range", INSTANCE_GEOMETRY_SET_VISIBILITY_RANGE_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_LIGHTMAP_HASH = 536974962L
+        @JvmField
+        val instanceGeometrySetLightmapBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_lightmap", INSTANCE_GEOMETRY_SET_LIGHTMAP_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_LOD_BIAS_HASH = 1794382983L
+        @JvmField
+        val instanceGeometrySetLodBiasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_lod_bias", INSTANCE_GEOMETRY_SET_LOD_BIAS_HASH)
+
+        private const val INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH = 3477296213L
+        @JvmField
+        val instanceGeometrySetShaderParameterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_set_shader_parameter", INSTANCE_GEOMETRY_SET_SHADER_PARAMETER_HASH)
+
+        private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH = 2621281810L
+        @JvmField
+        val instanceGeometryGetShaderParameterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_HASH)
+
+        private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
+        @JvmField
+        val instanceGeometryGetShaderParameterDefaultValueBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_default_value", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
+
+        private const val INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH = 2684255073L
+        @JvmField
+        val instanceGeometryGetShaderParameterListBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instance_geometry_get_shader_parameter_list", INSTANCE_GEOMETRY_GET_SHADER_PARAMETER_LIST_HASH)
+
+        private const val INSTANCES_CULL_AABB_HASH = 2570105777L
+        @JvmField
+        val instancesCullAabbBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instances_cull_aabb", INSTANCES_CULL_AABB_HASH)
+
+        private const val INSTANCES_CULL_RAY_HASH = 2208759584L
+        @JvmField
+        val instancesCullRayBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instances_cull_ray", INSTANCES_CULL_RAY_HASH)
+
+        private const val INSTANCES_CULL_CONVEX_HASH = 2488539944L
+        @JvmField
+        val instancesCullConvexBind =
+            ObjectCalls.getMethodBind("RenderingServer", "instances_cull_convex", INSTANCES_CULL_CONVEX_HASH)
+
+        private const val BAKE_RENDER_UV2_HASH = 1904608558L
+        @JvmField
+        val bakeRenderUv2Bind =
+            ObjectCalls.getMethodBind("RenderingServer", "bake_render_uv2", BAKE_RENDER_UV2_HASH)
+
+        private const val CANVAS_CREATE_HASH = 529393457L
+        @JvmField
+        val canvasCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_create", CANVAS_CREATE_HASH)
+
+        private const val CANVAS_SET_ITEM_MIRRORING_HASH = 2343975398L
+        @JvmField
+        val canvasSetItemMirroringBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_set_item_mirroring", CANVAS_SET_ITEM_MIRRORING_HASH)
+
+        private const val CANVAS_SET_ITEM_REPEAT_HASH = 1739512717L
+        @JvmField
+        val canvasSetItemRepeatBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_set_item_repeat", CANVAS_SET_ITEM_REPEAT_HASH)
+
+        private const val CANVAS_SET_MODULATE_HASH = 2948539648L
+        @JvmField
+        val canvasSetModulateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_set_modulate", CANVAS_SET_MODULATE_HASH)
+
+        private const val CANVAS_SET_DISABLE_SCALE_HASH = 2586408642L
+        @JvmField
+        val canvasSetDisableScaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_set_disable_scale", CANVAS_SET_DISABLE_SCALE_HASH)
+
+        private const val CANVAS_TEXTURE_CREATE_HASH = 529393457L
+        @JvmField
+        val canvasTextureCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_create", CANVAS_TEXTURE_CREATE_HASH)
+
+        private const val CANVAS_TEXTURE_SET_CHANNEL_HASH = 3822119138L
+        @JvmField
+        val canvasTextureSetChannelBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_channel", CANVAS_TEXTURE_SET_CHANNEL_HASH)
+
+        private const val CANVAS_TEXTURE_SET_SHADING_PARAMETERS_HASH = 2124967469L
+        @JvmField
+        val canvasTextureSetShadingParametersBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_shading_parameters", CANVAS_TEXTURE_SET_SHADING_PARAMETERS_HASH)
+
+        private const val CANVAS_TEXTURE_SET_TEXTURE_FILTER_HASH = 1155129294L
+        @JvmField
+        val canvasTextureSetTextureFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_texture_filter", CANVAS_TEXTURE_SET_TEXTURE_FILTER_HASH)
+
+        private const val CANVAS_TEXTURE_SET_TEXTURE_REPEAT_HASH = 1652956681L
+        @JvmField
+        val canvasTextureSetTextureRepeatBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_texture_set_texture_repeat", CANVAS_TEXTURE_SET_TEXTURE_REPEAT_HASH)
+
+        private const val CANVAS_ITEM_CREATE_HASH = 529393457L
+        @JvmField
+        val canvasItemCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_create", CANVAS_ITEM_CREATE_HASH)
+
+        private const val CANVAS_ITEM_SET_PARENT_HASH = 395945892L
+        @JvmField
+        val canvasItemSetParentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_parent", CANVAS_ITEM_SET_PARENT_HASH)
+
+        private const val CANVAS_ITEM_SET_DEFAULT_TEXTURE_FILTER_HASH = 1155129294L
+        @JvmField
+        val canvasItemSetDefaultTextureFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_default_texture_filter", CANVAS_ITEM_SET_DEFAULT_TEXTURE_FILTER_HASH)
+
+        private const val CANVAS_ITEM_SET_DEFAULT_TEXTURE_REPEAT_HASH = 1652956681L
+        @JvmField
+        val canvasItemSetDefaultTextureRepeatBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_default_texture_repeat", CANVAS_ITEM_SET_DEFAULT_TEXTURE_REPEAT_HASH)
+
+        private const val CANVAS_ITEM_SET_VISIBLE_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetVisibleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visible", CANVAS_ITEM_SET_VISIBLE_HASH)
+
+        private const val CANVAS_ITEM_SET_LIGHT_MASK_HASH = 3411492887L
+        @JvmField
+        val canvasItemSetLightMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_light_mask", CANVAS_ITEM_SET_LIGHT_MASK_HASH)
+
+        private const val CANVAS_ITEM_SET_VISIBILITY_LAYER_HASH = 3411492887L
+        @JvmField
+        val canvasItemSetVisibilityLayerBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visibility_layer", CANVAS_ITEM_SET_VISIBILITY_LAYER_HASH)
+
+        private const val CANVAS_ITEM_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val canvasItemSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_transform", CANVAS_ITEM_SET_TRANSFORM_HASH)
+
+        private const val CANVAS_ITEM_SET_CLIP_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetClipBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_clip", CANVAS_ITEM_SET_CLIP_HASH)
+
+        private const val CANVAS_ITEM_SET_DISTANCE_FIELD_MODE_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetDistanceFieldModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_distance_field_mode", CANVAS_ITEM_SET_DISTANCE_FIELD_MODE_HASH)
+
+        private const val CANVAS_ITEM_SET_CUSTOM_RECT_HASH = 1333997032L
+        @JvmField
+        val canvasItemSetCustomRectBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_custom_rect", CANVAS_ITEM_SET_CUSTOM_RECT_HASH)
+
+        private const val CANVAS_ITEM_SET_MODULATE_HASH = 2948539648L
+        @JvmField
+        val canvasItemSetModulateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_modulate", CANVAS_ITEM_SET_MODULATE_HASH)
+
+        private const val CANVAS_ITEM_SET_SELF_MODULATE_HASH = 2948539648L
+        @JvmField
+        val canvasItemSetSelfModulateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_self_modulate", CANVAS_ITEM_SET_SELF_MODULATE_HASH)
+
+        private const val CANVAS_ITEM_SET_DRAW_BEHIND_PARENT_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetDrawBehindParentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_draw_behind_parent", CANVAS_ITEM_SET_DRAW_BEHIND_PARENT_HASH)
+
+        private const val CANVAS_ITEM_SET_INTERPOLATED_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetInterpolatedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_interpolated", CANVAS_ITEM_SET_INTERPOLATED_HASH)
+
+        private const val CANVAS_ITEM_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
+        @JvmField
+        val canvasItemResetPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_reset_physics_interpolation", CANVAS_ITEM_RESET_PHYSICS_INTERPOLATION_HASH)
+
+        private const val CANVAS_ITEM_TRANSFORM_PHYSICS_INTERPOLATION_HASH = 1246044741L
+        @JvmField
+        val canvasItemTransformPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_transform_physics_interpolation", CANVAS_ITEM_TRANSFORM_PHYSICS_INTERPOLATION_HASH)
+
+        private const val CANVAS_ITEM_ADD_LINE_HASH = 1819681853L
+        @JvmField
+        val canvasItemAddLineBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_line", CANVAS_ITEM_ADD_LINE_HASH)
+
+        private const val CANVAS_ITEM_ADD_POLYLINE_HASH = 3098767073L
+        @JvmField
+        val canvasItemAddPolylineBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polyline", CANVAS_ITEM_ADD_POLYLINE_HASH)
+
+        private const val CANVAS_ITEM_ADD_MULTILINE_HASH = 3098767073L
+        @JvmField
+        val canvasItemAddMultilineBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_multiline", CANVAS_ITEM_ADD_MULTILINE_HASH)
+
+        private const val CANVAS_ITEM_ADD_RECT_HASH = 3523446176L
+        @JvmField
+        val canvasItemAddRectBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_rect", CANVAS_ITEM_ADD_RECT_HASH)
+
+        private const val CANVAS_ITEM_ADD_CIRCLE_HASH = 333077949L
+        @JvmField
+        val canvasItemAddCircleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_circle", CANVAS_ITEM_ADD_CIRCLE_HASH)
+
+        private const val CANVAS_ITEM_ADD_ELLIPSE_HASH = 4188642757L
+        @JvmField
+        val canvasItemAddEllipseBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_ellipse", CANVAS_ITEM_ADD_ELLIPSE_HASH)
+
+        private const val CANVAS_ITEM_ADD_TEXTURE_RECT_HASH = 324864032L
+        @JvmField
+        val canvasItemAddTextureRectBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_texture_rect", CANVAS_ITEM_ADD_TEXTURE_RECT_HASH)
+
+        private const val CANVAS_ITEM_ADD_MSDF_TEXTURE_RECT_REGION_HASH = 97408773L
+        @JvmField
+        val canvasItemAddMsdfTextureRectRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_msdf_texture_rect_region", CANVAS_ITEM_ADD_MSDF_TEXTURE_RECT_REGION_HASH)
+
+        private const val CANVAS_ITEM_ADD_LCD_TEXTURE_RECT_REGION_HASH = 359793297L
+        @JvmField
+        val canvasItemAddLcdTextureRectRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_lcd_texture_rect_region", CANVAS_ITEM_ADD_LCD_TEXTURE_RECT_REGION_HASH)
+
+        private const val CANVAS_ITEM_ADD_TEXTURE_RECT_REGION_HASH = 485157892L
+        @JvmField
+        val canvasItemAddTextureRectRegionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_texture_rect_region", CANVAS_ITEM_ADD_TEXTURE_RECT_REGION_HASH)
+
+        private const val CANVAS_ITEM_ADD_NINE_PATCH_HASH = 389957886L
+        @JvmField
+        val canvasItemAddNinePatchBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_nine_patch", CANVAS_ITEM_ADD_NINE_PATCH_HASH)
+
+        private const val CANVAS_ITEM_ADD_PRIMITIVE_HASH = 3731601077L
+        @JvmField
+        val canvasItemAddPrimitiveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_primitive", CANVAS_ITEM_ADD_PRIMITIVE_HASH)
+
+        private const val CANVAS_ITEM_ADD_POLYGON_HASH = 3580000528L
+        @JvmField
+        val canvasItemAddPolygonBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_polygon", CANVAS_ITEM_ADD_POLYGON_HASH)
+
+        private const val CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH = 660261329L
+        @JvmField
+        val canvasItemAddTriangleArrayBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_triangle_array", CANVAS_ITEM_ADD_TRIANGLE_ARRAY_HASH)
+
+        private const val CANVAS_ITEM_ADD_MESH_HASH = 316450961L
+        @JvmField
+        val canvasItemAddMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_mesh", CANVAS_ITEM_ADD_MESH_HASH)
+
+        private const val CANVAS_ITEM_ADD_MULTIMESH_HASH = 2131855138L
+        @JvmField
+        val canvasItemAddMultimeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_multimesh", CANVAS_ITEM_ADD_MULTIMESH_HASH)
+
+        private const val CANVAS_ITEM_ADD_PARTICLES_HASH = 2575754278L
+        @JvmField
+        val canvasItemAddParticlesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_particles", CANVAS_ITEM_ADD_PARTICLES_HASH)
+
+        private const val CANVAS_ITEM_ADD_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val canvasItemAddSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_set_transform", CANVAS_ITEM_ADD_SET_TRANSFORM_HASH)
+
+        private const val CANVAS_ITEM_ADD_CLIP_IGNORE_HASH = 1265174801L
+        @JvmField
+        val canvasItemAddClipIgnoreBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_clip_ignore", CANVAS_ITEM_ADD_CLIP_IGNORE_HASH)
+
+        private const val CANVAS_ITEM_ADD_ANIMATION_SLICE_HASH = 2646834499L
+        @JvmField
+        val canvasItemAddAnimationSliceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_add_animation_slice", CANVAS_ITEM_ADD_ANIMATION_SLICE_HASH)
+
+        private const val CANVAS_ITEM_SET_SORT_CHILDREN_BY_Y_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetSortChildrenByYBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_sort_children_by_y", CANVAS_ITEM_SET_SORT_CHILDREN_BY_Y_HASH)
+
+        private const val CANVAS_ITEM_SET_Z_INDEX_HASH = 3411492887L
+        @JvmField
+        val canvasItemSetZIndexBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_z_index", CANVAS_ITEM_SET_Z_INDEX_HASH)
+
+        private const val CANVAS_ITEM_SET_Z_AS_RELATIVE_TO_PARENT_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetZAsRelativeToParentBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_z_as_relative_to_parent", CANVAS_ITEM_SET_Z_AS_RELATIVE_TO_PARENT_HASH)
+
+        private const val CANVAS_ITEM_SET_COPY_TO_BACKBUFFER_HASH = 2429202503L
+        @JvmField
+        val canvasItemSetCopyToBackbufferBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_copy_to_backbuffer", CANVAS_ITEM_SET_COPY_TO_BACKBUFFER_HASH)
+
+        private const val CANVAS_ITEM_ATTACH_SKELETON_HASH = 395945892L
+        @JvmField
+        val canvasItemAttachSkeletonBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_attach_skeleton", CANVAS_ITEM_ATTACH_SKELETON_HASH)
+
+        private const val CANVAS_ITEM_CLEAR_HASH = 2722037293L
+        @JvmField
+        val canvasItemClearBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_clear", CANVAS_ITEM_CLEAR_HASH)
+
+        private const val CANVAS_ITEM_SET_DRAW_INDEX_HASH = 3411492887L
+        @JvmField
+        val canvasItemSetDrawIndexBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_draw_index", CANVAS_ITEM_SET_DRAW_INDEX_HASH)
+
+        private const val CANVAS_ITEM_SET_MATERIAL_HASH = 395945892L
+        @JvmField
+        val canvasItemSetMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_material", CANVAS_ITEM_SET_MATERIAL_HASH)
+
+        private const val CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH = 1265174801L
+        @JvmField
+        val canvasItemSetUseParentMaterialBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_use_parent_material", CANVAS_ITEM_SET_USE_PARENT_MATERIAL_HASH)
+
+        private const val CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH = 3477296213L
+        @JvmField
+        val canvasItemSetInstanceShaderParameterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_instance_shader_parameter", CANVAS_ITEM_SET_INSTANCE_SHADER_PARAMETER_HASH)
+
+        private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH = 2621281810L
+        @JvmField
+        val canvasItemGetInstanceShaderParameterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_HASH)
+
+        private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH = 2621281810L
+        @JvmField
+        val canvasItemGetInstanceShaderParameterDefaultValueBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_default_value", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_DEFAULT_VALUE_HASH)
+
+        private const val CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH = 2684255073L
+        @JvmField
+        val canvasItemGetInstanceShaderParameterListBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_get_instance_shader_parameter_list", CANVAS_ITEM_GET_INSTANCE_SHADER_PARAMETER_LIST_HASH)
+
+        private const val CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH = 3568945579L
+        @JvmField
+        val canvasItemSetVisibilityNotifierBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_visibility_notifier", CANVAS_ITEM_SET_VISIBILITY_NOTIFIER_HASH)
+
+        private const val CANVAS_ITEM_SET_CANVAS_GROUP_MODE_HASH = 3973586316L
+        @JvmField
+        val canvasItemSetCanvasGroupModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_item_set_canvas_group_mode", CANVAS_ITEM_SET_CANVAS_GROUP_MODE_HASH)
+
+        private const val DEBUG_CANVAS_ITEM_GET_RECT_HASH = 624227424L
+        @JvmField
+        val debugCanvasItemGetRectBind =
+            ObjectCalls.getMethodBind("RenderingServer", "debug_canvas_item_get_rect", DEBUG_CANVAS_ITEM_GET_RECT_HASH)
+
+        private const val CANVAS_LIGHT_CREATE_HASH = 529393457L
+        @JvmField
+        val canvasLightCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_create", CANVAS_LIGHT_CREATE_HASH)
+
+        private const val CANVAS_LIGHT_ATTACH_TO_CANVAS_HASH = 395945892L
+        @JvmField
+        val canvasLightAttachToCanvasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_attach_to_canvas", CANVAS_LIGHT_ATTACH_TO_CANVAS_HASH)
+
+        private const val CANVAS_LIGHT_SET_ENABLED_HASH = 1265174801L
+        @JvmField
+        val canvasLightSetEnabledBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_enabled", CANVAS_LIGHT_SET_ENABLED_HASH)
+
+        private const val CANVAS_LIGHT_SET_TEXTURE_SCALE_HASH = 1794382983L
+        @JvmField
+        val canvasLightSetTextureScaleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_texture_scale", CANVAS_LIGHT_SET_TEXTURE_SCALE_HASH)
+
+        private const val CANVAS_LIGHT_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val canvasLightSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_transform", CANVAS_LIGHT_SET_TRANSFORM_HASH)
+
+        private const val CANVAS_LIGHT_SET_TEXTURE_HASH = 395945892L
+        @JvmField
+        val canvasLightSetTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_texture", CANVAS_LIGHT_SET_TEXTURE_HASH)
+
+        private const val CANVAS_LIGHT_SET_TEXTURE_OFFSET_HASH = 3201125042L
+        @JvmField
+        val canvasLightSetTextureOffsetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_texture_offset", CANVAS_LIGHT_SET_TEXTURE_OFFSET_HASH)
+
+        private const val CANVAS_LIGHT_SET_COLOR_HASH = 2948539648L
+        @JvmField
+        val canvasLightSetColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_color", CANVAS_LIGHT_SET_COLOR_HASH)
+
+        private const val CANVAS_LIGHT_SET_HEIGHT_HASH = 1794382983L
+        @JvmField
+        val canvasLightSetHeightBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_height", CANVAS_LIGHT_SET_HEIGHT_HASH)
+
+        private const val CANVAS_LIGHT_SET_ENERGY_HASH = 1794382983L
+        @JvmField
+        val canvasLightSetEnergyBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_energy", CANVAS_LIGHT_SET_ENERGY_HASH)
+
+        private const val CANVAS_LIGHT_SET_Z_RANGE_HASH = 4288446313L
+        @JvmField
+        val canvasLightSetZRangeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_z_range", CANVAS_LIGHT_SET_Z_RANGE_HASH)
+
+        private const val CANVAS_LIGHT_SET_LAYER_RANGE_HASH = 4288446313L
+        @JvmField
+        val canvasLightSetLayerRangeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_layer_range", CANVAS_LIGHT_SET_LAYER_RANGE_HASH)
+
+        private const val CANVAS_LIGHT_SET_ITEM_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val canvasLightSetItemCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_item_cull_mask", CANVAS_LIGHT_SET_ITEM_CULL_MASK_HASH)
+
+        private const val CANVAS_LIGHT_SET_ITEM_SHADOW_CULL_MASK_HASH = 3411492887L
+        @JvmField
+        val canvasLightSetItemShadowCullMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_item_shadow_cull_mask", CANVAS_LIGHT_SET_ITEM_SHADOW_CULL_MASK_HASH)
+
+        private const val CANVAS_LIGHT_SET_MODE_HASH = 2957564891L
+        @JvmField
+        val canvasLightSetModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_mode", CANVAS_LIGHT_SET_MODE_HASH)
+
+        private const val CANVAS_LIGHT_SET_SHADOW_ENABLED_HASH = 1265174801L
+        @JvmField
+        val canvasLightSetShadowEnabledBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_enabled", CANVAS_LIGHT_SET_SHADOW_ENABLED_HASH)
+
+        private const val CANVAS_LIGHT_SET_SHADOW_FILTER_HASH = 393119659L
+        @JvmField
+        val canvasLightSetShadowFilterBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_filter", CANVAS_LIGHT_SET_SHADOW_FILTER_HASH)
+
+        private const val CANVAS_LIGHT_SET_SHADOW_COLOR_HASH = 2948539648L
+        @JvmField
+        val canvasLightSetShadowColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_color", CANVAS_LIGHT_SET_SHADOW_COLOR_HASH)
+
+        private const val CANVAS_LIGHT_SET_SHADOW_SMOOTH_HASH = 1794382983L
+        @JvmField
+        val canvasLightSetShadowSmoothBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_shadow_smooth", CANVAS_LIGHT_SET_SHADOW_SMOOTH_HASH)
+
+        private const val CANVAS_LIGHT_SET_BLEND_MODE_HASH = 804895945L
+        @JvmField
+        val canvasLightSetBlendModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_blend_mode", CANVAS_LIGHT_SET_BLEND_MODE_HASH)
+
+        private const val CANVAS_LIGHT_SET_INTERPOLATED_HASH = 1265174801L
+        @JvmField
+        val canvasLightSetInterpolatedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_set_interpolated", CANVAS_LIGHT_SET_INTERPOLATED_HASH)
+
+        private const val CANVAS_LIGHT_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
+        @JvmField
+        val canvasLightResetPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_reset_physics_interpolation", CANVAS_LIGHT_RESET_PHYSICS_INTERPOLATION_HASH)
+
+        private const val CANVAS_LIGHT_TRANSFORM_PHYSICS_INTERPOLATION_HASH = 1246044741L
+        @JvmField
+        val canvasLightTransformPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_transform_physics_interpolation", CANVAS_LIGHT_TRANSFORM_PHYSICS_INTERPOLATION_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_CREATE_HASH = 529393457L
+        @JvmField
+        val canvasLightOccluderCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_create", CANVAS_LIGHT_OCCLUDER_CREATE_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_ATTACH_TO_CANVAS_HASH = 395945892L
+        @JvmField
+        val canvasLightOccluderAttachToCanvasBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_attach_to_canvas", CANVAS_LIGHT_OCCLUDER_ATTACH_TO_CANVAS_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_SET_ENABLED_HASH = 1265174801L
+        @JvmField
+        val canvasLightOccluderSetEnabledBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_enabled", CANVAS_LIGHT_OCCLUDER_SET_ENABLED_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_SET_POLYGON_HASH = 395945892L
+        @JvmField
+        val canvasLightOccluderSetPolygonBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_polygon", CANVAS_LIGHT_OCCLUDER_SET_POLYGON_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_SET_AS_SDF_COLLISION_HASH = 1265174801L
+        @JvmField
+        val canvasLightOccluderSetAsSdfCollisionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_as_sdf_collision", CANVAS_LIGHT_OCCLUDER_SET_AS_SDF_COLLISION_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val canvasLightOccluderSetTransformBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_transform", CANVAS_LIGHT_OCCLUDER_SET_TRANSFORM_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_SET_LIGHT_MASK_HASH = 3411492887L
+        @JvmField
+        val canvasLightOccluderSetLightMaskBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_light_mask", CANVAS_LIGHT_OCCLUDER_SET_LIGHT_MASK_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_SET_INTERPOLATED_HASH = 1265174801L
+        @JvmField
+        val canvasLightOccluderSetInterpolatedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_set_interpolated", CANVAS_LIGHT_OCCLUDER_SET_INTERPOLATED_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_RESET_PHYSICS_INTERPOLATION_HASH = 2722037293L
+        @JvmField
+        val canvasLightOccluderResetPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_reset_physics_interpolation", CANVAS_LIGHT_OCCLUDER_RESET_PHYSICS_INTERPOLATION_HASH)
+
+        private const val CANVAS_LIGHT_OCCLUDER_TRANSFORM_PHYSICS_INTERPOLATION_HASH = 1246044741L
+        @JvmField
+        val canvasLightOccluderTransformPhysicsInterpolationBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_light_occluder_transform_physics_interpolation", CANVAS_LIGHT_OCCLUDER_TRANSFORM_PHYSICS_INTERPOLATION_HASH)
+
+        private const val CANVAS_OCCLUDER_POLYGON_CREATE_HASH = 529393457L
+        @JvmField
+        val canvasOccluderPolygonCreateBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_create", CANVAS_OCCLUDER_POLYGON_CREATE_HASH)
+
+        private const val CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH = 2103882027L
+        @JvmField
+        val canvasOccluderPolygonSetShapeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_set_shape", CANVAS_OCCLUDER_POLYGON_SET_SHAPE_HASH)
+
+        private const val CANVAS_OCCLUDER_POLYGON_SET_CULL_MODE_HASH = 1839404663L
+        @JvmField
+        val canvasOccluderPolygonSetCullModeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_occluder_polygon_set_cull_mode", CANVAS_OCCLUDER_POLYGON_SET_CULL_MODE_HASH)
+
+        private const val CANVAS_SET_SHADOW_TEXTURE_SIZE_HASH = 1286410249L
+        @JvmField
+        val canvasSetShadowTextureSizeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "canvas_set_shadow_texture_size", CANVAS_SET_SHADOW_TEXTURE_SIZE_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_ADD_HASH = 463390080L
+        @JvmField
+        val globalShaderParameterAddBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_add", GLOBAL_SHADER_PARAMETER_ADD_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_REMOVE_HASH = 3304788590L
+        @JvmField
+        val globalShaderParameterRemoveBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_remove", GLOBAL_SHADER_PARAMETER_REMOVE_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_GET_LIST_HASH = 3995934104L
+        @JvmField
+        val globalShaderParameterGetListBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_get_list", GLOBAL_SHADER_PARAMETER_GET_LIST_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_SET_HASH = 3776071444L
+        @JvmField
+        val globalShaderParameterSetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_set", GLOBAL_SHADER_PARAMETER_SET_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_SET_OVERRIDE_HASH = 3776071444L
+        @JvmField
+        val globalShaderParameterSetOverrideBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_set_override", GLOBAL_SHADER_PARAMETER_SET_OVERRIDE_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_GET_HASH = 2760726917L
+        @JvmField
+        val globalShaderParameterGetBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_get", GLOBAL_SHADER_PARAMETER_GET_HASH)
+
+        private const val GLOBAL_SHADER_PARAMETER_GET_TYPE_HASH = 1601414142L
+        @JvmField
+        val globalShaderParameterGetTypeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "global_shader_parameter_get_type", GLOBAL_SHADER_PARAMETER_GET_TYPE_HASH)
+
+        private const val FREE_RID_HASH = 2722037293L
+        @JvmField
+        val freeRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "free_rid", FREE_RID_HASH)
+
+        private const val REQUEST_FRAME_DRAWN_CALLBACK_HASH = 1611583062L
+        @JvmField
+        val requestFrameDrawnCallbackBind =
+            ObjectCalls.getMethodBind("RenderingServer", "request_frame_drawn_callback", REQUEST_FRAME_DRAWN_CALLBACK_HASH)
+
+        private const val HAS_CHANGED_HASH = 36873697L
+        @JvmField
+        val hasChangedBind =
+            ObjectCalls.getMethodBind("RenderingServer", "has_changed", HAS_CHANGED_HASH)
+
+        private const val GET_RENDERING_INFO_HASH = 3763192241L
+        @JvmField
+        val getRenderingInfoBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_rendering_info", GET_RENDERING_INFO_HASH)
+
+        private const val GET_VIDEO_ADAPTER_NAME_HASH = 201670096L
+        @JvmField
+        val getVideoAdapterNameBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_name", GET_VIDEO_ADAPTER_NAME_HASH)
+
+        private const val GET_VIDEO_ADAPTER_VENDOR_HASH = 201670096L
+        @JvmField
+        val getVideoAdapterVendorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_vendor", GET_VIDEO_ADAPTER_VENDOR_HASH)
+
+        private const val GET_VIDEO_ADAPTER_TYPE_HASH = 3099547011L
+        @JvmField
+        val getVideoAdapterTypeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_type", GET_VIDEO_ADAPTER_TYPE_HASH)
+
+        private const val GET_VIDEO_ADAPTER_API_VERSION_HASH = 201670096L
+        @JvmField
+        val getVideoAdapterApiVersionBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_video_adapter_api_version", GET_VIDEO_ADAPTER_API_VERSION_HASH)
+
+        private const val GET_CURRENT_RENDERING_DRIVER_NAME_HASH = 201670096L
+        @JvmField
+        val getCurrentRenderingDriverNameBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_current_rendering_driver_name", GET_CURRENT_RENDERING_DRIVER_NAME_HASH)
+
+        private const val GET_CURRENT_RENDERING_METHOD_HASH = 201670096L
+        @JvmField
+        val getCurrentRenderingMethodBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_current_rendering_method", GET_CURRENT_RENDERING_METHOD_HASH)
+
+        private const val MAKE_SPHERE_MESH_HASH = 2251015897L
+        @JvmField
+        val makeSphereMeshBind =
+            ObjectCalls.getMethodBind("RenderingServer", "make_sphere_mesh", MAKE_SPHERE_MESH_HASH)
+
+        private const val GET_TEST_CUBE_HASH = 529393457L
+        @JvmField
+        val getTestCubeBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_test_cube", GET_TEST_CUBE_HASH)
+
+        private const val GET_TEST_TEXTURE_HASH = 529393457L
+        @JvmField
+        val getTestTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_test_texture", GET_TEST_TEXTURE_HASH)
+
+        private const val GET_WHITE_TEXTURE_HASH = 529393457L
+        @JvmField
+        val getWhiteTextureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_white_texture", GET_WHITE_TEXTURE_HASH)
+
+        private const val SET_BOOT_IMAGE_WITH_STRETCH_HASH = 1104470771L
+        @JvmField
+        val setBootImageWithStretchBind =
+            ObjectCalls.getMethodBind("RenderingServer", "set_boot_image_with_stretch", SET_BOOT_IMAGE_WITH_STRETCH_HASH)
+
+        private const val SET_BOOT_IMAGE_HASH = 3759744527L
+        @JvmField
+        val setBootImageBind =
+            ObjectCalls.getMethodBind("RenderingServer", "set_boot_image", SET_BOOT_IMAGE_HASH)
+
+        private const val GET_DEFAULT_CLEAR_COLOR_HASH = 3200896285L
+        @JvmField
+        val getDefaultClearColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_default_clear_color", GET_DEFAULT_CLEAR_COLOR_HASH)
+
+        private const val SET_DEFAULT_CLEAR_COLOR_HASH = 2920490490L
+        @JvmField
+        val setDefaultClearColorBind =
+            ObjectCalls.getMethodBind("RenderingServer", "set_default_clear_color", SET_DEFAULT_CLEAR_COLOR_HASH)
+
+        private const val HAS_OS_FEATURE_HASH = 3927539163L
+        @JvmField
+        val hasOsFeatureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "has_os_feature", HAS_OS_FEATURE_HASH)
+
+        private const val SET_DEBUG_GENERATE_WIREFRAMES_HASH = 2586408642L
+        @JvmField
+        val setDebugGenerateWireframesBind =
+            ObjectCalls.getMethodBind("RenderingServer", "set_debug_generate_wireframes", SET_DEBUG_GENERATE_WIREFRAMES_HASH)
+
+        private const val IS_RENDER_LOOP_ENABLED_HASH = 36873697L
+        @JvmField
+        val isRenderLoopEnabledBind =
+            ObjectCalls.getMethodBind("RenderingServer", "is_render_loop_enabled", IS_RENDER_LOOP_ENABLED_HASH)
+
+        private const val SET_RENDER_LOOP_ENABLED_HASH = 2586408642L
+        @JvmField
+        val setRenderLoopEnabledBind =
+            ObjectCalls.getMethodBind("RenderingServer", "set_render_loop_enabled", SET_RENDER_LOOP_ENABLED_HASH)
+
+        private const val GET_FRAME_SETUP_TIME_CPU_HASH = 1740695150L
+        @JvmField
+        val getFrameSetupTimeCpuBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_frame_setup_time_cpu", GET_FRAME_SETUP_TIME_CPU_HASH)
+
+        private const val FORCE_SYNC_HASH = 3218959716L
+        @JvmField
+        val forceSyncBind =
+            ObjectCalls.getMethodBind("RenderingServer", "force_sync", FORCE_SYNC_HASH)
+
+        private const val FORCE_DRAW_HASH = 1076185472L
+        @JvmField
+        val forceDrawBind =
+            ObjectCalls.getMethodBind("RenderingServer", "force_draw", FORCE_DRAW_HASH)
+
+        private const val GET_RENDERING_DEVICE_HASH = 1405107940L
+        @JvmField
+        val getRenderingDeviceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "get_rendering_device", GET_RENDERING_DEVICE_HASH)
+
+        private const val CREATE_LOCAL_RENDERING_DEVICE_HASH = 1405107940L
+        @JvmField
+        val createLocalRenderingDeviceBind =
+            ObjectCalls.getMethodBind("RenderingServer", "create_local_rendering_device", CREATE_LOCAL_RENDERING_DEVICE_HASH)
+
+        private const val IS_ON_RENDER_THREAD_HASH = 2240911060L
+        @JvmField
+        val isOnRenderThreadBind =
+            ObjectCalls.getMethodBind("RenderingServer", "is_on_render_thread", IS_ON_RENDER_THREAD_HASH)
+
+        private const val CALL_ON_RENDER_THREAD_HASH = 1611583062L
+        @JvmField
+        val callOnRenderThreadBind =
+            ObjectCalls.getMethodBind("RenderingServer", "call_on_render_thread", CALL_ON_RENDER_THREAD_HASH)
+
+        private const val HAS_FEATURE_HASH = 598462696L
+        @JvmField
+        val hasFeatureBind =
+            ObjectCalls.getMethodBind("RenderingServer", "has_feature", HAS_FEATURE_HASH)
     }
 }

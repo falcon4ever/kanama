@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -27,7 +28,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
     }
 
     /**
@@ -37,7 +38,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
     }
 
     /**
@@ -48,7 +49,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
     }
 
     /**
@@ -69,7 +70,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getData(): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, segment, Image::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getDataBind, segment, Image::wrapBorrowed)
     }
 
     /**
@@ -79,7 +80,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -97,40 +98,42 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture3D? =
             if (handle.address() == 0L) null else Texture3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_FORMAT_HASH = 3847873762L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("Texture3D", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 3905245786L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("Texture3D", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 3905245786L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("Texture3D", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 3905245786L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("Texture3D", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val HAS_MIPMAPS_HASH = 36873697L
-        private val hasMipmapsBind by lazy {
+        @JvmField
+        val hasMipmapsBind =
             ObjectCalls.getMethodBind("Texture3D", "has_mipmaps", HAS_MIPMAPS_HASH)
-        }
 
         private const val GET_DATA_HASH = 3995934104L
-        private val getDataBind by lazy {
+        @JvmField
+        val getDataBind =
             ObjectCalls.getMethodBind("Texture3D", "get_data", GET_DATA_HASH)
-        }
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
-        private val createPlaceholderBind by lazy {
+        @JvmField
+        val createPlaceholderBind =
             ObjectCalls.getMethodBind("Texture3D", "create_placeholder", CREATE_PLACEHOLDER_HASH)
-        }
     }
 }

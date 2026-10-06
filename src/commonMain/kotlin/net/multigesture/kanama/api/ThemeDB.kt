@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -13,9 +14,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: ThemeDB
  */
 object ThemeDB {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("ThemeDB")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var fallbackBaseScale: Double
         @JvmName("fallbackBaseScaleProperty")
@@ -55,7 +55,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getDefaultTheme(): Theme? {
-        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDefaultThemeBind, singleton))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDefaultThemeBind, singleton))
     }
 
     /**
@@ -67,7 +67,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getProjectTheme(): Theme? {
-        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProjectThemeBind, singleton))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProjectThemeBind, singleton))
     }
 
     /**
@@ -78,7 +78,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackBaseScale(baseScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFallbackBaseScaleBind, singleton, baseScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFallbackBaseScaleBind, singleton, baseScale)
     }
 
     /**
@@ -89,7 +89,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackBaseScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFallbackBaseScaleBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFallbackBaseScaleBind, singleton)
     }
 
     /**
@@ -100,7 +100,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackFont(font: Font?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackFontBind, singleton, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackFontBind, singleton, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -111,7 +111,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackFont(): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackFontBind, singleton))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackFontBind, singleton))
     }
 
     /**
@@ -122,7 +122,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackFontSize(fontSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFallbackFontSizeBind, singleton, fontSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFallbackFontSizeBind, singleton, fontSize)
     }
 
     /**
@@ -133,7 +133,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFallbackFontSizeBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFallbackFontSizeBind, singleton)
     }
 
     /**
@@ -144,7 +144,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackIcon(icon: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackIconBind, singleton, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackIconBind, singleton, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -155,7 +155,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackIcon(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackIconBind, singleton))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackIconBind, singleton))
     }
 
     /**
@@ -166,7 +166,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackStylebox(stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackStyleboxBind, singleton, listOf(stylebox?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackStyleboxBind, singleton, listOf(stylebox?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -177,7 +177,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackStylebox(): StyleBox? {
-        return StyleBox.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackStyleboxBind, singleton))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackStyleboxBind, singleton))
     }
 
     /** Signal `fallback_changed()`; see [TypedSignal]. */
@@ -196,63 +196,68 @@ object ThemeDB {
     internal fun wrap(handle: RawSegment): ThemeDB? =
         if (handle.address() == 0L) null else this
 
-    private const val GET_DEFAULT_THEME_HASH = 754276358L
-    private val getDefaultThemeBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_default_theme", GET_DEFAULT_THEME_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("ThemeDB")
 
-    private const val GET_PROJECT_THEME_HASH = 754276358L
-    private val getProjectThemeBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_project_theme", GET_PROJECT_THEME_HASH)
-    }
+        private const val GET_DEFAULT_THEME_HASH = 754276358L
+        @JvmField
+        val getDefaultThemeBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_default_theme", GET_DEFAULT_THEME_HASH)
 
-    private const val SET_FALLBACK_BASE_SCALE_HASH = 373806689L
-    private val setFallbackBaseScaleBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "set_fallback_base_scale", SET_FALLBACK_BASE_SCALE_HASH)
-    }
+        private const val GET_PROJECT_THEME_HASH = 754276358L
+        @JvmField
+        val getProjectThemeBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_project_theme", GET_PROJECT_THEME_HASH)
 
-    private const val GET_FALLBACK_BASE_SCALE_HASH = 191475506L
-    private val getFallbackBaseScaleBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_fallback_base_scale", GET_FALLBACK_BASE_SCALE_HASH)
-    }
+        private const val SET_FALLBACK_BASE_SCALE_HASH = 373806689L
+        @JvmField
+        val setFallbackBaseScaleBind =
+            ObjectCalls.getMethodBind("ThemeDB", "set_fallback_base_scale", SET_FALLBACK_BASE_SCALE_HASH)
 
-    private const val SET_FALLBACK_FONT_HASH = 1262170328L
-    private val setFallbackFontBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "set_fallback_font", SET_FALLBACK_FONT_HASH)
-    }
+        private const val GET_FALLBACK_BASE_SCALE_HASH = 191475506L
+        @JvmField
+        val getFallbackBaseScaleBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_fallback_base_scale", GET_FALLBACK_BASE_SCALE_HASH)
 
-    private const val GET_FALLBACK_FONT_HASH = 3656929885L
-    private val getFallbackFontBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_fallback_font", GET_FALLBACK_FONT_HASH)
-    }
+        private const val SET_FALLBACK_FONT_HASH = 1262170328L
+        @JvmField
+        val setFallbackFontBind =
+            ObjectCalls.getMethodBind("ThemeDB", "set_fallback_font", SET_FALLBACK_FONT_HASH)
 
-    private const val SET_FALLBACK_FONT_SIZE_HASH = 1286410249L
-    private val setFallbackFontSizeBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "set_fallback_font_size", SET_FALLBACK_FONT_SIZE_HASH)
-    }
+        private const val GET_FALLBACK_FONT_HASH = 3656929885L
+        @JvmField
+        val getFallbackFontBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_fallback_font", GET_FALLBACK_FONT_HASH)
 
-    private const val GET_FALLBACK_FONT_SIZE_HASH = 2455072627L
-    private val getFallbackFontSizeBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_fallback_font_size", GET_FALLBACK_FONT_SIZE_HASH)
-    }
+        private const val SET_FALLBACK_FONT_SIZE_HASH = 1286410249L
+        @JvmField
+        val setFallbackFontSizeBind =
+            ObjectCalls.getMethodBind("ThemeDB", "set_fallback_font_size", SET_FALLBACK_FONT_SIZE_HASH)
 
-    private const val SET_FALLBACK_ICON_HASH = 4051416890L
-    private val setFallbackIconBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "set_fallback_icon", SET_FALLBACK_ICON_HASH)
-    }
+        private const val GET_FALLBACK_FONT_SIZE_HASH = 2455072627L
+        @JvmField
+        val getFallbackFontSizeBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_fallback_font_size", GET_FALLBACK_FONT_SIZE_HASH)
 
-    private const val GET_FALLBACK_ICON_HASH = 255860311L
-    private val getFallbackIconBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_fallback_icon", GET_FALLBACK_ICON_HASH)
-    }
+        private const val SET_FALLBACK_ICON_HASH = 4051416890L
+        @JvmField
+        val setFallbackIconBind =
+            ObjectCalls.getMethodBind("ThemeDB", "set_fallback_icon", SET_FALLBACK_ICON_HASH)
 
-    private const val SET_FALLBACK_STYLEBOX_HASH = 2797200388L
-    private val setFallbackStyleboxBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "set_fallback_stylebox", SET_FALLBACK_STYLEBOX_HASH)
-    }
+        private const val GET_FALLBACK_ICON_HASH = 255860311L
+        @JvmField
+        val getFallbackIconBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_fallback_icon", GET_FALLBACK_ICON_HASH)
 
-    private const val GET_FALLBACK_STYLEBOX_HASH = 496040854L
-    private val getFallbackStyleboxBind by lazy {
-        ObjectCalls.getMethodBind("ThemeDB", "get_fallback_stylebox", GET_FALLBACK_STYLEBOX_HASH)
+        private const val SET_FALLBACK_STYLEBOX_HASH = 2797200388L
+        @JvmField
+        val setFallbackStyleboxBind =
+            ObjectCalls.getMethodBind("ThemeDB", "set_fallback_stylebox", SET_FALLBACK_STYLEBOX_HASH)
+
+        private const val GET_FALLBACK_STYLEBOX_HASH = 496040854L
+        @JvmField
+        val getFallbackStyleboxBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_fallback_stylebox", GET_FALLBACK_STYLEBOX_HASH)
     }
 }

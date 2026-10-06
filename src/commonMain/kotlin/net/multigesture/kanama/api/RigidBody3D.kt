@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -160,7 +161,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_mass
      */
     fun setMass(mass: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMassBind, segment, mass)
     }
 
     /**
@@ -169,7 +170,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_mass
      */
     fun getMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_inertia
      */
     fun setInertia(inertia: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setInertiaBind, segment, inertia)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setInertiaBind, segment, inertia)
     }
 
     /**
@@ -197,7 +198,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_inertia
      */
     fun getInertia(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getInertiaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getInertiaBind, segment)
     }
 
     /**
@@ -206,7 +207,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_center_of_mass_mode
      */
     fun setCenterOfMassMode(mode: RigidBody3D.CenterOfMassMode) {
-        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCenterOfMassModeBind, segment, mode.value)
     }
 
     /**
@@ -215,7 +216,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_center_of_mass_mode
      */
     fun getCenterOfMassMode(): RigidBody3D.CenterOfMassMode {
-        return RigidBody3D.CenterOfMassMode(ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, segment))
+        return RigidBody3D.CenterOfMassMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCenterOfMassModeBind, segment))
     }
 
     /**
@@ -229,7 +230,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_center_of_mass
      */
     fun setCenterOfMass(centerOfMass: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setCenterOfMassBind, segment, centerOfMass)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setCenterOfMassBind, segment, centerOfMass)
     }
 
     /**
@@ -243,7 +244,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_center_of_mass
      */
     fun getCenterOfMass(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassBind, segment)
     }
 
     /**
@@ -253,7 +254,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -263,7 +264,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_physics_material_override
      */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
-        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPhysicsMaterialOverrideBind, segment))
     }
 
     /**
@@ -274,7 +275,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_linear_velocity
      */
     fun setLinearVelocity(linearVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, linearVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, linearVelocity)
     }
 
     /**
@@ -285,7 +286,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_linear_velocity
      */
     fun getLinearVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
     }
 
     /**
@@ -294,7 +295,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_angular_velocity
      */
     fun setAngularVelocity(angularVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, angularVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, angularVelocity)
     }
 
     /**
@@ -303,7 +304,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_angular_velocity
      */
     fun getAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
     }
 
     /**
@@ -313,7 +314,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_inverse_inertia_tensor
      */
     fun getInverseInertiaTensor(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getInverseInertiaTensorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getInverseInertiaTensorBind, segment)
     }
 
     /**
@@ -324,7 +325,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_gravity_scale
      */
     fun setGravityScale(gravityScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, segment, gravityScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGravityScaleBind, segment, gravityScale)
     }
 
     /**
@@ -335,7 +336,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_gravity_scale
      */
     fun getGravityScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGravityScaleBind, segment)
     }
 
     /**
@@ -344,7 +345,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_linear_damp_mode
      */
     fun setLinearDampMode(linearDampMode: RigidBody3D.DampMode) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLinearDampModeBind, segment, linearDampMode.value)
     }
 
     /**
@@ -353,7 +354,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_linear_damp_mode
      */
     fun getLinearDampMode(): RigidBody3D.DampMode {
-        return RigidBody3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment))
+        return RigidBody3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLinearDampModeBind, segment))
     }
 
     /**
@@ -362,7 +363,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_angular_damp_mode
      */
     fun setAngularDampMode(angularDampMode: RigidBody3D.DampMode) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAngularDampModeBind, segment, angularDampMode.value)
     }
 
     /**
@@ -371,7 +372,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_angular_damp_mode
      */
     fun getAngularDampMode(): RigidBody3D.DampMode {
-        return RigidBody3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment))
+        return RigidBody3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAngularDampModeBind, segment))
     }
 
     /**
@@ -384,7 +385,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -397,7 +398,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLinearDampBind, segment)
     }
 
     /**
@@ -410,7 +411,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -423,7 +424,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularDampBind, segment)
     }
 
     /**
@@ -437,7 +438,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_max_contacts_reported
      */
     fun setMaxContactsReported(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxContactsReportedBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxContactsReportedBind, segment, amount)
     }
 
     /**
@@ -451,7 +452,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_max_contacts_reported
      */
     fun getMaxContactsReported(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxContactsReportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxContactsReportedBind, segment)
     }
 
     /**
@@ -462,7 +463,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_contact_count
      */
     fun getContactCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getContactCountBind, segment)
     }
 
     /**
@@ -474,7 +475,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_use_custom_integrator
      */
     fun setUseCustomIntegrator(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomIntegratorBind, segment, enable)
     }
 
     /**
@@ -486,7 +487,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_using_custom_integrator
      */
     fun isUsingCustomIntegrator(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomIntegratorBind, segment)
     }
 
     /**
@@ -497,7 +498,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_contact_monitor
      */
     fun setContactMonitor(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContactMonitorBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setContactMonitorBind, segment, enabled)
     }
 
     /**
@@ -508,7 +509,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_contact_monitor_enabled
      */
     fun isContactMonitorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContactMonitorEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isContactMonitorEnabledBind, segment)
     }
 
     /**
@@ -521,7 +522,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_use_continuous_collision_detection
      */
     fun setUseContinuousCollisionDetection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseContinuousCollisionDetectionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseContinuousCollisionDetectionBind, segment, enable)
     }
 
     /**
@@ -534,7 +535,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_using_continuous_collision_detection
      */
     fun isUsingContinuousCollisionDetection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingContinuousCollisionDetectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingContinuousCollisionDetectionBind, segment)
     }
 
     /**
@@ -544,7 +545,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_axis_velocity
      */
     fun setAxisVelocity(axisVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAxisVelocityBind, segment, axisVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAxisVelocityBind, segment, axisVelocity)
     }
 
     /**
@@ -556,7 +557,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, segment, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -568,7 +569,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.apply_impulse
      */
     fun applyImpulse(impulse: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, segment, impulse, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.applyImpulseBind, segment, impulse, position)
     }
 
     /**
@@ -581,7 +582,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.apply_torque_impulse
      */
     fun applyTorqueImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyTorqueImpulseBind, segment, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyTorqueImpulseBind, segment, impulse)
     }
 
     /**
@@ -592,7 +593,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.apply_central_force
      */
     fun applyCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, segment, force)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyCentralForceBind, segment, force)
     }
 
     /**
@@ -602,7 +603,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.apply_force
      */
     fun applyForce(force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyForceBind, segment, force, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.applyForceBind, segment, force, position)
     }
 
     /**
@@ -613,7 +614,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.apply_torque
      */
     fun applyTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyTorqueBind, segment, torque)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyTorqueBind, segment, torque)
     }
 
     /**
@@ -624,7 +625,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.add_constant_central_force
      */
     fun addConstantCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(addConstantCentralForceBind, segment, force)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.addConstantCentralForceBind, segment, force)
     }
 
     /**
@@ -635,7 +636,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.add_constant_force
      */
     fun addConstantForce(force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(addConstantForceBind, segment, force, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.addConstantForceBind, segment, force, position)
     }
 
     /**
@@ -645,7 +646,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.add_constant_torque
      */
     fun addConstantTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(addConstantTorqueBind, segment, torque)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.addConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -655,7 +656,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_constant_force
      */
     fun setConstantForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantForceBind, segment, force)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setConstantForceBind, segment, force)
     }
 
     /**
@@ -665,7 +666,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_constant_force
      */
     fun getConstantForce(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantForceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getConstantForceBind, segment)
     }
 
     /**
@@ -675,7 +676,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_constant_torque
      */
     fun setConstantTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantTorqueBind, segment, torque)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -685,7 +686,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_constant_torque
      */
     fun getConstantTorque(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantTorqueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getConstantTorqueBind, segment)
     }
 
     /**
@@ -695,7 +696,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_sleeping
      */
     fun setSleeping(sleeping: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSleepingBind, segment, sleeping)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSleepingBind, segment, sleeping)
     }
 
     /**
@@ -705,7 +706,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_sleeping
      */
     fun isSleeping(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSleepingBind, segment)
     }
 
     /**
@@ -714,7 +715,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_can_sleep
      */
     fun setCanSleep(ableToSleep: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, segment, ableToSleep)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCanSleepBind, segment, ableToSleep)
     }
 
     /**
@@ -723,7 +724,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_able_to_sleep
      */
     fun isAbleToSleep(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbleToSleepBind, segment)
     }
 
     /**
@@ -732,7 +733,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_lock_rotation_enabled
      */
     fun setLockRotationEnabled(lockRotation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLockRotationEnabledBind, segment, lockRotation)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLockRotationEnabledBind, segment, lockRotation)
     }
 
     /**
@@ -741,7 +742,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_lock_rotation_enabled
      */
     fun isLockRotationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLockRotationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLockRotationEnabledBind, segment)
     }
 
     /**
@@ -752,7 +753,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_freeze_enabled
      */
     fun setFreezeEnabled(freezeMode: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFreezeEnabledBind, segment, freezeMode)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFreezeEnabledBind, segment, freezeMode)
     }
 
     /**
@@ -763,7 +764,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.is_freeze_enabled
      */
     fun isFreezeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFreezeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFreezeEnabledBind, segment)
     }
 
     /**
@@ -773,7 +774,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_freeze_mode
      */
     fun setFreezeMode(freezeMode: RigidBody3D.FreezeMode) {
-        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, segment, freezeMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFreezeModeBind, segment, freezeMode.value)
     }
 
     /**
@@ -783,7 +784,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_freeze_mode
      */
     fun getFreezeMode(): RigidBody3D.FreezeMode {
-        return RigidBody3D.FreezeMode(ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, segment))
+        return RigidBody3D.FreezeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFreezeModeBind, segment))
     }
 
     /**
@@ -795,7 +796,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_colliding_bodies
      */
     fun getCollidingBodies(): List<Node3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollidingBodiesBind, segment, Node3D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCollidingBodiesBind, segment, Node3D::wrap)
     }
 
     /** Signal `body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
@@ -914,300 +915,302 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): RigidBody3D? =
             if (handle.address() == 0L) null else RigidBody3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MASS_HASH = 373806689L
-        private val setMassBind by lazy {
+        @JvmField
+        val setMassBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_mass", SET_MASS_HASH)
-        }
 
         private const val GET_MASS_HASH = 1740695150L
-        private val getMassBind by lazy {
+        @JvmField
+        val getMassBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_mass", GET_MASS_HASH)
-        }
 
         private const val SET_INERTIA_HASH = 3460891852L
-        private val setInertiaBind by lazy {
+        @JvmField
+        val setInertiaBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_inertia", SET_INERTIA_HASH)
-        }
 
         private const val GET_INERTIA_HASH = 3360562783L
-        private val getInertiaBind by lazy {
+        @JvmField
+        val getInertiaBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_inertia", GET_INERTIA_HASH)
-        }
 
         private const val SET_CENTER_OF_MASS_MODE_HASH = 3625866032L
-        private val setCenterOfMassModeBind by lazy {
+        @JvmField
+        val setCenterOfMassModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_center_of_mass_mode", SET_CENTER_OF_MASS_MODE_HASH)
-        }
 
         private const val GET_CENTER_OF_MASS_MODE_HASH = 237405040L
-        private val getCenterOfMassModeBind by lazy {
+        @JvmField
+        val getCenterOfMassModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_center_of_mass_mode", GET_CENTER_OF_MASS_MODE_HASH)
-        }
 
         private const val SET_CENTER_OF_MASS_HASH = 3460891852L
-        private val setCenterOfMassBind by lazy {
+        @JvmField
+        val setCenterOfMassBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_center_of_mass", SET_CENTER_OF_MASS_HASH)
-        }
 
         private const val GET_CENTER_OF_MASS_HASH = 3360562783L
-        private val getCenterOfMassBind by lazy {
+        @JvmField
+        val getCenterOfMassBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_center_of_mass", GET_CENTER_OF_MASS_HASH)
-        }
 
         private const val SET_PHYSICS_MATERIAL_OVERRIDE_HASH = 1784508650L
-        private val setPhysicsMaterialOverrideBind by lazy {
+        @JvmField
+        val setPhysicsMaterialOverrideBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_physics_material_override", SET_PHYSICS_MATERIAL_OVERRIDE_HASH)
-        }
 
         private const val GET_PHYSICS_MATERIAL_OVERRIDE_HASH = 2521850424L
-        private val getPhysicsMaterialOverrideBind by lazy {
+        @JvmField
+        val getPhysicsMaterialOverrideBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_physics_material_override", GET_PHYSICS_MATERIAL_OVERRIDE_HASH)
-        }
 
         private const val SET_LINEAR_VELOCITY_HASH = 3460891852L
-        private val setLinearVelocityBind by lazy {
+        @JvmField
+        val setLinearVelocityBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_linear_velocity", SET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_LINEAR_VELOCITY_HASH = 3360562783L
-        private val getLinearVelocityBind by lazy {
+        @JvmField
+        val getLinearVelocityBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_linear_velocity", GET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_ANGULAR_VELOCITY_HASH = 3460891852L
-        private val setAngularVelocityBind by lazy {
+        @JvmField
+        val setAngularVelocityBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_angular_velocity", SET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_ANGULAR_VELOCITY_HASH = 3360562783L
-        private val getAngularVelocityBind by lazy {
+        @JvmField
+        val getAngularVelocityBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_angular_velocity", GET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_INVERSE_INERTIA_TENSOR_HASH = 2716978435L
-        private val getInverseInertiaTensorBind by lazy {
+        @JvmField
+        val getInverseInertiaTensorBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_inverse_inertia_tensor", GET_INVERSE_INERTIA_TENSOR_HASH)
-        }
 
         private const val SET_GRAVITY_SCALE_HASH = 373806689L
-        private val setGravityScaleBind by lazy {
+        @JvmField
+        val setGravityScaleBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_gravity_scale", SET_GRAVITY_SCALE_HASH)
-        }
 
         private const val GET_GRAVITY_SCALE_HASH = 1740695150L
-        private val getGravityScaleBind by lazy {
+        @JvmField
+        val getGravityScaleBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_gravity_scale", GET_GRAVITY_SCALE_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_MODE_HASH = 1802035050L
-        private val setLinearDampModeBind by lazy {
+        @JvmField
+        val setLinearDampModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_linear_damp_mode", SET_LINEAR_DAMP_MODE_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_MODE_HASH = 1366206940L
-        private val getLinearDampModeBind by lazy {
+        @JvmField
+        val getLinearDampModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_linear_damp_mode", GET_LINEAR_DAMP_MODE_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_MODE_HASH = 1802035050L
-        private val setAngularDampModeBind by lazy {
+        @JvmField
+        val setAngularDampModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_angular_damp_mode", SET_ANGULAR_DAMP_MODE_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_MODE_HASH = 1366206940L
-        private val getAngularDampModeBind by lazy {
+        @JvmField
+        val getAngularDampModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_angular_damp_mode", GET_ANGULAR_DAMP_MODE_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_HASH = 373806689L
-        private val setLinearDampBind by lazy {
+        @JvmField
+        val setLinearDampBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_linear_damp", SET_LINEAR_DAMP_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_HASH = 1740695150L
-        private val getLinearDampBind by lazy {
+        @JvmField
+        val getLinearDampBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_linear_damp", GET_LINEAR_DAMP_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_HASH = 373806689L
-        private val setAngularDampBind by lazy {
+        @JvmField
+        val setAngularDampBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_angular_damp", SET_ANGULAR_DAMP_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_HASH = 1740695150L
-        private val getAngularDampBind by lazy {
+        @JvmField
+        val getAngularDampBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_angular_damp", GET_ANGULAR_DAMP_HASH)
-        }
 
         private const val SET_MAX_CONTACTS_REPORTED_HASH = 1286410249L
-        private val setMaxContactsReportedBind by lazy {
+        @JvmField
+        val setMaxContactsReportedBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_max_contacts_reported", SET_MAX_CONTACTS_REPORTED_HASH)
-        }
 
         private const val GET_MAX_CONTACTS_REPORTED_HASH = 3905245786L
-        private val getMaxContactsReportedBind by lazy {
+        @JvmField
+        val getMaxContactsReportedBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_max_contacts_reported", GET_MAX_CONTACTS_REPORTED_HASH)
-        }
 
         private const val GET_CONTACT_COUNT_HASH = 3905245786L
-        private val getContactCountBind by lazy {
+        @JvmField
+        val getContactCountBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_contact_count", GET_CONTACT_COUNT_HASH)
-        }
 
         private const val SET_USE_CUSTOM_INTEGRATOR_HASH = 2586408642L
-        private val setUseCustomIntegratorBind by lazy {
+        @JvmField
+        val setUseCustomIntegratorBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_use_custom_integrator", SET_USE_CUSTOM_INTEGRATOR_HASH)
-        }
 
         private const val IS_USING_CUSTOM_INTEGRATOR_HASH = 2240911060L
-        private val isUsingCustomIntegratorBind by lazy {
+        @JvmField
+        val isUsingCustomIntegratorBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_using_custom_integrator", IS_USING_CUSTOM_INTEGRATOR_HASH)
-        }
 
         private const val SET_CONTACT_MONITOR_HASH = 2586408642L
-        private val setContactMonitorBind by lazy {
+        @JvmField
+        val setContactMonitorBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_contact_monitor", SET_CONTACT_MONITOR_HASH)
-        }
 
         private const val IS_CONTACT_MONITOR_ENABLED_HASH = 36873697L
-        private val isContactMonitorEnabledBind by lazy {
+        @JvmField
+        val isContactMonitorEnabledBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_contact_monitor_enabled", IS_CONTACT_MONITOR_ENABLED_HASH)
-        }
 
         private const val SET_USE_CONTINUOUS_COLLISION_DETECTION_HASH = 2586408642L
-        private val setUseContinuousCollisionDetectionBind by lazy {
+        @JvmField
+        val setUseContinuousCollisionDetectionBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_use_continuous_collision_detection", SET_USE_CONTINUOUS_COLLISION_DETECTION_HASH)
-        }
 
         private const val IS_USING_CONTINUOUS_COLLISION_DETECTION_HASH = 36873697L
-        private val isUsingContinuousCollisionDetectionBind by lazy {
+        @JvmField
+        val isUsingContinuousCollisionDetectionBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_using_continuous_collision_detection", IS_USING_CONTINUOUS_COLLISION_DETECTION_HASH)
-        }
 
         private const val SET_AXIS_VELOCITY_HASH = 3460891852L
-        private val setAxisVelocityBind by lazy {
+        @JvmField
+        val setAxisVelocityBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_axis_velocity", SET_AXIS_VELOCITY_HASH)
-        }
 
         private const val APPLY_CENTRAL_IMPULSE_HASH = 3460891852L
-        private val applyCentralImpulseBind by lazy {
+        @JvmField
+        val applyCentralImpulseBind =
             ObjectCalls.getMethodBind("RigidBody3D", "apply_central_impulse", APPLY_CENTRAL_IMPULSE_HASH)
-        }
 
         private const val APPLY_IMPULSE_HASH = 2754756483L
-        private val applyImpulseBind by lazy {
+        @JvmField
+        val applyImpulseBind =
             ObjectCalls.getMethodBind("RigidBody3D", "apply_impulse", APPLY_IMPULSE_HASH)
-        }
 
         private const val APPLY_TORQUE_IMPULSE_HASH = 3460891852L
-        private val applyTorqueImpulseBind by lazy {
+        @JvmField
+        val applyTorqueImpulseBind =
             ObjectCalls.getMethodBind("RigidBody3D", "apply_torque_impulse", APPLY_TORQUE_IMPULSE_HASH)
-        }
 
         private const val APPLY_CENTRAL_FORCE_HASH = 3460891852L
-        private val applyCentralForceBind by lazy {
+        @JvmField
+        val applyCentralForceBind =
             ObjectCalls.getMethodBind("RigidBody3D", "apply_central_force", APPLY_CENTRAL_FORCE_HASH)
-        }
 
         private const val APPLY_FORCE_HASH = 2754756483L
-        private val applyForceBind by lazy {
+        @JvmField
+        val applyForceBind =
             ObjectCalls.getMethodBind("RigidBody3D", "apply_force", APPLY_FORCE_HASH)
-        }
 
         private const val APPLY_TORQUE_HASH = 3460891852L
-        private val applyTorqueBind by lazy {
+        @JvmField
+        val applyTorqueBind =
             ObjectCalls.getMethodBind("RigidBody3D", "apply_torque", APPLY_TORQUE_HASH)
-        }
 
         private const val ADD_CONSTANT_CENTRAL_FORCE_HASH = 3460891852L
-        private val addConstantCentralForceBind by lazy {
+        @JvmField
+        val addConstantCentralForceBind =
             ObjectCalls.getMethodBind("RigidBody3D", "add_constant_central_force", ADD_CONSTANT_CENTRAL_FORCE_HASH)
-        }
 
         private const val ADD_CONSTANT_FORCE_HASH = 2754756483L
-        private val addConstantForceBind by lazy {
+        @JvmField
+        val addConstantForceBind =
             ObjectCalls.getMethodBind("RigidBody3D", "add_constant_force", ADD_CONSTANT_FORCE_HASH)
-        }
 
         private const val ADD_CONSTANT_TORQUE_HASH = 3460891852L
-        private val addConstantTorqueBind by lazy {
+        @JvmField
+        val addConstantTorqueBind =
             ObjectCalls.getMethodBind("RigidBody3D", "add_constant_torque", ADD_CONSTANT_TORQUE_HASH)
-        }
 
         private const val SET_CONSTANT_FORCE_HASH = 3460891852L
-        private val setConstantForceBind by lazy {
+        @JvmField
+        val setConstantForceBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_constant_force", SET_CONSTANT_FORCE_HASH)
-        }
 
         private const val GET_CONSTANT_FORCE_HASH = 3360562783L
-        private val getConstantForceBind by lazy {
+        @JvmField
+        val getConstantForceBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_constant_force", GET_CONSTANT_FORCE_HASH)
-        }
 
         private const val SET_CONSTANT_TORQUE_HASH = 3460891852L
-        private val setConstantTorqueBind by lazy {
+        @JvmField
+        val setConstantTorqueBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_constant_torque", SET_CONSTANT_TORQUE_HASH)
-        }
 
         private const val GET_CONSTANT_TORQUE_HASH = 3360562783L
-        private val getConstantTorqueBind by lazy {
+        @JvmField
+        val getConstantTorqueBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_constant_torque", GET_CONSTANT_TORQUE_HASH)
-        }
 
         private const val SET_SLEEPING_HASH = 2586408642L
-        private val setSleepingBind by lazy {
+        @JvmField
+        val setSleepingBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_sleeping", SET_SLEEPING_HASH)
-        }
 
         private const val IS_SLEEPING_HASH = 36873697L
-        private val isSleepingBind by lazy {
+        @JvmField
+        val isSleepingBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_sleeping", IS_SLEEPING_HASH)
-        }
 
         private const val SET_CAN_SLEEP_HASH = 2586408642L
-        private val setCanSleepBind by lazy {
+        @JvmField
+        val setCanSleepBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_can_sleep", SET_CAN_SLEEP_HASH)
-        }
 
         private const val IS_ABLE_TO_SLEEP_HASH = 36873697L
-        private val isAbleToSleepBind by lazy {
+        @JvmField
+        val isAbleToSleepBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_able_to_sleep", IS_ABLE_TO_SLEEP_HASH)
-        }
 
         private const val SET_LOCK_ROTATION_ENABLED_HASH = 2586408642L
-        private val setLockRotationEnabledBind by lazy {
+        @JvmField
+        val setLockRotationEnabledBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_lock_rotation_enabled", SET_LOCK_ROTATION_ENABLED_HASH)
-        }
 
         private const val IS_LOCK_ROTATION_ENABLED_HASH = 36873697L
-        private val isLockRotationEnabledBind by lazy {
+        @JvmField
+        val isLockRotationEnabledBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_lock_rotation_enabled", IS_LOCK_ROTATION_ENABLED_HASH)
-        }
 
         private const val SET_FREEZE_ENABLED_HASH = 2586408642L
-        private val setFreezeEnabledBind by lazy {
+        @JvmField
+        val setFreezeEnabledBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_freeze_enabled", SET_FREEZE_ENABLED_HASH)
-        }
 
         private const val IS_FREEZE_ENABLED_HASH = 36873697L
-        private val isFreezeEnabledBind by lazy {
+        @JvmField
+        val isFreezeEnabledBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_freeze_enabled", IS_FREEZE_ENABLED_HASH)
-        }
 
         private const val SET_FREEZE_MODE_HASH = 1319914653L
-        private val setFreezeModeBind by lazy {
+        @JvmField
+        val setFreezeModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "set_freeze_mode", SET_FREEZE_MODE_HASH)
-        }
 
         private const val GET_FREEZE_MODE_HASH = 2008423905L
-        private val getFreezeModeBind by lazy {
+        @JvmField
+        val getFreezeModeBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_freeze_mode", GET_FREEZE_MODE_HASH)
-        }
 
         private const val GET_COLLIDING_BODIES_HASH = 3995934104L
-        private val getCollidingBodiesBind by lazy {
+        @JvmField
+        val getCollidingBodiesBind =
             ObjectCalls.getMethodBind("RigidBody3D", "get_colliding_bodies", GET_COLLIDING_BODIES_HASH)
-        }
     }
 }

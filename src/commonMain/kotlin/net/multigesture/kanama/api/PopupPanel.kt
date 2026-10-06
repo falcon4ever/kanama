@@ -19,7 +19,5 @@ class PopupPanel(handle: GodotHandle) : Popup(handle) {
 
         internal fun wrap(handle: RawSegment): PopupPanel? =
             if (handle.address() == 0L) null else PopupPanel(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -31,7 +32,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Path3D.set_curve
      */
     fun setCurve(curve: Curve3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -40,7 +41,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Path3D.get_curve
      */
     fun getCurve(): Curve3D? {
-        return Curve3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
     }
 
     /**
@@ -50,7 +51,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Path3D.set_debug_custom_color
      */
     fun setDebugCustomColor(debugCustomColor: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugCustomColorBind, segment, debugCustomColor)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDebugCustomColorBind, segment, debugCustomColor)
     }
 
     /**
@@ -60,7 +61,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Path3D.get_debug_custom_color
      */
     fun getDebugCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugCustomColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDebugCustomColorBind, segment)
     }
 
     /** Signal `curve_changed()`; see [TypedSignal]. */
@@ -85,25 +86,27 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Path3D? =
             if (handle.address() == 0L) null else Path3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CURVE_HASH = 408955118L
-        private val setCurveBind by lazy {
+        @JvmField
+        val setCurveBind =
             ObjectCalls.getMethodBind("Path3D", "set_curve", SET_CURVE_HASH)
-        }
 
         private const val GET_CURVE_HASH = 4244715212L
-        private val getCurveBind by lazy {
+        @JvmField
+        val getCurveBind =
             ObjectCalls.getMethodBind("Path3D", "get_curve", GET_CURVE_HASH)
-        }
 
         private const val SET_DEBUG_CUSTOM_COLOR_HASH = 2920490490L
-        private val setDebugCustomColorBind by lazy {
+        @JvmField
+        val setDebugCustomColorBind =
             ObjectCalls.getMethodBind("Path3D", "set_debug_custom_color", SET_DEBUG_CUSTOM_COLOR_HASH)
-        }
 
         private const val GET_DEBUG_CUSTOM_COLOR_HASH = 3444240500L
-        private val getDebugCustomColorBind by lazy {
+        @JvmField
+        val getDebugCustomColorBind =
             ObjectCalls.getMethodBind("Path3D", "get_debug_custom_color", GET_DEBUG_CUSTOM_COLOR_HASH)
-        }
     }
 }

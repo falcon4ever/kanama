@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -63,7 +64,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.set_wait_time
      */
     fun setWaitTime(timeSec: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWaitTimeBind, segment, timeSec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWaitTimeBind, segment, timeSec)
     }
 
     /**
@@ -77,7 +78,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.get_wait_time
      */
     fun getWaitTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWaitTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWaitTimeBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.set_one_shot
      */
     fun setOneShot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOneShotBind, segment, enable)
     }
 
     /**
@@ -97,7 +98,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.is_one_shot
      */
     fun isOneShot(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOneShotBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOneShotBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.set_autostart
      */
     fun setAutostart(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutostartBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutostartBind, segment, enable)
     }
 
     /**
@@ -119,7 +120,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.has_autostart
      */
     fun hasAutostart(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutostartBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutostartBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.start
      */
     fun start(timeSec: Double = -1.0) {
-        ObjectCalls.ptrcallWithDoubleArg(startBind, segment, timeSec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.startBind, segment, timeSec)
     }
 
     /**
@@ -142,7 +143,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -152,7 +153,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.set_paused
      */
     fun setPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPausedBind, segment, paused)
     }
 
     /**
@@ -162,7 +163,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.is_paused
      */
     fun isPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPausedBind, segment)
     }
 
     /**
@@ -171,7 +172,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.set_ignore_time_scale
      */
     fun setIgnoreTimeScale(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTimeScaleBind, segment, ignore)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreTimeScaleBind, segment, ignore)
     }
 
     /**
@@ -180,7 +181,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.is_ignoring_time_scale
      */
     fun isIgnoringTimeScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringTimeScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIgnoringTimeScaleBind, segment)
     }
 
     /**
@@ -189,7 +190,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.is_stopped
      */
     fun isStopped(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStoppedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStoppedBind, segment)
     }
 
     /**
@@ -199,7 +200,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.get_time_left
      */
     fun getTimeLeft(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeLeftBind, segment)
     }
 
     /**
@@ -208,7 +209,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.set_timer_process_callback
      */
     fun setTimerProcessCallback(callback: Timer.TimerProcessCallback) {
-        ObjectCalls.ptrcallWithLongArg(setTimerProcessCallbackBind, segment, callback.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTimerProcessCallbackBind, segment, callback.value)
     }
 
     /**
@@ -217,7 +218,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Timer.get_timer_process_callback
      */
     fun getTimerProcessCallback(): Timer.TimerProcessCallback {
-        return Timer.TimerProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getTimerProcessCallbackBind, segment))
+        return Timer.TimerProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTimerProcessCallbackBind, segment))
     }
 
     /** Signal `timeout()`; see [TypedSignal]. */
@@ -260,85 +261,87 @@ class Timer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): Timer? =
             if (handle.address() == 0L) null else Timer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WAIT_TIME_HASH = 373806689L
-        private val setWaitTimeBind by lazy {
+        @JvmField
+        val setWaitTimeBind =
             ObjectCalls.getMethodBind("Timer", "set_wait_time", SET_WAIT_TIME_HASH)
-        }
 
         private const val GET_WAIT_TIME_HASH = 1740695150L
-        private val getWaitTimeBind by lazy {
+        @JvmField
+        val getWaitTimeBind =
             ObjectCalls.getMethodBind("Timer", "get_wait_time", GET_WAIT_TIME_HASH)
-        }
 
         private const val SET_ONE_SHOT_HASH = 2586408642L
-        private val setOneShotBind by lazy {
+        @JvmField
+        val setOneShotBind =
             ObjectCalls.getMethodBind("Timer", "set_one_shot", SET_ONE_SHOT_HASH)
-        }
 
         private const val IS_ONE_SHOT_HASH = 36873697L
-        private val isOneShotBind by lazy {
+        @JvmField
+        val isOneShotBind =
             ObjectCalls.getMethodBind("Timer", "is_one_shot", IS_ONE_SHOT_HASH)
-        }
 
         private const val SET_AUTOSTART_HASH = 2586408642L
-        private val setAutostartBind by lazy {
+        @JvmField
+        val setAutostartBind =
             ObjectCalls.getMethodBind("Timer", "set_autostart", SET_AUTOSTART_HASH)
-        }
 
         private const val HAS_AUTOSTART_HASH = 36873697L
-        private val hasAutostartBind by lazy {
+        @JvmField
+        val hasAutostartBind =
             ObjectCalls.getMethodBind("Timer", "has_autostart", HAS_AUTOSTART_HASH)
-        }
 
         private const val START_HASH = 1392008558L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("Timer", "start", START_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("Timer", "stop", STOP_HASH)
-        }
 
         private const val SET_PAUSED_HASH = 2586408642L
-        private val setPausedBind by lazy {
+        @JvmField
+        val setPausedBind =
             ObjectCalls.getMethodBind("Timer", "set_paused", SET_PAUSED_HASH)
-        }
 
         private const val IS_PAUSED_HASH = 36873697L
-        private val isPausedBind by lazy {
+        @JvmField
+        val isPausedBind =
             ObjectCalls.getMethodBind("Timer", "is_paused", IS_PAUSED_HASH)
-        }
 
         private const val SET_IGNORE_TIME_SCALE_HASH = 2586408642L
-        private val setIgnoreTimeScaleBind by lazy {
+        @JvmField
+        val setIgnoreTimeScaleBind =
             ObjectCalls.getMethodBind("Timer", "set_ignore_time_scale", SET_IGNORE_TIME_SCALE_HASH)
-        }
 
         private const val IS_IGNORING_TIME_SCALE_HASH = 2240911060L
-        private val isIgnoringTimeScaleBind by lazy {
+        @JvmField
+        val isIgnoringTimeScaleBind =
             ObjectCalls.getMethodBind("Timer", "is_ignoring_time_scale", IS_IGNORING_TIME_SCALE_HASH)
-        }
 
         private const val IS_STOPPED_HASH = 36873697L
-        private val isStoppedBind by lazy {
+        @JvmField
+        val isStoppedBind =
             ObjectCalls.getMethodBind("Timer", "is_stopped", IS_STOPPED_HASH)
-        }
 
         private const val GET_TIME_LEFT_HASH = 1740695150L
-        private val getTimeLeftBind by lazy {
+        @JvmField
+        val getTimeLeftBind =
             ObjectCalls.getMethodBind("Timer", "get_time_left", GET_TIME_LEFT_HASH)
-        }
 
         private const val SET_TIMER_PROCESS_CALLBACK_HASH = 3469495063L
-        private val setTimerProcessCallbackBind by lazy {
+        @JvmField
+        val setTimerProcessCallbackBind =
             ObjectCalls.getMethodBind("Timer", "set_timer_process_callback", SET_TIMER_PROCESS_CALLBACK_HASH)
-        }
 
         private const val GET_TIMER_PROCESS_CALLBACK_HASH = 2672570227L
-        private val getTimerProcessCallbackBind by lazy {
+        @JvmField
+        val getTimerProcessCallbackBind =
             ObjectCalls.getMethodBind("Timer", "get_timer_process_callback", GET_TIMER_PROCESS_CALLBACK_HASH)
-        }
     }
 }

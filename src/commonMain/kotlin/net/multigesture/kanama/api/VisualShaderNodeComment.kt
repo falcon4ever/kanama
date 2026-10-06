@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,12 +18,12 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
 
     fun setDescription(description: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setDescriptionBind, segment, description)
+        ObjectCalls.ptrcallWithStringArg(Binds.setDescriptionBind, segment, description)
     }
 
     fun getDescription(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getDescriptionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionBind, segment)
     }
 
     companion object {
@@ -35,15 +36,17 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeComment? =
             if (handle.address() == 0L) null else VisualShaderNodeComment(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DESCRIPTION_HASH = 83702148L
-        private val setDescriptionBind by lazy {
+        @JvmField
+        val setDescriptionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeComment", "set_description", SET_DESCRIPTION_HASH)
-        }
 
         private const val GET_DESCRIPTION_HASH = 201670096L
-        private val getDescriptionBind by lazy {
+        @JvmField
+        val getDescriptionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeComment", "get_description", GET_DESCRIPTION_HASH)
-        }
     }
 }

@@ -20,7 +20,5 @@ class VisualShaderNodeGlobalExpression(handle: GodotHandle) : VisualShaderNodeEx
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeGlobalExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeGlobalExpression(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

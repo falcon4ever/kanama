@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -25,7 +26,7 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MultiMeshInstance3D.set_multimesh
      */
     fun setMultimesh(multimesh: MultiMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -35,7 +36,7 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MultiMeshInstance3D.get_multimesh
      */
     fun getMultimesh(): MultiMesh? {
-        return MultiMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
+        return MultiMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMultimeshBind, segment))
     }
 
     companion object {
@@ -45,15 +46,17 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): MultiMeshInstance3D? =
             if (handle.address() == 0L) null else MultiMeshInstance3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MULTIMESH_HASH = 2246127404L
-        private val setMultimeshBind by lazy {
+        @JvmField
+        val setMultimeshBind =
             ObjectCalls.getMethodBind("MultiMeshInstance3D", "set_multimesh", SET_MULTIMESH_HASH)
-        }
 
         private const val GET_MULTIMESH_HASH = 1385450523L
-        private val getMultimeshBind by lazy {
+        @JvmField
+        val getMultimeshBind =
             ObjectCalls.getMethodBind("MultiMeshInstance3D", "get_multimesh", GET_MULTIMESH_HASH)
-        }
     }
 }

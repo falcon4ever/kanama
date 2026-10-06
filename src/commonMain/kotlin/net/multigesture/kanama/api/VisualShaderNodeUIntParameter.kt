@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -23,22 +24,22 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDefaultValueBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
     }
 
     companion object {
@@ -51,25 +52,27 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUIntParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeUIntParameter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
-        private val setDefaultValueEnabledBind by lazy {
+        @JvmField
+        val setDefaultValueEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeUIntParameter", "set_default_value_enabled", SET_DEFAULT_VALUE_ENABLED_HASH)
-        }
 
         private const val IS_DEFAULT_VALUE_ENABLED_HASH = 36873697L
-        private val isDefaultValueEnabledBind by lazy {
+        @JvmField
+        val isDefaultValueEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeUIntParameter", "is_default_value_enabled", IS_DEFAULT_VALUE_ENABLED_HASH)
-        }
 
         private const val SET_DEFAULT_VALUE_HASH = 1286410249L
-        private val setDefaultValueBind by lazy {
+        @JvmField
+        val setDefaultValueBind =
             ObjectCalls.getMethodBind("VisualShaderNodeUIntParameter", "set_default_value", SET_DEFAULT_VALUE_HASH)
-        }
 
         private const val GET_DEFAULT_VALUE_HASH = 3905245786L
-        private val getDefaultValueBind by lazy {
+        @JvmField
+        val getDefaultValueBind =
             ObjectCalls.getMethodBind("VisualShaderNodeUIntParameter", "get_default_value", GET_DEFAULT_VALUE_HASH)
-        }
     }
 }

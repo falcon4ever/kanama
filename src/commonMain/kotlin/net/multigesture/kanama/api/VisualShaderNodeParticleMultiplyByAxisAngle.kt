@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,12 +18,12 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
 
     fun setDegreesMode(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDegreesModeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDegreesModeBind, segment, enabled)
     }
 
     fun isDegreesMode(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDegreesModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDegreesModeBind, segment)
     }
 
     companion object {
@@ -35,15 +36,17 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DEGREES_MODE_HASH = 2586408642L
-        private val setDegreesModeBind by lazy {
+        @JvmField
+        val setDegreesModeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleMultiplyByAxisAngle", "set_degrees_mode", SET_DEGREES_MODE_HASH)
-        }
 
         private const val IS_DEGREES_MODE_HASH = 36873697L
-        private val isDegreesModeBind by lazy {
+        @JvmField
+        val isDegreesModeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleMultiplyByAxisAngle", "is_degrees_mode", IS_DEGREES_MODE_HASH)
-        }
     }
 }

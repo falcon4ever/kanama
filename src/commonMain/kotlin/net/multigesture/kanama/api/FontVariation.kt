@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -93,7 +94,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setBaseFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setBaseFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -103,7 +104,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getBaseFont(): Font? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseFontBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseFontBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -125,7 +126,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setVariationOpentype(coords: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setVariationOpentypeBind, segment, coords)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setVariationOpentypeBind, segment, coords)
     }
 
     /**
@@ -142,7 +143,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationOpentype(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getVariationOpentypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getVariationOpentypeBind, segment)
     }
 
     /**
@@ -154,7 +155,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setVariationEmbolden(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVariationEmboldenBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVariationEmboldenBind, segment, strength)
     }
 
     /**
@@ -166,7 +167,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationEmbolden(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVariationEmboldenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVariationEmboldenBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setVariationFaceIndex(faceIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVariationFaceIndexBind, segment, faceIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVariationFaceIndexBind, segment, faceIndex)
     }
 
     /**
@@ -186,7 +187,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationFaceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVariationFaceIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVariationFaceIndexBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setVariationTransform(transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setVariationTransformBind, segment, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setVariationTransformBind, segment, transform)
     }
 
     /**
@@ -210,7 +211,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getVariationTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getVariationTransformBind, segment)
     }
 
     /**
@@ -221,7 +222,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setOpentypeFeatures(features: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeaturesBind, segment, features)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setOpentypeFeaturesBind, segment, features)
     }
 
     /**
@@ -231,7 +232,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setSpacing(spacing: TextServer.SpacingType, value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, segment, spacing.value, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setSpacingBind, segment, spacing.value, value)
     }
 
     /**
@@ -241,7 +242,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setBaselineOffset(baselineOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBaselineOffsetBind, segment, baselineOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBaselineOffsetBind, segment, baselineOffset)
     }
 
     /**
@@ -251,7 +252,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getBaselineOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBaselineOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBaselineOffsetBind, segment)
     }
 
     /**
@@ -261,7 +262,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getPaletteIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPaletteIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPaletteIndexBind, segment)
     }
 
     /**
@@ -271,7 +272,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setPaletteIndex(paletteIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPaletteIndexBind, segment, paletteIndex)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPaletteIndexBind, segment, paletteIndex)
     }
 
     /**
@@ -282,7 +283,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun getPaletteCustomColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPaletteCustomColorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getPaletteCustomColorsBind, segment)
     }
 
     /**
@@ -293,7 +294,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setPaletteCustomColors(colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedColorListArg(setPaletteCustomColorsBind, segment, colors)
+        ObjectCalls.ptrcallWithPackedColorListArg(Binds.setPaletteCustomColorsBind, segment, colors)
     }
 
     companion object {
@@ -306,95 +307,97 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FontVariation? =
             if (handle.address() == 0L) null else FontVariation(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BASE_FONT_HASH = 1262170328L
-        private val setBaseFontBind by lazy {
+        @JvmField
+        val setBaseFontBind =
             ObjectCalls.getMethodBind("FontVariation", "set_base_font", SET_BASE_FONT_HASH)
-        }
 
         private const val GET_BASE_FONT_HASH = 3229501585L
-        private val getBaseFontBind by lazy {
+        @JvmField
+        val getBaseFontBind =
             ObjectCalls.getMethodBind("FontVariation", "get_base_font", GET_BASE_FONT_HASH)
-        }
 
         private const val SET_VARIATION_OPENTYPE_HASH = 4155329257L
-        private val setVariationOpentypeBind by lazy {
+        @JvmField
+        val setVariationOpentypeBind =
             ObjectCalls.getMethodBind("FontVariation", "set_variation_opentype", SET_VARIATION_OPENTYPE_HASH)
-        }
 
         private const val GET_VARIATION_OPENTYPE_HASH = 3102165223L
-        private val getVariationOpentypeBind by lazy {
+        @JvmField
+        val getVariationOpentypeBind =
             ObjectCalls.getMethodBind("FontVariation", "get_variation_opentype", GET_VARIATION_OPENTYPE_HASH)
-        }
 
         private const val SET_VARIATION_EMBOLDEN_HASH = 373806689L
-        private val setVariationEmboldenBind by lazy {
+        @JvmField
+        val setVariationEmboldenBind =
             ObjectCalls.getMethodBind("FontVariation", "set_variation_embolden", SET_VARIATION_EMBOLDEN_HASH)
-        }
 
         private const val GET_VARIATION_EMBOLDEN_HASH = 1740695150L
-        private val getVariationEmboldenBind by lazy {
+        @JvmField
+        val getVariationEmboldenBind =
             ObjectCalls.getMethodBind("FontVariation", "get_variation_embolden", GET_VARIATION_EMBOLDEN_HASH)
-        }
 
         private const val SET_VARIATION_FACE_INDEX_HASH = 1286410249L
-        private val setVariationFaceIndexBind by lazy {
+        @JvmField
+        val setVariationFaceIndexBind =
             ObjectCalls.getMethodBind("FontVariation", "set_variation_face_index", SET_VARIATION_FACE_INDEX_HASH)
-        }
 
         private const val GET_VARIATION_FACE_INDEX_HASH = 3905245786L
-        private val getVariationFaceIndexBind by lazy {
+        @JvmField
+        val getVariationFaceIndexBind =
             ObjectCalls.getMethodBind("FontVariation", "get_variation_face_index", GET_VARIATION_FACE_INDEX_HASH)
-        }
 
         private const val SET_VARIATION_TRANSFORM_HASH = 2761652528L
-        private val setVariationTransformBind by lazy {
+        @JvmField
+        val setVariationTransformBind =
             ObjectCalls.getMethodBind("FontVariation", "set_variation_transform", SET_VARIATION_TRANSFORM_HASH)
-        }
 
         private const val GET_VARIATION_TRANSFORM_HASH = 3814499831L
-        private val getVariationTransformBind by lazy {
+        @JvmField
+        val getVariationTransformBind =
             ObjectCalls.getMethodBind("FontVariation", "get_variation_transform", GET_VARIATION_TRANSFORM_HASH)
-        }
 
         private const val SET_OPENTYPE_FEATURES_HASH = 4155329257L
-        private val setOpentypeFeaturesBind by lazy {
+        @JvmField
+        val setOpentypeFeaturesBind =
             ObjectCalls.getMethodBind("FontVariation", "set_opentype_features", SET_OPENTYPE_FEATURES_HASH)
-        }
 
         private const val SET_SPACING_HASH = 3122339690L
-        private val setSpacingBind by lazy {
+        @JvmField
+        val setSpacingBind =
             ObjectCalls.getMethodBind("FontVariation", "set_spacing", SET_SPACING_HASH)
-        }
 
         private const val SET_BASELINE_OFFSET_HASH = 373806689L
-        private val setBaselineOffsetBind by lazy {
+        @JvmField
+        val setBaselineOffsetBind =
             ObjectCalls.getMethodBind("FontVariation", "set_baseline_offset", SET_BASELINE_OFFSET_HASH)
-        }
 
         private const val GET_BASELINE_OFFSET_HASH = 1740695150L
-        private val getBaselineOffsetBind by lazy {
+        @JvmField
+        val getBaselineOffsetBind =
             ObjectCalls.getMethodBind("FontVariation", "get_baseline_offset", GET_BASELINE_OFFSET_HASH)
-        }
 
         private const val GET_PALETTE_INDEX_HASH = 3905245786L
-        private val getPaletteIndexBind by lazy {
+        @JvmField
+        val getPaletteIndexBind =
             ObjectCalls.getMethodBind("FontVariation", "get_palette_index", GET_PALETTE_INDEX_HASH)
-        }
 
         private const val SET_PALETTE_INDEX_HASH = 1286410249L
-        private val setPaletteIndexBind by lazy {
+        @JvmField
+        val setPaletteIndexBind =
             ObjectCalls.getMethodBind("FontVariation", "set_palette_index", SET_PALETTE_INDEX_HASH)
-        }
 
         private const val GET_PALETTE_CUSTOM_COLORS_HASH = 1392750486L
-        private val getPaletteCustomColorsBind by lazy {
+        @JvmField
+        val getPaletteCustomColorsBind =
             ObjectCalls.getMethodBind("FontVariation", "get_palette_custom_colors", GET_PALETTE_CUSTOM_COLORS_HASH)
-        }
 
         private const val SET_PALETTE_CUSTOM_COLORS_HASH = 3546319833L
-        private val setPaletteCustomColorsBind by lazy {
+        @JvmField
+        val setPaletteCustomColorsBind =
             ObjectCalls.getMethodBind("FontVariation", "set_palette_custom_colors", SET_PALETTE_CUSTOM_COLORS_HASH)
-        }
     }
 }

@@ -20,7 +20,5 @@ open class GLTFDocumentExtension(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFDocumentExtension? =
             if (handle.address() == 0L) null else GLTFDocumentExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

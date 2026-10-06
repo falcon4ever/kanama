@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -80,7 +81,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTranslationObject(locale: String): Translation? {
         checkOpen()
-        return Translation.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, segment, locale))
+        return Translation.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getTranslationObjectBind, segment, locale))
     }
 
     /**
@@ -90,7 +91,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addTranslation(translation: Translation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -100,7 +101,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun removeTranslation(translation: Translation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -110,7 +111,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -120,7 +121,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTranslations(): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, segment, Translation::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTranslationsBind, segment, Translation::wrapBorrowed)
     }
 
     /**
@@ -132,7 +133,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTranslationForLocale(locale: String, exact: Boolean): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(hasTranslationForLocaleBind, segment, locale, exact)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(Binds.hasTranslationForLocaleBind, segment, locale, exact)
     }
 
     /**
@@ -142,7 +143,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTranslation(translation: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, segment, translation?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.hasTranslationBind, segment, translation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -154,7 +155,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, segment, locale, exact, Translation::wrapBorrowed)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(Binds.findTranslationsBind, segment, locale, exact, Translation::wrapBorrowed)
     }
 
     /**
@@ -164,7 +165,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun translate(message: String, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(translateBind, segment, message, context)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(Binds.translateBind, segment, message, context)
     }
 
     /**
@@ -176,7 +177,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun translatePlural(message: String, messagePlural: String, n: Int, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(translatePluralBind, segment, message, messagePlural, n, context)
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(Binds.translatePluralBind, segment, message, messagePlural, n, context)
     }
 
     /**
@@ -187,7 +188,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocaleOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocaleOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleOverrideBind, segment)
     }
 
     /**
@@ -200,7 +201,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLocaleOverride(locale: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocaleOverrideBind, segment, locale)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLocaleOverrideBind, segment, locale)
     }
 
     /**
@@ -211,7 +212,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -222,7 +223,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -236,7 +237,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationEnabledBind, segment)
     }
 
     /**
@@ -250,7 +251,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationEnabledBind, segment, enabled)
     }
 
     /**
@@ -263,7 +264,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationAccentsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationAccentsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationAccentsEnabledBind, segment)
     }
 
     /**
@@ -276,7 +277,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationAccentsEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationAccentsEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationAccentsEnabledBind, segment, enabled)
     }
 
     /**
@@ -289,7 +290,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationDoubleVowelsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationDoubleVowelsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationDoubleVowelsEnabledBind, segment)
     }
 
     /**
@@ -302,7 +303,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationDoubleVowelsEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationDoubleVowelsEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationDoubleVowelsEnabledBind, segment, enabled)
     }
 
     /**
@@ -317,7 +318,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationFakeBidiEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationFakeBidiEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationFakeBidiEnabledBind, segment)
     }
 
     /**
@@ -332,7 +333,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationFakeBidiEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationFakeBidiEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationFakeBidiEnabledBind, segment, enabled)
     }
 
     /**
@@ -345,7 +346,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationOverrideEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationOverrideEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationOverrideEnabledBind, segment)
     }
 
     /**
@@ -358,7 +359,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationOverrideEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationOverrideEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationOverrideEnabledBind, segment, enabled)
     }
 
     /**
@@ -372,7 +373,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPseudolocalizationSkipPlaceholdersEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPseudolocalizationSkipPlaceholdersEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPseudolocalizationSkipPlaceholdersEnabledBind, segment)
     }
 
     /**
@@ -386,7 +387,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationSkipPlaceholdersEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPseudolocalizationSkipPlaceholdersEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPseudolocalizationSkipPlaceholdersEnabledBind, segment, enabled)
     }
 
     /**
@@ -400,7 +401,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPseudolocalizationExpansionRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPseudolocalizationExpansionRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPseudolocalizationExpansionRatioBind, segment)
     }
 
     /**
@@ -414,7 +415,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationExpansionRatio(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPseudolocalizationExpansionRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPseudolocalizationExpansionRatioBind, segment, ratio)
     }
 
     /**
@@ -427,7 +428,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPseudolocalizationPrefix(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationPrefixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPseudolocalizationPrefixBind, segment)
     }
 
     /**
@@ -440,7 +441,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationPrefix(prefix: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPseudolocalizationPrefixBind, segment, prefix)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPseudolocalizationPrefixBind, segment, prefix)
     }
 
     /**
@@ -453,7 +454,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPseudolocalizationSuffix(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPseudolocalizationSuffixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPseudolocalizationSuffixBind, segment)
     }
 
     /**
@@ -466,7 +467,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPseudolocalizationSuffix(suffix: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPseudolocalizationSuffixBind, segment, suffix)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPseudolocalizationSuffixBind, segment, suffix)
     }
 
     /**
@@ -476,7 +477,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun pseudolocalize(message: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(pseudolocalizeBind, segment, message)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.pseudolocalizeBind, segment, message)
     }
 
     companion object {
@@ -489,170 +490,172 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TranslationDomain? =
             if (handle.address() == 0L) null else TranslationDomain(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRANSLATION_OBJECT_HASH = 606768082L
-        private val getTranslationObjectBind by lazy {
+        @JvmField
+        val getTranslationObjectBind =
             ObjectCalls.getMethodBind("TranslationDomain", "get_translation_object", GET_TRANSLATION_OBJECT_HASH)
-        }
 
         private const val ADD_TRANSLATION_HASH = 1466479800L
-        private val addTranslationBind by lazy {
+        @JvmField
+        val addTranslationBind =
             ObjectCalls.getMethodBind("TranslationDomain", "add_translation", ADD_TRANSLATION_HASH)
-        }
 
         private const val REMOVE_TRANSLATION_HASH = 1466479800L
-        private val removeTranslationBind by lazy {
+        @JvmField
+        val removeTranslationBind =
             ObjectCalls.getMethodBind("TranslationDomain", "remove_translation", REMOVE_TRANSLATION_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("TranslationDomain", "clear", CLEAR_HASH)
-        }
 
         private const val GET_TRANSLATIONS_HASH = 3995934104L
-        private val getTranslationsBind by lazy {
+        @JvmField
+        val getTranslationsBind =
             ObjectCalls.getMethodBind("TranslationDomain", "get_translations", GET_TRANSLATIONS_HASH)
-        }
 
         private const val HAS_TRANSLATION_FOR_LOCALE_HASH = 2034713381L
-        private val hasTranslationForLocaleBind by lazy {
+        @JvmField
+        val hasTranslationForLocaleBind =
             ObjectCalls.getMethodBind("TranslationDomain", "has_translation_for_locale", HAS_TRANSLATION_FOR_LOCALE_HASH)
-        }
 
         private const val HAS_TRANSLATION_HASH = 2696976312L
-        private val hasTranslationBind by lazy {
+        @JvmField
+        val hasTranslationBind =
             ObjectCalls.getMethodBind("TranslationDomain", "has_translation", HAS_TRANSLATION_HASH)
-        }
 
         private const val FIND_TRANSLATIONS_HASH = 2109650934L
-        private val findTranslationsBind by lazy {
+        @JvmField
+        val findTranslationsBind =
             ObjectCalls.getMethodBind("TranslationDomain", "find_translations", FIND_TRANSLATIONS_HASH)
-        }
 
         private const val TRANSLATE_HASH = 1829228469L
-        private val translateBind by lazy {
+        @JvmField
+        val translateBind =
             ObjectCalls.getMethodBind("TranslationDomain", "translate", TRANSLATE_HASH)
-        }
 
         private const val TRANSLATE_PLURAL_HASH = 229954002L
-        private val translatePluralBind by lazy {
+        @JvmField
+        val translatePluralBind =
             ObjectCalls.getMethodBind("TranslationDomain", "translate_plural", TRANSLATE_PLURAL_HASH)
-        }
 
         private const val GET_LOCALE_OVERRIDE_HASH = 201670096L
-        private val getLocaleOverrideBind by lazy {
+        @JvmField
+        val getLocaleOverrideBind =
             ObjectCalls.getMethodBind("TranslationDomain", "get_locale_override", GET_LOCALE_OVERRIDE_HASH)
-        }
 
         private const val SET_LOCALE_OVERRIDE_HASH = 83702148L
-        private val setLocaleOverrideBind by lazy {
+        @JvmField
+        val setLocaleOverrideBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_locale_override", SET_LOCALE_OVERRIDE_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_PSEUDOLOCALIZATION_ENABLED_HASH = 36873697L
-        private val isPseudolocalizationEnabledBind by lazy {
+        @JvmField
+        val isPseudolocalizationEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_pseudolocalization_enabled", IS_PSEUDOLOCALIZATION_ENABLED_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_ENABLED_HASH = 2586408642L
-        private val setPseudolocalizationEnabledBind by lazy {
+        @JvmField
+        val setPseudolocalizationEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_enabled", SET_PSEUDOLOCALIZATION_ENABLED_HASH)
-        }
 
         private const val IS_PSEUDOLOCALIZATION_ACCENTS_ENABLED_HASH = 36873697L
-        private val isPseudolocalizationAccentsEnabledBind by lazy {
+        @JvmField
+        val isPseudolocalizationAccentsEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_pseudolocalization_accents_enabled", IS_PSEUDOLOCALIZATION_ACCENTS_ENABLED_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_ACCENTS_ENABLED_HASH = 2586408642L
-        private val setPseudolocalizationAccentsEnabledBind by lazy {
+        @JvmField
+        val setPseudolocalizationAccentsEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_accents_enabled", SET_PSEUDOLOCALIZATION_ACCENTS_ENABLED_HASH)
-        }
 
         private const val IS_PSEUDOLOCALIZATION_DOUBLE_VOWELS_ENABLED_HASH = 36873697L
-        private val isPseudolocalizationDoubleVowelsEnabledBind by lazy {
+        @JvmField
+        val isPseudolocalizationDoubleVowelsEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_pseudolocalization_double_vowels_enabled", IS_PSEUDOLOCALIZATION_DOUBLE_VOWELS_ENABLED_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_DOUBLE_VOWELS_ENABLED_HASH = 2586408642L
-        private val setPseudolocalizationDoubleVowelsEnabledBind by lazy {
+        @JvmField
+        val setPseudolocalizationDoubleVowelsEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_double_vowels_enabled", SET_PSEUDOLOCALIZATION_DOUBLE_VOWELS_ENABLED_HASH)
-        }
 
         private const val IS_PSEUDOLOCALIZATION_FAKE_BIDI_ENABLED_HASH = 36873697L
-        private val isPseudolocalizationFakeBidiEnabledBind by lazy {
+        @JvmField
+        val isPseudolocalizationFakeBidiEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_pseudolocalization_fake_bidi_enabled", IS_PSEUDOLOCALIZATION_FAKE_BIDI_ENABLED_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_FAKE_BIDI_ENABLED_HASH = 2586408642L
-        private val setPseudolocalizationFakeBidiEnabledBind by lazy {
+        @JvmField
+        val setPseudolocalizationFakeBidiEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_fake_bidi_enabled", SET_PSEUDOLOCALIZATION_FAKE_BIDI_ENABLED_HASH)
-        }
 
         private const val IS_PSEUDOLOCALIZATION_OVERRIDE_ENABLED_HASH = 36873697L
-        private val isPseudolocalizationOverrideEnabledBind by lazy {
+        @JvmField
+        val isPseudolocalizationOverrideEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_pseudolocalization_override_enabled", IS_PSEUDOLOCALIZATION_OVERRIDE_ENABLED_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_OVERRIDE_ENABLED_HASH = 2586408642L
-        private val setPseudolocalizationOverrideEnabledBind by lazy {
+        @JvmField
+        val setPseudolocalizationOverrideEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_override_enabled", SET_PSEUDOLOCALIZATION_OVERRIDE_ENABLED_HASH)
-        }
 
         private const val IS_PSEUDOLOCALIZATION_SKIP_PLACEHOLDERS_ENABLED_HASH = 36873697L
-        private val isPseudolocalizationSkipPlaceholdersEnabledBind by lazy {
+        @JvmField
+        val isPseudolocalizationSkipPlaceholdersEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "is_pseudolocalization_skip_placeholders_enabled", IS_PSEUDOLOCALIZATION_SKIP_PLACEHOLDERS_ENABLED_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_SKIP_PLACEHOLDERS_ENABLED_HASH = 2586408642L
-        private val setPseudolocalizationSkipPlaceholdersEnabledBind by lazy {
+        @JvmField
+        val setPseudolocalizationSkipPlaceholdersEnabledBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_skip_placeholders_enabled", SET_PSEUDOLOCALIZATION_SKIP_PLACEHOLDERS_ENABLED_HASH)
-        }
 
         private const val GET_PSEUDOLOCALIZATION_EXPANSION_RATIO_HASH = 1740695150L
-        private val getPseudolocalizationExpansionRatioBind by lazy {
+        @JvmField
+        val getPseudolocalizationExpansionRatioBind =
             ObjectCalls.getMethodBind("TranslationDomain", "get_pseudolocalization_expansion_ratio", GET_PSEUDOLOCALIZATION_EXPANSION_RATIO_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_EXPANSION_RATIO_HASH = 373806689L
-        private val setPseudolocalizationExpansionRatioBind by lazy {
+        @JvmField
+        val setPseudolocalizationExpansionRatioBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_expansion_ratio", SET_PSEUDOLOCALIZATION_EXPANSION_RATIO_HASH)
-        }
 
         private const val GET_PSEUDOLOCALIZATION_PREFIX_HASH = 201670096L
-        private val getPseudolocalizationPrefixBind by lazy {
+        @JvmField
+        val getPseudolocalizationPrefixBind =
             ObjectCalls.getMethodBind("TranslationDomain", "get_pseudolocalization_prefix", GET_PSEUDOLOCALIZATION_PREFIX_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_PREFIX_HASH = 83702148L
-        private val setPseudolocalizationPrefixBind by lazy {
+        @JvmField
+        val setPseudolocalizationPrefixBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_prefix", SET_PSEUDOLOCALIZATION_PREFIX_HASH)
-        }
 
         private const val GET_PSEUDOLOCALIZATION_SUFFIX_HASH = 201670096L
-        private val getPseudolocalizationSuffixBind by lazy {
+        @JvmField
+        val getPseudolocalizationSuffixBind =
             ObjectCalls.getMethodBind("TranslationDomain", "get_pseudolocalization_suffix", GET_PSEUDOLOCALIZATION_SUFFIX_HASH)
-        }
 
         private const val SET_PSEUDOLOCALIZATION_SUFFIX_HASH = 83702148L
-        private val setPseudolocalizationSuffixBind by lazy {
+        @JvmField
+        val setPseudolocalizationSuffixBind =
             ObjectCalls.getMethodBind("TranslationDomain", "set_pseudolocalization_suffix", SET_PSEUDOLOCALIZATION_SUFFIX_HASH)
-        }
 
         private const val PSEUDOLOCALIZE_HASH = 1965194235L
-        private val pseudolocalizeBind by lazy {
+        @JvmField
+        val pseudolocalizeBind =
             ObjectCalls.getMethodBind("TranslationDomain", "pseudolocalize", PSEUDOLOCALIZE_HASH)
-        }
     }
 }

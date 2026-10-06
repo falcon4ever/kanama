@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -119,7 +120,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, segment, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -131,7 +132,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.apply_impulse
      */
     fun applyImpulse(impulse: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, segment, impulse, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.applyImpulseBind, segment, impulse, position)
     }
 
     /**
@@ -140,7 +141,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_joint_type
      */
     fun setJointType(jointType: PhysicalBone3D.JointType) {
-        ObjectCalls.ptrcallWithLongArg(setJointTypeBind, segment, jointType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJointTypeBind, segment, jointType.value)
     }
 
     /**
@@ -149,7 +150,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_joint_type
      */
     fun getJointType(): PhysicalBone3D.JointType {
-        return PhysicalBone3D.JointType(ObjectCalls.ptrcallNoArgsRetLong(getJointTypeBind, segment))
+        return PhysicalBone3D.JointType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJointTypeBind, segment))
     }
 
     /**
@@ -158,7 +159,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_joint_offset
      */
     fun setJointOffset(offset: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setJointOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setJointOffsetBind, segment, offset)
     }
 
     /**
@@ -167,7 +168,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_joint_offset
      */
     fun getJointOffset(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getJointOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getJointOffsetBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_joint_rotation
      */
     fun setJointRotation(euler: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setJointRotationBind, segment, euler)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setJointRotationBind, segment, euler)
     }
 
     /**
@@ -185,7 +186,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_joint_rotation
      */
     fun getJointRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getJointRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getJointRotationBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_body_offset
      */
     fun setBodyOffset(offset: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setBodyOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setBodyOffsetBind, segment, offset)
     }
 
     /**
@@ -203,7 +204,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_body_offset
      */
     fun getBodyOffset(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getBodyOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getBodyOffsetBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_simulate_physics
      */
     fun getSimulatePhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSimulatePhysicsBind, segment)
     }
 
     /**
@@ -221,7 +222,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.is_simulating_physics
      */
     fun isSimulatingPhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSimulatingPhysicsBind, segment)
     }
 
     /**
@@ -230,7 +231,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_bone_id
      */
     fun getBoneId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneIdBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_mass
      */
     fun setMass(mass: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMassBind, segment, mass)
     }
 
     /**
@@ -248,7 +249,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_mass
      */
     fun getMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
     }
 
     /**
@@ -257,7 +258,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_friction
      */
     fun setFriction(friction: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, segment, friction)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrictionBind, segment, friction)
     }
 
     /**
@@ -266,7 +267,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_friction
      */
     fun getFriction(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrictionBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_bounce
      */
     fun setBounce(bounce: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBounceBind, segment, bounce)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBounceBind, segment, bounce)
     }
 
     /**
@@ -292,7 +293,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_bounce
      */
     fun getBounce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBounceBind, segment)
     }
 
     /**
@@ -303,7 +304,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_gravity_scale
      */
     fun setGravityScale(gravityScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityScaleBind, segment, gravityScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGravityScaleBind, segment, gravityScale)
     }
 
     /**
@@ -314,7 +315,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_gravity_scale
      */
     fun getGravityScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGravityScaleBind, segment)
     }
 
     /**
@@ -323,7 +324,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_linear_damp_mode
      */
     fun setLinearDampMode(linearDampMode: PhysicalBone3D.DampMode) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLinearDampModeBind, segment, linearDampMode.value)
     }
 
     /**
@@ -332,7 +333,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_linear_damp_mode
      */
     fun getLinearDampMode(): PhysicalBone3D.DampMode {
-        return PhysicalBone3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment))
+        return PhysicalBone3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLinearDampModeBind, segment))
     }
 
     /**
@@ -341,7 +342,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_angular_damp_mode
      */
     fun setAngularDampMode(angularDampMode: PhysicalBone3D.DampMode) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAngularDampModeBind, segment, angularDampMode.value)
     }
 
     /**
@@ -350,7 +351,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_angular_damp_mode
      */
     fun getAngularDampMode(): PhysicalBone3D.DampMode {
-        return PhysicalBone3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment))
+        return PhysicalBone3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAngularDampModeBind, segment))
     }
 
     /**
@@ -363,7 +364,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -376,7 +377,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLinearDampBind, segment)
     }
 
     /**
@@ -389,7 +390,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -402,7 +403,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularDampBind, segment)
     }
 
     /**
@@ -413,7 +414,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_linear_velocity
      */
     fun setLinearVelocity(linearVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, linearVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, linearVelocity)
     }
 
     /**
@@ -424,7 +425,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_linear_velocity
      */
     fun getLinearVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
     }
 
     /**
@@ -433,7 +434,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_angular_velocity
      */
     fun setAngularVelocity(angularVelocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, angularVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, angularVelocity)
     }
 
     /**
@@ -442,7 +443,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.get_angular_velocity
      */
     fun getAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
     }
 
     /**
@@ -454,7 +455,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_use_custom_integrator
      */
     fun setUseCustomIntegrator(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomIntegratorBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomIntegratorBind, segment, enable)
     }
 
     /**
@@ -466,7 +467,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.is_using_custom_integrator
      */
     fun isUsingCustomIntegrator(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomIntegratorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomIntegratorBind, segment)
     }
 
     /**
@@ -476,7 +477,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.set_can_sleep
      */
     fun setCanSleep(ableToSleep: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCanSleepBind, segment, ableToSleep)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCanSleepBind, segment, ableToSleep)
     }
 
     /**
@@ -486,7 +487,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: PhysicalBone3D.is_able_to_sleep
      */
     fun isAbleToSleep(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbleToSleepBind, segment)
     }
 
     /**
@@ -568,190 +569,192 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicalBone3D? =
             if (handle.address() == 0L) null else PhysicalBone3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val APPLY_CENTRAL_IMPULSE_HASH = 3460891852L
-        private val applyCentralImpulseBind by lazy {
+        @JvmField
+        val applyCentralImpulseBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "apply_central_impulse", APPLY_CENTRAL_IMPULSE_HASH)
-        }
 
         private const val APPLY_IMPULSE_HASH = 2754756483L
-        private val applyImpulseBind by lazy {
+        @JvmField
+        val applyImpulseBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "apply_impulse", APPLY_IMPULSE_HASH)
-        }
 
         private const val SET_JOINT_TYPE_HASH = 2289552604L
-        private val setJointTypeBind by lazy {
+        @JvmField
+        val setJointTypeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_joint_type", SET_JOINT_TYPE_HASH)
-        }
 
         private const val GET_JOINT_TYPE_HASH = 931347320L
-        private val getJointTypeBind by lazy {
+        @JvmField
+        val getJointTypeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_joint_type", GET_JOINT_TYPE_HASH)
-        }
 
         private const val SET_JOINT_OFFSET_HASH = 2952846383L
-        private val setJointOffsetBind by lazy {
+        @JvmField
+        val setJointOffsetBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_joint_offset", SET_JOINT_OFFSET_HASH)
-        }
 
         private const val GET_JOINT_OFFSET_HASH = 3229777777L
-        private val getJointOffsetBind by lazy {
+        @JvmField
+        val getJointOffsetBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_joint_offset", GET_JOINT_OFFSET_HASH)
-        }
 
         private const val SET_JOINT_ROTATION_HASH = 3460891852L
-        private val setJointRotationBind by lazy {
+        @JvmField
+        val setJointRotationBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_joint_rotation", SET_JOINT_ROTATION_HASH)
-        }
 
         private const val GET_JOINT_ROTATION_HASH = 3360562783L
-        private val getJointRotationBind by lazy {
+        @JvmField
+        val getJointRotationBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_joint_rotation", GET_JOINT_ROTATION_HASH)
-        }
 
         private const val SET_BODY_OFFSET_HASH = 2952846383L
-        private val setBodyOffsetBind by lazy {
+        @JvmField
+        val setBodyOffsetBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_body_offset", SET_BODY_OFFSET_HASH)
-        }
 
         private const val GET_BODY_OFFSET_HASH = 3229777777L
-        private val getBodyOffsetBind by lazy {
+        @JvmField
+        val getBodyOffsetBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_body_offset", GET_BODY_OFFSET_HASH)
-        }
 
         private const val GET_SIMULATE_PHYSICS_HASH = 2240911060L
-        private val getSimulatePhysicsBind by lazy {
+        @JvmField
+        val getSimulatePhysicsBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_simulate_physics", GET_SIMULATE_PHYSICS_HASH)
-        }
 
         private const val IS_SIMULATING_PHYSICS_HASH = 2240911060L
-        private val isSimulatingPhysicsBind by lazy {
+        @JvmField
+        val isSimulatingPhysicsBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "is_simulating_physics", IS_SIMULATING_PHYSICS_HASH)
-        }
 
         private const val GET_BONE_ID_HASH = 3905245786L
-        private val getBoneIdBind by lazy {
+        @JvmField
+        val getBoneIdBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_bone_id", GET_BONE_ID_HASH)
-        }
 
         private const val SET_MASS_HASH = 373806689L
-        private val setMassBind by lazy {
+        @JvmField
+        val setMassBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_mass", SET_MASS_HASH)
-        }
 
         private const val GET_MASS_HASH = 1740695150L
-        private val getMassBind by lazy {
+        @JvmField
+        val getMassBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_mass", GET_MASS_HASH)
-        }
 
         private const val SET_FRICTION_HASH = 373806689L
-        private val setFrictionBind by lazy {
+        @JvmField
+        val setFrictionBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_friction", SET_FRICTION_HASH)
-        }
 
         private const val GET_FRICTION_HASH = 1740695150L
-        private val getFrictionBind by lazy {
+        @JvmField
+        val getFrictionBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_friction", GET_FRICTION_HASH)
-        }
 
         private const val SET_BOUNCE_HASH = 373806689L
-        private val setBounceBind by lazy {
+        @JvmField
+        val setBounceBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_bounce", SET_BOUNCE_HASH)
-        }
 
         private const val GET_BOUNCE_HASH = 1740695150L
-        private val getBounceBind by lazy {
+        @JvmField
+        val getBounceBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_bounce", GET_BOUNCE_HASH)
-        }
 
         private const val SET_GRAVITY_SCALE_HASH = 373806689L
-        private val setGravityScaleBind by lazy {
+        @JvmField
+        val setGravityScaleBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_gravity_scale", SET_GRAVITY_SCALE_HASH)
-        }
 
         private const val GET_GRAVITY_SCALE_HASH = 1740695150L
-        private val getGravityScaleBind by lazy {
+        @JvmField
+        val getGravityScaleBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_gravity_scale", GET_GRAVITY_SCALE_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_MODE_HASH = 1244972221L
-        private val setLinearDampModeBind by lazy {
+        @JvmField
+        val setLinearDampModeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_linear_damp_mode", SET_LINEAR_DAMP_MODE_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_MODE_HASH = 205884699L
-        private val getLinearDampModeBind by lazy {
+        @JvmField
+        val getLinearDampModeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_linear_damp_mode", GET_LINEAR_DAMP_MODE_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_MODE_HASH = 1244972221L
-        private val setAngularDampModeBind by lazy {
+        @JvmField
+        val setAngularDampModeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_angular_damp_mode", SET_ANGULAR_DAMP_MODE_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_MODE_HASH = 205884699L
-        private val getAngularDampModeBind by lazy {
+        @JvmField
+        val getAngularDampModeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_angular_damp_mode", GET_ANGULAR_DAMP_MODE_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_HASH = 373806689L
-        private val setLinearDampBind by lazy {
+        @JvmField
+        val setLinearDampBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_linear_damp", SET_LINEAR_DAMP_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_HASH = 1740695150L
-        private val getLinearDampBind by lazy {
+        @JvmField
+        val getLinearDampBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_linear_damp", GET_LINEAR_DAMP_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_HASH = 373806689L
-        private val setAngularDampBind by lazy {
+        @JvmField
+        val setAngularDampBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_angular_damp", SET_ANGULAR_DAMP_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_HASH = 1740695150L
-        private val getAngularDampBind by lazy {
+        @JvmField
+        val getAngularDampBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_angular_damp", GET_ANGULAR_DAMP_HASH)
-        }
 
         private const val SET_LINEAR_VELOCITY_HASH = 3460891852L
-        private val setLinearVelocityBind by lazy {
+        @JvmField
+        val setLinearVelocityBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_linear_velocity", SET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_LINEAR_VELOCITY_HASH = 3360562783L
-        private val getLinearVelocityBind by lazy {
+        @JvmField
+        val getLinearVelocityBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_linear_velocity", GET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_ANGULAR_VELOCITY_HASH = 3460891852L
-        private val setAngularVelocityBind by lazy {
+        @JvmField
+        val setAngularVelocityBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_angular_velocity", SET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_ANGULAR_VELOCITY_HASH = 3360562783L
-        private val getAngularVelocityBind by lazy {
+        @JvmField
+        val getAngularVelocityBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_angular_velocity", GET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val SET_USE_CUSTOM_INTEGRATOR_HASH = 2586408642L
-        private val setUseCustomIntegratorBind by lazy {
+        @JvmField
+        val setUseCustomIntegratorBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_use_custom_integrator", SET_USE_CUSTOM_INTEGRATOR_HASH)
-        }
 
         private const val IS_USING_CUSTOM_INTEGRATOR_HASH = 2240911060L
-        private val isUsingCustomIntegratorBind by lazy {
+        @JvmField
+        val isUsingCustomIntegratorBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "is_using_custom_integrator", IS_USING_CUSTOM_INTEGRATOR_HASH)
-        }
 
         private const val SET_CAN_SLEEP_HASH = 2586408642L
-        private val setCanSleepBind by lazy {
+        @JvmField
+        val setCanSleepBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "set_can_sleep", SET_CAN_SLEEP_HASH)
-        }
 
         private const val IS_ABLE_TO_SLEEP_HASH = 36873697L
-        private val isAbleToSleepBind by lazy {
+        @JvmField
+        val isAbleToSleepBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "is_able_to_sleep", IS_ABLE_TO_SLEEP_HASH)
-        }
     }
 }

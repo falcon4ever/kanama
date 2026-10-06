@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -172,7 +173,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setSamplePartitionType(samplePartitionType: NavigationMesh.SamplePartitionType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSamplePartitionTypeBind, segment, samplePartitionType.value)
     }
 
     /**
@@ -182,7 +183,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSamplePartitionType(): NavigationMesh.SamplePartitionType {
         checkOpen()
-        return NavigationMesh.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment))
+        return NavigationMesh.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplePartitionTypeBind, segment))
     }
 
     /**
@@ -192,7 +193,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setParsedGeometryType(geometryType: NavigationMesh.ParsedGeometryType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setParsedGeometryTypeBind, segment, geometryType.value)
     }
 
     /**
@@ -202,7 +203,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedGeometryType(): NavigationMesh.ParsedGeometryType {
         checkOpen()
-        return NavigationMesh.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment))
+        return NavigationMesh.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getParsedGeometryTypeBind, segment))
     }
 
     /**
@@ -213,7 +214,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setCollisionMask(mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -224,7 +225,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -246,7 +247,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -256,7 +257,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceGeometryMode(mask: NavigationMesh.SourceGeometryMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, mask.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSourceGeometryModeBind, segment, mask.value)
     }
 
     /**
@@ -266,7 +267,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGeometryMode(): NavigationMesh.SourceGeometryMode {
         checkOpen()
-        return NavigationMesh.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment))
+        return NavigationMesh.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceGeometryModeBind, segment))
     }
 
     /**
@@ -277,7 +278,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceGroupName(mask: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setSourceGroupNameBind, segment, mask)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setSourceGroupNameBind, segment, mask)
     }
 
     /**
@@ -288,7 +289,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGroupName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGroupNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSourceGroupNameBind, segment)
     }
 
     /**
@@ -299,7 +300,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setCellSize(cellSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, segment, cellSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCellSizeBind, segment, cellSize)
     }
 
     /**
@@ -310,7 +311,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
     }
 
     /**
@@ -321,7 +322,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setCellHeight(cellHeight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellHeightBind, segment, cellHeight)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCellHeightBind, segment, cellHeight)
     }
 
     /**
@@ -332,7 +333,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellHeightBind, segment)
     }
 
     /**
@@ -346,7 +347,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setBorderSize(borderSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, segment, borderSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBorderSizeBind, segment, borderSize)
     }
 
     /**
@@ -360,7 +361,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBorderSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderSizeBind, segment)
     }
 
     /**
@@ -372,7 +373,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setAgentHeight(agentHeight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentHeightBind, segment, agentHeight)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentHeightBind, segment, agentHeight)
     }
 
     /**
@@ -384,7 +385,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentHeightBind, segment)
     }
 
     /**
@@ -399,7 +400,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setAgentRadius(agentRadius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, segment, agentRadius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentRadiusBind, segment, agentRadius)
     }
 
     /**
@@ -414,7 +415,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentRadiusBind, segment)
     }
 
     /**
@@ -425,7 +426,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setAgentMaxClimb(agentMaxClimb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentMaxClimbBind, segment, agentMaxClimb)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentMaxClimbBind, segment, agentMaxClimb)
     }
 
     /**
@@ -436,7 +437,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentMaxClimb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxClimbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentMaxClimbBind, segment)
     }
 
     /**
@@ -446,7 +447,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setAgentMaxSlope(agentMaxSlope: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentMaxSlopeBind, segment, agentMaxSlope)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentMaxSlopeBind, segment, agentMaxSlope)
     }
 
     /**
@@ -456,7 +457,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentMaxSlope(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentMaxSlopeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentMaxSlopeBind, segment)
     }
 
     /**
@@ -468,7 +469,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setRegionMinSize(regionMinSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRegionMinSizeBind, segment, regionMinSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRegionMinSizeBind, segment, regionMinSize)
     }
 
     /**
@@ -480,7 +481,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getRegionMinSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMinSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRegionMinSizeBind, segment)
     }
 
     /**
@@ -492,7 +493,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setRegionMergeSize(regionMergeSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRegionMergeSizeBind, segment, regionMergeSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRegionMergeSizeBind, segment, regionMergeSize)
     }
 
     /**
@@ -504,7 +505,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getRegionMergeSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRegionMergeSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRegionMergeSizeBind, segment)
     }
 
     /**
@@ -516,7 +517,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setEdgeMaxLength(edgeMaxLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxLengthBind, segment, edgeMaxLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEdgeMaxLengthBind, segment, edgeMaxLength)
     }
 
     /**
@@ -528,7 +529,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getEdgeMaxLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeMaxLengthBind, segment)
     }
 
     /**
@@ -539,7 +540,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setEdgeMaxError(edgeMaxError: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEdgeMaxErrorBind, segment, edgeMaxError)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEdgeMaxErrorBind, segment, edgeMaxError)
     }
 
     /**
@@ -550,7 +551,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getEdgeMaxError(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEdgeMaxErrorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEdgeMaxErrorBind, segment)
     }
 
     /**
@@ -561,7 +562,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setVerticesPerPolygon(verticesPerPolygon: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVerticesPerPolygonBind, segment, verticesPerPolygon)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVerticesPerPolygonBind, segment, verticesPerPolygon)
     }
 
     /**
@@ -572,7 +573,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getVerticesPerPolygon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVerticesPerPolygonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVerticesPerPolygonBind, segment)
     }
 
     /**
@@ -582,7 +583,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setDetailSampleDistance(detailSampleDist: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDetailSampleDistanceBind, segment, detailSampleDist)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDetailSampleDistanceBind, segment, detailSampleDist)
     }
 
     /**
@@ -592,7 +593,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getDetailSampleDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDetailSampleDistanceBind, segment)
     }
 
     /**
@@ -602,7 +603,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setDetailSampleMaxError(detailSampleMaxError: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDetailSampleMaxErrorBind, segment, detailSampleMaxError)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDetailSampleMaxErrorBind, segment, detailSampleMaxError)
     }
 
     /**
@@ -612,7 +613,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getDetailSampleMaxError(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDetailSampleMaxErrorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDetailSampleMaxErrorBind, segment)
     }
 
     /**
@@ -623,7 +624,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterLowHangingObstacles(filterLowHangingObstacles: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterLowHangingObstaclesBind, segment, filterLowHangingObstacles)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFilterLowHangingObstaclesBind, segment, filterLowHangingObstacles)
     }
 
     /**
@@ -634,7 +635,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterLowHangingObstacles(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFilterLowHangingObstaclesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterLowHangingObstaclesBind, segment)
     }
 
     /**
@@ -644,7 +645,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterLedgeSpans(filterLedgeSpans: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterLedgeSpansBind, segment, filterLedgeSpans)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFilterLedgeSpansBind, segment, filterLedgeSpans)
     }
 
     /**
@@ -654,7 +655,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterLedgeSpans(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFilterLedgeSpansBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterLedgeSpansBind, segment)
     }
 
     /**
@@ -665,7 +666,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterWalkableLowHeightSpans(filterWalkableLowHeightSpans: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterWalkableLowHeightSpansBind, segment, filterWalkableLowHeightSpans)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFilterWalkableLowHeightSpansBind, segment, filterWalkableLowHeightSpans)
     }
 
     /**
@@ -676,7 +677,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterWalkableLowHeightSpans(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFilterWalkableLowHeightSpansBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFilterWalkableLowHeightSpansBind, segment)
     }
 
     /**
@@ -687,7 +688,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterBakingAabb(bakingAabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setFilterBakingAabbBind, segment, bakingAabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setFilterBakingAabbBind, segment, bakingAabb)
     }
 
     /**
@@ -698,7 +699,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterBakingAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getFilterBakingAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getFilterBakingAabbBind, segment)
     }
 
     /**
@@ -708,7 +709,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterBakingAabbOffset(bakingAabbOffset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setFilterBakingAabbOffsetBind, segment, bakingAabbOffset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setFilterBakingAabbOffsetBind, segment, bakingAabbOffset)
     }
 
     /**
@@ -718,7 +719,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFilterBakingAabbOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getFilterBakingAabbOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getFilterBakingAabbOffsetBind, segment)
     }
 
     /**
@@ -728,7 +729,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setVertices(vertices: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, segment, vertices)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setVerticesBind, segment, vertices)
     }
 
     /**
@@ -738,7 +739,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertices(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getVerticesBind, segment)
     }
 
     /**
@@ -748,7 +749,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun addPolygon(polygon: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.addPolygonBind, segment, polygon)
     }
 
     /**
@@ -758,7 +759,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygonCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolygonCountBind, segment)
     }
 
     /**
@@ -768,7 +769,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygon(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getPolygonBind, segment, idx)
     }
 
     /**
@@ -778,7 +779,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun clearPolygons() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPolygonsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearPolygonsBind, segment)
     }
 
     /**
@@ -789,7 +790,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createFromMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(createFromMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.createFromMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -799,7 +800,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -928,295 +929,297 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMesh? =
             if (handle.address() == 0L) null else NavigationMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SAMPLE_PARTITION_TYPE_HASH = 2472437533L
-        private val setSamplePartitionTypeBind by lazy {
+        @JvmField
+        val setSamplePartitionTypeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_sample_partition_type", SET_SAMPLE_PARTITION_TYPE_HASH)
-        }
 
         private const val GET_SAMPLE_PARTITION_TYPE_HASH = 833513918L
-        private val getSamplePartitionTypeBind by lazy {
+        @JvmField
+        val getSamplePartitionTypeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_sample_partition_type", GET_SAMPLE_PARTITION_TYPE_HASH)
-        }
 
         private const val SET_PARSED_GEOMETRY_TYPE_HASH = 3064713163L
-        private val setParsedGeometryTypeBind by lazy {
+        @JvmField
+        val setParsedGeometryTypeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_parsed_geometry_type", SET_PARSED_GEOMETRY_TYPE_HASH)
-        }
 
         private const val GET_PARSED_GEOMETRY_TYPE_HASH = 3928011953L
-        private val getParsedGeometryTypeBind by lazy {
+        @JvmField
+        val getParsedGeometryTypeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_parsed_geometry_type", GET_PARSED_GEOMETRY_TYPE_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val SET_COLLISION_MASK_VALUE_HASH = 300928843L
-        private val setCollisionMaskValueBind by lazy {
+        @JvmField
+        val setCollisionMaskValueBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_collision_mask_value", SET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_MASK_VALUE_HASH = 1116898809L
-        private val getCollisionMaskValueBind by lazy {
+        @JvmField
+        val getCollisionMaskValueBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_collision_mask_value", GET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val SET_SOURCE_GEOMETRY_MODE_HASH = 2700825194L
-        private val setSourceGeometryModeBind by lazy {
+        @JvmField
+        val setSourceGeometryModeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_source_geometry_mode", SET_SOURCE_GEOMETRY_MODE_HASH)
-        }
 
         private const val GET_SOURCE_GEOMETRY_MODE_HASH = 2770484141L
-        private val getSourceGeometryModeBind by lazy {
+        @JvmField
+        val getSourceGeometryModeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_source_geometry_mode", GET_SOURCE_GEOMETRY_MODE_HASH)
-        }
 
         private const val SET_SOURCE_GROUP_NAME_HASH = 3304788590L
-        private val setSourceGroupNameBind by lazy {
+        @JvmField
+        val setSourceGroupNameBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_source_group_name", SET_SOURCE_GROUP_NAME_HASH)
-        }
 
         private const val GET_SOURCE_GROUP_NAME_HASH = 2002593661L
-        private val getSourceGroupNameBind by lazy {
+        @JvmField
+        val getSourceGroupNameBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_source_group_name", GET_SOURCE_GROUP_NAME_HASH)
-        }
 
         private const val SET_CELL_SIZE_HASH = 373806689L
-        private val setCellSizeBind by lazy {
+        @JvmField
+        val setCellSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_cell_size", SET_CELL_SIZE_HASH)
-        }
 
         private const val GET_CELL_SIZE_HASH = 1740695150L
-        private val getCellSizeBind by lazy {
+        @JvmField
+        val getCellSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_cell_size", GET_CELL_SIZE_HASH)
-        }
 
         private const val SET_CELL_HEIGHT_HASH = 373806689L
-        private val setCellHeightBind by lazy {
+        @JvmField
+        val setCellHeightBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_cell_height", SET_CELL_HEIGHT_HASH)
-        }
 
         private const val GET_CELL_HEIGHT_HASH = 1740695150L
-        private val getCellHeightBind by lazy {
+        @JvmField
+        val getCellHeightBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_cell_height", GET_CELL_HEIGHT_HASH)
-        }
 
         private const val SET_BORDER_SIZE_HASH = 373806689L
-        private val setBorderSizeBind by lazy {
+        @JvmField
+        val setBorderSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_border_size", SET_BORDER_SIZE_HASH)
-        }
 
         private const val GET_BORDER_SIZE_HASH = 1740695150L
-        private val getBorderSizeBind by lazy {
+        @JvmField
+        val getBorderSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_border_size", GET_BORDER_SIZE_HASH)
-        }
 
         private const val SET_AGENT_HEIGHT_HASH = 373806689L
-        private val setAgentHeightBind by lazy {
+        @JvmField
+        val setAgentHeightBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_agent_height", SET_AGENT_HEIGHT_HASH)
-        }
 
         private const val GET_AGENT_HEIGHT_HASH = 1740695150L
-        private val getAgentHeightBind by lazy {
+        @JvmField
+        val getAgentHeightBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_agent_height", GET_AGENT_HEIGHT_HASH)
-        }
 
         private const val SET_AGENT_RADIUS_HASH = 373806689L
-        private val setAgentRadiusBind by lazy {
+        @JvmField
+        val setAgentRadiusBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_agent_radius", SET_AGENT_RADIUS_HASH)
-        }
 
         private const val GET_AGENT_RADIUS_HASH = 191475506L
-        private val getAgentRadiusBind by lazy {
+        @JvmField
+        val getAgentRadiusBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_agent_radius", GET_AGENT_RADIUS_HASH)
-        }
 
         private const val SET_AGENT_MAX_CLIMB_HASH = 373806689L
-        private val setAgentMaxClimbBind by lazy {
+        @JvmField
+        val setAgentMaxClimbBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_agent_max_climb", SET_AGENT_MAX_CLIMB_HASH)
-        }
 
         private const val GET_AGENT_MAX_CLIMB_HASH = 1740695150L
-        private val getAgentMaxClimbBind by lazy {
+        @JvmField
+        val getAgentMaxClimbBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_agent_max_climb", GET_AGENT_MAX_CLIMB_HASH)
-        }
 
         private const val SET_AGENT_MAX_SLOPE_HASH = 373806689L
-        private val setAgentMaxSlopeBind by lazy {
+        @JvmField
+        val setAgentMaxSlopeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_agent_max_slope", SET_AGENT_MAX_SLOPE_HASH)
-        }
 
         private const val GET_AGENT_MAX_SLOPE_HASH = 1740695150L
-        private val getAgentMaxSlopeBind by lazy {
+        @JvmField
+        val getAgentMaxSlopeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_agent_max_slope", GET_AGENT_MAX_SLOPE_HASH)
-        }
 
         private const val SET_REGION_MIN_SIZE_HASH = 373806689L
-        private val setRegionMinSizeBind by lazy {
+        @JvmField
+        val setRegionMinSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_region_min_size", SET_REGION_MIN_SIZE_HASH)
-        }
 
         private const val GET_REGION_MIN_SIZE_HASH = 1740695150L
-        private val getRegionMinSizeBind by lazy {
+        @JvmField
+        val getRegionMinSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_region_min_size", GET_REGION_MIN_SIZE_HASH)
-        }
 
         private const val SET_REGION_MERGE_SIZE_HASH = 373806689L
-        private val setRegionMergeSizeBind by lazy {
+        @JvmField
+        val setRegionMergeSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_region_merge_size", SET_REGION_MERGE_SIZE_HASH)
-        }
 
         private const val GET_REGION_MERGE_SIZE_HASH = 1740695150L
-        private val getRegionMergeSizeBind by lazy {
+        @JvmField
+        val getRegionMergeSizeBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_region_merge_size", GET_REGION_MERGE_SIZE_HASH)
-        }
 
         private const val SET_EDGE_MAX_LENGTH_HASH = 373806689L
-        private val setEdgeMaxLengthBind by lazy {
+        @JvmField
+        val setEdgeMaxLengthBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_edge_max_length", SET_EDGE_MAX_LENGTH_HASH)
-        }
 
         private const val GET_EDGE_MAX_LENGTH_HASH = 1740695150L
-        private val getEdgeMaxLengthBind by lazy {
+        @JvmField
+        val getEdgeMaxLengthBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_edge_max_length", GET_EDGE_MAX_LENGTH_HASH)
-        }
 
         private const val SET_EDGE_MAX_ERROR_HASH = 373806689L
-        private val setEdgeMaxErrorBind by lazy {
+        @JvmField
+        val setEdgeMaxErrorBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_edge_max_error", SET_EDGE_MAX_ERROR_HASH)
-        }
 
         private const val GET_EDGE_MAX_ERROR_HASH = 1740695150L
-        private val getEdgeMaxErrorBind by lazy {
+        @JvmField
+        val getEdgeMaxErrorBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_edge_max_error", GET_EDGE_MAX_ERROR_HASH)
-        }
 
         private const val SET_VERTICES_PER_POLYGON_HASH = 373806689L
-        private val setVerticesPerPolygonBind by lazy {
+        @JvmField
+        val setVerticesPerPolygonBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_vertices_per_polygon", SET_VERTICES_PER_POLYGON_HASH)
-        }
 
         private const val GET_VERTICES_PER_POLYGON_HASH = 1740695150L
-        private val getVerticesPerPolygonBind by lazy {
+        @JvmField
+        val getVerticesPerPolygonBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_vertices_per_polygon", GET_VERTICES_PER_POLYGON_HASH)
-        }
 
         private const val SET_DETAIL_SAMPLE_DISTANCE_HASH = 373806689L
-        private val setDetailSampleDistanceBind by lazy {
+        @JvmField
+        val setDetailSampleDistanceBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_detail_sample_distance", SET_DETAIL_SAMPLE_DISTANCE_HASH)
-        }
 
         private const val GET_DETAIL_SAMPLE_DISTANCE_HASH = 1740695150L
-        private val getDetailSampleDistanceBind by lazy {
+        @JvmField
+        val getDetailSampleDistanceBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_detail_sample_distance", GET_DETAIL_SAMPLE_DISTANCE_HASH)
-        }
 
         private const val SET_DETAIL_SAMPLE_MAX_ERROR_HASH = 373806689L
-        private val setDetailSampleMaxErrorBind by lazy {
+        @JvmField
+        val setDetailSampleMaxErrorBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_detail_sample_max_error", SET_DETAIL_SAMPLE_MAX_ERROR_HASH)
-        }
 
         private const val GET_DETAIL_SAMPLE_MAX_ERROR_HASH = 1740695150L
-        private val getDetailSampleMaxErrorBind by lazy {
+        @JvmField
+        val getDetailSampleMaxErrorBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_detail_sample_max_error", GET_DETAIL_SAMPLE_MAX_ERROR_HASH)
-        }
 
         private const val SET_FILTER_LOW_HANGING_OBSTACLES_HASH = 2586408642L
-        private val setFilterLowHangingObstaclesBind by lazy {
+        @JvmField
+        val setFilterLowHangingObstaclesBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_filter_low_hanging_obstacles", SET_FILTER_LOW_HANGING_OBSTACLES_HASH)
-        }
 
         private const val GET_FILTER_LOW_HANGING_OBSTACLES_HASH = 36873697L
-        private val getFilterLowHangingObstaclesBind by lazy {
+        @JvmField
+        val getFilterLowHangingObstaclesBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_low_hanging_obstacles", GET_FILTER_LOW_HANGING_OBSTACLES_HASH)
-        }
 
         private const val SET_FILTER_LEDGE_SPANS_HASH = 2586408642L
-        private val setFilterLedgeSpansBind by lazy {
+        @JvmField
+        val setFilterLedgeSpansBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_filter_ledge_spans", SET_FILTER_LEDGE_SPANS_HASH)
-        }
 
         private const val GET_FILTER_LEDGE_SPANS_HASH = 36873697L
-        private val getFilterLedgeSpansBind by lazy {
+        @JvmField
+        val getFilterLedgeSpansBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_ledge_spans", GET_FILTER_LEDGE_SPANS_HASH)
-        }
 
         private const val SET_FILTER_WALKABLE_LOW_HEIGHT_SPANS_HASH = 2586408642L
-        private val setFilterWalkableLowHeightSpansBind by lazy {
+        @JvmField
+        val setFilterWalkableLowHeightSpansBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_filter_walkable_low_height_spans", SET_FILTER_WALKABLE_LOW_HEIGHT_SPANS_HASH)
-        }
 
         private const val GET_FILTER_WALKABLE_LOW_HEIGHT_SPANS_HASH = 36873697L
-        private val getFilterWalkableLowHeightSpansBind by lazy {
+        @JvmField
+        val getFilterWalkableLowHeightSpansBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_walkable_low_height_spans", GET_FILTER_WALKABLE_LOW_HEIGHT_SPANS_HASH)
-        }
 
         private const val SET_FILTER_BAKING_AABB_HASH = 259215842L
-        private val setFilterBakingAabbBind by lazy {
+        @JvmField
+        val setFilterBakingAabbBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_filter_baking_aabb", SET_FILTER_BAKING_AABB_HASH)
-        }
 
         private const val GET_FILTER_BAKING_AABB_HASH = 1068685055L
-        private val getFilterBakingAabbBind by lazy {
+        @JvmField
+        val getFilterBakingAabbBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_baking_aabb", GET_FILTER_BAKING_AABB_HASH)
-        }
 
         private const val SET_FILTER_BAKING_AABB_OFFSET_HASH = 3460891852L
-        private val setFilterBakingAabbOffsetBind by lazy {
+        @JvmField
+        val setFilterBakingAabbOffsetBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_filter_baking_aabb_offset", SET_FILTER_BAKING_AABB_OFFSET_HASH)
-        }
 
         private const val GET_FILTER_BAKING_AABB_OFFSET_HASH = 3360562783L
-        private val getFilterBakingAabbOffsetBind by lazy {
+        @JvmField
+        val getFilterBakingAabbOffsetBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_filter_baking_aabb_offset", GET_FILTER_BAKING_AABB_OFFSET_HASH)
-        }
 
         private const val SET_VERTICES_HASH = 334873810L
-        private val setVerticesBind by lazy {
+        @JvmField
+        val setVerticesBind =
             ObjectCalls.getMethodBind("NavigationMesh", "set_vertices", SET_VERTICES_HASH)
-        }
 
         private const val GET_VERTICES_HASH = 497664490L
-        private val getVerticesBind by lazy {
+        @JvmField
+        val getVerticesBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_vertices", GET_VERTICES_HASH)
-        }
 
         private const val ADD_POLYGON_HASH = 3614634198L
-        private val addPolygonBind by lazy {
+        @JvmField
+        val addPolygonBind =
             ObjectCalls.getMethodBind("NavigationMesh", "add_polygon", ADD_POLYGON_HASH)
-        }
 
         private const val GET_POLYGON_COUNT_HASH = 3905245786L
-        private val getPolygonCountBind by lazy {
+        @JvmField
+        val getPolygonCountBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_polygon_count", GET_POLYGON_COUNT_HASH)
-        }
 
         private const val GET_POLYGON_HASH = 3668444399L
-        private val getPolygonBind by lazy {
+        @JvmField
+        val getPolygonBind =
             ObjectCalls.getMethodBind("NavigationMesh", "get_polygon", GET_POLYGON_HASH)
-        }
 
         private const val CLEAR_POLYGONS_HASH = 3218959716L
-        private val clearPolygonsBind by lazy {
+        @JvmField
+        val clearPolygonsBind =
             ObjectCalls.getMethodBind("NavigationMesh", "clear_polygons", CLEAR_POLYGONS_HASH)
-        }
 
         private const val CREATE_FROM_MESH_HASH = 194775623L
-        private val createFromMeshBind by lazy {
+        @JvmField
+        val createFromMeshBind =
             ObjectCalls.getMethodBind("NavigationMesh", "create_from_mesh", CREATE_FROM_MESH_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("NavigationMesh", "clear", CLEAR_HASH)
-        }
     }
 }

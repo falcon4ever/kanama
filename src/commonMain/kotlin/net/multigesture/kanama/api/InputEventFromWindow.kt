@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setWindowId(id: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWindowIdBind, segment, id)
+        ObjectCalls.ptrcallWithLongArg(Binds.setWindowIdBind, segment, id)
     }
 
     /**
@@ -34,7 +35,7 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getWindowId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWindowIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getWindowIdBind, segment)
     }
 
     companion object {
@@ -47,15 +48,17 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventFromWindow? =
             if (handle.address() == 0L) null else InputEventFromWindow(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WINDOW_ID_HASH = 1286410249L
-        private val setWindowIdBind by lazy {
+        @JvmField
+        val setWindowIdBind =
             ObjectCalls.getMethodBind("InputEventFromWindow", "set_window_id", SET_WINDOW_ID_HASH)
-        }
 
         private const val GET_WINDOW_ID_HASH = 3905245786L
-        private val getWindowIdBind by lazy {
+        @JvmField
+        val getWindowIdBind =
             ObjectCalls.getMethodBind("InputEventFromWindow", "get_window_id", GET_WINDOW_ID_HASH)
-        }
     }
 }

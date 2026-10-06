@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -23,7 +24,7 @@ class Marker3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Marker3D.set_gizmo_extents
      */
     fun setGizmoExtents(extents: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGizmoExtentsBind, segment, extents)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGizmoExtentsBind, segment, extents)
     }
 
     /**
@@ -32,7 +33,7 @@ class Marker3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Marker3D.get_gizmo_extents
      */
     fun getGizmoExtents(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGizmoExtentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGizmoExtentsBind, segment)
     }
 
     companion object {
@@ -42,15 +43,17 @@ class Marker3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Marker3D? =
             if (handle.address() == 0L) null else Marker3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_GIZMO_EXTENTS_HASH = 373806689L
-        private val setGizmoExtentsBind by lazy {
+        @JvmField
+        val setGizmoExtentsBind =
             ObjectCalls.getMethodBind("Marker3D", "set_gizmo_extents", SET_GIZMO_EXTENTS_HASH)
-        }
 
         private const val GET_GIZMO_EXTENTS_HASH = 1740695150L
-        private val getGizmoExtentsBind by lazy {
+        @JvmField
+        val getGizmoExtentsBind =
             ObjectCalls.getMethodBind("Marker3D", "get_gizmo_extents", GET_GIZMO_EXTENTS_HASH)
-        }
     }
 }

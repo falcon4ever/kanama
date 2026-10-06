@@ -20,7 +20,5 @@ class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformCompose(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

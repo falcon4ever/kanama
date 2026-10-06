@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class XRAnchor3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRAnchor3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ class XRAnchor3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRAnchor3D.get_plane
      */
     fun getPlane(): Plane {
-        return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPlane(Binds.getPlaneBind, segment)
     }
 
     companion object {
@@ -38,15 +39,17 @@ class XRAnchor3D(handle: GodotHandle) : XRNode3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRAnchor3D? =
             if (handle.address() == 0L) null else XRAnchor3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("XRAnchor3D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val GET_PLANE_HASH = 2753500971L
-        private val getPlaneBind by lazy {
+        @JvmField
+        val getPlaneBind =
             ObjectCalls.getMethodBind("XRAnchor3D", "get_plane", GET_PLANE_HASH)
-        }
     }
 }

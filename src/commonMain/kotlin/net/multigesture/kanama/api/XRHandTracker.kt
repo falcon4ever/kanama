@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -33,7 +34,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHasTrackingData(hasData: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, segment, hasData)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHasTrackingDataBind, segment, hasData)
     }
 
     /**
@@ -43,7 +44,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHandTrackingSource(source: XRHandTracker.HandTrackingSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, segment, source.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHandTrackingSourceBind, segment, source.value)
     }
 
     /**
@@ -63,7 +64,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHandTrackingSource(): XRHandTracker.HandTrackingSource {
         checkOpen()
-        return XRHandTracker.HandTrackingSource(ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, segment))
+        return XRHandTracker.HandTrackingSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHandTrackingSourceBind, segment))
     }
 
     /**
@@ -73,7 +74,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHandJointFlags(joint: XRHandTracker.HandJoint, flags: XRHandTracker.HandJointFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, segment, joint.value, flags.value)
+        ObjectCalls.ptrcallWithTwoLongArgs(Binds.setHandJointFlagsBind, segment, joint.value, flags.value)
     }
 
     /**
@@ -83,7 +84,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHandJointFlags(joint: XRHandTracker.HandJoint): XRHandTracker.HandJointFlags {
         checkOpen()
-        return XRHandTracker.HandJointFlags(ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, segment, joint.value))
+        return XRHandTracker.HandJointFlags(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getHandJointFlagsBind, segment, joint.value))
     }
 
     /**
@@ -93,7 +94,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHandJointTransform(joint: XRHandTracker.HandJoint, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, segment, joint.value, transform)
+        ObjectCalls.ptrcallWithLongAndTransform3DArg(Binds.setHandJointTransformBind, segment, joint.value, transform)
     }
 
     /**
@@ -103,7 +104,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHandJointTransform(joint: XRHandTracker.HandJoint): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, segment, joint.value)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getHandJointTransformBind, segment, joint.value)
     }
 
     /**
@@ -113,7 +114,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHandJointRadius(joint: XRHandTracker.HandJoint, radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, segment, joint.value, radius)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setHandJointRadiusBind, segment, joint.value, radius)
     }
 
     /**
@@ -123,7 +124,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHandJointRadius(joint: XRHandTracker.HandJoint): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, segment, joint.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getHandJointRadiusBind, segment, joint.value)
     }
 
     /**
@@ -133,7 +134,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHandJointLinearVelocity(joint: XRHandTracker.HandJoint, linearVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, segment, joint.value, linearVelocity)
+        ObjectCalls.ptrcallWithLongAndVector3Arg(Binds.setHandJointLinearVelocityBind, segment, joint.value, linearVelocity)
     }
 
     /**
@@ -143,7 +144,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHandJointLinearVelocity(joint: XRHandTracker.HandJoint): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, segment, joint.value)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getHandJointLinearVelocityBind, segment, joint.value)
     }
 
     /**
@@ -153,7 +154,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun setHandJointAngularVelocity(joint: XRHandTracker.HandJoint, angularVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, segment, joint.value, angularVelocity)
+        ObjectCalls.ptrcallWithLongAndVector3Arg(Binds.setHandJointAngularVelocityBind, segment, joint.value, angularVelocity)
     }
 
     /**
@@ -163,7 +164,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      */
     fun getHandJointAngularVelocity(joint: XRHandTracker.HandJoint): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, segment, joint.value)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getHandJointAngularVelocityBind, segment, joint.value)
     }
 
     /**
@@ -456,75 +457,77 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRHandTracker? =
             if (handle.address() == 0L) null else XRHandTracker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L
-        private val setHasTrackingDataBind by lazy {
+        @JvmField
+        val setHasTrackingDataBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_has_tracking_data", SET_HAS_TRACKING_DATA_HASH)
-        }
 
         private const val GET_HAS_TRACKING_DATA_HASH = 36873697L
-        private val getHasTrackingDataBind by lazy {
+        @JvmField
+        val getHasTrackingDataBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_has_tracking_data", GET_HAS_TRACKING_DATA_HASH)
-        }
 
         private const val SET_HAND_TRACKING_SOURCE_HASH = 2958308861L
-        private val setHandTrackingSourceBind by lazy {
+        @JvmField
+        val setHandTrackingSourceBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_hand_tracking_source", SET_HAND_TRACKING_SOURCE_HASH)
-        }
 
         private const val GET_HAND_TRACKING_SOURCE_HASH = 2475045250L
-        private val getHandTrackingSourceBind by lazy {
+        @JvmField
+        val getHandTrackingSourceBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_hand_tracking_source", GET_HAND_TRACKING_SOURCE_HASH)
-        }
 
         private const val SET_HAND_JOINT_FLAGS_HASH = 3028437365L
-        private val setHandJointFlagsBind by lazy {
+        @JvmField
+        val setHandJointFlagsBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_hand_joint_flags", SET_HAND_JOINT_FLAGS_HASH)
-        }
 
         private const val GET_HAND_JOINT_FLAGS_HASH = 1730972401L
-        private val getHandJointFlagsBind by lazy {
+        @JvmField
+        val getHandJointFlagsBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_hand_joint_flags", GET_HAND_JOINT_FLAGS_HASH)
-        }
 
         private const val SET_HAND_JOINT_TRANSFORM_HASH = 2529959613L
-        private val setHandJointTransformBind by lazy {
+        @JvmField
+        val setHandJointTransformBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_hand_joint_transform", SET_HAND_JOINT_TRANSFORM_HASH)
-        }
 
         private const val GET_HAND_JOINT_TRANSFORM_HASH = 1090840196L
-        private val getHandJointTransformBind by lazy {
+        @JvmField
+        val getHandJointTransformBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_hand_joint_transform", GET_HAND_JOINT_TRANSFORM_HASH)
-        }
 
         private const val SET_HAND_JOINT_RADIUS_HASH = 2723659615L
-        private val setHandJointRadiusBind by lazy {
+        @JvmField
+        val setHandJointRadiusBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_hand_joint_radius", SET_HAND_JOINT_RADIUS_HASH)
-        }
 
         private const val GET_HAND_JOINT_RADIUS_HASH = 3400025734L
-        private val getHandJointRadiusBind by lazy {
+        @JvmField
+        val getHandJointRadiusBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_hand_joint_radius", GET_HAND_JOINT_RADIUS_HASH)
-        }
 
         private const val SET_HAND_JOINT_LINEAR_VELOCITY_HASH = 1978646737L
-        private val setHandJointLinearVelocityBind by lazy {
+        @JvmField
+        val setHandJointLinearVelocityBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_hand_joint_linear_velocity", SET_HAND_JOINT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_HAND_JOINT_LINEAR_VELOCITY_HASH = 547240792L
-        private val getHandJointLinearVelocityBind by lazy {
+        @JvmField
+        val getHandJointLinearVelocityBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_hand_joint_linear_velocity", GET_HAND_JOINT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_HAND_JOINT_ANGULAR_VELOCITY_HASH = 1978646737L
-        private val setHandJointAngularVelocityBind by lazy {
+        @JvmField
+        val setHandJointAngularVelocityBind =
             ObjectCalls.getMethodBind("XRHandTracker", "set_hand_joint_angular_velocity", SET_HAND_JOINT_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_HAND_JOINT_ANGULAR_VELOCITY_HASH = 547240792L
-        private val getHandJointAngularVelocityBind by lazy {
+        @JvmField
+        val getHandJointAngularVelocityBind =
             ObjectCalls.getMethodBind("XRHandTracker", "get_hand_joint_angular_velocity", GET_HAND_JOINT_ANGULAR_VELOCITY_HASH)
-        }
     }
 }

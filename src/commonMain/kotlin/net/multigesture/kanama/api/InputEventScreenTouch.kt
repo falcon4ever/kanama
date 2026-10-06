@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -37,7 +38,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun setIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setIndexBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.setIndexBind, segment, index)
     }
 
     /**
@@ -47,7 +48,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun getIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIndexBind, segment)
     }
 
     /**
@@ -57,7 +58,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -67,7 +68,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
     }
 
     /**
@@ -87,7 +88,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun setCanceled(canceled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCanceledBind, segment, canceled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCanceledBind, segment, canceled)
     }
 
     /**
@@ -97,7 +98,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun setDoubleTap(doubleTap: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDoubleTapBind, segment, doubleTap)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDoubleTapBind, segment, doubleTap)
     }
 
     /**
@@ -107,7 +108,7 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
      */
     fun isDoubleTap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDoubleTapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDoubleTapBind, segment)
     }
 
     companion object {
@@ -130,45 +131,47 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         @JvmStatic
         fun from(value: GodotObject): InputEventScreenTouch? =
             if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventScreenTouch(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_INDEX_HASH = 1286410249L
-        private val setIndexBind by lazy {
+        @JvmField
+        val setIndexBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "set_index", SET_INDEX_HASH)
-        }
 
         private const val GET_INDEX_HASH = 3905245786L
-        private val getIndexBind by lazy {
+        @JvmField
+        val getIndexBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "get_index", GET_INDEX_HASH)
-        }
 
         private const val SET_POSITION_HASH = 743155724L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "get_position", GET_POSITION_HASH)
-        }
 
         private const val SET_PRESSED_HASH = 2586408642L
-        private val setPressedBind by lazy {
+        @JvmField
+        val setPressedBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "set_pressed", SET_PRESSED_HASH)
-        }
 
         private const val SET_CANCELED_HASH = 2586408642L
-        private val setCanceledBind by lazy {
+        @JvmField
+        val setCanceledBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "set_canceled", SET_CANCELED_HASH)
-        }
 
         private const val SET_DOUBLE_TAP_HASH = 2586408642L
-        private val setDoubleTapBind by lazy {
+        @JvmField
+        val setDoubleTapBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "set_double_tap", SET_DOUBLE_TAP_HASH)
-        }
 
         private const val IS_DOUBLE_TAP_HASH = 36873697L
-        private val isDoubleTapBind by lazy {
+        @JvmField
+        val isDoubleTapBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "is_double_tap", IS_DOUBLE_TAP_HASH)
-        }
     }
 }

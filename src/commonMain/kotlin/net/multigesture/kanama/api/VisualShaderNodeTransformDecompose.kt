@@ -20,7 +20,5 @@ class VisualShaderNodeTransformDecompose(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformDecompose? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformDecompose(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

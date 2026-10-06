@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -80,7 +81,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_normal
      */
     fun setTextureNormal(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -91,7 +92,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_pressed
      */
     fun setTexturePressed(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -101,7 +102,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_hover
      */
     fun setTextureHover(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureHoverBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureHoverBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -111,7 +112,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_disabled
      */
     fun setTextureDisabled(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureDisabledBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureDisabledBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -125,7 +126,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_focused
      */
     fun setTextureFocused(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureFocusedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureFocusedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -135,7 +136,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_click_mask
      */
     fun setClickMask(mask: BitMap?) {
-        ObjectCalls.ptrcallWithObjectArgs(setClickMaskBind, segment, listOf(mask?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setClickMaskBind, segment, listOf(mask?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -145,7 +146,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_ignore_texture_size
      */
     fun setIgnoreTextureSize(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTextureSizeBind, segment, ignore)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreTextureSizeBind, segment, ignore)
     }
 
     /**
@@ -155,7 +156,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_stretch_mode
      */
     fun setStretchMode(mode: TextureButton.StretchMode) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -164,7 +165,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_flip_h
      */
     fun setFlipH(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipHBind, segment, enable)
     }
 
     /**
@@ -173,7 +174,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedHBind, segment)
     }
 
     /**
@@ -182,7 +183,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_flip_v
      */
     fun setFlipV(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipVBind, segment, enable)
     }
 
     /**
@@ -191,7 +192,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedVBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_normal
      */
     fun getTextureNormal(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureNormalBind, segment))
     }
 
     /**
@@ -212,7 +213,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_pressed
      */
     fun getTexturePressed(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTexturePressedBind, segment))
     }
 
     /**
@@ -222,7 +223,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_hover
      */
     fun getTextureHover(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureHoverBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureHoverBind, segment))
     }
 
     /**
@@ -232,7 +233,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_disabled
      */
     fun getTextureDisabled(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureDisabledBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureDisabledBind, segment))
     }
 
     /**
@@ -246,7 +247,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_focused
      */
     fun getTextureFocused(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureFocusedBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureFocusedBind, segment))
     }
 
     /**
@@ -256,7 +257,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_click_mask
      */
     fun getClickMask(): BitMap? {
-        return BitMap.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getClickMaskBind, segment))
+        return BitMap.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getClickMaskBind, segment))
     }
 
     /**
@@ -266,7 +267,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_ignore_texture_size
      */
     fun getIgnoreTextureSize(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getIgnoreTextureSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIgnoreTextureSizeBind, segment)
     }
 
     /**
@@ -276,7 +277,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_stretch_mode
      */
     fun getStretchMode(): TextureButton.StretchMode {
-        return TextureButton.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
+        return TextureButton.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStretchModeBind, segment))
     }
 
     /**
@@ -342,105 +343,107 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): TextureButton? =
             if (handle.address() == 0L) null else TextureButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_NORMAL_HASH = 4051416890L
-        private val setTextureNormalBind by lazy {
+        @JvmField
+        val setTextureNormalBind =
             ObjectCalls.getMethodBind("TextureButton", "set_texture_normal", SET_TEXTURE_NORMAL_HASH)
-        }
 
         private const val SET_TEXTURE_PRESSED_HASH = 4051416890L
-        private val setTexturePressedBind by lazy {
+        @JvmField
+        val setTexturePressedBind =
             ObjectCalls.getMethodBind("TextureButton", "set_texture_pressed", SET_TEXTURE_PRESSED_HASH)
-        }
 
         private const val SET_TEXTURE_HOVER_HASH = 4051416890L
-        private val setTextureHoverBind by lazy {
+        @JvmField
+        val setTextureHoverBind =
             ObjectCalls.getMethodBind("TextureButton", "set_texture_hover", SET_TEXTURE_HOVER_HASH)
-        }
 
         private const val SET_TEXTURE_DISABLED_HASH = 4051416890L
-        private val setTextureDisabledBind by lazy {
+        @JvmField
+        val setTextureDisabledBind =
             ObjectCalls.getMethodBind("TextureButton", "set_texture_disabled", SET_TEXTURE_DISABLED_HASH)
-        }
 
         private const val SET_TEXTURE_FOCUSED_HASH = 4051416890L
-        private val setTextureFocusedBind by lazy {
+        @JvmField
+        val setTextureFocusedBind =
             ObjectCalls.getMethodBind("TextureButton", "set_texture_focused", SET_TEXTURE_FOCUSED_HASH)
-        }
 
         private const val SET_CLICK_MASK_HASH = 698588216L
-        private val setClickMaskBind by lazy {
+        @JvmField
+        val setClickMaskBind =
             ObjectCalls.getMethodBind("TextureButton", "set_click_mask", SET_CLICK_MASK_HASH)
-        }
 
         private const val SET_IGNORE_TEXTURE_SIZE_HASH = 2586408642L
-        private val setIgnoreTextureSizeBind by lazy {
+        @JvmField
+        val setIgnoreTextureSizeBind =
             ObjectCalls.getMethodBind("TextureButton", "set_ignore_texture_size", SET_IGNORE_TEXTURE_SIZE_HASH)
-        }
 
         private const val SET_STRETCH_MODE_HASH = 252530840L
-        private val setStretchModeBind by lazy {
+        @JvmField
+        val setStretchModeBind =
             ObjectCalls.getMethodBind("TextureButton", "set_stretch_mode", SET_STRETCH_MODE_HASH)
-        }
 
         private const val SET_FLIP_H_HASH = 2586408642L
-        private val setFlipHBind by lazy {
+        @JvmField
+        val setFlipHBind =
             ObjectCalls.getMethodBind("TextureButton", "set_flip_h", SET_FLIP_H_HASH)
-        }
 
         private const val IS_FLIPPED_H_HASH = 36873697L
-        private val isFlippedHBind by lazy {
+        @JvmField
+        val isFlippedHBind =
             ObjectCalls.getMethodBind("TextureButton", "is_flipped_h", IS_FLIPPED_H_HASH)
-        }
 
         private const val SET_FLIP_V_HASH = 2586408642L
-        private val setFlipVBind by lazy {
+        @JvmField
+        val setFlipVBind =
             ObjectCalls.getMethodBind("TextureButton", "set_flip_v", SET_FLIP_V_HASH)
-        }
 
         private const val IS_FLIPPED_V_HASH = 36873697L
-        private val isFlippedVBind by lazy {
+        @JvmField
+        val isFlippedVBind =
             ObjectCalls.getMethodBind("TextureButton", "is_flipped_v", IS_FLIPPED_V_HASH)
-        }
 
         private const val GET_TEXTURE_NORMAL_HASH = 3635182373L
-        private val getTextureNormalBind by lazy {
+        @JvmField
+        val getTextureNormalBind =
             ObjectCalls.getMethodBind("TextureButton", "get_texture_normal", GET_TEXTURE_NORMAL_HASH)
-        }
 
         private const val GET_TEXTURE_PRESSED_HASH = 3635182373L
-        private val getTexturePressedBind by lazy {
+        @JvmField
+        val getTexturePressedBind =
             ObjectCalls.getMethodBind("TextureButton", "get_texture_pressed", GET_TEXTURE_PRESSED_HASH)
-        }
 
         private const val GET_TEXTURE_HOVER_HASH = 3635182373L
-        private val getTextureHoverBind by lazy {
+        @JvmField
+        val getTextureHoverBind =
             ObjectCalls.getMethodBind("TextureButton", "get_texture_hover", GET_TEXTURE_HOVER_HASH)
-        }
 
         private const val GET_TEXTURE_DISABLED_HASH = 3635182373L
-        private val getTextureDisabledBind by lazy {
+        @JvmField
+        val getTextureDisabledBind =
             ObjectCalls.getMethodBind("TextureButton", "get_texture_disabled", GET_TEXTURE_DISABLED_HASH)
-        }
 
         private const val GET_TEXTURE_FOCUSED_HASH = 3635182373L
-        private val getTextureFocusedBind by lazy {
+        @JvmField
+        val getTextureFocusedBind =
             ObjectCalls.getMethodBind("TextureButton", "get_texture_focused", GET_TEXTURE_FOCUSED_HASH)
-        }
 
         private const val GET_CLICK_MASK_HASH = 2459671998L
-        private val getClickMaskBind by lazy {
+        @JvmField
+        val getClickMaskBind =
             ObjectCalls.getMethodBind("TextureButton", "get_click_mask", GET_CLICK_MASK_HASH)
-        }
 
         private const val GET_IGNORE_TEXTURE_SIZE_HASH = 36873697L
-        private val getIgnoreTextureSizeBind by lazy {
+        @JvmField
+        val getIgnoreTextureSizeBind =
             ObjectCalls.getMethodBind("TextureButton", "get_ignore_texture_size", GET_IGNORE_TEXTURE_SIZE_HASH)
-        }
 
         private const val GET_STRETCH_MODE_HASH = 33815122L
-        private val getStretchModeBind by lazy {
+        @JvmField
+        val getStretchModeBind =
             ObjectCalls.getMethodBind("TextureButton", "get_stretch_mode", GET_STRETCH_MODE_HASH)
-        }
     }
 }

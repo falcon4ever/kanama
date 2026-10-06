@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -56,182 +57,182 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
 
     fun getSessionState(): OpenXRInterface.SessionState {
         checkOpen()
-        return OpenXRInterface.SessionState(ObjectCalls.ptrcallNoArgsRetLong(getSessionStateBind, segment))
+        return OpenXRInterface.SessionState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSessionStateBind, segment))
     }
 
     fun isUserPresenceSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresenceSupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserPresenceSupportedBind, segment)
     }
 
     fun isUserPresent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUserPresentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserPresentBind, segment)
     }
 
     fun getDisplayRefreshRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayRefreshRateBind, segment)
     }
 
     fun setDisplayRefreshRate(refreshRate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, segment, refreshRate)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayRefreshRateBind, segment, refreshRate)
     }
 
     fun getRenderTargetSizeMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderTargetSizeMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderTargetSizeMultiplierBind, segment)
     }
 
     fun setRenderTargetSizeMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRenderTargetSizeMultiplierBind, segment, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRenderTargetSizeMultiplierBind, segment, multiplier)
     }
 
     fun isFoveationSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoveationSupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFoveationSupportedBind, segment)
     }
 
     fun getFoveationLevel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFoveationLevelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFoveationLevelBind, segment)
     }
 
     fun setFoveationLevel(foveationLevel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFoveationLevelBind, segment, foveationLevel)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFoveationLevelBind, segment, foveationLevel)
     }
 
     fun getFoveationDynamic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationDynamicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFoveationDynamicBind, segment)
     }
 
     fun setFoveationDynamic(foveationDynamic: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFoveationDynamicBind, segment, foveationDynamic)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFoveationDynamicBind, segment, foveationDynamic)
     }
 
     fun getFoveationWithSubsampledImages(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFoveationWithSubsampledImagesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFoveationWithSubsampledImagesBind, segment)
     }
 
     fun setFoveationWithSubsampledImages(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFoveationWithSubsampledImagesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFoveationWithSubsampledImagesBind, segment, enabled)
     }
 
     fun isActionSetActive(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isActionSetActiveBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isActionSetActiveBind, segment, name)
     }
 
     fun setActionSetActive(name: String, active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(setActionSetActiveBind, segment, name, active)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setActionSetActiveBind, segment, name, active)
     }
 
     fun getActionSets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionSetsBind, segment)
     }
 
     fun getAvailableDisplayRefreshRates(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getAvailableDisplayRefreshRatesBind, segment)
     }
 
     fun setMotionRange(hand: OpenXRInterface.Hand, motionRange: OpenXRInterface.HandMotionRange) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setMotionRangeBind, segment, hand.value, motionRange.value)
+        ObjectCalls.ptrcallWithTwoLongArgs(Binds.setMotionRangeBind, segment, hand.value, motionRange.value)
     }
 
     fun getMotionRange(hand: OpenXRInterface.Hand): OpenXRInterface.HandMotionRange {
         checkOpen()
-        return OpenXRInterface.HandMotionRange(ObjectCalls.ptrcallWithLongArgRetLong(getMotionRangeBind, segment, hand.value))
+        return OpenXRInterface.HandMotionRange(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMotionRangeBind, segment, hand.value))
     }
 
     fun getHandTrackingSource(hand: OpenXRInterface.Hand): OpenXRInterface.HandTrackedSource {
         checkOpen()
-        return OpenXRInterface.HandTrackedSource(ObjectCalls.ptrcallWithLongArgRetLong(getHandTrackingSourceBind, segment, hand.value))
+        return OpenXRInterface.HandTrackedSource(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getHandTrackingSourceBind, segment, hand.value))
     }
 
     fun getHandJointFlags(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): OpenXRInterface.HandJointFlags {
         checkOpen()
-        return OpenXRInterface.HandJointFlags(ObjectCalls.ptrcallWithTwoLongArgsRetLong(getHandJointFlagsBind, segment, hand.value, joint.value))
+        return OpenXRInterface.HandJointFlags(ObjectCalls.ptrcallWithTwoLongArgsRetLong(Binds.getHandJointFlagsBind, segment, hand.value, joint.value))
     }
 
     fun getHandJointRotation(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(getHandJointRotationBind, segment, hand.value, joint.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(Binds.getHandJointRotationBind, segment, hand.value, joint.value)
     }
 
     fun getHandJointPosition(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointPositionBind, segment, hand.value, joint.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointPositionBind, segment, hand.value, joint.value)
     }
 
     fun getHandJointRadius(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(getHandJointRadiusBind, segment, hand.value, joint.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(Binds.getHandJointRadiusBind, segment, hand.value, joint.value)
     }
 
     fun getHandJointLinearVelocity(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointLinearVelocityBind, segment, hand.value, joint.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointLinearVelocityBind, segment, hand.value, joint.value)
     }
 
     fun getHandJointAngularVelocity(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointAngularVelocityBind, segment, hand.value, joint.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(Binds.getHandJointAngularVelocityBind, segment, hand.value, joint.value)
     }
 
     fun isHandTrackingSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandTrackingSupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandTrackingSupportedBind, segment)
     }
 
     fun isHandInteractionSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandInteractionSupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandInteractionSupportedBind, segment)
     }
 
     fun isEyeGazeInteractionSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEyeGazeInteractionSupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEyeGazeInteractionSupportedBind, segment)
     }
 
     fun getVrsMinRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
     }
 
     fun setVrsMinRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsMinRadiusBind, segment, radius)
     }
 
     fun getVrsStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
     }
 
     fun setVrsStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsStrengthBind, segment, strength)
     }
 
     fun setCpuLevel(level: OpenXRInterface.PerfSettingsLevel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCpuLevelBind, segment, level.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCpuLevelBind, segment, level.value)
     }
 
     fun setGpuLevel(level: OpenXRInterface.PerfSettingsLevel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setGpuLevelBind, segment, level.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGpuLevelBind, segment, level.value)
     }
 
     /** Signal `session_begun()`; see [TypedSignal]. */
@@ -446,185 +447,187 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRInterface? =
             if (handle.address() == 0L) null else OpenXRInterface(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SESSION_STATE_HASH = 896364779L
-        private val getSessionStateBind by lazy {
+        @JvmField
+        val getSessionStateBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_session_state", GET_SESSION_STATE_HASH)
-        }
 
         private const val IS_USER_PRESENCE_SUPPORTED_HASH = 36873697L
-        private val isUserPresenceSupportedBind by lazy {
+        @JvmField
+        val isUserPresenceSupportedBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_user_presence_supported", IS_USER_PRESENCE_SUPPORTED_HASH)
-        }
 
         private const val IS_USER_PRESENT_HASH = 36873697L
-        private val isUserPresentBind by lazy {
+        @JvmField
+        val isUserPresentBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_user_present", IS_USER_PRESENT_HASH)
-        }
 
         private const val GET_DISPLAY_REFRESH_RATE_HASH = 1740695150L
-        private val getDisplayRefreshRateBind by lazy {
+        @JvmField
+        val getDisplayRefreshRateBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_display_refresh_rate", GET_DISPLAY_REFRESH_RATE_HASH)
-        }
 
         private const val SET_DISPLAY_REFRESH_RATE_HASH = 373806689L
-        private val setDisplayRefreshRateBind by lazy {
+        @JvmField
+        val setDisplayRefreshRateBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_display_refresh_rate", SET_DISPLAY_REFRESH_RATE_HASH)
-        }
 
         private const val GET_RENDER_TARGET_SIZE_MULTIPLIER_HASH = 1740695150L
-        private val getRenderTargetSizeMultiplierBind by lazy {
+        @JvmField
+        val getRenderTargetSizeMultiplierBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_render_target_size_multiplier", GET_RENDER_TARGET_SIZE_MULTIPLIER_HASH)
-        }
 
         private const val SET_RENDER_TARGET_SIZE_MULTIPLIER_HASH = 373806689L
-        private val setRenderTargetSizeMultiplierBind by lazy {
+        @JvmField
+        val setRenderTargetSizeMultiplierBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_render_target_size_multiplier", SET_RENDER_TARGET_SIZE_MULTIPLIER_HASH)
-        }
 
         private const val IS_FOVEATION_SUPPORTED_HASH = 36873697L
-        private val isFoveationSupportedBind by lazy {
+        @JvmField
+        val isFoveationSupportedBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_foveation_supported", IS_FOVEATION_SUPPORTED_HASH)
-        }
 
         private const val GET_FOVEATION_LEVEL_HASH = 3905245786L
-        private val getFoveationLevelBind by lazy {
+        @JvmField
+        val getFoveationLevelBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_foveation_level", GET_FOVEATION_LEVEL_HASH)
-        }
 
         private const val SET_FOVEATION_LEVEL_HASH = 1286410249L
-        private val setFoveationLevelBind by lazy {
+        @JvmField
+        val setFoveationLevelBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_foveation_level", SET_FOVEATION_LEVEL_HASH)
-        }
 
         private const val GET_FOVEATION_DYNAMIC_HASH = 36873697L
-        private val getFoveationDynamicBind by lazy {
+        @JvmField
+        val getFoveationDynamicBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_foveation_dynamic", GET_FOVEATION_DYNAMIC_HASH)
-        }
 
         private const val SET_FOVEATION_DYNAMIC_HASH = 2586408642L
-        private val setFoveationDynamicBind by lazy {
+        @JvmField
+        val setFoveationDynamicBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_foveation_dynamic", SET_FOVEATION_DYNAMIC_HASH)
-        }
 
         private const val GET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH = 36873697L
-        private val getFoveationWithSubsampledImagesBind by lazy {
+        @JvmField
+        val getFoveationWithSubsampledImagesBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_foveation_with_subsampled_images", GET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH)
-        }
 
         private const val SET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH = 2586408642L
-        private val setFoveationWithSubsampledImagesBind by lazy {
+        @JvmField
+        val setFoveationWithSubsampledImagesBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_foveation_with_subsampled_images", SET_FOVEATION_WITH_SUBSAMPLED_IMAGES_HASH)
-        }
 
         private const val IS_ACTION_SET_ACTIVE_HASH = 3927539163L
-        private val isActionSetActiveBind by lazy {
+        @JvmField
+        val isActionSetActiveBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_action_set_active", IS_ACTION_SET_ACTIVE_HASH)
-        }
 
         private const val SET_ACTION_SET_ACTIVE_HASH = 2678287736L
-        private val setActionSetActiveBind by lazy {
+        @JvmField
+        val setActionSetActiveBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_action_set_active", SET_ACTION_SET_ACTIVE_HASH)
-        }
 
         private const val GET_ACTION_SETS_HASH = 3995934104L
-        private val getActionSetsBind by lazy {
+        @JvmField
+        val getActionSetsBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_action_sets", GET_ACTION_SETS_HASH)
-        }
 
         private const val GET_AVAILABLE_DISPLAY_REFRESH_RATES_HASH = 3995934104L
-        private val getAvailableDisplayRefreshRatesBind by lazy {
+        @JvmField
+        val getAvailableDisplayRefreshRatesBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_available_display_refresh_rates", GET_AVAILABLE_DISPLAY_REFRESH_RATES_HASH)
-        }
 
         private const val SET_MOTION_RANGE_HASH = 855158159L
-        private val setMotionRangeBind by lazy {
+        @JvmField
+        val setMotionRangeBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_motion_range", SET_MOTION_RANGE_HASH)
-        }
 
         private const val GET_MOTION_RANGE_HASH = 3955838114L
-        private val getMotionRangeBind by lazy {
+        @JvmField
+        val getMotionRangeBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_motion_range", GET_MOTION_RANGE_HASH)
-        }
 
         private const val GET_HAND_TRACKING_SOURCE_HASH = 4092421202L
-        private val getHandTrackingSourceBind by lazy {
+        @JvmField
+        val getHandTrackingSourceBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_tracking_source", GET_HAND_TRACKING_SOURCE_HASH)
-        }
 
         private const val GET_HAND_JOINT_FLAGS_HASH = 720567706L
-        private val getHandJointFlagsBind by lazy {
+        @JvmField
+        val getHandJointFlagsBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_joint_flags", GET_HAND_JOINT_FLAGS_HASH)
-        }
 
         private const val GET_HAND_JOINT_ROTATION_HASH = 1974618321L
-        private val getHandJointRotationBind by lazy {
+        @JvmField
+        val getHandJointRotationBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_joint_rotation", GET_HAND_JOINT_ROTATION_HASH)
-        }
 
         private const val GET_HAND_JOINT_POSITION_HASH = 3529194242L
-        private val getHandJointPositionBind by lazy {
+        @JvmField
+        val getHandJointPositionBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_joint_position", GET_HAND_JOINT_POSITION_HASH)
-        }
 
         private const val GET_HAND_JOINT_RADIUS_HASH = 901522724L
-        private val getHandJointRadiusBind by lazy {
+        @JvmField
+        val getHandJointRadiusBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_joint_radius", GET_HAND_JOINT_RADIUS_HASH)
-        }
 
         private const val GET_HAND_JOINT_LINEAR_VELOCITY_HASH = 3529194242L
-        private val getHandJointLinearVelocityBind by lazy {
+        @JvmField
+        val getHandJointLinearVelocityBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_joint_linear_velocity", GET_HAND_JOINT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_HAND_JOINT_ANGULAR_VELOCITY_HASH = 3529194242L
-        private val getHandJointAngularVelocityBind by lazy {
+        @JvmField
+        val getHandJointAngularVelocityBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_hand_joint_angular_velocity", GET_HAND_JOINT_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val IS_HAND_TRACKING_SUPPORTED_HASH = 2240911060L
-        private val isHandTrackingSupportedBind by lazy {
+        @JvmField
+        val isHandTrackingSupportedBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_hand_tracking_supported", IS_HAND_TRACKING_SUPPORTED_HASH)
-        }
 
         private const val IS_HAND_INTERACTION_SUPPORTED_HASH = 36873697L
-        private val isHandInteractionSupportedBind by lazy {
+        @JvmField
+        val isHandInteractionSupportedBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_hand_interaction_supported", IS_HAND_INTERACTION_SUPPORTED_HASH)
-        }
 
         private const val IS_EYE_GAZE_INTERACTION_SUPPORTED_HASH = 2240911060L
-        private val isEyeGazeInteractionSupportedBind by lazy {
+        @JvmField
+        val isEyeGazeInteractionSupportedBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_eye_gaze_interaction_supported", IS_EYE_GAZE_INTERACTION_SUPPORTED_HASH)
-        }
 
         private const val GET_VRS_MIN_RADIUS_HASH = 1740695150L
-        private val getVrsMinRadiusBind by lazy {
+        @JvmField
+        val getVrsMinRadiusBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_vrs_min_radius", GET_VRS_MIN_RADIUS_HASH)
-        }
 
         private const val SET_VRS_MIN_RADIUS_HASH = 373806689L
-        private val setVrsMinRadiusBind by lazy {
+        @JvmField
+        val setVrsMinRadiusBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_vrs_min_radius", SET_VRS_MIN_RADIUS_HASH)
-        }
 
         private const val GET_VRS_STRENGTH_HASH = 1740695150L
-        private val getVrsStrengthBind by lazy {
+        @JvmField
+        val getVrsStrengthBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "get_vrs_strength", GET_VRS_STRENGTH_HASH)
-        }
 
         private const val SET_VRS_STRENGTH_HASH = 373806689L
-        private val setVrsStrengthBind by lazy {
+        @JvmField
+        val setVrsStrengthBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_vrs_strength", SET_VRS_STRENGTH_HASH)
-        }
 
         private const val SET_CPU_LEVEL_HASH = 2940842095L
-        private val setCpuLevelBind by lazy {
+        @JvmField
+        val setCpuLevelBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_cpu_level", SET_CPU_LEVEL_HASH)
-        }
 
         private const val SET_GPU_LEVEL_HASH = 2940842095L
-        private val setGpuLevelBind by lazy {
+        @JvmField
+        val setGpuLevelBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_gpu_level", SET_GPU_LEVEL_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -16,9 +17,8 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: PhysicsServer3D
  */
 object PhysicsServer3D {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("PhysicsServer3D")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Creates a 3D world boundary shape in the physics server, and returns the `RID` that identifies
@@ -28,7 +28,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun worldBoundaryShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(worldBoundaryShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.worldBoundaryShapeCreateBind, singleton)
     }
 
     /**
@@ -39,7 +39,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun separationRayShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(separationRayShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.separationRayShapeCreateBind, singleton)
     }
 
     /**
@@ -50,7 +50,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun sphereShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(sphereShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.sphereShapeCreateBind, singleton)
     }
 
     /**
@@ -61,7 +61,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun boxShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(boxShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.boxShapeCreateBind, singleton)
     }
 
     /**
@@ -72,7 +72,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun capsuleShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(capsuleShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.capsuleShapeCreateBind, singleton)
     }
 
     /**
@@ -83,7 +83,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun cylinderShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(cylinderShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.cylinderShapeCreateBind, singleton)
     }
 
     /**
@@ -94,7 +94,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun convexPolygonShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(convexPolygonShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.convexPolygonShapeCreateBind, singleton)
     }
 
     /**
@@ -105,7 +105,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun concavePolygonShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(concavePolygonShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.concavePolygonShapeCreateBind, singleton)
     }
 
     /**
@@ -116,7 +116,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun heightmapShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(heightmapShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.heightmapShapeCreateBind, singleton)
     }
 
     /**
@@ -129,7 +129,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun customShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(customShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.customShapeCreateBind, singleton)
     }
 
     /**
@@ -156,7 +156,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun shapeSetData(shape: RID, data: Any?) {
-        ObjectCalls.ptrcallWithRIDAndVariantArg(shapeSetDataBind, singleton, shape, data)
+        ObjectCalls.ptrcallWithRIDAndVariantArg(Binds.shapeSetDataBind, singleton, shape, data)
     }
 
     /**
@@ -166,7 +166,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun shapeSetMargin(shape: RID, margin: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(shapeSetMarginBind, singleton, shape, margin)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.shapeSetMarginBind, singleton, shape, margin)
     }
 
     /**
@@ -176,7 +176,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun shapeGetType(shape: RID): PhysicsServer3D.ShapeType {
-        return PhysicsServer3D.ShapeType(ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape))
+        return PhysicsServer3D.ShapeType(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapeGetTypeBind, singleton, shape))
     }
 
     /**
@@ -188,7 +188,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun shapeGetData(shape: RID): Any? {
-        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, singleton, shape)
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(Binds.shapeGetDataBind, singleton, shape)
     }
 
     /**
@@ -199,7 +199,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun shapeGetMargin(shape: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(shapeGetMarginBind, singleton, shape)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.shapeGetMarginBind, singleton, shape)
     }
 
     /**
@@ -211,7 +211,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun spaceCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(spaceCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.spaceCreateBind, singleton)
     }
 
     /**
@@ -221,7 +221,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun spaceSetActive(space: RID, active: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(spaceSetActiveBind, singleton, space, active)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.spaceSetActiveBind, singleton, space, active)
     }
 
     /**
@@ -231,7 +231,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun spaceIsActive(space: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(spaceIsActiveBind, singleton, space)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.spaceIsActiveBind, singleton, space)
     }
 
     /**
@@ -242,7 +242,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun spaceSetParam(space: RID, param: PhysicsServer3D.SpaceParameter, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.spaceSetParamBind, singleton, space, param.value, value)
     }
 
     /**
@@ -252,7 +252,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun spaceGetParam(space: RID, param: PhysicsServer3D.SpaceParameter): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.spaceGetParamBind, singleton, space, param.value)
     }
 
     /**
@@ -263,7 +263,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun spaceGetDirectState(space: RID): PhysicsDirectSpaceState3D? {
-        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(spaceGetDirectStateBind, singleton, space))
+        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.spaceGetDirectStateBind, singleton, space))
     }
 
     /**
@@ -277,7 +277,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(areaCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.areaCreateBind, singleton)
     }
 
     /**
@@ -287,7 +287,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetSpace(area: RID, space: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(areaSetSpaceBind, singleton, area, space)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.areaSetSpaceBind, singleton, area, space)
     }
 
     /**
@@ -297,7 +297,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetSpace(area: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(areaGetSpaceBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.areaGetSpaceBind, singleton, area)
     }
 
     /**
@@ -308,7 +308,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaAddShape(area: RID, shape: RID, transform: Transform3D, disabled: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoRIDTransform3DBoolArgs(areaAddShapeBind, singleton, area, shape, transform, disabled)
+        ObjectCalls.ptrcallWithTwoRIDTransform3DBoolArgs(Binds.areaAddShapeBind, singleton, area, shape, transform, disabled)
     }
 
     /**
@@ -319,7 +319,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetShape(area: RID, shapeIdx: Int, shape: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(areaSetShapeBind, singleton, area, shapeIdx, shape)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.areaSetShapeBind, singleton, area, shapeIdx, shape)
     }
 
     /**
@@ -329,12 +329,12 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetShapeTransform(area: RID, shapeIdx: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(areaSetShapeTransformBind, singleton, area, shapeIdx, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(Binds.areaSetShapeTransformBind, singleton, area, shapeIdx, transform)
     }
 
     @JvmStatic
     fun areaSetShapeDisabled(area: RID, shapeIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(areaSetShapeDisabledBind, singleton, area, shapeIdx, disabled)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.areaSetShapeDisabledBind, singleton, area, shapeIdx, disabled)
     }
 
     /**
@@ -344,7 +344,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetShapeCount(area: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(areaGetShapeCountBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.areaGetShapeCountBind, singleton, area)
     }
 
     /**
@@ -354,7 +354,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetShape(area: RID, shapeIdx: Int): RID {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(areaGetShapeBind, singleton, area, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.areaGetShapeBind, singleton, area, shapeIdx)
     }
 
     /**
@@ -364,7 +364,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetShapeTransform(area: RID, shapeIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(areaGetShapeTransformBind, singleton, area, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(Binds.areaGetShapeTransformBind, singleton, area, shapeIdx)
     }
 
     /**
@@ -374,7 +374,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaRemoveShape(area: RID, shapeIdx: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(areaRemoveShapeBind, singleton, area, shapeIdx)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.areaRemoveShapeBind, singleton, area, shapeIdx)
     }
 
     /**
@@ -384,7 +384,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaClearShapes(area: RID) {
-        ObjectCalls.ptrcallWithRIDArg(areaClearShapesBind, singleton, area)
+        ObjectCalls.ptrcallWithRIDArg(Binds.areaClearShapesBind, singleton, area)
     }
 
     /**
@@ -394,7 +394,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetCollisionLayer(area: RID, layer: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(areaSetCollisionLayerBind, singleton, area, layer)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.areaSetCollisionLayerBind, singleton, area, layer)
     }
 
     /**
@@ -404,7 +404,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetCollisionLayer(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionLayerBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.areaGetCollisionLayerBind, singleton, area)
     }
 
     /**
@@ -414,7 +414,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetCollisionMask(area: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(areaSetCollisionMaskBind, singleton, area, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.areaSetCollisionMaskBind, singleton, area, mask)
     }
 
     /**
@@ -424,7 +424,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetCollisionMask(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionMaskBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.areaGetCollisionMaskBind, singleton, area)
     }
 
     /**
@@ -435,7 +435,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetParam(area: RID, param: PhysicsServer3D.AreaParameter, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.areaSetParamBind, singleton, area, param.value, value)
     }
 
     /**
@@ -445,7 +445,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetTransform(area: RID, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDAndTransform3DArg(areaSetTransformBind, singleton, area, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform3DArg(Binds.areaSetTransformBind, singleton, area, transform)
     }
 
     /**
@@ -456,7 +456,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetParam(area: RID, param: PhysicsServer3D.AreaParameter): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.areaGetParamBind, singleton, area, param.value)
     }
 
     /**
@@ -466,7 +466,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetTransform(area: RID): Transform3D {
-        return ObjectCalls.ptrcallWithRIDArgRetTransform3D(areaGetTransformBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetTransform3D(Binds.areaGetTransformBind, singleton, area)
     }
 
     /**
@@ -476,7 +476,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaAttachObjectInstanceId(area: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(areaAttachObjectInstanceIdBind, singleton, area, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.areaAttachObjectInstanceIdBind, singleton, area, id)
     }
 
     /**
@@ -486,7 +486,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaGetObjectInstanceId(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(areaGetObjectInstanceIdBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.areaGetObjectInstanceIdBind, singleton, area)
     }
 
     /**
@@ -505,7 +505,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetMonitorCallback(area: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.areaSetMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
     }
 
     /**
@@ -524,12 +524,12 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetAreaMonitorCallback(area: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetAreaMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.areaSetAreaMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
     }
 
     @JvmStatic
     fun areaSetMonitorable(area: RID, monitorable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(areaSetMonitorableBind, singleton, area, monitorable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.areaSetMonitorableBind, singleton, area, monitorable)
     }
 
     /**
@@ -539,7 +539,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun areaSetRayPickable(area: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(areaSetRayPickableBind, singleton, area, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.areaSetRayPickableBind, singleton, area, enable)
     }
 
     /**
@@ -552,7 +552,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(bodyCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.bodyCreateBind, singleton)
     }
 
     /**
@@ -562,7 +562,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetSpace(body: RID, space: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(bodySetSpaceBind, singleton, body, space)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.bodySetSpaceBind, singleton, body, space)
     }
 
     /**
@@ -572,7 +572,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetSpace(body: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(bodyGetSpaceBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.bodyGetSpaceBind, singleton, body)
     }
 
     /**
@@ -582,7 +582,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetMode(body: RID, mode: PhysicsServer3D.BodyMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.bodySetModeBind, singleton, body, mode.value)
     }
 
     /**
@@ -592,7 +592,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetMode(body: RID): PhysicsServer3D.BodyMode {
-        return PhysicsServer3D.BodyMode(ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body))
+        return PhysicsServer3D.BodyMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bodyGetModeBind, singleton, body))
     }
 
     /**
@@ -602,7 +602,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetCollisionLayer(body: RID, layer: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(bodySetCollisionLayerBind, singleton, body, layer)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.bodySetCollisionLayerBind, singleton, body, layer)
     }
 
     /**
@@ -612,7 +612,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetCollisionLayer(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(bodyGetCollisionLayerBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.bodyGetCollisionLayerBind, singleton, body)
     }
 
     /**
@@ -622,7 +622,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetCollisionMask(body: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(bodySetCollisionMaskBind, singleton, body, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.bodySetCollisionMaskBind, singleton, body, mask)
     }
 
     /**
@@ -632,7 +632,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetCollisionMask(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(bodyGetCollisionMaskBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.bodyGetCollisionMaskBind, singleton, body)
     }
 
     /**
@@ -642,7 +642,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetCollisionPriority(body: RID, priority: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(bodySetCollisionPriorityBind, singleton, body, priority)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.bodySetCollisionPriorityBind, singleton, body, priority)
     }
 
     /**
@@ -652,7 +652,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetCollisionPriority(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(bodyGetCollisionPriorityBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.bodyGetCollisionPriorityBind, singleton, body)
     }
 
     /**
@@ -663,7 +663,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyAddShape(body: RID, shape: RID, transform: Transform3D, disabled: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoRIDTransform3DBoolArgs(bodyAddShapeBind, singleton, body, shape, transform, disabled)
+        ObjectCalls.ptrcallWithTwoRIDTransform3DBoolArgs(Binds.bodyAddShapeBind, singleton, body, shape, transform, disabled)
     }
 
     /**
@@ -674,7 +674,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetShape(body: RID, shapeIdx: Int, shape: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(bodySetShapeBind, singleton, body, shapeIdx, shape)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.bodySetShapeBind, singleton, body, shapeIdx, shape)
     }
 
     /**
@@ -684,12 +684,12 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetShapeTransform(body: RID, shapeIdx: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(bodySetShapeTransformBind, singleton, body, shapeIdx, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform3DArg(Binds.bodySetShapeTransformBind, singleton, body, shapeIdx, transform)
     }
 
     @JvmStatic
     fun bodySetShapeDisabled(body: RID, shapeIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(bodySetShapeDisabledBind, singleton, body, shapeIdx, disabled)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.bodySetShapeDisabledBind, singleton, body, shapeIdx, disabled)
     }
 
     /**
@@ -699,7 +699,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetShapeCount(body: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(bodyGetShapeCountBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.bodyGetShapeCountBind, singleton, body)
     }
 
     /**
@@ -709,7 +709,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetShape(body: RID, shapeIdx: Int): RID {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(bodyGetShapeBind, singleton, body, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.bodyGetShapeBind, singleton, body, shapeIdx)
     }
 
     /**
@@ -719,7 +719,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetShapeTransform(body: RID, shapeIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(bodyGetShapeTransformBind, singleton, body, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform3D(Binds.bodyGetShapeTransformBind, singleton, body, shapeIdx)
     }
 
     /**
@@ -729,7 +729,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyRemoveShape(body: RID, shapeIdx: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(bodyRemoveShapeBind, singleton, body, shapeIdx)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.bodyRemoveShapeBind, singleton, body, shapeIdx)
     }
 
     /**
@@ -739,7 +739,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyClearShapes(body: RID) {
-        ObjectCalls.ptrcallWithRIDArg(bodyClearShapesBind, singleton, body)
+        ObjectCalls.ptrcallWithRIDArg(Binds.bodyClearShapesBind, singleton, body)
     }
 
     /**
@@ -749,7 +749,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyAttachObjectInstanceId(body: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodyAttachObjectInstanceIdBind, singleton, body, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.bodyAttachObjectInstanceIdBind, singleton, body, id)
     }
 
     /**
@@ -759,7 +759,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetObjectInstanceId(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetObjectInstanceIdBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bodyGetObjectInstanceIdBind, singleton, body)
     }
 
     /**
@@ -771,7 +771,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetEnableContinuousCollisionDetection(body: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetEnableContinuousCollisionDetectionBind, singleton, body, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.bodySetEnableContinuousCollisionDetectionBind, singleton, body, enable)
     }
 
     /**
@@ -781,7 +781,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyIsContinuousCollisionDetectionEnabled(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(bodyIsContinuousCollisionDetectionEnabledBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.bodyIsContinuousCollisionDetectionEnabledBind, singleton, body)
     }
 
     /**
@@ -791,7 +791,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetParam(body: RID, param: PhysicsServer3D.BodyParameter, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.bodySetParamBind, singleton, body, param.value, value)
     }
 
     /**
@@ -802,7 +802,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetParam(body: RID, param: PhysicsServer3D.BodyParameter): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.bodyGetParamBind, singleton, body, param.value)
     }
 
     /**
@@ -813,7 +813,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
-        ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
+        ObjectCalls.ptrcallWithRIDArg(Binds.bodyResetMassPropertiesBind, singleton, body)
     }
 
     /**
@@ -823,7 +823,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetState(body: RID, state: PhysicsServer3D.BodyState, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.bodySetStateBind, singleton, body, state.value, value)
     }
 
     /**
@@ -833,7 +833,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetState(body: RID, state: PhysicsServer3D.BodyState): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.bodyGetStateBind, singleton, body, state.value)
     }
 
     /**
@@ -846,7 +846,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyApplyCentralImpulse(body: RID, impulse: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyCentralImpulseBind, singleton, body, impulse)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodyApplyCentralImpulseBind, singleton, body, impulse)
     }
 
     /**
@@ -859,7 +859,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyApplyImpulse(body: RID, impulse: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndTwoVector3Args(bodyApplyImpulseBind, singleton, body, impulse, position)
+        ObjectCalls.ptrcallWithRIDAndTwoVector3Args(Binds.bodyApplyImpulseBind, singleton, body, impulse, position)
     }
 
     /**
@@ -872,7 +872,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyApplyTorqueImpulse(body: RID, impulse: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyTorqueImpulseBind, singleton, body, impulse)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodyApplyTorqueImpulseBind, singleton, body, impulse)
     }
 
     /**
@@ -884,7 +884,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyApplyCentralForce(body: RID, force: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyCentralForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodyApplyCentralForceBind, singleton, body, force)
     }
 
     /**
@@ -895,7 +895,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyApplyForce(body: RID, force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndTwoVector3Args(bodyApplyForceBind, singleton, body, force, position)
+        ObjectCalls.ptrcallWithRIDAndTwoVector3Args(Binds.bodyApplyForceBind, singleton, body, force, position)
     }
 
     /**
@@ -906,7 +906,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyApplyTorque(body: RID, torque: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyApplyTorqueBind, singleton, body, torque)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodyApplyTorqueBind, singleton, body, torque)
     }
 
     /**
@@ -918,7 +918,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyAddConstantCentralForce(body: RID, force: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyAddConstantCentralForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodyAddConstantCentralForceBind, singleton, body, force)
     }
 
     /**
@@ -930,7 +930,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyAddConstantForce(body: RID, force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndTwoVector3Args(bodyAddConstantForceBind, singleton, body, force, position)
+        ObjectCalls.ptrcallWithRIDAndTwoVector3Args(Binds.bodyAddConstantForceBind, singleton, body, force, position)
     }
 
     /**
@@ -941,7 +941,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyAddConstantTorque(body: RID, torque: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodyAddConstantTorqueBind, singleton, body, torque)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodyAddConstantTorqueBind, singleton, body, torque)
     }
 
     /**
@@ -952,7 +952,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetConstantForce(body: RID, force: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodySetConstantForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodySetConstantForceBind, singleton, body, force)
     }
 
     /**
@@ -963,7 +963,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetConstantForce(body: RID): Vector3 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector3(bodyGetConstantForceBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetVector3(Binds.bodyGetConstantForceBind, singleton, body)
     }
 
     /**
@@ -974,7 +974,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetConstantTorque(body: RID, torque: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodySetConstantTorqueBind, singleton, body, torque)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodySetConstantTorqueBind, singleton, body, torque)
     }
 
     /**
@@ -985,7 +985,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetConstantTorque(body: RID): Vector3 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector3(bodyGetConstantTorqueBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetVector3(Binds.bodyGetConstantTorqueBind, singleton, body)
     }
 
     /**
@@ -996,17 +996,17 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetAxisVelocity(body: RID, axisVelocity: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(bodySetAxisVelocityBind, singleton, body, axisVelocity)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.bodySetAxisVelocityBind, singleton, body, axisVelocity)
     }
 
     @JvmStatic
     fun bodySetAxisLock(body: RID, axis: PhysicsServer3D.BodyAxis, lock: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(bodySetAxisLockBind, singleton, body, axis.value, lock)
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(Binds.bodySetAxisLockBind, singleton, body, axis.value, lock)
     }
 
     @JvmStatic
     fun bodyIsAxisLocked(body: RID, axis: PhysicsServer3D.BodyAxis): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(bodyIsAxisLockedBind, singleton, body, axis.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(Binds.bodyIsAxisLockedBind, singleton, body, axis.value)
     }
 
     /**
@@ -1016,7 +1016,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyAddCollisionException(body: RID, exceptedBody: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(bodyAddCollisionExceptionBind, singleton, body, exceptedBody)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.bodyAddCollisionExceptionBind, singleton, body, exceptedBody)
     }
 
     /**
@@ -1028,7 +1028,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyRemoveCollisionException(body: RID, exceptedBody: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(bodyRemoveCollisionExceptionBind, singleton, body, exceptedBody)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.bodyRemoveCollisionExceptionBind, singleton, body, exceptedBody)
     }
 
     /**
@@ -1039,7 +1039,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetMaxContactsReported(body: RID, amount: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(bodySetMaxContactsReportedBind, singleton, body, amount)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.bodySetMaxContactsReportedBind, singleton, body, amount)
     }
 
     /**
@@ -1049,7 +1049,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetMaxContactsReported(body: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(bodyGetMaxContactsReportedBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.bodyGetMaxContactsReportedBind, singleton, body)
     }
 
     /**
@@ -1063,7 +1063,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetOmitForceIntegration(body: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetOmitForceIntegrationBind, singleton, body, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.bodySetOmitForceIntegrationBind, singleton, body, enable)
     }
 
     /**
@@ -1074,7 +1074,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyIsOmittingForceIntegration(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(bodyIsOmittingForceIntegrationBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.bodyIsOmittingForceIntegrationBind, singleton, body)
     }
 
     /**
@@ -1088,7 +1088,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetStateSyncCallback(body: RID, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(bodySetStateSyncCallbackBind, singleton, body, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.bodySetStateSyncCallbackBind, singleton, body, callable.target.segment, callable.method)
     }
 
     /**
@@ -1106,7 +1106,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
-        ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.segment, callable.method, userdata)
+        ObjectCalls.ptrcallWithRIDCallableVariantArgs(Binds.bodySetForceIntegrationCallbackBind, singleton, body, callable.target.segment, callable.method, userdata)
     }
 
     /**
@@ -1116,7 +1116,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodySetRayPickable(body: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetRayPickableBind, singleton, body, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.bodySetRayPickableBind, singleton, body, enable)
     }
 
     /**
@@ -1128,7 +1128,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters3D, result: PhysicsTestMotionResult3D?): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(Binds.bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1139,7 +1139,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun bodyGetDirectState(body: RID): PhysicsDirectBodyState3D? {
-        return PhysicsDirectBodyState3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(bodyGetDirectStateBind, singleton, body))
+        return PhysicsDirectBodyState3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.bodyGetDirectStateBind, singleton, body))
     }
 
     /**
@@ -1149,7 +1149,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(softBodyCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.softBodyCreateBind, singleton)
     }
 
     /**
@@ -1160,7 +1160,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyUpdateRenderingServer(body: RID, renderingServerHandler: PhysicsServer3DRenderingServerHandler) {
-        ObjectCalls.ptrcallWithRIDAndObjectArg(softBodyUpdateRenderingServerBind, singleton, body, renderingServerHandler.segment)
+        ObjectCalls.ptrcallWithRIDAndObjectArg(Binds.softBodyUpdateRenderingServerBind, singleton, body, renderingServerHandler.segment)
     }
 
     /**
@@ -1170,7 +1170,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetSpace(body: RID, space: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(softBodySetSpaceBind, singleton, body, space)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.softBodySetSpaceBind, singleton, body, space)
     }
 
     /**
@@ -1180,7 +1180,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetSpace(body: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(softBodyGetSpaceBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.softBodyGetSpaceBind, singleton, body)
     }
 
     /**
@@ -1190,7 +1190,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetMesh(body: RID, mesh: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(softBodySetMeshBind, singleton, body, mesh)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.softBodySetMeshBind, singleton, body, mesh)
     }
 
     /**
@@ -1200,7 +1200,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetBounds(body: RID): AABB {
-        return ObjectCalls.ptrcallWithRIDArgRetAABB(softBodyGetBoundsBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetAABB(Binds.softBodyGetBoundsBind, singleton, body)
     }
 
     /**
@@ -1210,7 +1210,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetCollisionLayer(body: RID, layer: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(softBodySetCollisionLayerBind, singleton, body, layer)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.softBodySetCollisionLayerBind, singleton, body, layer)
     }
 
     /**
@@ -1220,7 +1220,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetCollisionLayer(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(softBodyGetCollisionLayerBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.softBodyGetCollisionLayerBind, singleton, body)
     }
 
     /**
@@ -1230,7 +1230,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetCollisionMask(body: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(softBodySetCollisionMaskBind, singleton, body, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.softBodySetCollisionMaskBind, singleton, body, mask)
     }
 
     /**
@@ -1240,7 +1240,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetCollisionMask(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(softBodyGetCollisionMaskBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.softBodyGetCollisionMaskBind, singleton, body)
     }
 
     /**
@@ -1250,7 +1250,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyAddCollisionException(body: RID, bodyB: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(softBodyAddCollisionExceptionBind, singleton, body, bodyB)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.softBodyAddCollisionExceptionBind, singleton, body, bodyB)
     }
 
     /**
@@ -1260,7 +1260,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyRemoveCollisionException(body: RID, bodyB: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(softBodyRemoveCollisionExceptionBind, singleton, body, bodyB)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.softBodyRemoveCollisionExceptionBind, singleton, body, bodyB)
     }
 
     /**
@@ -1272,7 +1272,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetState(body: RID, state: PhysicsServer3D.BodyState, variant: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(softBodySetStateBind, singleton, body, state.value, variant)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.softBodySetStateBind, singleton, body, state.value, variant)
     }
 
     /**
@@ -1284,7 +1284,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetState(body: RID, state: PhysicsServer3D.BodyState): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(softBodyGetStateBind, singleton, body, state.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.softBodyGetStateBind, singleton, body, state.value)
     }
 
     /**
@@ -1294,7 +1294,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetTransform(body: RID, transform: Transform3D) {
-        ObjectCalls.ptrcallWithRIDAndTransform3DArg(softBodySetTransformBind, singleton, body, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform3DArg(Binds.softBodySetTransformBind, singleton, body, transform)
     }
 
     /**
@@ -1304,7 +1304,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetRayPickable(body: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(softBodySetRayPickableBind, singleton, body, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.softBodySetRayPickableBind, singleton, body, enable)
     }
 
     /**
@@ -1315,7 +1315,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetSimulationPrecision(body: RID, simulationPrecision: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(softBodySetSimulationPrecisionBind, singleton, body, simulationPrecision)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.softBodySetSimulationPrecisionBind, singleton, body, simulationPrecision)
     }
 
     /**
@@ -1325,7 +1325,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetSimulationPrecision(body: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(softBodyGetSimulationPrecisionBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.softBodyGetSimulationPrecisionBind, singleton, body)
     }
 
     /**
@@ -1335,7 +1335,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetTotalMass(body: RID, totalMass: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetTotalMassBind, singleton, body, totalMass)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.softBodySetTotalMassBind, singleton, body, totalMass)
     }
 
     /**
@@ -1345,7 +1345,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetTotalMass(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetTotalMassBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.softBodyGetTotalMassBind, singleton, body)
     }
 
     /**
@@ -1357,7 +1357,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetLinearStiffness(body: RID, stiffness: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetLinearStiffnessBind, singleton, body, stiffness)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.softBodySetLinearStiffnessBind, singleton, body, stiffness)
     }
 
     /**
@@ -1367,7 +1367,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetLinearStiffness(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetLinearStiffnessBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.softBodyGetLinearStiffnessBind, singleton, body)
     }
 
     /**
@@ -1377,7 +1377,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetShrinkingFactor(body: RID, shrinkingFactor: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetShrinkingFactorBind, singleton, body, shrinkingFactor)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.softBodySetShrinkingFactorBind, singleton, body, shrinkingFactor)
     }
 
     /**
@@ -1387,7 +1387,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetShrinkingFactor(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetShrinkingFactorBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.softBodyGetShrinkingFactorBind, singleton, body)
     }
 
     /**
@@ -1398,7 +1398,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetPressureCoefficient(body: RID, pressureCoefficient: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetPressureCoefficientBind, singleton, body, pressureCoefficient)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.softBodySetPressureCoefficientBind, singleton, body, pressureCoefficient)
     }
 
     /**
@@ -1408,7 +1408,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetPressureCoefficient(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetPressureCoefficientBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.softBodyGetPressureCoefficientBind, singleton, body)
     }
 
     /**
@@ -1419,7 +1419,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetDampingCoefficient(body: RID, dampingCoefficient: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetDampingCoefficientBind, singleton, body, dampingCoefficient)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.softBodySetDampingCoefficientBind, singleton, body, dampingCoefficient)
     }
 
     /**
@@ -1429,7 +1429,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetDampingCoefficient(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetDampingCoefficientBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.softBodyGetDampingCoefficientBind, singleton, body)
     }
 
     /**
@@ -1440,7 +1440,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodySetDragCoefficient(body: RID, dragCoefficient: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(softBodySetDragCoefficientBind, singleton, body, dragCoefficient)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.softBodySetDragCoefficientBind, singleton, body, dragCoefficient)
     }
 
     /**
@@ -1450,7 +1450,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetDragCoefficient(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(softBodyGetDragCoefficientBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.softBodyGetDragCoefficientBind, singleton, body)
     }
 
     /**
@@ -1460,7 +1460,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyMovePoint(body: RID, pointIndex: Int, globalPosition: Vector3) {
-        ObjectCalls.ptrcallWithRIDIntAndVector3Arg(softBodyMovePointBind, singleton, body, pointIndex, globalPosition)
+        ObjectCalls.ptrcallWithRIDIntAndVector3Arg(Binds.softBodyMovePointBind, singleton, body, pointIndex, globalPosition)
     }
 
     /**
@@ -1470,7 +1470,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyGetPointGlobalPosition(body: RID, pointIndex: Int): Vector3 {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetVector3(softBodyGetPointGlobalPositionBind, singleton, body, pointIndex)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetVector3(Binds.softBodyGetPointGlobalPositionBind, singleton, body, pointIndex)
     }
 
     /**
@@ -1480,7 +1480,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyRemoveAllPinnedPoints(body: RID) {
-        ObjectCalls.ptrcallWithRIDArg(softBodyRemoveAllPinnedPointsBind, singleton, body)
+        ObjectCalls.ptrcallWithRIDArg(Binds.softBodyRemoveAllPinnedPointsBind, singleton, body)
     }
 
     /**
@@ -1492,7 +1492,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyPinPoint(body: RID, pointIndex: Int, pin: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(softBodyPinPointBind, singleton, body, pointIndex, pin)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.softBodyPinPointBind, singleton, body, pointIndex, pin)
     }
 
     /**
@@ -1502,7 +1502,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyIsPointPinned(body: RID, pointIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(softBodyIsPointPinnedBind, singleton, body, pointIndex)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.softBodyIsPointPinnedBind, singleton, body, pointIndex)
     }
 
     /**
@@ -1514,7 +1514,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyApplyPointImpulse(body: RID, pointIndex: Int, impulse: Vector3) {
-        ObjectCalls.ptrcallWithRIDIntAndVector3Arg(softBodyApplyPointImpulseBind, singleton, body, pointIndex, impulse)
+        ObjectCalls.ptrcallWithRIDIntAndVector3Arg(Binds.softBodyApplyPointImpulseBind, singleton, body, pointIndex, impulse)
     }
 
     /**
@@ -1525,7 +1525,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyApplyPointForce(body: RID, pointIndex: Int, force: Vector3) {
-        ObjectCalls.ptrcallWithRIDIntAndVector3Arg(softBodyApplyPointForceBind, singleton, body, pointIndex, force)
+        ObjectCalls.ptrcallWithRIDIntAndVector3Arg(Binds.softBodyApplyPointForceBind, singleton, body, pointIndex, force)
     }
 
     /**
@@ -1537,7 +1537,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyApplyCentralImpulse(body: RID, impulse: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(softBodyApplyCentralImpulseBind, singleton, body, impulse)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.softBodyApplyCentralImpulseBind, singleton, body, impulse)
     }
 
     /**
@@ -1548,22 +1548,22 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun softBodyApplyCentralForce(body: RID, force: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(softBodyApplyCentralForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.softBodyApplyCentralForceBind, singleton, body, force)
     }
 
     @JvmStatic
     fun jointCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(jointCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.jointCreateBind, singleton)
     }
 
     @JvmStatic
     fun jointClear(joint: RID) {
-        ObjectCalls.ptrcallWithRIDArg(jointClearBind, singleton, joint)
+        ObjectCalls.ptrcallWithRIDArg(Binds.jointClearBind, singleton, joint)
     }
 
     @JvmStatic
     fun jointMakePin(joint: RID, bodyA: RID, localA: Vector3, bodyB: RID, localB: Vector3) {
-        ObjectCalls.ptrcallWithTwoRIDVector3RIDVector3Args(jointMakePinBind, singleton, joint, bodyA, localA, bodyB, localB)
+        ObjectCalls.ptrcallWithTwoRIDVector3RIDVector3Args(Binds.jointMakePinBind, singleton, joint, bodyA, localA, bodyB, localB)
     }
 
     /**
@@ -1573,7 +1573,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun pinJointSetParam(joint: RID, param: PhysicsServer3D.PinJointParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.pinJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1583,7 +1583,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun pinJointGetParam(joint: RID, param: PhysicsServer3D.PinJointParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.pinJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1593,7 +1593,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun pinJointSetLocalA(joint: RID, localA: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(pinJointSetLocalABind, singleton, joint, localA)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.pinJointSetLocalABind, singleton, joint, localA)
     }
 
     /**
@@ -1603,7 +1603,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun pinJointGetLocalA(joint: RID): Vector3 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector3(pinJointGetLocalABind, singleton, joint)
+        return ObjectCalls.ptrcallWithRIDArgRetVector3(Binds.pinJointGetLocalABind, singleton, joint)
     }
 
     /**
@@ -1613,7 +1613,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun pinJointSetLocalB(joint: RID, localB: Vector3) {
-        ObjectCalls.ptrcallWithRIDAndVector3Arg(pinJointSetLocalBBind, singleton, joint, localB)
+        ObjectCalls.ptrcallWithRIDAndVector3Arg(Binds.pinJointSetLocalBBind, singleton, joint, localB)
     }
 
     /**
@@ -1623,12 +1623,12 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun pinJointGetLocalB(joint: RID): Vector3 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector3(pinJointGetLocalBBind, singleton, joint)
+        return ObjectCalls.ptrcallWithRIDArgRetVector3(Binds.pinJointGetLocalBBind, singleton, joint)
     }
 
     @JvmStatic
     fun jointMakeHinge(joint: RID, bodyA: RID, hingeA: Transform3D, bodyB: RID, hingeB: Transform3D) {
-        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeHingeBind, singleton, joint, bodyA, hingeA, bodyB, hingeB)
+        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(Binds.jointMakeHingeBind, singleton, joint, bodyA, hingeA, bodyB, hingeB)
     }
 
     /**
@@ -1638,7 +1638,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun hingeJointSetParam(joint: RID, param: PhysicsServer3D.HingeJointParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(hingeJointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.hingeJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1648,7 +1648,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun hingeJointGetParam(joint: RID, param: PhysicsServer3D.HingeJointParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(hingeJointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.hingeJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1658,7 +1658,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun hingeJointSetFlag(joint: RID, flag: PhysicsServer3D.HingeJointFlag, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(hingeJointSetFlagBind, singleton, joint, flag.value, enabled)
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(Binds.hingeJointSetFlagBind, singleton, joint, flag.value, enabled)
     }
 
     /**
@@ -1668,12 +1668,12 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun hingeJointGetFlag(joint: RID, flag: PhysicsServer3D.HingeJointFlag): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(hingeJointGetFlagBind, singleton, joint, flag.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(Binds.hingeJointGetFlagBind, singleton, joint, flag.value)
     }
 
     @JvmStatic
     fun jointMakeSlider(joint: RID, bodyA: RID, localRefA: Transform3D, bodyB: RID, localRefB: Transform3D) {
-        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeSliderBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
+        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(Binds.jointMakeSliderBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
     }
 
     /**
@@ -1683,7 +1683,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun sliderJointSetParam(joint: RID, param: PhysicsServer3D.SliderJointParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(sliderJointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.sliderJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1693,12 +1693,12 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun sliderJointGetParam(joint: RID, param: PhysicsServer3D.SliderJointParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(sliderJointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.sliderJointGetParamBind, singleton, joint, param.value)
     }
 
     @JvmStatic
     fun jointMakeConeTwist(joint: RID, bodyA: RID, localRefA: Transform3D, bodyB: RID, localRefB: Transform3D) {
-        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeConeTwistBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
+        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(Binds.jointMakeConeTwistBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
     }
 
     /**
@@ -1708,7 +1708,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun coneTwistJointSetParam(joint: RID, param: PhysicsServer3D.ConeTwistJointParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(coneTwistJointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.coneTwistJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1718,7 +1718,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun coneTwistJointGetParam(joint: RID, param: PhysicsServer3D.ConeTwistJointParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(coneTwistJointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.coneTwistJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1728,7 +1728,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun jointGetType(joint: RID): PhysicsServer3D.JointType {
-        return PhysicsServer3D.JointType(ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint))
+        return PhysicsServer3D.JointType(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.jointGetTypeBind, singleton, joint))
     }
 
     /**
@@ -1739,7 +1739,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun jointSetSolverPriority(joint: RID, priority: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(jointSetSolverPriorityBind, singleton, joint, priority)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.jointSetSolverPriorityBind, singleton, joint, priority)
     }
 
     /**
@@ -1750,7 +1750,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun jointGetSolverPriority(joint: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(jointGetSolverPriorityBind, singleton, joint)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.jointGetSolverPriorityBind, singleton, joint)
     }
 
     /**
@@ -1760,7 +1760,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun jointDisableCollisionsBetweenBodies(joint: RID, disable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(jointDisableCollisionsBetweenBodiesBind, singleton, joint, disable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.jointDisableCollisionsBetweenBodiesBind, singleton, joint, disable)
     }
 
     /**
@@ -1770,7 +1770,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun jointIsDisabledCollisionsBetweenBodies(joint: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(jointIsDisabledCollisionsBetweenBodiesBind, singleton, joint)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.jointIsDisabledCollisionsBetweenBodiesBind, singleton, joint)
     }
 
     /**
@@ -1781,7 +1781,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun jointMakeGeneric6dof(joint: RID, bodyA: RID, localRefA: Transform3D, bodyB: RID, localRefB: Transform3D) {
-        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(jointMakeGeneric6dofBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
+        ObjectCalls.ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(Binds.jointMakeGeneric6dofBind, singleton, joint, bodyA, localRefA, bodyB, localRefB)
     }
 
     /**
@@ -1791,7 +1791,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun generic6dofJointSetParam(joint: RID, axis: Vector3.Axis, param: PhysicsServer3D.G6DOFJointAxisParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDTwoLongDoubleArgs(generic6dofJointSetParamBind, singleton, joint, axis.value, param.value, value)
+        ObjectCalls.ptrcallWithRIDTwoLongDoubleArgs(Binds.generic6dofJointSetParamBind, singleton, joint, axis.value, param.value, value)
     }
 
     /**
@@ -1801,7 +1801,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun generic6dofJointGetParam(joint: RID, axis: Vector3.Axis, param: PhysicsServer3D.G6DOFJointAxisParam): Double {
-        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetDouble(generic6dofJointGetParamBind, singleton, joint, axis.value, param.value)
+        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetDouble(Binds.generic6dofJointGetParamBind, singleton, joint, axis.value, param.value)
     }
 
     /**
@@ -1811,7 +1811,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun generic6dofJointSetFlag(joint: RID, axis: Vector3.Axis, flag: PhysicsServer3D.G6DOFJointAxisFlag, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDTwoLongBoolArgs(generic6dofJointSetFlagBind, singleton, joint, axis.value, flag.value, enable)
+        ObjectCalls.ptrcallWithRIDTwoLongBoolArgs(Binds.generic6dofJointSetFlagBind, singleton, joint, axis.value, flag.value, enable)
     }
 
     /**
@@ -1821,7 +1821,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun generic6dofJointGetFlag(joint: RID, axis: Vector3.Axis, flag: PhysicsServer3D.G6DOFJointAxisFlag): Boolean {
-        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetBool(generic6dofJointGetFlagBind, singleton, joint, axis.value, flag.value)
+        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetBool(Binds.generic6dofJointGetFlagBind, singleton, joint, axis.value, flag.value)
     }
 
     /**
@@ -1832,7 +1832,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun freeRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, singleton, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeRidBind, singleton, rid)
     }
 
     /**
@@ -1842,7 +1842,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun setActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, singleton, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, singleton, active)
     }
 
     /**
@@ -1852,7 +1852,7 @@ object PhysicsServer3D {
      */
     @JvmStatic
     fun getProcessInfo(processInfo: PhysicsServer3D.ProcessInfo): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getProcessInfoBind, singleton, processInfo.value)
     }
 
     /**
@@ -3007,878 +3007,883 @@ object PhysicsServer3D {
     internal fun wrap(handle: RawSegment): PhysicsServer3D? =
         if (handle.address() == 0L) null else this
 
-    private const val WORLD_BOUNDARY_SHAPE_CREATE_HASH = 529393457L
-    private val worldBoundaryShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "world_boundary_shape_create", WORLD_BOUNDARY_SHAPE_CREATE_HASH)
-    }
-
-    private const val SEPARATION_RAY_SHAPE_CREATE_HASH = 529393457L
-    private val separationRayShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "separation_ray_shape_create", SEPARATION_RAY_SHAPE_CREATE_HASH)
-    }
-
-    private const val SPHERE_SHAPE_CREATE_HASH = 529393457L
-    private val sphereShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "sphere_shape_create", SPHERE_SHAPE_CREATE_HASH)
-    }
-
-    private const val BOX_SHAPE_CREATE_HASH = 529393457L
-    private val boxShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "box_shape_create", BOX_SHAPE_CREATE_HASH)
-    }
-
-    private const val CAPSULE_SHAPE_CREATE_HASH = 529393457L
-    private val capsuleShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "capsule_shape_create", CAPSULE_SHAPE_CREATE_HASH)
-    }
-
-    private const val CYLINDER_SHAPE_CREATE_HASH = 529393457L
-    private val cylinderShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "cylinder_shape_create", CYLINDER_SHAPE_CREATE_HASH)
-    }
-
-    private const val CONVEX_POLYGON_SHAPE_CREATE_HASH = 529393457L
-    private val convexPolygonShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "convex_polygon_shape_create", CONVEX_POLYGON_SHAPE_CREATE_HASH)
-    }
-
-    private const val CONCAVE_POLYGON_SHAPE_CREATE_HASH = 529393457L
-    private val concavePolygonShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "concave_polygon_shape_create", CONCAVE_POLYGON_SHAPE_CREATE_HASH)
-    }
-
-    private const val HEIGHTMAP_SHAPE_CREATE_HASH = 529393457L
-    private val heightmapShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "heightmap_shape_create", HEIGHTMAP_SHAPE_CREATE_HASH)
-    }
-
-    private const val CUSTOM_SHAPE_CREATE_HASH = 529393457L
-    private val customShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "custom_shape_create", CUSTOM_SHAPE_CREATE_HASH)
-    }
-
-    private const val SHAPE_SET_DATA_HASH = 3175752987L
-    private val shapeSetDataBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_data", SHAPE_SET_DATA_HASH)
-    }
-
-    private const val SHAPE_SET_MARGIN_HASH = 1794382983L
-    private val shapeSetMarginBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_margin", SHAPE_SET_MARGIN_HASH)
-    }
-
-    private const val SHAPE_GET_TYPE_HASH = 3418923367L
-    private val shapeGetTypeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_type", SHAPE_GET_TYPE_HASH)
-    }
-
-    private const val SHAPE_GET_DATA_HASH = 4171304767L
-    private val shapeGetDataBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_data", SHAPE_GET_DATA_HASH)
-    }
-
-    private const val SHAPE_GET_MARGIN_HASH = 866169185L
-    private val shapeGetMarginBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_margin", SHAPE_GET_MARGIN_HASH)
-    }
-
-    private const val SPACE_CREATE_HASH = 529393457L
-    private val spaceCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "space_create", SPACE_CREATE_HASH)
-    }
-
-    private const val SPACE_SET_ACTIVE_HASH = 1265174801L
-    private val spaceSetActiveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "space_set_active", SPACE_SET_ACTIVE_HASH)
-    }
-
-    private const val SPACE_IS_ACTIVE_HASH = 4155700596L
-    private val spaceIsActiveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "space_is_active", SPACE_IS_ACTIVE_HASH)
-    }
-
-    private const val SPACE_SET_PARAM_HASH = 2406017470L
-    private val spaceSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "space_set_param", SPACE_SET_PARAM_HASH)
-    }
-
-    private const val SPACE_GET_PARAM_HASH = 1523206731L
-    private val spaceGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "space_get_param", SPACE_GET_PARAM_HASH)
-    }
-
-    private const val SPACE_GET_DIRECT_STATE_HASH = 2048616813L
-    private val spaceGetDirectStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "space_get_direct_state", SPACE_GET_DIRECT_STATE_HASH)
-    }
-
-    private const val AREA_CREATE_HASH = 529393457L
-    private val areaCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_create", AREA_CREATE_HASH)
-    }
-
-    private const val AREA_SET_SPACE_HASH = 395945892L
-    private val areaSetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_space", AREA_SET_SPACE_HASH)
-    }
-
-    private const val AREA_GET_SPACE_HASH = 3814569979L
-    private val areaGetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_space", AREA_GET_SPACE_HASH)
-    }
-
-    private const val AREA_ADD_SHAPE_HASH = 3711419014L
-    private val areaAddShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_add_shape", AREA_ADD_SHAPE_HASH)
-    }
-
-    private const val AREA_SET_SHAPE_HASH = 2310537182L
-    private val areaSetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_shape", AREA_SET_SHAPE_HASH)
-    }
-
-    private const val AREA_SET_SHAPE_TRANSFORM_HASH = 675327471L
-    private val areaSetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_shape_transform", AREA_SET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val AREA_SET_SHAPE_DISABLED_HASH = 2658558584L
-    private val areaSetShapeDisabledBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_shape_disabled", AREA_SET_SHAPE_DISABLED_HASH)
-    }
-
-    private const val AREA_GET_SHAPE_COUNT_HASH = 2198884583L
-    private val areaGetShapeCountBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_shape_count", AREA_GET_SHAPE_COUNT_HASH)
-    }
-
-    private const val AREA_GET_SHAPE_HASH = 1066463050L
-    private val areaGetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_shape", AREA_GET_SHAPE_HASH)
-    }
-
-    private const val AREA_GET_SHAPE_TRANSFORM_HASH = 1050775521L
-    private val areaGetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_shape_transform", AREA_GET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val AREA_REMOVE_SHAPE_HASH = 3411492887L
-    private val areaRemoveShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_remove_shape", AREA_REMOVE_SHAPE_HASH)
-    }
-
-    private const val AREA_CLEAR_SHAPES_HASH = 2722037293L
-    private val areaClearShapesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_clear_shapes", AREA_CLEAR_SHAPES_HASH)
-    }
-
-    private const val AREA_SET_COLLISION_LAYER_HASH = 3411492887L
-    private val areaSetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_collision_layer", AREA_SET_COLLISION_LAYER_HASH)
-    }
-
-    private const val AREA_GET_COLLISION_LAYER_HASH = 2198884583L
-    private val areaGetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_collision_layer", AREA_GET_COLLISION_LAYER_HASH)
-    }
-
-    private const val AREA_SET_COLLISION_MASK_HASH = 3411492887L
-    private val areaSetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_collision_mask", AREA_SET_COLLISION_MASK_HASH)
-    }
-
-    private const val AREA_GET_COLLISION_MASK_HASH = 2198884583L
-    private val areaGetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_collision_mask", AREA_GET_COLLISION_MASK_HASH)
-    }
-
-    private const val AREA_SET_PARAM_HASH = 2980114638L
-    private val areaSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_param", AREA_SET_PARAM_HASH)
-    }
-
-    private const val AREA_SET_TRANSFORM_HASH = 3935195649L
-    private val areaSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_transform", AREA_SET_TRANSFORM_HASH)
-    }
-
-    private const val AREA_GET_PARAM_HASH = 890056067L
-    private val areaGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_param", AREA_GET_PARAM_HASH)
-    }
-
-    private const val AREA_GET_TRANSFORM_HASH = 1128465797L
-    private val areaGetTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_transform", AREA_GET_TRANSFORM_HASH)
-    }
-
-    private const val AREA_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
-    private val areaAttachObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_attach_object_instance_id", AREA_ATTACH_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val AREA_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
-    private val areaGetObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_object_instance_id", AREA_GET_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val AREA_SET_MONITOR_CALLBACK_HASH = 3379118538L
-    private val areaSetMonitorCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_monitor_callback", AREA_SET_MONITOR_CALLBACK_HASH)
-    }
-
-    private const val AREA_SET_AREA_MONITOR_CALLBACK_HASH = 3379118538L
-    private val areaSetAreaMonitorCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_area_monitor_callback", AREA_SET_AREA_MONITOR_CALLBACK_HASH)
-    }
-
-    private const val AREA_SET_MONITORABLE_HASH = 1265174801L
-    private val areaSetMonitorableBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_monitorable", AREA_SET_MONITORABLE_HASH)
-    }
-
-    private const val AREA_SET_RAY_PICKABLE_HASH = 1265174801L
-    private val areaSetRayPickableBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_ray_pickable", AREA_SET_RAY_PICKABLE_HASH)
-    }
-
-    private const val BODY_CREATE_HASH = 529393457L
-    private val bodyCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_create", BODY_CREATE_HASH)
-    }
-
-    private const val BODY_SET_SPACE_HASH = 395945892L
-    private val bodySetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_space", BODY_SET_SPACE_HASH)
-    }
-
-    private const val BODY_GET_SPACE_HASH = 3814569979L
-    private val bodyGetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_space", BODY_GET_SPACE_HASH)
-    }
-
-    private const val BODY_SET_MODE_HASH = 606803466L
-    private val bodySetModeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_mode", BODY_SET_MODE_HASH)
-    }
-
-    private const val BODY_GET_MODE_HASH = 2488819728L
-    private val bodyGetModeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_mode", BODY_GET_MODE_HASH)
-    }
-
-    private const val BODY_SET_COLLISION_LAYER_HASH = 3411492887L
-    private val bodySetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_collision_layer", BODY_SET_COLLISION_LAYER_HASH)
-    }
-
-    private const val BODY_GET_COLLISION_LAYER_HASH = 2198884583L
-    private val bodyGetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_collision_layer", BODY_GET_COLLISION_LAYER_HASH)
-    }
-
-    private const val BODY_SET_COLLISION_MASK_HASH = 3411492887L
-    private val bodySetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_collision_mask", BODY_SET_COLLISION_MASK_HASH)
-    }
-
-    private const val BODY_GET_COLLISION_MASK_HASH = 2198884583L
-    private val bodyGetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_collision_mask", BODY_GET_COLLISION_MASK_HASH)
-    }
-
-    private const val BODY_SET_COLLISION_PRIORITY_HASH = 1794382983L
-    private val bodySetCollisionPriorityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_collision_priority", BODY_SET_COLLISION_PRIORITY_HASH)
-    }
-
-    private const val BODY_GET_COLLISION_PRIORITY_HASH = 866169185L
-    private val bodyGetCollisionPriorityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_collision_priority", BODY_GET_COLLISION_PRIORITY_HASH)
-    }
-
-    private const val BODY_ADD_SHAPE_HASH = 3711419014L
-    private val bodyAddShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_shape", BODY_ADD_SHAPE_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_HASH = 2310537182L
-    private val bodySetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_shape", BODY_SET_SHAPE_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_TRANSFORM_HASH = 675327471L
-    private val bodySetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_shape_transform", BODY_SET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_DISABLED_HASH = 2658558584L
-    private val bodySetShapeDisabledBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_shape_disabled", BODY_SET_SHAPE_DISABLED_HASH)
-    }
-
-    private const val BODY_GET_SHAPE_COUNT_HASH = 2198884583L
-    private val bodyGetShapeCountBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_shape_count", BODY_GET_SHAPE_COUNT_HASH)
-    }
-
-    private const val BODY_GET_SHAPE_HASH = 1066463050L
-    private val bodyGetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_shape", BODY_GET_SHAPE_HASH)
-    }
-
-    private const val BODY_GET_SHAPE_TRANSFORM_HASH = 1050775521L
-    private val bodyGetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_shape_transform", BODY_GET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val BODY_REMOVE_SHAPE_HASH = 3411492887L
-    private val bodyRemoveShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_remove_shape", BODY_REMOVE_SHAPE_HASH)
-    }
-
-    private const val BODY_CLEAR_SHAPES_HASH = 2722037293L
-    private val bodyClearShapesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_clear_shapes", BODY_CLEAR_SHAPES_HASH)
-    }
-
-    private const val BODY_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
-    private val bodyAttachObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_attach_object_instance_id", BODY_ATTACH_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val BODY_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
-    private val bodyGetObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_object_instance_id", BODY_GET_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val BODY_SET_ENABLE_CONTINUOUS_COLLISION_DETECTION_HASH = 1265174801L
-    private val bodySetEnableContinuousCollisionDetectionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_enable_continuous_collision_detection", BODY_SET_ENABLE_CONTINUOUS_COLLISION_DETECTION_HASH)
-    }
-
-    private const val BODY_IS_CONTINUOUS_COLLISION_DETECTION_ENABLED_HASH = 4155700596L
-    private val bodyIsContinuousCollisionDetectionEnabledBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_continuous_collision_detection_enabled", BODY_IS_CONTINUOUS_COLLISION_DETECTION_ENABLED_HASH)
-    }
-
-    private const val BODY_SET_PARAM_HASH = 910941953L
-    private val bodySetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_param", BODY_SET_PARAM_HASH)
-    }
-
-    private const val BODY_GET_PARAM_HASH = 3385027841L
-    private val bodyGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_param", BODY_GET_PARAM_HASH)
-    }
-
-    private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
-    private val bodyResetMassPropertiesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
-    }
-
-    private const val BODY_SET_STATE_HASH = 599977762L
-    private val bodySetStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state", BODY_SET_STATE_HASH)
-    }
-
-    private const val BODY_GET_STATE_HASH = 1850449534L
-    private val bodyGetStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_state", BODY_GET_STATE_HASH)
-    }
-
-    private const val BODY_APPLY_CENTRAL_IMPULSE_HASH = 3227306858L
-    private val bodyApplyCentralImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_central_impulse", BODY_APPLY_CENTRAL_IMPULSE_HASH)
-    }
-
-    private const val BODY_APPLY_IMPULSE_HASH = 390416203L
-    private val bodyApplyImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_impulse", BODY_APPLY_IMPULSE_HASH)
-    }
-
-    private const val BODY_APPLY_TORQUE_IMPULSE_HASH = 3227306858L
-    private val bodyApplyTorqueImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_torque_impulse", BODY_APPLY_TORQUE_IMPULSE_HASH)
-    }
-
-    private const val BODY_APPLY_CENTRAL_FORCE_HASH = 3227306858L
-    private val bodyApplyCentralForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_central_force", BODY_APPLY_CENTRAL_FORCE_HASH)
-    }
-
-    private const val BODY_APPLY_FORCE_HASH = 390416203L
-    private val bodyApplyForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_force", BODY_APPLY_FORCE_HASH)
-    }
-
-    private const val BODY_APPLY_TORQUE_HASH = 3227306858L
-    private val bodyApplyTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_torque", BODY_APPLY_TORQUE_HASH)
-    }
-
-    private const val BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH = 3227306858L
-    private val bodyAddConstantCentralForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_constant_central_force", BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH)
-    }
-
-    private const val BODY_ADD_CONSTANT_FORCE_HASH = 390416203L
-    private val bodyAddConstantForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_constant_force", BODY_ADD_CONSTANT_FORCE_HASH)
-    }
-
-    private const val BODY_ADD_CONSTANT_TORQUE_HASH = 3227306858L
-    private val bodyAddConstantTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_constant_torque", BODY_ADD_CONSTANT_TORQUE_HASH)
-    }
-
-    private const val BODY_SET_CONSTANT_FORCE_HASH = 3227306858L
-    private val bodySetConstantForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_constant_force", BODY_SET_CONSTANT_FORCE_HASH)
-    }
-
-    private const val BODY_GET_CONSTANT_FORCE_HASH = 531438156L
-    private val bodyGetConstantForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_constant_force", BODY_GET_CONSTANT_FORCE_HASH)
-    }
-
-    private const val BODY_SET_CONSTANT_TORQUE_HASH = 3227306858L
-    private val bodySetConstantTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_constant_torque", BODY_SET_CONSTANT_TORQUE_HASH)
-    }
-
-    private const val BODY_GET_CONSTANT_TORQUE_HASH = 531438156L
-    private val bodyGetConstantTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_constant_torque", BODY_GET_CONSTANT_TORQUE_HASH)
-    }
-
-    private const val BODY_SET_AXIS_VELOCITY_HASH = 3227306858L
-    private val bodySetAxisVelocityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_axis_velocity", BODY_SET_AXIS_VELOCITY_HASH)
-    }
-
-    private const val BODY_SET_AXIS_LOCK_HASH = 2020836892L
-    private val bodySetAxisLockBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_axis_lock", BODY_SET_AXIS_LOCK_HASH)
-    }
-
-    private const val BODY_IS_AXIS_LOCKED_HASH = 587853580L
-    private val bodyIsAxisLockedBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_axis_locked", BODY_IS_AXIS_LOCKED_HASH)
-    }
-
-    private const val BODY_ADD_COLLISION_EXCEPTION_HASH = 395945892L
-    private val bodyAddCollisionExceptionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_collision_exception", BODY_ADD_COLLISION_EXCEPTION_HASH)
-    }
-
-    private const val BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
-    private val bodyRemoveCollisionExceptionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_remove_collision_exception", BODY_REMOVE_COLLISION_EXCEPTION_HASH)
-    }
-
-    private const val BODY_SET_MAX_CONTACTS_REPORTED_HASH = 3411492887L
-    private val bodySetMaxContactsReportedBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_max_contacts_reported", BODY_SET_MAX_CONTACTS_REPORTED_HASH)
-    }
-
-    private const val BODY_GET_MAX_CONTACTS_REPORTED_HASH = 2198884583L
-    private val bodyGetMaxContactsReportedBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_max_contacts_reported", BODY_GET_MAX_CONTACTS_REPORTED_HASH)
-    }
-
-    private const val BODY_SET_OMIT_FORCE_INTEGRATION_HASH = 1265174801L
-    private val bodySetOmitForceIntegrationBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_omit_force_integration", BODY_SET_OMIT_FORCE_INTEGRATION_HASH)
-    }
-
-    private const val BODY_IS_OMITTING_FORCE_INTEGRATION_HASH = 4155700596L
-    private val bodyIsOmittingForceIntegrationBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_omitting_force_integration", BODY_IS_OMITTING_FORCE_INTEGRATION_HASH)
-    }
-
-    private const val BODY_SET_STATE_SYNC_CALLBACK_HASH = 3379118538L
-    private val bodySetStateSyncCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state_sync_callback", BODY_SET_STATE_SYNC_CALLBACK_HASH)
-    }
-
-    private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
-    private val bodySetForceIntegrationCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_force_integration_callback", BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH)
-    }
-
-    private const val BODY_SET_RAY_PICKABLE_HASH = 1265174801L
-    private val bodySetRayPickableBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_ray_pickable", BODY_SET_RAY_PICKABLE_HASH)
-    }
-
-    private const val BODY_TEST_MOTION_HASH = 1944921792L
-    private val bodyTestMotionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_test_motion", BODY_TEST_MOTION_HASH)
-    }
-
-    private const val BODY_GET_DIRECT_STATE_HASH = 3029727957L
-    private val bodyGetDirectStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_direct_state", BODY_GET_DIRECT_STATE_HASH)
-    }
-
-    private const val SOFT_BODY_CREATE_HASH = 529393457L
-    private val softBodyCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_create", SOFT_BODY_CREATE_HASH)
-    }
-
-    private const val SOFT_BODY_UPDATE_RENDERING_SERVER_HASH = 2218179753L
-    private val softBodyUpdateRenderingServerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_update_rendering_server", SOFT_BODY_UPDATE_RENDERING_SERVER_HASH)
-    }
-
-    private const val SOFT_BODY_SET_SPACE_HASH = 395945892L
-    private val softBodySetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_space", SOFT_BODY_SET_SPACE_HASH)
-    }
-
-    private const val SOFT_BODY_GET_SPACE_HASH = 3814569979L
-    private val softBodyGetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_space", SOFT_BODY_GET_SPACE_HASH)
-    }
-
-    private const val SOFT_BODY_SET_MESH_HASH = 395945892L
-    private val softBodySetMeshBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_mesh", SOFT_BODY_SET_MESH_HASH)
-    }
-
-    private const val SOFT_BODY_GET_BOUNDS_HASH = 974181306L
-    private val softBodyGetBoundsBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_bounds", SOFT_BODY_GET_BOUNDS_HASH)
-    }
-
-    private const val SOFT_BODY_SET_COLLISION_LAYER_HASH = 3411492887L
-    private val softBodySetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_collision_layer", SOFT_BODY_SET_COLLISION_LAYER_HASH)
-    }
-
-    private const val SOFT_BODY_GET_COLLISION_LAYER_HASH = 2198884583L
-    private val softBodyGetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_collision_layer", SOFT_BODY_GET_COLLISION_LAYER_HASH)
-    }
-
-    private const val SOFT_BODY_SET_COLLISION_MASK_HASH = 3411492887L
-    private val softBodySetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_collision_mask", SOFT_BODY_SET_COLLISION_MASK_HASH)
-    }
-
-    private const val SOFT_BODY_GET_COLLISION_MASK_HASH = 2198884583L
-    private val softBodyGetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_collision_mask", SOFT_BODY_GET_COLLISION_MASK_HASH)
-    }
-
-    private const val SOFT_BODY_ADD_COLLISION_EXCEPTION_HASH = 395945892L
-    private val softBodyAddCollisionExceptionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_add_collision_exception", SOFT_BODY_ADD_COLLISION_EXCEPTION_HASH)
-    }
-
-    private const val SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
-    private val softBodyRemoveCollisionExceptionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_remove_collision_exception", SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH)
-    }
-
-    private const val SOFT_BODY_SET_STATE_HASH = 599977762L
-    private val softBodySetStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_state", SOFT_BODY_SET_STATE_HASH)
-    }
-
-    private const val SOFT_BODY_GET_STATE_HASH = 1850449534L
-    private val softBodyGetStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_state", SOFT_BODY_GET_STATE_HASH)
-    }
-
-    private const val SOFT_BODY_SET_TRANSFORM_HASH = 3935195649L
-    private val softBodySetTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_transform", SOFT_BODY_SET_TRANSFORM_HASH)
-    }
-
-    private const val SOFT_BODY_SET_RAY_PICKABLE_HASH = 1265174801L
-    private val softBodySetRayPickableBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_ray_pickable", SOFT_BODY_SET_RAY_PICKABLE_HASH)
-    }
-
-    private const val SOFT_BODY_SET_SIMULATION_PRECISION_HASH = 3411492887L
-    private val softBodySetSimulationPrecisionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_simulation_precision", SOFT_BODY_SET_SIMULATION_PRECISION_HASH)
-    }
-
-    private const val SOFT_BODY_GET_SIMULATION_PRECISION_HASH = 2198884583L
-    private val softBodyGetSimulationPrecisionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_simulation_precision", SOFT_BODY_GET_SIMULATION_PRECISION_HASH)
-    }
-
-    private const val SOFT_BODY_SET_TOTAL_MASS_HASH = 1794382983L
-    private val softBodySetTotalMassBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_total_mass", SOFT_BODY_SET_TOTAL_MASS_HASH)
-    }
-
-    private const val SOFT_BODY_GET_TOTAL_MASS_HASH = 866169185L
-    private val softBodyGetTotalMassBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_total_mass", SOFT_BODY_GET_TOTAL_MASS_HASH)
-    }
-
-    private const val SOFT_BODY_SET_LINEAR_STIFFNESS_HASH = 1794382983L
-    private val softBodySetLinearStiffnessBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_linear_stiffness", SOFT_BODY_SET_LINEAR_STIFFNESS_HASH)
-    }
-
-    private const val SOFT_BODY_GET_LINEAR_STIFFNESS_HASH = 866169185L
-    private val softBodyGetLinearStiffnessBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_linear_stiffness", SOFT_BODY_GET_LINEAR_STIFFNESS_HASH)
-    }
-
-    private const val SOFT_BODY_SET_SHRINKING_FACTOR_HASH = 1794382983L
-    private val softBodySetShrinkingFactorBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_shrinking_factor", SOFT_BODY_SET_SHRINKING_FACTOR_HASH)
-    }
-
-    private const val SOFT_BODY_GET_SHRINKING_FACTOR_HASH = 866169185L
-    private val softBodyGetShrinkingFactorBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_shrinking_factor", SOFT_BODY_GET_SHRINKING_FACTOR_HASH)
-    }
-
-    private const val SOFT_BODY_SET_PRESSURE_COEFFICIENT_HASH = 1794382983L
-    private val softBodySetPressureCoefficientBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_pressure_coefficient", SOFT_BODY_SET_PRESSURE_COEFFICIENT_HASH)
-    }
-
-    private const val SOFT_BODY_GET_PRESSURE_COEFFICIENT_HASH = 866169185L
-    private val softBodyGetPressureCoefficientBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_pressure_coefficient", SOFT_BODY_GET_PRESSURE_COEFFICIENT_HASH)
-    }
-
-    private const val SOFT_BODY_SET_DAMPING_COEFFICIENT_HASH = 1794382983L
-    private val softBodySetDampingCoefficientBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_damping_coefficient", SOFT_BODY_SET_DAMPING_COEFFICIENT_HASH)
-    }
-
-    private const val SOFT_BODY_GET_DAMPING_COEFFICIENT_HASH = 866169185L
-    private val softBodyGetDampingCoefficientBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_damping_coefficient", SOFT_BODY_GET_DAMPING_COEFFICIENT_HASH)
-    }
-
-    private const val SOFT_BODY_SET_DRAG_COEFFICIENT_HASH = 1794382983L
-    private val softBodySetDragCoefficientBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_drag_coefficient", SOFT_BODY_SET_DRAG_COEFFICIENT_HASH)
-    }
-
-    private const val SOFT_BODY_GET_DRAG_COEFFICIENT_HASH = 866169185L
-    private val softBodyGetDragCoefficientBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_drag_coefficient", SOFT_BODY_GET_DRAG_COEFFICIENT_HASH)
-    }
-
-    private const val SOFT_BODY_MOVE_POINT_HASH = 831953689L
-    private val softBodyMovePointBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_move_point", SOFT_BODY_MOVE_POINT_HASH)
-    }
-
-    private const val SOFT_BODY_GET_POINT_GLOBAL_POSITION_HASH = 3440143363L
-    private val softBodyGetPointGlobalPositionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_point_global_position", SOFT_BODY_GET_POINT_GLOBAL_POSITION_HASH)
-    }
-
-    private const val SOFT_BODY_REMOVE_ALL_PINNED_POINTS_HASH = 2722037293L
-    private val softBodyRemoveAllPinnedPointsBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_remove_all_pinned_points", SOFT_BODY_REMOVE_ALL_PINNED_POINTS_HASH)
-    }
-
-    private const val SOFT_BODY_PIN_POINT_HASH = 2658558584L
-    private val softBodyPinPointBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_pin_point", SOFT_BODY_PIN_POINT_HASH)
-    }
-
-    private const val SOFT_BODY_IS_POINT_PINNED_HASH = 3120086654L
-    private val softBodyIsPointPinnedBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_is_point_pinned", SOFT_BODY_IS_POINT_PINNED_HASH)
-    }
-
-    private const val SOFT_BODY_APPLY_POINT_IMPULSE_HASH = 831953689L
-    private val softBodyApplyPointImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_point_impulse", SOFT_BODY_APPLY_POINT_IMPULSE_HASH)
-    }
-
-    private const val SOFT_BODY_APPLY_POINT_FORCE_HASH = 831953689L
-    private val softBodyApplyPointForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_point_force", SOFT_BODY_APPLY_POINT_FORCE_HASH)
-    }
-
-    private const val SOFT_BODY_APPLY_CENTRAL_IMPULSE_HASH = 3227306858L
-    private val softBodyApplyCentralImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_central_impulse", SOFT_BODY_APPLY_CENTRAL_IMPULSE_HASH)
-    }
-
-    private const val SOFT_BODY_APPLY_CENTRAL_FORCE_HASH = 3227306858L
-    private val softBodyApplyCentralForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_central_force", SOFT_BODY_APPLY_CENTRAL_FORCE_HASH)
-    }
-
-    private const val JOINT_CREATE_HASH = 529393457L
-    private val jointCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_create", JOINT_CREATE_HASH)
-    }
-
-    private const val JOINT_CLEAR_HASH = 2722037293L
-    private val jointClearBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_clear", JOINT_CLEAR_HASH)
-    }
-
-    private const val JOINT_MAKE_PIN_HASH = 4280171926L
-    private val jointMakePinBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_pin", JOINT_MAKE_PIN_HASH)
-    }
-
-    private const val PIN_JOINT_SET_PARAM_HASH = 810685294L
-    private val pinJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_set_param", PIN_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val PIN_JOINT_GET_PARAM_HASH = 2817972347L
-    private val pinJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_get_param", PIN_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val PIN_JOINT_SET_LOCAL_A_HASH = 3227306858L
-    private val pinJointSetLocalABind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_set_local_a", PIN_JOINT_SET_LOCAL_A_HASH)
-    }
-
-    private const val PIN_JOINT_GET_LOCAL_A_HASH = 531438156L
-    private val pinJointGetLocalABind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_get_local_a", PIN_JOINT_GET_LOCAL_A_HASH)
-    }
-
-    private const val PIN_JOINT_SET_LOCAL_B_HASH = 3227306858L
-    private val pinJointSetLocalBBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_set_local_b", PIN_JOINT_SET_LOCAL_B_HASH)
-    }
-
-    private const val PIN_JOINT_GET_LOCAL_B_HASH = 531438156L
-    private val pinJointGetLocalBBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_get_local_b", PIN_JOINT_GET_LOCAL_B_HASH)
-    }
-
-    private const val JOINT_MAKE_HINGE_HASH = 1684107643L
-    private val jointMakeHingeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_hinge", JOINT_MAKE_HINGE_HASH)
-    }
-
-    private const val HINGE_JOINT_SET_PARAM_HASH = 3165502333L
-    private val hingeJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_set_param", HINGE_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val HINGE_JOINT_GET_PARAM_HASH = 2129207581L
-    private val hingeJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_get_param", HINGE_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val HINGE_JOINT_SET_FLAG_HASH = 1601626188L
-    private val hingeJointSetFlagBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_set_flag", HINGE_JOINT_SET_FLAG_HASH)
-    }
-
-    private const val HINGE_JOINT_GET_FLAG_HASH = 4165147865L
-    private val hingeJointGetFlagBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_get_flag", HINGE_JOINT_GET_FLAG_HASH)
-    }
-
-    private const val JOINT_MAKE_SLIDER_HASH = 1684107643L
-    private val jointMakeSliderBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_slider", JOINT_MAKE_SLIDER_HASH)
-    }
-
-    private const val SLIDER_JOINT_SET_PARAM_HASH = 2264833593L
-    private val sliderJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "slider_joint_set_param", SLIDER_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val SLIDER_JOINT_GET_PARAM_HASH = 3498644957L
-    private val sliderJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "slider_joint_get_param", SLIDER_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val JOINT_MAKE_CONE_TWIST_HASH = 1684107643L
-    private val jointMakeConeTwistBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_cone_twist", JOINT_MAKE_CONE_TWIST_HASH)
-    }
-
-    private const val CONE_TWIST_JOINT_SET_PARAM_HASH = 808587618L
-    private val coneTwistJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "cone_twist_joint_set_param", CONE_TWIST_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val CONE_TWIST_JOINT_GET_PARAM_HASH = 1134789658L
-    private val coneTwistJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "cone_twist_joint_get_param", CONE_TWIST_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val JOINT_GET_TYPE_HASH = 4290791900L
-    private val jointGetTypeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_get_type", JOINT_GET_TYPE_HASH)
-    }
-
-    private const val JOINT_SET_SOLVER_PRIORITY_HASH = 3411492887L
-    private val jointSetSolverPriorityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_set_solver_priority", JOINT_SET_SOLVER_PRIORITY_HASH)
-    }
-
-    private const val JOINT_GET_SOLVER_PRIORITY_HASH = 2198884583L
-    private val jointGetSolverPriorityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_get_solver_priority", JOINT_GET_SOLVER_PRIORITY_HASH)
-    }
-
-    private const val JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH = 1265174801L
-    private val jointDisableCollisionsBetweenBodiesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_disable_collisions_between_bodies", JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH)
-    }
-
-    private const val JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH = 4155700596L
-    private val jointIsDisabledCollisionsBetweenBodiesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_is_disabled_collisions_between_bodies", JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH)
-    }
-
-    private const val JOINT_MAKE_GENERIC_6DOF_HASH = 1684107643L
-    private val jointMakeGeneric6dofBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_generic_6dof", JOINT_MAKE_GENERIC_6DOF_HASH)
-    }
-
-    private const val GENERIC_6DOF_JOINT_SET_PARAM_HASH = 2600081391L
-    private val generic6dofJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_set_param", GENERIC_6DOF_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val GENERIC_6DOF_JOINT_GET_PARAM_HASH = 467122058L
-    private val generic6dofJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_get_param", GENERIC_6DOF_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val GENERIC_6DOF_JOINT_SET_FLAG_HASH = 3570926903L
-    private val generic6dofJointSetFlagBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_set_flag", GENERIC_6DOF_JOINT_SET_FLAG_HASH)
-    }
-
-    private const val GENERIC_6DOF_JOINT_GET_FLAG_HASH = 4158090196L
-    private val generic6dofJointGetFlagBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_get_flag", GENERIC_6DOF_JOINT_GET_FLAG_HASH)
-    }
-
-    private const val FREE_RID_HASH = 2722037293L
-    private val freeRidBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "free_rid", FREE_RID_HASH)
-    }
-
-    private const val SET_ACTIVE_HASH = 2586408642L
-    private val setActiveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "set_active", SET_ACTIVE_HASH)
-    }
-
-    private const val GET_PROCESS_INFO_HASH = 1332958745L
-    private val getProcessInfoBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer3D", "get_process_info", GET_PROCESS_INFO_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("PhysicsServer3D")
+
+        private const val WORLD_BOUNDARY_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val worldBoundaryShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "world_boundary_shape_create", WORLD_BOUNDARY_SHAPE_CREATE_HASH)
+
+        private const val SEPARATION_RAY_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val separationRayShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "separation_ray_shape_create", SEPARATION_RAY_SHAPE_CREATE_HASH)
+
+        private const val SPHERE_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val sphereShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "sphere_shape_create", SPHERE_SHAPE_CREATE_HASH)
+
+        private const val BOX_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val boxShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "box_shape_create", BOX_SHAPE_CREATE_HASH)
+
+        private const val CAPSULE_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val capsuleShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "capsule_shape_create", CAPSULE_SHAPE_CREATE_HASH)
+
+        private const val CYLINDER_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val cylinderShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "cylinder_shape_create", CYLINDER_SHAPE_CREATE_HASH)
+
+        private const val CONVEX_POLYGON_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val convexPolygonShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "convex_polygon_shape_create", CONVEX_POLYGON_SHAPE_CREATE_HASH)
+
+        private const val CONCAVE_POLYGON_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val concavePolygonShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "concave_polygon_shape_create", CONCAVE_POLYGON_SHAPE_CREATE_HASH)
+
+        private const val HEIGHTMAP_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val heightmapShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "heightmap_shape_create", HEIGHTMAP_SHAPE_CREATE_HASH)
+
+        private const val CUSTOM_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val customShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "custom_shape_create", CUSTOM_SHAPE_CREATE_HASH)
+
+        private const val SHAPE_SET_DATA_HASH = 3175752987L
+        @JvmField
+        val shapeSetDataBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_data", SHAPE_SET_DATA_HASH)
+
+        private const val SHAPE_SET_MARGIN_HASH = 1794382983L
+        @JvmField
+        val shapeSetMarginBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "shape_set_margin", SHAPE_SET_MARGIN_HASH)
+
+        private const val SHAPE_GET_TYPE_HASH = 3418923367L
+        @JvmField
+        val shapeGetTypeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_type", SHAPE_GET_TYPE_HASH)
+
+        private const val SHAPE_GET_DATA_HASH = 4171304767L
+        @JvmField
+        val shapeGetDataBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_data", SHAPE_GET_DATA_HASH)
+
+        private const val SHAPE_GET_MARGIN_HASH = 866169185L
+        @JvmField
+        val shapeGetMarginBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "shape_get_margin", SHAPE_GET_MARGIN_HASH)
+
+        private const val SPACE_CREATE_HASH = 529393457L
+        @JvmField
+        val spaceCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "space_create", SPACE_CREATE_HASH)
+
+        private const val SPACE_SET_ACTIVE_HASH = 1265174801L
+        @JvmField
+        val spaceSetActiveBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "space_set_active", SPACE_SET_ACTIVE_HASH)
+
+        private const val SPACE_IS_ACTIVE_HASH = 4155700596L
+        @JvmField
+        val spaceIsActiveBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "space_is_active", SPACE_IS_ACTIVE_HASH)
+
+        private const val SPACE_SET_PARAM_HASH = 2406017470L
+        @JvmField
+        val spaceSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "space_set_param", SPACE_SET_PARAM_HASH)
+
+        private const val SPACE_GET_PARAM_HASH = 1523206731L
+        @JvmField
+        val spaceGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "space_get_param", SPACE_GET_PARAM_HASH)
+
+        private const val SPACE_GET_DIRECT_STATE_HASH = 2048616813L
+        @JvmField
+        val spaceGetDirectStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "space_get_direct_state", SPACE_GET_DIRECT_STATE_HASH)
+
+        private const val AREA_CREATE_HASH = 529393457L
+        @JvmField
+        val areaCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_create", AREA_CREATE_HASH)
+
+        private const val AREA_SET_SPACE_HASH = 395945892L
+        @JvmField
+        val areaSetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_space", AREA_SET_SPACE_HASH)
+
+        private const val AREA_GET_SPACE_HASH = 3814569979L
+        @JvmField
+        val areaGetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_space", AREA_GET_SPACE_HASH)
+
+        private const val AREA_ADD_SHAPE_HASH = 3711419014L
+        @JvmField
+        val areaAddShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_add_shape", AREA_ADD_SHAPE_HASH)
+
+        private const val AREA_SET_SHAPE_HASH = 2310537182L
+        @JvmField
+        val areaSetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_shape", AREA_SET_SHAPE_HASH)
+
+        private const val AREA_SET_SHAPE_TRANSFORM_HASH = 675327471L
+        @JvmField
+        val areaSetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_shape_transform", AREA_SET_SHAPE_TRANSFORM_HASH)
+
+        private const val AREA_SET_SHAPE_DISABLED_HASH = 2658558584L
+        @JvmField
+        val areaSetShapeDisabledBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_shape_disabled", AREA_SET_SHAPE_DISABLED_HASH)
+
+        private const val AREA_GET_SHAPE_COUNT_HASH = 2198884583L
+        @JvmField
+        val areaGetShapeCountBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_shape_count", AREA_GET_SHAPE_COUNT_HASH)
+
+        private const val AREA_GET_SHAPE_HASH = 1066463050L
+        @JvmField
+        val areaGetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_shape", AREA_GET_SHAPE_HASH)
+
+        private const val AREA_GET_SHAPE_TRANSFORM_HASH = 1050775521L
+        @JvmField
+        val areaGetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_shape_transform", AREA_GET_SHAPE_TRANSFORM_HASH)
+
+        private const val AREA_REMOVE_SHAPE_HASH = 3411492887L
+        @JvmField
+        val areaRemoveShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_remove_shape", AREA_REMOVE_SHAPE_HASH)
+
+        private const val AREA_CLEAR_SHAPES_HASH = 2722037293L
+        @JvmField
+        val areaClearShapesBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_clear_shapes", AREA_CLEAR_SHAPES_HASH)
+
+        private const val AREA_SET_COLLISION_LAYER_HASH = 3411492887L
+        @JvmField
+        val areaSetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_collision_layer", AREA_SET_COLLISION_LAYER_HASH)
+
+        private const val AREA_GET_COLLISION_LAYER_HASH = 2198884583L
+        @JvmField
+        val areaGetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_collision_layer", AREA_GET_COLLISION_LAYER_HASH)
+
+        private const val AREA_SET_COLLISION_MASK_HASH = 3411492887L
+        @JvmField
+        val areaSetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_collision_mask", AREA_SET_COLLISION_MASK_HASH)
+
+        private const val AREA_GET_COLLISION_MASK_HASH = 2198884583L
+        @JvmField
+        val areaGetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_collision_mask", AREA_GET_COLLISION_MASK_HASH)
+
+        private const val AREA_SET_PARAM_HASH = 2980114638L
+        @JvmField
+        val areaSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_param", AREA_SET_PARAM_HASH)
+
+        private const val AREA_SET_TRANSFORM_HASH = 3935195649L
+        @JvmField
+        val areaSetTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_transform", AREA_SET_TRANSFORM_HASH)
+
+        private const val AREA_GET_PARAM_HASH = 890056067L
+        @JvmField
+        val areaGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_param", AREA_GET_PARAM_HASH)
+
+        private const val AREA_GET_TRANSFORM_HASH = 1128465797L
+        @JvmField
+        val areaGetTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_transform", AREA_GET_TRANSFORM_HASH)
+
+        private const val AREA_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val areaAttachObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_attach_object_instance_id", AREA_ATTACH_OBJECT_INSTANCE_ID_HASH)
+
+        private const val AREA_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
+        @JvmField
+        val areaGetObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_get_object_instance_id", AREA_GET_OBJECT_INSTANCE_ID_HASH)
+
+        private const val AREA_SET_MONITOR_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val areaSetMonitorCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_monitor_callback", AREA_SET_MONITOR_CALLBACK_HASH)
+
+        private const val AREA_SET_AREA_MONITOR_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val areaSetAreaMonitorCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_area_monitor_callback", AREA_SET_AREA_MONITOR_CALLBACK_HASH)
+
+        private const val AREA_SET_MONITORABLE_HASH = 1265174801L
+        @JvmField
+        val areaSetMonitorableBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_monitorable", AREA_SET_MONITORABLE_HASH)
+
+        private const val AREA_SET_RAY_PICKABLE_HASH = 1265174801L
+        @JvmField
+        val areaSetRayPickableBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "area_set_ray_pickable", AREA_SET_RAY_PICKABLE_HASH)
+
+        private const val BODY_CREATE_HASH = 529393457L
+        @JvmField
+        val bodyCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_create", BODY_CREATE_HASH)
+
+        private const val BODY_SET_SPACE_HASH = 395945892L
+        @JvmField
+        val bodySetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_space", BODY_SET_SPACE_HASH)
+
+        private const val BODY_GET_SPACE_HASH = 3814569979L
+        @JvmField
+        val bodyGetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_space", BODY_GET_SPACE_HASH)
+
+        private const val BODY_SET_MODE_HASH = 606803466L
+        @JvmField
+        val bodySetModeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_mode", BODY_SET_MODE_HASH)
+
+        private const val BODY_GET_MODE_HASH = 2488819728L
+        @JvmField
+        val bodyGetModeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_mode", BODY_GET_MODE_HASH)
+
+        private const val BODY_SET_COLLISION_LAYER_HASH = 3411492887L
+        @JvmField
+        val bodySetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_collision_layer", BODY_SET_COLLISION_LAYER_HASH)
+
+        private const val BODY_GET_COLLISION_LAYER_HASH = 2198884583L
+        @JvmField
+        val bodyGetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_collision_layer", BODY_GET_COLLISION_LAYER_HASH)
+
+        private const val BODY_SET_COLLISION_MASK_HASH = 3411492887L
+        @JvmField
+        val bodySetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_collision_mask", BODY_SET_COLLISION_MASK_HASH)
+
+        private const val BODY_GET_COLLISION_MASK_HASH = 2198884583L
+        @JvmField
+        val bodyGetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_collision_mask", BODY_GET_COLLISION_MASK_HASH)
+
+        private const val BODY_SET_COLLISION_PRIORITY_HASH = 1794382983L
+        @JvmField
+        val bodySetCollisionPriorityBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_collision_priority", BODY_SET_COLLISION_PRIORITY_HASH)
+
+        private const val BODY_GET_COLLISION_PRIORITY_HASH = 866169185L
+        @JvmField
+        val bodyGetCollisionPriorityBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_collision_priority", BODY_GET_COLLISION_PRIORITY_HASH)
+
+        private const val BODY_ADD_SHAPE_HASH = 3711419014L
+        @JvmField
+        val bodyAddShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_shape", BODY_ADD_SHAPE_HASH)
+
+        private const val BODY_SET_SHAPE_HASH = 2310537182L
+        @JvmField
+        val bodySetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_shape", BODY_SET_SHAPE_HASH)
+
+        private const val BODY_SET_SHAPE_TRANSFORM_HASH = 675327471L
+        @JvmField
+        val bodySetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_shape_transform", BODY_SET_SHAPE_TRANSFORM_HASH)
+
+        private const val BODY_SET_SHAPE_DISABLED_HASH = 2658558584L
+        @JvmField
+        val bodySetShapeDisabledBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_shape_disabled", BODY_SET_SHAPE_DISABLED_HASH)
+
+        private const val BODY_GET_SHAPE_COUNT_HASH = 2198884583L
+        @JvmField
+        val bodyGetShapeCountBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_shape_count", BODY_GET_SHAPE_COUNT_HASH)
+
+        private const val BODY_GET_SHAPE_HASH = 1066463050L
+        @JvmField
+        val bodyGetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_shape", BODY_GET_SHAPE_HASH)
+
+        private const val BODY_GET_SHAPE_TRANSFORM_HASH = 1050775521L
+        @JvmField
+        val bodyGetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_shape_transform", BODY_GET_SHAPE_TRANSFORM_HASH)
+
+        private const val BODY_REMOVE_SHAPE_HASH = 3411492887L
+        @JvmField
+        val bodyRemoveShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_remove_shape", BODY_REMOVE_SHAPE_HASH)
+
+        private const val BODY_CLEAR_SHAPES_HASH = 2722037293L
+        @JvmField
+        val bodyClearShapesBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_clear_shapes", BODY_CLEAR_SHAPES_HASH)
+
+        private const val BODY_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val bodyAttachObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_attach_object_instance_id", BODY_ATTACH_OBJECT_INSTANCE_ID_HASH)
+
+        private const val BODY_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
+        @JvmField
+        val bodyGetObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_object_instance_id", BODY_GET_OBJECT_INSTANCE_ID_HASH)
+
+        private const val BODY_SET_ENABLE_CONTINUOUS_COLLISION_DETECTION_HASH = 1265174801L
+        @JvmField
+        val bodySetEnableContinuousCollisionDetectionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_enable_continuous_collision_detection", BODY_SET_ENABLE_CONTINUOUS_COLLISION_DETECTION_HASH)
+
+        private const val BODY_IS_CONTINUOUS_COLLISION_DETECTION_ENABLED_HASH = 4155700596L
+        @JvmField
+        val bodyIsContinuousCollisionDetectionEnabledBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_continuous_collision_detection_enabled", BODY_IS_CONTINUOUS_COLLISION_DETECTION_ENABLED_HASH)
+
+        private const val BODY_SET_PARAM_HASH = 910941953L
+        @JvmField
+        val bodySetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_param", BODY_SET_PARAM_HASH)
+
+        private const val BODY_GET_PARAM_HASH = 3385027841L
+        @JvmField
+        val bodyGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_param", BODY_GET_PARAM_HASH)
+
+        private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
+        @JvmField
+        val bodyResetMassPropertiesBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
+
+        private const val BODY_SET_STATE_HASH = 599977762L
+        @JvmField
+        val bodySetStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state", BODY_SET_STATE_HASH)
+
+        private const val BODY_GET_STATE_HASH = 1850449534L
+        @JvmField
+        val bodyGetStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_state", BODY_GET_STATE_HASH)
+
+        private const val BODY_APPLY_CENTRAL_IMPULSE_HASH = 3227306858L
+        @JvmField
+        val bodyApplyCentralImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_central_impulse", BODY_APPLY_CENTRAL_IMPULSE_HASH)
+
+        private const val BODY_APPLY_IMPULSE_HASH = 390416203L
+        @JvmField
+        val bodyApplyImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_impulse", BODY_APPLY_IMPULSE_HASH)
+
+        private const val BODY_APPLY_TORQUE_IMPULSE_HASH = 3227306858L
+        @JvmField
+        val bodyApplyTorqueImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_torque_impulse", BODY_APPLY_TORQUE_IMPULSE_HASH)
+
+        private const val BODY_APPLY_CENTRAL_FORCE_HASH = 3227306858L
+        @JvmField
+        val bodyApplyCentralForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_central_force", BODY_APPLY_CENTRAL_FORCE_HASH)
+
+        private const val BODY_APPLY_FORCE_HASH = 390416203L
+        @JvmField
+        val bodyApplyForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_force", BODY_APPLY_FORCE_HASH)
+
+        private const val BODY_APPLY_TORQUE_HASH = 3227306858L
+        @JvmField
+        val bodyApplyTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_apply_torque", BODY_APPLY_TORQUE_HASH)
+
+        private const val BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH = 3227306858L
+        @JvmField
+        val bodyAddConstantCentralForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_constant_central_force", BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH)
+
+        private const val BODY_ADD_CONSTANT_FORCE_HASH = 390416203L
+        @JvmField
+        val bodyAddConstantForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_constant_force", BODY_ADD_CONSTANT_FORCE_HASH)
+
+        private const val BODY_ADD_CONSTANT_TORQUE_HASH = 3227306858L
+        @JvmField
+        val bodyAddConstantTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_constant_torque", BODY_ADD_CONSTANT_TORQUE_HASH)
+
+        private const val BODY_SET_CONSTANT_FORCE_HASH = 3227306858L
+        @JvmField
+        val bodySetConstantForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_constant_force", BODY_SET_CONSTANT_FORCE_HASH)
+
+        private const val BODY_GET_CONSTANT_FORCE_HASH = 531438156L
+        @JvmField
+        val bodyGetConstantForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_constant_force", BODY_GET_CONSTANT_FORCE_HASH)
+
+        private const val BODY_SET_CONSTANT_TORQUE_HASH = 3227306858L
+        @JvmField
+        val bodySetConstantTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_constant_torque", BODY_SET_CONSTANT_TORQUE_HASH)
+
+        private const val BODY_GET_CONSTANT_TORQUE_HASH = 531438156L
+        @JvmField
+        val bodyGetConstantTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_constant_torque", BODY_GET_CONSTANT_TORQUE_HASH)
+
+        private const val BODY_SET_AXIS_VELOCITY_HASH = 3227306858L
+        @JvmField
+        val bodySetAxisVelocityBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_axis_velocity", BODY_SET_AXIS_VELOCITY_HASH)
+
+        private const val BODY_SET_AXIS_LOCK_HASH = 2020836892L
+        @JvmField
+        val bodySetAxisLockBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_axis_lock", BODY_SET_AXIS_LOCK_HASH)
+
+        private const val BODY_IS_AXIS_LOCKED_HASH = 587853580L
+        @JvmField
+        val bodyIsAxisLockedBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_axis_locked", BODY_IS_AXIS_LOCKED_HASH)
+
+        private const val BODY_ADD_COLLISION_EXCEPTION_HASH = 395945892L
+        @JvmField
+        val bodyAddCollisionExceptionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_add_collision_exception", BODY_ADD_COLLISION_EXCEPTION_HASH)
+
+        private const val BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
+        @JvmField
+        val bodyRemoveCollisionExceptionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_remove_collision_exception", BODY_REMOVE_COLLISION_EXCEPTION_HASH)
+
+        private const val BODY_SET_MAX_CONTACTS_REPORTED_HASH = 3411492887L
+        @JvmField
+        val bodySetMaxContactsReportedBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_max_contacts_reported", BODY_SET_MAX_CONTACTS_REPORTED_HASH)
+
+        private const val BODY_GET_MAX_CONTACTS_REPORTED_HASH = 2198884583L
+        @JvmField
+        val bodyGetMaxContactsReportedBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_max_contacts_reported", BODY_GET_MAX_CONTACTS_REPORTED_HASH)
+
+        private const val BODY_SET_OMIT_FORCE_INTEGRATION_HASH = 1265174801L
+        @JvmField
+        val bodySetOmitForceIntegrationBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_omit_force_integration", BODY_SET_OMIT_FORCE_INTEGRATION_HASH)
+
+        private const val BODY_IS_OMITTING_FORCE_INTEGRATION_HASH = 4155700596L
+        @JvmField
+        val bodyIsOmittingForceIntegrationBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_is_omitting_force_integration", BODY_IS_OMITTING_FORCE_INTEGRATION_HASH)
+
+        private const val BODY_SET_STATE_SYNC_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val bodySetStateSyncCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_state_sync_callback", BODY_SET_STATE_SYNC_CALLBACK_HASH)
+
+        private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
+        @JvmField
+        val bodySetForceIntegrationCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_force_integration_callback", BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH)
+
+        private const val BODY_SET_RAY_PICKABLE_HASH = 1265174801L
+        @JvmField
+        val bodySetRayPickableBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_set_ray_pickable", BODY_SET_RAY_PICKABLE_HASH)
+
+        private const val BODY_TEST_MOTION_HASH = 1944921792L
+        @JvmField
+        val bodyTestMotionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_test_motion", BODY_TEST_MOTION_HASH)
+
+        private const val BODY_GET_DIRECT_STATE_HASH = 3029727957L
+        @JvmField
+        val bodyGetDirectStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "body_get_direct_state", BODY_GET_DIRECT_STATE_HASH)
+
+        private const val SOFT_BODY_CREATE_HASH = 529393457L
+        @JvmField
+        val softBodyCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_create", SOFT_BODY_CREATE_HASH)
+
+        private const val SOFT_BODY_UPDATE_RENDERING_SERVER_HASH = 2218179753L
+        @JvmField
+        val softBodyUpdateRenderingServerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_update_rendering_server", SOFT_BODY_UPDATE_RENDERING_SERVER_HASH)
+
+        private const val SOFT_BODY_SET_SPACE_HASH = 395945892L
+        @JvmField
+        val softBodySetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_space", SOFT_BODY_SET_SPACE_HASH)
+
+        private const val SOFT_BODY_GET_SPACE_HASH = 3814569979L
+        @JvmField
+        val softBodyGetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_space", SOFT_BODY_GET_SPACE_HASH)
+
+        private const val SOFT_BODY_SET_MESH_HASH = 395945892L
+        @JvmField
+        val softBodySetMeshBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_mesh", SOFT_BODY_SET_MESH_HASH)
+
+        private const val SOFT_BODY_GET_BOUNDS_HASH = 974181306L
+        @JvmField
+        val softBodyGetBoundsBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_bounds", SOFT_BODY_GET_BOUNDS_HASH)
+
+        private const val SOFT_BODY_SET_COLLISION_LAYER_HASH = 3411492887L
+        @JvmField
+        val softBodySetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_collision_layer", SOFT_BODY_SET_COLLISION_LAYER_HASH)
+
+        private const val SOFT_BODY_GET_COLLISION_LAYER_HASH = 2198884583L
+        @JvmField
+        val softBodyGetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_collision_layer", SOFT_BODY_GET_COLLISION_LAYER_HASH)
+
+        private const val SOFT_BODY_SET_COLLISION_MASK_HASH = 3411492887L
+        @JvmField
+        val softBodySetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_collision_mask", SOFT_BODY_SET_COLLISION_MASK_HASH)
+
+        private const val SOFT_BODY_GET_COLLISION_MASK_HASH = 2198884583L
+        @JvmField
+        val softBodyGetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_collision_mask", SOFT_BODY_GET_COLLISION_MASK_HASH)
+
+        private const val SOFT_BODY_ADD_COLLISION_EXCEPTION_HASH = 395945892L
+        @JvmField
+        val softBodyAddCollisionExceptionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_add_collision_exception", SOFT_BODY_ADD_COLLISION_EXCEPTION_HASH)
+
+        private const val SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
+        @JvmField
+        val softBodyRemoveCollisionExceptionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_remove_collision_exception", SOFT_BODY_REMOVE_COLLISION_EXCEPTION_HASH)
+
+        private const val SOFT_BODY_SET_STATE_HASH = 599977762L
+        @JvmField
+        val softBodySetStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_state", SOFT_BODY_SET_STATE_HASH)
+
+        private const val SOFT_BODY_GET_STATE_HASH = 1850449534L
+        @JvmField
+        val softBodyGetStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_state", SOFT_BODY_GET_STATE_HASH)
+
+        private const val SOFT_BODY_SET_TRANSFORM_HASH = 3935195649L
+        @JvmField
+        val softBodySetTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_transform", SOFT_BODY_SET_TRANSFORM_HASH)
+
+        private const val SOFT_BODY_SET_RAY_PICKABLE_HASH = 1265174801L
+        @JvmField
+        val softBodySetRayPickableBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_ray_pickable", SOFT_BODY_SET_RAY_PICKABLE_HASH)
+
+        private const val SOFT_BODY_SET_SIMULATION_PRECISION_HASH = 3411492887L
+        @JvmField
+        val softBodySetSimulationPrecisionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_simulation_precision", SOFT_BODY_SET_SIMULATION_PRECISION_HASH)
+
+        private const val SOFT_BODY_GET_SIMULATION_PRECISION_HASH = 2198884583L
+        @JvmField
+        val softBodyGetSimulationPrecisionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_simulation_precision", SOFT_BODY_GET_SIMULATION_PRECISION_HASH)
+
+        private const val SOFT_BODY_SET_TOTAL_MASS_HASH = 1794382983L
+        @JvmField
+        val softBodySetTotalMassBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_total_mass", SOFT_BODY_SET_TOTAL_MASS_HASH)
+
+        private const val SOFT_BODY_GET_TOTAL_MASS_HASH = 866169185L
+        @JvmField
+        val softBodyGetTotalMassBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_total_mass", SOFT_BODY_GET_TOTAL_MASS_HASH)
+
+        private const val SOFT_BODY_SET_LINEAR_STIFFNESS_HASH = 1794382983L
+        @JvmField
+        val softBodySetLinearStiffnessBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_linear_stiffness", SOFT_BODY_SET_LINEAR_STIFFNESS_HASH)
+
+        private const val SOFT_BODY_GET_LINEAR_STIFFNESS_HASH = 866169185L
+        @JvmField
+        val softBodyGetLinearStiffnessBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_linear_stiffness", SOFT_BODY_GET_LINEAR_STIFFNESS_HASH)
+
+        private const val SOFT_BODY_SET_SHRINKING_FACTOR_HASH = 1794382983L
+        @JvmField
+        val softBodySetShrinkingFactorBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_shrinking_factor", SOFT_BODY_SET_SHRINKING_FACTOR_HASH)
+
+        private const val SOFT_BODY_GET_SHRINKING_FACTOR_HASH = 866169185L
+        @JvmField
+        val softBodyGetShrinkingFactorBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_shrinking_factor", SOFT_BODY_GET_SHRINKING_FACTOR_HASH)
+
+        private const val SOFT_BODY_SET_PRESSURE_COEFFICIENT_HASH = 1794382983L
+        @JvmField
+        val softBodySetPressureCoefficientBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_pressure_coefficient", SOFT_BODY_SET_PRESSURE_COEFFICIENT_HASH)
+
+        private const val SOFT_BODY_GET_PRESSURE_COEFFICIENT_HASH = 866169185L
+        @JvmField
+        val softBodyGetPressureCoefficientBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_pressure_coefficient", SOFT_BODY_GET_PRESSURE_COEFFICIENT_HASH)
+
+        private const val SOFT_BODY_SET_DAMPING_COEFFICIENT_HASH = 1794382983L
+        @JvmField
+        val softBodySetDampingCoefficientBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_damping_coefficient", SOFT_BODY_SET_DAMPING_COEFFICIENT_HASH)
+
+        private const val SOFT_BODY_GET_DAMPING_COEFFICIENT_HASH = 866169185L
+        @JvmField
+        val softBodyGetDampingCoefficientBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_damping_coefficient", SOFT_BODY_GET_DAMPING_COEFFICIENT_HASH)
+
+        private const val SOFT_BODY_SET_DRAG_COEFFICIENT_HASH = 1794382983L
+        @JvmField
+        val softBodySetDragCoefficientBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_set_drag_coefficient", SOFT_BODY_SET_DRAG_COEFFICIENT_HASH)
+
+        private const val SOFT_BODY_GET_DRAG_COEFFICIENT_HASH = 866169185L
+        @JvmField
+        val softBodyGetDragCoefficientBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_drag_coefficient", SOFT_BODY_GET_DRAG_COEFFICIENT_HASH)
+
+        private const val SOFT_BODY_MOVE_POINT_HASH = 831953689L
+        @JvmField
+        val softBodyMovePointBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_move_point", SOFT_BODY_MOVE_POINT_HASH)
+
+        private const val SOFT_BODY_GET_POINT_GLOBAL_POSITION_HASH = 3440143363L
+        @JvmField
+        val softBodyGetPointGlobalPositionBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_get_point_global_position", SOFT_BODY_GET_POINT_GLOBAL_POSITION_HASH)
+
+        private const val SOFT_BODY_REMOVE_ALL_PINNED_POINTS_HASH = 2722037293L
+        @JvmField
+        val softBodyRemoveAllPinnedPointsBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_remove_all_pinned_points", SOFT_BODY_REMOVE_ALL_PINNED_POINTS_HASH)
+
+        private const val SOFT_BODY_PIN_POINT_HASH = 2658558584L
+        @JvmField
+        val softBodyPinPointBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_pin_point", SOFT_BODY_PIN_POINT_HASH)
+
+        private const val SOFT_BODY_IS_POINT_PINNED_HASH = 3120086654L
+        @JvmField
+        val softBodyIsPointPinnedBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_is_point_pinned", SOFT_BODY_IS_POINT_PINNED_HASH)
+
+        private const val SOFT_BODY_APPLY_POINT_IMPULSE_HASH = 831953689L
+        @JvmField
+        val softBodyApplyPointImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_point_impulse", SOFT_BODY_APPLY_POINT_IMPULSE_HASH)
+
+        private const val SOFT_BODY_APPLY_POINT_FORCE_HASH = 831953689L
+        @JvmField
+        val softBodyApplyPointForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_point_force", SOFT_BODY_APPLY_POINT_FORCE_HASH)
+
+        private const val SOFT_BODY_APPLY_CENTRAL_IMPULSE_HASH = 3227306858L
+        @JvmField
+        val softBodyApplyCentralImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_central_impulse", SOFT_BODY_APPLY_CENTRAL_IMPULSE_HASH)
+
+        private const val SOFT_BODY_APPLY_CENTRAL_FORCE_HASH = 3227306858L
+        @JvmField
+        val softBodyApplyCentralForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "soft_body_apply_central_force", SOFT_BODY_APPLY_CENTRAL_FORCE_HASH)
+
+        private const val JOINT_CREATE_HASH = 529393457L
+        @JvmField
+        val jointCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_create", JOINT_CREATE_HASH)
+
+        private const val JOINT_CLEAR_HASH = 2722037293L
+        @JvmField
+        val jointClearBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_clear", JOINT_CLEAR_HASH)
+
+        private const val JOINT_MAKE_PIN_HASH = 4280171926L
+        @JvmField
+        val jointMakePinBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_pin", JOINT_MAKE_PIN_HASH)
+
+        private const val PIN_JOINT_SET_PARAM_HASH = 810685294L
+        @JvmField
+        val pinJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_set_param", PIN_JOINT_SET_PARAM_HASH)
+
+        private const val PIN_JOINT_GET_PARAM_HASH = 2817972347L
+        @JvmField
+        val pinJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_get_param", PIN_JOINT_GET_PARAM_HASH)
+
+        private const val PIN_JOINT_SET_LOCAL_A_HASH = 3227306858L
+        @JvmField
+        val pinJointSetLocalABind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_set_local_a", PIN_JOINT_SET_LOCAL_A_HASH)
+
+        private const val PIN_JOINT_GET_LOCAL_A_HASH = 531438156L
+        @JvmField
+        val pinJointGetLocalABind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_get_local_a", PIN_JOINT_GET_LOCAL_A_HASH)
+
+        private const val PIN_JOINT_SET_LOCAL_B_HASH = 3227306858L
+        @JvmField
+        val pinJointSetLocalBBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_set_local_b", PIN_JOINT_SET_LOCAL_B_HASH)
+
+        private const val PIN_JOINT_GET_LOCAL_B_HASH = 531438156L
+        @JvmField
+        val pinJointGetLocalBBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "pin_joint_get_local_b", PIN_JOINT_GET_LOCAL_B_HASH)
+
+        private const val JOINT_MAKE_HINGE_HASH = 1684107643L
+        @JvmField
+        val jointMakeHingeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_hinge", JOINT_MAKE_HINGE_HASH)
+
+        private const val HINGE_JOINT_SET_PARAM_HASH = 3165502333L
+        @JvmField
+        val hingeJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_set_param", HINGE_JOINT_SET_PARAM_HASH)
+
+        private const val HINGE_JOINT_GET_PARAM_HASH = 2129207581L
+        @JvmField
+        val hingeJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_get_param", HINGE_JOINT_GET_PARAM_HASH)
+
+        private const val HINGE_JOINT_SET_FLAG_HASH = 1601626188L
+        @JvmField
+        val hingeJointSetFlagBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_set_flag", HINGE_JOINT_SET_FLAG_HASH)
+
+        private const val HINGE_JOINT_GET_FLAG_HASH = 4165147865L
+        @JvmField
+        val hingeJointGetFlagBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "hinge_joint_get_flag", HINGE_JOINT_GET_FLAG_HASH)
+
+        private const val JOINT_MAKE_SLIDER_HASH = 1684107643L
+        @JvmField
+        val jointMakeSliderBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_slider", JOINT_MAKE_SLIDER_HASH)
+
+        private const val SLIDER_JOINT_SET_PARAM_HASH = 2264833593L
+        @JvmField
+        val sliderJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "slider_joint_set_param", SLIDER_JOINT_SET_PARAM_HASH)
+
+        private const val SLIDER_JOINT_GET_PARAM_HASH = 3498644957L
+        @JvmField
+        val sliderJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "slider_joint_get_param", SLIDER_JOINT_GET_PARAM_HASH)
+
+        private const val JOINT_MAKE_CONE_TWIST_HASH = 1684107643L
+        @JvmField
+        val jointMakeConeTwistBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_cone_twist", JOINT_MAKE_CONE_TWIST_HASH)
+
+        private const val CONE_TWIST_JOINT_SET_PARAM_HASH = 808587618L
+        @JvmField
+        val coneTwistJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "cone_twist_joint_set_param", CONE_TWIST_JOINT_SET_PARAM_HASH)
+
+        private const val CONE_TWIST_JOINT_GET_PARAM_HASH = 1134789658L
+        @JvmField
+        val coneTwistJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "cone_twist_joint_get_param", CONE_TWIST_JOINT_GET_PARAM_HASH)
+
+        private const val JOINT_GET_TYPE_HASH = 4290791900L
+        @JvmField
+        val jointGetTypeBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_get_type", JOINT_GET_TYPE_HASH)
+
+        private const val JOINT_SET_SOLVER_PRIORITY_HASH = 3411492887L
+        @JvmField
+        val jointSetSolverPriorityBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_set_solver_priority", JOINT_SET_SOLVER_PRIORITY_HASH)
+
+        private const val JOINT_GET_SOLVER_PRIORITY_HASH = 2198884583L
+        @JvmField
+        val jointGetSolverPriorityBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_get_solver_priority", JOINT_GET_SOLVER_PRIORITY_HASH)
+
+        private const val JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH = 1265174801L
+        @JvmField
+        val jointDisableCollisionsBetweenBodiesBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_disable_collisions_between_bodies", JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH)
+
+        private const val JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH = 4155700596L
+        @JvmField
+        val jointIsDisabledCollisionsBetweenBodiesBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_is_disabled_collisions_between_bodies", JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH)
+
+        private const val JOINT_MAKE_GENERIC_6DOF_HASH = 1684107643L
+        @JvmField
+        val jointMakeGeneric6dofBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "joint_make_generic_6dof", JOINT_MAKE_GENERIC_6DOF_HASH)
+
+        private const val GENERIC_6DOF_JOINT_SET_PARAM_HASH = 2600081391L
+        @JvmField
+        val generic6dofJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_set_param", GENERIC_6DOF_JOINT_SET_PARAM_HASH)
+
+        private const val GENERIC_6DOF_JOINT_GET_PARAM_HASH = 467122058L
+        @JvmField
+        val generic6dofJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_get_param", GENERIC_6DOF_JOINT_GET_PARAM_HASH)
+
+        private const val GENERIC_6DOF_JOINT_SET_FLAG_HASH = 3570926903L
+        @JvmField
+        val generic6dofJointSetFlagBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_set_flag", GENERIC_6DOF_JOINT_SET_FLAG_HASH)
+
+        private const val GENERIC_6DOF_JOINT_GET_FLAG_HASH = 4158090196L
+        @JvmField
+        val generic6dofJointGetFlagBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_get_flag", GENERIC_6DOF_JOINT_GET_FLAG_HASH)
+
+        private const val FREE_RID_HASH = 2722037293L
+        @JvmField
+        val freeRidBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "free_rid", FREE_RID_HASH)
+
+        private const val SET_ACTIVE_HASH = 2586408642L
+        @JvmField
+        val setActiveBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "set_active", SET_ACTIVE_HASH)
+
+        private const val GET_PROCESS_INFO_HASH = 1332958745L
+        @JvmField
+        val getProcessInfoBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "get_process_info", GET_PROCESS_INFO_HASH)
     }
 }

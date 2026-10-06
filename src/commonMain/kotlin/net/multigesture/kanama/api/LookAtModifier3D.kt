@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -201,7 +202,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_target_node
      */
     fun setTargetNode(targetNode: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNode)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNode)
     }
 
     /**
@@ -211,7 +212,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_target_node
      */
     fun getTargetNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
     }
 
     /**
@@ -220,7 +221,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -229,7 +230,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBoneNameBind, segment)
     }
 
     /**
@@ -238,7 +239,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_bone
      */
     fun setBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneBind, segment, bone)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBoneBind, segment, bone)
     }
 
     /**
@@ -247,7 +248,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_bone
      */
     fun getBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneBind, segment)
     }
 
     /**
@@ -257,7 +258,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_forward_axis
      */
     fun setForwardAxis(forwardAxis: SkeletonModifier3D.BoneAxis) {
-        ObjectCalls.ptrcallWithLongArg(setForwardAxisBind, segment, forwardAxis.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setForwardAxisBind, segment, forwardAxis.value)
     }
 
     /**
@@ -267,7 +268,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_forward_axis
      */
     fun getForwardAxis(): SkeletonModifier3D.BoneAxis {
-        return SkeletonModifier3D.BoneAxis(ObjectCalls.ptrcallNoArgsRetLong(getForwardAxisBind, segment))
+        return SkeletonModifier3D.BoneAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getForwardAxisBind, segment))
     }
 
     /**
@@ -277,7 +278,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_rotation_axis
      */
     fun setPrimaryRotationAxis(axis: Vector3.Axis) {
-        ObjectCalls.ptrcallWithLongArg(setPrimaryRotationAxisBind, segment, axis.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPrimaryRotationAxisBind, segment, axis.value)
     }
 
     /**
@@ -287,7 +288,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_rotation_axis
      */
     fun getPrimaryRotationAxis(): Vector3.Axis {
-        return Vector3.Axis(ObjectCalls.ptrcallNoArgsRetLong(getPrimaryRotationAxisBind, segment))
+        return Vector3.Axis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPrimaryRotationAxisBind, segment))
     }
 
     /**
@@ -296,7 +297,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_use_secondary_rotation
      */
     fun setUseSecondaryRotation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseSecondaryRotationBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseSecondaryRotationBind, segment, enabled)
     }
 
     /**
@@ -305,7 +306,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_using_secondary_rotation
      */
     fun isUsingSecondaryRotation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSecondaryRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSecondaryRotationBind, segment)
     }
 
     /**
@@ -318,7 +319,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_relative
      */
     fun setRelative(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRelativeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRelativeBind, segment, enabled)
     }
 
     /**
@@ -331,7 +332,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_relative
      */
     fun isRelative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRelativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRelativeBind, segment)
     }
 
     /**
@@ -342,7 +343,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_safe_margin
      */
     fun setOriginSafeMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOriginSafeMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOriginSafeMarginBind, segment, margin)
     }
 
     /**
@@ -353,7 +354,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_safe_margin
      */
     fun getOriginSafeMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOriginSafeMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOriginSafeMarginBind, segment)
     }
 
     /**
@@ -363,7 +364,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_from
      */
     fun setOriginFrom(originFrom: LookAtModifier3D.OriginFrom) {
-        ObjectCalls.ptrcallWithLongArg(setOriginFromBind, segment, originFrom.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOriginFromBind, segment, originFrom.value)
     }
 
     /**
@@ -373,7 +374,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_from
      */
     fun getOriginFrom(): LookAtModifier3D.OriginFrom {
-        return LookAtModifier3D.OriginFrom(ObjectCalls.ptrcallNoArgsRetLong(getOriginFromBind, segment))
+        return LookAtModifier3D.OriginFrom(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOriginFromBind, segment))
     }
 
     /**
@@ -383,7 +384,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_bone_name
      */
     fun setOriginBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setOriginBoneNameBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOriginBoneNameBind, segment, boneName)
     }
 
     /**
@@ -393,7 +394,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_bone_name
      */
     fun getOriginBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginBoneNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginBoneNameBind, segment)
     }
 
     /**
@@ -402,7 +403,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_bone
      */
     fun setOriginBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOriginBoneBind, segment, bone)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOriginBoneBind, segment, bone)
     }
 
     /**
@@ -411,7 +412,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_bone
      */
     fun getOriginBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOriginBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOriginBoneBind, segment)
     }
 
     /**
@@ -421,7 +422,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_external_node
      */
     fun setOriginExternalNode(externalNode: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setOriginExternalNodeBind, segment, externalNode)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setOriginExternalNodeBind, segment, externalNode)
     }
 
     /**
@@ -431,7 +432,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_external_node
      */
     fun getOriginExternalNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getOriginExternalNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getOriginExternalNodeBind, segment)
     }
 
     /**
@@ -442,7 +443,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_origin_offset
      */
     fun setOriginOffset(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setOriginOffsetBind, segment, offset)
     }
 
     /**
@@ -453,7 +454,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_origin_offset
      */
     fun getOriginOffset(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOriginOffsetBind, segment)
     }
 
     /**
@@ -467,7 +468,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_duration
      */
     fun setDuration(duration: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDurationBind, segment, duration)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDurationBind, segment, duration)
     }
 
     /**
@@ -481,7 +482,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_duration
      */
     fun getDuration(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDurationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDurationBind, segment)
     }
 
     /**
@@ -490,7 +491,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_transition_type
      */
     fun setTransitionType(transitionType: Tween.TransitionType) {
-        ObjectCalls.ptrcallWithLongArg(setTransitionTypeBind, segment, transitionType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransitionTypeBind, segment, transitionType.value)
     }
 
     /**
@@ -499,7 +500,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_transition_type
      */
     fun getTransitionType(): Tween.TransitionType {
-        return Tween.TransitionType(ObjectCalls.ptrcallNoArgsRetLong(getTransitionTypeBind, segment))
+        return Tween.TransitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransitionTypeBind, segment))
     }
 
     /**
@@ -508,7 +509,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_ease_type
      */
     fun setEaseType(easeType: Tween.EaseType) {
-        ObjectCalls.ptrcallWithLongArg(setEaseTypeBind, segment, easeType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEaseTypeBind, segment, easeType.value)
     }
 
     /**
@@ -517,7 +518,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_ease_type
      */
     fun getEaseType(): Tween.EaseType {
-        return Tween.EaseType(ObjectCalls.ptrcallNoArgsRetLong(getEaseTypeBind, segment))
+        return Tween.EaseType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEaseTypeBind, segment))
     }
 
     /**
@@ -533,7 +534,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_use_angle_limitation
      */
     fun setUseAngleLimitation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAngleLimitationBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseAngleLimitationBind, segment, enabled)
     }
 
     /**
@@ -549,7 +550,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_using_angle_limitation
      */
     fun isUsingAngleLimitation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingAngleLimitationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingAngleLimitationBind, segment)
     }
 
     /**
@@ -559,7 +560,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_symmetry_limitation
      */
     fun setSymmetryLimitation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSymmetryLimitationBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSymmetryLimitationBind, segment, enabled)
     }
 
     /**
@@ -569,7 +570,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_limitation_symmetry
      */
     fun isLimitationSymmetry(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitationSymmetryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLimitationSymmetryBind, segment)
     }
 
     /**
@@ -578,7 +579,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_limit_angle
      */
     fun setPrimaryLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryLimitAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPrimaryLimitAngleBind, segment, angle)
     }
 
     /**
@@ -587,7 +588,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_limit_angle
      */
     fun getPrimaryLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryLimitAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPrimaryLimitAngleBind, segment)
     }
 
     /**
@@ -599,7 +600,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_damp_threshold
      */
     fun setPrimaryDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryDampThresholdBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPrimaryDampThresholdBind, segment, power)
     }
 
     /**
@@ -611,7 +612,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_damp_threshold
      */
     fun getPrimaryDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryDampThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPrimaryDampThresholdBind, segment)
     }
 
     /**
@@ -621,7 +622,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_positive_limit_angle
      */
     fun setPrimaryPositiveLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveLimitAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPrimaryPositiveLimitAngleBind, segment, angle)
     }
 
     /**
@@ -631,7 +632,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_positive_limit_angle
      */
     fun getPrimaryPositiveLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveLimitAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPrimaryPositiveLimitAngleBind, segment)
     }
 
     /**
@@ -640,7 +641,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_positive_damp_threshold
      */
     fun setPrimaryPositiveDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryPositiveDampThresholdBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPrimaryPositiveDampThresholdBind, segment, power)
     }
 
     /**
@@ -649,7 +650,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_positive_damp_threshold
      */
     fun getPrimaryPositiveDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryPositiveDampThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPrimaryPositiveDampThresholdBind, segment)
     }
 
     /**
@@ -659,7 +660,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_negative_limit_angle
      */
     fun setPrimaryNegativeLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeLimitAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPrimaryNegativeLimitAngleBind, segment, angle)
     }
 
     /**
@@ -669,7 +670,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_negative_limit_angle
      */
     fun getPrimaryNegativeLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeLimitAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPrimaryNegativeLimitAngleBind, segment)
     }
 
     /**
@@ -678,7 +679,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_primary_negative_damp_threshold
      */
     fun setPrimaryNegativeDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPrimaryNegativeDampThresholdBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPrimaryNegativeDampThresholdBind, segment, power)
     }
 
     /**
@@ -687,7 +688,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_primary_negative_damp_threshold
      */
     fun getPrimaryNegativeDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPrimaryNegativeDampThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPrimaryNegativeDampThresholdBind, segment)
     }
 
     /**
@@ -696,7 +697,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_limit_angle
      */
     fun setSecondaryLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryLimitAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSecondaryLimitAngleBind, segment, angle)
     }
 
     /**
@@ -705,7 +706,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_limit_angle
      */
     fun getSecondaryLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryLimitAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSecondaryLimitAngleBind, segment)
     }
 
     /**
@@ -714,7 +715,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_damp_threshold
      */
     fun setSecondaryDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryDampThresholdBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSecondaryDampThresholdBind, segment, power)
     }
 
     /**
@@ -723,7 +724,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_damp_threshold
      */
     fun getSecondaryDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryDampThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSecondaryDampThresholdBind, segment)
     }
 
     /**
@@ -733,7 +734,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_positive_limit_angle
      */
     fun setSecondaryPositiveLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveLimitAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSecondaryPositiveLimitAngleBind, segment, angle)
     }
 
     /**
@@ -743,7 +744,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_positive_limit_angle
      */
     fun getSecondaryPositiveLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveLimitAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSecondaryPositiveLimitAngleBind, segment)
     }
 
     /**
@@ -752,7 +753,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_positive_damp_threshold
      */
     fun setSecondaryPositiveDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryPositiveDampThresholdBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSecondaryPositiveDampThresholdBind, segment, power)
     }
 
     /**
@@ -761,7 +762,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_positive_damp_threshold
      */
     fun getSecondaryPositiveDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryPositiveDampThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSecondaryPositiveDampThresholdBind, segment)
     }
 
     /**
@@ -771,7 +772,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_negative_limit_angle
      */
     fun setSecondaryNegativeLimitAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeLimitAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSecondaryNegativeLimitAngleBind, segment, angle)
     }
 
     /**
@@ -781,7 +782,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_negative_limit_angle
      */
     fun getSecondaryNegativeLimitAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeLimitAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSecondaryNegativeLimitAngleBind, segment)
     }
 
     /**
@@ -790,7 +791,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.set_secondary_negative_damp_threshold
      */
     fun setSecondaryNegativeDampThreshold(power: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSecondaryNegativeDampThresholdBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSecondaryNegativeDampThresholdBind, segment, power)
     }
 
     /**
@@ -799,7 +800,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_secondary_negative_damp_threshold
      */
     fun getSecondaryNegativeDampThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSecondaryNegativeDampThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSecondaryNegativeDampThresholdBind, segment)
     }
 
     /**
@@ -808,7 +809,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.get_interpolation_remaining
      */
     fun getInterpolationRemaining(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationRemainingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInterpolationRemainingBind, segment)
     }
 
     /**
@@ -819,7 +820,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_interpolating
      */
     fun isInterpolating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInterpolatingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInterpolatingBind, segment)
     }
 
     /**
@@ -831,7 +832,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: LookAtModifier3D.is_target_within_limitation
      */
     fun isTargetWithinLimitation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTargetWithinLimitationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTargetWithinLimitationBind, segment)
     }
 
     /**
@@ -877,320 +878,322 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): LookAtModifier3D? =
             if (handle.address() == 0L) null else LookAtModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TARGET_NODE_HASH = 1348162250L
-        private val setTargetNodeBind by lazy {
+        @JvmField
+        val setTargetNodeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_target_node", SET_TARGET_NODE_HASH)
-        }
 
         private const val GET_TARGET_NODE_HASH = 4075236667L
-        private val getTargetNodeBind by lazy {
+        @JvmField
+        val getTargetNodeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_target_node", GET_TARGET_NODE_HASH)
-        }
 
         private const val SET_BONE_NAME_HASH = 83702148L
-        private val setBoneNameBind by lazy {
+        @JvmField
+        val setBoneNameBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_bone_name", SET_BONE_NAME_HASH)
-        }
 
         private const val GET_BONE_NAME_HASH = 201670096L
-        private val getBoneNameBind by lazy {
+        @JvmField
+        val getBoneNameBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_bone_name", GET_BONE_NAME_HASH)
-        }
 
         private const val SET_BONE_HASH = 1286410249L
-        private val setBoneBind by lazy {
+        @JvmField
+        val setBoneBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_bone", SET_BONE_HASH)
-        }
 
         private const val GET_BONE_HASH = 3905245786L
-        private val getBoneBind by lazy {
+        @JvmField
+        val getBoneBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_bone", GET_BONE_HASH)
-        }
 
         private const val SET_FORWARD_AXIS_HASH = 3199955933L
-        private val setForwardAxisBind by lazy {
+        @JvmField
+        val setForwardAxisBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_forward_axis", SET_FORWARD_AXIS_HASH)
-        }
 
         private const val GET_FORWARD_AXIS_HASH = 4076020284L
-        private val getForwardAxisBind by lazy {
+        @JvmField
+        val getForwardAxisBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_forward_axis", GET_FORWARD_AXIS_HASH)
-        }
 
         private const val SET_PRIMARY_ROTATION_AXIS_HASH = 1144690656L
-        private val setPrimaryRotationAxisBind by lazy {
+        @JvmField
+        val setPrimaryRotationAxisBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_rotation_axis", SET_PRIMARY_ROTATION_AXIS_HASH)
-        }
 
         private const val GET_PRIMARY_ROTATION_AXIS_HASH = 3050976882L
-        private val getPrimaryRotationAxisBind by lazy {
+        @JvmField
+        val getPrimaryRotationAxisBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_rotation_axis", GET_PRIMARY_ROTATION_AXIS_HASH)
-        }
 
         private const val SET_USE_SECONDARY_ROTATION_HASH = 2586408642L
-        private val setUseSecondaryRotationBind by lazy {
+        @JvmField
+        val setUseSecondaryRotationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_use_secondary_rotation", SET_USE_SECONDARY_ROTATION_HASH)
-        }
 
         private const val IS_USING_SECONDARY_ROTATION_HASH = 36873697L
-        private val isUsingSecondaryRotationBind by lazy {
+        @JvmField
+        val isUsingSecondaryRotationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_using_secondary_rotation", IS_USING_SECONDARY_ROTATION_HASH)
-        }
 
         private const val SET_RELATIVE_HASH = 2586408642L
-        private val setRelativeBind by lazy {
+        @JvmField
+        val setRelativeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_relative", SET_RELATIVE_HASH)
-        }
 
         private const val IS_RELATIVE_HASH = 36873697L
-        private val isRelativeBind by lazy {
+        @JvmField
+        val isRelativeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_relative", IS_RELATIVE_HASH)
-        }
 
         private const val SET_ORIGIN_SAFE_MARGIN_HASH = 373806689L
-        private val setOriginSafeMarginBind by lazy {
+        @JvmField
+        val setOriginSafeMarginBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_origin_safe_margin", SET_ORIGIN_SAFE_MARGIN_HASH)
-        }
 
         private const val GET_ORIGIN_SAFE_MARGIN_HASH = 1740695150L
-        private val getOriginSafeMarginBind by lazy {
+        @JvmField
+        val getOriginSafeMarginBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_origin_safe_margin", GET_ORIGIN_SAFE_MARGIN_HASH)
-        }
 
         private const val SET_ORIGIN_FROM_HASH = 4254695669L
-        private val setOriginFromBind by lazy {
+        @JvmField
+        val setOriginFromBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_origin_from", SET_ORIGIN_FROM_HASH)
-        }
 
         private const val GET_ORIGIN_FROM_HASH = 4057166297L
-        private val getOriginFromBind by lazy {
+        @JvmField
+        val getOriginFromBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_origin_from", GET_ORIGIN_FROM_HASH)
-        }
 
         private const val SET_ORIGIN_BONE_NAME_HASH = 83702148L
-        private val setOriginBoneNameBind by lazy {
+        @JvmField
+        val setOriginBoneNameBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_origin_bone_name", SET_ORIGIN_BONE_NAME_HASH)
-        }
 
         private const val GET_ORIGIN_BONE_NAME_HASH = 201670096L
-        private val getOriginBoneNameBind by lazy {
+        @JvmField
+        val getOriginBoneNameBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_origin_bone_name", GET_ORIGIN_BONE_NAME_HASH)
-        }
 
         private const val SET_ORIGIN_BONE_HASH = 1286410249L
-        private val setOriginBoneBind by lazy {
+        @JvmField
+        val setOriginBoneBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_origin_bone", SET_ORIGIN_BONE_HASH)
-        }
 
         private const val GET_ORIGIN_BONE_HASH = 3905245786L
-        private val getOriginBoneBind by lazy {
+        @JvmField
+        val getOriginBoneBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_origin_bone", GET_ORIGIN_BONE_HASH)
-        }
 
         private const val SET_ORIGIN_EXTERNAL_NODE_HASH = 1348162250L
-        private val setOriginExternalNodeBind by lazy {
+        @JvmField
+        val setOriginExternalNodeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_origin_external_node", SET_ORIGIN_EXTERNAL_NODE_HASH)
-        }
 
         private const val GET_ORIGIN_EXTERNAL_NODE_HASH = 4075236667L
-        private val getOriginExternalNodeBind by lazy {
+        @JvmField
+        val getOriginExternalNodeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_origin_external_node", GET_ORIGIN_EXTERNAL_NODE_HASH)
-        }
 
         private const val SET_ORIGIN_OFFSET_HASH = 3460891852L
-        private val setOriginOffsetBind by lazy {
+        @JvmField
+        val setOriginOffsetBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_origin_offset", SET_ORIGIN_OFFSET_HASH)
-        }
 
         private const val GET_ORIGIN_OFFSET_HASH = 3360562783L
-        private val getOriginOffsetBind by lazy {
+        @JvmField
+        val getOriginOffsetBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_origin_offset", GET_ORIGIN_OFFSET_HASH)
-        }
 
         private const val SET_DURATION_HASH = 373806689L
-        private val setDurationBind by lazy {
+        @JvmField
+        val setDurationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_duration", SET_DURATION_HASH)
-        }
 
         private const val GET_DURATION_HASH = 1740695150L
-        private val getDurationBind by lazy {
+        @JvmField
+        val getDurationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_duration", GET_DURATION_HASH)
-        }
 
         private const val SET_TRANSITION_TYPE_HASH = 1058637742L
-        private val setTransitionTypeBind by lazy {
+        @JvmField
+        val setTransitionTypeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_transition_type", SET_TRANSITION_TYPE_HASH)
-        }
 
         private const val GET_TRANSITION_TYPE_HASH = 3842314528L
-        private val getTransitionTypeBind by lazy {
+        @JvmField
+        val getTransitionTypeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_transition_type", GET_TRANSITION_TYPE_HASH)
-        }
 
         private const val SET_EASE_TYPE_HASH = 1208105857L
-        private val setEaseTypeBind by lazy {
+        @JvmField
+        val setEaseTypeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_ease_type", SET_EASE_TYPE_HASH)
-        }
 
         private const val GET_EASE_TYPE_HASH = 631880200L
-        private val getEaseTypeBind by lazy {
+        @JvmField
+        val getEaseTypeBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_ease_type", GET_EASE_TYPE_HASH)
-        }
 
         private const val SET_USE_ANGLE_LIMITATION_HASH = 2586408642L
-        private val setUseAngleLimitationBind by lazy {
+        @JvmField
+        val setUseAngleLimitationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_use_angle_limitation", SET_USE_ANGLE_LIMITATION_HASH)
-        }
 
         private const val IS_USING_ANGLE_LIMITATION_HASH = 36873697L
-        private val isUsingAngleLimitationBind by lazy {
+        @JvmField
+        val isUsingAngleLimitationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_using_angle_limitation", IS_USING_ANGLE_LIMITATION_HASH)
-        }
 
         private const val SET_SYMMETRY_LIMITATION_HASH = 2586408642L
-        private val setSymmetryLimitationBind by lazy {
+        @JvmField
+        val setSymmetryLimitationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_symmetry_limitation", SET_SYMMETRY_LIMITATION_HASH)
-        }
 
         private const val IS_LIMITATION_SYMMETRY_HASH = 36873697L
-        private val isLimitationSymmetryBind by lazy {
+        @JvmField
+        val isLimitationSymmetryBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_limitation_symmetry", IS_LIMITATION_SYMMETRY_HASH)
-        }
 
         private const val SET_PRIMARY_LIMIT_ANGLE_HASH = 373806689L
-        private val setPrimaryLimitAngleBind by lazy {
+        @JvmField
+        val setPrimaryLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_limit_angle", SET_PRIMARY_LIMIT_ANGLE_HASH)
-        }
 
         private const val GET_PRIMARY_LIMIT_ANGLE_HASH = 1740695150L
-        private val getPrimaryLimitAngleBind by lazy {
+        @JvmField
+        val getPrimaryLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_limit_angle", GET_PRIMARY_LIMIT_ANGLE_HASH)
-        }
 
         private const val SET_PRIMARY_DAMP_THRESHOLD_HASH = 373806689L
-        private val setPrimaryDampThresholdBind by lazy {
+        @JvmField
+        val setPrimaryDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_damp_threshold", SET_PRIMARY_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_PRIMARY_DAMP_THRESHOLD_HASH = 1740695150L
-        private val getPrimaryDampThresholdBind by lazy {
+        @JvmField
+        val getPrimaryDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_damp_threshold", GET_PRIMARY_DAMP_THRESHOLD_HASH)
-        }
 
         private const val SET_PRIMARY_POSITIVE_LIMIT_ANGLE_HASH = 373806689L
-        private val setPrimaryPositiveLimitAngleBind by lazy {
+        @JvmField
+        val setPrimaryPositiveLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_positive_limit_angle", SET_PRIMARY_POSITIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val GET_PRIMARY_POSITIVE_LIMIT_ANGLE_HASH = 1740695150L
-        private val getPrimaryPositiveLimitAngleBind by lazy {
+        @JvmField
+        val getPrimaryPositiveLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_positive_limit_angle", GET_PRIMARY_POSITIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val SET_PRIMARY_POSITIVE_DAMP_THRESHOLD_HASH = 373806689L
-        private val setPrimaryPositiveDampThresholdBind by lazy {
+        @JvmField
+        val setPrimaryPositiveDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_positive_damp_threshold", SET_PRIMARY_POSITIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_PRIMARY_POSITIVE_DAMP_THRESHOLD_HASH = 1740695150L
-        private val getPrimaryPositiveDampThresholdBind by lazy {
+        @JvmField
+        val getPrimaryPositiveDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_positive_damp_threshold", GET_PRIMARY_POSITIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val SET_PRIMARY_NEGATIVE_LIMIT_ANGLE_HASH = 373806689L
-        private val setPrimaryNegativeLimitAngleBind by lazy {
+        @JvmField
+        val setPrimaryNegativeLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_negative_limit_angle", SET_PRIMARY_NEGATIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val GET_PRIMARY_NEGATIVE_LIMIT_ANGLE_HASH = 1740695150L
-        private val getPrimaryNegativeLimitAngleBind by lazy {
+        @JvmField
+        val getPrimaryNegativeLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_negative_limit_angle", GET_PRIMARY_NEGATIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val SET_PRIMARY_NEGATIVE_DAMP_THRESHOLD_HASH = 373806689L
-        private val setPrimaryNegativeDampThresholdBind by lazy {
+        @JvmField
+        val setPrimaryNegativeDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_primary_negative_damp_threshold", SET_PRIMARY_NEGATIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_PRIMARY_NEGATIVE_DAMP_THRESHOLD_HASH = 1740695150L
-        private val getPrimaryNegativeDampThresholdBind by lazy {
+        @JvmField
+        val getPrimaryNegativeDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_primary_negative_damp_threshold", GET_PRIMARY_NEGATIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val SET_SECONDARY_LIMIT_ANGLE_HASH = 373806689L
-        private val setSecondaryLimitAngleBind by lazy {
+        @JvmField
+        val setSecondaryLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_secondary_limit_angle", SET_SECONDARY_LIMIT_ANGLE_HASH)
-        }
 
         private const val GET_SECONDARY_LIMIT_ANGLE_HASH = 1740695150L
-        private val getSecondaryLimitAngleBind by lazy {
+        @JvmField
+        val getSecondaryLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_secondary_limit_angle", GET_SECONDARY_LIMIT_ANGLE_HASH)
-        }
 
         private const val SET_SECONDARY_DAMP_THRESHOLD_HASH = 373806689L
-        private val setSecondaryDampThresholdBind by lazy {
+        @JvmField
+        val setSecondaryDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_secondary_damp_threshold", SET_SECONDARY_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_SECONDARY_DAMP_THRESHOLD_HASH = 1740695150L
-        private val getSecondaryDampThresholdBind by lazy {
+        @JvmField
+        val getSecondaryDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_secondary_damp_threshold", GET_SECONDARY_DAMP_THRESHOLD_HASH)
-        }
 
         private const val SET_SECONDARY_POSITIVE_LIMIT_ANGLE_HASH = 373806689L
-        private val setSecondaryPositiveLimitAngleBind by lazy {
+        @JvmField
+        val setSecondaryPositiveLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_secondary_positive_limit_angle", SET_SECONDARY_POSITIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val GET_SECONDARY_POSITIVE_LIMIT_ANGLE_HASH = 1740695150L
-        private val getSecondaryPositiveLimitAngleBind by lazy {
+        @JvmField
+        val getSecondaryPositiveLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_secondary_positive_limit_angle", GET_SECONDARY_POSITIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val SET_SECONDARY_POSITIVE_DAMP_THRESHOLD_HASH = 373806689L
-        private val setSecondaryPositiveDampThresholdBind by lazy {
+        @JvmField
+        val setSecondaryPositiveDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_secondary_positive_damp_threshold", SET_SECONDARY_POSITIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_SECONDARY_POSITIVE_DAMP_THRESHOLD_HASH = 1740695150L
-        private val getSecondaryPositiveDampThresholdBind by lazy {
+        @JvmField
+        val getSecondaryPositiveDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_secondary_positive_damp_threshold", GET_SECONDARY_POSITIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val SET_SECONDARY_NEGATIVE_LIMIT_ANGLE_HASH = 373806689L
-        private val setSecondaryNegativeLimitAngleBind by lazy {
+        @JvmField
+        val setSecondaryNegativeLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_secondary_negative_limit_angle", SET_SECONDARY_NEGATIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val GET_SECONDARY_NEGATIVE_LIMIT_ANGLE_HASH = 1740695150L
-        private val getSecondaryNegativeLimitAngleBind by lazy {
+        @JvmField
+        val getSecondaryNegativeLimitAngleBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_secondary_negative_limit_angle", GET_SECONDARY_NEGATIVE_LIMIT_ANGLE_HASH)
-        }
 
         private const val SET_SECONDARY_NEGATIVE_DAMP_THRESHOLD_HASH = 373806689L
-        private val setSecondaryNegativeDampThresholdBind by lazy {
+        @JvmField
+        val setSecondaryNegativeDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "set_secondary_negative_damp_threshold", SET_SECONDARY_NEGATIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_SECONDARY_NEGATIVE_DAMP_THRESHOLD_HASH = 1740695150L
-        private val getSecondaryNegativeDampThresholdBind by lazy {
+        @JvmField
+        val getSecondaryNegativeDampThresholdBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_secondary_negative_damp_threshold", GET_SECONDARY_NEGATIVE_DAMP_THRESHOLD_HASH)
-        }
 
         private const val GET_INTERPOLATION_REMAINING_HASH = 1740695150L
-        private val getInterpolationRemainingBind by lazy {
+        @JvmField
+        val getInterpolationRemainingBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "get_interpolation_remaining", GET_INTERPOLATION_REMAINING_HASH)
-        }
 
         private const val IS_INTERPOLATING_HASH = 36873697L
-        private val isInterpolatingBind by lazy {
+        @JvmField
+        val isInterpolatingBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_interpolating", IS_INTERPOLATING_HASH)
-        }
 
         private const val IS_TARGET_WITHIN_LIMITATION_HASH = 36873697L
-        private val isTargetWithinLimitationBind by lazy {
+        @JvmField
+        val isTargetWithinLimitationBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_target_within_limitation", IS_TARGET_WITHIN_LIMITATION_HASH)
-        }
     }
 }

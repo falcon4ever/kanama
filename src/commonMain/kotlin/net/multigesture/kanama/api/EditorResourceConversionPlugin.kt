@@ -23,7 +23,5 @@ class EditorResourceConversionPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourceConversionPlugin? =
             if (handle.address() == 0L) null else EditorResourceConversionPlugin(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

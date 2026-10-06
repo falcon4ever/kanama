@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ open class ScrollBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ScrollBar.set_custom_step
      */
     fun setCustomStep(step: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCustomStepBind, segment, step)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCustomStepBind, segment, step)
     }
 
     /**
@@ -34,7 +35,7 @@ open class ScrollBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ScrollBar.get_custom_step
      */
     fun getCustomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomStepBind, segment)
     }
 
     /** Signal `scrolling()`; see [TypedSignal]. */
@@ -53,15 +54,17 @@ open class ScrollBar(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): ScrollBar? =
             if (handle.address() == 0L) null else ScrollBar(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CUSTOM_STEP_HASH = 373806689L
-        private val setCustomStepBind by lazy {
+        @JvmField
+        val setCustomStepBind =
             ObjectCalls.getMethodBind("ScrollBar", "set_custom_step", SET_CUSTOM_STEP_HASH)
-        }
 
         private const val GET_CUSTOM_STEP_HASH = 1740695150L
-        private val getCustomStepBind by lazy {
+        @JvmField
+        val getCustomStepBind =
             ObjectCalls.getMethodBind("ScrollBar", "get_custom_step", GET_CUSTOM_STEP_HASH)
-        }
     }
 }

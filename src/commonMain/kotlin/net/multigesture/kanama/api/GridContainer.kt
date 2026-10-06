@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class GridContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GridContainer.set_columns
      */
     fun setColumns(columns: Int) {
-        ObjectCalls.ptrcallWithIntArg(setColumnsBind, segment, columns)
+        ObjectCalls.ptrcallWithIntArg(Binds.setColumnsBind, segment, columns)
     }
 
     /**
@@ -34,7 +35,7 @@ class GridContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GridContainer.get_columns
      */
     fun getColumns(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getColumnsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getColumnsBind, segment)
     }
 
     companion object {
@@ -44,15 +45,17 @@ class GridContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): GridContainer? =
             if (handle.address() == 0L) null else GridContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COLUMNS_HASH = 1286410249L
-        private val setColumnsBind by lazy {
+        @JvmField
+        val setColumnsBind =
             ObjectCalls.getMethodBind("GridContainer", "set_columns", SET_COLUMNS_HASH)
-        }
 
         private const val GET_COLUMNS_HASH = 3905245786L
-        private val getColumnsBind by lazy {
+        @JvmField
+        val getColumnsBind =
             ObjectCalls.getMethodBind("GridContainer", "get_columns", GET_COLUMNS_HASH)
-        }
     }
 }

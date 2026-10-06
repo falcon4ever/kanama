@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class PlaceholderMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setAabbBind, segment, aabb)
     }
 
     companion object {
@@ -31,10 +32,12 @@ class PlaceholderMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderMesh? =
             if (handle.address() == 0L) null else PlaceholderMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_AABB_HASH = 259215842L
-        private val setAabbBind by lazy {
+        @JvmField
+        val setAabbBind =
             ObjectCalls.getMethodBind("PlaceholderMesh", "set_aabb", SET_AABB_HASH)
-        }
     }
 }

@@ -20,7 +20,5 @@ class StreamPeerExtension(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerExtension? =
             if (handle.address() == 0L) null else StreamPeerExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

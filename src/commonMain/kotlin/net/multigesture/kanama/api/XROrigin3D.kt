@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.set_world_scale
      */
     fun setWorldScale(worldScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWorldScaleBind, segment, worldScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWorldScaleBind, segment, worldScale)
     }
 
     /**
@@ -42,7 +43,7 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.get_world_scale
      */
     fun getWorldScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWorldScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWorldScaleBind, segment)
     }
 
     /**
@@ -52,7 +53,7 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.set_current
      */
     fun setCurrent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCurrentBind, segment, enabled)
     }
 
     /**
@@ -62,7 +63,7 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XROrigin3D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCurrentBind, segment)
     }
 
     companion object {
@@ -72,25 +73,27 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): XROrigin3D? =
             if (handle.address() == 0L) null else XROrigin3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WORLD_SCALE_HASH = 373806689L
-        private val setWorldScaleBind by lazy {
+        @JvmField
+        val setWorldScaleBind =
             ObjectCalls.getMethodBind("XROrigin3D", "set_world_scale", SET_WORLD_SCALE_HASH)
-        }
 
         private const val GET_WORLD_SCALE_HASH = 1740695150L
-        private val getWorldScaleBind by lazy {
+        @JvmField
+        val getWorldScaleBind =
             ObjectCalls.getMethodBind("XROrigin3D", "get_world_scale", GET_WORLD_SCALE_HASH)
-        }
 
         private const val SET_CURRENT_HASH = 2586408642L
-        private val setCurrentBind by lazy {
+        @JvmField
+        val setCurrentBind =
             ObjectCalls.getMethodBind("XROrigin3D", "set_current", SET_CURRENT_HASH)
-        }
 
         private const val IS_CURRENT_HASH = 36873697L
-        private val isCurrentBind by lazy {
+        @JvmField
+        val isCurrentBind =
             ObjectCalls.getMethodBind("XROrigin3D", "is_current", IS_CURRENT_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -46,7 +47,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setLightmapTextures(lightTextures: List<TextureLayered>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setLightmapTexturesBind, segment, lightTextures)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setLightmapTexturesBind, segment, lightTextures)
     }
 
     /**
@@ -56,7 +57,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, segment, TextureLayered::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightmapTexturesBind, segment, TextureLayered::wrapBorrowed)
     }
 
     /**
@@ -66,7 +67,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setShadowmaskTextures(shadowmaskTextures: List<TextureLayered>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setShadowmaskTexturesBind, segment, shadowmaskTextures)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setShadowmaskTexturesBind, segment, shadowmaskTextures)
     }
 
     /**
@@ -76,7 +77,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowmaskTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, segment, TextureLayered::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getShadowmaskTexturesBind, segment, TextureLayered::wrapBorrowed)
     }
 
     /**
@@ -90,7 +91,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setUsesSphericalHarmonics(usesSphericalHarmonics: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUsesSphericalHarmonicsBind, segment, usesSphericalHarmonics)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUsesSphericalHarmonicsBind, segment, usesSphericalHarmonics)
     }
 
     /**
@@ -100,7 +101,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingSphericalHarmonics(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSphericalHarmonicsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSphericalHarmonicsBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun addUser(path: NodePath, uvScale: Rect2, sliceIndex: Int, subInstance: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(addUserBind, segment, path, uvScale, sliceIndex, subInstance)
+        ObjectCalls.ptrcallWithNodePathRect2TwoIntArgs(Binds.addUserBind, segment, path, uvScale, sliceIndex, subInstance)
     }
 
     /**
@@ -120,7 +121,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getUserCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUserCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUserCountBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getUserPath(userIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getUserPathBind, segment, userIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getUserPathBind, segment, userIdx)
     }
 
     /**
@@ -140,7 +141,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun clearUsers() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearUsersBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearUsersBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setLightTexture(lightTexture: TextureLayered?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, segment, listOf(lightTexture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setLightTextureBind, segment, listOf(lightTexture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -160,7 +161,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightTexture(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, segment))
+        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLightTextureBind, segment))
     }
 
     /**
@@ -216,65 +217,67 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): LightmapGIData? =
             if (handle.address() == 0L) null else LightmapGIData(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LIGHTMAP_TEXTURES_HASH = 381264803L
-        private val setLightmapTexturesBind by lazy {
+        @JvmField
+        val setLightmapTexturesBind =
             ObjectCalls.getMethodBind("LightmapGIData", "set_lightmap_textures", SET_LIGHTMAP_TEXTURES_HASH)
-        }
 
         private const val GET_LIGHTMAP_TEXTURES_HASH = 3995934104L
-        private val getLightmapTexturesBind by lazy {
+        @JvmField
+        val getLightmapTexturesBind =
             ObjectCalls.getMethodBind("LightmapGIData", "get_lightmap_textures", GET_LIGHTMAP_TEXTURES_HASH)
-        }
 
         private const val SET_SHADOWMASK_TEXTURES_HASH = 381264803L
-        private val setShadowmaskTexturesBind by lazy {
+        @JvmField
+        val setShadowmaskTexturesBind =
             ObjectCalls.getMethodBind("LightmapGIData", "set_shadowmask_textures", SET_SHADOWMASK_TEXTURES_HASH)
-        }
 
         private const val GET_SHADOWMASK_TEXTURES_HASH = 3995934104L
-        private val getShadowmaskTexturesBind by lazy {
+        @JvmField
+        val getShadowmaskTexturesBind =
             ObjectCalls.getMethodBind("LightmapGIData", "get_shadowmask_textures", GET_SHADOWMASK_TEXTURES_HASH)
-        }
 
         private const val SET_USES_SPHERICAL_HARMONICS_HASH = 2586408642L
-        private val setUsesSphericalHarmonicsBind by lazy {
+        @JvmField
+        val setUsesSphericalHarmonicsBind =
             ObjectCalls.getMethodBind("LightmapGIData", "set_uses_spherical_harmonics", SET_USES_SPHERICAL_HARMONICS_HASH)
-        }
 
         private const val IS_USING_SPHERICAL_HARMONICS_HASH = 36873697L
-        private val isUsingSphericalHarmonicsBind by lazy {
+        @JvmField
+        val isUsingSphericalHarmonicsBind =
             ObjectCalls.getMethodBind("LightmapGIData", "is_using_spherical_harmonics", IS_USING_SPHERICAL_HARMONICS_HASH)
-        }
 
         private const val ADD_USER_HASH = 4272570515L
-        private val addUserBind by lazy {
+        @JvmField
+        val addUserBind =
             ObjectCalls.getMethodBind("LightmapGIData", "add_user", ADD_USER_HASH)
-        }
 
         private const val GET_USER_COUNT_HASH = 3905245786L
-        private val getUserCountBind by lazy {
+        @JvmField
+        val getUserCountBind =
             ObjectCalls.getMethodBind("LightmapGIData", "get_user_count", GET_USER_COUNT_HASH)
-        }
 
         private const val GET_USER_PATH_HASH = 408788394L
-        private val getUserPathBind by lazy {
+        @JvmField
+        val getUserPathBind =
             ObjectCalls.getMethodBind("LightmapGIData", "get_user_path", GET_USER_PATH_HASH)
-        }
 
         private const val CLEAR_USERS_HASH = 3218959716L
-        private val clearUsersBind by lazy {
+        @JvmField
+        val clearUsersBind =
             ObjectCalls.getMethodBind("LightmapGIData", "clear_users", CLEAR_USERS_HASH)
-        }
 
         private const val SET_LIGHT_TEXTURE_HASH = 1278366092L
-        private val setLightTextureBind by lazy {
+        @JvmField
+        val setLightTextureBind =
             ObjectCalls.getMethodBind("LightmapGIData", "set_light_texture", SET_LIGHT_TEXTURE_HASH)
-        }
 
         private const val GET_LIGHT_TEXTURE_HASH = 3984243839L
-        private val getLightTextureBind by lazy {
+        @JvmField
+        val getLightTextureBind =
             ObjectCalls.getMethodBind("LightmapGIData", "get_light_texture", GET_LIGHT_TEXTURE_HASH)
-        }
     }
 }

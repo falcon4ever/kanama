@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun create(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(createBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.createBind, segment, size)
     }
 
     /**
@@ -33,7 +34,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, threshold)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(Binds.createFromImageAlphaBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, threshold)
     }
 
     /**
@@ -43,7 +44,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun setBitv(position: Vector2i, bit: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndBoolArg(setBitvBind, segment, position, bit)
+        ObjectCalls.ptrcallWithVector2iAndBoolArg(Binds.setBitvBind, segment, position, bit)
     }
 
     /**
@@ -53,7 +54,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun setBit(x: Int, y: Int, bit: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setBitBind, segment, x, y, bit)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setBitBind, segment, x, y, bit)
     }
 
     /**
@@ -63,7 +64,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getBitv(position: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(getBitvBind, segment, position)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.getBitvBind, segment, position)
     }
 
     /**
@@ -73,7 +74,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getBit(x: Int, y: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getBitBind, segment, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.getBitBind, segment, x, y)
     }
 
     /**
@@ -83,7 +84,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun setBitRect(rect: Rect2i, bit: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndBoolArg(setBitRectBind, segment, rect, bit)
+        ObjectCalls.ptrcallWithRect2iAndBoolArg(Binds.setBitRectBind, segment, rect, bit)
     }
 
     /**
@@ -93,7 +94,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getTrueBitCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTrueBitCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTrueBitCountBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun resize(newSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(resizeBind, segment, newSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.resizeBind, segment, newSize)
     }
 
     /**
@@ -126,7 +127,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun growMask(pixels: Int, rect: Rect2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndRect2iArg(growMaskBind, segment, pixels, rect)
+        ObjectCalls.ptrcallWithIntAndRect2iArg(Binds.growMaskBind, segment, pixels, rect)
     }
 
     /**
@@ -138,7 +139,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun convertToImage(): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, segment))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.convertToImageBind, segment))
     }
 
     /**
@@ -150,7 +151,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun opaqueToPolygons(rect: Rect2i, epsilon: Double = 2.0): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(opaqueToPolygonsBind, segment, rect, epsilon)
+        return ObjectCalls.ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(Binds.opaqueToPolygonsBind, segment, rect, epsilon)
     }
 
     companion object {
@@ -163,70 +164,72 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BitMap? =
             if (handle.address() == 0L) null else BitMap(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_HASH = 1130785943L
-        private val createBind by lazy {
+        @JvmField
+        val createBind =
             ObjectCalls.getMethodBind("BitMap", "create", CREATE_HASH)
-        }
 
         private const val CREATE_FROM_IMAGE_ALPHA_HASH = 106271684L
-        private val createFromImageAlphaBind by lazy {
+        @JvmField
+        val createFromImageAlphaBind =
             ObjectCalls.getMethodBind("BitMap", "create_from_image_alpha", CREATE_FROM_IMAGE_ALPHA_HASH)
-        }
 
         private const val SET_BITV_HASH = 4153096796L
-        private val setBitvBind by lazy {
+        @JvmField
+        val setBitvBind =
             ObjectCalls.getMethodBind("BitMap", "set_bitv", SET_BITV_HASH)
-        }
 
         private const val SET_BIT_HASH = 1383440665L
-        private val setBitBind by lazy {
+        @JvmField
+        val setBitBind =
             ObjectCalls.getMethodBind("BitMap", "set_bit", SET_BIT_HASH)
-        }
 
         private const val GET_BITV_HASH = 3900751641L
-        private val getBitvBind by lazy {
+        @JvmField
+        val getBitvBind =
             ObjectCalls.getMethodBind("BitMap", "get_bitv", GET_BITV_HASH)
-        }
 
         private const val GET_BIT_HASH = 2522259332L
-        private val getBitBind by lazy {
+        @JvmField
+        val getBitBind =
             ObjectCalls.getMethodBind("BitMap", "get_bit", GET_BIT_HASH)
-        }
 
         private const val SET_BIT_RECT_HASH = 472162941L
-        private val setBitRectBind by lazy {
+        @JvmField
+        val setBitRectBind =
             ObjectCalls.getMethodBind("BitMap", "set_bit_rect", SET_BIT_RECT_HASH)
-        }
 
         private const val GET_TRUE_BIT_COUNT_HASH = 3905245786L
-        private val getTrueBitCountBind by lazy {
+        @JvmField
+        val getTrueBitCountBind =
             ObjectCalls.getMethodBind("BitMap", "get_true_bit_count", GET_TRUE_BIT_COUNT_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("BitMap", "get_size", GET_SIZE_HASH)
-        }
 
         private const val RESIZE_HASH = 1130785943L
-        private val resizeBind by lazy {
+        @JvmField
+        val resizeBind =
             ObjectCalls.getMethodBind("BitMap", "resize", RESIZE_HASH)
-        }
 
         private const val GROW_MASK_HASH = 3317281434L
-        private val growMaskBind by lazy {
+        @JvmField
+        val growMaskBind =
             ObjectCalls.getMethodBind("BitMap", "grow_mask", GROW_MASK_HASH)
-        }
 
         private const val CONVERT_TO_IMAGE_HASH = 4190603485L
-        private val convertToImageBind by lazy {
+        @JvmField
+        val convertToImageBind =
             ObjectCalls.getMethodBind("BitMap", "convert_to_image", CONVERT_TO_IMAGE_HASH)
-        }
 
         private const val OPAQUE_TO_POLYGONS_HASH = 48478126L
-        private val opaqueToPolygonsBind by lazy {
+        @JvmField
+        val opaqueToPolygonsBind =
             ObjectCalls.getMethodBind("BitMap", "opaque_to_polygons", OPAQUE_TO_POLYGONS_HASH)
-        }
     }
 }

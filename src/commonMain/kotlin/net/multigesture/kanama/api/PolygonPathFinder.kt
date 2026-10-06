@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,22 +20,22 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
      */
     fun setup(points: List<Vector2>, connections: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(setupBind, segment, points, connections)
+        ObjectCalls.ptrcallWithPackedVector2ListAndPackedInt32ListArgs(Binds.setupBind, segment, points, connections)
     }
 
     fun findPath(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(findPathBind, segment, from, to)
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.findPathBind, segment, from, to)
     }
 
     fun getIntersections(from: Vector2, to: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getIntersectionsBind, segment, from, to)
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.getIntersectionsBind, segment, from, to)
     }
 
     fun getClosestPoint(point: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, segment, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPointBind, segment, point)
     }
 
     /**
@@ -44,22 +45,22 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
      */
     fun isPointInside(point: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(isPointInsideBind, segment, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetBool(Binds.isPointInsideBind, segment, point)
     }
 
     fun setPointPenalty(idx: Int, penalty: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointPenaltyBind, segment, idx, penalty)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointPenaltyBind, segment, idx, penalty)
     }
 
     fun getPointPenalty(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointPenaltyBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointPenaltyBind, segment, idx)
     }
 
     fun getBounds(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
     }
 
     companion object {
@@ -72,45 +73,47 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SETUP_HASH = 3251786936L
-        private val setupBind by lazy {
+        @JvmField
+        val setupBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "setup", SETUP_HASH)
-        }
 
         private const val FIND_PATH_HASH = 1562168077L
-        private val findPathBind by lazy {
+        @JvmField
+        val findPathBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "find_path", FIND_PATH_HASH)
-        }
 
         private const val GET_INTERSECTIONS_HASH = 3932192302L
-        private val getIntersectionsBind by lazy {
+        @JvmField
+        val getIntersectionsBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "get_intersections", GET_INTERSECTIONS_HASH)
-        }
 
         private const val GET_CLOSEST_POINT_HASH = 2656412154L
-        private val getClosestPointBind by lazy {
+        @JvmField
+        val getClosestPointBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "get_closest_point", GET_CLOSEST_POINT_HASH)
-        }
 
         private const val IS_POINT_INSIDE_HASH = 556197845L
-        private val isPointInsideBind by lazy {
+        @JvmField
+        val isPointInsideBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "is_point_inside", IS_POINT_INSIDE_HASH)
-        }
 
         private const val SET_POINT_PENALTY_HASH = 1602489585L
-        private val setPointPenaltyBind by lazy {
+        @JvmField
+        val setPointPenaltyBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "set_point_penalty", SET_POINT_PENALTY_HASH)
-        }
 
         private const val GET_POINT_PENALTY_HASH = 2339986948L
-        private val getPointPenaltyBind by lazy {
+        @JvmField
+        val getPointPenaltyBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "get_point_penalty", GET_POINT_PENALTY_HASH)
-        }
 
         private const val GET_BOUNDS_HASH = 1639390495L
-        private val getBoundsBind by lazy {
+        @JvmField
+        val getBoundsBind =
             ObjectCalls.getMethodBind("PolygonPathFinder", "get_bounds", GET_BOUNDS_HASH)
-        }
     }
 }

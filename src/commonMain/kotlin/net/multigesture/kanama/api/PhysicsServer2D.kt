@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -15,9 +16,8 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: PhysicsServer2D
  */
 object PhysicsServer2D {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("PhysicsServer2D")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Creates a 2D world boundary shape in the physics server, and returns the `RID` that identifies
@@ -27,7 +27,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun worldBoundaryShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(worldBoundaryShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.worldBoundaryShapeCreateBind, singleton)
     }
 
     /**
@@ -38,7 +38,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun separationRayShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(separationRayShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.separationRayShapeCreateBind, singleton)
     }
 
     /**
@@ -49,7 +49,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun segmentShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(segmentShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.segmentShapeCreateBind, singleton)
     }
 
     /**
@@ -60,7 +60,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun circleShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(circleShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.circleShapeCreateBind, singleton)
     }
 
     /**
@@ -71,7 +71,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun rectangleShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(rectangleShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.rectangleShapeCreateBind, singleton)
     }
 
     /**
@@ -82,7 +82,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun capsuleShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(capsuleShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.capsuleShapeCreateBind, singleton)
     }
 
     /**
@@ -93,7 +93,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun convexPolygonShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(convexPolygonShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.convexPolygonShapeCreateBind, singleton)
     }
 
     /**
@@ -104,7 +104,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun concavePolygonShapeCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(concavePolygonShapeCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.concavePolygonShapeCreateBind, singleton)
     }
 
     /**
@@ -130,7 +130,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun shapeSetData(shape: RID, data: Any?) {
-        ObjectCalls.ptrcallWithRIDAndVariantArg(shapeSetDataBind, singleton, shape, data)
+        ObjectCalls.ptrcallWithRIDAndVariantArg(Binds.shapeSetDataBind, singleton, shape, data)
     }
 
     /**
@@ -140,7 +140,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun shapeGetType(shape: RID): PhysicsServer2D.ShapeType {
-        return PhysicsServer2D.ShapeType(ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape))
+        return PhysicsServer2D.ShapeType(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shapeGetTypeBind, singleton, shape))
     }
 
     /**
@@ -152,7 +152,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun shapeGetData(shape: RID): Any? {
-        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(shapeGetDataBind, singleton, shape)
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(Binds.shapeGetDataBind, singleton, shape)
     }
 
     /**
@@ -164,7 +164,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun spaceCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(spaceCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.spaceCreateBind, singleton)
     }
 
     /**
@@ -175,7 +175,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun spaceSetActive(space: RID, active: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(spaceSetActiveBind, singleton, space, active)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.spaceSetActiveBind, singleton, space, active)
     }
 
     /**
@@ -185,7 +185,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun spaceIsActive(space: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(spaceIsActiveBind, singleton, space)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.spaceIsActiveBind, singleton, space)
     }
 
     /**
@@ -195,7 +195,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun spaceSetParam(space: RID, param: PhysicsServer2D.SpaceParameter, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.spaceSetParamBind, singleton, space, param.value, value)
     }
 
     /**
@@ -205,7 +205,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun spaceGetParam(space: RID, param: PhysicsServer2D.SpaceParameter): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.spaceGetParamBind, singleton, space, param.value)
     }
 
     /**
@@ -216,7 +216,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun spaceGetDirectState(space: RID): PhysicsDirectSpaceState2D? {
-        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(spaceGetDirectStateBind, singleton, space))
+        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.spaceGetDirectStateBind, singleton, space))
     }
 
     /**
@@ -230,7 +230,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(areaCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.areaCreateBind, singleton)
     }
 
     /**
@@ -242,7 +242,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetSpace(area: RID, space: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(areaSetSpaceBind, singleton, area, space)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.areaSetSpaceBind, singleton, area, space)
     }
 
     /**
@@ -253,7 +253,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetSpace(area: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(areaGetSpaceBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.areaGetSpaceBind, singleton, area)
     }
 
     /**
@@ -265,7 +265,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaAddShape(area: RID, shape: RID, transform: Transform2D, disabled: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoRIDTransform2DBoolArgs(areaAddShapeBind, singleton, area, shape, transform, disabled)
+        ObjectCalls.ptrcallWithTwoRIDTransform2DBoolArgs(Binds.areaAddShapeBind, singleton, area, shape, transform, disabled)
     }
 
     /**
@@ -276,7 +276,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetShape(area: RID, shapeIdx: Int, shape: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(areaSetShapeBind, singleton, area, shapeIdx, shape)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.areaSetShapeBind, singleton, area, shapeIdx, shape)
     }
 
     /**
@@ -286,7 +286,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetShapeTransform(area: RID, shapeIdx: Int, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(areaSetShapeTransformBind, singleton, area, shapeIdx, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(Binds.areaSetShapeTransformBind, singleton, area, shapeIdx, transform)
     }
 
     /**
@@ -297,7 +297,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetShapeDisabled(area: RID, shapeIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(areaSetShapeDisabledBind, singleton, area, shapeIdx, disabled)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.areaSetShapeDisabledBind, singleton, area, shapeIdx, disabled)
     }
 
     /**
@@ -307,7 +307,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetShapeCount(area: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(areaGetShapeCountBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.areaGetShapeCountBind, singleton, area)
     }
 
     /**
@@ -317,7 +317,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetShape(area: RID, shapeIdx: Int): RID {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(areaGetShapeBind, singleton, area, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.areaGetShapeBind, singleton, area, shapeIdx)
     }
 
     /**
@@ -328,7 +328,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetShapeTransform(area: RID, shapeIdx: Int): Transform2D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(areaGetShapeTransformBind, singleton, area, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(Binds.areaGetShapeTransformBind, singleton, area, shapeIdx)
     }
 
     /**
@@ -341,7 +341,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaRemoveShape(area: RID, shapeIdx: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(areaRemoveShapeBind, singleton, area, shapeIdx)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.areaRemoveShapeBind, singleton, area, shapeIdx)
     }
 
     /**
@@ -352,7 +352,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaClearShapes(area: RID) {
-        ObjectCalls.ptrcallWithRIDArg(areaClearShapesBind, singleton, area)
+        ObjectCalls.ptrcallWithRIDArg(Binds.areaClearShapesBind, singleton, area)
     }
 
     /**
@@ -362,7 +362,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetCollisionLayer(area: RID, layer: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(areaSetCollisionLayerBind, singleton, area, layer)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.areaSetCollisionLayerBind, singleton, area, layer)
     }
 
     /**
@@ -372,7 +372,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetCollisionLayer(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionLayerBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.areaGetCollisionLayerBind, singleton, area)
     }
 
     /**
@@ -382,7 +382,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetCollisionMask(area: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(areaSetCollisionMaskBind, singleton, area, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.areaSetCollisionMaskBind, singleton, area, mask)
     }
 
     /**
@@ -392,7 +392,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetCollisionMask(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(areaGetCollisionMaskBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.areaGetCollisionMaskBind, singleton, area)
     }
 
     /**
@@ -402,7 +402,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetParam(area: RID, param: PhysicsServer2D.AreaParameter, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.areaSetParamBind, singleton, area, param.value, value)
     }
 
     /**
@@ -412,7 +412,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetTransform(area: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(areaSetTransformBind, singleton, area, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.areaSetTransformBind, singleton, area, transform)
     }
 
     /**
@@ -422,7 +422,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetParam(area: RID, param: PhysicsServer2D.AreaParameter): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.areaGetParamBind, singleton, area, param.value)
     }
 
     /**
@@ -432,7 +432,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetTransform(area: RID): Transform2D {
-        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(areaGetTransformBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(Binds.areaGetTransformBind, singleton, area)
     }
 
     /**
@@ -443,7 +443,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaAttachObjectInstanceId(area: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(areaAttachObjectInstanceIdBind, singleton, area, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.areaAttachObjectInstanceIdBind, singleton, area, id)
     }
 
     /**
@@ -454,7 +454,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetObjectInstanceId(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(areaGetObjectInstanceIdBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.areaGetObjectInstanceIdBind, singleton, area)
     }
 
     /**
@@ -465,7 +465,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaAttachCanvasInstanceId(area: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(areaAttachCanvasInstanceIdBind, singleton, area, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.areaAttachCanvasInstanceIdBind, singleton, area, id)
     }
 
     /**
@@ -476,7 +476,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaGetCanvasInstanceId(area: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(areaGetCanvasInstanceIdBind, singleton, area)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.areaGetCanvasInstanceIdBind, singleton, area)
     }
 
     /**
@@ -495,7 +495,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetMonitorCallback(area: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.areaSetMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
     }
 
     /**
@@ -514,7 +514,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetAreaMonitorCallback(area: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(areaSetAreaMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.areaSetAreaMonitorCallbackBind, singleton, area, callback.target.segment, callback.method)
     }
 
     /**
@@ -525,7 +525,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun areaSetMonitorable(area: RID, monitorable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(areaSetMonitorableBind, singleton, area, monitorable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.areaSetMonitorableBind, singleton, area, monitorable)
     }
 
     /**
@@ -538,7 +538,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(bodyCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.bodyCreateBind, singleton)
     }
 
     /**
@@ -555,7 +555,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetSpace(body: RID, space: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(bodySetSpaceBind, singleton, body, space)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.bodySetSpaceBind, singleton, body, space)
     }
 
     /**
@@ -566,7 +566,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetSpace(body: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(bodyGetSpaceBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.bodyGetSpaceBind, singleton, body)
     }
 
     /**
@@ -576,7 +576,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetMode(body: RID, mode: PhysicsServer2D.BodyMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.bodySetModeBind, singleton, body, mode.value)
     }
 
     /**
@@ -586,7 +586,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetMode(body: RID): PhysicsServer2D.BodyMode {
-        return PhysicsServer2D.BodyMode(ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body))
+        return PhysicsServer2D.BodyMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bodyGetModeBind, singleton, body))
     }
 
     /**
@@ -598,7 +598,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAddShape(body: RID, shape: RID, transform: Transform2D, disabled: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoRIDTransform2DBoolArgs(bodyAddShapeBind, singleton, body, shape, transform, disabled)
+        ObjectCalls.ptrcallWithTwoRIDTransform2DBoolArgs(Binds.bodyAddShapeBind, singleton, body, shape, transform, disabled)
     }
 
     /**
@@ -609,7 +609,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetShape(body: RID, shapeIdx: Int, shape: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(bodySetShapeBind, singleton, body, shapeIdx, shape)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.bodySetShapeBind, singleton, body, shapeIdx, shape)
     }
 
     /**
@@ -619,7 +619,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetShapeTransform(body: RID, shapeIdx: Int, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(bodySetShapeTransformBind, singleton, body, shapeIdx, transform)
+        ObjectCalls.ptrcallWithRIDIntAndTransform2DArg(Binds.bodySetShapeTransformBind, singleton, body, shapeIdx, transform)
     }
 
     /**
@@ -629,7 +629,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetShapeCount(body: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(bodyGetShapeCountBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.bodyGetShapeCountBind, singleton, body)
     }
 
     /**
@@ -639,7 +639,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetShape(body: RID, shapeIdx: Int): RID {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(bodyGetShapeBind, singleton, body, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.bodyGetShapeBind, singleton, body, shapeIdx)
     }
 
     /**
@@ -650,7 +650,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetShapeTransform(body: RID, shapeIdx: Int): Transform2D {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(bodyGetShapeTransformBind, singleton, body, shapeIdx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetTransform2D(Binds.bodyGetShapeTransformBind, singleton, body, shapeIdx)
     }
 
     /**
@@ -663,7 +663,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyRemoveShape(body: RID, shapeIdx: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(bodyRemoveShapeBind, singleton, body, shapeIdx)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.bodyRemoveShapeBind, singleton, body, shapeIdx)
     }
 
     /**
@@ -674,7 +674,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyClearShapes(body: RID) {
-        ObjectCalls.ptrcallWithRIDArg(bodyClearShapesBind, singleton, body)
+        ObjectCalls.ptrcallWithRIDArg(Binds.bodyClearShapesBind, singleton, body)
     }
 
     /**
@@ -685,7 +685,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetShapeDisabled(body: RID, shapeIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(bodySetShapeDisabledBind, singleton, body, shapeIdx, disabled)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.bodySetShapeDisabledBind, singleton, body, shapeIdx, disabled)
     }
 
     /**
@@ -699,7 +699,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetShapeAsOneWayCollision(body: RID, shapeIdx: Int, enable: Boolean, margin: Double, direction: Vector2) {
-        ObjectCalls.ptrcallWithRIDIntBoolDoubleVector2Args(bodySetShapeAsOneWayCollisionBind, singleton, body, shapeIdx, enable, margin, direction)
+        ObjectCalls.ptrcallWithRIDIntBoolDoubleVector2Args(Binds.bodySetShapeAsOneWayCollisionBind, singleton, body, shapeIdx, enable, margin, direction)
     }
 
     /**
@@ -710,7 +710,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAttachObjectInstanceId(body: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodyAttachObjectInstanceIdBind, singleton, body, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.bodyAttachObjectInstanceIdBind, singleton, body, id)
     }
 
     /**
@@ -721,7 +721,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetObjectInstanceId(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetObjectInstanceIdBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bodyGetObjectInstanceIdBind, singleton, body)
     }
 
     /**
@@ -732,7 +732,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAttachCanvasInstanceId(body: RID, id: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodyAttachCanvasInstanceIdBind, singleton, body, id)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.bodyAttachCanvasInstanceIdBind, singleton, body, id)
     }
 
     /**
@@ -743,7 +743,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetCanvasInstanceId(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetCanvasInstanceIdBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bodyGetCanvasInstanceIdBind, singleton, body)
     }
 
     /**
@@ -755,7 +755,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetContinuousCollisionDetectionMode(body: RID, mode: PhysicsServer2D.CCDMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetContinuousCollisionDetectionModeBind, singleton, body, mode.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.bodySetContinuousCollisionDetectionModeBind, singleton, body, mode.value)
     }
 
     /**
@@ -765,7 +765,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetContinuousCollisionDetectionMode(body: RID): PhysicsServer2D.CCDMode {
-        return PhysicsServer2D.CCDMode(ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetContinuousCollisionDetectionModeBind, singleton, body))
+        return PhysicsServer2D.CCDMode(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bodyGetContinuousCollisionDetectionModeBind, singleton, body))
     }
 
     /**
@@ -775,7 +775,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetCollisionLayer(body: RID, layer: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(bodySetCollisionLayerBind, singleton, body, layer)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.bodySetCollisionLayerBind, singleton, body, layer)
     }
 
     /**
@@ -785,7 +785,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetCollisionLayer(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(bodyGetCollisionLayerBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.bodyGetCollisionLayerBind, singleton, body)
     }
 
     /**
@@ -795,7 +795,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetCollisionMask(body: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(bodySetCollisionMaskBind, singleton, body, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.bodySetCollisionMaskBind, singleton, body, mask)
     }
 
     /**
@@ -805,7 +805,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetCollisionMask(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(bodyGetCollisionMaskBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.bodyGetCollisionMaskBind, singleton, body)
     }
 
     /**
@@ -816,7 +816,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetCollisionPriority(body: RID, priority: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(bodySetCollisionPriorityBind, singleton, body, priority)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.bodySetCollisionPriorityBind, singleton, body, priority)
     }
 
     /**
@@ -827,7 +827,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetCollisionPriority(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(bodyGetCollisionPriorityBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.bodyGetCollisionPriorityBind, singleton, body)
     }
 
     /**
@@ -837,7 +837,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetParam(body: RID, param: PhysicsServer2D.BodyParameter, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.bodySetParamBind, singleton, body, param.value, value)
     }
 
     /**
@@ -847,7 +847,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetParam(body: RID, param: PhysicsServer2D.BodyParameter): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.bodyGetParamBind, singleton, body, param.value)
     }
 
     /**
@@ -858,7 +858,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyResetMassProperties(body: RID) {
-        ObjectCalls.ptrcallWithRIDArg(bodyResetMassPropertiesBind, singleton, body)
+        ObjectCalls.ptrcallWithRIDArg(Binds.bodyResetMassPropertiesBind, singleton, body)
     }
 
     /**
@@ -869,7 +869,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetState(body: RID, state: PhysicsServer2D.BodyState, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(Binds.bodySetStateBind, singleton, body, state.value, value)
     }
 
     /**
@@ -879,7 +879,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetState(body: RID, state: PhysicsServer2D.BodyState): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.bodyGetStateBind, singleton, body, state.value)
     }
 
     /**
@@ -893,7 +893,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyApplyCentralImpulse(body: RID, impulse: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(bodyApplyCentralImpulseBind, singleton, body, impulse)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.bodyApplyCentralImpulseBind, singleton, body, impulse)
     }
 
     /**
@@ -906,7 +906,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyApplyTorqueImpulse(body: RID, impulse: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(bodyApplyTorqueImpulseBind, singleton, body, impulse)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.bodyApplyTorqueImpulseBind, singleton, body, impulse)
     }
 
     /**
@@ -920,7 +920,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyApplyImpulse(body: RID, impulse: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
-        ObjectCalls.ptrcallWithRIDAndTwoVector2Args(bodyApplyImpulseBind, singleton, body, impulse, position)
+        ObjectCalls.ptrcallWithRIDAndTwoVector2Args(Binds.bodyApplyImpulseBind, singleton, body, impulse, position)
     }
 
     /**
@@ -932,7 +932,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyApplyCentralForce(body: RID, force: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(bodyApplyCentralForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.bodyApplyCentralForceBind, singleton, body, force)
     }
 
     /**
@@ -944,7 +944,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyApplyForce(body: RID, force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
-        ObjectCalls.ptrcallWithRIDAndTwoVector2Args(bodyApplyForceBind, singleton, body, force, position)
+        ObjectCalls.ptrcallWithRIDAndTwoVector2Args(Binds.bodyApplyForceBind, singleton, body, force, position)
     }
 
     /**
@@ -955,7 +955,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyApplyTorque(body: RID, torque: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(bodyApplyTorqueBind, singleton, body, torque)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.bodyApplyTorqueBind, singleton, body, torque)
     }
 
     /**
@@ -968,7 +968,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAddConstantCentralForce(body: RID, force: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(bodyAddConstantCentralForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.bodyAddConstantCentralForceBind, singleton, body, force)
     }
 
     /**
@@ -981,7 +981,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAddConstantForce(body: RID, force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
-        ObjectCalls.ptrcallWithRIDAndTwoVector2Args(bodyAddConstantForceBind, singleton, body, force, position)
+        ObjectCalls.ptrcallWithRIDAndTwoVector2Args(Binds.bodyAddConstantForceBind, singleton, body, force, position)
     }
 
     /**
@@ -993,7 +993,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAddConstantTorque(body: RID, torque: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(bodyAddConstantTorqueBind, singleton, body, torque)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.bodyAddConstantTorqueBind, singleton, body, torque)
     }
 
     /**
@@ -1004,7 +1004,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetConstantForce(body: RID, force: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(bodySetConstantForceBind, singleton, body, force)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.bodySetConstantForceBind, singleton, body, force)
     }
 
     /**
@@ -1015,7 +1015,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetConstantForce(body: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(bodyGetConstantForceBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.bodyGetConstantForceBind, singleton, body)
     }
 
     /**
@@ -1026,7 +1026,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetConstantTorque(body: RID, torque: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(bodySetConstantTorqueBind, singleton, body, torque)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.bodySetConstantTorqueBind, singleton, body, torque)
     }
 
     /**
@@ -1037,7 +1037,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetConstantTorque(body: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(bodyGetConstantTorqueBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.bodyGetConstantTorqueBind, singleton, body)
     }
 
     /**
@@ -1049,7 +1049,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetAxisVelocity(body: RID, axisVelocity: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(bodySetAxisVelocityBind, singleton, body, axisVelocity)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.bodySetAxisVelocityBind, singleton, body, axisVelocity)
     }
 
     /**
@@ -1060,7 +1060,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyAddCollisionException(body: RID, exceptedBody: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(bodyAddCollisionExceptionBind, singleton, body, exceptedBody)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.bodyAddCollisionExceptionBind, singleton, body, exceptedBody)
     }
 
     /**
@@ -1071,7 +1071,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyRemoveCollisionException(body: RID, exceptedBody: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(bodyRemoveCollisionExceptionBind, singleton, body, exceptedBody)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.bodyRemoveCollisionExceptionBind, singleton, body, exceptedBody)
     }
 
     /**
@@ -1082,7 +1082,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetMaxContactsReported(body: RID, amount: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(bodySetMaxContactsReportedBind, singleton, body, amount)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.bodySetMaxContactsReportedBind, singleton, body, amount)
     }
 
     /**
@@ -1093,7 +1093,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetMaxContactsReported(body: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(bodyGetMaxContactsReportedBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.bodyGetMaxContactsReportedBind, singleton, body)
     }
 
     /**
@@ -1107,7 +1107,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetOmitForceIntegration(body: RID, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(bodySetOmitForceIntegrationBind, singleton, body, enable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.bodySetOmitForceIntegrationBind, singleton, body, enable)
     }
 
     /**
@@ -1118,7 +1118,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyIsOmittingForceIntegration(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(bodyIsOmittingForceIntegrationBind, singleton, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.bodyIsOmittingForceIntegrationBind, singleton, body)
     }
 
     /**
@@ -1132,7 +1132,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetStateSyncCallback(body: RID, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(bodySetStateSyncCallbackBind, singleton, body, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.bodySetStateSyncCallbackBind, singleton, body, callable.target.segment, callable.method)
     }
 
     /**
@@ -1150,7 +1150,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodySetForceIntegrationCallback(body: RID, callable: GodotCallable, userdata: Any? = null) {
-        ObjectCalls.ptrcallWithRIDCallableVariantArgs(bodySetForceIntegrationCallbackBind, singleton, body, callable.target.segment, callable.method, userdata)
+        ObjectCalls.ptrcallWithRIDCallableVariantArgs(Binds.bodySetForceIntegrationCallbackBind, singleton, body, callable.target.segment, callable.method, userdata)
     }
 
     /**
@@ -1163,7 +1163,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D, result: PhysicsTestMotionResult2D?): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(Binds.bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1174,7 +1174,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyGetDirectState(body: RID): PhysicsDirectBodyState2D? {
-        return PhysicsDirectBodyState2D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(bodyGetDirectStateBind, singleton, body))
+        return PhysicsDirectBodyState2D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.bodyGetDirectStateBind, singleton, body))
     }
 
     /**
@@ -1186,7 +1186,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(jointCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.jointCreateBind, singleton)
     }
 
     /**
@@ -1197,7 +1197,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointClear(joint: RID) {
-        ObjectCalls.ptrcallWithRIDArg(jointClearBind, singleton, joint)
+        ObjectCalls.ptrcallWithRIDArg(Binds.jointClearBind, singleton, joint)
     }
 
     /**
@@ -1207,7 +1207,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointSetParam(joint: RID, param: PhysicsServer2D.JointParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(jointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.jointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1217,7 +1217,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointGetParam(joint: RID, param: PhysicsServer2D.JointParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(jointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.jointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1227,7 +1227,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointDisableCollisionsBetweenBodies(joint: RID, disable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(jointDisableCollisionsBetweenBodiesBind, singleton, joint, disable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.jointDisableCollisionsBetweenBodiesBind, singleton, joint, disable)
     }
 
     /**
@@ -1237,7 +1237,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointIsDisabledCollisionsBetweenBodies(joint: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(jointIsDisabledCollisionsBetweenBodiesBind, singleton, joint)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.jointIsDisabledCollisionsBetweenBodiesBind, singleton, joint)
     }
 
     /**
@@ -1250,7 +1250,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointMakePin(joint: RID, anchor: Vector2, bodyA: RID, bodyB: RID) {
-        ObjectCalls.ptrcallWithRIDVector2TwoRIDArgs(jointMakePinBind, singleton, joint, anchor, bodyA, bodyB)
+        ObjectCalls.ptrcallWithRIDVector2TwoRIDArgs(Binds.jointMakePinBind, singleton, joint, anchor, bodyA, bodyB)
     }
 
     /**
@@ -1260,7 +1260,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointMakeGroove(joint: RID, groove1A: Vector2, groove2A: Vector2, anchorB: Vector2, bodyA: RID, bodyB: RID) {
-        ObjectCalls.ptrcallWithRIDThreeVector2TwoRIDArgs(jointMakeGrooveBind, singleton, joint, groove1A, groove2A, anchorB, bodyA, bodyB)
+        ObjectCalls.ptrcallWithRIDThreeVector2TwoRIDArgs(Binds.jointMakeGrooveBind, singleton, joint, groove1A, groove2A, anchorB, bodyA, bodyB)
     }
 
     /**
@@ -1273,7 +1273,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointMakeDampedSpring(joint: RID, anchorA: Vector2, anchorB: Vector2, bodyA: RID, bodyB: RID) {
-        ObjectCalls.ptrcallWithRIDTwoVector2TwoRIDArgs(jointMakeDampedSpringBind, singleton, joint, anchorA, anchorB, bodyA, bodyB)
+        ObjectCalls.ptrcallWithRIDTwoVector2TwoRIDArgs(Binds.jointMakeDampedSpringBind, singleton, joint, anchorA, anchorB, bodyA, bodyB)
     }
 
     /**
@@ -1283,7 +1283,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun pinJointSetFlag(joint: RID, flag: PhysicsServer2D.PinJointFlag, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(pinJointSetFlagBind, singleton, joint, flag.value, enabled)
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(Binds.pinJointSetFlagBind, singleton, joint, flag.value, enabled)
     }
 
     /**
@@ -1293,7 +1293,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun pinJointGetFlag(joint: RID, flag: PhysicsServer2D.PinJointFlag): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(pinJointGetFlagBind, singleton, joint, flag.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(Binds.pinJointGetFlagBind, singleton, joint, flag.value)
     }
 
     /**
@@ -1303,7 +1303,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun pinJointSetParam(joint: RID, param: PhysicsServer2D.PinJointParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.pinJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1313,7 +1313,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun pinJointGetParam(joint: RID, param: PhysicsServer2D.PinJointParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.pinJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1323,7 +1323,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun dampedSpringJointSetParam(joint: RID, param: PhysicsServer2D.DampedSpringParam, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(dampedSpringJointSetParamBind, singleton, joint, param.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(Binds.dampedSpringJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1333,7 +1333,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun dampedSpringJointGetParam(joint: RID, param: PhysicsServer2D.DampedSpringParam): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(dampedSpringJointGetParamBind, singleton, joint, param.value)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(Binds.dampedSpringJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1343,7 +1343,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun jointGetType(joint: RID): PhysicsServer2D.JointType {
-        return PhysicsServer2D.JointType(ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint))
+        return PhysicsServer2D.JointType(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.jointGetTypeBind, singleton, joint))
     }
 
     /**
@@ -1354,7 +1354,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun freeRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, singleton, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeRidBind, singleton, rid)
     }
 
     /**
@@ -1365,7 +1365,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun setActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, singleton, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, singleton, active)
     }
 
     /**
@@ -1375,7 +1375,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun getProcessInfo(processInfo: PhysicsServer2D.ProcessInfo): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getProcessInfoBind, singleton, processInfo.value)
     }
 
     /**
@@ -2140,598 +2140,603 @@ object PhysicsServer2D {
     internal fun wrap(handle: RawSegment): PhysicsServer2D? =
         if (handle.address() == 0L) null else this
 
-    private const val WORLD_BOUNDARY_SHAPE_CREATE_HASH = 529393457L
-    private val worldBoundaryShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "world_boundary_shape_create", WORLD_BOUNDARY_SHAPE_CREATE_HASH)
-    }
-
-    private const val SEPARATION_RAY_SHAPE_CREATE_HASH = 529393457L
-    private val separationRayShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "separation_ray_shape_create", SEPARATION_RAY_SHAPE_CREATE_HASH)
-    }
-
-    private const val SEGMENT_SHAPE_CREATE_HASH = 529393457L
-    private val segmentShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "segment_shape_create", SEGMENT_SHAPE_CREATE_HASH)
-    }
-
-    private const val CIRCLE_SHAPE_CREATE_HASH = 529393457L
-    private val circleShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "circle_shape_create", CIRCLE_SHAPE_CREATE_HASH)
-    }
-
-    private const val RECTANGLE_SHAPE_CREATE_HASH = 529393457L
-    private val rectangleShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "rectangle_shape_create", RECTANGLE_SHAPE_CREATE_HASH)
-    }
-
-    private const val CAPSULE_SHAPE_CREATE_HASH = 529393457L
-    private val capsuleShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "capsule_shape_create", CAPSULE_SHAPE_CREATE_HASH)
-    }
-
-    private const val CONVEX_POLYGON_SHAPE_CREATE_HASH = 529393457L
-    private val convexPolygonShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "convex_polygon_shape_create", CONVEX_POLYGON_SHAPE_CREATE_HASH)
-    }
-
-    private const val CONCAVE_POLYGON_SHAPE_CREATE_HASH = 529393457L
-    private val concavePolygonShapeCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "concave_polygon_shape_create", CONCAVE_POLYGON_SHAPE_CREATE_HASH)
-    }
-
-    private const val SHAPE_SET_DATA_HASH = 3175752987L
-    private val shapeSetDataBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "shape_set_data", SHAPE_SET_DATA_HASH)
-    }
-
-    private const val SHAPE_GET_TYPE_HASH = 1240598777L
-    private val shapeGetTypeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_type", SHAPE_GET_TYPE_HASH)
-    }
-
-    private const val SHAPE_GET_DATA_HASH = 4171304767L
-    private val shapeGetDataBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_data", SHAPE_GET_DATA_HASH)
-    }
-
-    private const val SPACE_CREATE_HASH = 529393457L
-    private val spaceCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "space_create", SPACE_CREATE_HASH)
-    }
-
-    private const val SPACE_SET_ACTIVE_HASH = 1265174801L
-    private val spaceSetActiveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "space_set_active", SPACE_SET_ACTIVE_HASH)
-    }
-
-    private const val SPACE_IS_ACTIVE_HASH = 4155700596L
-    private val spaceIsActiveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "space_is_active", SPACE_IS_ACTIVE_HASH)
-    }
-
-    private const val SPACE_SET_PARAM_HASH = 949194586L
-    private val spaceSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "space_set_param", SPACE_SET_PARAM_HASH)
-    }
-
-    private const val SPACE_GET_PARAM_HASH = 874111783L
-    private val spaceGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "space_get_param", SPACE_GET_PARAM_HASH)
-    }
-
-    private const val SPACE_GET_DIRECT_STATE_HASH = 3160173886L
-    private val spaceGetDirectStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "space_get_direct_state", SPACE_GET_DIRECT_STATE_HASH)
-    }
-
-    private const val AREA_CREATE_HASH = 529393457L
-    private val areaCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_create", AREA_CREATE_HASH)
-    }
-
-    private const val AREA_SET_SPACE_HASH = 395945892L
-    private val areaSetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_space", AREA_SET_SPACE_HASH)
-    }
-
-    private const val AREA_GET_SPACE_HASH = 3814569979L
-    private val areaGetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_space", AREA_GET_SPACE_HASH)
-    }
-
-    private const val AREA_ADD_SHAPE_HASH = 339056240L
-    private val areaAddShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_add_shape", AREA_ADD_SHAPE_HASH)
-    }
-
-    private const val AREA_SET_SHAPE_HASH = 2310537182L
-    private val areaSetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_shape", AREA_SET_SHAPE_HASH)
-    }
-
-    private const val AREA_SET_SHAPE_TRANSFORM_HASH = 736082694L
-    private val areaSetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_shape_transform", AREA_SET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val AREA_SET_SHAPE_DISABLED_HASH = 2658558584L
-    private val areaSetShapeDisabledBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_shape_disabled", AREA_SET_SHAPE_DISABLED_HASH)
-    }
-
-    private const val AREA_GET_SHAPE_COUNT_HASH = 2198884583L
-    private val areaGetShapeCountBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_shape_count", AREA_GET_SHAPE_COUNT_HASH)
-    }
-
-    private const val AREA_GET_SHAPE_HASH = 1066463050L
-    private val areaGetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_shape", AREA_GET_SHAPE_HASH)
-    }
-
-    private const val AREA_GET_SHAPE_TRANSFORM_HASH = 1324854622L
-    private val areaGetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_shape_transform", AREA_GET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val AREA_REMOVE_SHAPE_HASH = 3411492887L
-    private val areaRemoveShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_remove_shape", AREA_REMOVE_SHAPE_HASH)
-    }
-
-    private const val AREA_CLEAR_SHAPES_HASH = 2722037293L
-    private val areaClearShapesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_clear_shapes", AREA_CLEAR_SHAPES_HASH)
-    }
-
-    private const val AREA_SET_COLLISION_LAYER_HASH = 3411492887L
-    private val areaSetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_collision_layer", AREA_SET_COLLISION_LAYER_HASH)
-    }
-
-    private const val AREA_GET_COLLISION_LAYER_HASH = 2198884583L
-    private val areaGetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_collision_layer", AREA_GET_COLLISION_LAYER_HASH)
-    }
-
-    private const val AREA_SET_COLLISION_MASK_HASH = 3411492887L
-    private val areaSetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_collision_mask", AREA_SET_COLLISION_MASK_HASH)
-    }
-
-    private const val AREA_GET_COLLISION_MASK_HASH = 2198884583L
-    private val areaGetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_collision_mask", AREA_GET_COLLISION_MASK_HASH)
-    }
-
-    private const val AREA_SET_PARAM_HASH = 1257146028L
-    private val areaSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_param", AREA_SET_PARAM_HASH)
-    }
-
-    private const val AREA_SET_TRANSFORM_HASH = 1246044741L
-    private val areaSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_transform", AREA_SET_TRANSFORM_HASH)
-    }
-
-    private const val AREA_GET_PARAM_HASH = 3047435120L
-    private val areaGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_param", AREA_GET_PARAM_HASH)
-    }
-
-    private const val AREA_GET_TRANSFORM_HASH = 213527486L
-    private val areaGetTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_transform", AREA_GET_TRANSFORM_HASH)
-    }
-
-    private const val AREA_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
-    private val areaAttachObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_attach_object_instance_id", AREA_ATTACH_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val AREA_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
-    private val areaGetObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_object_instance_id", AREA_GET_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val AREA_ATTACH_CANVAS_INSTANCE_ID_HASH = 3411492887L
-    private val areaAttachCanvasInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_attach_canvas_instance_id", AREA_ATTACH_CANVAS_INSTANCE_ID_HASH)
-    }
-
-    private const val AREA_GET_CANVAS_INSTANCE_ID_HASH = 2198884583L
-    private val areaGetCanvasInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_canvas_instance_id", AREA_GET_CANVAS_INSTANCE_ID_HASH)
-    }
-
-    private const val AREA_SET_MONITOR_CALLBACK_HASH = 3379118538L
-    private val areaSetMonitorCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_monitor_callback", AREA_SET_MONITOR_CALLBACK_HASH)
-    }
-
-    private const val AREA_SET_AREA_MONITOR_CALLBACK_HASH = 3379118538L
-    private val areaSetAreaMonitorCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_area_monitor_callback", AREA_SET_AREA_MONITOR_CALLBACK_HASH)
-    }
-
-    private const val AREA_SET_MONITORABLE_HASH = 1265174801L
-    private val areaSetMonitorableBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_monitorable", AREA_SET_MONITORABLE_HASH)
-    }
-
-    private const val BODY_CREATE_HASH = 529393457L
-    private val bodyCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_create", BODY_CREATE_HASH)
-    }
-
-    private const val BODY_SET_SPACE_HASH = 395945892L
-    private val bodySetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_space", BODY_SET_SPACE_HASH)
-    }
-
-    private const val BODY_GET_SPACE_HASH = 3814569979L
-    private val bodyGetSpaceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_space", BODY_GET_SPACE_HASH)
-    }
-
-    private const val BODY_SET_MODE_HASH = 1658067650L
-    private val bodySetModeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_mode", BODY_SET_MODE_HASH)
-    }
-
-    private const val BODY_GET_MODE_HASH = 3261702585L
-    private val bodyGetModeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_mode", BODY_GET_MODE_HASH)
-    }
-
-    private const val BODY_ADD_SHAPE_HASH = 339056240L
-    private val bodyAddShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_shape", BODY_ADD_SHAPE_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_HASH = 2310537182L
-    private val bodySetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape", BODY_SET_SHAPE_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_TRANSFORM_HASH = 736082694L
-    private val bodySetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape_transform", BODY_SET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val BODY_GET_SHAPE_COUNT_HASH = 2198884583L
-    private val bodyGetShapeCountBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_shape_count", BODY_GET_SHAPE_COUNT_HASH)
-    }
-
-    private const val BODY_GET_SHAPE_HASH = 1066463050L
-    private val bodyGetShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_shape", BODY_GET_SHAPE_HASH)
-    }
-
-    private const val BODY_GET_SHAPE_TRANSFORM_HASH = 1324854622L
-    private val bodyGetShapeTransformBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_shape_transform", BODY_GET_SHAPE_TRANSFORM_HASH)
-    }
-
-    private const val BODY_REMOVE_SHAPE_HASH = 3411492887L
-    private val bodyRemoveShapeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_remove_shape", BODY_REMOVE_SHAPE_HASH)
-    }
-
-    private const val BODY_CLEAR_SHAPES_HASH = 2722037293L
-    private val bodyClearShapesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_clear_shapes", BODY_CLEAR_SHAPES_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_DISABLED_HASH = 2658558584L
-    private val bodySetShapeDisabledBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape_disabled", BODY_SET_SHAPE_DISABLED_HASH)
-    }
-
-    private const val BODY_SET_SHAPE_AS_ONE_WAY_COLLISION_HASH = 2389283141L
-    private val bodySetShapeAsOneWayCollisionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape_as_one_way_collision", BODY_SET_SHAPE_AS_ONE_WAY_COLLISION_HASH)
-    }
-
-    private const val BODY_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
-    private val bodyAttachObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_attach_object_instance_id", BODY_ATTACH_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val BODY_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
-    private val bodyGetObjectInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_object_instance_id", BODY_GET_OBJECT_INSTANCE_ID_HASH)
-    }
-
-    private const val BODY_ATTACH_CANVAS_INSTANCE_ID_HASH = 3411492887L
-    private val bodyAttachCanvasInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_attach_canvas_instance_id", BODY_ATTACH_CANVAS_INSTANCE_ID_HASH)
-    }
-
-    private const val BODY_GET_CANVAS_INSTANCE_ID_HASH = 2198884583L
-    private val bodyGetCanvasInstanceIdBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_canvas_instance_id", BODY_GET_CANVAS_INSTANCE_ID_HASH)
-    }
-
-    private const val BODY_SET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH = 1882257015L
-    private val bodySetContinuousCollisionDetectionModeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_continuous_collision_detection_mode", BODY_SET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH)
-    }
-
-    private const val BODY_GET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH = 2661282217L
-    private val bodyGetContinuousCollisionDetectionModeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_continuous_collision_detection_mode", BODY_GET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH)
-    }
-
-    private const val BODY_SET_COLLISION_LAYER_HASH = 3411492887L
-    private val bodySetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_collision_layer", BODY_SET_COLLISION_LAYER_HASH)
-    }
-
-    private const val BODY_GET_COLLISION_LAYER_HASH = 2198884583L
-    private val bodyGetCollisionLayerBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_layer", BODY_GET_COLLISION_LAYER_HASH)
-    }
-
-    private const val BODY_SET_COLLISION_MASK_HASH = 3411492887L
-    private val bodySetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_collision_mask", BODY_SET_COLLISION_MASK_HASH)
-    }
-
-    private const val BODY_GET_COLLISION_MASK_HASH = 2198884583L
-    private val bodyGetCollisionMaskBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_mask", BODY_GET_COLLISION_MASK_HASH)
-    }
-
-    private const val BODY_SET_COLLISION_PRIORITY_HASH = 1794382983L
-    private val bodySetCollisionPriorityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_collision_priority", BODY_SET_COLLISION_PRIORITY_HASH)
-    }
-
-    private const val BODY_GET_COLLISION_PRIORITY_HASH = 866169185L
-    private val bodyGetCollisionPriorityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_priority", BODY_GET_COLLISION_PRIORITY_HASH)
-    }
-
-    private const val BODY_SET_PARAM_HASH = 2715630609L
-    private val bodySetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_param", BODY_SET_PARAM_HASH)
-    }
-
-    private const val BODY_GET_PARAM_HASH = 3208033526L
-    private val bodyGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_param", BODY_GET_PARAM_HASH)
-    }
-
-    private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
-    private val bodyResetMassPropertiesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
-    }
-
-    private const val BODY_SET_STATE_HASH = 1706355209L
-    private val bodySetStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state", BODY_SET_STATE_HASH)
-    }
-
-    private const val BODY_GET_STATE_HASH = 4036367961L
-    private val bodyGetStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_state", BODY_GET_STATE_HASH)
-    }
-
-    private const val BODY_APPLY_CENTRAL_IMPULSE_HASH = 3201125042L
-    private val bodyApplyCentralImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_central_impulse", BODY_APPLY_CENTRAL_IMPULSE_HASH)
-    }
-
-    private const val BODY_APPLY_TORQUE_IMPULSE_HASH = 1794382983L
-    private val bodyApplyTorqueImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_torque_impulse", BODY_APPLY_TORQUE_IMPULSE_HASH)
-    }
-
-    private const val BODY_APPLY_IMPULSE_HASH = 205485391L
-    private val bodyApplyImpulseBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_impulse", BODY_APPLY_IMPULSE_HASH)
-    }
-
-    private const val BODY_APPLY_CENTRAL_FORCE_HASH = 3201125042L
-    private val bodyApplyCentralForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_central_force", BODY_APPLY_CENTRAL_FORCE_HASH)
-    }
-
-    private const val BODY_APPLY_FORCE_HASH = 205485391L
-    private val bodyApplyForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_force", BODY_APPLY_FORCE_HASH)
-    }
-
-    private const val BODY_APPLY_TORQUE_HASH = 1794382983L
-    private val bodyApplyTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_torque", BODY_APPLY_TORQUE_HASH)
-    }
-
-    private const val BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH = 3201125042L
-    private val bodyAddConstantCentralForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_constant_central_force", BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH)
-    }
-
-    private const val BODY_ADD_CONSTANT_FORCE_HASH = 205485391L
-    private val bodyAddConstantForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_constant_force", BODY_ADD_CONSTANT_FORCE_HASH)
-    }
-
-    private const val BODY_ADD_CONSTANT_TORQUE_HASH = 1794382983L
-    private val bodyAddConstantTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_constant_torque", BODY_ADD_CONSTANT_TORQUE_HASH)
-    }
-
-    private const val BODY_SET_CONSTANT_FORCE_HASH = 3201125042L
-    private val bodySetConstantForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_constant_force", BODY_SET_CONSTANT_FORCE_HASH)
-    }
-
-    private const val BODY_GET_CONSTANT_FORCE_HASH = 2440833711L
-    private val bodyGetConstantForceBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_constant_force", BODY_GET_CONSTANT_FORCE_HASH)
-    }
-
-    private const val BODY_SET_CONSTANT_TORQUE_HASH = 1794382983L
-    private val bodySetConstantTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_constant_torque", BODY_SET_CONSTANT_TORQUE_HASH)
-    }
-
-    private const val BODY_GET_CONSTANT_TORQUE_HASH = 866169185L
-    private val bodyGetConstantTorqueBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_constant_torque", BODY_GET_CONSTANT_TORQUE_HASH)
-    }
-
-    private const val BODY_SET_AXIS_VELOCITY_HASH = 3201125042L
-    private val bodySetAxisVelocityBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_axis_velocity", BODY_SET_AXIS_VELOCITY_HASH)
-    }
-
-    private const val BODY_ADD_COLLISION_EXCEPTION_HASH = 395945892L
-    private val bodyAddCollisionExceptionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_collision_exception", BODY_ADD_COLLISION_EXCEPTION_HASH)
-    }
-
-    private const val BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
-    private val bodyRemoveCollisionExceptionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_remove_collision_exception", BODY_REMOVE_COLLISION_EXCEPTION_HASH)
-    }
-
-    private const val BODY_SET_MAX_CONTACTS_REPORTED_HASH = 3411492887L
-    private val bodySetMaxContactsReportedBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_max_contacts_reported", BODY_SET_MAX_CONTACTS_REPORTED_HASH)
-    }
-
-    private const val BODY_GET_MAX_CONTACTS_REPORTED_HASH = 2198884583L
-    private val bodyGetMaxContactsReportedBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_max_contacts_reported", BODY_GET_MAX_CONTACTS_REPORTED_HASH)
-    }
-
-    private const val BODY_SET_OMIT_FORCE_INTEGRATION_HASH = 1265174801L
-    private val bodySetOmitForceIntegrationBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_omit_force_integration", BODY_SET_OMIT_FORCE_INTEGRATION_HASH)
-    }
-
-    private const val BODY_IS_OMITTING_FORCE_INTEGRATION_HASH = 4155700596L
-    private val bodyIsOmittingForceIntegrationBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_is_omitting_force_integration", BODY_IS_OMITTING_FORCE_INTEGRATION_HASH)
-    }
-
-    private const val BODY_SET_STATE_SYNC_CALLBACK_HASH = 3379118538L
-    private val bodySetStateSyncCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state_sync_callback", BODY_SET_STATE_SYNC_CALLBACK_HASH)
-    }
-
-    private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
-    private val bodySetForceIntegrationCallbackBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_force_integration_callback", BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH)
-    }
-
-    private const val BODY_TEST_MOTION_HASH = 1699844009L
-    private val bodyTestMotionBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_test_motion", BODY_TEST_MOTION_HASH)
-    }
-
-    private const val BODY_GET_DIRECT_STATE_HASH = 1191931871L
-    private val bodyGetDirectStateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_direct_state", BODY_GET_DIRECT_STATE_HASH)
-    }
-
-    private const val JOINT_CREATE_HASH = 529393457L
-    private val jointCreateBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_create", JOINT_CREATE_HASH)
-    }
-
-    private const val JOINT_CLEAR_HASH = 2722037293L
-    private val jointClearBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_clear", JOINT_CLEAR_HASH)
-    }
-
-    private const val JOINT_SET_PARAM_HASH = 3972556514L
-    private val jointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_set_param", JOINT_SET_PARAM_HASH)
-    }
-
-    private const val JOINT_GET_PARAM_HASH = 4016448949L
-    private val jointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_get_param", JOINT_GET_PARAM_HASH)
-    }
-
-    private const val JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH = 1265174801L
-    private val jointDisableCollisionsBetweenBodiesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_disable_collisions_between_bodies", JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH)
-    }
-
-    private const val JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH = 4155700596L
-    private val jointIsDisabledCollisionsBetweenBodiesBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_is_disabled_collisions_between_bodies", JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH)
-    }
-
-    private const val JOINT_MAKE_PIN_HASH = 1612646186L
-    private val jointMakePinBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_make_pin", JOINT_MAKE_PIN_HASH)
-    }
-
-    private const val JOINT_MAKE_GROOVE_HASH = 481430435L
-    private val jointMakeGrooveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_make_groove", JOINT_MAKE_GROOVE_HASH)
-    }
-
-    private const val JOINT_MAKE_DAMPED_SPRING_HASH = 1994657646L
-    private val jointMakeDampedSpringBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_make_damped_spring", JOINT_MAKE_DAMPED_SPRING_HASH)
-    }
-
-    private const val PIN_JOINT_SET_FLAG_HASH = 3520002352L
-    private val pinJointSetFlagBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_set_flag", PIN_JOINT_SET_FLAG_HASH)
-    }
-
-    private const val PIN_JOINT_GET_FLAG_HASH = 2647867364L
-    private val pinJointGetFlagBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_get_flag", PIN_JOINT_GET_FLAG_HASH)
-    }
-
-    private const val PIN_JOINT_SET_PARAM_HASH = 550574241L
-    private val pinJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_set_param", PIN_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val PIN_JOINT_GET_PARAM_HASH = 348281383L
-    private val pinJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_get_param", PIN_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val DAMPED_SPRING_JOINT_SET_PARAM_HASH = 220564071L
-    private val dampedSpringJointSetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "damped_spring_joint_set_param", DAMPED_SPRING_JOINT_SET_PARAM_HASH)
-    }
-
-    private const val DAMPED_SPRING_JOINT_GET_PARAM_HASH = 2075871277L
-    private val dampedSpringJointGetParamBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "damped_spring_joint_get_param", DAMPED_SPRING_JOINT_GET_PARAM_HASH)
-    }
-
-    private const val JOINT_GET_TYPE_HASH = 4262502231L
-    private val jointGetTypeBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "joint_get_type", JOINT_GET_TYPE_HASH)
-    }
-
-    private const val FREE_RID_HASH = 2722037293L
-    private val freeRidBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "free_rid", FREE_RID_HASH)
-    }
-
-    private const val SET_ACTIVE_HASH = 2586408642L
-    private val setActiveBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "set_active", SET_ACTIVE_HASH)
-    }
-
-    private const val GET_PROCESS_INFO_HASH = 576496006L
-    private val getProcessInfoBind by lazy {
-        ObjectCalls.getMethodBind("PhysicsServer2D", "get_process_info", GET_PROCESS_INFO_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("PhysicsServer2D")
+
+        private const val WORLD_BOUNDARY_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val worldBoundaryShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "world_boundary_shape_create", WORLD_BOUNDARY_SHAPE_CREATE_HASH)
+
+        private const val SEPARATION_RAY_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val separationRayShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "separation_ray_shape_create", SEPARATION_RAY_SHAPE_CREATE_HASH)
+
+        private const val SEGMENT_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val segmentShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "segment_shape_create", SEGMENT_SHAPE_CREATE_HASH)
+
+        private const val CIRCLE_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val circleShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "circle_shape_create", CIRCLE_SHAPE_CREATE_HASH)
+
+        private const val RECTANGLE_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val rectangleShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "rectangle_shape_create", RECTANGLE_SHAPE_CREATE_HASH)
+
+        private const val CAPSULE_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val capsuleShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "capsule_shape_create", CAPSULE_SHAPE_CREATE_HASH)
+
+        private const val CONVEX_POLYGON_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val convexPolygonShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "convex_polygon_shape_create", CONVEX_POLYGON_SHAPE_CREATE_HASH)
+
+        private const val CONCAVE_POLYGON_SHAPE_CREATE_HASH = 529393457L
+        @JvmField
+        val concavePolygonShapeCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "concave_polygon_shape_create", CONCAVE_POLYGON_SHAPE_CREATE_HASH)
+
+        private const val SHAPE_SET_DATA_HASH = 3175752987L
+        @JvmField
+        val shapeSetDataBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "shape_set_data", SHAPE_SET_DATA_HASH)
+
+        private const val SHAPE_GET_TYPE_HASH = 1240598777L
+        @JvmField
+        val shapeGetTypeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_type", SHAPE_GET_TYPE_HASH)
+
+        private const val SHAPE_GET_DATA_HASH = 4171304767L
+        @JvmField
+        val shapeGetDataBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "shape_get_data", SHAPE_GET_DATA_HASH)
+
+        private const val SPACE_CREATE_HASH = 529393457L
+        @JvmField
+        val spaceCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "space_create", SPACE_CREATE_HASH)
+
+        private const val SPACE_SET_ACTIVE_HASH = 1265174801L
+        @JvmField
+        val spaceSetActiveBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "space_set_active", SPACE_SET_ACTIVE_HASH)
+
+        private const val SPACE_IS_ACTIVE_HASH = 4155700596L
+        @JvmField
+        val spaceIsActiveBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "space_is_active", SPACE_IS_ACTIVE_HASH)
+
+        private const val SPACE_SET_PARAM_HASH = 949194586L
+        @JvmField
+        val spaceSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "space_set_param", SPACE_SET_PARAM_HASH)
+
+        private const val SPACE_GET_PARAM_HASH = 874111783L
+        @JvmField
+        val spaceGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "space_get_param", SPACE_GET_PARAM_HASH)
+
+        private const val SPACE_GET_DIRECT_STATE_HASH = 3160173886L
+        @JvmField
+        val spaceGetDirectStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "space_get_direct_state", SPACE_GET_DIRECT_STATE_HASH)
+
+        private const val AREA_CREATE_HASH = 529393457L
+        @JvmField
+        val areaCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_create", AREA_CREATE_HASH)
+
+        private const val AREA_SET_SPACE_HASH = 395945892L
+        @JvmField
+        val areaSetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_space", AREA_SET_SPACE_HASH)
+
+        private const val AREA_GET_SPACE_HASH = 3814569979L
+        @JvmField
+        val areaGetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_space", AREA_GET_SPACE_HASH)
+
+        private const val AREA_ADD_SHAPE_HASH = 339056240L
+        @JvmField
+        val areaAddShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_add_shape", AREA_ADD_SHAPE_HASH)
+
+        private const val AREA_SET_SHAPE_HASH = 2310537182L
+        @JvmField
+        val areaSetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_shape", AREA_SET_SHAPE_HASH)
+
+        private const val AREA_SET_SHAPE_TRANSFORM_HASH = 736082694L
+        @JvmField
+        val areaSetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_shape_transform", AREA_SET_SHAPE_TRANSFORM_HASH)
+
+        private const val AREA_SET_SHAPE_DISABLED_HASH = 2658558584L
+        @JvmField
+        val areaSetShapeDisabledBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_shape_disabled", AREA_SET_SHAPE_DISABLED_HASH)
+
+        private const val AREA_GET_SHAPE_COUNT_HASH = 2198884583L
+        @JvmField
+        val areaGetShapeCountBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_shape_count", AREA_GET_SHAPE_COUNT_HASH)
+
+        private const val AREA_GET_SHAPE_HASH = 1066463050L
+        @JvmField
+        val areaGetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_shape", AREA_GET_SHAPE_HASH)
+
+        private const val AREA_GET_SHAPE_TRANSFORM_HASH = 1324854622L
+        @JvmField
+        val areaGetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_shape_transform", AREA_GET_SHAPE_TRANSFORM_HASH)
+
+        private const val AREA_REMOVE_SHAPE_HASH = 3411492887L
+        @JvmField
+        val areaRemoveShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_remove_shape", AREA_REMOVE_SHAPE_HASH)
+
+        private const val AREA_CLEAR_SHAPES_HASH = 2722037293L
+        @JvmField
+        val areaClearShapesBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_clear_shapes", AREA_CLEAR_SHAPES_HASH)
+
+        private const val AREA_SET_COLLISION_LAYER_HASH = 3411492887L
+        @JvmField
+        val areaSetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_collision_layer", AREA_SET_COLLISION_LAYER_HASH)
+
+        private const val AREA_GET_COLLISION_LAYER_HASH = 2198884583L
+        @JvmField
+        val areaGetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_collision_layer", AREA_GET_COLLISION_LAYER_HASH)
+
+        private const val AREA_SET_COLLISION_MASK_HASH = 3411492887L
+        @JvmField
+        val areaSetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_collision_mask", AREA_SET_COLLISION_MASK_HASH)
+
+        private const val AREA_GET_COLLISION_MASK_HASH = 2198884583L
+        @JvmField
+        val areaGetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_collision_mask", AREA_GET_COLLISION_MASK_HASH)
+
+        private const val AREA_SET_PARAM_HASH = 1257146028L
+        @JvmField
+        val areaSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_param", AREA_SET_PARAM_HASH)
+
+        private const val AREA_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val areaSetTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_transform", AREA_SET_TRANSFORM_HASH)
+
+        private const val AREA_GET_PARAM_HASH = 3047435120L
+        @JvmField
+        val areaGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_param", AREA_GET_PARAM_HASH)
+
+        private const val AREA_GET_TRANSFORM_HASH = 213527486L
+        @JvmField
+        val areaGetTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_transform", AREA_GET_TRANSFORM_HASH)
+
+        private const val AREA_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val areaAttachObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_attach_object_instance_id", AREA_ATTACH_OBJECT_INSTANCE_ID_HASH)
+
+        private const val AREA_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
+        @JvmField
+        val areaGetObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_object_instance_id", AREA_GET_OBJECT_INSTANCE_ID_HASH)
+
+        private const val AREA_ATTACH_CANVAS_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val areaAttachCanvasInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_attach_canvas_instance_id", AREA_ATTACH_CANVAS_INSTANCE_ID_HASH)
+
+        private const val AREA_GET_CANVAS_INSTANCE_ID_HASH = 2198884583L
+        @JvmField
+        val areaGetCanvasInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_get_canvas_instance_id", AREA_GET_CANVAS_INSTANCE_ID_HASH)
+
+        private const val AREA_SET_MONITOR_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val areaSetMonitorCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_monitor_callback", AREA_SET_MONITOR_CALLBACK_HASH)
+
+        private const val AREA_SET_AREA_MONITOR_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val areaSetAreaMonitorCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_area_monitor_callback", AREA_SET_AREA_MONITOR_CALLBACK_HASH)
+
+        private const val AREA_SET_MONITORABLE_HASH = 1265174801L
+        @JvmField
+        val areaSetMonitorableBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "area_set_monitorable", AREA_SET_MONITORABLE_HASH)
+
+        private const val BODY_CREATE_HASH = 529393457L
+        @JvmField
+        val bodyCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_create", BODY_CREATE_HASH)
+
+        private const val BODY_SET_SPACE_HASH = 395945892L
+        @JvmField
+        val bodySetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_space", BODY_SET_SPACE_HASH)
+
+        private const val BODY_GET_SPACE_HASH = 3814569979L
+        @JvmField
+        val bodyGetSpaceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_space", BODY_GET_SPACE_HASH)
+
+        private const val BODY_SET_MODE_HASH = 1658067650L
+        @JvmField
+        val bodySetModeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_mode", BODY_SET_MODE_HASH)
+
+        private const val BODY_GET_MODE_HASH = 3261702585L
+        @JvmField
+        val bodyGetModeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_mode", BODY_GET_MODE_HASH)
+
+        private const val BODY_ADD_SHAPE_HASH = 339056240L
+        @JvmField
+        val bodyAddShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_shape", BODY_ADD_SHAPE_HASH)
+
+        private const val BODY_SET_SHAPE_HASH = 2310537182L
+        @JvmField
+        val bodySetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape", BODY_SET_SHAPE_HASH)
+
+        private const val BODY_SET_SHAPE_TRANSFORM_HASH = 736082694L
+        @JvmField
+        val bodySetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape_transform", BODY_SET_SHAPE_TRANSFORM_HASH)
+
+        private const val BODY_GET_SHAPE_COUNT_HASH = 2198884583L
+        @JvmField
+        val bodyGetShapeCountBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_shape_count", BODY_GET_SHAPE_COUNT_HASH)
+
+        private const val BODY_GET_SHAPE_HASH = 1066463050L
+        @JvmField
+        val bodyGetShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_shape", BODY_GET_SHAPE_HASH)
+
+        private const val BODY_GET_SHAPE_TRANSFORM_HASH = 1324854622L
+        @JvmField
+        val bodyGetShapeTransformBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_shape_transform", BODY_GET_SHAPE_TRANSFORM_HASH)
+
+        private const val BODY_REMOVE_SHAPE_HASH = 3411492887L
+        @JvmField
+        val bodyRemoveShapeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_remove_shape", BODY_REMOVE_SHAPE_HASH)
+
+        private const val BODY_CLEAR_SHAPES_HASH = 2722037293L
+        @JvmField
+        val bodyClearShapesBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_clear_shapes", BODY_CLEAR_SHAPES_HASH)
+
+        private const val BODY_SET_SHAPE_DISABLED_HASH = 2658558584L
+        @JvmField
+        val bodySetShapeDisabledBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape_disabled", BODY_SET_SHAPE_DISABLED_HASH)
+
+        private const val BODY_SET_SHAPE_AS_ONE_WAY_COLLISION_HASH = 2389283141L
+        @JvmField
+        val bodySetShapeAsOneWayCollisionBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_shape_as_one_way_collision", BODY_SET_SHAPE_AS_ONE_WAY_COLLISION_HASH)
+
+        private const val BODY_ATTACH_OBJECT_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val bodyAttachObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_attach_object_instance_id", BODY_ATTACH_OBJECT_INSTANCE_ID_HASH)
+
+        private const val BODY_GET_OBJECT_INSTANCE_ID_HASH = 2198884583L
+        @JvmField
+        val bodyGetObjectInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_object_instance_id", BODY_GET_OBJECT_INSTANCE_ID_HASH)
+
+        private const val BODY_ATTACH_CANVAS_INSTANCE_ID_HASH = 3411492887L
+        @JvmField
+        val bodyAttachCanvasInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_attach_canvas_instance_id", BODY_ATTACH_CANVAS_INSTANCE_ID_HASH)
+
+        private const val BODY_GET_CANVAS_INSTANCE_ID_HASH = 2198884583L
+        @JvmField
+        val bodyGetCanvasInstanceIdBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_canvas_instance_id", BODY_GET_CANVAS_INSTANCE_ID_HASH)
+
+        private const val BODY_SET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH = 1882257015L
+        @JvmField
+        val bodySetContinuousCollisionDetectionModeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_continuous_collision_detection_mode", BODY_SET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH)
+
+        private const val BODY_GET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH = 2661282217L
+        @JvmField
+        val bodyGetContinuousCollisionDetectionModeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_continuous_collision_detection_mode", BODY_GET_CONTINUOUS_COLLISION_DETECTION_MODE_HASH)
+
+        private const val BODY_SET_COLLISION_LAYER_HASH = 3411492887L
+        @JvmField
+        val bodySetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_collision_layer", BODY_SET_COLLISION_LAYER_HASH)
+
+        private const val BODY_GET_COLLISION_LAYER_HASH = 2198884583L
+        @JvmField
+        val bodyGetCollisionLayerBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_layer", BODY_GET_COLLISION_LAYER_HASH)
+
+        private const val BODY_SET_COLLISION_MASK_HASH = 3411492887L
+        @JvmField
+        val bodySetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_collision_mask", BODY_SET_COLLISION_MASK_HASH)
+
+        private const val BODY_GET_COLLISION_MASK_HASH = 2198884583L
+        @JvmField
+        val bodyGetCollisionMaskBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_mask", BODY_GET_COLLISION_MASK_HASH)
+
+        private const val BODY_SET_COLLISION_PRIORITY_HASH = 1794382983L
+        @JvmField
+        val bodySetCollisionPriorityBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_collision_priority", BODY_SET_COLLISION_PRIORITY_HASH)
+
+        private const val BODY_GET_COLLISION_PRIORITY_HASH = 866169185L
+        @JvmField
+        val bodyGetCollisionPriorityBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_collision_priority", BODY_GET_COLLISION_PRIORITY_HASH)
+
+        private const val BODY_SET_PARAM_HASH = 2715630609L
+        @JvmField
+        val bodySetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_param", BODY_SET_PARAM_HASH)
+
+        private const val BODY_GET_PARAM_HASH = 3208033526L
+        @JvmField
+        val bodyGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_param", BODY_GET_PARAM_HASH)
+
+        private const val BODY_RESET_MASS_PROPERTIES_HASH = 2722037293L
+        @JvmField
+        val bodyResetMassPropertiesBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_reset_mass_properties", BODY_RESET_MASS_PROPERTIES_HASH)
+
+        private const val BODY_SET_STATE_HASH = 1706355209L
+        @JvmField
+        val bodySetStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state", BODY_SET_STATE_HASH)
+
+        private const val BODY_GET_STATE_HASH = 4036367961L
+        @JvmField
+        val bodyGetStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_state", BODY_GET_STATE_HASH)
+
+        private const val BODY_APPLY_CENTRAL_IMPULSE_HASH = 3201125042L
+        @JvmField
+        val bodyApplyCentralImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_central_impulse", BODY_APPLY_CENTRAL_IMPULSE_HASH)
+
+        private const val BODY_APPLY_TORQUE_IMPULSE_HASH = 1794382983L
+        @JvmField
+        val bodyApplyTorqueImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_torque_impulse", BODY_APPLY_TORQUE_IMPULSE_HASH)
+
+        private const val BODY_APPLY_IMPULSE_HASH = 205485391L
+        @JvmField
+        val bodyApplyImpulseBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_impulse", BODY_APPLY_IMPULSE_HASH)
+
+        private const val BODY_APPLY_CENTRAL_FORCE_HASH = 3201125042L
+        @JvmField
+        val bodyApplyCentralForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_central_force", BODY_APPLY_CENTRAL_FORCE_HASH)
+
+        private const val BODY_APPLY_FORCE_HASH = 205485391L
+        @JvmField
+        val bodyApplyForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_force", BODY_APPLY_FORCE_HASH)
+
+        private const val BODY_APPLY_TORQUE_HASH = 1794382983L
+        @JvmField
+        val bodyApplyTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_apply_torque", BODY_APPLY_TORQUE_HASH)
+
+        private const val BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH = 3201125042L
+        @JvmField
+        val bodyAddConstantCentralForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_constant_central_force", BODY_ADD_CONSTANT_CENTRAL_FORCE_HASH)
+
+        private const val BODY_ADD_CONSTANT_FORCE_HASH = 205485391L
+        @JvmField
+        val bodyAddConstantForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_constant_force", BODY_ADD_CONSTANT_FORCE_HASH)
+
+        private const val BODY_ADD_CONSTANT_TORQUE_HASH = 1794382983L
+        @JvmField
+        val bodyAddConstantTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_constant_torque", BODY_ADD_CONSTANT_TORQUE_HASH)
+
+        private const val BODY_SET_CONSTANT_FORCE_HASH = 3201125042L
+        @JvmField
+        val bodySetConstantForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_constant_force", BODY_SET_CONSTANT_FORCE_HASH)
+
+        private const val BODY_GET_CONSTANT_FORCE_HASH = 2440833711L
+        @JvmField
+        val bodyGetConstantForceBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_constant_force", BODY_GET_CONSTANT_FORCE_HASH)
+
+        private const val BODY_SET_CONSTANT_TORQUE_HASH = 1794382983L
+        @JvmField
+        val bodySetConstantTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_constant_torque", BODY_SET_CONSTANT_TORQUE_HASH)
+
+        private const val BODY_GET_CONSTANT_TORQUE_HASH = 866169185L
+        @JvmField
+        val bodyGetConstantTorqueBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_constant_torque", BODY_GET_CONSTANT_TORQUE_HASH)
+
+        private const val BODY_SET_AXIS_VELOCITY_HASH = 3201125042L
+        @JvmField
+        val bodySetAxisVelocityBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_axis_velocity", BODY_SET_AXIS_VELOCITY_HASH)
+
+        private const val BODY_ADD_COLLISION_EXCEPTION_HASH = 395945892L
+        @JvmField
+        val bodyAddCollisionExceptionBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_add_collision_exception", BODY_ADD_COLLISION_EXCEPTION_HASH)
+
+        private const val BODY_REMOVE_COLLISION_EXCEPTION_HASH = 395945892L
+        @JvmField
+        val bodyRemoveCollisionExceptionBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_remove_collision_exception", BODY_REMOVE_COLLISION_EXCEPTION_HASH)
+
+        private const val BODY_SET_MAX_CONTACTS_REPORTED_HASH = 3411492887L
+        @JvmField
+        val bodySetMaxContactsReportedBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_max_contacts_reported", BODY_SET_MAX_CONTACTS_REPORTED_HASH)
+
+        private const val BODY_GET_MAX_CONTACTS_REPORTED_HASH = 2198884583L
+        @JvmField
+        val bodyGetMaxContactsReportedBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_max_contacts_reported", BODY_GET_MAX_CONTACTS_REPORTED_HASH)
+
+        private const val BODY_SET_OMIT_FORCE_INTEGRATION_HASH = 1265174801L
+        @JvmField
+        val bodySetOmitForceIntegrationBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_omit_force_integration", BODY_SET_OMIT_FORCE_INTEGRATION_HASH)
+
+        private const val BODY_IS_OMITTING_FORCE_INTEGRATION_HASH = 4155700596L
+        @JvmField
+        val bodyIsOmittingForceIntegrationBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_is_omitting_force_integration", BODY_IS_OMITTING_FORCE_INTEGRATION_HASH)
+
+        private const val BODY_SET_STATE_SYNC_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val bodySetStateSyncCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_state_sync_callback", BODY_SET_STATE_SYNC_CALLBACK_HASH)
+
+        private const val BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH = 3059434249L
+        @JvmField
+        val bodySetForceIntegrationCallbackBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_set_force_integration_callback", BODY_SET_FORCE_INTEGRATION_CALLBACK_HASH)
+
+        private const val BODY_TEST_MOTION_HASH = 1699844009L
+        @JvmField
+        val bodyTestMotionBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_test_motion", BODY_TEST_MOTION_HASH)
+
+        private const val BODY_GET_DIRECT_STATE_HASH = 1191931871L
+        @JvmField
+        val bodyGetDirectStateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "body_get_direct_state", BODY_GET_DIRECT_STATE_HASH)
+
+        private const val JOINT_CREATE_HASH = 529393457L
+        @JvmField
+        val jointCreateBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_create", JOINT_CREATE_HASH)
+
+        private const val JOINT_CLEAR_HASH = 2722037293L
+        @JvmField
+        val jointClearBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_clear", JOINT_CLEAR_HASH)
+
+        private const val JOINT_SET_PARAM_HASH = 3972556514L
+        @JvmField
+        val jointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_set_param", JOINT_SET_PARAM_HASH)
+
+        private const val JOINT_GET_PARAM_HASH = 4016448949L
+        @JvmField
+        val jointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_get_param", JOINT_GET_PARAM_HASH)
+
+        private const val JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH = 1265174801L
+        @JvmField
+        val jointDisableCollisionsBetweenBodiesBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_disable_collisions_between_bodies", JOINT_DISABLE_COLLISIONS_BETWEEN_BODIES_HASH)
+
+        private const val JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH = 4155700596L
+        @JvmField
+        val jointIsDisabledCollisionsBetweenBodiesBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_is_disabled_collisions_between_bodies", JOINT_IS_DISABLED_COLLISIONS_BETWEEN_BODIES_HASH)
+
+        private const val JOINT_MAKE_PIN_HASH = 1612646186L
+        @JvmField
+        val jointMakePinBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_make_pin", JOINT_MAKE_PIN_HASH)
+
+        private const val JOINT_MAKE_GROOVE_HASH = 481430435L
+        @JvmField
+        val jointMakeGrooveBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_make_groove", JOINT_MAKE_GROOVE_HASH)
+
+        private const val JOINT_MAKE_DAMPED_SPRING_HASH = 1994657646L
+        @JvmField
+        val jointMakeDampedSpringBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_make_damped_spring", JOINT_MAKE_DAMPED_SPRING_HASH)
+
+        private const val PIN_JOINT_SET_FLAG_HASH = 3520002352L
+        @JvmField
+        val pinJointSetFlagBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_set_flag", PIN_JOINT_SET_FLAG_HASH)
+
+        private const val PIN_JOINT_GET_FLAG_HASH = 2647867364L
+        @JvmField
+        val pinJointGetFlagBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_get_flag", PIN_JOINT_GET_FLAG_HASH)
+
+        private const val PIN_JOINT_SET_PARAM_HASH = 550574241L
+        @JvmField
+        val pinJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_set_param", PIN_JOINT_SET_PARAM_HASH)
+
+        private const val PIN_JOINT_GET_PARAM_HASH = 348281383L
+        @JvmField
+        val pinJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "pin_joint_get_param", PIN_JOINT_GET_PARAM_HASH)
+
+        private const val DAMPED_SPRING_JOINT_SET_PARAM_HASH = 220564071L
+        @JvmField
+        val dampedSpringJointSetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "damped_spring_joint_set_param", DAMPED_SPRING_JOINT_SET_PARAM_HASH)
+
+        private const val DAMPED_SPRING_JOINT_GET_PARAM_HASH = 2075871277L
+        @JvmField
+        val dampedSpringJointGetParamBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "damped_spring_joint_get_param", DAMPED_SPRING_JOINT_GET_PARAM_HASH)
+
+        private const val JOINT_GET_TYPE_HASH = 4262502231L
+        @JvmField
+        val jointGetTypeBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "joint_get_type", JOINT_GET_TYPE_HASH)
+
+        private const val FREE_RID_HASH = 2722037293L
+        @JvmField
+        val freeRidBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "free_rid", FREE_RID_HASH)
+
+        private const val SET_ACTIVE_HASH = 2586408642L
+        @JvmField
+        val setActiveBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "set_active", SET_ACTIVE_HASH)
+
+        private const val GET_PROCESS_INFO_HASH = 576496006L
+        @JvmField
+        val getProcessInfoBind =
+            ObjectCalls.getMethodBind("PhysicsServer2D", "get_process_info", GET_PROCESS_INFO_HASH)
     }
 }

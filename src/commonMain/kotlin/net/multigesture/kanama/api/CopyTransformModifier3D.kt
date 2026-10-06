@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_flags
      */
     fun setCopyFlags(index: Int, copyFlags: CopyTransformModifier3D.TransformFlag) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCopyFlagsBind, segment, index, copyFlags.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setCopyFlagsBind, segment, index, copyFlags.value)
     }
 
     /**
@@ -29,7 +30,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.get_copy_flags
      */
     fun getCopyFlags(index: Int): CopyTransformModifier3D.TransformFlag {
-        return CopyTransformModifier3D.TransformFlag(ObjectCalls.ptrcallWithIntArgRetLong(getCopyFlagsBind, segment, index))
+        return CopyTransformModifier3D.TransformFlag(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCopyFlagsBind, segment, index))
     }
 
     /**
@@ -38,7 +39,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_flags
      */
     fun setAxisFlags(index: Int, axisFlags: CopyTransformModifier3D.AxisFlag) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setAxisFlagsBind, segment, index, axisFlags.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setAxisFlagsBind, segment, index, axisFlags.value)
     }
 
     /**
@@ -47,7 +48,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.get_axis_flags
      */
     fun getAxisFlags(index: Int): CopyTransformModifier3D.AxisFlag {
-        return CopyTransformModifier3D.AxisFlag(ObjectCalls.ptrcallWithIntArgRetLong(getAxisFlagsBind, segment, index))
+        return CopyTransformModifier3D.AxisFlag(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getAxisFlagsBind, segment, index))
     }
 
     /**
@@ -61,7 +62,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_invert_flags
      */
     fun setInvertFlags(index: Int, axisFlags: CopyTransformModifier3D.AxisFlag) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setInvertFlagsBind, segment, index, axisFlags.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setInvertFlagsBind, segment, index, axisFlags.value)
     }
 
     /**
@@ -70,7 +71,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.get_invert_flags
      */
     fun getInvertFlags(index: Int): CopyTransformModifier3D.AxisFlag {
-        return CopyTransformModifier3D.AxisFlag(ObjectCalls.ptrcallWithIntArgRetLong(getInvertFlagsBind, segment, index))
+        return CopyTransformModifier3D.AxisFlag(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getInvertFlagsBind, segment, index))
     }
 
     /**
@@ -79,7 +80,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_position
      */
     fun setCopyPosition(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyPositionBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCopyPositionBind, segment, index, enabled)
     }
 
     /**
@@ -89,7 +90,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_position_copying
      */
     fun isPositionCopying(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isPositionCopyingBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isPositionCopyingBind, segment, index)
     }
 
     /**
@@ -98,7 +99,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_rotation
      */
     fun setCopyRotation(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyRotationBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCopyRotationBind, segment, index, enabled)
     }
 
     /**
@@ -108,7 +109,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_rotation_copying
      */
     fun isRotationCopying(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRotationCopyingBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRotationCopyingBind, segment, index)
     }
 
     /**
@@ -117,7 +118,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_scale
      */
     fun setCopyScale(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCopyScaleBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCopyScaleBind, segment, index, enabled)
     }
 
     /**
@@ -127,7 +128,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_scale_copying
      */
     fun isScaleCopying(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isScaleCopyingBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isScaleCopyingBind, segment, index)
     }
 
     /**
@@ -136,7 +137,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_x_enabled
      */
     fun setAxisXEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisXEnabledBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAxisXEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -146,7 +147,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_x_enabled
      */
     fun isAxisXEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisXEnabledBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAxisXEnabledBind, segment, index)
     }
 
     /**
@@ -155,7 +156,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_y_enabled
      */
     fun setAxisYEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisYEnabledBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAxisYEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -165,7 +166,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_y_enabled
      */
     fun isAxisYEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisYEnabledBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAxisYEnabledBind, segment, index)
     }
 
     /**
@@ -174,7 +175,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_z_enabled
      */
     fun setAxisZEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisZEnabledBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAxisZEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -184,7 +185,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_z_enabled
      */
     fun isAxisZEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisZEnabledBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAxisZEnabledBind, segment, index)
     }
 
     /**
@@ -193,7 +194,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_x_inverted
      */
     fun setAxisXInverted(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisXInvertedBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAxisXInvertedBind, segment, index, enabled)
     }
 
     /**
@@ -203,7 +204,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_x_inverted
      */
     fun isAxisXInverted(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisXInvertedBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAxisXInvertedBind, segment, index)
     }
 
     /**
@@ -212,7 +213,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_y_inverted
      */
     fun setAxisYInverted(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisYInvertedBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAxisYInvertedBind, segment, index, enabled)
     }
 
     /**
@@ -222,7 +223,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_y_inverted
      */
     fun isAxisYInverted(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisYInvertedBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAxisYInvertedBind, segment, index)
     }
 
     /**
@@ -231,7 +232,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_z_inverted
      */
     fun setAxisZInverted(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAxisZInvertedBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAxisZInvertedBind, segment, index, enabled)
     }
 
     /**
@@ -241,7 +242,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_axis_z_inverted
      */
     fun isAxisZInverted(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAxisZInvertedBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAxisZInvertedBind, segment, index)
     }
 
     /**
@@ -252,7 +253,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_relative
      */
     fun setRelative(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setRelativeBind, segment, index, enabled)
     }
 
     /**
@@ -261,7 +262,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_relative
      */
     fun isRelative(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRelativeBind, segment, index)
     }
 
     /**
@@ -274,7 +275,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.set_additive
      */
     fun setAdditive(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAdditiveBind, segment, index, enabled)
     }
 
     /**
@@ -283,7 +284,7 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: CopyTransformModifier3D.is_additive
      */
     fun isAdditive(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAdditiveBind, segment, index)
     }
 
     /**
@@ -387,145 +388,147 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
 
         internal fun wrap(handle: RawSegment): CopyTransformModifier3D? =
             if (handle.address() == 0L) null else CopyTransformModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COPY_FLAGS_HASH = 2252507859L
-        private val setCopyFlagsBind by lazy {
+        @JvmField
+        val setCopyFlagsBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_copy_flags", SET_COPY_FLAGS_HASH)
-        }
 
         private const val GET_COPY_FLAGS_HASH = 1685185931L
-        private val getCopyFlagsBind by lazy {
+        @JvmField
+        val getCopyFlagsBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "get_copy_flags", GET_COPY_FLAGS_HASH)
-        }
 
         private const val SET_AXIS_FLAGS_HASH = 2044211897L
-        private val setAxisFlagsBind by lazy {
+        @JvmField
+        val setAxisFlagsBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_flags", SET_AXIS_FLAGS_HASH)
-        }
 
         private const val GET_AXIS_FLAGS_HASH = 992162046L
-        private val getAxisFlagsBind by lazy {
+        @JvmField
+        val getAxisFlagsBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "get_axis_flags", GET_AXIS_FLAGS_HASH)
-        }
 
         private const val SET_INVERT_FLAGS_HASH = 2044211897L
-        private val setInvertFlagsBind by lazy {
+        @JvmField
+        val setInvertFlagsBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_invert_flags", SET_INVERT_FLAGS_HASH)
-        }
 
         private const val GET_INVERT_FLAGS_HASH = 992162046L
-        private val getInvertFlagsBind by lazy {
+        @JvmField
+        val getInvertFlagsBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "get_invert_flags", GET_INVERT_FLAGS_HASH)
-        }
 
         private const val SET_COPY_POSITION_HASH = 300928843L
-        private val setCopyPositionBind by lazy {
+        @JvmField
+        val setCopyPositionBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_copy_position", SET_COPY_POSITION_HASH)
-        }
 
         private const val IS_POSITION_COPYING_HASH = 1116898809L
-        private val isPositionCopyingBind by lazy {
+        @JvmField
+        val isPositionCopyingBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_position_copying", IS_POSITION_COPYING_HASH)
-        }
 
         private const val SET_COPY_ROTATION_HASH = 300928843L
-        private val setCopyRotationBind by lazy {
+        @JvmField
+        val setCopyRotationBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_copy_rotation", SET_COPY_ROTATION_HASH)
-        }
 
         private const val IS_ROTATION_COPYING_HASH = 1116898809L
-        private val isRotationCopyingBind by lazy {
+        @JvmField
+        val isRotationCopyingBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_rotation_copying", IS_ROTATION_COPYING_HASH)
-        }
 
         private const val SET_COPY_SCALE_HASH = 300928843L
-        private val setCopyScaleBind by lazy {
+        @JvmField
+        val setCopyScaleBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_copy_scale", SET_COPY_SCALE_HASH)
-        }
 
         private const val IS_SCALE_COPYING_HASH = 1116898809L
-        private val isScaleCopyingBind by lazy {
+        @JvmField
+        val isScaleCopyingBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_scale_copying", IS_SCALE_COPYING_HASH)
-        }
 
         private const val SET_AXIS_X_ENABLED_HASH = 300928843L
-        private val setAxisXEnabledBind by lazy {
+        @JvmField
+        val setAxisXEnabledBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_x_enabled", SET_AXIS_X_ENABLED_HASH)
-        }
 
         private const val IS_AXIS_X_ENABLED_HASH = 1116898809L
-        private val isAxisXEnabledBind by lazy {
+        @JvmField
+        val isAxisXEnabledBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_axis_x_enabled", IS_AXIS_X_ENABLED_HASH)
-        }
 
         private const val SET_AXIS_Y_ENABLED_HASH = 300928843L
-        private val setAxisYEnabledBind by lazy {
+        @JvmField
+        val setAxisYEnabledBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_y_enabled", SET_AXIS_Y_ENABLED_HASH)
-        }
 
         private const val IS_AXIS_Y_ENABLED_HASH = 1116898809L
-        private val isAxisYEnabledBind by lazy {
+        @JvmField
+        val isAxisYEnabledBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_axis_y_enabled", IS_AXIS_Y_ENABLED_HASH)
-        }
 
         private const val SET_AXIS_Z_ENABLED_HASH = 300928843L
-        private val setAxisZEnabledBind by lazy {
+        @JvmField
+        val setAxisZEnabledBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_z_enabled", SET_AXIS_Z_ENABLED_HASH)
-        }
 
         private const val IS_AXIS_Z_ENABLED_HASH = 1116898809L
-        private val isAxisZEnabledBind by lazy {
+        @JvmField
+        val isAxisZEnabledBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_axis_z_enabled", IS_AXIS_Z_ENABLED_HASH)
-        }
 
         private const val SET_AXIS_X_INVERTED_HASH = 300928843L
-        private val setAxisXInvertedBind by lazy {
+        @JvmField
+        val setAxisXInvertedBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_x_inverted", SET_AXIS_X_INVERTED_HASH)
-        }
 
         private const val IS_AXIS_X_INVERTED_HASH = 1116898809L
-        private val isAxisXInvertedBind by lazy {
+        @JvmField
+        val isAxisXInvertedBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_axis_x_inverted", IS_AXIS_X_INVERTED_HASH)
-        }
 
         private const val SET_AXIS_Y_INVERTED_HASH = 300928843L
-        private val setAxisYInvertedBind by lazy {
+        @JvmField
+        val setAxisYInvertedBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_y_inverted", SET_AXIS_Y_INVERTED_HASH)
-        }
 
         private const val IS_AXIS_Y_INVERTED_HASH = 1116898809L
-        private val isAxisYInvertedBind by lazy {
+        @JvmField
+        val isAxisYInvertedBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_axis_y_inverted", IS_AXIS_Y_INVERTED_HASH)
-        }
 
         private const val SET_AXIS_Z_INVERTED_HASH = 300928843L
-        private val setAxisZInvertedBind by lazy {
+        @JvmField
+        val setAxisZInvertedBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_axis_z_inverted", SET_AXIS_Z_INVERTED_HASH)
-        }
 
         private const val IS_AXIS_Z_INVERTED_HASH = 1116898809L
-        private val isAxisZInvertedBind by lazy {
+        @JvmField
+        val isAxisZInvertedBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_axis_z_inverted", IS_AXIS_Z_INVERTED_HASH)
-        }
 
         private const val SET_RELATIVE_HASH = 300928843L
-        private val setRelativeBind by lazy {
+        @JvmField
+        val setRelativeBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_relative", SET_RELATIVE_HASH)
-        }
 
         private const val IS_RELATIVE_HASH = 1116898809L
-        private val isRelativeBind by lazy {
+        @JvmField
+        val isRelativeBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_relative", IS_RELATIVE_HASH)
-        }
 
         private const val SET_ADDITIVE_HASH = 300928843L
-        private val setAdditiveBind by lazy {
+        @JvmField
+        val setAdditiveBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "set_additive", SET_ADDITIVE_HASH)
-        }
 
         private const val IS_ADDITIVE_HASH = 1116898809L
-        private val isAdditiveBind by lazy {
+        @JvmField
+        val isAdditiveBind =
             ObjectCalls.getMethodBind("CopyTransformModifier3D", "is_additive", IS_ADDITIVE_HASH)
-        }
     }
 }

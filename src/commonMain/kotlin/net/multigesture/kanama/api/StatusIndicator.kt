@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -46,7 +47,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_tooltip
      */
     fun setTooltip(tooltip: String) {
-        ObjectCalls.ptrcallWithStringArg(setTooltipBind, segment, tooltip)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTooltipBind, segment, tooltip)
     }
 
     /**
@@ -55,7 +56,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_tooltip
      */
     fun getTooltip(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTooltipBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTooltipBind, segment)
     }
 
     /**
@@ -64,7 +65,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_icon
      */
     fun setIcon(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -73,7 +74,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_icon
      */
     fun getIcon(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getIconBind, segment))
     }
 
     /**
@@ -82,7 +83,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, visible)
     }
 
     /**
@@ -91,7 +92,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_menu
      */
     fun setMenu(menu: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setMenuBind, segment, menu)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setMenuBind, segment, menu)
     }
 
     /**
@@ -111,7 +112,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_menu
      */
     fun getMenu(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getMenuBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getMenuBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRectBind, segment)
     }
 
     /** Signal `pressed(mouse_button: int, mouse_position: Vector2i)`; see [TypedSignal]. */
@@ -140,50 +141,52 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): StatusIndicator? =
             if (handle.address() == 0L) null else StatusIndicator(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TOOLTIP_HASH = 83702148L
-        private val setTooltipBind by lazy {
+        @JvmField
+        val setTooltipBind =
             ObjectCalls.getMethodBind("StatusIndicator", "set_tooltip", SET_TOOLTIP_HASH)
-        }
 
         private const val GET_TOOLTIP_HASH = 201670096L
-        private val getTooltipBind by lazy {
+        @JvmField
+        val getTooltipBind =
             ObjectCalls.getMethodBind("StatusIndicator", "get_tooltip", GET_TOOLTIP_HASH)
-        }
 
         private const val SET_ICON_HASH = 4051416890L
-        private val setIconBind by lazy {
+        @JvmField
+        val setIconBind =
             ObjectCalls.getMethodBind("StatusIndicator", "set_icon", SET_ICON_HASH)
-        }
 
         private const val GET_ICON_HASH = 3635182373L
-        private val getIconBind by lazy {
+        @JvmField
+        val getIconBind =
             ObjectCalls.getMethodBind("StatusIndicator", "get_icon", GET_ICON_HASH)
-        }
 
         private const val SET_VISIBLE_HASH = 2586408642L
-        private val setVisibleBind by lazy {
+        @JvmField
+        val setVisibleBind =
             ObjectCalls.getMethodBind("StatusIndicator", "set_visible", SET_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 36873697L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("StatusIndicator", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val SET_MENU_HASH = 1348162250L
-        private val setMenuBind by lazy {
+        @JvmField
+        val setMenuBind =
             ObjectCalls.getMethodBind("StatusIndicator", "set_menu", SET_MENU_HASH)
-        }
 
         private const val GET_MENU_HASH = 4075236667L
-        private val getMenuBind by lazy {
+        @JvmField
+        val getMenuBind =
             ObjectCalls.getMethodBind("StatusIndicator", "get_menu", GET_MENU_HASH)
-        }
 
         private const val GET_RECT_HASH = 1639390495L
-        private val getRectBind by lazy {
+        @JvmField
+        val getRectBind =
             ObjectCalls.getMethodBind("StatusIndicator", "get_rect", GET_RECT_HASH)
-        }
     }
 }

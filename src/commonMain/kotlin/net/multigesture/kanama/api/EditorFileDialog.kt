@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
      * Generated from Godot docs: EditorFileDialog.add_side_menu
      */
     fun addSideMenu(menu: Control, title: String = "") {
-        ObjectCalls.ptrcallWithObjectAndStringArg(addSideMenuBind, segment, menu.segment, title)
+        ObjectCalls.ptrcallWithObjectAndStringArg(Binds.addSideMenuBind, segment, menu.segment, title)
     }
 
     /**
@@ -33,7 +34,7 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
      * Generated from Godot docs: EditorFileDialog.set_disable_overwrite_warning
      */
     fun setDisableOverwriteWarning(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableOverwriteWarningBind, segment, disable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableOverwriteWarningBind, segment, disable)
     }
 
     /**
@@ -42,7 +43,7 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
      * Generated from Godot docs: EditorFileDialog.is_overwrite_warning_disabled
      */
     fun isOverwriteWarningDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOverwriteWarningDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOverwriteWarningDisabledBind, segment)
     }
 
     companion object {
@@ -52,20 +53,22 @@ class EditorFileDialog(handle: GodotHandle) : FileDialog(handle) {
 
         internal fun wrap(handle: RawSegment): EditorFileDialog? =
             if (handle.address() == 0L) null else EditorFileDialog(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_SIDE_MENU_HASH = 402368861L
-        private val addSideMenuBind by lazy {
+        @JvmField
+        val addSideMenuBind =
             ObjectCalls.getMethodBind("EditorFileDialog", "add_side_menu", ADD_SIDE_MENU_HASH)
-        }
 
         private const val SET_DISABLE_OVERWRITE_WARNING_HASH = 2586408642L
-        private val setDisableOverwriteWarningBind by lazy {
+        @JvmField
+        val setDisableOverwriteWarningBind =
             ObjectCalls.getMethodBind("EditorFileDialog", "set_disable_overwrite_warning", SET_DISABLE_OVERWRITE_WARNING_HASH)
-        }
 
         private const val IS_OVERWRITE_WARNING_DISABLED_HASH = 36873697L
-        private val isOverwriteWarningDisabledBind by lazy {
+        @JvmField
+        val isOverwriteWarningDisabledBind =
             ObjectCalls.getMethodBind("EditorFileDialog", "is_overwrite_warning_disabled", IS_OVERWRITE_WARNING_DISABLED_HASH)
-        }
     }
 }

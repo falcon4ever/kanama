@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -109,7 +110,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMagFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMagFilterBind, segment, pMember.value)
     }
 
     /**
@@ -120,7 +121,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMagFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment))
+        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMagFilterBind, segment))
     }
 
     /**
@@ -131,7 +132,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMinFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMinFilterBind, segment, pMember.value)
     }
 
     /**
@@ -142,7 +143,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMinFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment))
+        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinFilterBind, segment))
     }
 
     /**
@@ -152,7 +153,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMipFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMipFilterBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMipFilterBind, segment, pMember.value)
     }
 
     /**
@@ -162,7 +163,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMipFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, segment))
+        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMipFilterBind, segment))
     }
 
     /**
@@ -173,7 +174,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRepeatU(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatUBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRepeatUBind, segment, pMember.value)
     }
 
     /**
@@ -184,7 +185,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRepeatU(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, segment))
+        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatUBind, segment))
     }
 
     /**
@@ -195,7 +196,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRepeatV(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatVBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRepeatVBind, segment, pMember.value)
     }
 
     /**
@@ -206,7 +207,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRepeatV(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, segment))
+        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatVBind, segment))
     }
 
     /**
@@ -217,7 +218,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRepeatW(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatWBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRepeatWBind, segment, pMember.value)
     }
 
     /**
@@ -228,7 +229,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRepeatW(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, segment))
+        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatWBind, segment))
     }
 
     /**
@@ -241,7 +242,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLodBias(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLodBiasBind, segment, pMember)
     }
 
     /**
@@ -254,7 +255,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLodBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLodBiasBind, segment)
     }
 
     /**
@@ -264,7 +265,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setUseAnisotropy(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseAnisotropyBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseAnisotropyBind, segment, pMember)
     }
 
     /**
@@ -274,7 +275,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUseAnisotropy(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseAnisotropyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseAnisotropyBind, segment)
     }
 
     /**
@@ -288,7 +289,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAnisotropyMax(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAnisotropyMaxBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAnisotropyMaxBind, segment, pMember)
     }
 
     /**
@@ -302,7 +303,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAnisotropyMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAnisotropyMaxBind, segment)
     }
 
     /**
@@ -315,7 +316,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnableCompare(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableCompareBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableCompareBind, segment, pMember)
     }
 
     /**
@@ -328,7 +329,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableCompare(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableCompareBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableCompareBind, segment)
     }
 
     /**
@@ -338,7 +339,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCompareOp(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCompareOpBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCompareOpBind, segment, pMember.value)
     }
 
     /**
@@ -348,7 +349,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCompareOp(): RenderingDevice.CompareOperator {
         checkOpen()
-        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, segment))
+        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCompareOpBind, segment))
     }
 
     /**
@@ -359,7 +360,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMinLod(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinLodBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinLodBind, segment, pMember)
     }
 
     /**
@@ -370,7 +371,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMinLod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinLodBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinLodBind, segment)
     }
 
     /**
@@ -381,7 +382,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMaxLod(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxLodBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxLodBind, segment, pMember)
     }
 
     /**
@@ -392,7 +393,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxLod(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxLodBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxLodBind, segment)
     }
 
     /**
@@ -403,7 +404,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBorderColor(pMember: RenderingDevice.SamplerBorderColor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBorderColorBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBorderColorBind, segment, pMember.value)
     }
 
     /**
@@ -414,7 +415,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBorderColor(): RenderingDevice.SamplerBorderColor {
         checkOpen()
-        return RenderingDevice.SamplerBorderColor(ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, segment))
+        return RenderingDevice.SamplerBorderColor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBorderColorBind, segment))
     }
 
     /**
@@ -425,7 +426,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setUnnormalizedUvw(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUnnormalizedUvwBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUnnormalizedUvwBind, segment, pMember)
     }
 
     /**
@@ -436,7 +437,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUnnormalizedUvw(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUnnormalizedUvwBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUnnormalizedUvwBind, segment)
     }
 
     companion object {
@@ -449,155 +450,157 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDSamplerState? =
             if (handle.address() == 0L) null else RDSamplerState(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MAG_FILTER_HASH = 1493420382L
-        private val setMagFilterBind by lazy {
+        @JvmField
+        val setMagFilterBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_mag_filter", SET_MAG_FILTER_HASH)
-        }
 
         private const val GET_MAG_FILTER_HASH = 2209202801L
-        private val getMagFilterBind by lazy {
+        @JvmField
+        val getMagFilterBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_mag_filter", GET_MAG_FILTER_HASH)
-        }
 
         private const val SET_MIN_FILTER_HASH = 1493420382L
-        private val setMinFilterBind by lazy {
+        @JvmField
+        val setMinFilterBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_min_filter", SET_MIN_FILTER_HASH)
-        }
 
         private const val GET_MIN_FILTER_HASH = 2209202801L
-        private val getMinFilterBind by lazy {
+        @JvmField
+        val getMinFilterBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_min_filter", GET_MIN_FILTER_HASH)
-        }
 
         private const val SET_MIP_FILTER_HASH = 1493420382L
-        private val setMipFilterBind by lazy {
+        @JvmField
+        val setMipFilterBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_mip_filter", SET_MIP_FILTER_HASH)
-        }
 
         private const val GET_MIP_FILTER_HASH = 2209202801L
-        private val getMipFilterBind by lazy {
+        @JvmField
+        val getMipFilterBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_mip_filter", GET_MIP_FILTER_HASH)
-        }
 
         private const val SET_REPEAT_U_HASH = 246127626L
-        private val setRepeatUBind by lazy {
+        @JvmField
+        val setRepeatUBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_repeat_u", SET_REPEAT_U_HASH)
-        }
 
         private const val GET_REPEAT_U_HASH = 3227895872L
-        private val getRepeatUBind by lazy {
+        @JvmField
+        val getRepeatUBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_repeat_u", GET_REPEAT_U_HASH)
-        }
 
         private const val SET_REPEAT_V_HASH = 246127626L
-        private val setRepeatVBind by lazy {
+        @JvmField
+        val setRepeatVBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_repeat_v", SET_REPEAT_V_HASH)
-        }
 
         private const val GET_REPEAT_V_HASH = 3227895872L
-        private val getRepeatVBind by lazy {
+        @JvmField
+        val getRepeatVBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_repeat_v", GET_REPEAT_V_HASH)
-        }
 
         private const val SET_REPEAT_W_HASH = 246127626L
-        private val setRepeatWBind by lazy {
+        @JvmField
+        val setRepeatWBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_repeat_w", SET_REPEAT_W_HASH)
-        }
 
         private const val GET_REPEAT_W_HASH = 3227895872L
-        private val getRepeatWBind by lazy {
+        @JvmField
+        val getRepeatWBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_repeat_w", GET_REPEAT_W_HASH)
-        }
 
         private const val SET_LOD_BIAS_HASH = 373806689L
-        private val setLodBiasBind by lazy {
+        @JvmField
+        val setLodBiasBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_lod_bias", SET_LOD_BIAS_HASH)
-        }
 
         private const val GET_LOD_BIAS_HASH = 1740695150L
-        private val getLodBiasBind by lazy {
+        @JvmField
+        val getLodBiasBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_lod_bias", GET_LOD_BIAS_HASH)
-        }
 
         private const val SET_USE_ANISOTROPY_HASH = 2586408642L
-        private val setUseAnisotropyBind by lazy {
+        @JvmField
+        val setUseAnisotropyBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_use_anisotropy", SET_USE_ANISOTROPY_HASH)
-        }
 
         private const val GET_USE_ANISOTROPY_HASH = 36873697L
-        private val getUseAnisotropyBind by lazy {
+        @JvmField
+        val getUseAnisotropyBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_use_anisotropy", GET_USE_ANISOTROPY_HASH)
-        }
 
         private const val SET_ANISOTROPY_MAX_HASH = 373806689L
-        private val setAnisotropyMaxBind by lazy {
+        @JvmField
+        val setAnisotropyMaxBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_anisotropy_max", SET_ANISOTROPY_MAX_HASH)
-        }
 
         private const val GET_ANISOTROPY_MAX_HASH = 1740695150L
-        private val getAnisotropyMaxBind by lazy {
+        @JvmField
+        val getAnisotropyMaxBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_anisotropy_max", GET_ANISOTROPY_MAX_HASH)
-        }
 
         private const val SET_ENABLE_COMPARE_HASH = 2586408642L
-        private val setEnableCompareBind by lazy {
+        @JvmField
+        val setEnableCompareBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_enable_compare", SET_ENABLE_COMPARE_HASH)
-        }
 
         private const val GET_ENABLE_COMPARE_HASH = 36873697L
-        private val getEnableCompareBind by lazy {
+        @JvmField
+        val getEnableCompareBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_enable_compare", GET_ENABLE_COMPARE_HASH)
-        }
 
         private const val SET_COMPARE_OP_HASH = 2573711505L
-        private val setCompareOpBind by lazy {
+        @JvmField
+        val setCompareOpBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_compare_op", SET_COMPARE_OP_HASH)
-        }
 
         private const val GET_COMPARE_OP_HASH = 269730778L
-        private val getCompareOpBind by lazy {
+        @JvmField
+        val getCompareOpBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_compare_op", GET_COMPARE_OP_HASH)
-        }
 
         private const val SET_MIN_LOD_HASH = 373806689L
-        private val setMinLodBind by lazy {
+        @JvmField
+        val setMinLodBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_min_lod", SET_MIN_LOD_HASH)
-        }
 
         private const val GET_MIN_LOD_HASH = 1740695150L
-        private val getMinLodBind by lazy {
+        @JvmField
+        val getMinLodBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_min_lod", GET_MIN_LOD_HASH)
-        }
 
         private const val SET_MAX_LOD_HASH = 373806689L
-        private val setMaxLodBind by lazy {
+        @JvmField
+        val setMaxLodBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_max_lod", SET_MAX_LOD_HASH)
-        }
 
         private const val GET_MAX_LOD_HASH = 1740695150L
-        private val getMaxLodBind by lazy {
+        @JvmField
+        val getMaxLodBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_max_lod", GET_MAX_LOD_HASH)
-        }
 
         private const val SET_BORDER_COLOR_HASH = 1115869595L
-        private val setBorderColorBind by lazy {
+        @JvmField
+        val setBorderColorBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_border_color", SET_BORDER_COLOR_HASH)
-        }
 
         private const val GET_BORDER_COLOR_HASH = 3514246478L
-        private val getBorderColorBind by lazy {
+        @JvmField
+        val getBorderColorBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_border_color", GET_BORDER_COLOR_HASH)
-        }
 
         private const val SET_UNNORMALIZED_UVW_HASH = 2586408642L
-        private val setUnnormalizedUvwBind by lazy {
+        @JvmField
+        val setUnnormalizedUvwBind =
             ObjectCalls.getMethodBind("RDSamplerState", "set_unnormalized_uvw", SET_UNNORMALIZED_UVW_HASH)
-        }
 
         private const val GET_UNNORMALIZED_UVW_HASH = 36873697L
-        private val getUnnormalizedUvwBind by lazy {
+        @JvmField
+        val getUnnormalizedUvwBind =
             ObjectCalls.getMethodBind("RDSamplerState", "get_unnormalized_uvw", GET_UNNORMALIZED_UVW_HASH)
-        }
     }
 }

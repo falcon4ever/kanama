@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -20,7 +21,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_dock
      */
     fun addDock(dock: EditorDock) {
-        ObjectCalls.ptrcallWithObjectArgs(addDockBind, segment, listOf(dock.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addDockBind, segment, listOf(dock.segment))
     }
 
     /**
@@ -29,7 +30,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_dock
      */
     fun removeDock(dock: EditorDock) {
-        ObjectCalls.ptrcallWithObjectArgs(removeDockBind, segment, listOf(dock.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeDockBind, segment, listOf(dock.segment))
     }
 
     /**
@@ -41,7 +42,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_control_to_container
      */
     fun addControlToContainer(container: EditorPlugin.CustomControlContainer, control: Control) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(addControlToContainerBind, segment, container.value, control.segment)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.addControlToContainerBind, segment, container.value, control.segment)
     }
 
     /**
@@ -51,7 +52,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_control_from_container
      */
     fun removeControlFromContainer(container: EditorPlugin.CustomControlContainer, control: Control) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(removeControlFromContainerBind, segment, container.value, control.segment)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.removeControlFromContainerBind, segment, container.value, control.segment)
     }
 
     /**
@@ -61,7 +62,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_tool_menu_item
      */
     fun addToolMenuItem(name: String, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithStringCallableArgs(addToolMenuItemBind, segment, name, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithStringCallableArgs(Binds.addToolMenuItemBind, segment, name, callable.target.segment, callable.method)
     }
 
     /**
@@ -71,7 +72,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_tool_submenu_item
      */
     fun addToolSubmenuItem(name: String, submenu: PopupMenu) {
-        ObjectCalls.ptrcallWithStringAndObjectArg(addToolSubmenuItemBind, segment, name, submenu.segment)
+        ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addToolSubmenuItemBind, segment, name, submenu.segment)
     }
 
     /**
@@ -80,7 +81,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_tool_menu_item
      */
     fun removeToolMenuItem(name: String) {
-        ObjectCalls.ptrcallWithStringArg(removeToolMenuItemBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeToolMenuItemBind, segment, name)
     }
 
     /**
@@ -89,7 +90,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.get_export_as_menu
      */
     fun getExportAsMenu(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportAsMenuBind, segment))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExportAsMenuBind, segment))
     }
 
     /**
@@ -105,7 +106,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_custom_type
      */
     fun addCustomType(type: String, base: String, script: Script?, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoStringTwoObjectArgs(addCustomTypeBind, segment, type, base, script?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoStringTwoObjectArgs(Binds.addCustomTypeBind, segment, type, base, script?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -114,7 +115,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_custom_type
      */
     fun removeCustomType(type: String) {
-        ObjectCalls.ptrcallWithStringArg(removeCustomTypeBind, segment, type)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeCustomTypeBind, segment, type)
     }
 
     /**
@@ -127,7 +128,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_control_to_dock
      */
     fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithLongAndTwoObjectArgs(addControlToDockBind, segment, slot.value, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndTwoObjectArgs(Binds.addControlToDockBind, segment, slot.value, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -136,7 +137,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_control_from_docks
      */
     fun removeControlFromDocks(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(removeControlFromDocksBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeControlFromDocksBind, segment, listOf(control.segment))
     }
 
     /**
@@ -145,7 +146,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.set_dock_tab_icon
      */
     fun setDockTabIcon(control: Control, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(setDockTabIconBind, segment, control.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setDockTabIconBind, segment, control.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -160,7 +161,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_control_to_bottom_panel
      */
     fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut?): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        return Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(Binds.addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -169,7 +170,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_control_from_bottom_panel
      */
     fun removeControlFromBottomPanel(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(removeControlFromBottomPanelBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeControlFromBottomPanelBind, segment, listOf(control.segment))
     }
 
     /**
@@ -178,7 +179,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_autoload_singleton
      */
     fun addAutoloadSingleton(name: String, path: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(addAutoloadSingletonBind, segment, name, path)
+        ObjectCalls.ptrcallWithTwoStringArgs(Binds.addAutoloadSingletonBind, segment, name, path)
     }
 
     /**
@@ -187,7 +188,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_autoload_singleton
      */
     fun removeAutoloadSingleton(name: String) {
-        ObjectCalls.ptrcallWithStringArg(removeAutoloadSingletonBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeAutoloadSingletonBind, segment, name)
     }
 
     /**
@@ -198,7 +199,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.update_overlays
      */
     fun updateOverlays(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(updateOverlaysBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.updateOverlaysBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.make_bottom_panel_item_visible
      */
     fun makeBottomPanelItemVisible(item: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(makeBottomPanelItemVisibleBind, segment, listOf(item.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.makeBottomPanelItemVisibleBind, segment, listOf(item.segment))
     }
 
     /**
@@ -216,7 +217,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.hide_bottom_panel
      */
     fun hideBottomPanel() {
-        ObjectCalls.ptrcallNoArgs(hideBottomPanelBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.hideBottomPanelBind, segment)
     }
 
     /**
@@ -226,7 +227,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.get_undo_redo
      */
     fun getUndoRedo(): EditorUndoRedoManager? {
-        return EditorUndoRedoManager.wrap(ObjectCalls.ptrcallNoArgsRetObject(getUndoRedoBind, segment))
+        return EditorUndoRedoManager.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getUndoRedoBind, segment))
     }
 
     /**
@@ -240,7 +241,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_undo_redo_inspector_hook_callback
      */
     fun addUndoRedoInspectorHookCallback(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addUndoRedoInspectorHookCallbackBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.addUndoRedoInspectorHookCallbackBind, segment, callable.target.segment, callable.method)
     }
 
     /**
@@ -249,7 +250,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_undo_redo_inspector_hook_callback
      */
     fun removeUndoRedoInspectorHookCallback(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(removeUndoRedoInspectorHookCallbackBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.removeUndoRedoInspectorHookCallbackBind, segment, callable.target.segment, callable.method)
     }
 
     /**
@@ -258,7 +259,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.queue_save_layout
      */
     fun queueSaveLayout() {
-        ObjectCalls.ptrcallNoArgs(queueSaveLayoutBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.queueSaveLayoutBind, segment)
     }
 
     /**
@@ -268,7 +269,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_translation_parser_plugin
      */
     fun addTranslationParserPlugin(parser: EditorTranslationParserPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -277,7 +278,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_translation_parser_plugin
      */
     fun removeTranslationParserPlugin(parser: EditorTranslationParserPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -290,7 +291,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_import_plugin
      */
     fun addImportPlugin(importer: EditorImportPlugin?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addImportPluginBind, segment, importer?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addImportPluginBind, segment, importer?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
     }
 
     /**
@@ -299,7 +300,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_import_plugin
      */
     fun removeImportPlugin(importer: EditorImportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeImportPluginBind, segment, listOf(importer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeImportPluginBind, segment, listOf(importer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -310,7 +311,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_scene_format_importer_plugin
      */
     fun addSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
     }
 
     /**
@@ -319,7 +320,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_scene_format_importer_plugin
      */
     fun removeSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -330,7 +331,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_scene_post_import_plugin
      */
     fun addScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
     }
 
     /**
@@ -339,7 +340,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_scene_post_import_plugin
      */
     fun removeScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -349,7 +350,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_export_plugin
      */
     fun addExportPlugin(plugin: EditorExportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -358,7 +359,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_export_plugin
      */
     fun removeExportPlugin(plugin: EditorExportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -368,7 +369,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_export_platform
      */
     fun addExportPlatform(platform: EditorExportPlatform?) {
-        ObjectCalls.ptrcallWithObjectArgs(addExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -377,7 +378,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_export_platform
      */
     fun removeExportPlatform(platform: EditorExportPlatform?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -388,7 +389,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_node_3d_gizmo_plugin
      */
     fun addNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -397,7 +398,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_node_3d_gizmo_plugin
      */
     fun removeNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -409,7 +410,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_inspector_plugin
      */
     fun addInspectorPlugin(plugin: EditorInspectorPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -418,7 +419,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_inspector_plugin
      */
     fun removeInspectorPlugin(plugin: EditorInspectorPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -429,7 +430,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_resource_conversion_plugin
      */
     fun addResourceConversionPlugin(plugin: EditorResourceConversionPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -438,7 +439,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_resource_conversion_plugin
      */
     fun removeResourceConversionPlugin(plugin: EditorResourceConversionPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -449,7 +450,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.set_input_event_forwarding_always_enabled
      */
     fun setInputEventForwardingAlwaysEnabled() {
-        ObjectCalls.ptrcallNoArgs(setInputEventForwardingAlwaysEnabledBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setInputEventForwardingAlwaysEnabledBind, segment)
     }
 
     /**
@@ -460,7 +461,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.set_force_draw_over_forwarding_enabled
      */
     fun setForceDrawOverForwardingEnabled() {
-        ObjectCalls.ptrcallNoArgs(setForceDrawOverForwardingEnabledBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setForceDrawOverForwardingEnabledBind, segment)
     }
 
     /**
@@ -470,7 +471,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_context_menu_plugin
      */
     fun addContextMenuPlugin(slot: EditorContextMenuPlugin.ContextMenuSlot, plugin: EditorContextMenuPlugin?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(addContextMenuPluginBind, segment, slot.value, plugin?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.addContextMenuPluginBind, segment, slot.value, plugin?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -479,7 +480,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_context_menu_plugin
      */
     fun removeContextMenuPlugin(plugin: EditorContextMenuPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeContextMenuPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeContextMenuPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -488,7 +489,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.get_editor_interface
      */
     fun getEditorInterface(): EditorInterface? {
-        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, segment))
+        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorInterfaceBind, segment))
     }
 
     /**
@@ -499,7 +500,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.get_script_create_dialog
      */
     fun getScriptCreateDialog(): ScriptCreateDialog? {
-        return ScriptCreateDialog.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScriptCreateDialogBind, segment))
+        return ScriptCreateDialog.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScriptCreateDialogBind, segment))
     }
 
     /**
@@ -509,7 +510,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_debugger_plugin
      */
     fun addDebuggerPlugin(script: EditorDebuggerPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -518,7 +519,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_debugger_plugin
      */
     fun removeDebuggerPlugin(script: EditorDebuggerPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -527,7 +528,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.get_plugin_version
      */
     fun getPluginVersion(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPluginVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPluginVersionBind, segment)
     }
 
     /** Signal `scene_changed(scene_root: Node)`; see [TypedSignal]. */
@@ -771,260 +772,262 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): EditorPlugin? =
             if (handle.address() == 0L) null else EditorPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_DOCK_HASH = 158651717L
-        private val addDockBind by lazy {
+        @JvmField
+        val addDockBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_dock", ADD_DOCK_HASH)
-        }
 
         private const val REMOVE_DOCK_HASH = 158651717L
-        private val removeDockBind by lazy {
+        @JvmField
+        val removeDockBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_dock", REMOVE_DOCK_HASH)
-        }
 
         private const val ADD_CONTROL_TO_CONTAINER_HASH = 3092750152L
-        private val addControlToContainerBind by lazy {
+        @JvmField
+        val addControlToContainerBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_control_to_container", ADD_CONTROL_TO_CONTAINER_HASH)
-        }
 
         private const val REMOVE_CONTROL_FROM_CONTAINER_HASH = 3092750152L
-        private val removeControlFromContainerBind by lazy {
+        @JvmField
+        val removeControlFromContainerBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_control_from_container", REMOVE_CONTROL_FROM_CONTAINER_HASH)
-        }
 
         private const val ADD_TOOL_MENU_ITEM_HASH = 2137474292L
-        private val addToolMenuItemBind by lazy {
+        @JvmField
+        val addToolMenuItemBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_tool_menu_item", ADD_TOOL_MENU_ITEM_HASH)
-        }
 
         private const val ADD_TOOL_SUBMENU_ITEM_HASH = 1019428915L
-        private val addToolSubmenuItemBind by lazy {
+        @JvmField
+        val addToolSubmenuItemBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_tool_submenu_item", ADD_TOOL_SUBMENU_ITEM_HASH)
-        }
 
         private const val REMOVE_TOOL_MENU_ITEM_HASH = 83702148L
-        private val removeToolMenuItemBind by lazy {
+        @JvmField
+        val removeToolMenuItemBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_tool_menu_item", REMOVE_TOOL_MENU_ITEM_HASH)
-        }
 
         private const val GET_EXPORT_AS_MENU_HASH = 1775878644L
-        private val getExportAsMenuBind by lazy {
+        @JvmField
+        val getExportAsMenuBind =
             ObjectCalls.getMethodBind("EditorPlugin", "get_export_as_menu", GET_EXPORT_AS_MENU_HASH)
-        }
 
         private const val ADD_CUSTOM_TYPE_HASH = 1986814599L
-        private val addCustomTypeBind by lazy {
+        @JvmField
+        val addCustomTypeBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_custom_type", ADD_CUSTOM_TYPE_HASH)
-        }
 
         private const val REMOVE_CUSTOM_TYPE_HASH = 83702148L
-        private val removeCustomTypeBind by lazy {
+        @JvmField
+        val removeCustomTypeBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_custom_type", REMOVE_CUSTOM_TYPE_HASH)
-        }
 
         private const val ADD_CONTROL_TO_DOCK_HASH = 2994930786L
-        private val addControlToDockBind by lazy {
+        @JvmField
+        val addControlToDockBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_control_to_dock", ADD_CONTROL_TO_DOCK_HASH)
-        }
 
         private const val REMOVE_CONTROL_FROM_DOCKS_HASH = 1496901182L
-        private val removeControlFromDocksBind by lazy {
+        @JvmField
+        val removeControlFromDocksBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_control_from_docks", REMOVE_CONTROL_FROM_DOCKS_HASH)
-        }
 
         private const val SET_DOCK_TAB_ICON_HASH = 3450529724L
-        private val setDockTabIconBind by lazy {
+        @JvmField
+        val setDockTabIconBind =
             ObjectCalls.getMethodBind("EditorPlugin", "set_dock_tab_icon", SET_DOCK_TAB_ICON_HASH)
-        }
 
         private const val ADD_CONTROL_TO_BOTTOM_PANEL_HASH = 111032269L
-        private val addControlToBottomPanelBind by lazy {
+        @JvmField
+        val addControlToBottomPanelBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_control_to_bottom_panel", ADD_CONTROL_TO_BOTTOM_PANEL_HASH)
-        }
 
         private const val REMOVE_CONTROL_FROM_BOTTOM_PANEL_HASH = 1496901182L
-        private val removeControlFromBottomPanelBind by lazy {
+        @JvmField
+        val removeControlFromBottomPanelBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_control_from_bottom_panel", REMOVE_CONTROL_FROM_BOTTOM_PANEL_HASH)
-        }
 
         private const val ADD_AUTOLOAD_SINGLETON_HASH = 3186203200L
-        private val addAutoloadSingletonBind by lazy {
+        @JvmField
+        val addAutoloadSingletonBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_autoload_singleton", ADD_AUTOLOAD_SINGLETON_HASH)
-        }
 
         private const val REMOVE_AUTOLOAD_SINGLETON_HASH = 83702148L
-        private val removeAutoloadSingletonBind by lazy {
+        @JvmField
+        val removeAutoloadSingletonBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_autoload_singleton", REMOVE_AUTOLOAD_SINGLETON_HASH)
-        }
 
         private const val UPDATE_OVERLAYS_HASH = 3905245786L
-        private val updateOverlaysBind by lazy {
+        @JvmField
+        val updateOverlaysBind =
             ObjectCalls.getMethodBind("EditorPlugin", "update_overlays", UPDATE_OVERLAYS_HASH)
-        }
 
         private const val MAKE_BOTTOM_PANEL_ITEM_VISIBLE_HASH = 1496901182L
-        private val makeBottomPanelItemVisibleBind by lazy {
+        @JvmField
+        val makeBottomPanelItemVisibleBind =
             ObjectCalls.getMethodBind("EditorPlugin", "make_bottom_panel_item_visible", MAKE_BOTTOM_PANEL_ITEM_VISIBLE_HASH)
-        }
 
         private const val HIDE_BOTTOM_PANEL_HASH = 3218959716L
-        private val hideBottomPanelBind by lazy {
+        @JvmField
+        val hideBottomPanelBind =
             ObjectCalls.getMethodBind("EditorPlugin", "hide_bottom_panel", HIDE_BOTTOM_PANEL_HASH)
-        }
 
         private const val GET_UNDO_REDO_HASH = 773492341L
-        private val getUndoRedoBind by lazy {
+        @JvmField
+        val getUndoRedoBind =
             ObjectCalls.getMethodBind("EditorPlugin", "get_undo_redo", GET_UNDO_REDO_HASH)
-        }
 
         private const val ADD_UNDO_REDO_INSPECTOR_HOOK_CALLBACK_HASH = 1611583062L
-        private val addUndoRedoInspectorHookCallbackBind by lazy {
+        @JvmField
+        val addUndoRedoInspectorHookCallbackBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_undo_redo_inspector_hook_callback", ADD_UNDO_REDO_INSPECTOR_HOOK_CALLBACK_HASH)
-        }
 
         private const val REMOVE_UNDO_REDO_INSPECTOR_HOOK_CALLBACK_HASH = 1611583062L
-        private val removeUndoRedoInspectorHookCallbackBind by lazy {
+        @JvmField
+        val removeUndoRedoInspectorHookCallbackBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_undo_redo_inspector_hook_callback", REMOVE_UNDO_REDO_INSPECTOR_HOOK_CALLBACK_HASH)
-        }
 
         private const val QUEUE_SAVE_LAYOUT_HASH = 3218959716L
-        private val queueSaveLayoutBind by lazy {
+        @JvmField
+        val queueSaveLayoutBind =
             ObjectCalls.getMethodBind("EditorPlugin", "queue_save_layout", QUEUE_SAVE_LAYOUT_HASH)
-        }
 
         private const val ADD_TRANSLATION_PARSER_PLUGIN_HASH = 3116463128L
-        private val addTranslationParserPluginBind by lazy {
+        @JvmField
+        val addTranslationParserPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_translation_parser_plugin", ADD_TRANSLATION_PARSER_PLUGIN_HASH)
-        }
 
         private const val REMOVE_TRANSLATION_PARSER_PLUGIN_HASH = 3116463128L
-        private val removeTranslationParserPluginBind by lazy {
+        @JvmField
+        val removeTranslationParserPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_translation_parser_plugin", REMOVE_TRANSLATION_PARSER_PLUGIN_HASH)
-        }
 
         private const val ADD_IMPORT_PLUGIN_HASH = 3113975762L
-        private val addImportPluginBind by lazy {
+        @JvmField
+        val addImportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_import_plugin", ADD_IMPORT_PLUGIN_HASH)
-        }
 
         private const val REMOVE_IMPORT_PLUGIN_HASH = 2312482773L
-        private val removeImportPluginBind by lazy {
+        @JvmField
+        val removeImportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_import_plugin", REMOVE_IMPORT_PLUGIN_HASH)
-        }
 
         private const val ADD_SCENE_FORMAT_IMPORTER_PLUGIN_HASH = 2764104752L
-        private val addSceneFormatImporterPluginBind by lazy {
+        @JvmField
+        val addSceneFormatImporterPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_scene_format_importer_plugin", ADD_SCENE_FORMAT_IMPORTER_PLUGIN_HASH)
-        }
 
         private const val REMOVE_SCENE_FORMAT_IMPORTER_PLUGIN_HASH = 2637776123L
-        private val removeSceneFormatImporterPluginBind by lazy {
+        @JvmField
+        val removeSceneFormatImporterPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_scene_format_importer_plugin", REMOVE_SCENE_FORMAT_IMPORTER_PLUGIN_HASH)
-        }
 
         private const val ADD_SCENE_POST_IMPORT_PLUGIN_HASH = 3492436322L
-        private val addScenePostImportPluginBind by lazy {
+        @JvmField
+        val addScenePostImportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_scene_post_import_plugin", ADD_SCENE_POST_IMPORT_PLUGIN_HASH)
-        }
 
         private const val REMOVE_SCENE_POST_IMPORT_PLUGIN_HASH = 3045178206L
-        private val removeScenePostImportPluginBind by lazy {
+        @JvmField
+        val removeScenePostImportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_scene_post_import_plugin", REMOVE_SCENE_POST_IMPORT_PLUGIN_HASH)
-        }
 
         private const val ADD_EXPORT_PLUGIN_HASH = 4095952207L
-        private val addExportPluginBind by lazy {
+        @JvmField
+        val addExportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_export_plugin", ADD_EXPORT_PLUGIN_HASH)
-        }
 
         private const val REMOVE_EXPORT_PLUGIN_HASH = 4095952207L
-        private val removeExportPluginBind by lazy {
+        @JvmField
+        val removeExportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_export_plugin", REMOVE_EXPORT_PLUGIN_HASH)
-        }
 
         private const val ADD_EXPORT_PLATFORM_HASH = 3431312373L
-        private val addExportPlatformBind by lazy {
+        @JvmField
+        val addExportPlatformBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_export_platform", ADD_EXPORT_PLATFORM_HASH)
-        }
 
         private const val REMOVE_EXPORT_PLATFORM_HASH = 3431312373L
-        private val removeExportPlatformBind by lazy {
+        @JvmField
+        val removeExportPlatformBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_export_platform", REMOVE_EXPORT_PLATFORM_HASH)
-        }
 
         private const val ADD_NODE_3D_GIZMO_PLUGIN_HASH = 1541015022L
-        private val addNode3dGizmoPluginBind by lazy {
+        @JvmField
+        val addNode3dGizmoPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_node_3d_gizmo_plugin", ADD_NODE_3D_GIZMO_PLUGIN_HASH)
-        }
 
         private const val REMOVE_NODE_3D_GIZMO_PLUGIN_HASH = 1541015022L
-        private val removeNode3dGizmoPluginBind by lazy {
+        @JvmField
+        val removeNode3dGizmoPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_node_3d_gizmo_plugin", REMOVE_NODE_3D_GIZMO_PLUGIN_HASH)
-        }
 
         private const val ADD_INSPECTOR_PLUGIN_HASH = 546395733L
-        private val addInspectorPluginBind by lazy {
+        @JvmField
+        val addInspectorPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_inspector_plugin", ADD_INSPECTOR_PLUGIN_HASH)
-        }
 
         private const val REMOVE_INSPECTOR_PLUGIN_HASH = 546395733L
-        private val removeInspectorPluginBind by lazy {
+        @JvmField
+        val removeInspectorPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_inspector_plugin", REMOVE_INSPECTOR_PLUGIN_HASH)
-        }
 
         private const val ADD_RESOURCE_CONVERSION_PLUGIN_HASH = 2124849111L
-        private val addResourceConversionPluginBind by lazy {
+        @JvmField
+        val addResourceConversionPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_resource_conversion_plugin", ADD_RESOURCE_CONVERSION_PLUGIN_HASH)
-        }
 
         private const val REMOVE_RESOURCE_CONVERSION_PLUGIN_HASH = 2124849111L
-        private val removeResourceConversionPluginBind by lazy {
+        @JvmField
+        val removeResourceConversionPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_resource_conversion_plugin", REMOVE_RESOURCE_CONVERSION_PLUGIN_HASH)
-        }
 
         private const val SET_INPUT_EVENT_FORWARDING_ALWAYS_ENABLED_HASH = 3218959716L
-        private val setInputEventForwardingAlwaysEnabledBind by lazy {
+        @JvmField
+        val setInputEventForwardingAlwaysEnabledBind =
             ObjectCalls.getMethodBind("EditorPlugin", "set_input_event_forwarding_always_enabled", SET_INPUT_EVENT_FORWARDING_ALWAYS_ENABLED_HASH)
-        }
 
         private const val SET_FORCE_DRAW_OVER_FORWARDING_ENABLED_HASH = 3218959716L
-        private val setForceDrawOverForwardingEnabledBind by lazy {
+        @JvmField
+        val setForceDrawOverForwardingEnabledBind =
             ObjectCalls.getMethodBind("EditorPlugin", "set_force_draw_over_forwarding_enabled", SET_FORCE_DRAW_OVER_FORWARDING_ENABLED_HASH)
-        }
 
         private const val ADD_CONTEXT_MENU_PLUGIN_HASH = 1904221872L
-        private val addContextMenuPluginBind by lazy {
+        @JvmField
+        val addContextMenuPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_context_menu_plugin", ADD_CONTEXT_MENU_PLUGIN_HASH)
-        }
 
         private const val REMOVE_CONTEXT_MENU_PLUGIN_HASH = 2281511854L
-        private val removeContextMenuPluginBind by lazy {
+        @JvmField
+        val removeContextMenuPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_context_menu_plugin", REMOVE_CONTEXT_MENU_PLUGIN_HASH)
-        }
 
         private const val GET_EDITOR_INTERFACE_HASH = 4223731786L
-        private val getEditorInterfaceBind by lazy {
+        @JvmField
+        val getEditorInterfaceBind =
             ObjectCalls.getMethodBind("EditorPlugin", "get_editor_interface", GET_EDITOR_INTERFACE_HASH)
-        }
 
         private const val GET_SCRIPT_CREATE_DIALOG_HASH = 3121871482L
-        private val getScriptCreateDialogBind by lazy {
+        @JvmField
+        val getScriptCreateDialogBind =
             ObjectCalls.getMethodBind("EditorPlugin", "get_script_create_dialog", GET_SCRIPT_CREATE_DIALOG_HASH)
-        }
 
         private const val ADD_DEBUGGER_PLUGIN_HASH = 3749880309L
-        private val addDebuggerPluginBind by lazy {
+        @JvmField
+        val addDebuggerPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "add_debugger_plugin", ADD_DEBUGGER_PLUGIN_HASH)
-        }
 
         private const val REMOVE_DEBUGGER_PLUGIN_HASH = 3749880309L
-        private val removeDebuggerPluginBind by lazy {
+        @JvmField
+        val removeDebuggerPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_debugger_plugin", REMOVE_DEBUGGER_PLUGIN_HASH)
-        }
 
         private const val GET_PLUGIN_VERSION_HASH = 201670096L
-        private val getPluginVersionBind by lazy {
+        @JvmField
+        val getPluginVersionBind =
             ObjectCalls.getMethodBind("EditorPlugin", "get_plugin_version", GET_PLUGIN_VERSION_HASH)
-        }
     }
 }

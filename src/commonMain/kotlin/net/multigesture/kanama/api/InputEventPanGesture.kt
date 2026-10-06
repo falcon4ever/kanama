@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
      */
     fun setDelta(delta: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setDeltaBind, segment, delta)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setDeltaBind, segment, delta)
     }
 
     /**
@@ -35,7 +36,7 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
      */
     fun getDelta(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getDeltaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getDeltaBind, segment)
     }
 
     companion object {
@@ -48,15 +49,17 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventPanGesture? =
             if (handle.address() == 0L) null else InputEventPanGesture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DELTA_HASH = 743155724L
-        private val setDeltaBind by lazy {
+        @JvmField
+        val setDeltaBind =
             ObjectCalls.getMethodBind("InputEventPanGesture", "set_delta", SET_DELTA_HASH)
-        }
 
         private const val GET_DELTA_HASH = 3341600327L
-        private val getDeltaBind by lazy {
+        @JvmField
+        val getDeltaBind =
             ObjectCalls.getMethodBind("InputEventPanGesture", "get_delta", GET_DELTA_HASH)
-        }
     }
 }

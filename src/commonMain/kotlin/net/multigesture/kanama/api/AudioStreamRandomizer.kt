@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -51,7 +52,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun addStream(index: Int, stream: AudioStream?, weight: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT, weight)
+        ObjectCalls.ptrcallWithIntObjectDoubleArgs(Binds.addStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT, weight)
     }
 
     /**
@@ -61,7 +62,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun moveStream(indexFrom: Int, indexTo: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveStreamBind, segment, indexFrom, indexTo)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveStreamBind, segment, indexFrom, indexTo)
     }
 
     /**
@@ -71,7 +72,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun removeStream(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeStreamBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeStreamBind, segment, index)
     }
 
     /**
@@ -81,7 +82,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setStream(index: Int, stream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -91,7 +92,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStream(index: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getStreamBind, segment, index)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getStreamBind, segment, index)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -107,7 +108,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setStreamProbabilityWeight(index: Int, weight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setStreamProbabilityWeightBind, segment, index, weight)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setStreamProbabilityWeightBind, segment, index, weight)
     }
 
     /**
@@ -117,7 +118,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStreamProbabilityWeight(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getStreamProbabilityWeightBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getStreamProbabilityWeightBind, segment, index)
     }
 
     /**
@@ -127,7 +128,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setStreamsCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStreamsCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStreamsCountBind, segment, count)
     }
 
     /**
@@ -137,7 +138,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getStreamsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStreamsCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamsCountBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setRandomPitch(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRandomPitchBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomPitchBind, segment, scale)
     }
 
     /**
@@ -163,7 +164,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getRandomPitch(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomPitchBind, segment)
     }
 
     /**
@@ -174,7 +175,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setRandomPitchSemitones(semitones: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRandomPitchSemitonesBind, segment, semitones)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomPitchSemitonesBind, segment, semitones)
     }
 
     /**
@@ -185,7 +186,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getRandomPitchSemitones(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomPitchSemitonesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomPitchSemitonesBind, segment)
     }
 
     /**
@@ -197,7 +198,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setRandomVolumeOffsetDb(dbOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRandomVolumeOffsetDbBind, segment, dbOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomVolumeOffsetDbBind, segment, dbOffset)
     }
 
     /**
@@ -209,7 +210,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getRandomVolumeOffsetDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomVolumeOffsetDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomVolumeOffsetDbBind, segment)
     }
 
     /**
@@ -219,7 +220,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setPlaybackMode(mode: AudioStreamRandomizer.PlaybackMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPlaybackModeBind, segment, mode.value)
     }
 
     /**
@@ -229,7 +230,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getPlaybackMode(): AudioStreamRandomizer.PlaybackMode {
         checkOpen()
-        return AudioStreamRandomizer.PlaybackMode(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, segment))
+        return AudioStreamRandomizer.PlaybackMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaybackModeBind, segment))
     }
 
     /**
@@ -277,90 +278,92 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamRandomizer? =
             if (handle.address() == 0L) null else AudioStreamRandomizer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_STREAM_HASH = 1892018854L
-        private val addStreamBind by lazy {
+        @JvmField
+        val addStreamBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "add_stream", ADD_STREAM_HASH)
-        }
 
         private const val MOVE_STREAM_HASH = 3937882851L
-        private val moveStreamBind by lazy {
+        @JvmField
+        val moveStreamBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "move_stream", MOVE_STREAM_HASH)
-        }
 
         private const val REMOVE_STREAM_HASH = 1286410249L
-        private val removeStreamBind by lazy {
+        @JvmField
+        val removeStreamBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "remove_stream", REMOVE_STREAM_HASH)
-        }
 
         private const val SET_STREAM_HASH = 111075094L
-        private val setStreamBind by lazy {
+        @JvmField
+        val setStreamBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_stream", SET_STREAM_HASH)
-        }
 
         private const val GET_STREAM_HASH = 2739380747L
-        private val getStreamBind by lazy {
+        @JvmField
+        val getStreamBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_stream", GET_STREAM_HASH)
-        }
 
         private const val SET_STREAM_PROBABILITY_WEIGHT_HASH = 1602489585L
-        private val setStreamProbabilityWeightBind by lazy {
+        @JvmField
+        val setStreamProbabilityWeightBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_stream_probability_weight", SET_STREAM_PROBABILITY_WEIGHT_HASH)
-        }
 
         private const val GET_STREAM_PROBABILITY_WEIGHT_HASH = 2339986948L
-        private val getStreamProbabilityWeightBind by lazy {
+        @JvmField
+        val getStreamProbabilityWeightBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_stream_probability_weight", GET_STREAM_PROBABILITY_WEIGHT_HASH)
-        }
 
         private const val SET_STREAMS_COUNT_HASH = 1286410249L
-        private val setStreamsCountBind by lazy {
+        @JvmField
+        val setStreamsCountBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_streams_count", SET_STREAMS_COUNT_HASH)
-        }
 
         private const val GET_STREAMS_COUNT_HASH = 3905245786L
-        private val getStreamsCountBind by lazy {
+        @JvmField
+        val getStreamsCountBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_streams_count", GET_STREAMS_COUNT_HASH)
-        }
 
         private const val SET_RANDOM_PITCH_HASH = 373806689L
-        private val setRandomPitchBind by lazy {
+        @JvmField
+        val setRandomPitchBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_random_pitch", SET_RANDOM_PITCH_HASH)
-        }
 
         private const val GET_RANDOM_PITCH_HASH = 1740695150L
-        private val getRandomPitchBind by lazy {
+        @JvmField
+        val getRandomPitchBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_random_pitch", GET_RANDOM_PITCH_HASH)
-        }
 
         private const val SET_RANDOM_PITCH_SEMITONES_HASH = 373806689L
-        private val setRandomPitchSemitonesBind by lazy {
+        @JvmField
+        val setRandomPitchSemitonesBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_random_pitch_semitones", SET_RANDOM_PITCH_SEMITONES_HASH)
-        }
 
         private const val GET_RANDOM_PITCH_SEMITONES_HASH = 1740695150L
-        private val getRandomPitchSemitonesBind by lazy {
+        @JvmField
+        val getRandomPitchSemitonesBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_random_pitch_semitones", GET_RANDOM_PITCH_SEMITONES_HASH)
-        }
 
         private const val SET_RANDOM_VOLUME_OFFSET_DB_HASH = 373806689L
-        private val setRandomVolumeOffsetDbBind by lazy {
+        @JvmField
+        val setRandomVolumeOffsetDbBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_random_volume_offset_db", SET_RANDOM_VOLUME_OFFSET_DB_HASH)
-        }
 
         private const val GET_RANDOM_VOLUME_OFFSET_DB_HASH = 1740695150L
-        private val getRandomVolumeOffsetDbBind by lazy {
+        @JvmField
+        val getRandomVolumeOffsetDbBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_random_volume_offset_db", GET_RANDOM_VOLUME_OFFSET_DB_HASH)
-        }
 
         private const val SET_PLAYBACK_MODE_HASH = 3950967023L
-        private val setPlaybackModeBind by lazy {
+        @JvmField
+        val setPlaybackModeBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "set_playback_mode", SET_PLAYBACK_MODE_HASH)
-        }
 
         private const val GET_PLAYBACK_MODE_HASH = 3943055077L
-        private val getPlaybackModeBind by lazy {
+        @JvmField
+        val getPlaybackModeBind =
             ObjectCalls.getMethodBind("AudioStreamRandomizer", "get_playback_mode", GET_PLAYBACK_MODE_HASH)
-        }
     }
 }

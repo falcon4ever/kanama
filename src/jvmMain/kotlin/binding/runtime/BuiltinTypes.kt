@@ -315,7 +315,7 @@ object BuiltinTypes {
   fun readVariantScalarOwned(variant: MemorySegment, arena: Arena): Any? {
     val value = variantToScalar(variant, arena)
     if (value is GodotObject && value.isClass("RefCounted")) {
-      ObjectCalls.ptrcallNoArgsRetBool(referenceBind, value.segment)
+      ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.referenceBind, value.segment)
       return RefCounted.owned(RefCounted(value.handle))
     }
     return value
@@ -383,7 +383,7 @@ object BuiltinTypes {
     VariantConverters.variantToType(VariantType.OBJECT).invoke(scratch, variant)
     val handle = scratch.get(ADDRESS, 0)
     if (handle.address() == 0L) return null
-    ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
+    ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.referenceBind, handle)
     ScriptPropertyCapture.recordHandle(handle)
     return wrapper(handle)
   }
@@ -425,7 +425,7 @@ object BuiltinTypes {
     VariantConverters.variantToType(VariantType.ARRAY).invoke(scratch, variant)
     try {
       return readArrayObjects(scratch) { handle ->
-        ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.referenceBind, handle)
         ScriptPropertyCapture.recordHandle(handle)
         wrapper(handle)
       }
@@ -436,7 +436,7 @@ object BuiltinTypes {
 
   fun releaseRefCounted(handle: MemorySegment) {
     if (handle.address() == 0L) return
-    val shouldDestroy = ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)
+    val shouldDestroy = ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.unreferenceBind, handle)
     if (System.getenv("KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP") == "1") {
       System.err.println(
         "[kanama:kt] script property cleanup RefCounted handle=0x${handle.address().toString(16)} destroy=$shouldDestroy"
@@ -1852,7 +1852,7 @@ object BuiltinTypes {
     VariantConverters.variantToType(VariantType.DICTIONARY).invoke(scratch, variant)
     try {
       return readDictionaryObjectValues(scratch) { handle ->
-        ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
+        ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.referenceBind, handle)
         ScriptPropertyCapture.recordHandle(handle)
         wrapper(handle)
       }
@@ -2868,11 +2868,15 @@ object BuiltinTypes {
   private const val REFCOUNTED_REFERENCE_HASH = 2240911060L
   private const val REFCOUNTED_UNREFERENCE_HASH = 2240911060L
 
-  private val referenceBind by lazy {
-    ObjectCalls.getMethodBind("RefCounted", "reference", REFCOUNTED_REFERENCE_HASH)
-  }
+  // Bound together on the first reference or release (task 131 item 18): the holder's class
+  // initialisation is the laziness, and each bind is a static final after it.
+  private object RefCountedBinds {
+    @JvmField
+    val referenceBind: MemorySegment =
+      ObjectCalls.getMethodBind("RefCounted", "reference", REFCOUNTED_REFERENCE_HASH)
 
-  private val unreferenceBind by lazy {
-    ObjectCalls.getMethodBind("RefCounted", "unreference", REFCOUNTED_UNREFERENCE_HASH)
+    @JvmField
+    val unreferenceBind: MemorySegment =
+      ObjectCalls.getMethodBind("RefCounted", "unreference", REFCOUNTED_UNREFERENCE_HASH)
   }
 }

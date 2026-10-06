@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -84,7 +85,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, pMember.value)
     }
 
     /**
@@ -94,7 +95,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -104,7 +105,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setWidth(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setWidthBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setWidthBind, segment, pMember)
     }
 
     /**
@@ -114,7 +115,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWidth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getWidthBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHeight(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setHeightBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setHeightBind, segment, pMember)
     }
 
     /**
@@ -134,7 +135,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHeight(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getHeightBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDepth(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setDepthBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setDepthBind, segment, pMember)
     }
 
     /**
@@ -154,7 +155,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepth(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getDepthBind, segment)
     }
 
     /**
@@ -164,7 +165,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setArrayLayers(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setArrayLayersBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setArrayLayersBind, segment, pMember)
     }
 
     /**
@@ -174,7 +175,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getArrayLayers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getArrayLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getArrayLayersBind, segment)
     }
 
     /**
@@ -184,7 +185,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMipmaps(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMipmapsBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setMipmapsBind, segment, pMember)
     }
 
     /**
@@ -194,7 +195,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMipmaps(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMipmapsBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTextureType(pMember: RenderingDevice.TextureType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, pMember.value)
     }
 
     /**
@@ -214,7 +215,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextureType(): RenderingDevice.TextureType {
         checkOpen()
-        return RenderingDevice.TextureType(ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment))
+        return RenderingDevice.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
     }
 
     /**
@@ -224,7 +225,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSamples(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSamplesBind, segment, pMember.value)
     }
 
     /**
@@ -234,7 +235,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment))
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplesBind, segment))
     }
 
     /**
@@ -244,7 +245,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setUsageBits(pMember: RenderingDevice.TextureUsageBits) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setUsageBitsBind, segment, pMember.value)
     }
 
     /**
@@ -254,7 +255,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUsageBits(): RenderingDevice.TextureUsageBits {
         checkOpen()
-        return RenderingDevice.TextureUsageBits(ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, segment))
+        return RenderingDevice.TextureUsageBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUsageBitsBind, segment))
     }
 
     /**
@@ -264,7 +265,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIsResolveBuffer(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsResolveBufferBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIsResolveBufferBind, segment, pMember)
     }
 
     /**
@@ -274,7 +275,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIsResolveBuffer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsResolveBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsResolveBufferBind, segment)
     }
 
     /**
@@ -287,7 +288,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIsDiscardable(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsDiscardableBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIsDiscardableBind, segment, pMember)
     }
 
     /**
@@ -300,7 +301,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIsDiscardable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsDiscardableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsDiscardableBind, segment)
     }
 
     /**
@@ -312,7 +313,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addShareableFormat(format: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.addShareableFormatBind, segment, format.value)
     }
 
     /**
@@ -323,7 +324,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun removeShareableFormat(format: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.removeShareableFormatBind, segment, format.value)
     }
 
     companion object {
@@ -336,125 +337,127 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDTextureFormat? =
             if (handle.address() == 0L) null else RDTextureFormat(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FORMAT_HASH = 565531219L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_format", SET_FORMAT_HASH)
-        }
 
         private const val GET_FORMAT_HASH = 2235804183L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 3905245786L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 1286410249L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 3905245786L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val SET_DEPTH_HASH = 1286410249L
-        private val setDepthBind by lazy {
+        @JvmField
+        val setDepthBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_depth", SET_DEPTH_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 3905245786L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val SET_ARRAY_LAYERS_HASH = 1286410249L
-        private val setArrayLayersBind by lazy {
+        @JvmField
+        val setArrayLayersBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_array_layers", SET_ARRAY_LAYERS_HASH)
-        }
 
         private const val GET_ARRAY_LAYERS_HASH = 3905245786L
-        private val getArrayLayersBind by lazy {
+        @JvmField
+        val getArrayLayersBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_array_layers", GET_ARRAY_LAYERS_HASH)
-        }
 
         private const val SET_MIPMAPS_HASH = 1286410249L
-        private val setMipmapsBind by lazy {
+        @JvmField
+        val setMipmapsBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_mipmaps", SET_MIPMAPS_HASH)
-        }
 
         private const val GET_MIPMAPS_HASH = 3905245786L
-        private val getMipmapsBind by lazy {
+        @JvmField
+        val getMipmapsBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_mipmaps", GET_MIPMAPS_HASH)
-        }
 
         private const val SET_TEXTURE_TYPE_HASH = 652343381L
-        private val setTextureTypeBind by lazy {
+        @JvmField
+        val setTextureTypeBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_texture_type", SET_TEXTURE_TYPE_HASH)
-        }
 
         private const val GET_TEXTURE_TYPE_HASH = 4036357416L
-        private val getTextureTypeBind by lazy {
+        @JvmField
+        val getTextureTypeBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_texture_type", GET_TEXTURE_TYPE_HASH)
-        }
 
         private const val SET_SAMPLES_HASH = 3774171498L
-        private val setSamplesBind by lazy {
+        @JvmField
+        val setSamplesBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_samples", SET_SAMPLES_HASH)
-        }
 
         private const val GET_SAMPLES_HASH = 407791724L
-        private val getSamplesBind by lazy {
+        @JvmField
+        val getSamplesBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_samples", GET_SAMPLES_HASH)
-        }
 
         private const val SET_USAGE_BITS_HASH = 245642367L
-        private val setUsageBitsBind by lazy {
+        @JvmField
+        val setUsageBitsBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_usage_bits", SET_USAGE_BITS_HASH)
-        }
 
         private const val GET_USAGE_BITS_HASH = 1313398998L
-        private val getUsageBitsBind by lazy {
+        @JvmField
+        val getUsageBitsBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_usage_bits", GET_USAGE_BITS_HASH)
-        }
 
         private const val SET_IS_RESOLVE_BUFFER_HASH = 2586408642L
-        private val setIsResolveBufferBind by lazy {
+        @JvmField
+        val setIsResolveBufferBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_is_resolve_buffer", SET_IS_RESOLVE_BUFFER_HASH)
-        }
 
         private const val GET_IS_RESOLVE_BUFFER_HASH = 36873697L
-        private val getIsResolveBufferBind by lazy {
+        @JvmField
+        val getIsResolveBufferBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_is_resolve_buffer", GET_IS_RESOLVE_BUFFER_HASH)
-        }
 
         private const val SET_IS_DISCARDABLE_HASH = 2586408642L
-        private val setIsDiscardableBind by lazy {
+        @JvmField
+        val setIsDiscardableBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "set_is_discardable", SET_IS_DISCARDABLE_HASH)
-        }
 
         private const val GET_IS_DISCARDABLE_HASH = 36873697L
-        private val getIsDiscardableBind by lazy {
+        @JvmField
+        val getIsDiscardableBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "get_is_discardable", GET_IS_DISCARDABLE_HASH)
-        }
 
         private const val ADD_SHAREABLE_FORMAT_HASH = 565531219L
-        private val addShareableFormatBind by lazy {
+        @JvmField
+        val addShareableFormatBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "add_shareable_format", ADD_SHAREABLE_FORMAT_HASH)
-        }
 
         private const val REMOVE_SHAREABLE_FORMAT_HASH = 565531219L
-        private val removeShareableFormatBind by lazy {
+        @JvmField
+        val removeShareableFormatBind =
             ObjectCalls.getMethodBind("RDTextureFormat", "remove_shareable_format", REMOVE_SHAREABLE_FORMAT_HASH)
-        }
     }
 }

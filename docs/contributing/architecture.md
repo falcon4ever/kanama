@@ -143,6 +143,14 @@ Key points:
 
 - **`bootstrap.c` runs once and stops.** It does not stay in the call path.
   After step 6 the C frame returns and is never re-entered.
+- **The bootstrap chooses the JVM options.** The classpath, native access, the JNI
+  `exit` hook, JDWP when configured, then the user's options — from
+  `kanama-jvm-options.txt` next to `kanama.jar` (exported games), the project
+  setting `kanama/jvm/options`, then `KANAMA_JVM_OPTIONS` — and no heap or GC
+  option of Kanama's own. They are JNI options, which HotSpot treats as
+  command-line ones; G1 ignores young-generation sizes from `JAVA_TOOL_OPTIONS`.
+  See [Desktop and Packaging → JVM Options](../exporting/desktop.md#jvm-options)
+  for the young-generation cap recommended to games that spawn many objects at once.
 - **The proc-address getter is the only thing C hands to Kotlin.** A single
   `long`. Everything else Kotlin needs, it asks for itself via that getter.
 - **Class registration happens during the `initialize` upcall**, not during

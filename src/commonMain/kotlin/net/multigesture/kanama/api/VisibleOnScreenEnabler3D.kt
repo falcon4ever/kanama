@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -32,7 +33,7 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
      * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_mode
      */
     fun setEnableMode(mode: VisibleOnScreenEnabler3D.EnableMode) {
-        ObjectCalls.ptrcallWithLongArg(setEnableModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEnableModeBind, segment, mode.value)
     }
 
     /**
@@ -42,7 +43,7 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
      * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_mode
      */
     fun getEnableMode(): VisibleOnScreenEnabler3D.EnableMode {
-        return VisibleOnScreenEnabler3D.EnableMode(ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, segment))
+        return VisibleOnScreenEnabler3D.EnableMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEnableModeBind, segment))
     }
 
     /**
@@ -54,7 +55,7 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
      * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_node_path
      */
     fun setEnableNodePath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setEnableNodePathBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setEnableNodePathBind, segment, path)
     }
 
     /**
@@ -66,7 +67,7 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
      * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_node_path
      */
     fun getEnableNodePath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getEnableNodePathBind, segment)
     }
 
     /**
@@ -107,25 +108,27 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
 
         internal fun wrap(handle: RawSegment): VisibleOnScreenEnabler3D? =
             if (handle.address() == 0L) null else VisibleOnScreenEnabler3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLE_MODE_HASH = 320303646L
-        private val setEnableModeBind by lazy {
+        @JvmField
+        val setEnableModeBind =
             ObjectCalls.getMethodBind("VisibleOnScreenEnabler3D", "set_enable_mode", SET_ENABLE_MODE_HASH)
-        }
 
         private const val GET_ENABLE_MODE_HASH = 3352990031L
-        private val getEnableModeBind by lazy {
+        @JvmField
+        val getEnableModeBind =
             ObjectCalls.getMethodBind("VisibleOnScreenEnabler3D", "get_enable_mode", GET_ENABLE_MODE_HASH)
-        }
 
         private const val SET_ENABLE_NODE_PATH_HASH = 1348162250L
-        private val setEnableNodePathBind by lazy {
+        @JvmField
+        val setEnableNodePathBind =
             ObjectCalls.getMethodBind("VisibleOnScreenEnabler3D", "set_enable_node_path", SET_ENABLE_NODE_PATH_HASH)
-        }
 
         private const val GET_ENABLE_NODE_PATH_HASH = 277076166L
-        private val getEnableNodePathBind by lazy {
+        @JvmField
+        val getEnableNodePathBind =
             ObjectCalls.getMethodBind("VisibleOnScreenEnabler3D", "get_enable_node_path", GET_ENABLE_NODE_PATH_HASH)
-        }
     }
 }

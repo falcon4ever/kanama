@@ -19,7 +19,5 @@ class CheckBox(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): CheckBox? =
             if (handle.address() == 0L) null else CheckBox(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

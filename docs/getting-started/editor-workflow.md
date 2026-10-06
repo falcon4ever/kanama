@@ -177,6 +177,9 @@ can set breakpoints in Kotlin scripts and step through lifecycle callbacks,
 signal handlers, and ordinary gameplay code while the game is running.
 
 For one-off launches, `KANAMA_JDWP_PORT=5005` overrides the project setting.
+Other JVM options (a GC log, heap sizes) go in `KANAMA_JVM_OPTIONS`, for example
+`KANAMA_JVM_OPTIONS="-Xlog:gc"`; see
+[JVM Options](../exporting/desktop.md#jvm-options).
 
 ## Script Reload
 

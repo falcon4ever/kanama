@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setDelay(delay: Double): MethodTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -35,7 +36,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setTrans(trans: Tween.TransitionType): MethodTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setTransBind, segment, trans.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -51,7 +52,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setEase(ease: Tween.EaseType): MethodTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setEaseBind, segment, ease.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -69,20 +70,22 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MethodTweener? =
             if (handle.address() == 0L) null else MethodTweener(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DELAY_HASH = 266477812L
-        private val setDelayBind by lazy {
+        @JvmField
+        val setDelayBind =
             ObjectCalls.getMethodBind("MethodTweener", "set_delay", SET_DELAY_HASH)
-        }
 
         private const val SET_TRANS_HASH = 3740975367L
-        private val setTransBind by lazy {
+        @JvmField
+        val setTransBind =
             ObjectCalls.getMethodBind("MethodTweener", "set_trans", SET_TRANS_HASH)
-        }
 
         private const val SET_EASE_HASH = 315540545L
-        private val setEaseBind by lazy {
+        @JvmField
+        val setEaseBind =
             ObjectCalls.getMethodBind("MethodTweener", "set_ease", SET_EASE_HASH)
-        }
     }
 }

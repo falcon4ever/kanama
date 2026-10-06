@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun from(value: Any?): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithVariantArgRetObject(fromBind, segment, value)
+        val ret = ObjectCalls.ptrcallWithVariantArgRetObject(Binds.fromBind, segment, value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -35,7 +36,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun fromCurrent(): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(fromCurrentBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.fromCurrentBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -50,7 +51,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun asRelative(): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(asRelativeBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.asRelativeBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -66,7 +67,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setTrans(trans: Tween.TransitionType): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setTransBind, segment, trans.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -82,7 +83,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setEase(ease: Tween.EaseType): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setEaseBind, segment, ease.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -101,7 +102,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setCustomInterpolator(interpolatorMethod: GodotCallable): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithCallableArgRetObject(setCustomInterpolatorBind, segment, interpolatorMethod.target.segment, interpolatorMethod.method)
+        val ret = ObjectCalls.ptrcallWithCallableArgRetObject(Binds.setCustomInterpolatorBind, segment, interpolatorMethod.target.segment, interpolatorMethod.method)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -117,7 +118,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setDelay(delay: Double): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -135,40 +136,42 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PropertyTweener? =
             if (handle.address() == 0L) null else PropertyTweener(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FROM_HASH = 4190193059L
-        private val fromBind by lazy {
+        @JvmField
+        val fromBind =
             ObjectCalls.getMethodBind("PropertyTweener", "from", FROM_HASH)
-        }
 
         private const val FROM_CURRENT_HASH = 4279177709L
-        private val fromCurrentBind by lazy {
+        @JvmField
+        val fromCurrentBind =
             ObjectCalls.getMethodBind("PropertyTweener", "from_current", FROM_CURRENT_HASH)
-        }
 
         private const val AS_RELATIVE_HASH = 4279177709L
-        private val asRelativeBind by lazy {
+        @JvmField
+        val asRelativeBind =
             ObjectCalls.getMethodBind("PropertyTweener", "as_relative", AS_RELATIVE_HASH)
-        }
 
         private const val SET_TRANS_HASH = 1899107404L
-        private val setTransBind by lazy {
+        @JvmField
+        val setTransBind =
             ObjectCalls.getMethodBind("PropertyTweener", "set_trans", SET_TRANS_HASH)
-        }
 
         private const val SET_EASE_HASH = 1080455622L
-        private val setEaseBind by lazy {
+        @JvmField
+        val setEaseBind =
             ObjectCalls.getMethodBind("PropertyTweener", "set_ease", SET_EASE_HASH)
-        }
 
         private const val SET_CUSTOM_INTERPOLATOR_HASH = 3174170268L
-        private val setCustomInterpolatorBind by lazy {
+        @JvmField
+        val setCustomInterpolatorBind =
             ObjectCalls.getMethodBind("PropertyTweener", "set_custom_interpolator", SET_CUSTOM_INTERPOLATOR_HASH)
-        }
 
         private const val SET_DELAY_HASH = 2171559331L
-        private val setDelayBind by lazy {
+        @JvmField
+        val setDelayBind =
             ObjectCalls.getMethodBind("PropertyTweener", "set_delay", SET_DELAY_HASH)
-        }
     }
 }

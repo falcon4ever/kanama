@@ -20,7 +20,5 @@ class VisualShaderNodeParticleOutput(handle: GodotHandle) : VisualShaderNodeOutp
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleOutput? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleOutput(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

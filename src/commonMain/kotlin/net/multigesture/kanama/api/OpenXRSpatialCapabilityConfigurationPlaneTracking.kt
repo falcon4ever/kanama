@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,22 +11,22 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
     fun supportsMesh2d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(supportsMesh2dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsMesh2dBind, segment)
     }
 
     fun supportsPolygons(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(supportsPolygonsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsPolygonsBind, segment)
     }
 
     fun supportsLabels(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(supportsLabelsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsLabelsBind, segment)
     }
 
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
     }
 
     companion object {
@@ -38,25 +39,27 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SUPPORTS_MESH_2D_HASH = 2240911060L
-        private val supportsMesh2dBind by lazy {
+        @JvmField
+        val supportsMesh2dBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "supports_mesh_2d", SUPPORTS_MESH_2D_HASH)
-        }
 
         private const val SUPPORTS_POLYGONS_HASH = 2240911060L
-        private val supportsPolygonsBind by lazy {
+        @JvmField
+        val supportsPolygonsBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "supports_polygons", SUPPORTS_POLYGONS_HASH)
-        }
 
         private const val SUPPORTS_LABELS_HASH = 2240911060L
-        private val supportsLabelsBind by lazy {
+        @JvmField
+        val supportsLabelsBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "supports_labels", SUPPORTS_LABELS_HASH)
-        }
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
-        private val getEnabledComponentsBind by lazy {
+        @JvmField
+        val getEnabledComponentsBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationPlaneTracking", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
-        }
     }
 }

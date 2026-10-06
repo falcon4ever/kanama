@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -48,7 +49,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun setExposureMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExposureMultiplierBind, segment, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExposureMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -58,7 +59,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getExposureMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExposureMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExposureMultiplierBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun setExposureSensitivity(sensitivity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExposureSensitivityBind, segment, sensitivity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExposureSensitivityBind, segment, sensitivity)
     }
 
     /**
@@ -86,7 +87,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getExposureSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExposureSensitivityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExposureSensitivityBind, segment)
     }
 
     /**
@@ -99,7 +100,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun setAutoExposureEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAutoExposureEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoExposureEnabledBind, segment, enabled)
     }
 
     /**
@@ -112,7 +113,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun isAutoExposureEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoExposureEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoExposureEnabledBind, segment)
     }
 
     /**
@@ -123,7 +124,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun setAutoExposureSpeed(exposureSpeed: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureSpeedBind, segment, exposureSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureSpeedBind, segment, exposureSpeed)
     }
 
     /**
@@ -134,7 +135,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getAutoExposureSpeed(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureSpeedBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun setAutoExposureScale(exposureGrey: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureScaleBind, segment, exposureGrey)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureScaleBind, segment, exposureGrey)
     }
 
     /**
@@ -154,7 +155,7 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
      */
     fun getAutoExposureScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureScaleBind, segment)
     }
 
     companion object {
@@ -167,55 +168,57 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraAttributes? =
             if (handle.address() == 0L) null else CameraAttributes(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EXPOSURE_MULTIPLIER_HASH = 373806689L
-        private val setExposureMultiplierBind by lazy {
+        @JvmField
+        val setExposureMultiplierBind =
             ObjectCalls.getMethodBind("CameraAttributes", "set_exposure_multiplier", SET_EXPOSURE_MULTIPLIER_HASH)
-        }
 
         private const val GET_EXPOSURE_MULTIPLIER_HASH = 1740695150L
-        private val getExposureMultiplierBind by lazy {
+        @JvmField
+        val getExposureMultiplierBind =
             ObjectCalls.getMethodBind("CameraAttributes", "get_exposure_multiplier", GET_EXPOSURE_MULTIPLIER_HASH)
-        }
 
         private const val SET_EXPOSURE_SENSITIVITY_HASH = 373806689L
-        private val setExposureSensitivityBind by lazy {
+        @JvmField
+        val setExposureSensitivityBind =
             ObjectCalls.getMethodBind("CameraAttributes", "set_exposure_sensitivity", SET_EXPOSURE_SENSITIVITY_HASH)
-        }
 
         private const val GET_EXPOSURE_SENSITIVITY_HASH = 1740695150L
-        private val getExposureSensitivityBind by lazy {
+        @JvmField
+        val getExposureSensitivityBind =
             ObjectCalls.getMethodBind("CameraAttributes", "get_exposure_sensitivity", GET_EXPOSURE_SENSITIVITY_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_ENABLED_HASH = 2586408642L
-        private val setAutoExposureEnabledBind by lazy {
+        @JvmField
+        val setAutoExposureEnabledBind =
             ObjectCalls.getMethodBind("CameraAttributes", "set_auto_exposure_enabled", SET_AUTO_EXPOSURE_ENABLED_HASH)
-        }
 
         private const val IS_AUTO_EXPOSURE_ENABLED_HASH = 36873697L
-        private val isAutoExposureEnabledBind by lazy {
+        @JvmField
+        val isAutoExposureEnabledBind =
             ObjectCalls.getMethodBind("CameraAttributes", "is_auto_exposure_enabled", IS_AUTO_EXPOSURE_ENABLED_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_SPEED_HASH = 373806689L
-        private val setAutoExposureSpeedBind by lazy {
+        @JvmField
+        val setAutoExposureSpeedBind =
             ObjectCalls.getMethodBind("CameraAttributes", "set_auto_exposure_speed", SET_AUTO_EXPOSURE_SPEED_HASH)
-        }
 
         private const val GET_AUTO_EXPOSURE_SPEED_HASH = 1740695150L
-        private val getAutoExposureSpeedBind by lazy {
+        @JvmField
+        val getAutoExposureSpeedBind =
             ObjectCalls.getMethodBind("CameraAttributes", "get_auto_exposure_speed", GET_AUTO_EXPOSURE_SPEED_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_SCALE_HASH = 373806689L
-        private val setAutoExposureScaleBind by lazy {
+        @JvmField
+        val setAutoExposureScaleBind =
             ObjectCalls.getMethodBind("CameraAttributes", "set_auto_exposure_scale", SET_AUTO_EXPOSURE_SCALE_HASH)
-        }
 
         private const val GET_AUTO_EXPOSURE_SCALE_HASH = 1740695150L
-        private val getAutoExposureScaleBind by lazy {
+        @JvmField
+        val getAutoExposureScaleBind =
             ObjectCalls.getMethodBind("CameraAttributes", "get_auto_exposure_scale", GET_AUTO_EXPOSURE_SCALE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -73,102 +74,102 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
 
     fun getSkinRoot(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkinRootBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkinRootBind, segment)
     }
 
     fun setSkinRoot(skinRoot: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSkinRootBind, segment, skinRoot)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSkinRootBind, segment, skinRoot)
     }
 
     fun getJointsOriginal(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsOriginalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsOriginalBind, segment)
     }
 
     fun setJointsOriginal(jointsOriginal: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsOriginalBind, segment, jointsOriginal)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setJointsOriginalBind, segment, jointsOriginal)
     }
 
     fun getInverseBinds(): List<Transform3D> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3DList(getInverseBindsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3DList(Binds.getInverseBindsBind, segment)
     }
 
     fun setInverseBinds(inverseBinds: List<Transform3D>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DListArg(setInverseBindsBind, segment, inverseBinds)
+        ObjectCalls.ptrcallWithTransform3DListArg(Binds.setInverseBindsBind, segment, inverseBinds)
     }
 
     fun getJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getJointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getJointsBind, segment)
     }
 
     fun setJoints(joints: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setJointsBind, segment, joints)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setJointsBind, segment, joints)
     }
 
     fun getNonJoints(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getNonJointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getNonJointsBind, segment)
     }
 
     fun setNonJoints(nonJoints: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setNonJointsBind, segment, nonJoints)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setNonJointsBind, segment, nonJoints)
     }
 
     fun getRoots(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootsBind, segment)
     }
 
     fun setRoots(roots: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootsBind, segment, roots)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setRootsBind, segment, roots)
     }
 
     fun getSkeleton(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkeletonBind, segment)
     }
 
     fun setSkeleton(skeleton: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSkeletonBind, segment, skeleton)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSkeletonBind, segment, skeleton)
     }
 
     fun getJointIToBoneI(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToBoneIBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJointIToBoneIBind, segment)
     }
 
     fun setJointIToBoneI(jointIToBoneI: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setJointIToBoneIBind, segment, jointIToBoneI)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setJointIToBoneIBind, segment, jointIToBoneI)
     }
 
     fun getJointIToName(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getJointIToNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJointIToNameBind, segment)
     }
 
     fun setJointIToName(jointIToName: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setJointIToNameBind, segment, jointIToName)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setJointIToNameBind, segment, jointIToName)
     }
 
     fun getGodotSkin(): Skin? {
         checkOpen()
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotSkinBind, segment))
     }
 
     fun setGodotSkin(godotSkin: Skin?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, segment, listOf(godotSkin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGodotSkinBind, segment, listOf(godotSkin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -181,105 +182,107 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFSkin? =
             if (handle.address() == 0L) null else GLTFSkin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SKIN_ROOT_HASH = 2455072627L
-        private val getSkinRootBind by lazy {
+        @JvmField
+        val getSkinRootBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_skin_root", GET_SKIN_ROOT_HASH)
-        }
 
         private const val SET_SKIN_ROOT_HASH = 1286410249L
-        private val setSkinRootBind by lazy {
+        @JvmField
+        val setSkinRootBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_skin_root", SET_SKIN_ROOT_HASH)
-        }
 
         private const val GET_JOINTS_ORIGINAL_HASH = 969006518L
-        private val getJointsOriginalBind by lazy {
+        @JvmField
+        val getJointsOriginalBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_joints_original", GET_JOINTS_ORIGINAL_HASH)
-        }
 
         private const val SET_JOINTS_ORIGINAL_HASH = 3614634198L
-        private val setJointsOriginalBind by lazy {
+        @JvmField
+        val setJointsOriginalBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_joints_original", SET_JOINTS_ORIGINAL_HASH)
-        }
 
         private const val GET_INVERSE_BINDS_HASH = 2915620761L
-        private val getInverseBindsBind by lazy {
+        @JvmField
+        val getInverseBindsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_inverse_binds", GET_INVERSE_BINDS_HASH)
-        }
 
         private const val SET_INVERSE_BINDS_HASH = 381264803L
-        private val setInverseBindsBind by lazy {
+        @JvmField
+        val setInverseBindsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_inverse_binds", SET_INVERSE_BINDS_HASH)
-        }
 
         private const val GET_JOINTS_HASH = 969006518L
-        private val getJointsBind by lazy {
+        @JvmField
+        val getJointsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_joints", GET_JOINTS_HASH)
-        }
 
         private const val SET_JOINTS_HASH = 3614634198L
-        private val setJointsBind by lazy {
+        @JvmField
+        val setJointsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_joints", SET_JOINTS_HASH)
-        }
 
         private const val GET_NON_JOINTS_HASH = 969006518L
-        private val getNonJointsBind by lazy {
+        @JvmField
+        val getNonJointsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_non_joints", GET_NON_JOINTS_HASH)
-        }
 
         private const val SET_NON_JOINTS_HASH = 3614634198L
-        private val setNonJointsBind by lazy {
+        @JvmField
+        val setNonJointsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_non_joints", SET_NON_JOINTS_HASH)
-        }
 
         private const val GET_ROOTS_HASH = 969006518L
-        private val getRootsBind by lazy {
+        @JvmField
+        val getRootsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_roots", GET_ROOTS_HASH)
-        }
 
         private const val SET_ROOTS_HASH = 3614634198L
-        private val setRootsBind by lazy {
+        @JvmField
+        val setRootsBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_roots", SET_ROOTS_HASH)
-        }
 
         private const val GET_SKELETON_HASH = 2455072627L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_skeleton", GET_SKELETON_HASH)
-        }
 
         private const val SET_SKELETON_HASH = 1286410249L
-        private val setSkeletonBind by lazy {
+        @JvmField
+        val setSkeletonBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_skeleton", SET_SKELETON_HASH)
-        }
 
         private const val GET_JOINT_I_TO_BONE_I_HASH = 2382534195L
-        private val getJointIToBoneIBind by lazy {
+        @JvmField
+        val getJointIToBoneIBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_joint_i_to_bone_i", GET_JOINT_I_TO_BONE_I_HASH)
-        }
 
         private const val SET_JOINT_I_TO_BONE_I_HASH = 4155329257L
-        private val setJointIToBoneIBind by lazy {
+        @JvmField
+        val setJointIToBoneIBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_joint_i_to_bone_i", SET_JOINT_I_TO_BONE_I_HASH)
-        }
 
         private const val GET_JOINT_I_TO_NAME_HASH = 2382534195L
-        private val getJointIToNameBind by lazy {
+        @JvmField
+        val getJointIToNameBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_joint_i_to_name", GET_JOINT_I_TO_NAME_HASH)
-        }
 
         private const val SET_JOINT_I_TO_NAME_HASH = 4155329257L
-        private val setJointIToNameBind by lazy {
+        @JvmField
+        val setJointIToNameBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_joint_i_to_name", SET_JOINT_I_TO_NAME_HASH)
-        }
 
         private const val GET_GODOT_SKIN_HASH = 1032037385L
-        private val getGodotSkinBind by lazy {
+        @JvmField
+        val getGodotSkinBind =
             ObjectCalls.getMethodBind("GLTFSkin", "get_godot_skin", GET_GODOT_SKIN_HASH)
-        }
 
         private const val SET_GODOT_SKIN_HASH = 3971435618L
-        private val setGodotSkinBind by lazy {
+        @JvmField
+        val setGodotSkinBind =
             ObjectCalls.getMethodBind("GLTFSkin", "set_godot_skin", SET_GODOT_SKIN_HASH)
-        }
     }
 }

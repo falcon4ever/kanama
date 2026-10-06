@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -110,7 +111,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_cell
      */
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = 0) {
-        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
+        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(Binds.setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
     }
 
     /**
@@ -119,7 +120,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.erase_cell
      */
     fun eraseCell(coords: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(eraseCellBind, segment, coords)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.eraseCellBind, segment, coords)
     }
 
     /**
@@ -128,7 +129,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.fix_invalid_tiles
      */
     fun fixInvalidTiles() {
-        ObjectCalls.ptrcallNoArgs(fixInvalidTilesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.fixInvalidTilesBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_source_id
      */
     fun getCellSourceId(coords: Vector2i): Int {
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellSourceIdBind, segment, coords)
     }
 
     /**
@@ -157,7 +158,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_atlas_coords
      */
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getCellAtlasCoordsBind, segment, coords)
     }
 
     /**
@@ -166,7 +167,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_alternative_tile
      */
     fun getCellAlternativeTile(coords: Vector2i): Int {
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellAlternativeTileBind, segment, coords)
     }
 
     /**
@@ -176,7 +177,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_cell_tile_data
      */
     fun getCellTileData(coords: Vector2i): TileData? {
-        return TileData.wrap(ObjectCalls.ptrcallWithVector2iArgRetObject(getCellTileDataBind, segment, coords))
+        return TileData.wrap(ObjectCalls.ptrcallWithVector2iArgRetObject(Binds.getCellTileDataBind, segment, coords))
     }
 
     /**
@@ -186,7 +187,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_cell_flipped_h
      */
     fun isCellFlippedH(coords: Vector2i): Boolean {
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellFlippedHBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isCellFlippedHBind, segment, coords)
     }
 
     /**
@@ -196,7 +197,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_cell_flipped_v
      */
     fun isCellFlippedV(coords: Vector2i): Boolean {
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellFlippedVBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isCellFlippedVBind, segment, coords)
     }
 
     /**
@@ -206,7 +207,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_cell_transposed
      */
     fun isCellTransposed(coords: Vector2i): Boolean {
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isCellTransposedBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isCellTransposedBind, segment, coords)
     }
 
     /**
@@ -217,7 +218,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_used_cells
      */
     fun getUsedCells(): List<Vector2i> {
-        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2iList(Binds.getUsedCellsBind, segment)
     }
 
     /**
@@ -232,7 +233,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_used_cells_by_id
      */
     fun getUsedCellsById(sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1): List<Vector2i> {
-        return ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(getUsedCellsByIdBind, segment, sourceId, atlasCoords, alternativeTile)
+        return ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(Binds.getUsedCellsByIdBind, segment, sourceId, atlasCoords, alternativeTile)
     }
 
     /**
@@ -241,7 +242,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_used_rect
      */
     fun getUsedRect(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getUsedRectBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_pattern
      */
     fun getPattern(coordsArray: List<Vector2i>): TileMapPattern? {
-        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithVector2iListArgRetObject(getPatternBind, segment, coordsArray))
+        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithVector2iListArgRetObject(Binds.getPatternBind, segment, coordsArray))
     }
 
     /**
@@ -260,7 +261,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_pattern
      */
     fun setPattern(position: Vector2i, pattern: TileMapPattern?) {
-        ObjectCalls.ptrcallWithVector2iAndObjectArg(setPatternBind, segment, position, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithVector2iAndObjectArg(Binds.setPatternBind, segment, position, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -276,7 +277,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_cells_terrain_connect
      */
     fun setCellsTerrainConnect(cells: List<Vector2i>, terrainSet: Int, terrain: Int, ignoreEmptyTerrains: Boolean = true) {
-        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainConnectBind, segment, cells, terrainSet, terrain, ignoreEmptyTerrains)
+        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(Binds.setCellsTerrainConnectBind, segment, cells, terrainSet, terrain, ignoreEmptyTerrains)
     }
 
     /**
@@ -291,7 +292,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_cells_terrain_path
      */
     fun setCellsTerrainPath(path: List<Vector2i>, terrainSet: Int, terrain: Int, ignoreEmptyTerrains: Boolean = true) {
-        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(setCellsTerrainPathBind, segment, path, terrainSet, terrain, ignoreEmptyTerrains)
+        ObjectCalls.ptrcallWithVector2iListTwoIntAndBoolArgs(Binds.setCellsTerrainPathBind, segment, path, terrainSet, terrain, ignoreEmptyTerrains)
     }
 
     /**
@@ -300,7 +301,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.has_body_rid
      */
     fun hasBodyRid(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(hasBodyRidBind, segment, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.hasBodyRidBind, segment, body)
     }
 
     /**
@@ -313,7 +314,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_coords_for_body_rid
      */
     fun getCoordsForBodyRid(body: RID): Vector2i {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2i(getCoordsForBodyRidBind, segment, body)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2i(Binds.getCoordsForBodyRidBind, segment, body)
     }
 
     /**
@@ -327,7 +328,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.update_internals
      */
     fun updateInternals() {
-        ObjectCalls.ptrcallNoArgs(updateInternalsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateInternalsBind, segment)
     }
 
     /**
@@ -341,7 +342,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.notify_runtime_tile_data_update
      */
     fun notifyRuntimeTileDataUpdate() {
-        ObjectCalls.ptrcallNoArgs(notifyRuntimeTileDataUpdateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.notifyRuntimeTileDataUpdateBind, segment)
     }
 
     /**
@@ -353,7 +354,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.map_pattern
      */
     fun mapPattern(positionInTilemap: Vector2i, coordsInPattern: Vector2i, pattern: TileMapPattern?): Vector2i {
-        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(Binds.mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -364,7 +365,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_surrounding_cells
      */
     fun getSurroundingCells(coords: Vector2i): List<Vector2i> {
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(getSurroundingCellsBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2iList(Binds.getSurroundingCellsBind, segment, coords)
     }
 
     /**
@@ -374,7 +375,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_neighbor_cell
      */
     fun getNeighborCell(coords: Vector2i, neighbor: TileSet.CellNeighbor): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor.value)
+        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(Binds.getNeighborCellBind, segment, coords, neighbor.value)
     }
 
     /**
@@ -386,7 +387,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.map_to_local
      */
     fun mapToLocal(mapPosition: Vector2i): Vector2 {
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2(mapToLocalBind, segment, mapPosition)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2(Binds.mapToLocalBind, segment, mapPosition)
     }
 
     /**
@@ -397,7 +398,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.local_to_map
      */
     fun localToMap(localPosition: Vector2): Vector2i {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2i(localToMapBind, segment, localPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2i(Binds.localToMapBind, segment, localPosition)
     }
 
     /**
@@ -406,7 +407,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_tile_map_data_from_array
      */
     fun setTileMapDataFromArray(tileMapLayerData: ByteArray) {
-        ObjectCalls.ptrcallWithByteArrayArg(setTileMapDataFromArrayBind, segment, tileMapLayerData)
+        ObjectCalls.ptrcallWithByteArrayArg(Binds.setTileMapDataFromArrayBind, segment, tileMapLayerData)
     }
 
     /**
@@ -415,7 +416,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_tile_map_data_as_array
      */
     fun getTileMapDataAsArray(): ByteArray {
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getTileMapDataAsArrayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getTileMapDataAsArrayBind, segment)
     }
 
     /**
@@ -425,7 +426,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -435,7 +436,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -445,7 +446,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_tile_set
      */
     fun setTileSet(tileSet: TileSet?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTileSetBind, segment, listOf(tileSet?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTileSetBind, segment, listOf(tileSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -455,7 +456,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_tile_set
      */
     fun getTileSet(): TileSet? {
-        return TileSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTileSetBind, segment))
+        return TileSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTileSetBind, segment))
     }
 
     /**
@@ -465,7 +466,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_y_sort_origin
      */
     fun setYSortOrigin(ySortOrigin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, segment, ySortOrigin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setYSortOriginBind, segment, ySortOrigin)
     }
 
     /**
@@ -475,7 +476,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_y_sort_origin
      */
     fun getYSortOrigin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getYSortOriginBind, segment)
     }
 
     /**
@@ -485,7 +486,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_x_draw_order_reversed
      */
     fun setXDrawOrderReversed(xDrawOrderReversed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setXDrawOrderReversedBind, segment, xDrawOrderReversed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setXDrawOrderReversedBind, segment, xDrawOrderReversed)
     }
 
     /**
@@ -495,7 +496,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_x_draw_order_reversed
      */
     fun isXDrawOrderReversed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isXDrawOrderReversedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isXDrawOrderReversedBind, segment)
     }
 
     /**
@@ -510,7 +511,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_rendering_quadrant_size
      */
     fun setRenderingQuadrantSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRenderingQuadrantSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRenderingQuadrantSizeBind, segment, size)
     }
 
     /**
@@ -525,7 +526,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_rendering_quadrant_size
      */
     fun getRenderingQuadrantSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderingQuadrantSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderingQuadrantSizeBind, segment)
     }
 
     /**
@@ -534,7 +535,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_collision_enabled
      */
     fun setCollisionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollisionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollisionEnabledBind, segment, enabled)
     }
 
     /**
@@ -543,7 +544,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_collision_enabled
      */
     fun isCollisionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollisionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollisionEnabledBind, segment)
     }
 
     /**
@@ -553,7 +554,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_use_kinematic_bodies
      */
     fun setUseKinematicBodies(useKinematicBodies: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseKinematicBodiesBind, segment, useKinematicBodies)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseKinematicBodiesBind, segment, useKinematicBodies)
     }
 
     /**
@@ -563,7 +564,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_using_kinematic_bodies
      */
     fun isUsingKinematicBodies(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingKinematicBodiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingKinematicBodiesBind, segment)
     }
 
     /**
@@ -573,7 +574,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_collision_visibility_mode
      */
     fun setCollisionVisibilityMode(visibilityMode: TileMapLayer.DebugVisibilityMode) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCollisionVisibilityModeBind, segment, visibilityMode.value)
     }
 
     /**
@@ -583,7 +584,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_collision_visibility_mode
      */
     fun getCollisionVisibilityMode(): TileMapLayer.DebugVisibilityMode {
-        return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment))
+        return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCollisionVisibilityModeBind, segment))
     }
 
     /**
@@ -600,7 +601,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_physics_quadrant_size
      */
     fun setPhysicsQuadrantSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPhysicsQuadrantSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPhysicsQuadrantSizeBind, segment, size)
     }
 
     /**
@@ -617,7 +618,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_physics_quadrant_size
      */
     fun getPhysicsQuadrantSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsQuadrantSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicsQuadrantSizeBind, segment)
     }
 
     /**
@@ -626,7 +627,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_occlusion_enabled
      */
     fun setOcclusionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOcclusionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOcclusionEnabledBind, segment, enabled)
     }
 
     /**
@@ -635,7 +636,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_occlusion_enabled
      */
     fun isOcclusionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOcclusionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOcclusionEnabledBind, segment)
     }
 
     /**
@@ -644,7 +645,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_navigation_enabled
      */
     fun setNavigationEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNavigationEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNavigationEnabledBind, segment, enabled)
     }
 
     /**
@@ -653,7 +654,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.is_navigation_enabled
      */
     fun isNavigationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNavigationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNavigationEnabledBind, segment)
     }
 
     /**
@@ -663,7 +664,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_navigation_map
      */
     fun setNavigationMap(map: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, map)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setNavigationMapBind, segment, map)
     }
 
     /**
@@ -674,7 +675,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -684,7 +685,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_navigation_visibility_mode
      */
     fun setNavigationVisibilityMode(showNavigation: TileMapLayer.DebugVisibilityMode) {
-        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, segment, showNavigation.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setNavigationVisibilityModeBind, segment, showNavigation.value)
     }
 
     /**
@@ -694,7 +695,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_navigation_visibility_mode
      */
     fun getNavigationVisibilityMode(): TileMapLayer.DebugVisibilityMode {
-        return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment))
+        return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNavigationVisibilityModeBind, segment))
     }
 
     /** Signal `changed()`; see [TypedSignal]. */
@@ -746,280 +747,282 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): TileMapLayer? =
             if (handle.address() == 0L) null else TileMapLayer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CELL_HASH = 2428518503L
-        private val setCellBind by lazy {
+        @JvmField
+        val setCellBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_cell", SET_CELL_HASH)
-        }
 
         private const val ERASE_CELL_HASH = 1130785943L
-        private val eraseCellBind by lazy {
+        @JvmField
+        val eraseCellBind =
             ObjectCalls.getMethodBind("TileMapLayer", "erase_cell", ERASE_CELL_HASH)
-        }
 
         private const val FIX_INVALID_TILES_HASH = 3218959716L
-        private val fixInvalidTilesBind by lazy {
+        @JvmField
+        val fixInvalidTilesBind =
             ObjectCalls.getMethodBind("TileMapLayer", "fix_invalid_tiles", FIX_INVALID_TILES_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("TileMapLayer", "clear", CLEAR_HASH)
-        }
 
         private const val GET_CELL_SOURCE_ID_HASH = 2485466453L
-        private val getCellSourceIdBind by lazy {
+        @JvmField
+        val getCellSourceIdBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_cell_source_id", GET_CELL_SOURCE_ID_HASH)
-        }
 
         private const val GET_CELL_ATLAS_COORDS_HASH = 3050897911L
-        private val getCellAtlasCoordsBind by lazy {
+        @JvmField
+        val getCellAtlasCoordsBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_cell_atlas_coords", GET_CELL_ATLAS_COORDS_HASH)
-        }
 
         private const val GET_CELL_ALTERNATIVE_TILE_HASH = 2485466453L
-        private val getCellAlternativeTileBind by lazy {
+        @JvmField
+        val getCellAlternativeTileBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_cell_alternative_tile", GET_CELL_ALTERNATIVE_TILE_HASH)
-        }
 
         private const val GET_CELL_TILE_DATA_HASH = 205084707L
-        private val getCellTileDataBind by lazy {
+        @JvmField
+        val getCellTileDataBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_cell_tile_data", GET_CELL_TILE_DATA_HASH)
-        }
 
         private const val IS_CELL_FLIPPED_H_HASH = 3900751641L
-        private val isCellFlippedHBind by lazy {
+        @JvmField
+        val isCellFlippedHBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_cell_flipped_h", IS_CELL_FLIPPED_H_HASH)
-        }
 
         private const val IS_CELL_FLIPPED_V_HASH = 3900751641L
-        private val isCellFlippedVBind by lazy {
+        @JvmField
+        val isCellFlippedVBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_cell_flipped_v", IS_CELL_FLIPPED_V_HASH)
-        }
 
         private const val IS_CELL_TRANSPOSED_HASH = 3900751641L
-        private val isCellTransposedBind by lazy {
+        @JvmField
+        val isCellTransposedBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_cell_transposed", IS_CELL_TRANSPOSED_HASH)
-        }
 
         private const val GET_USED_CELLS_HASH = 3995934104L
-        private val getUsedCellsBind by lazy {
+        @JvmField
+        val getUsedCellsBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", GET_USED_CELLS_HASH)
-        }
 
         private const val GET_USED_CELLS_BY_ID_HASH = 4175304538L
-        private val getUsedCellsByIdBind by lazy {
+        @JvmField
+        val getUsedCellsByIdBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells_by_id", GET_USED_CELLS_BY_ID_HASH)
-        }
 
         private const val GET_USED_RECT_HASH = 410525958L
-        private val getUsedRectBind by lazy {
+        @JvmField
+        val getUsedRectBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_used_rect", GET_USED_RECT_HASH)
-        }
 
         private const val GET_PATTERN_HASH = 3820813253L
-        private val getPatternBind by lazy {
+        @JvmField
+        val getPatternBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_pattern", GET_PATTERN_HASH)
-        }
 
         private const val SET_PATTERN_HASH = 1491151770L
-        private val setPatternBind by lazy {
+        @JvmField
+        val setPatternBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_pattern", SET_PATTERN_HASH)
-        }
 
         private const val SET_CELLS_TERRAIN_CONNECT_HASH = 748968311L
-        private val setCellsTerrainConnectBind by lazy {
+        @JvmField
+        val setCellsTerrainConnectBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_cells_terrain_connect", SET_CELLS_TERRAIN_CONNECT_HASH)
-        }
 
         private const val SET_CELLS_TERRAIN_PATH_HASH = 748968311L
-        private val setCellsTerrainPathBind by lazy {
+        @JvmField
+        val setCellsTerrainPathBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_cells_terrain_path", SET_CELLS_TERRAIN_PATH_HASH)
-        }
 
         private const val HAS_BODY_RID_HASH = 4155700596L
-        private val hasBodyRidBind by lazy {
+        @JvmField
+        val hasBodyRidBind =
             ObjectCalls.getMethodBind("TileMapLayer", "has_body_rid", HAS_BODY_RID_HASH)
-        }
 
         private const val GET_COORDS_FOR_BODY_RID_HASH = 733700038L
-        private val getCoordsForBodyRidBind by lazy {
+        @JvmField
+        val getCoordsForBodyRidBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_coords_for_body_rid", GET_COORDS_FOR_BODY_RID_HASH)
-        }
 
         private const val UPDATE_INTERNALS_HASH = 3218959716L
-        private val updateInternalsBind by lazy {
+        @JvmField
+        val updateInternalsBind =
             ObjectCalls.getMethodBind("TileMapLayer", "update_internals", UPDATE_INTERNALS_HASH)
-        }
 
         private const val NOTIFY_RUNTIME_TILE_DATA_UPDATE_HASH = 3218959716L
-        private val notifyRuntimeTileDataUpdateBind by lazy {
+        @JvmField
+        val notifyRuntimeTileDataUpdateBind =
             ObjectCalls.getMethodBind("TileMapLayer", "notify_runtime_tile_data_update", NOTIFY_RUNTIME_TILE_DATA_UPDATE_HASH)
-        }
 
         private const val MAP_PATTERN_HASH = 1864516957L
-        private val mapPatternBind by lazy {
+        @JvmField
+        val mapPatternBind =
             ObjectCalls.getMethodBind("TileMapLayer", "map_pattern", MAP_PATTERN_HASH)
-        }
 
         private const val GET_SURROUNDING_CELLS_HASH = 2673526557L
-        private val getSurroundingCellsBind by lazy {
+        @JvmField
+        val getSurroundingCellsBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_surrounding_cells", GET_SURROUNDING_CELLS_HASH)
-        }
 
         private const val GET_NEIGHBOR_CELL_HASH = 986575103L
-        private val getNeighborCellBind by lazy {
+        @JvmField
+        val getNeighborCellBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_neighbor_cell", GET_NEIGHBOR_CELL_HASH)
-        }
 
         private const val MAP_TO_LOCAL_HASH = 108438297L
-        private val mapToLocalBind by lazy {
+        @JvmField
+        val mapToLocalBind =
             ObjectCalls.getMethodBind("TileMapLayer", "map_to_local", MAP_TO_LOCAL_HASH)
-        }
 
         private const val LOCAL_TO_MAP_HASH = 837806996L
-        private val localToMapBind by lazy {
+        @JvmField
+        val localToMapBind =
             ObjectCalls.getMethodBind("TileMapLayer", "local_to_map", LOCAL_TO_MAP_HASH)
-        }
 
         private const val SET_TILE_MAP_DATA_FROM_ARRAY_HASH = 2971499966L
-        private val setTileMapDataFromArrayBind by lazy {
+        @JvmField
+        val setTileMapDataFromArrayBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_tile_map_data_from_array", SET_TILE_MAP_DATA_FROM_ARRAY_HASH)
-        }
 
         private const val GET_TILE_MAP_DATA_AS_ARRAY_HASH = 2362200018L
-        private val getTileMapDataAsArrayBind by lazy {
+        @JvmField
+        val getTileMapDataAsArrayBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_tile_map_data_as_array", GET_TILE_MAP_DATA_AS_ARRAY_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_TILE_SET_HASH = 774531446L
-        private val setTileSetBind by lazy {
+        @JvmField
+        val setTileSetBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_tile_set", SET_TILE_SET_HASH)
-        }
 
         private const val GET_TILE_SET_HASH = 2678226422L
-        private val getTileSetBind by lazy {
+        @JvmField
+        val getTileSetBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_tile_set", GET_TILE_SET_HASH)
-        }
 
         private const val SET_Y_SORT_ORIGIN_HASH = 1286410249L
-        private val setYSortOriginBind by lazy {
+        @JvmField
+        val setYSortOriginBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_y_sort_origin", SET_Y_SORT_ORIGIN_HASH)
-        }
 
         private const val GET_Y_SORT_ORIGIN_HASH = 3905245786L
-        private val getYSortOriginBind by lazy {
+        @JvmField
+        val getYSortOriginBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_y_sort_origin", GET_Y_SORT_ORIGIN_HASH)
-        }
 
         private const val SET_X_DRAW_ORDER_REVERSED_HASH = 2586408642L
-        private val setXDrawOrderReversedBind by lazy {
+        @JvmField
+        val setXDrawOrderReversedBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_x_draw_order_reversed", SET_X_DRAW_ORDER_REVERSED_HASH)
-        }
 
         private const val IS_X_DRAW_ORDER_REVERSED_HASH = 36873697L
-        private val isXDrawOrderReversedBind by lazy {
+        @JvmField
+        val isXDrawOrderReversedBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_x_draw_order_reversed", IS_X_DRAW_ORDER_REVERSED_HASH)
-        }
 
         private const val SET_RENDERING_QUADRANT_SIZE_HASH = 1286410249L
-        private val setRenderingQuadrantSizeBind by lazy {
+        @JvmField
+        val setRenderingQuadrantSizeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_rendering_quadrant_size", SET_RENDERING_QUADRANT_SIZE_HASH)
-        }
 
         private const val GET_RENDERING_QUADRANT_SIZE_HASH = 3905245786L
-        private val getRenderingQuadrantSizeBind by lazy {
+        @JvmField
+        val getRenderingQuadrantSizeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_rendering_quadrant_size", GET_RENDERING_QUADRANT_SIZE_HASH)
-        }
 
         private const val SET_COLLISION_ENABLED_HASH = 2586408642L
-        private val setCollisionEnabledBind by lazy {
+        @JvmField
+        val setCollisionEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_collision_enabled", SET_COLLISION_ENABLED_HASH)
-        }
 
         private const val IS_COLLISION_ENABLED_HASH = 36873697L
-        private val isCollisionEnabledBind by lazy {
+        @JvmField
+        val isCollisionEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_collision_enabled", IS_COLLISION_ENABLED_HASH)
-        }
 
         private const val SET_USE_KINEMATIC_BODIES_HASH = 2586408642L
-        private val setUseKinematicBodiesBind by lazy {
+        @JvmField
+        val setUseKinematicBodiesBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_use_kinematic_bodies", SET_USE_KINEMATIC_BODIES_HASH)
-        }
 
         private const val IS_USING_KINEMATIC_BODIES_HASH = 36873697L
-        private val isUsingKinematicBodiesBind by lazy {
+        @JvmField
+        val isUsingKinematicBodiesBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_using_kinematic_bodies", IS_USING_KINEMATIC_BODIES_HASH)
-        }
 
         private const val SET_COLLISION_VISIBILITY_MODE_HASH = 3508099847L
-        private val setCollisionVisibilityModeBind by lazy {
+        @JvmField
+        val setCollisionVisibilityModeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_collision_visibility_mode", SET_COLLISION_VISIBILITY_MODE_HASH)
-        }
 
         private const val GET_COLLISION_VISIBILITY_MODE_HASH = 338220793L
-        private val getCollisionVisibilityModeBind by lazy {
+        @JvmField
+        val getCollisionVisibilityModeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_collision_visibility_mode", GET_COLLISION_VISIBILITY_MODE_HASH)
-        }
 
         private const val SET_PHYSICS_QUADRANT_SIZE_HASH = 1286410249L
-        private val setPhysicsQuadrantSizeBind by lazy {
+        @JvmField
+        val setPhysicsQuadrantSizeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_physics_quadrant_size", SET_PHYSICS_QUADRANT_SIZE_HASH)
-        }
 
         private const val GET_PHYSICS_QUADRANT_SIZE_HASH = 3905245786L
-        private val getPhysicsQuadrantSizeBind by lazy {
+        @JvmField
+        val getPhysicsQuadrantSizeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_physics_quadrant_size", GET_PHYSICS_QUADRANT_SIZE_HASH)
-        }
 
         private const val SET_OCCLUSION_ENABLED_HASH = 2586408642L
-        private val setOcclusionEnabledBind by lazy {
+        @JvmField
+        val setOcclusionEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_occlusion_enabled", SET_OCCLUSION_ENABLED_HASH)
-        }
 
         private const val IS_OCCLUSION_ENABLED_HASH = 36873697L
-        private val isOcclusionEnabledBind by lazy {
+        @JvmField
+        val isOcclusionEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_occlusion_enabled", IS_OCCLUSION_ENABLED_HASH)
-        }
 
         private const val SET_NAVIGATION_ENABLED_HASH = 2586408642L
-        private val setNavigationEnabledBind by lazy {
+        @JvmField
+        val setNavigationEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_navigation_enabled", SET_NAVIGATION_ENABLED_HASH)
-        }
 
         private const val IS_NAVIGATION_ENABLED_HASH = 36873697L
-        private val isNavigationEnabledBind by lazy {
+        @JvmField
+        val isNavigationEnabledBind =
             ObjectCalls.getMethodBind("TileMapLayer", "is_navigation_enabled", IS_NAVIGATION_ENABLED_HASH)
-        }
 
         private const val SET_NAVIGATION_MAP_HASH = 2722037293L
-        private val setNavigationMapBind by lazy {
+        @JvmField
+        val setNavigationMapBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_navigation_map", SET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val SET_NAVIGATION_VISIBILITY_MODE_HASH = 3508099847L
-        private val setNavigationVisibilityModeBind by lazy {
+        @JvmField
+        val setNavigationVisibilityModeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "set_navigation_visibility_mode", SET_NAVIGATION_VISIBILITY_MODE_HASH)
-        }
 
         private const val GET_NAVIGATION_VISIBILITY_MODE_HASH = 338220793L
-        private val getNavigationVisibilityModeBind by lazy {
+        @JvmField
+        val getNavigationVisibilityModeBind =
             ObjectCalls.getMethodBind("TileMapLayer", "get_navigation_visibility_mode", GET_NAVIGATION_VISIBILITY_MODE_HASH)
-        }
     }
 }

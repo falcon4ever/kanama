@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getExpandedContainer(): FoldableContainer? {
         checkOpen()
-        return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExpandedContainerBind, segment))
+        return FoldableContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExpandedContainerBind, segment))
     }
 
     /**
@@ -37,7 +38,7 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getContainers(): List<FoldableContainer> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getContainersBind, segment, FoldableContainer::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getContainersBind, segment, FoldableContainer::wrap)
     }
 
     /**
@@ -47,7 +48,7 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun setAllowFoldingAll(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowFoldingAllBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowFoldingAllBind, segment, enabled)
     }
 
     /**
@@ -57,7 +58,7 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun isAllowFoldingAll(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowFoldingAllBind, segment)
     }
 
     /** Signal `expanded(container: FoldableContainer)`; see [TypedSignal]. */
@@ -79,25 +80,27 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FoldableGroup? =
             if (handle.address() == 0L) null else FoldableGroup(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_EXPANDED_CONTAINER_HASH = 1427441056L
-        private val getExpandedContainerBind by lazy {
+        @JvmField
+        val getExpandedContainerBind =
             ObjectCalls.getMethodBind("FoldableGroup", "get_expanded_container", GET_EXPANDED_CONTAINER_HASH)
-        }
 
         private const val GET_CONTAINERS_HASH = 3995934104L
-        private val getContainersBind by lazy {
+        @JvmField
+        val getContainersBind =
             ObjectCalls.getMethodBind("FoldableGroup", "get_containers", GET_CONTAINERS_HASH)
-        }
 
         private const val SET_ALLOW_FOLDING_ALL_HASH = 2586408642L
-        private val setAllowFoldingAllBind by lazy {
+        @JvmField
+        val setAllowFoldingAllBind =
             ObjectCalls.getMethodBind("FoldableGroup", "set_allow_folding_all", SET_ALLOW_FOLDING_ALL_HASH)
-        }
 
         private const val IS_ALLOW_FOLDING_ALL_HASH = 36873697L
-        private val isAllowFoldingAllBind by lazy {
+        @JvmField
+        val isAllowFoldingAllBind =
             ObjectCalls.getMethodBind("FoldableGroup", "is_allow_folding_all", IS_ALLOW_FOLDING_ALL_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -80,7 +81,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_sprite_frames
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -90,7 +91,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_sprite_frames
      */
     fun getSpriteFrames(): SpriteFrames? {
-        return SpriteFrames.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
+        return SpriteFrames.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpriteFramesBind, segment))
     }
 
     /**
@@ -100,7 +101,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_animation
      */
     fun setAnimation(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAnimationBind, segment, name)
     }
 
     /**
@@ -110,7 +111,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_animation
      */
     fun getAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAnimationBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_autoplay
      */
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAutoplayBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAutoplayBind, segment, name)
     }
 
     /**
@@ -128,7 +129,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_autoplay
      */
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAutoplayBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.play
      */
     fun play(name: String = "", customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, segment, name, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(Binds.playBind, segment, name, customSpeed, fromEnd)
     }
 
     /**
@@ -160,7 +161,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.play_backwards
      */
     fun playBackwards(name: String = "") {
-        ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.playBackwardsBind, segment, name)
     }
 
     /**
@@ -171,7 +172,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pauseBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_centered
      */
     fun setCentered(centered: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, segment, centered)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCenteredBind, segment, centered)
     }
 
     /**
@@ -207,7 +208,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_centered
      */
     fun isCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCenteredBind, segment)
     }
 
     /**
@@ -216,7 +217,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -225,7 +226,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -234,7 +235,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipHBind, segment, flipH)
     }
 
     /**
@@ -243,7 +244,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedHBind, segment)
     }
 
     /**
@@ -252,7 +253,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipVBind, segment, flipV)
     }
 
     /**
@@ -261,7 +262,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedVBind, segment)
     }
 
     /**
@@ -271,7 +272,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFrameBind, segment, frame)
     }
 
     /**
@@ -281,7 +282,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameBind, segment)
     }
 
     /**
@@ -291,7 +292,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_frame_progress
      */
     fun setFrameProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, segment, progress)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrameProgressBind, segment, progress)
     }
 
     /**
@@ -301,7 +302,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_frame_progress
      */
     fun getFrameProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrameProgressBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_frame_and_progress
      */
     fun setFrameAndProgress(frame: Int, progress: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, segment, frame, progress)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setFrameAndProgressBind, segment, frame, progress)
     }
 
     /**
@@ -323,7 +324,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.set_speed_scale
      */
     fun setSpeedScale(speedScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speedScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, speedScale)
     }
 
     /**
@@ -335,7 +336,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -346,7 +347,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_playing_speed
      */
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPlayingSpeedBind, segment)
     }
 
     /** Signal `sprite_frames_changed()`; see [TypedSignal]. */
@@ -389,140 +390,142 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatedSprite2D? =
             if (handle.address() == 0L) null else AnimatedSprite2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SPRITE_FRAMES_HASH = 905781144L
-        private val setSpriteFramesBind by lazy {
+        @JvmField
+        val setSpriteFramesBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_sprite_frames", SET_SPRITE_FRAMES_HASH)
-        }
 
         private const val GET_SPRITE_FRAMES_HASH = 3804851214L
-        private val getSpriteFramesBind by lazy {
+        @JvmField
+        val getSpriteFramesBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_sprite_frames", GET_SPRITE_FRAMES_HASH)
-        }
 
         private const val SET_ANIMATION_HASH = 3304788590L
-        private val setAnimationBind by lazy {
+        @JvmField
+        val setAnimationBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_animation", SET_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_HASH = 2002593661L
-        private val getAnimationBind by lazy {
+        @JvmField
+        val getAnimationBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_animation", GET_ANIMATION_HASH)
-        }
 
         private const val SET_AUTOPLAY_HASH = 83702148L
-        private val setAutoplayBind by lazy {
+        @JvmField
+        val setAutoplayBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_autoplay", SET_AUTOPLAY_HASH)
-        }
 
         private const val GET_AUTOPLAY_HASH = 201670096L
-        private val getAutoplayBind by lazy {
+        @JvmField
+        val getAutoplayBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_autoplay", GET_AUTOPLAY_HASH)
-        }
 
         private const val IS_PLAYING_HASH = 36873697L
-        private val isPlayingBind by lazy {
+        @JvmField
+        val isPlayingBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "is_playing", IS_PLAYING_HASH)
-        }
 
         private const val PLAY_HASH = 3269405555L
-        private val playBind by lazy {
+        @JvmField
+        val playBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "play", PLAY_HASH)
-        }
 
         private const val PLAY_BACKWARDS_HASH = 3323268493L
-        private val playBackwardsBind by lazy {
+        @JvmField
+        val playBackwardsBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "play_backwards", PLAY_BACKWARDS_HASH)
-        }
 
         private const val PAUSE_HASH = 3218959716L
-        private val pauseBind by lazy {
+        @JvmField
+        val pauseBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "pause", PAUSE_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "stop", STOP_HASH)
-        }
 
         private const val SET_CENTERED_HASH = 2586408642L
-        private val setCenteredBind by lazy {
+        @JvmField
+        val setCenteredBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_centered", SET_CENTERED_HASH)
-        }
 
         private const val IS_CENTERED_HASH = 36873697L
-        private val isCenteredBind by lazy {
+        @JvmField
+        val isCenteredBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "is_centered", IS_CENTERED_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_FLIP_H_HASH = 2586408642L
-        private val setFlipHBind by lazy {
+        @JvmField
+        val setFlipHBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_flip_h", SET_FLIP_H_HASH)
-        }
 
         private const val IS_FLIPPED_H_HASH = 36873697L
-        private val isFlippedHBind by lazy {
+        @JvmField
+        val isFlippedHBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "is_flipped_h", IS_FLIPPED_H_HASH)
-        }
 
         private const val SET_FLIP_V_HASH = 2586408642L
-        private val setFlipVBind by lazy {
+        @JvmField
+        val setFlipVBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_flip_v", SET_FLIP_V_HASH)
-        }
 
         private const val IS_FLIPPED_V_HASH = 36873697L
-        private val isFlippedVBind by lazy {
+        @JvmField
+        val isFlippedVBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "is_flipped_v", IS_FLIPPED_V_HASH)
-        }
 
         private const val SET_FRAME_HASH = 1286410249L
-        private val setFrameBind by lazy {
+        @JvmField
+        val setFrameBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_frame", SET_FRAME_HASH)
-        }
 
         private const val GET_FRAME_HASH = 3905245786L
-        private val getFrameBind by lazy {
+        @JvmField
+        val getFrameBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_frame", GET_FRAME_HASH)
-        }
 
         private const val SET_FRAME_PROGRESS_HASH = 373806689L
-        private val setFrameProgressBind by lazy {
+        @JvmField
+        val setFrameProgressBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_frame_progress", SET_FRAME_PROGRESS_HASH)
-        }
 
         private const val GET_FRAME_PROGRESS_HASH = 1740695150L
-        private val getFrameProgressBind by lazy {
+        @JvmField
+        val getFrameProgressBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_frame_progress", GET_FRAME_PROGRESS_HASH)
-        }
 
         private const val SET_FRAME_AND_PROGRESS_HASH = 1602489585L
-        private val setFrameAndProgressBind by lazy {
+        @JvmField
+        val setFrameAndProgressBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_frame_and_progress", SET_FRAME_AND_PROGRESS_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_PLAYING_SPEED_HASH = 1740695150L
-        private val getPlayingSpeedBind by lazy {
+        @JvmField
+        val getPlayingSpeedBind =
             ObjectCalls.getMethodBind("AnimatedSprite2D", "get_playing_speed", GET_PLAYING_SPEED_HASH)
-        }
     }
 }

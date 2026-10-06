@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,7 +19,7 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ScriptEditorBase.add_syntax_highlighter
      */
     fun addSyntaxHighlighter(highlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(addSyntaxHighlighterBind, segment, listOf(highlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addSyntaxHighlighterBind, segment, listOf(highlighter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -28,7 +29,7 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ScriptEditorBase.get_base_editor
      */
     fun getBaseEditor(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseEditorBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseEditorBind, segment))
     }
 
     /** Signal `name_changed()`; see [TypedSignal]. */
@@ -101,15 +102,17 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptEditorBase? =
             if (handle.address() == 0L) null else ScriptEditorBase(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_SYNTAX_HIGHLIGHTER_HASH = 1092774468L
-        private val addSyntaxHighlighterBind by lazy {
+        @JvmField
+        val addSyntaxHighlighterBind =
             ObjectCalls.getMethodBind("ScriptEditorBase", "add_syntax_highlighter", ADD_SYNTAX_HIGHLIGHTER_HASH)
-        }
 
         private const val GET_BASE_EDITOR_HASH = 2783021301L
-        private val getBaseEditorBind by lazy {
+        @JvmField
+        val getBaseEditorBind =
             ObjectCalls.getMethodBind("ScriptEditorBase", "get_base_editor", GET_BASE_EDITOR_HASH)
-        }
     }
 }

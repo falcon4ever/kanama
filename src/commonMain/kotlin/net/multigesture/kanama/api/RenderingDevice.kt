@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -30,7 +31,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create
      */
     fun textureCreate(format: RDTextureFormat?, view: RDTextureView?, data: List<ByteArray>): RID {
-        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(textureCreateBind, segment, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, data)
+        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(Binds.textureCreateBind, segment, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, data)
     }
 
     /**
@@ -40,7 +41,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared
      */
     fun textureCreateShared(view: RDTextureView?, withTexture: RID): RID {
-        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(textureCreateSharedBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture)
+        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(Binds.textureCreateSharedBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture)
     }
 
     /**
@@ -55,7 +56,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
      */
     fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: RenderingDevice.TextureSliceType = RenderingDevice.TextureSliceType.SLICE_2D): RID {
-        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value)
+        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(Binds.textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value)
     }
 
     /**
@@ -66,7 +67,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_from_extension
      */
     fun textureCreateFromExtension(type: RenderingDevice.TextureType, format: RenderingDevice.DataFormat, samples: RenderingDevice.TextureSamples, usageFlags: RenderingDevice.TextureUsageBits, image: Long, width: Long, height: Long, depth: Long, layers: Long, mipmaps: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithFourLongLongLongLongLongLongArgsRetRID(textureCreateFromExtensionBind, segment, type.value, format.value, samples.value, usageFlags.value, image, width, height, depth, layers, mipmaps)
+        return ObjectCalls.ptrcallWithFourLongLongLongLongLongLongArgsRetRID(Binds.textureCreateFromExtensionBind, segment, type.value, format.value, samples.value, usageFlags.value, image, width, height, depth, layers, mipmaps)
     }
 
     /**
@@ -83,7 +84,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_update
      */
     fun textureUpdate(texture: RID, layer: Long, data: ByteArray): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, segment, texture, layer, data))
+        return GodotError(ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(Binds.textureUpdateBind, segment, texture, layer, data))
     }
 
     /**
@@ -100,7 +101,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_data
      */
     fun textureGetData(texture: RID, layer: Long): ByteArray {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetByteArray(textureGetDataBind, segment, texture, layer)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetByteArray(Binds.textureGetDataBind, segment, texture, layer)
     }
 
     /**
@@ -118,7 +119,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_data_async
      */
     fun textureGetDataAsync(texture: RID, layer: Long, callback: GodotCallable): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method))
+        return GodotError(ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(Binds.textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method))
     }
 
     /**
@@ -128,7 +129,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_format_supported_for_usage
      */
     fun textureIsFormatSupportedForUsage(format: RenderingDevice.DataFormat, usageFlags: RenderingDevice.TextureUsageBits): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(textureIsFormatSupportedForUsageBind, segment, format.value, usageFlags.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(Binds.textureIsFormatSupportedForUsageBind, segment, format.value, usageFlags.value)
     }
 
     /**
@@ -137,7 +138,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_shared
      */
     fun textureIsShared(texture: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsSharedBind, segment, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.textureIsSharedBind, segment, texture)
     }
 
     /**
@@ -146,7 +147,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_valid
      */
     fun textureIsValid(texture: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsValidBind, segment, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.textureIsValidBind, segment, texture)
     }
 
     /**
@@ -159,7 +160,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_set_discardable
      */
     fun textureSetDiscardable(texture: RID, discardable: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(textureSetDiscardableBind, segment, texture, discardable)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.textureSetDiscardableBind, segment, texture, discardable)
     }
 
     /**
@@ -169,7 +170,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_is_discardable
      */
     fun textureIsDiscardable(texture: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(textureIsDiscardableBind, segment, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.textureIsDiscardableBind, segment, texture)
     }
 
     /**
@@ -191,7 +192,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_copy
      */
     fun textureCopy(fromTexture: RID, toTexture: RID, fromPos: Vector3, toPos: Vector3, size: Vector3, srcMipmap: Long, dstMipmap: Long, srcLayer: Long, dstLayer: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(textureCopyBind, segment, fromTexture, toTexture, fromPos, toPos, size, srcMipmap, dstMipmap, srcLayer, dstLayer))
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(Binds.textureCopyBind, segment, fromTexture, toTexture, fromPos, toPos, size, srcMipmap, dstMipmap, srcLayer, dstLayer))
     }
 
     /**
@@ -207,7 +208,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_clear
      */
     fun textureClear(texture: RID, color: Color, baseMipmap: Long, mipmapCount: Long, baseLayer: Long, layerCount: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDColorFourUInt32ArgsRetLong(textureClearBind, segment, texture, color, baseMipmap, mipmapCount, baseLayer, layerCount))
+        return GodotError(ObjectCalls.ptrcallWithRIDColorFourUInt32ArgsRetLong(Binds.textureClearBind, segment, texture, color, baseMipmap, mipmapCount, baseLayer, layerCount))
     }
 
     /**
@@ -229,7 +230,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_resolve_multisample
      */
     fun textureResolveMultisample(fromTexture: RID, toTexture: RID): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithTwoRIDArgsRetLong(textureResolveMultisampleBind, segment, fromTexture, toTexture))
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDArgsRetLong(Binds.textureResolveMultisampleBind, segment, fromTexture, toTexture))
     }
 
     /**
@@ -238,7 +239,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_format
      */
     fun textureGetFormat(texture: RID): RDTextureFormat? {
-        return RDTextureFormat.wrapOwned(ObjectCalls.ptrcallWithRIDArgRetObject(textureGetFormatBind, segment, texture))
+        return RDTextureFormat.wrapOwned(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.textureGetFormatBind, segment, texture))
     }
 
     /**
@@ -249,7 +250,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_native_handle
      */
     fun textureGetNativeHandle(texture: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(textureGetNativeHandleBind, segment, texture)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.textureGetNativeHandleBind, segment, texture)
     }
 
     /**
@@ -261,7 +262,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create
      */
     fun framebufferFormatCreate(attachments: List<RDAttachmentFormat>, viewCount: Long = 1L): Long {
-        return ObjectCalls.ptrcallWithObjectListUInt32ArgsRetLong(framebufferFormatCreateBind, segment, attachments, viewCount)
+        return ObjectCalls.ptrcallWithObjectListUInt32ArgsRetLong(Binds.framebufferFormatCreateBind, segment, attachments, viewCount)
     }
 
     /**
@@ -273,7 +274,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create_multipass
      */
     fun framebufferFormatCreateMultipass(attachments: List<RDAttachmentFormat>, passes: List<RDFramebufferPass>, viewCount: Long = 1L): Long {
-        return ObjectCalls.ptrcallWithTwoObjectListUInt32ArgsRetLong(framebufferFormatCreateMultipassBind, segment, attachments, passes, viewCount)
+        return ObjectCalls.ptrcallWithTwoObjectListUInt32ArgsRetLong(Binds.framebufferFormatCreateMultipassBind, segment, attachments, passes, viewCount)
     }
 
     /**
@@ -283,7 +284,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create_empty
      */
     fun framebufferFormatCreateEmpty(samples: RenderingDevice.TextureSamples = RenderingDevice.TextureSamples.SAMPLES_1): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(framebufferFormatCreateEmptyBind, segment, samples.value)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.framebufferFormatCreateEmptyBind, segment, samples.value)
     }
 
     /**
@@ -293,7 +294,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_format_get_texture_samples
      */
     fun framebufferFormatGetTextureSamples(format: Long, renderPass: Long = 0L): RenderingDevice.TextureSamples {
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(framebufferFormatGetTextureSamplesBind, segment, format, renderPass))
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(Binds.framebufferFormatGetTextureSamplesBind, segment, format, renderPass))
     }
 
     /**
@@ -304,7 +305,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_create
      */
     fun framebufferCreate(textures: List<RID>, validateWithFormat: Long = -1L, viewCount: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithRIDListLongUInt32ArgsRetRID(framebufferCreateBind, segment, textures, validateWithFormat, viewCount)
+        return ObjectCalls.ptrcallWithRIDListLongUInt32ArgsRetRID(Binds.framebufferCreateBind, segment, textures, validateWithFormat, viewCount)
     }
 
     /**
@@ -315,7 +316,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_create_multipass
      */
     fun framebufferCreateMultipass(textures: List<RID>, passes: List<RDFramebufferPass>, validateWithFormat: Long = -1L, viewCount: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(framebufferCreateMultipassBind, segment, textures, passes, validateWithFormat, viewCount)
+        return ObjectCalls.ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(Binds.framebufferCreateMultipassBind, segment, textures, passes, validateWithFormat, viewCount)
     }
 
     /**
@@ -325,7 +326,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_create_empty
      */
     fun framebufferCreateEmpty(size: Vector2i, samples: RenderingDevice.TextureSamples = RenderingDevice.TextureSamples.SAMPLES_1, validateWithFormat: Long = -1L): RID {
-        return ObjectCalls.ptrcallWithVector2iLongLongArgsRetRID(framebufferCreateEmptyBind, segment, size, samples.value, validateWithFormat)
+        return ObjectCalls.ptrcallWithVector2iLongLongArgsRetRID(Binds.framebufferCreateEmptyBind, segment, size, samples.value, validateWithFormat)
     }
 
     /**
@@ -335,7 +336,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_get_format
      */
     fun framebufferGetFormat(framebuffer: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(framebufferGetFormatBind, segment, framebuffer)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.framebufferGetFormatBind, segment, framebuffer)
     }
 
     /**
@@ -345,7 +346,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.framebuffer_is_valid
      */
     fun framebufferIsValid(framebuffer: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(framebufferIsValidBind, segment, framebuffer)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.framebufferIsValidBind, segment, framebuffer)
     }
 
     /**
@@ -355,7 +356,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sampler_create
      */
     fun samplerCreate(state: RDSamplerState?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(samplerCreateBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetRID(Binds.samplerCreateBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -365,7 +366,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sampler_is_format_supported_for_filter
      */
     fun samplerIsFormatSupportedForFilter(format: RenderingDevice.DataFormat, samplerFilter: RenderingDevice.SamplerFilter): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(samplerIsFormatSupportedForFilterBind, segment, format.value, samplerFilter.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(Binds.samplerIsFormatSupportedForFilterBind, segment, format.value, samplerFilter.value)
     }
 
     /**
@@ -375,7 +376,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.vertex_buffer_create
      */
     fun vertexBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
-        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, segment, sizeBytes, data, creationBits.value)
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(Binds.vertexBufferCreateBind, segment, sizeBytes, data, creationBits.value)
     }
 
     /**
@@ -385,7 +386,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.vertex_format_create
      */
     fun vertexFormatCreate(vertexDescriptions: List<RDVertexAttribute>): Long {
-        return ObjectCalls.ptrcallWithObjectListArgRetLong(vertexFormatCreateBind, segment, vertexDescriptions)
+        return ObjectCalls.ptrcallWithObjectListArgRetLong(Binds.vertexFormatCreateBind, segment, vertexDescriptions)
     }
 
     /**
@@ -397,7 +398,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.vertex_array_create
      */
     fun vertexArrayCreate(vertexCount: Long, vertexFormat: Long, srcBuffers: List<RID>, offsets: List<Long>): RID {
-        return ObjectCalls.ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(vertexArrayCreateBind, segment, vertexCount, vertexFormat, srcBuffers, offsets)
+        return ObjectCalls.ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(Binds.vertexArrayCreateBind, segment, vertexCount, vertexFormat, srcBuffers, offsets)
     }
 
     /**
@@ -407,7 +408,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.index_buffer_create
      */
     fun indexBufferCreate(sizeIndices: Long, format: RenderingDevice.IndexBufferFormat, data: ByteArray, useRestartIndices: Boolean = false, creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
-        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(indexBufferCreateBind, segment, sizeIndices, format.value, data, useRestartIndices, creationBits.value)
+        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(Binds.indexBufferCreateBind, segment, sizeIndices, format.value, data, useRestartIndices, creationBits.value)
     }
 
     /**
@@ -418,7 +419,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.index_array_create
      */
     fun indexArrayCreate(indexBuffer: RID, indexOffset: Long, indexCount: Long): RID {
-        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetRID(indexArrayCreateBind, segment, indexBuffer, indexOffset, indexCount)
+        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetRID(Binds.indexArrayCreateBind, segment, indexBuffer, indexOffset, indexCount)
     }
 
     /**
@@ -433,7 +434,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_spirv_from_source
      */
     fun shaderCompileSpirvFromSource(shaderSource: RDShaderSource?, allowCache: Boolean = true): RDShaderSPIRV? {
-        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
+        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(Binds.shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
     }
 
     /**
@@ -446,7 +447,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_binary_from_spirv
      */
     fun shaderCompileBinaryFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): ByteArray {
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
+        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(Binds.shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
     }
 
     /**
@@ -458,7 +459,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_from_spirv
      */
     fun shaderCreateFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): RID {
-        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
+        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(Binds.shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
     }
 
     /**
@@ -470,7 +471,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_from_bytecode
      */
     fun shaderCreateFromBytecode(binaryData: ByteArray, placeholderRid: RID): RID {
-        return ObjectCalls.ptrcallWithByteArrayAndRIDArgRetRID(shaderCreateFromBytecodeBind, segment, binaryData, placeholderRid)
+        return ObjectCalls.ptrcallWithByteArrayAndRIDArgRetRID(Binds.shaderCreateFromBytecodeBind, segment, binaryData, placeholderRid)
     }
 
     /**
@@ -481,7 +482,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_placeholder
      */
     fun shaderCreatePlaceholder(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(shaderCreatePlaceholderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.shaderCreatePlaceholderBind, segment)
     }
 
     /**
@@ -492,7 +493,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_get_vertex_input_attribute_mask
      */
     fun shaderGetVertexInputAttributeMask(shader: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shaderGetVertexInputAttributeMaskBind, segment, shader)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.shaderGetVertexInputAttributeMaskBind, segment, shader)
     }
 
     /**
@@ -502,7 +503,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.uniform_buffer_create
      */
     fun uniformBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
-        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(uniformBufferCreateBind, segment, sizeBytes, data, creationBits.value)
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(Binds.uniformBufferCreateBind, segment, sizeBytes, data, creationBits.value)
     }
 
     /**
@@ -513,7 +514,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.storage_buffer_create
      */
     fun storageBufferCreate(sizeBytes: Long, data: ByteArray, usage: RenderingDevice.StorageBufferUsage = RenderingDevice.StorageBufferUsage(0L), creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
-        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(storageBufferCreateBind, segment, sizeBytes, data, usage.value, creationBits.value)
+        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(Binds.storageBufferCreateBind, segment, sizeBytes, data, usage.value, creationBits.value)
     }
 
     /**
@@ -523,7 +524,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_buffer_create
      */
     fun textureBufferCreate(sizeBytes: Long, format: RenderingDevice.DataFormat, data: ByteArray): RID {
-        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(textureBufferCreateBind, segment, sizeBytes, format.value, data)
+        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(Binds.textureBufferCreateBind, segment, sizeBytes, format.value, data)
     }
 
     /**
@@ -534,7 +535,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.uniform_set_create
      */
     fun uniformSetCreate(uniforms: List<RDUniform>, shader: RID, shaderSet: Long): RID {
-        return ObjectCalls.ptrcallWithObjectListRIDUInt32ArgsRetRID(uniformSetCreateBind, segment, uniforms, shader, shaderSet)
+        return ObjectCalls.ptrcallWithObjectListRIDUInt32ArgsRetRID(Binds.uniformSetCreateBind, segment, uniforms, shader, shaderSet)
     }
 
     /**
@@ -543,7 +544,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.uniform_set_is_valid
      */
     fun uniformSetIsValid(uniformSet: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(uniformSetIsValidBind, segment, uniformSet)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.uniformSetIsValidBind, segment, uniformSet)
     }
 
     /**
@@ -555,7 +556,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_copy
      */
     fun bufferCopy(srcBuffer: RID, dstBuffer: RID, srcOffset: Long, dstOffset: Long, size: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(bufferCopyBind, segment, srcBuffer, dstBuffer, srcOffset, dstOffset, size))
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(Binds.bufferCopyBind, segment, srcBuffer, dstBuffer, srcOffset, dstOffset, size))
     }
 
     /**
@@ -567,7 +568,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_update
      */
     fun bufferUpdate(buffer: RID, offset: Long, sizeBytes: Long, data: ByteArray): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, segment, buffer, offset, sizeBytes, data))
+        return GodotError(ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(Binds.bufferUpdateBind, segment, buffer, offset, sizeBytes, data))
     }
 
     /**
@@ -579,7 +580,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_clear
      */
     fun bufferClear(buffer: RID, offset: Long, sizeBytes: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(bufferClearBind, segment, buffer, offset, sizeBytes))
+        return GodotError(ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(Binds.bufferClearBind, segment, buffer, offset, sizeBytes))
     }
 
     /**
@@ -591,7 +592,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_data
      */
     fun bufferGetData(buffer: RID, offsetBytes: Long = 0L, sizeBytes: Long = 0L): ByteArray {
-        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(bufferGetDataBind, segment, buffer, offsetBytes, sizeBytes)
+        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(Binds.bufferGetDataBind, segment, buffer, offsetBytes, sizeBytes)
     }
 
     /**
@@ -607,7 +608,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_data_async
      */
     fun bufferGetDataAsync(buffer: RID, callback: GodotCallable, offsetBytes: Long = 0L, sizeBytes: Long = 0L): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes))
+        return GodotError(ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(Binds.bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes))
     }
 
     /**
@@ -619,7 +620,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.buffer_get_device_address
      */
     fun bufferGetDeviceAddress(buffer: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bufferGetDeviceAddressBind, segment, buffer)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.bufferGetDeviceAddressBind, segment, buffer)
     }
 
     /**
@@ -630,7 +631,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.render_pipeline_create
      */
     fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: RenderingDevice.RenderPrimitive, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: RenderingDevice.PipelineDynamicStateFlags = RenderingDevice.PipelineDynamicStateFlags(0L), forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive.value, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags.value, forRenderPass, specializationConstants)
+        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(Binds.renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive.value, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags.value, forRenderPass, specializationConstants)
     }
 
     /**
@@ -640,7 +641,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.render_pipeline_is_valid
      */
     fun renderPipelineIsValid(renderPipeline: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(renderPipelineIsValidBind, segment, renderPipeline)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.renderPipelineIsValidBind, segment, renderPipeline)
     }
 
     /**
@@ -651,7 +652,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_pipeline_create
      */
     fun computePipelineCreate(shader: RID, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDObjectListArgsRetRID(computePipelineCreateBind, segment, shader, specializationConstants)
+        return ObjectCalls.ptrcallWithRIDObjectListArgsRetRID(Binds.computePipelineCreateBind, segment, shader, specializationConstants)
     }
 
     /**
@@ -661,7 +662,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_pipeline_is_valid
      */
     fun computePipelineIsValid(computePipeline: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(computePipelineIsValidBind, segment, computePipeline)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.computePipelineIsValidBind, segment, computePipeline)
     }
 
     /**
@@ -675,7 +676,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_pipeline_create
      */
     fun raytracingPipelineCreate(raygenShaders: List<RDPipelineShader>, missShaders: List<RDPipelineShader>, hitGroups: List<RDHitGroup>, maxTraceRecursionDepth: Long): RID {
-        return ObjectCalls.ptrcallWithThreeObjectListUInt32ArgsRetRID(raytracingPipelineCreateBind, segment, raygenShaders, missShaders, hitGroups, maxTraceRecursionDepth)
+        return ObjectCalls.ptrcallWithThreeObjectListUInt32ArgsRetRID(Binds.raytracingPipelineCreateBind, segment, raygenShaders, missShaders, hitGroups, maxTraceRecursionDepth)
     }
 
     /**
@@ -685,7 +686,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_pipeline_is_valid
      */
     fun raytracingPipelineIsValid(raytracingPipeline: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(raytracingPipelineIsValidBind, segment, raytracingPipeline)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.raytracingPipelineIsValidBind, segment, raytracingPipeline)
     }
 
     /**
@@ -696,7 +697,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.blas_create
      */
     fun blasCreate(geometries: List<RDAccelerationStructureGeometry>, flags: RenderingDevice.AccelerationStructureFlagBits): RID {
-        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(blasCreateBind, segment, geometries, flags.value)
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(Binds.blasCreateBind, segment, geometries, flags.value)
     }
 
     /**
@@ -707,7 +708,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.tlas_create
      */
     fun tlasCreate(maxInstanceCount: Long, flags: RenderingDevice.AccelerationStructureFlagBits): RID {
-        return ObjectCalls.ptrcallWithUInt32AndLongArgRetRID(tlasCreateBind, segment, maxInstanceCount, flags.value)
+        return ObjectCalls.ptrcallWithUInt32AndLongArgRetRID(Binds.tlasCreateBind, segment, maxInstanceCount, flags.value)
     }
 
     /**
@@ -716,7 +717,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.blas_build
      */
     fun blasBuild(blas: RID): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDArgRetLong(blasBuildBind, segment, blas))
+        return GodotError(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.blasBuildBind, segment, blas))
     }
 
     /**
@@ -729,7 +730,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.tlas_build
      */
     fun tlasBuild(tlas: RID, instances: List<RDAccelerationStructureInstance>): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(tlasBuildBind, segment, tlas, instances))
+        return GodotError(ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(Binds.tlasBuildBind, segment, tlas, instances))
     }
 
     /**
@@ -742,7 +743,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_create
      */
     fun hitSbtCreate(raytracingPipeline: RID, initialHitGroupCapacity: Long): RID {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetRID(hitSbtCreateBind, segment, raytracingPipeline, initialHitGroupCapacity)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetRID(Binds.hitSbtCreateBind, segment, raytracingPipeline, initialHitGroupCapacity)
     }
 
     /**
@@ -754,7 +755,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_set_pipeline
      */
     fun hitSbtSetPipeline(hitSbt: RID, raytracingPipeline: RID): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithTwoRIDArgsRetLong(hitSbtSetPipelineBind, segment, hitSbt, raytracingPipeline))
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDArgsRetLong(Binds.hitSbtSetPipelineBind, segment, hitSbt, raytracingPipeline))
     }
 
     /**
@@ -770,7 +771,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_alloc
      */
     fun hitSbtRangeAlloc(hitSbt: RID, hitGroupCount: Long): Long {
-        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetLong(hitSbtRangeAllocBind, segment, hitSbt, hitGroupCount)
+        return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetLong(Binds.hitSbtRangeAllocBind, segment, hitSbt, hitGroupCount)
     }
 
     /**
@@ -780,7 +781,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_free
      */
     fun hitSbtRangeFree(hitSbt: RID, range: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDAndLongArgRetLong(hitSbtRangeFreeBind, segment, hitSbt, range))
+        return GodotError(ObjectCalls.ptrcallWithRIDAndLongArgRetLong(Binds.hitSbtRangeFreeBind, segment, hitSbt, range))
     }
 
     /**
@@ -792,7 +793,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_update
      */
     fun hitSbtRangeUpdate(hitSbt: RID, range: Long, offset: Long, hitGroupIndices: List<Int>): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(hitSbtRangeUpdateBind, segment, hitSbt, range, offset, hitGroupIndices))
+        return GodotError(ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(Binds.hitSbtRangeUpdateBind, segment, hitSbt, range, offset, hitGroupIndices))
     }
 
     /**
@@ -805,7 +806,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.screen_get_width
      */
     fun screenGetWidth(screen: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(screenGetWidthBind, segment, screen)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.screenGetWidthBind, segment, screen)
     }
 
     /**
@@ -818,7 +819,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.screen_get_height
      */
     fun screenGetHeight(screen: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(screenGetHeightBind, segment, screen)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.screenGetHeightBind, segment, screen)
     }
 
     /**
@@ -829,7 +830,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.screen_get_framebuffer_format
      */
     fun screenGetFramebufferFormat(screen: Int = 0): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(screenGetFramebufferFormatBind, segment, screen)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.screenGetFramebufferFormatBind, segment, screen)
     }
 
     /**
@@ -841,7 +842,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_begin_for_screen
      */
     fun drawListBeginForScreen(screen: Int = 0, clearColor: Color): Long {
-        return ObjectCalls.ptrcallWithIntColorArgsRetLong(drawListBeginForScreenBind, segment, screen, clearColor)
+        return ObjectCalls.ptrcallWithIntColorArgsRetLong(Binds.drawListBeginForScreenBind, segment, screen, clearColor)
     }
 
     /**
@@ -852,7 +853,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_begin
      */
     fun drawListBegin(framebuffer: RID, drawFlags: RenderingDevice.DrawFlags = RenderingDevice.DrawFlags.DEFAULT_ALL, clearColorValues: List<Color>, clearDepthValue: Double = 1.0, clearStencilValue: Long = 0L, region: Rect2, breadcrumb: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(drawListBeginBind, segment, framebuffer, drawFlags.value, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
+        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(Binds.drawListBeginBind, segment, framebuffer, drawFlags.value, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
     }
 
     /**
@@ -861,7 +862,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_begin_split
      */
     fun drawListBeginSplit(framebuffer: RID, splits: Long, initialColorAction: RenderingDevice.InitialAction, finalColorAction: RenderingDevice.FinalAction, initialDepthAction: RenderingDevice.InitialAction, finalDepthAction: RenderingDevice.FinalAction, clearColorValues: List<Color>, clearDepth: Double = 1.0, clearStencil: Long = 0L, region: Rect2, storageTextures: List<RID>): List<Long> {
-        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(drawListBeginSplitBind, segment, framebuffer, splits, initialColorAction.value, finalColorAction.value, initialDepthAction.value, finalDepthAction.value, clearColorValues, clearDepth, clearStencil, region, storageTextures)
+        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(Binds.drawListBeginSplitBind, segment, framebuffer, splits, initialColorAction.value, finalColorAction.value, initialDepthAction.value, finalDepthAction.value, clearColorValues, clearDepth, clearStencil, region, storageTextures)
     }
 
     /**
@@ -871,7 +872,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_set_blend_constants
      */
     fun drawListSetBlendConstants(drawList: Long, color: Color) {
-        ObjectCalls.ptrcallWithLongAndColorArg(drawListSetBlendConstantsBind, segment, drawList, color)
+        ObjectCalls.ptrcallWithLongAndColorArg(Binds.drawListSetBlendConstantsBind, segment, drawList, color)
     }
 
     /**
@@ -880,7 +881,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_render_pipeline
      */
     fun drawListBindRenderPipeline(drawList: Long, renderPipeline: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindRenderPipelineBind, segment, drawList, renderPipeline)
+        ObjectCalls.ptrcallWithLongAndRIDArg(Binds.drawListBindRenderPipelineBind, segment, drawList, renderPipeline)
     }
 
     /**
@@ -890,7 +891,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_uniform_set
      */
     fun drawListBindUniformSet(drawList: Long, uniformSet: RID, setIndex: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(drawListBindUniformSetBind, segment, drawList, uniformSet, setIndex)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(Binds.drawListBindUniformSetBind, segment, drawList, uniformSet, setIndex)
     }
 
     /**
@@ -899,7 +900,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_vertex_array
      */
     fun drawListBindVertexArray(drawList: Long, vertexArray: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindVertexArrayBind, segment, drawList, vertexArray)
+        ObjectCalls.ptrcallWithLongAndRIDArg(Binds.drawListBindVertexArrayBind, segment, drawList, vertexArray)
     }
 
     /**
@@ -910,7 +911,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_vertex_buffers_format
      */
     fun drawListBindVertexBuffersFormat(drawList: Long, vertexFormat: Long, vertexCount: Long, vertexBuffers: List<RID>, offsets: List<Long>) {
-        ObjectCalls.ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(drawListBindVertexBuffersFormatBind, segment, drawList, vertexFormat, vertexCount, vertexBuffers, offsets)
+        ObjectCalls.ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(Binds.drawListBindVertexBuffersFormatBind, segment, drawList, vertexFormat, vertexCount, vertexBuffers, offsets)
     }
 
     /**
@@ -919,7 +920,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_bind_index_array
      */
     fun drawListBindIndexArray(drawList: Long, indexArray: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(drawListBindIndexArrayBind, segment, drawList, indexArray)
+        ObjectCalls.ptrcallWithLongAndRIDArg(Binds.drawListBindIndexArrayBind, segment, drawList, indexArray)
     }
 
     /**
@@ -930,7 +931,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_set_push_constant
      */
     fun drawListSetPushConstant(drawList: Long, buffer: ByteArray, sizeBytes: Long) {
-        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(drawListSetPushConstantBind, segment, drawList, buffer, sizeBytes)
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(Binds.drawListSetPushConstantBind, segment, drawList, buffer, sizeBytes)
     }
 
     /**
@@ -940,7 +941,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_draw
      */
     fun drawListDraw(drawList: Long, useIndices: Boolean, instances: Long, proceduralVertexCount: Long = 0L) {
-        ObjectCalls.ptrcallWithLongBoolTwoUInt32Args(drawListDrawBind, segment, drawList, useIndices, instances, proceduralVertexCount)
+        ObjectCalls.ptrcallWithLongBoolTwoUInt32Args(Binds.drawListDrawBind, segment, drawList, useIndices, instances, proceduralVertexCount)
     }
 
     /**
@@ -952,7 +953,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_draw_indirect
      */
     fun drawListDrawIndirect(drawList: Long, useIndices: Boolean, buffer: RID, offset: Long = 0L, drawCount: Long = 1L, stride: Long = 0L) {
-        ObjectCalls.ptrcallWithLongBoolRIDThreeUInt32Args(drawListDrawIndirectBind, segment, drawList, useIndices, buffer, offset, drawCount, stride)
+        ObjectCalls.ptrcallWithLongBoolRIDThreeUInt32Args(Binds.drawListDrawIndirectBind, segment, drawList, useIndices, buffer, offset, drawCount, stride)
     }
 
     /**
@@ -964,7 +965,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_enable_scissor
      */
     fun drawListEnableScissor(drawList: Long, rect: Rect2) {
-        ObjectCalls.ptrcallWithLongRect2Args(drawListEnableScissorBind, segment, drawList, rect)
+        ObjectCalls.ptrcallWithLongRect2Args(Binds.drawListEnableScissorBind, segment, drawList, rect)
     }
 
     /**
@@ -974,7 +975,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_disable_scissor
      */
     fun drawListDisableScissor(drawList: Long) {
-        ObjectCalls.ptrcallWithLongArg(drawListDisableScissorBind, segment, drawList)
+        ObjectCalls.ptrcallWithLongArg(Binds.drawListDisableScissorBind, segment, drawList)
     }
 
     /**
@@ -983,7 +984,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_switch_to_next_pass
      */
     fun drawListSwitchToNextPass(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(drawListSwitchToNextPassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.drawListSwitchToNextPassBind, segment)
     }
 
     /**
@@ -992,7 +993,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_switch_to_next_pass_split
      */
     fun drawListSwitchToNextPassSplit(splits: Long): List<Long> {
-        return ObjectCalls.ptrcallWithUInt32ArgRetPackedInt64List(drawListSwitchToNextPassSplitBind, segment, splits)
+        return ObjectCalls.ptrcallWithUInt32ArgRetPackedInt64List(Binds.drawListSwitchToNextPassSplitBind, segment, splits)
     }
 
     /**
@@ -1001,7 +1002,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_list_end
      */
     fun drawListEnd() {
-        ObjectCalls.ptrcallNoArgs(drawListEndBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.drawListEndBind, segment)
     }
 
     /**
@@ -1012,7 +1013,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_begin
      */
     fun computeListBegin(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(computeListBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.computeListBeginBind, segment)
     }
 
     /**
@@ -1023,7 +1024,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_bind_compute_pipeline
      */
     fun computeListBindComputePipeline(computeList: Long, computePipeline: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(computeListBindComputePipelineBind, segment, computeList, computePipeline)
+        ObjectCalls.ptrcallWithLongAndRIDArg(Binds.computeListBindComputePipelineBind, segment, computeList, computePipeline)
     }
 
     /**
@@ -1034,7 +1035,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_set_push_constant
      */
     fun computeListSetPushConstant(computeList: Long, buffer: ByteArray, sizeBytes: Long) {
-        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(computeListSetPushConstantBind, segment, computeList, buffer, sizeBytes)
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(Binds.computeListSetPushConstantBind, segment, computeList, buffer, sizeBytes)
     }
 
     /**
@@ -1045,7 +1046,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_bind_uniform_set
      */
     fun computeListBindUniformSet(computeList: Long, uniformSet: RID, setIndex: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(computeListBindUniformSetBind, segment, computeList, uniformSet, setIndex)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(Binds.computeListBindUniformSetBind, segment, computeList, uniformSet, setIndex)
     }
 
     /**
@@ -1055,7 +1056,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_dispatch
      */
     fun computeListDispatch(computeList: Long, xGroups: Long, yGroups: Long, zGroups: Long) {
-        ObjectCalls.ptrcallWithLongAndThreeUInt32Args(computeListDispatchBind, segment, computeList, xGroups, yGroups, zGroups)
+        ObjectCalls.ptrcallWithLongAndThreeUInt32Args(Binds.computeListDispatchBind, segment, computeList, xGroups, yGroups, zGroups)
     }
 
     /**
@@ -1065,7 +1066,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_dispatch_indirect
      */
     fun computeListDispatchIndirect(computeList: Long, buffer: RID, offset: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(computeListDispatchIndirectBind, segment, computeList, buffer, offset)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(Binds.computeListDispatchIndirectBind, segment, computeList, buffer, offset)
     }
 
     /**
@@ -1074,7 +1075,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_add_barrier
      */
     fun computeListAddBarrier(computeList: Long) {
-        ObjectCalls.ptrcallWithLongArg(computeListAddBarrierBind, segment, computeList)
+        ObjectCalls.ptrcallWithLongArg(Binds.computeListAddBarrierBind, segment, computeList)
     }
 
     /**
@@ -1083,7 +1084,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.compute_list_end
      */
     fun computeListEnd() {
-        ObjectCalls.ptrcallNoArgs(computeListEndBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.computeListEndBind, segment)
     }
 
     /**
@@ -1094,7 +1095,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_begin
      */
     fun raytracingListBegin(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(raytracingListBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.raytracingListBeginBind, segment)
     }
 
     /**
@@ -1103,7 +1104,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_bind_raytracing_pipeline
      */
     fun raytracingListBindRaytracingPipeline(raytracingList: Long, raytracingPipeline: RID) {
-        ObjectCalls.ptrcallWithLongAndRIDArg(raytracingListBindRaytracingPipelineBind, segment, raytracingList, raytracingPipeline)
+        ObjectCalls.ptrcallWithLongAndRIDArg(Binds.raytracingListBindRaytracingPipelineBind, segment, raytracingList, raytracingPipeline)
     }
 
     /**
@@ -1115,7 +1116,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_set_push_constant
      */
     fun raytracingListSetPushConstant(raytracingList: Long, buffer: ByteArray, sizeBytes: Long) {
-        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(raytracingListSetPushConstantBind, segment, raytracingList, buffer, sizeBytes)
+        ObjectCalls.ptrcallWithLongByteArrayUInt32Args(Binds.raytracingListSetPushConstantBind, segment, raytracingList, buffer, sizeBytes)
     }
 
     /**
@@ -1124,7 +1125,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_bind_uniform_set
      */
     fun raytracingListBindUniformSet(raytracingList: Long, uniformSet: RID, setIndex: Long) {
-        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(raytracingListBindUniformSetBind, segment, raytracingList, uniformSet, setIndex)
+        ObjectCalls.ptrcallWithLongRIDAndUInt32Args(Binds.raytracingListBindUniformSetBind, segment, raytracingList, uniformSet, setIndex)
     }
 
     /**
@@ -1136,7 +1137,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_trace_rays
      */
     fun raytracingListTraceRays(raytracingList: Long, raygenShaderIndex: Long, hitSbt: RID, width: Long, height: Long, depth: Long) {
-        ObjectCalls.ptrcallWithLongUInt32RIDThreeUInt32Args(raytracingListTraceRaysBind, segment, raytracingList, raygenShaderIndex, hitSbt, width, height, depth)
+        ObjectCalls.ptrcallWithLongUInt32RIDThreeUInt32Args(Binds.raytracingListTraceRaysBind, segment, raytracingList, raygenShaderIndex, hitSbt, width, height, depth)
     }
 
     /**
@@ -1145,7 +1146,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.raytracing_list_end
      */
     fun raytracingListEnd() {
-        ObjectCalls.ptrcallNoArgs(raytracingListEndBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.raytracingListEndBind, segment)
     }
 
     /**
@@ -1156,7 +1157,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.free_rid
      */
     fun freeRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, segment, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeRidBind, segment, rid)
     }
 
     /**
@@ -1167,7 +1168,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.capture_timestamp
      */
     fun captureTimestamp(name: String) {
-        ObjectCalls.ptrcallWithStringArg(captureTimestampBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.captureTimestampBind, segment, name)
     }
 
     /**
@@ -1176,7 +1177,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamps_count
      */
     fun getCapturedTimestampsCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCapturedTimestampsCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCapturedTimestampsCountBind, segment)
     }
 
     /**
@@ -1186,7 +1187,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamps_frame
      */
     fun getCapturedTimestampsFrame(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCapturedTimestampsFrameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCapturedTimestampsFrameBind, segment)
     }
 
     /**
@@ -1196,7 +1197,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_gpu_time
      */
     fun getCapturedTimestampGpuTime(index: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getCapturedTimestampGpuTimeBind, segment, index)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(Binds.getCapturedTimestampGpuTimeBind, segment, index)
     }
 
     /**
@@ -1206,7 +1207,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_cpu_time
      */
     fun getCapturedTimestampCpuTime(index: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getCapturedTimestampCpuTimeBind, segment, index)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(Binds.getCapturedTimestampCpuTimeBind, segment, index)
     }
 
     /**
@@ -1216,7 +1217,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_name
      */
     fun getCapturedTimestampName(index: Long): String {
-        return ObjectCalls.ptrcallWithUInt32ArgRetString(getCapturedTimestampNameBind, segment, index)
+        return ObjectCalls.ptrcallWithUInt32ArgRetString(Binds.getCapturedTimestampNameBind, segment, index)
     }
 
     /**
@@ -1225,7 +1226,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.has_feature
      */
     fun hasFeature(feature: RenderingDevice.Features): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasFeatureBind, segment, feature.value)
     }
 
     /**
@@ -1237,7 +1238,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.limit_get
      */
     fun limitGet(limit: RenderingDevice.Limit): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(limitGetBind, segment, limit.value)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.limitGetBind, segment, limit.value)
     }
 
     /**
@@ -1248,7 +1249,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_frame_delay
      */
     fun getFrameDelay(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getFrameDelayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFrameDelayBind, segment)
     }
 
     /**
@@ -1258,7 +1259,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.submit
      */
     fun submit() {
-        ObjectCalls.ptrcallNoArgs(submitBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.submitBind, segment)
     }
 
     /**
@@ -1269,7 +1270,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sync
      */
     fun sync() {
-        ObjectCalls.ptrcallNoArgs(syncBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.syncBind, segment)
     }
 
     /**
@@ -1278,7 +1279,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.barrier
      */
     fun barrier(from: RenderingDevice.BarrierMask = RenderingDevice.BarrierMask.ALL_BARRIERS, to: RenderingDevice.BarrierMask = RenderingDevice.BarrierMask.ALL_BARRIERS) {
-        ObjectCalls.ptrcallWithTwoLongArgs(barrierBind, segment, from.value, to.value)
+        ObjectCalls.ptrcallWithTwoLongArgs(Binds.barrierBind, segment, from.value, to.value)
     }
 
     /**
@@ -1287,7 +1288,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.full_barrier
      */
     fun fullBarrier() {
-        ObjectCalls.ptrcallNoArgs(fullBarrierBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.fullBarrierBind, segment)
     }
 
     /**
@@ -1297,7 +1298,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.create_local_device
      */
     fun createLocalDevice(): RenderingDevice? {
-        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(createLocalDeviceBind, segment))
+        return RenderingDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.createLocalDeviceBind, segment))
     }
 
     /**
@@ -1313,7 +1314,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.set_resource_name
      */
     fun setResourceName(id: RID, name: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(setResourceNameBind, segment, id, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.setResourceNameBind, segment, id, name)
     }
 
     /**
@@ -1327,7 +1328,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_command_begin_label
      */
     fun drawCommandBeginLabel(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringAndColorArg(drawCommandBeginLabelBind, segment, name, color)
+        ObjectCalls.ptrcallWithStringAndColorArg(Binds.drawCommandBeginLabelBind, segment, name, color)
     }
 
     /**
@@ -1336,7 +1337,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_command_insert_label
      */
     fun drawCommandInsertLabel(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringAndColorArg(drawCommandInsertLabelBind, segment, name, color)
+        ObjectCalls.ptrcallWithStringAndColorArg(Binds.drawCommandInsertLabelBind, segment, name, color)
     }
 
     /**
@@ -1345,7 +1346,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.draw_command_end_label
      */
     fun drawCommandEndLabel() {
-        ObjectCalls.ptrcallNoArgs(drawCommandEndLabelBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.drawCommandEndLabelBind, segment)
     }
 
     /**
@@ -1355,7 +1356,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_vendor_name
      */
     fun getDeviceVendorName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDeviceVendorNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDeviceVendorNameBind, segment)
     }
 
     /**
@@ -1365,7 +1366,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_name
      */
     fun getDeviceName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDeviceNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDeviceNameBind, segment)
     }
 
     /**
@@ -1377,7 +1378,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_pipeline_cache_uuid
      */
     fun getDevicePipelineCacheUuid(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDevicePipelineCacheUuidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDevicePipelineCacheUuidBind, segment)
     }
 
     /**
@@ -1388,7 +1389,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_memory_usage
      */
     fun getMemoryUsage(type: RenderingDevice.MemoryType): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMemoryUsageBind, segment, type.value)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMemoryUsageBind, segment, type.value)
     }
 
     /**
@@ -1399,7 +1400,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_resource
      */
     fun getDriverResource(resource: RenderingDevice.DriverResource, rid: RID, index: Long): Long {
-        return ObjectCalls.ptrcallWithLongRIDLongArgsRetLong(getDriverResourceBind, segment, resource.value, rid, index)
+        return ObjectCalls.ptrcallWithLongRIDLongArgsRetLong(Binds.getDriverResourceBind, segment, resource.value, rid, index)
     }
 
     /**
@@ -1408,7 +1409,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_perf_report
      */
     fun getPerfReport(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPerfReportBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPerfReportBind, segment)
     }
 
     /**
@@ -1423,7 +1424,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_and_device_memory_report
      */
     fun getDriverAndDeviceMemoryReport(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDriverAndDeviceMemoryReportBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDriverAndDeviceMemoryReportBind, segment)
     }
 
     /**
@@ -1442,7 +1443,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_tracked_object_name
      */
     fun getTrackedObjectName(typeIndex: Long): String {
-        return ObjectCalls.ptrcallWithUInt32ArgRetString(getTrackedObjectNameBind, segment, typeIndex)
+        return ObjectCalls.ptrcallWithUInt32ArgRetString(Binds.getTrackedObjectNameBind, segment, typeIndex)
     }
 
     /**
@@ -1453,7 +1454,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_tracked_object_type_count
      */
     fun getTrackedObjectTypeCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackedObjectTypeCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackedObjectTypeCountBind, segment)
     }
 
     /**
@@ -1463,7 +1464,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_total_memory
      */
     fun getDriverTotalMemory(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDriverTotalMemoryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDriverTotalMemoryBind, segment)
     }
 
     /**
@@ -1474,7 +1475,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_allocation_count
      */
     fun getDriverAllocationCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDriverAllocationCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDriverAllocationCountBind, segment)
     }
 
     /**
@@ -1486,7 +1487,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_memory_by_object_type
      */
     fun getDriverMemoryByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDriverMemoryByObjectTypeBind, segment, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(Binds.getDriverMemoryByObjectTypeBind, segment, type)
     }
 
     /**
@@ -1498,7 +1499,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_driver_allocs_by_object_type
      */
     fun getDriverAllocsByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDriverAllocsByObjectTypeBind, segment, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(Binds.getDriverAllocsByObjectTypeBind, segment, type)
     }
 
     /**
@@ -1508,7 +1509,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_total_memory
      */
     fun getDeviceTotalMemory(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDeviceTotalMemoryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDeviceTotalMemoryBind, segment)
     }
 
     /**
@@ -1518,7 +1519,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_allocation_count
      */
     fun getDeviceAllocationCount(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDeviceAllocationCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDeviceAllocationCountBind, segment)
     }
 
     /**
@@ -1530,7 +1531,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_memory_by_object_type
      */
     fun getDeviceMemoryByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceMemoryByObjectTypeBind, segment, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(Binds.getDeviceMemoryByObjectTypeBind, segment, type)
     }
 
     /**
@@ -1542,7 +1543,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.get_device_allocs_by_object_type
      */
     fun getDeviceAllocsByObjectType(type: Long): Long {
-        return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceAllocsByObjectTypeBind, segment, type)
+        return ObjectCalls.ptrcallWithUInt32ArgRetLong(Binds.getDeviceAllocsByObjectTypeBind, segment, type)
     }
 
     /**
@@ -5642,680 +5643,682 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): RenderingDevice? =
             if (handle.address() == 0L) null else RenderingDevice(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val TEXTURE_CREATE_HASH = 3709173589L
-        private val textureCreateBind by lazy {
+        @JvmField
+        val textureCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create", TEXTURE_CREATE_HASH)
-        }
 
         private const val TEXTURE_CREATE_SHARED_HASH = 3178156134L
-        private val textureCreateSharedBind by lazy {
+        @JvmField
+        val textureCreateSharedBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_shared", TEXTURE_CREATE_SHARED_HASH)
-        }
 
         private const val TEXTURE_CREATE_SHARED_FROM_SLICE_HASH = 1808971279L
-        private val textureCreateSharedFromSliceBind by lazy {
+        @JvmField
+        val textureCreateSharedFromSliceBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_shared_from_slice", TEXTURE_CREATE_SHARED_FROM_SLICE_HASH)
-        }
 
         private const val TEXTURE_CREATE_FROM_EXTENSION_HASH = 3732868568L
-        private val textureCreateFromExtensionBind by lazy {
+        @JvmField
+        val textureCreateFromExtensionBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_from_extension", TEXTURE_CREATE_FROM_EXTENSION_HASH)
-        }
 
         private const val TEXTURE_UPDATE_HASH = 1349464008L
-        private val textureUpdateBind by lazy {
+        @JvmField
+        val textureUpdateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_update", TEXTURE_UPDATE_HASH)
-        }
 
         private const val TEXTURE_GET_DATA_HASH = 1859412099L
-        private val textureGetDataBind by lazy {
+        @JvmField
+        val textureGetDataBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_data", TEXTURE_GET_DATA_HASH)
-        }
 
         private const val TEXTURE_GET_DATA_ASYNC_HASH = 498832090L
-        private val textureGetDataAsyncBind by lazy {
+        @JvmField
+        val textureGetDataAsyncBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_data_async", TEXTURE_GET_DATA_ASYNC_HASH)
-        }
 
         private const val TEXTURE_IS_FORMAT_SUPPORTED_FOR_USAGE_HASH = 2592520478L
-        private val textureIsFormatSupportedForUsageBind by lazy {
+        @JvmField
+        val textureIsFormatSupportedForUsageBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_is_format_supported_for_usage", TEXTURE_IS_FORMAT_SUPPORTED_FOR_USAGE_HASH)
-        }
 
         private const val TEXTURE_IS_SHARED_HASH = 3521089500L
-        private val textureIsSharedBind by lazy {
+        @JvmField
+        val textureIsSharedBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_is_shared", TEXTURE_IS_SHARED_HASH)
-        }
 
         private const val TEXTURE_IS_VALID_HASH = 3521089500L
-        private val textureIsValidBind by lazy {
+        @JvmField
+        val textureIsValidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_is_valid", TEXTURE_IS_VALID_HASH)
-        }
 
         private const val TEXTURE_SET_DISCARDABLE_HASH = 1265174801L
-        private val textureSetDiscardableBind by lazy {
+        @JvmField
+        val textureSetDiscardableBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_set_discardable", TEXTURE_SET_DISCARDABLE_HASH)
-        }
 
         private const val TEXTURE_IS_DISCARDABLE_HASH = 3521089500L
-        private val textureIsDiscardableBind by lazy {
+        @JvmField
+        val textureIsDiscardableBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_is_discardable", TEXTURE_IS_DISCARDABLE_HASH)
-        }
 
         private const val TEXTURE_COPY_HASH = 2859522160L
-        private val textureCopyBind by lazy {
+        @JvmField
+        val textureCopyBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_copy", TEXTURE_COPY_HASH)
-        }
 
         private const val TEXTURE_CLEAR_HASH = 3477703247L
-        private val textureClearBind by lazy {
+        @JvmField
+        val textureClearBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_clear", TEXTURE_CLEAR_HASH)
-        }
 
         private const val TEXTURE_RESOLVE_MULTISAMPLE_HASH = 3181288260L
-        private val textureResolveMultisampleBind by lazy {
+        @JvmField
+        val textureResolveMultisampleBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_resolve_multisample", TEXTURE_RESOLVE_MULTISAMPLE_HASH)
-        }
 
         private const val TEXTURE_GET_FORMAT_HASH = 1374471690L
-        private val textureGetFormatBind by lazy {
+        @JvmField
+        val textureGetFormatBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_format", TEXTURE_GET_FORMAT_HASH)
-        }
 
         private const val TEXTURE_GET_NATIVE_HANDLE_HASH = 3917799429L
-        private val textureGetNativeHandleBind by lazy {
+        @JvmField
+        val textureGetNativeHandleBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_native_handle", TEXTURE_GET_NATIVE_HANDLE_HASH)
-        }
 
         private const val FRAMEBUFFER_FORMAT_CREATE_HASH = 697032759L
-        private val framebufferFormatCreateBind by lazy {
+        @JvmField
+        val framebufferFormatCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_create", FRAMEBUFFER_FORMAT_CREATE_HASH)
-        }
 
         private const val FRAMEBUFFER_FORMAT_CREATE_MULTIPASS_HASH = 2647479094L
-        private val framebufferFormatCreateMultipassBind by lazy {
+        @JvmField
+        val framebufferFormatCreateMultipassBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_create_multipass", FRAMEBUFFER_FORMAT_CREATE_MULTIPASS_HASH)
-        }
 
         private const val FRAMEBUFFER_FORMAT_CREATE_EMPTY_HASH = 555930169L
-        private val framebufferFormatCreateEmptyBind by lazy {
+        @JvmField
+        val framebufferFormatCreateEmptyBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_create_empty", FRAMEBUFFER_FORMAT_CREATE_EMPTY_HASH)
-        }
 
         private const val FRAMEBUFFER_FORMAT_GET_TEXTURE_SAMPLES_HASH = 4223391010L
-        private val framebufferFormatGetTextureSamplesBind by lazy {
+        @JvmField
+        val framebufferFormatGetTextureSamplesBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_format_get_texture_samples", FRAMEBUFFER_FORMAT_GET_TEXTURE_SAMPLES_HASH)
-        }
 
         private const val FRAMEBUFFER_CREATE_HASH = 3284231055L
-        private val framebufferCreateBind by lazy {
+        @JvmField
+        val framebufferCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_create", FRAMEBUFFER_CREATE_HASH)
-        }
 
         private const val FRAMEBUFFER_CREATE_MULTIPASS_HASH = 1750306695L
-        private val framebufferCreateMultipassBind by lazy {
+        @JvmField
+        val framebufferCreateMultipassBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_create_multipass", FRAMEBUFFER_CREATE_MULTIPASS_HASH)
-        }
 
         private const val FRAMEBUFFER_CREATE_EMPTY_HASH = 3058360618L
-        private val framebufferCreateEmptyBind by lazy {
+        @JvmField
+        val framebufferCreateEmptyBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_create_empty", FRAMEBUFFER_CREATE_EMPTY_HASH)
-        }
 
         private const val FRAMEBUFFER_GET_FORMAT_HASH = 3917799429L
-        private val framebufferGetFormatBind by lazy {
+        @JvmField
+        val framebufferGetFormatBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_get_format", FRAMEBUFFER_GET_FORMAT_HASH)
-        }
 
         private const val FRAMEBUFFER_IS_VALID_HASH = 4155700596L
-        private val framebufferIsValidBind by lazy {
+        @JvmField
+        val framebufferIsValidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "framebuffer_is_valid", FRAMEBUFFER_IS_VALID_HASH)
-        }
 
         private const val SAMPLER_CREATE_HASH = 2327892535L
-        private val samplerCreateBind by lazy {
+        @JvmField
+        val samplerCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "sampler_create", SAMPLER_CREATE_HASH)
-        }
 
         private const val SAMPLER_IS_FORMAT_SUPPORTED_FOR_FILTER_HASH = 2247922238L
-        private val samplerIsFormatSupportedForFilterBind by lazy {
+        @JvmField
+        val samplerIsFormatSupportedForFilterBind =
             ObjectCalls.getMethodBind("RenderingDevice", "sampler_is_format_supported_for_filter", SAMPLER_IS_FORMAT_SUPPORTED_FOR_FILTER_HASH)
-        }
 
         private const val VERTEX_BUFFER_CREATE_HASH = 2089548973L
-        private val vertexBufferCreateBind by lazy {
+        @JvmField
+        val vertexBufferCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "vertex_buffer_create", VERTEX_BUFFER_CREATE_HASH)
-        }
 
         private const val VERTEX_FORMAT_CREATE_HASH = 1242678479L
-        private val vertexFormatCreateBind by lazy {
+        @JvmField
+        val vertexFormatCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "vertex_format_create", VERTEX_FORMAT_CREATE_HASH)
-        }
 
         private const val VERTEX_ARRAY_CREATE_HASH = 3799816279L
-        private val vertexArrayCreateBind by lazy {
+        @JvmField
+        val vertexArrayCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "vertex_array_create", VERTEX_ARRAY_CREATE_HASH)
-        }
 
         private const val INDEX_BUFFER_CREATE_HASH = 2368684885L
-        private val indexBufferCreateBind by lazy {
+        @JvmField
+        val indexBufferCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "index_buffer_create", INDEX_BUFFER_CREATE_HASH)
-        }
 
         private const val INDEX_ARRAY_CREATE_HASH = 2256026069L
-        private val indexArrayCreateBind by lazy {
+        @JvmField
+        val indexArrayCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "index_array_create", INDEX_ARRAY_CREATE_HASH)
-        }
 
         private const val SHADER_COMPILE_SPIRV_FROM_SOURCE_HASH = 1178973306L
-        private val shaderCompileSpirvFromSourceBind by lazy {
+        @JvmField
+        val shaderCompileSpirvFromSourceBind =
             ObjectCalls.getMethodBind("RenderingDevice", "shader_compile_spirv_from_source", SHADER_COMPILE_SPIRV_FROM_SOURCE_HASH)
-        }
 
         private const val SHADER_COMPILE_BINARY_FROM_SPIRV_HASH = 134910450L
-        private val shaderCompileBinaryFromSpirvBind by lazy {
+        @JvmField
+        val shaderCompileBinaryFromSpirvBind =
             ObjectCalls.getMethodBind("RenderingDevice", "shader_compile_binary_from_spirv", SHADER_COMPILE_BINARY_FROM_SPIRV_HASH)
-        }
 
         private const val SHADER_CREATE_FROM_SPIRV_HASH = 342949005L
-        private val shaderCreateFromSpirvBind by lazy {
+        @JvmField
+        val shaderCreateFromSpirvBind =
             ObjectCalls.getMethodBind("RenderingDevice", "shader_create_from_spirv", SHADER_CREATE_FROM_SPIRV_HASH)
-        }
 
         private const val SHADER_CREATE_FROM_BYTECODE_HASH = 1687031350L
-        private val shaderCreateFromBytecodeBind by lazy {
+        @JvmField
+        val shaderCreateFromBytecodeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "shader_create_from_bytecode", SHADER_CREATE_FROM_BYTECODE_HASH)
-        }
 
         private const val SHADER_CREATE_PLACEHOLDER_HASH = 529393457L
-        private val shaderCreatePlaceholderBind by lazy {
+        @JvmField
+        val shaderCreatePlaceholderBind =
             ObjectCalls.getMethodBind("RenderingDevice", "shader_create_placeholder", SHADER_CREATE_PLACEHOLDER_HASH)
-        }
 
         private const val SHADER_GET_VERTEX_INPUT_ATTRIBUTE_MASK_HASH = 3917799429L
-        private val shaderGetVertexInputAttributeMaskBind by lazy {
+        @JvmField
+        val shaderGetVertexInputAttributeMaskBind =
             ObjectCalls.getMethodBind("RenderingDevice", "shader_get_vertex_input_attribute_mask", SHADER_GET_VERTEX_INPUT_ATTRIBUTE_MASK_HASH)
-        }
 
         private const val UNIFORM_BUFFER_CREATE_HASH = 2089548973L
-        private val uniformBufferCreateBind by lazy {
+        @JvmField
+        val uniformBufferCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "uniform_buffer_create", UNIFORM_BUFFER_CREATE_HASH)
-        }
 
         private const val STORAGE_BUFFER_CREATE_HASH = 1609052553L
-        private val storageBufferCreateBind by lazy {
+        @JvmField
+        val storageBufferCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "storage_buffer_create", STORAGE_BUFFER_CREATE_HASH)
-        }
 
         private const val TEXTURE_BUFFER_CREATE_HASH = 1470338698L
-        private val textureBufferCreateBind by lazy {
+        @JvmField
+        val textureBufferCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_buffer_create", TEXTURE_BUFFER_CREATE_HASH)
-        }
 
         private const val UNIFORM_SET_CREATE_HASH = 2280795797L
-        private val uniformSetCreateBind by lazy {
+        @JvmField
+        val uniformSetCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "uniform_set_create", UNIFORM_SET_CREATE_HASH)
-        }
 
         private const val UNIFORM_SET_IS_VALID_HASH = 3521089500L
-        private val uniformSetIsValidBind by lazy {
+        @JvmField
+        val uniformSetIsValidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "uniform_set_is_valid", UNIFORM_SET_IS_VALID_HASH)
-        }
 
         private const val BUFFER_COPY_HASH = 864257779L
-        private val bufferCopyBind by lazy {
+        @JvmField
+        val bufferCopyBind =
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_copy", BUFFER_COPY_HASH)
-        }
 
         private const val BUFFER_UPDATE_HASH = 3454956949L
-        private val bufferUpdateBind by lazy {
+        @JvmField
+        val bufferUpdateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_update", BUFFER_UPDATE_HASH)
-        }
 
         private const val BUFFER_CLEAR_HASH = 2452320800L
-        private val bufferClearBind by lazy {
+        @JvmField
+        val bufferClearBind =
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_clear", BUFFER_CLEAR_HASH)
-        }
 
         private const val BUFFER_GET_DATA_HASH = 3101830688L
-        private val bufferGetDataBind by lazy {
+        @JvmField
+        val bufferGetDataBind =
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_get_data", BUFFER_GET_DATA_HASH)
-        }
 
         private const val BUFFER_GET_DATA_ASYNC_HASH = 2370287848L
-        private val bufferGetDataAsyncBind by lazy {
+        @JvmField
+        val bufferGetDataAsyncBind =
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_get_data_async", BUFFER_GET_DATA_ASYNC_HASH)
-        }
 
         private const val BUFFER_GET_DEVICE_ADDRESS_HASH = 3917799429L
-        private val bufferGetDeviceAddressBind by lazy {
+        @JvmField
+        val bufferGetDeviceAddressBind =
             ObjectCalls.getMethodBind("RenderingDevice", "buffer_get_device_address", BUFFER_GET_DEVICE_ADDRESS_HASH)
-        }
 
         private const val RENDER_PIPELINE_CREATE_HASH = 2385451958L
-        private val renderPipelineCreateBind by lazy {
+        @JvmField
+        val renderPipelineCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "render_pipeline_create", RENDER_PIPELINE_CREATE_HASH)
-        }
 
         private const val RENDER_PIPELINE_IS_VALID_HASH = 3521089500L
-        private val renderPipelineIsValidBind by lazy {
+        @JvmField
+        val renderPipelineIsValidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "render_pipeline_is_valid", RENDER_PIPELINE_IS_VALID_HASH)
-        }
 
         private const val COMPUTE_PIPELINE_CREATE_HASH = 1448838280L
-        private val computePipelineCreateBind by lazy {
+        @JvmField
+        val computePipelineCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_pipeline_create", COMPUTE_PIPELINE_CREATE_HASH)
-        }
 
         private const val COMPUTE_PIPELINE_IS_VALID_HASH = 3521089500L
-        private val computePipelineIsValidBind by lazy {
+        @JvmField
+        val computePipelineIsValidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_pipeline_is_valid", COMPUTE_PIPELINE_IS_VALID_HASH)
-        }
 
         private const val RAYTRACING_PIPELINE_CREATE_HASH = 1489129684L
-        private val raytracingPipelineCreateBind by lazy {
+        @JvmField
+        val raytracingPipelineCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_pipeline_create", RAYTRACING_PIPELINE_CREATE_HASH)
-        }
 
         private const val RAYTRACING_PIPELINE_IS_VALID_HASH = 3521089500L
-        private val raytracingPipelineIsValidBind by lazy {
+        @JvmField
+        val raytracingPipelineIsValidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_pipeline_is_valid", RAYTRACING_PIPELINE_IS_VALID_HASH)
-        }
 
         private const val BLAS_CREATE_HASH = 1010940044L
-        private val blasCreateBind by lazy {
+        @JvmField
+        val blasCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "blas_create", BLAS_CREATE_HASH)
-        }
 
         private const val TLAS_CREATE_HASH = 592780330L
-        private val tlasCreateBind by lazy {
+        @JvmField
+        val tlasCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "tlas_create", TLAS_CREATE_HASH)
-        }
 
         private const val BLAS_BUILD_HASH = 813180755L
-        private val blasBuildBind by lazy {
+        @JvmField
+        val blasBuildBind =
             ObjectCalls.getMethodBind("RenderingDevice", "blas_build", BLAS_BUILD_HASH)
-        }
 
         private const val TLAS_BUILD_HASH = 261981775L
-        private val tlasBuildBind by lazy {
+        @JvmField
+        val tlasBuildBind =
             ObjectCalls.getMethodBind("RenderingDevice", "tlas_build", TLAS_BUILD_HASH)
-        }
 
         private const val HIT_SBT_CREATE_HASH = 2233757277L
-        private val hitSbtCreateBind by lazy {
+        @JvmField
+        val hitSbtCreateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_create", HIT_SBT_CREATE_HASH)
-        }
 
         private const val HIT_SBT_SET_PIPELINE_HASH = 3181288260L
-        private val hitSbtSetPipelineBind by lazy {
+        @JvmField
+        val hitSbtSetPipelineBind =
             ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_set_pipeline", HIT_SBT_SET_PIPELINE_HASH)
-        }
 
         private const val HIT_SBT_RANGE_ALLOC_HASH = 2722015314L
-        private val hitSbtRangeAllocBind by lazy {
+        @JvmField
+        val hitSbtRangeAllocBind =
             ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_range_alloc", HIT_SBT_RANGE_ALLOC_HASH)
-        }
 
         private const val HIT_SBT_RANGE_FREE_HASH = 3804025326L
-        private val hitSbtRangeFreeBind by lazy {
+        @JvmField
+        val hitSbtRangeFreeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_range_free", HIT_SBT_RANGE_FREE_HASH)
-        }
 
         private const val HIT_SBT_RANGE_UPDATE_HASH = 1332346675L
-        private val hitSbtRangeUpdateBind by lazy {
+        @JvmField
+        val hitSbtRangeUpdateBind =
             ObjectCalls.getMethodBind("RenderingDevice", "hit_sbt_range_update", HIT_SBT_RANGE_UPDATE_HASH)
-        }
 
         private const val SCREEN_GET_WIDTH_HASH = 1591665591L
-        private val screenGetWidthBind by lazy {
+        @JvmField
+        val screenGetWidthBind =
             ObjectCalls.getMethodBind("RenderingDevice", "screen_get_width", SCREEN_GET_WIDTH_HASH)
-        }
 
         private const val SCREEN_GET_HEIGHT_HASH = 1591665591L
-        private val screenGetHeightBind by lazy {
+        @JvmField
+        val screenGetHeightBind =
             ObjectCalls.getMethodBind("RenderingDevice", "screen_get_height", SCREEN_GET_HEIGHT_HASH)
-        }
 
         private const val SCREEN_GET_FRAMEBUFFER_FORMAT_HASH = 1591665591L
-        private val screenGetFramebufferFormatBind by lazy {
+        @JvmField
+        val screenGetFramebufferFormatBind =
             ObjectCalls.getMethodBind("RenderingDevice", "screen_get_framebuffer_format", SCREEN_GET_FRAMEBUFFER_FORMAT_HASH)
-        }
 
         private const val DRAW_LIST_BEGIN_FOR_SCREEN_HASH = 3988079995L
-        private val drawListBeginForScreenBind by lazy {
+        @JvmField
+        val drawListBeginForScreenBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin_for_screen", DRAW_LIST_BEGIN_FOR_SCREEN_HASH)
-        }
 
         private const val DRAW_LIST_BEGIN_HASH = 1317926357L
-        private val drawListBeginBind by lazy {
+        @JvmField
+        val drawListBeginBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin", DRAW_LIST_BEGIN_HASH)
-        }
 
         private const val DRAW_LIST_BEGIN_SPLIT_HASH = 2406300660L
-        private val drawListBeginSplitBind by lazy {
+        @JvmField
+        val drawListBeginSplitBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_begin_split", DRAW_LIST_BEGIN_SPLIT_HASH)
-        }
 
         private const val DRAW_LIST_SET_BLEND_CONSTANTS_HASH = 2878471219L
-        private val drawListSetBlendConstantsBind by lazy {
+        @JvmField
+        val drawListSetBlendConstantsBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_set_blend_constants", DRAW_LIST_SET_BLEND_CONSTANTS_HASH)
-        }
 
         private const val DRAW_LIST_BIND_RENDER_PIPELINE_HASH = 4040184819L
-        private val drawListBindRenderPipelineBind by lazy {
+        @JvmField
+        val drawListBindRenderPipelineBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_render_pipeline", DRAW_LIST_BIND_RENDER_PIPELINE_HASH)
-        }
 
         private const val DRAW_LIST_BIND_UNIFORM_SET_HASH = 749655778L
-        private val drawListBindUniformSetBind by lazy {
+        @JvmField
+        val drawListBindUniformSetBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_uniform_set", DRAW_LIST_BIND_UNIFORM_SET_HASH)
-        }
 
         private const val DRAW_LIST_BIND_VERTEX_ARRAY_HASH = 4040184819L
-        private val drawListBindVertexArrayBind by lazy {
+        @JvmField
+        val drawListBindVertexArrayBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_vertex_array", DRAW_LIST_BIND_VERTEX_ARRAY_HASH)
-        }
 
         private const val DRAW_LIST_BIND_VERTEX_BUFFERS_FORMAT_HASH = 2008628980L
-        private val drawListBindVertexBuffersFormatBind by lazy {
+        @JvmField
+        val drawListBindVertexBuffersFormatBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_vertex_buffers_format", DRAW_LIST_BIND_VERTEX_BUFFERS_FORMAT_HASH)
-        }
 
         private const val DRAW_LIST_BIND_INDEX_ARRAY_HASH = 4040184819L
-        private val drawListBindIndexArrayBind by lazy {
+        @JvmField
+        val drawListBindIndexArrayBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_bind_index_array", DRAW_LIST_BIND_INDEX_ARRAY_HASH)
-        }
 
         private const val DRAW_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
-        private val drawListSetPushConstantBind by lazy {
+        @JvmField
+        val drawListSetPushConstantBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_set_push_constant", DRAW_LIST_SET_PUSH_CONSTANT_HASH)
-        }
 
         private const val DRAW_LIST_DRAW_HASH = 4230067973L
-        private val drawListDrawBind by lazy {
+        @JvmField
+        val drawListDrawBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_draw", DRAW_LIST_DRAW_HASH)
-        }
 
         private const val DRAW_LIST_DRAW_INDIRECT_HASH = 1092133571L
-        private val drawListDrawIndirectBind by lazy {
+        @JvmField
+        val drawListDrawIndirectBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_draw_indirect", DRAW_LIST_DRAW_INDIRECT_HASH)
-        }
 
         private const val DRAW_LIST_ENABLE_SCISSOR_HASH = 244650101L
-        private val drawListEnableScissorBind by lazy {
+        @JvmField
+        val drawListEnableScissorBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_enable_scissor", DRAW_LIST_ENABLE_SCISSOR_HASH)
-        }
 
         private const val DRAW_LIST_DISABLE_SCISSOR_HASH = 1286410249L
-        private val drawListDisableScissorBind by lazy {
+        @JvmField
+        val drawListDisableScissorBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_disable_scissor", DRAW_LIST_DISABLE_SCISSOR_HASH)
-        }
 
         private const val DRAW_LIST_SWITCH_TO_NEXT_PASS_HASH = 2455072627L
-        private val drawListSwitchToNextPassBind by lazy {
+        @JvmField
+        val drawListSwitchToNextPassBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_switch_to_next_pass", DRAW_LIST_SWITCH_TO_NEXT_PASS_HASH)
-        }
 
         private const val DRAW_LIST_SWITCH_TO_NEXT_PASS_SPLIT_HASH = 2865087369L
-        private val drawListSwitchToNextPassSplitBind by lazy {
+        @JvmField
+        val drawListSwitchToNextPassSplitBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_switch_to_next_pass_split", DRAW_LIST_SWITCH_TO_NEXT_PASS_SPLIT_HASH)
-        }
 
         private const val DRAW_LIST_END_HASH = 3218959716L
-        private val drawListEndBind by lazy {
+        @JvmField
+        val drawListEndBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_list_end", DRAW_LIST_END_HASH)
-        }
 
         private const val COMPUTE_LIST_BEGIN_HASH = 2455072627L
-        private val computeListBeginBind by lazy {
+        @JvmField
+        val computeListBeginBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_begin", COMPUTE_LIST_BEGIN_HASH)
-        }
 
         private const val COMPUTE_LIST_BIND_COMPUTE_PIPELINE_HASH = 4040184819L
-        private val computeListBindComputePipelineBind by lazy {
+        @JvmField
+        val computeListBindComputePipelineBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_bind_compute_pipeline", COMPUTE_LIST_BIND_COMPUTE_PIPELINE_HASH)
-        }
 
         private const val COMPUTE_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
-        private val computeListSetPushConstantBind by lazy {
+        @JvmField
+        val computeListSetPushConstantBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_set_push_constant", COMPUTE_LIST_SET_PUSH_CONSTANT_HASH)
-        }
 
         private const val COMPUTE_LIST_BIND_UNIFORM_SET_HASH = 749655778L
-        private val computeListBindUniformSetBind by lazy {
+        @JvmField
+        val computeListBindUniformSetBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_bind_uniform_set", COMPUTE_LIST_BIND_UNIFORM_SET_HASH)
-        }
 
         private const val COMPUTE_LIST_DISPATCH_HASH = 4275841770L
-        private val computeListDispatchBind by lazy {
+        @JvmField
+        val computeListDispatchBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_dispatch", COMPUTE_LIST_DISPATCH_HASH)
-        }
 
         private const val COMPUTE_LIST_DISPATCH_INDIRECT_HASH = 749655778L
-        private val computeListDispatchIndirectBind by lazy {
+        @JvmField
+        val computeListDispatchIndirectBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_dispatch_indirect", COMPUTE_LIST_DISPATCH_INDIRECT_HASH)
-        }
 
         private const val COMPUTE_LIST_ADD_BARRIER_HASH = 1286410249L
-        private val computeListAddBarrierBind by lazy {
+        @JvmField
+        val computeListAddBarrierBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_add_barrier", COMPUTE_LIST_ADD_BARRIER_HASH)
-        }
 
         private const val COMPUTE_LIST_END_HASH = 3218959716L
-        private val computeListEndBind by lazy {
+        @JvmField
+        val computeListEndBind =
             ObjectCalls.getMethodBind("RenderingDevice", "compute_list_end", COMPUTE_LIST_END_HASH)
-        }
 
         private const val RAYTRACING_LIST_BEGIN_HASH = 2455072627L
-        private val raytracingListBeginBind by lazy {
+        @JvmField
+        val raytracingListBeginBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_begin", RAYTRACING_LIST_BEGIN_HASH)
-        }
 
         private const val RAYTRACING_LIST_BIND_RAYTRACING_PIPELINE_HASH = 4040184819L
-        private val raytracingListBindRaytracingPipelineBind by lazy {
+        @JvmField
+        val raytracingListBindRaytracingPipelineBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_bind_raytracing_pipeline", RAYTRACING_LIST_BIND_RAYTRACING_PIPELINE_HASH)
-        }
 
         private const val RAYTRACING_LIST_SET_PUSH_CONSTANT_HASH = 2772371345L
-        private val raytracingListSetPushConstantBind by lazy {
+        @JvmField
+        val raytracingListSetPushConstantBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_set_push_constant", RAYTRACING_LIST_SET_PUSH_CONSTANT_HASH)
-        }
 
         private const val RAYTRACING_LIST_BIND_UNIFORM_SET_HASH = 749655778L
-        private val raytracingListBindUniformSetBind by lazy {
+        @JvmField
+        val raytracingListBindUniformSetBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_bind_uniform_set", RAYTRACING_LIST_BIND_UNIFORM_SET_HASH)
-        }
 
         private const val RAYTRACING_LIST_TRACE_RAYS_HASH = 2559472681L
-        private val raytracingListTraceRaysBind by lazy {
+        @JvmField
+        val raytracingListTraceRaysBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_trace_rays", RAYTRACING_LIST_TRACE_RAYS_HASH)
-        }
 
         private const val RAYTRACING_LIST_END_HASH = 3218959716L
-        private val raytracingListEndBind by lazy {
+        @JvmField
+        val raytracingListEndBind =
             ObjectCalls.getMethodBind("RenderingDevice", "raytracing_list_end", RAYTRACING_LIST_END_HASH)
-        }
 
         private const val FREE_RID_HASH = 2722037293L
-        private val freeRidBind by lazy {
+        @JvmField
+        val freeRidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "free_rid", FREE_RID_HASH)
-        }
 
         private const val CAPTURE_TIMESTAMP_HASH = 83702148L
-        private val captureTimestampBind by lazy {
+        @JvmField
+        val captureTimestampBind =
             ObjectCalls.getMethodBind("RenderingDevice", "capture_timestamp", CAPTURE_TIMESTAMP_HASH)
-        }
 
         private const val GET_CAPTURED_TIMESTAMPS_COUNT_HASH = 3905245786L
-        private val getCapturedTimestampsCountBind by lazy {
+        @JvmField
+        val getCapturedTimestampsCountBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamps_count", GET_CAPTURED_TIMESTAMPS_COUNT_HASH)
-        }
 
         private const val GET_CAPTURED_TIMESTAMPS_FRAME_HASH = 3905245786L
-        private val getCapturedTimestampsFrameBind by lazy {
+        @JvmField
+        val getCapturedTimestampsFrameBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamps_frame", GET_CAPTURED_TIMESTAMPS_FRAME_HASH)
-        }
 
         private const val GET_CAPTURED_TIMESTAMP_GPU_TIME_HASH = 923996154L
-        private val getCapturedTimestampGpuTimeBind by lazy {
+        @JvmField
+        val getCapturedTimestampGpuTimeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamp_gpu_time", GET_CAPTURED_TIMESTAMP_GPU_TIME_HASH)
-        }
 
         private const val GET_CAPTURED_TIMESTAMP_CPU_TIME_HASH = 923996154L
-        private val getCapturedTimestampCpuTimeBind by lazy {
+        @JvmField
+        val getCapturedTimestampCpuTimeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamp_cpu_time", GET_CAPTURED_TIMESTAMP_CPU_TIME_HASH)
-        }
 
         private const val GET_CAPTURED_TIMESTAMP_NAME_HASH = 844755477L
-        private val getCapturedTimestampNameBind by lazy {
+        @JvmField
+        val getCapturedTimestampNameBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_captured_timestamp_name", GET_CAPTURED_TIMESTAMP_NAME_HASH)
-        }
 
         private const val HAS_FEATURE_HASH = 1772728326L
-        private val hasFeatureBind by lazy {
+        @JvmField
+        val hasFeatureBind =
             ObjectCalls.getMethodBind("RenderingDevice", "has_feature", HAS_FEATURE_HASH)
-        }
 
         private const val LIMIT_GET_HASH = 1559202131L
-        private val limitGetBind by lazy {
+        @JvmField
+        val limitGetBind =
             ObjectCalls.getMethodBind("RenderingDevice", "limit_get", LIMIT_GET_HASH)
-        }
 
         private const val GET_FRAME_DELAY_HASH = 3905245786L
-        private val getFrameDelayBind by lazy {
+        @JvmField
+        val getFrameDelayBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_frame_delay", GET_FRAME_DELAY_HASH)
-        }
 
         private const val SUBMIT_HASH = 3218959716L
-        private val submitBind by lazy {
+        @JvmField
+        val submitBind =
             ObjectCalls.getMethodBind("RenderingDevice", "submit", SUBMIT_HASH)
-        }
 
         private const val SYNC_HASH = 3218959716L
-        private val syncBind by lazy {
+        @JvmField
+        val syncBind =
             ObjectCalls.getMethodBind("RenderingDevice", "sync", SYNC_HASH)
-        }
 
         private const val BARRIER_HASH = 3718155691L
-        private val barrierBind by lazy {
+        @JvmField
+        val barrierBind =
             ObjectCalls.getMethodBind("RenderingDevice", "barrier", BARRIER_HASH)
-        }
 
         private const val FULL_BARRIER_HASH = 3218959716L
-        private val fullBarrierBind by lazy {
+        @JvmField
+        val fullBarrierBind =
             ObjectCalls.getMethodBind("RenderingDevice", "full_barrier", FULL_BARRIER_HASH)
-        }
 
         private const val CREATE_LOCAL_DEVICE_HASH = 2846302423L
-        private val createLocalDeviceBind by lazy {
+        @JvmField
+        val createLocalDeviceBind =
             ObjectCalls.getMethodBind("RenderingDevice", "create_local_device", CREATE_LOCAL_DEVICE_HASH)
-        }
 
         private const val SET_RESOURCE_NAME_HASH = 2726140452L
-        private val setResourceNameBind by lazy {
+        @JvmField
+        val setResourceNameBind =
             ObjectCalls.getMethodBind("RenderingDevice", "set_resource_name", SET_RESOURCE_NAME_HASH)
-        }
 
         private const val DRAW_COMMAND_BEGIN_LABEL_HASH = 1636512886L
-        private val drawCommandBeginLabelBind by lazy {
+        @JvmField
+        val drawCommandBeginLabelBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_command_begin_label", DRAW_COMMAND_BEGIN_LABEL_HASH)
-        }
 
         private const val DRAW_COMMAND_INSERT_LABEL_HASH = 1636512886L
-        private val drawCommandInsertLabelBind by lazy {
+        @JvmField
+        val drawCommandInsertLabelBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_command_insert_label", DRAW_COMMAND_INSERT_LABEL_HASH)
-        }
 
         private const val DRAW_COMMAND_END_LABEL_HASH = 3218959716L
-        private val drawCommandEndLabelBind by lazy {
+        @JvmField
+        val drawCommandEndLabelBind =
             ObjectCalls.getMethodBind("RenderingDevice", "draw_command_end_label", DRAW_COMMAND_END_LABEL_HASH)
-        }
 
         private const val GET_DEVICE_VENDOR_NAME_HASH = 201670096L
-        private val getDeviceVendorNameBind by lazy {
+        @JvmField
+        val getDeviceVendorNameBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_vendor_name", GET_DEVICE_VENDOR_NAME_HASH)
-        }
 
         private const val GET_DEVICE_NAME_HASH = 201670096L
-        private val getDeviceNameBind by lazy {
+        @JvmField
+        val getDeviceNameBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_name", GET_DEVICE_NAME_HASH)
-        }
 
         private const val GET_DEVICE_PIPELINE_CACHE_UUID_HASH = 201670096L
-        private val getDevicePipelineCacheUuidBind by lazy {
+        @JvmField
+        val getDevicePipelineCacheUuidBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_pipeline_cache_uuid", GET_DEVICE_PIPELINE_CACHE_UUID_HASH)
-        }
 
         private const val GET_MEMORY_USAGE_HASH = 251690689L
-        private val getMemoryUsageBind by lazy {
+        @JvmField
+        val getMemoryUsageBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_memory_usage", GET_MEMORY_USAGE_HASH)
-        }
 
         private const val GET_DRIVER_RESOURCE_HASH = 501815484L
-        private val getDriverResourceBind by lazy {
+        @JvmField
+        val getDriverResourceBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_resource", GET_DRIVER_RESOURCE_HASH)
-        }
 
         private const val GET_PERF_REPORT_HASH = 201670096L
-        private val getPerfReportBind by lazy {
+        @JvmField
+        val getPerfReportBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_perf_report", GET_PERF_REPORT_HASH)
-        }
 
         private const val GET_DRIVER_AND_DEVICE_MEMORY_REPORT_HASH = 201670096L
-        private val getDriverAndDeviceMemoryReportBind by lazy {
+        @JvmField
+        val getDriverAndDeviceMemoryReportBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_and_device_memory_report", GET_DRIVER_AND_DEVICE_MEMORY_REPORT_HASH)
-        }
 
         private const val GET_TRACKED_OBJECT_NAME_HASH = 844755477L
-        private val getTrackedObjectNameBind by lazy {
+        @JvmField
+        val getTrackedObjectNameBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_tracked_object_name", GET_TRACKED_OBJECT_NAME_HASH)
-        }
 
         private const val GET_TRACKED_OBJECT_TYPE_COUNT_HASH = 3905245786L
-        private val getTrackedObjectTypeCountBind by lazy {
+        @JvmField
+        val getTrackedObjectTypeCountBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_tracked_object_type_count", GET_TRACKED_OBJECT_TYPE_COUNT_HASH)
-        }
 
         private const val GET_DRIVER_TOTAL_MEMORY_HASH = 3905245786L
-        private val getDriverTotalMemoryBind by lazy {
+        @JvmField
+        val getDriverTotalMemoryBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_total_memory", GET_DRIVER_TOTAL_MEMORY_HASH)
-        }
 
         private const val GET_DRIVER_ALLOCATION_COUNT_HASH = 3905245786L
-        private val getDriverAllocationCountBind by lazy {
+        @JvmField
+        val getDriverAllocationCountBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_allocation_count", GET_DRIVER_ALLOCATION_COUNT_HASH)
-        }
 
         private const val GET_DRIVER_MEMORY_BY_OBJECT_TYPE_HASH = 923996154L
-        private val getDriverMemoryByObjectTypeBind by lazy {
+        @JvmField
+        val getDriverMemoryByObjectTypeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_memory_by_object_type", GET_DRIVER_MEMORY_BY_OBJECT_TYPE_HASH)
-        }
 
         private const val GET_DRIVER_ALLOCS_BY_OBJECT_TYPE_HASH = 923996154L
-        private val getDriverAllocsByObjectTypeBind by lazy {
+        @JvmField
+        val getDriverAllocsByObjectTypeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_driver_allocs_by_object_type", GET_DRIVER_ALLOCS_BY_OBJECT_TYPE_HASH)
-        }
 
         private const val GET_DEVICE_TOTAL_MEMORY_HASH = 3905245786L
-        private val getDeviceTotalMemoryBind by lazy {
+        @JvmField
+        val getDeviceTotalMemoryBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_total_memory", GET_DEVICE_TOTAL_MEMORY_HASH)
-        }
 
         private const val GET_DEVICE_ALLOCATION_COUNT_HASH = 3905245786L
-        private val getDeviceAllocationCountBind by lazy {
+        @JvmField
+        val getDeviceAllocationCountBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_allocation_count", GET_DEVICE_ALLOCATION_COUNT_HASH)
-        }
 
         private const val GET_DEVICE_MEMORY_BY_OBJECT_TYPE_HASH = 923996154L
-        private val getDeviceMemoryByObjectTypeBind by lazy {
+        @JvmField
+        val getDeviceMemoryByObjectTypeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_memory_by_object_type", GET_DEVICE_MEMORY_BY_OBJECT_TYPE_HASH)
-        }
 
         private const val GET_DEVICE_ALLOCS_BY_OBJECT_TYPE_HASH = 923996154L
-        private val getDeviceAllocsByObjectTypeBind by lazy {
+        @JvmField
+        val getDeviceAllocsByObjectTypeBind =
             ObjectCalls.getMethodBind("RenderingDevice", "get_device_allocs_by_object_type", GET_DEVICE_ALLOCS_BY_OBJECT_TYPE_HASH)
-        }
     }
 }

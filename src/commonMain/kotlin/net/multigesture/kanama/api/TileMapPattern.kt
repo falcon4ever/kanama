@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun setCell(coords: Vector2i, sourceId: Int = -1, atlasCoords: Vector2i, alternativeTile: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
+        ObjectCalls.ptrcallWithVector2iIntVector2iIntArgs(Binds.setCellBind, segment, coords, sourceId, atlasCoords, alternativeTile)
     }
 
     /**
@@ -28,7 +29,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun hasCell(coords: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(hasCellBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.hasCellBind, segment, coords)
     }
 
     /**
@@ -38,7 +39,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun removeCell(coords: Vector2i, updateSize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndBoolArg(removeCellBind, segment, coords, updateSize)
+        ObjectCalls.ptrcallWithVector2iAndBoolArg(Binds.removeCellBind, segment, coords, updateSize)
     }
 
     /**
@@ -48,7 +49,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellSourceId(coords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellSourceIdBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellSourceIdBind, segment, coords)
     }
 
     /**
@@ -58,7 +59,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellAtlasCoords(coords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getCellAtlasCoordsBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getCellAtlasCoordsBind, segment, coords)
     }
 
     /**
@@ -68,7 +69,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellAlternativeTile(coords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getCellAlternativeTileBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getCellAlternativeTileBind, segment, coords)
     }
 
     /**
@@ -78,7 +79,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getUsedCells(): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2iList(getUsedCellsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2iList(Binds.getUsedCellsBind, segment)
     }
 
     /**
@@ -88,7 +89,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun setSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -108,7 +109,7 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
     }
 
     companion object {
@@ -121,55 +122,57 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileMapPattern? =
             if (handle.address() == 0L) null else TileMapPattern(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CELL_HASH = 2224802556L
-        private val setCellBind by lazy {
+        @JvmField
+        val setCellBind =
             ObjectCalls.getMethodBind("TileMapPattern", "set_cell", SET_CELL_HASH)
-        }
 
         private const val HAS_CELL_HASH = 3900751641L
-        private val hasCellBind by lazy {
+        @JvmField
+        val hasCellBind =
             ObjectCalls.getMethodBind("TileMapPattern", "has_cell", HAS_CELL_HASH)
-        }
 
         private const val REMOVE_CELL_HASH = 4153096796L
-        private val removeCellBind by lazy {
+        @JvmField
+        val removeCellBind =
             ObjectCalls.getMethodBind("TileMapPattern", "remove_cell", REMOVE_CELL_HASH)
-        }
 
         private const val GET_CELL_SOURCE_ID_HASH = 2485466453L
-        private val getCellSourceIdBind by lazy {
+        @JvmField
+        val getCellSourceIdBind =
             ObjectCalls.getMethodBind("TileMapPattern", "get_cell_source_id", GET_CELL_SOURCE_ID_HASH)
-        }
 
         private const val GET_CELL_ATLAS_COORDS_HASH = 3050897911L
-        private val getCellAtlasCoordsBind by lazy {
+        @JvmField
+        val getCellAtlasCoordsBind =
             ObjectCalls.getMethodBind("TileMapPattern", "get_cell_atlas_coords", GET_CELL_ATLAS_COORDS_HASH)
-        }
 
         private const val GET_CELL_ALTERNATIVE_TILE_HASH = 2485466453L
-        private val getCellAlternativeTileBind by lazy {
+        @JvmField
+        val getCellAlternativeTileBind =
             ObjectCalls.getMethodBind("TileMapPattern", "get_cell_alternative_tile", GET_CELL_ALTERNATIVE_TILE_HASH)
-        }
 
         private const val GET_USED_CELLS_HASH = 3995934104L
-        private val getUsedCellsBind by lazy {
+        @JvmField
+        val getUsedCellsBind =
             ObjectCalls.getMethodBind("TileMapPattern", "get_used_cells", GET_USED_CELLS_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("TileMapPattern", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SIZE_HASH = 1130785943L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("TileMapPattern", "set_size", SET_SIZE_HASH)
-        }
 
         private const val IS_EMPTY_HASH = 36873697L
-        private val isEmptyBind by lazy {
+        @JvmField
+        val isEmptyBind =
             ObjectCalls.getMethodBind("TileMapPattern", "is_empty", IS_EMPTY_HASH)
-        }
     }
 }

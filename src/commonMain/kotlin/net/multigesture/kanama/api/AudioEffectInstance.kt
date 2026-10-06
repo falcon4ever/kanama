@@ -22,7 +22,5 @@ open class AudioEffectInstance(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectInstance? =
             if (handle.address() == 0L) null else AudioEffectInstance(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

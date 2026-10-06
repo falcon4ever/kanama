@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -420,27 +421,27 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
 
     fun setStreamCount(streamCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStreamCountBind, segment, streamCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStreamCountBind, segment, streamCount)
     }
 
     fun getStreamCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
     }
 
     fun getBpm(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBpmBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
     }
 
     fun setListStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setListStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setListStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun getListStream(streamIndex: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getListStreamBind, segment, streamIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getListStreamBind, segment, streamIndex)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -450,32 +451,32 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
 
     fun setShuffle(shuffle: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setShuffleBind, segment, shuffle)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShuffleBind, segment, shuffle)
     }
 
     fun getShuffle(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getShuffleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShuffleBind, segment)
     }
 
     fun setFadeTime(dec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFadeTimeBind, segment, dec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeTimeBind, segment, dec)
     }
 
     fun getFadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeTimeBind, segment)
     }
 
     fun setLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
     }
 
     fun hasLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
     }
 
     companion object {
@@ -490,60 +491,62 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaylist? =
             if (handle.address() == 0L) null else AudioStreamPlaylist(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STREAM_COUNT_HASH = 1286410249L
-        private val setStreamCountBind by lazy {
+        @JvmField
+        val setStreamCountBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "set_stream_count", SET_STREAM_COUNT_HASH)
-        }
 
         private const val GET_STREAM_COUNT_HASH = 3905245786L
-        private val getStreamCountBind by lazy {
+        @JvmField
+        val getStreamCountBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "get_stream_count", GET_STREAM_COUNT_HASH)
-        }
 
         private const val GET_BPM_HASH = 1740695150L
-        private val getBpmBind by lazy {
+        @JvmField
+        val getBpmBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "get_bpm", GET_BPM_HASH)
-        }
 
         private const val SET_LIST_STREAM_HASH = 111075094L
-        private val setListStreamBind by lazy {
+        @JvmField
+        val setListStreamBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "set_list_stream", SET_LIST_STREAM_HASH)
-        }
 
         private const val GET_LIST_STREAM_HASH = 2739380747L
-        private val getListStreamBind by lazy {
+        @JvmField
+        val getListStreamBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "get_list_stream", GET_LIST_STREAM_HASH)
-        }
 
         private const val SET_SHUFFLE_HASH = 2586408642L
-        private val setShuffleBind by lazy {
+        @JvmField
+        val setShuffleBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "set_shuffle", SET_SHUFFLE_HASH)
-        }
 
         private const val GET_SHUFFLE_HASH = 36873697L
-        private val getShuffleBind by lazy {
+        @JvmField
+        val getShuffleBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "get_shuffle", GET_SHUFFLE_HASH)
-        }
 
         private const val SET_FADE_TIME_HASH = 373806689L
-        private val setFadeTimeBind by lazy {
+        @JvmField
+        val setFadeTimeBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "set_fade_time", SET_FADE_TIME_HASH)
-        }
 
         private const val GET_FADE_TIME_HASH = 1740695150L
-        private val getFadeTimeBind by lazy {
+        @JvmField
+        val getFadeTimeBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "get_fade_time", GET_FADE_TIME_HASH)
-        }
 
         private const val SET_LOOP_HASH = 2586408642L
-        private val setLoopBind by lazy {
+        @JvmField
+        val setLoopBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "set_loop", SET_LOOP_HASH)
-        }
 
         private const val HAS_LOOP_HASH = 36873697L
-        private val hasLoopBind by lazy {
+        @JvmField
+        val hasLoopBind =
             ObjectCalls.getMethodBind("AudioStreamPlaylist", "has_loop", HAS_LOOP_HASH)
-        }
     }
 }

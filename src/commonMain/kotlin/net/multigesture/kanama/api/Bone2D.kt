@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.set_rest
      */
     fun setRest(rest: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setRestBind, segment, rest)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setRestBind, segment, rest)
     }
 
     /**
@@ -35,7 +36,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.get_rest
      */
     fun getRest(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getRestBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getRestBind, segment)
     }
 
     /**
@@ -44,7 +45,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.apply_rest
      */
     fun applyRest() {
-        ObjectCalls.ptrcallNoArgs(applyRestBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.applyRestBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.get_skeleton_rest
      */
     fun getSkeletonRest(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getSkeletonRestBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getSkeletonRestBind, segment)
     }
 
     /**
@@ -63,7 +64,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.get_index_in_skeleton
      */
     fun getIndexInSkeleton(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndexInSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIndexInSkeletonBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.set_autocalculate_length_and_angle
      */
     fun setAutocalculateLengthAndAngle(autoCalculate: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutocalculateLengthAndAngleBind, segment, autoCalculate)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutocalculateLengthAndAngleBind, segment, autoCalculate)
     }
 
     /**
@@ -85,7 +86,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.get_autocalculate_length_and_angle
      */
     fun getAutocalculateLengthAndAngle(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAutocalculateLengthAndAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAutocalculateLengthAndAngleBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.set_length
      */
     fun setLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, length)
     }
 
     /**
@@ -103,7 +104,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.get_length
      */
     fun getLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.set_bone_angle
      */
     fun setBoneAngle(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBoneAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBoneAngleBind, segment, angle)
     }
 
     /**
@@ -126,7 +127,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Bone2D.get_bone_angle
      */
     fun getBoneAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBoneAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBoneAngleBind, segment)
     }
 
     companion object {
@@ -136,60 +137,62 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Bone2D? =
             if (handle.address() == 0L) null else Bone2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_REST_HASH = 2761652528L
-        private val setRestBind by lazy {
+        @JvmField
+        val setRestBind =
             ObjectCalls.getMethodBind("Bone2D", "set_rest", SET_REST_HASH)
-        }
 
         private const val GET_REST_HASH = 3814499831L
-        private val getRestBind by lazy {
+        @JvmField
+        val getRestBind =
             ObjectCalls.getMethodBind("Bone2D", "get_rest", GET_REST_HASH)
-        }
 
         private const val APPLY_REST_HASH = 3218959716L
-        private val applyRestBind by lazy {
+        @JvmField
+        val applyRestBind =
             ObjectCalls.getMethodBind("Bone2D", "apply_rest", APPLY_REST_HASH)
-        }
 
         private const val GET_SKELETON_REST_HASH = 3814499831L
-        private val getSkeletonRestBind by lazy {
+        @JvmField
+        val getSkeletonRestBind =
             ObjectCalls.getMethodBind("Bone2D", "get_skeleton_rest", GET_SKELETON_REST_HASH)
-        }
 
         private const val GET_INDEX_IN_SKELETON_HASH = 3905245786L
-        private val getIndexInSkeletonBind by lazy {
+        @JvmField
+        val getIndexInSkeletonBind =
             ObjectCalls.getMethodBind("Bone2D", "get_index_in_skeleton", GET_INDEX_IN_SKELETON_HASH)
-        }
 
         private const val SET_AUTOCALCULATE_LENGTH_AND_ANGLE_HASH = 2586408642L
-        private val setAutocalculateLengthAndAngleBind by lazy {
+        @JvmField
+        val setAutocalculateLengthAndAngleBind =
             ObjectCalls.getMethodBind("Bone2D", "set_autocalculate_length_and_angle", SET_AUTOCALCULATE_LENGTH_AND_ANGLE_HASH)
-        }
 
         private const val GET_AUTOCALCULATE_LENGTH_AND_ANGLE_HASH = 36873697L
-        private val getAutocalculateLengthAndAngleBind by lazy {
+        @JvmField
+        val getAutocalculateLengthAndAngleBind =
             ObjectCalls.getMethodBind("Bone2D", "get_autocalculate_length_and_angle", GET_AUTOCALCULATE_LENGTH_AND_ANGLE_HASH)
-        }
 
         private const val SET_LENGTH_HASH = 373806689L
-        private val setLengthBind by lazy {
+        @JvmField
+        val setLengthBind =
             ObjectCalls.getMethodBind("Bone2D", "set_length", SET_LENGTH_HASH)
-        }
 
         private const val GET_LENGTH_HASH = 1740695150L
-        private val getLengthBind by lazy {
+        @JvmField
+        val getLengthBind =
             ObjectCalls.getMethodBind("Bone2D", "get_length", GET_LENGTH_HASH)
-        }
 
         private const val SET_BONE_ANGLE_HASH = 373806689L
-        private val setBoneAngleBind by lazy {
+        @JvmField
+        val setBoneAngleBind =
             ObjectCalls.getMethodBind("Bone2D", "set_bone_angle", SET_BONE_ANGLE_HASH)
-        }
 
         private const val GET_BONE_ANGLE_HASH = 1740695150L
-        private val getBoneAngleBind by lazy {
+        @JvmField
+        val getBoneAngleBind =
             ObjectCalls.getMethodBind("Bone2D", "get_bone_angle", GET_BONE_ANGLE_HASH)
-        }
     }
 }

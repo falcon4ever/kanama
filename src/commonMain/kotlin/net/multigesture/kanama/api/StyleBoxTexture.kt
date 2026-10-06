@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -106,7 +107,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -116,7 +117,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -128,7 +129,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setTextureMargin(margin: Side, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, segment, margin.value, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setTextureMarginBind, segment, margin.value, size)
     }
 
     /**
@@ -138,7 +139,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setTextureMarginAll(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMarginAllBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTextureMarginAllBind, segment, size)
     }
 
     /**
@@ -150,7 +151,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getTextureMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getTextureMarginBind, segment, margin.value)
     }
 
     /**
@@ -161,7 +162,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setExpandMargin(margin: Side, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin.value, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setExpandMarginBind, segment, margin.value, size)
     }
 
     /**
@@ -171,7 +172,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setExpandMarginAll(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExpandMarginAllBind, segment, size)
     }
 
     /**
@@ -182,7 +183,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getExpandMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getExpandMarginBind, segment, margin.value)
     }
 
     /**
@@ -194,7 +195,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setRegionRect(region: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, region)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setRegionRectBind, segment, region)
     }
 
     /**
@@ -206,7 +207,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getRegionRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionRectBind, segment)
     }
 
     /**
@@ -216,7 +217,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setDrawCenter(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawCenterBind, segment, enable)
     }
 
     /**
@@ -226,7 +227,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isDrawCenterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
     }
 
     /**
@@ -236,7 +237,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setModulate(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, color)
     }
 
     /**
@@ -246,7 +247,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setHAxisStretchMode(mode: StyleBoxTexture.AxisStretchMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -266,7 +267,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getHAxisStretchMode(): StyleBoxTexture.AxisStretchMode {
         checkOpen()
-        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment))
+        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHAxisStretchModeBind, segment))
     }
 
     /**
@@ -276,7 +277,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setVAxisStretchMode(mode: StyleBoxTexture.AxisStretchMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -286,7 +287,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getVAxisStretchMode(): StyleBoxTexture.AxisStretchMode {
         checkOpen()
-        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment))
+        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVAxisStretchModeBind, segment))
     }
 
     /**
@@ -332,95 +333,97 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxTexture? =
             if (handle.address() == 0L) null else StyleBoxTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_TEXTURE_MARGIN_HASH = 4290182280L
-        private val setTextureMarginBind by lazy {
+        @JvmField
+        val setTextureMarginBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_texture_margin", SET_TEXTURE_MARGIN_HASH)
-        }
 
         private const val SET_TEXTURE_MARGIN_ALL_HASH = 373806689L
-        private val setTextureMarginAllBind by lazy {
+        @JvmField
+        val setTextureMarginAllBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_texture_margin_all", SET_TEXTURE_MARGIN_ALL_HASH)
-        }
 
         private const val GET_TEXTURE_MARGIN_HASH = 2869120046L
-        private val getTextureMarginBind by lazy {
+        @JvmField
+        val getTextureMarginBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_texture_margin", GET_TEXTURE_MARGIN_HASH)
-        }
 
         private const val SET_EXPAND_MARGIN_HASH = 4290182280L
-        private val setExpandMarginBind by lazy {
+        @JvmField
+        val setExpandMarginBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_expand_margin", SET_EXPAND_MARGIN_HASH)
-        }
 
         private const val SET_EXPAND_MARGIN_ALL_HASH = 373806689L
-        private val setExpandMarginAllBind by lazy {
+        @JvmField
+        val setExpandMarginAllBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_expand_margin_all", SET_EXPAND_MARGIN_ALL_HASH)
-        }
 
         private const val GET_EXPAND_MARGIN_HASH = 2869120046L
-        private val getExpandMarginBind by lazy {
+        @JvmField
+        val getExpandMarginBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_expand_margin", GET_EXPAND_MARGIN_HASH)
-        }
 
         private const val SET_REGION_RECT_HASH = 2046264180L
-        private val setRegionRectBind by lazy {
+        @JvmField
+        val setRegionRectBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_region_rect", SET_REGION_RECT_HASH)
-        }
 
         private const val GET_REGION_RECT_HASH = 1639390495L
-        private val getRegionRectBind by lazy {
+        @JvmField
+        val getRegionRectBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_region_rect", GET_REGION_RECT_HASH)
-        }
 
         private const val SET_DRAW_CENTER_HASH = 2586408642L
-        private val setDrawCenterBind by lazy {
+        @JvmField
+        val setDrawCenterBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_draw_center", SET_DRAW_CENTER_HASH)
-        }
 
         private const val IS_DRAW_CENTER_ENABLED_HASH = 36873697L
-        private val isDrawCenterEnabledBind by lazy {
+        @JvmField
+        val isDrawCenterEnabledBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "is_draw_center_enabled", IS_DRAW_CENTER_ENABLED_HASH)
-        }
 
         private const val SET_MODULATE_HASH = 2920490490L
-        private val setModulateBind by lazy {
+        @JvmField
+        val setModulateBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_modulate", SET_MODULATE_HASH)
-        }
 
         private const val GET_MODULATE_HASH = 3444240500L
-        private val getModulateBind by lazy {
+        @JvmField
+        val getModulateBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_modulate", GET_MODULATE_HASH)
-        }
 
         private const val SET_H_AXIS_STRETCH_MODE_HASH = 2965538783L
-        private val setHAxisStretchModeBind by lazy {
+        @JvmField
+        val setHAxisStretchModeBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_h_axis_stretch_mode", SET_H_AXIS_STRETCH_MODE_HASH)
-        }
 
         private const val GET_H_AXIS_STRETCH_MODE_HASH = 3807744063L
-        private val getHAxisStretchModeBind by lazy {
+        @JvmField
+        val getHAxisStretchModeBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_h_axis_stretch_mode", GET_H_AXIS_STRETCH_MODE_HASH)
-        }
 
         private const val SET_V_AXIS_STRETCH_MODE_HASH = 2965538783L
-        private val setVAxisStretchModeBind by lazy {
+        @JvmField
+        val setVAxisStretchModeBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "set_v_axis_stretch_mode", SET_V_AXIS_STRETCH_MODE_HASH)
-        }
 
         private const val GET_V_AXIS_STRETCH_MODE_HASH = 3807744063L
-        private val getVAxisStretchModeBind by lazy {
+        @JvmField
+        val getVAxisStretchModeBind =
             ObjectCalls.getMethodBind("StyleBoxTexture", "get_v_axis_stretch_mode", GET_V_AXIS_STRETCH_MODE_HASH)
-        }
     }
 }

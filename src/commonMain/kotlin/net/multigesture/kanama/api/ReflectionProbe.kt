@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -110,7 +111,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_intensity
      */
     fun setIntensity(intensity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setIntensityBind, segment, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setIntensityBind, segment, intensity)
     }
 
     /**
@@ -119,7 +120,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_intensity
      */
     fun getIntensity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIntensityBind, segment)
     }
 
     /**
@@ -128,7 +129,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_blend_distance
      */
     fun setBlendDistance(blendDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBlendDistanceBind, segment, blendDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBlendDistanceBind, segment, blendDistance)
     }
 
     /**
@@ -137,7 +138,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_blend_distance
      */
     fun getBlendDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBlendDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBlendDistanceBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_ambient_mode
      */
     fun setAmbientMode(ambient: ReflectionProbe.AmbientMode) {
-        ObjectCalls.ptrcallWithLongArg(setAmbientModeBind, segment, ambient.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAmbientModeBind, segment, ambient.value)
     }
 
     /**
@@ -159,7 +160,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_ambient_mode
      */
     fun getAmbientMode(): ReflectionProbe.AmbientMode {
-        return ReflectionProbe.AmbientMode(ObjectCalls.ptrcallNoArgsRetLong(getAmbientModeBind, segment))
+        return ReflectionProbe.AmbientMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAmbientModeBind, segment))
     }
 
     /**
@@ -169,7 +170,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_ambient_color
      */
     fun setAmbientColor(ambient: Color) {
-        ObjectCalls.ptrcallWithColorArg(setAmbientColorBind, segment, ambient)
+        ObjectCalls.ptrcallWithColorArg(Binds.setAmbientColorBind, segment, ambient)
     }
 
     /**
@@ -179,7 +180,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_ambient_color
      */
     fun getAmbientColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getAmbientColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getAmbientColorBind, segment)
     }
 
     /**
@@ -189,7 +190,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_ambient_color_energy
      */
     fun setAmbientColorEnergy(ambientEnergy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAmbientColorEnergyBind, segment, ambientEnergy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAmbientColorEnergyBind, segment, ambientEnergy)
     }
 
     /**
@@ -199,7 +200,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_ambient_color_energy
      */
     fun getAmbientColorEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientColorEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientColorEnergyBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_max_distance
      */
     fun setMaxDistance(maxDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDistanceBind, segment, maxDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxDistanceBind, segment, maxDistance)
     }
 
     /**
@@ -225,7 +226,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_max_distance
      */
     fun getMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxDistanceBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_mesh_lod_threshold
      */
     fun setMeshLodThreshold(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMeshLodThresholdBind, segment, ratio)
     }
 
     /**
@@ -253,7 +254,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_mesh_lod_threshold
      */
     fun getMeshLodThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMeshLodThresholdBind, segment)
     }
 
     /**
@@ -265,7 +266,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -277,7 +278,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -288,7 +289,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_origin_offset
      */
     fun setOriginOffset(originOffset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setOriginOffsetBind, segment, originOffset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setOriginOffsetBind, segment, originOffset)
     }
 
     /**
@@ -299,7 +300,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_origin_offset
      */
     fun getOriginOffset(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOriginOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOriginOffsetBind, segment)
     }
 
     /**
@@ -308,7 +309,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_as_interior
      */
     fun setAsInterior(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsInteriorBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsInteriorBind, segment, enable)
     }
 
     /**
@@ -317,7 +318,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.is_set_as_interior
      */
     fun isSetAsInterior(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsInteriorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSetAsInteriorBind, segment)
     }
 
     /**
@@ -329,7 +330,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_enable_box_projection
      */
     fun setEnableBoxProjection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableBoxProjectionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableBoxProjectionBind, segment, enable)
     }
 
     /**
@@ -341,7 +342,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.is_box_projection_enabled
      */
     fun isBoxProjectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBoxProjectionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBoxProjectionEnabledBind, segment)
     }
 
     /**
@@ -351,7 +352,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_enable_shadows
      */
     fun setEnableShadows(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableShadowsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableShadowsBind, segment, enable)
     }
 
     /**
@@ -361,7 +362,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.are_shadows_enabled
      */
     fun areShadowsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areShadowsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areShadowsEnabledBind, segment)
     }
 
     /**
@@ -374,7 +375,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_cull_mask
      */
     fun setCullMask(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCullMaskBind, segment, layers)
     }
 
     /**
@@ -387,7 +388,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCullMaskBind, segment)
     }
 
     /**
@@ -399,7 +400,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_reflection_mask
      */
     fun setReflectionMask(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setReflectionMaskBind, segment, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setReflectionMaskBind, segment, layers)
     }
 
     /**
@@ -411,7 +412,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_reflection_mask
      */
     fun getReflectionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getReflectionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getReflectionMaskBind, segment)
     }
 
     /**
@@ -421,7 +422,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.set_update_mode
      */
     fun setUpdateMode(mode: ReflectionProbe.UpdateMode) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setUpdateModeBind, segment, mode.value)
     }
 
     /**
@@ -431,7 +432,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: ReflectionProbe.get_update_mode
      */
     fun getUpdateMode(): ReflectionProbe.UpdateMode {
-        return ReflectionProbe.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment))
+        return ReflectionProbe.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUpdateModeBind, segment))
     }
 
     /**
@@ -505,155 +506,157 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): ReflectionProbe? =
             if (handle.address() == 0L) null else ReflectionProbe(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INTENSITY_HASH = 373806689L
-        private val setIntensityBind by lazy {
+        @JvmField
+        val setIntensityBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_intensity", SET_INTENSITY_HASH)
-        }
 
         private const val GET_INTENSITY_HASH = 1740695150L
-        private val getIntensityBind by lazy {
+        @JvmField
+        val getIntensityBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_intensity", GET_INTENSITY_HASH)
-        }
 
         private const val SET_BLEND_DISTANCE_HASH = 373806689L
-        private val setBlendDistanceBind by lazy {
+        @JvmField
+        val setBlendDistanceBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_blend_distance", SET_BLEND_DISTANCE_HASH)
-        }
 
         private const val GET_BLEND_DISTANCE_HASH = 1740695150L
-        private val getBlendDistanceBind by lazy {
+        @JvmField
+        val getBlendDistanceBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_blend_distance", GET_BLEND_DISTANCE_HASH)
-        }
 
         private const val SET_AMBIENT_MODE_HASH = 1748981278L
-        private val setAmbientModeBind by lazy {
+        @JvmField
+        val setAmbientModeBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_ambient_mode", SET_AMBIENT_MODE_HASH)
-        }
 
         private const val GET_AMBIENT_MODE_HASH = 1014607621L
-        private val getAmbientModeBind by lazy {
+        @JvmField
+        val getAmbientModeBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_ambient_mode", GET_AMBIENT_MODE_HASH)
-        }
 
         private const val SET_AMBIENT_COLOR_HASH = 2920490490L
-        private val setAmbientColorBind by lazy {
+        @JvmField
+        val setAmbientColorBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_ambient_color", SET_AMBIENT_COLOR_HASH)
-        }
 
         private const val GET_AMBIENT_COLOR_HASH = 3444240500L
-        private val getAmbientColorBind by lazy {
+        @JvmField
+        val getAmbientColorBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_ambient_color", GET_AMBIENT_COLOR_HASH)
-        }
 
         private const val SET_AMBIENT_COLOR_ENERGY_HASH = 373806689L
-        private val setAmbientColorEnergyBind by lazy {
+        @JvmField
+        val setAmbientColorEnergyBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_ambient_color_energy", SET_AMBIENT_COLOR_ENERGY_HASH)
-        }
 
         private const val GET_AMBIENT_COLOR_ENERGY_HASH = 1740695150L
-        private val getAmbientColorEnergyBind by lazy {
+        @JvmField
+        val getAmbientColorEnergyBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_ambient_color_energy", GET_AMBIENT_COLOR_ENERGY_HASH)
-        }
 
         private const val SET_MAX_DISTANCE_HASH = 373806689L
-        private val setMaxDistanceBind by lazy {
+        @JvmField
+        val setMaxDistanceBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_max_distance", SET_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_MAX_DISTANCE_HASH = 1740695150L
-        private val getMaxDistanceBind by lazy {
+        @JvmField
+        val getMaxDistanceBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_max_distance", GET_MAX_DISTANCE_HASH)
-        }
 
         private const val SET_MESH_LOD_THRESHOLD_HASH = 373806689L
-        private val setMeshLodThresholdBind by lazy {
+        @JvmField
+        val setMeshLodThresholdBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_mesh_lod_threshold", SET_MESH_LOD_THRESHOLD_HASH)
-        }
 
         private const val GET_MESH_LOD_THRESHOLD_HASH = 1740695150L
-        private val getMeshLodThresholdBind by lazy {
+        @JvmField
+        val getMeshLodThresholdBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_mesh_lod_threshold", GET_MESH_LOD_THRESHOLD_HASH)
-        }
 
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_ORIGIN_OFFSET_HASH = 3460891852L
-        private val setOriginOffsetBind by lazy {
+        @JvmField
+        val setOriginOffsetBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_origin_offset", SET_ORIGIN_OFFSET_HASH)
-        }
 
         private const val GET_ORIGIN_OFFSET_HASH = 3360562783L
-        private val getOriginOffsetBind by lazy {
+        @JvmField
+        val getOriginOffsetBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_origin_offset", GET_ORIGIN_OFFSET_HASH)
-        }
 
         private const val SET_AS_INTERIOR_HASH = 2586408642L
-        private val setAsInteriorBind by lazy {
+        @JvmField
+        val setAsInteriorBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_as_interior", SET_AS_INTERIOR_HASH)
-        }
 
         private const val IS_SET_AS_INTERIOR_HASH = 36873697L
-        private val isSetAsInteriorBind by lazy {
+        @JvmField
+        val isSetAsInteriorBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "is_set_as_interior", IS_SET_AS_INTERIOR_HASH)
-        }
 
         private const val SET_ENABLE_BOX_PROJECTION_HASH = 2586408642L
-        private val setEnableBoxProjectionBind by lazy {
+        @JvmField
+        val setEnableBoxProjectionBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_enable_box_projection", SET_ENABLE_BOX_PROJECTION_HASH)
-        }
 
         private const val IS_BOX_PROJECTION_ENABLED_HASH = 36873697L
-        private val isBoxProjectionEnabledBind by lazy {
+        @JvmField
+        val isBoxProjectionEnabledBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "is_box_projection_enabled", IS_BOX_PROJECTION_ENABLED_HASH)
-        }
 
         private const val SET_ENABLE_SHADOWS_HASH = 2586408642L
-        private val setEnableShadowsBind by lazy {
+        @JvmField
+        val setEnableShadowsBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_enable_shadows", SET_ENABLE_SHADOWS_HASH)
-        }
 
         private const val ARE_SHADOWS_ENABLED_HASH = 36873697L
-        private val areShadowsEnabledBind by lazy {
+        @JvmField
+        val areShadowsEnabledBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "are_shadows_enabled", ARE_SHADOWS_ENABLED_HASH)
-        }
 
         private const val SET_CULL_MASK_HASH = 1286410249L
-        private val setCullMaskBind by lazy {
+        @JvmField
+        val setCullMaskBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_cull_mask", SET_CULL_MASK_HASH)
-        }
 
         private const val GET_CULL_MASK_HASH = 3905245786L
-        private val getCullMaskBind by lazy {
+        @JvmField
+        val getCullMaskBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_cull_mask", GET_CULL_MASK_HASH)
-        }
 
         private const val SET_REFLECTION_MASK_HASH = 1286410249L
-        private val setReflectionMaskBind by lazy {
+        @JvmField
+        val setReflectionMaskBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_reflection_mask", SET_REFLECTION_MASK_HASH)
-        }
 
         private const val GET_REFLECTION_MASK_HASH = 3905245786L
-        private val getReflectionMaskBind by lazy {
+        @JvmField
+        val getReflectionMaskBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_reflection_mask", GET_REFLECTION_MASK_HASH)
-        }
 
         private const val SET_UPDATE_MODE_HASH = 4090221187L
-        private val setUpdateModeBind by lazy {
+        @JvmField
+        val setUpdateModeBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "set_update_mode", SET_UPDATE_MODE_HASH)
-        }
 
         private const val GET_UPDATE_MODE_HASH = 2367550552L
-        private val getUpdateModeBind by lazy {
+        @JvmField
+        val getUpdateModeBind =
             ObjectCalls.getMethodBind("ReflectionProbe", "get_update_mode", GET_UPDATE_MODE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -55,7 +56,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSampleCount(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSampleCountBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSampleCountBind, segment, pMember.value)
     }
 
     /**
@@ -66,7 +67,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSampleCount(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, segment))
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSampleCountBind, segment))
     }
 
     /**
@@ -80,7 +81,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnableSampleShading(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableSampleShadingBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableSampleShadingBind, segment, pMember)
     }
 
     /**
@@ -94,7 +95,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableSampleShading(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableSampleShadingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableSampleShadingBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMinSampleShading(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinSampleShadingBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinSampleShadingBind, segment, pMember)
     }
 
     /**
@@ -122,7 +123,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMinSampleShading(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinSampleShadingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinSampleShadingBind, segment)
     }
 
     /**
@@ -134,7 +135,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnableAlphaToCoverage(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToCoverageBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableAlphaToCoverageBind, segment, pMember)
     }
 
     /**
@@ -146,7 +147,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableAlphaToCoverage(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToCoverageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableAlphaToCoverageBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnableAlphaToOne(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableAlphaToOneBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableAlphaToOneBind, segment, pMember)
     }
 
     /**
@@ -168,7 +169,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableAlphaToOne(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableAlphaToOneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableAlphaToOneBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSampleMasks(masks: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedIntListArg(setSampleMasksBind, segment, masks)
+        ObjectCalls.ptrcallWithTypedIntListArg(Binds.setSampleMasksBind, segment, masks)
     }
 
     /**
@@ -192,7 +193,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSampleMasks(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(getSampleMasksBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLongList(Binds.getSampleMasksBind, segment)
     }
 
     companion object {
@@ -205,65 +206,67 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineMultisampleState? =
             if (handle.address() == 0L) null else RDPipelineMultisampleState(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SAMPLE_COUNT_HASH = 3774171498L
-        private val setSampleCountBind by lazy {
+        @JvmField
+        val setSampleCountBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_sample_count", SET_SAMPLE_COUNT_HASH)
-        }
 
         private const val GET_SAMPLE_COUNT_HASH = 407791724L
-        private val getSampleCountBind by lazy {
+        @JvmField
+        val getSampleCountBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_sample_count", GET_SAMPLE_COUNT_HASH)
-        }
 
         private const val SET_ENABLE_SAMPLE_SHADING_HASH = 2586408642L
-        private val setEnableSampleShadingBind by lazy {
+        @JvmField
+        val setEnableSampleShadingBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_enable_sample_shading", SET_ENABLE_SAMPLE_SHADING_HASH)
-        }
 
         private const val GET_ENABLE_SAMPLE_SHADING_HASH = 36873697L
-        private val getEnableSampleShadingBind by lazy {
+        @JvmField
+        val getEnableSampleShadingBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_enable_sample_shading", GET_ENABLE_SAMPLE_SHADING_HASH)
-        }
 
         private const val SET_MIN_SAMPLE_SHADING_HASH = 373806689L
-        private val setMinSampleShadingBind by lazy {
+        @JvmField
+        val setMinSampleShadingBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_min_sample_shading", SET_MIN_SAMPLE_SHADING_HASH)
-        }
 
         private const val GET_MIN_SAMPLE_SHADING_HASH = 1740695150L
-        private val getMinSampleShadingBind by lazy {
+        @JvmField
+        val getMinSampleShadingBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_min_sample_shading", GET_MIN_SAMPLE_SHADING_HASH)
-        }
 
         private const val SET_ENABLE_ALPHA_TO_COVERAGE_HASH = 2586408642L
-        private val setEnableAlphaToCoverageBind by lazy {
+        @JvmField
+        val setEnableAlphaToCoverageBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_enable_alpha_to_coverage", SET_ENABLE_ALPHA_TO_COVERAGE_HASH)
-        }
 
         private const val GET_ENABLE_ALPHA_TO_COVERAGE_HASH = 36873697L
-        private val getEnableAlphaToCoverageBind by lazy {
+        @JvmField
+        val getEnableAlphaToCoverageBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_enable_alpha_to_coverage", GET_ENABLE_ALPHA_TO_COVERAGE_HASH)
-        }
 
         private const val SET_ENABLE_ALPHA_TO_ONE_HASH = 2586408642L
-        private val setEnableAlphaToOneBind by lazy {
+        @JvmField
+        val setEnableAlphaToOneBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_enable_alpha_to_one", SET_ENABLE_ALPHA_TO_ONE_HASH)
-        }
 
         private const val GET_ENABLE_ALPHA_TO_ONE_HASH = 36873697L
-        private val getEnableAlphaToOneBind by lazy {
+        @JvmField
+        val getEnableAlphaToOneBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_enable_alpha_to_one", GET_ENABLE_ALPHA_TO_ONE_HASH)
-        }
 
         private const val SET_SAMPLE_MASKS_HASH = 381264803L
-        private val setSampleMasksBind by lazy {
+        @JvmField
+        val setSampleMasksBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "set_sample_masks", SET_SAMPLE_MASKS_HASH)
-        }
 
         private const val GET_SAMPLE_MASKS_HASH = 3995934104L
-        private val getSampleMasksBind by lazy {
+        @JvmField
+        val getSampleMasksBind =
             ObjectCalls.getMethodBind("RDPipelineMultisampleState", "get_sample_masks", GET_SAMPLE_MASKS_HASH)
-        }
     }
 }

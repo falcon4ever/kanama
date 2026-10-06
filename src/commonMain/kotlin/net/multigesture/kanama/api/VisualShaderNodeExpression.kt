@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,12 +18,12 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
 
     fun setExpression(expression: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setExpressionBind, segment, expression)
+        ObjectCalls.ptrcallWithStringArg(Binds.setExpressionBind, segment, expression)
     }
 
     fun getExpression(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getExpressionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExpressionBind, segment)
     }
 
     companion object {
@@ -35,15 +36,17 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeExpression(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EXPRESSION_HASH = 83702148L
-        private val setExpressionBind by lazy {
+        @JvmField
+        val setExpressionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeExpression", "set_expression", SET_EXPRESSION_HASH)
-        }
 
         private const val GET_EXPRESSION_HASH = 201670096L
-        private val getExpressionBind by lazy {
+        @JvmField
+        val getExpressionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeExpression", "get_expression", GET_EXPRESSION_HASH)
-        }
     }
 }

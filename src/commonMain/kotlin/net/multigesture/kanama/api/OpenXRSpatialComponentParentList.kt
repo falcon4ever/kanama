@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,7 +12,7 @@ import net.multigesture.kanama.types.RID
 class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getParent(index: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetRID(getParentBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetRID(Binds.getParentBind, segment, index)
     }
 
     companion object {
@@ -24,10 +25,12 @@ class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentParentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentParentList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PARENT_HASH = 495598643L
-        private val getParentBind by lazy {
+        @JvmField
+        val getParentBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentParentList", "get_parent", GET_PARENT_HASH)
-        }
     }
 }

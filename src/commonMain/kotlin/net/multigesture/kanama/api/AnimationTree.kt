@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -38,7 +39,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_tree_root
      */
     fun setTreeRoot(animationNode: AnimationRootNode?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, segment, listOf(animationNode?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTreeRootBind, segment, listOf(animationNode?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -47,7 +48,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_tree_root
      */
     fun getTreeRoot(): AnimationRootNode? {
-        return AnimationRootNode.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, segment))
+        return AnimationRootNode.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTreeRootBind, segment))
     }
 
     /**
@@ -57,7 +58,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_advance_expression_base_node
      */
     fun setAdvanceExpressionBaseNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setAdvanceExpressionBaseNodeBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setAdvanceExpressionBaseNodeBind, segment, path)
     }
 
     /**
@@ -67,7 +68,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_advance_expression_base_node
      */
     fun getAdvanceExpressionBaseNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getAdvanceExpressionBaseNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getAdvanceExpressionBaseNodeBind, segment)
     }
 
     /**
@@ -76,7 +77,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_animation_player
      */
     fun setAnimationPlayer(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setAnimationPlayerBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setAnimationPlayerBind, segment, path)
     }
 
     /**
@@ -85,7 +86,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_animation_player
      */
     fun getAnimationPlayer(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPlayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getAnimationPlayerBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_process_callback
      */
     fun setProcessCallback(mode: AnimationTree.AnimationProcessCallback) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessCallbackBind, segment, mode.value)
     }
 
     /**
@@ -103,7 +104,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_process_callback
      */
     fun getProcessCallback(): AnimationTree.AnimationProcessCallback {
-        return AnimationTree.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
+        return AnimationTree.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessCallbackBind, segment))
     }
 
     /** Signal `animation_player_changed()`; see [TypedSignal]. */
@@ -138,45 +139,47 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
 
         internal fun wrap(handle: RawSegment): AnimationTree? =
             if (handle.address() == 0L) null else AnimationTree(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TREE_ROOT_HASH = 2581683800L
-        private val setTreeRootBind by lazy {
+        @JvmField
+        val setTreeRootBind =
             ObjectCalls.getMethodBind("AnimationTree", "set_tree_root", SET_TREE_ROOT_HASH)
-        }
 
         private const val GET_TREE_ROOT_HASH = 4110384712L
-        private val getTreeRootBind by lazy {
+        @JvmField
+        val getTreeRootBind =
             ObjectCalls.getMethodBind("AnimationTree", "get_tree_root", GET_TREE_ROOT_HASH)
-        }
 
         private const val SET_ADVANCE_EXPRESSION_BASE_NODE_HASH = 1348162250L
-        private val setAdvanceExpressionBaseNodeBind by lazy {
+        @JvmField
+        val setAdvanceExpressionBaseNodeBind =
             ObjectCalls.getMethodBind("AnimationTree", "set_advance_expression_base_node", SET_ADVANCE_EXPRESSION_BASE_NODE_HASH)
-        }
 
         private const val GET_ADVANCE_EXPRESSION_BASE_NODE_HASH = 4075236667L
-        private val getAdvanceExpressionBaseNodeBind by lazy {
+        @JvmField
+        val getAdvanceExpressionBaseNodeBind =
             ObjectCalls.getMethodBind("AnimationTree", "get_advance_expression_base_node", GET_ADVANCE_EXPRESSION_BASE_NODE_HASH)
-        }
 
         private const val SET_ANIMATION_PLAYER_HASH = 1348162250L
-        private val setAnimationPlayerBind by lazy {
+        @JvmField
+        val setAnimationPlayerBind =
             ObjectCalls.getMethodBind("AnimationTree", "set_animation_player", SET_ANIMATION_PLAYER_HASH)
-        }
 
         private const val GET_ANIMATION_PLAYER_HASH = 4075236667L
-        private val getAnimationPlayerBind by lazy {
+        @JvmField
+        val getAnimationPlayerBind =
             ObjectCalls.getMethodBind("AnimationTree", "get_animation_player", GET_ANIMATION_PLAYER_HASH)
-        }
 
         private const val SET_PROCESS_CALLBACK_HASH = 1723352826L
-        private val setProcessCallbackBind by lazy {
+        @JvmField
+        val setProcessCallbackBind =
             ObjectCalls.getMethodBind("AnimationTree", "set_process_callback", SET_PROCESS_CALLBACK_HASH)
-        }
 
         private const val GET_PROCESS_CALLBACK_HASH = 891317132L
-        private val getProcessCallbackBind by lazy {
+        @JvmField
+        val getProcessCallbackBind =
             ObjectCalls.getMethodBind("AnimationTree", "get_process_callback", GET_PROCESS_CALLBACK_HASH)
-        }
     }
 }

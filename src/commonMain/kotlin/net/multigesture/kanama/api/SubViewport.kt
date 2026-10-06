@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -58,7 +59,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_size
      */
     fun setSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -70,7 +71,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_size
      */
     fun getSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_size_2d_override
      */
     fun setSize2dOverride(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setSize2dOverrideBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSize2dOverrideBind, segment, size)
     }
 
     /**
@@ -90,7 +91,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_size_2d_override
      */
     fun getSize2dOverride(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSize2dOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSize2dOverrideBind, segment)
     }
 
     /**
@@ -99,7 +100,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_size_2d_override_stretch
      */
     fun setSize2dOverrideStretch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSize2dOverrideStretchBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSize2dOverrideStretchBind, segment, enable)
     }
 
     /**
@@ -108,7 +109,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.is_size_2d_override_stretch_enabled
      */
     fun isSize2dOverrideStretchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSize2dOverrideStretchEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSize2dOverrideStretchEnabledBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_view_count
      */
     fun setViewCount(viewCount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setViewCountBind, segment, viewCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setViewCountBind, segment, viewCount)
     }
 
     /**
@@ -126,7 +127,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_view_count
      */
     fun getViewCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getViewCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getViewCountBind, segment)
     }
 
     /**
@@ -135,7 +136,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_update_mode
      */
     fun setUpdateMode(mode: SubViewport.UpdateMode) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setUpdateModeBind, segment, mode.value)
     }
 
     /**
@@ -144,7 +145,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_update_mode
      */
     fun getUpdateMode(): SubViewport.UpdateMode {
-        return SubViewport.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment))
+        return SubViewport.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUpdateModeBind, segment))
     }
 
     /**
@@ -154,7 +155,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.set_clear_mode
      */
     fun setClearMode(mode: SubViewport.ClearMode) {
-        ObjectCalls.ptrcallWithLongArg(setClearModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setClearModeBind, segment, mode.value)
     }
 
     /**
@@ -164,7 +165,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      * Generated from Godot docs: SubViewport.get_clear_mode
      */
     fun getClearMode(): SubViewport.ClearMode {
-        return SubViewport.ClearMode(ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, segment))
+        return SubViewport.ClearMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getClearModeBind, segment))
     }
 
     /**
@@ -246,65 +247,67 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
 
         internal fun wrap(handle: RawSegment): SubViewport? =
             if (handle.address() == 0L) null else SubViewport(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 1130785943L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("SubViewport", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("SubViewport", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SIZE_2D_OVERRIDE_HASH = 1130785943L
-        private val setSize2dOverrideBind by lazy {
+        @JvmField
+        val setSize2dOverrideBind =
             ObjectCalls.getMethodBind("SubViewport", "set_size_2d_override", SET_SIZE_2D_OVERRIDE_HASH)
-        }
 
         private const val GET_SIZE_2D_OVERRIDE_HASH = 3690982128L
-        private val getSize2dOverrideBind by lazy {
+        @JvmField
+        val getSize2dOverrideBind =
             ObjectCalls.getMethodBind("SubViewport", "get_size_2d_override", GET_SIZE_2D_OVERRIDE_HASH)
-        }
 
         private const val SET_SIZE_2D_OVERRIDE_STRETCH_HASH = 2586408642L
-        private val setSize2dOverrideStretchBind by lazy {
+        @JvmField
+        val setSize2dOverrideStretchBind =
             ObjectCalls.getMethodBind("SubViewport", "set_size_2d_override_stretch", SET_SIZE_2D_OVERRIDE_STRETCH_HASH)
-        }
 
         private const val IS_SIZE_2D_OVERRIDE_STRETCH_ENABLED_HASH = 36873697L
-        private val isSize2dOverrideStretchEnabledBind by lazy {
+        @JvmField
+        val isSize2dOverrideStretchEnabledBind =
             ObjectCalls.getMethodBind("SubViewport", "is_size_2d_override_stretch_enabled", IS_SIZE_2D_OVERRIDE_STRETCH_ENABLED_HASH)
-        }
 
         private const val SET_VIEW_COUNT_HASH = 1286410249L
-        private val setViewCountBind by lazy {
+        @JvmField
+        val setViewCountBind =
             ObjectCalls.getMethodBind("SubViewport", "set_view_count", SET_VIEW_COUNT_HASH)
-        }
 
         private const val GET_VIEW_COUNT_HASH = 3905245786L
-        private val getViewCountBind by lazy {
+        @JvmField
+        val getViewCountBind =
             ObjectCalls.getMethodBind("SubViewport", "get_view_count", GET_VIEW_COUNT_HASH)
-        }
 
         private const val SET_UPDATE_MODE_HASH = 1295690030L
-        private val setUpdateModeBind by lazy {
+        @JvmField
+        val setUpdateModeBind =
             ObjectCalls.getMethodBind("SubViewport", "set_update_mode", SET_UPDATE_MODE_HASH)
-        }
 
         private const val GET_UPDATE_MODE_HASH = 2980171553L
-        private val getUpdateModeBind by lazy {
+        @JvmField
+        val getUpdateModeBind =
             ObjectCalls.getMethodBind("SubViewport", "get_update_mode", GET_UPDATE_MODE_HASH)
-        }
 
         private const val SET_CLEAR_MODE_HASH = 2834454712L
-        private val setClearModeBind by lazy {
+        @JvmField
+        val setClearModeBind =
             ObjectCalls.getMethodBind("SubViewport", "set_clear_mode", SET_CLEAR_MODE_HASH)
-        }
 
         private const val GET_CLEAR_MODE_HASH = 331324495L
-        private val getClearModeBind by lazy {
+        @JvmField
+        val getClearModeBind =
             ObjectCalls.getMethodBind("SubViewport", "get_clear_mode", GET_CLEAR_MODE_HASH)
-        }
     }
 }

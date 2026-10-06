@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -766,7 +767,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setDirection(degrees: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setDirectionBind, segment, degrees)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setDirectionBind, segment, degrees)
     }
 
     /**
@@ -776,7 +777,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getDirection(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getDirectionBind, segment)
     }
 
     /**
@@ -787,7 +788,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setInheritVelocityRatio(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setInheritVelocityRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInheritVelocityRatioBind, segment, ratio)
     }
 
     /**
@@ -798,7 +799,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getInheritVelocityRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInheritVelocityRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInheritVelocityRatioBind, segment)
     }
 
     /**
@@ -808,7 +809,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSpread(degrees: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpreadBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpreadBind, segment, degrees)
     }
 
     /**
@@ -818,7 +819,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpreadBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpreadBind, segment)
     }
 
     /**
@@ -828,7 +829,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setFlatness(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFlatnessBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFlatnessBind, segment, amount)
     }
 
     /**
@@ -838,7 +839,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getFlatness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFlatnessBind, segment)
     }
 
     /**
@@ -849,7 +850,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParam(param: ParticleProcessMaterial.Parameter, value: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndVector2Arg(Binds.setParamBind, segment, param.value, value)
     }
 
     /**
@@ -860,7 +861,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParam(param: ParticleProcessMaterial.Parameter): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(Binds.getParamBind, segment, param.value)
     }
 
     /**
@@ -872,7 +873,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParamMin(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamMinBind, segment, param.value, value)
     }
 
     /**
@@ -884,7 +885,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParamMin(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMinBind, segment, param.value)
     }
 
     /**
@@ -896,7 +897,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParamMax(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamMaxBind, segment, param.value, value)
     }
 
     /**
@@ -908,7 +909,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParamMax(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamMaxBind, segment, param.value)
     }
 
     /**
@@ -919,7 +920,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParamTexture(param: ParticleProcessMaterial.Parameter, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -930,7 +931,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParamTexture(param: ParticleProcessMaterial.Parameter): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param.value))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getParamTextureBind, segment, param.value))
     }
 
     /**
@@ -944,7 +945,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -958,7 +959,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -968,7 +969,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setUseScale3d(usingScale3d: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseScale3dBind, segment, usingScale3d)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseScale3dBind, segment, usingScale3d)
     }
 
     /**
@@ -978,7 +979,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isUsingScale3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingScale3dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingScale3dBind, segment)
     }
 
     /**
@@ -989,7 +990,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setScale3dMin(scale3dMin: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setScale3dMinBind, segment, scale3dMin)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setScale3dMinBind, segment, scale3dMin)
     }
 
     /**
@@ -1000,7 +1001,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getScale3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScale3dMinBind, segment)
     }
 
     /**
@@ -1011,7 +1012,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setScale3dMax(scale3dMax: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setScale3dMaxBind, segment, scale3dMax)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setScale3dMaxBind, segment, scale3dMax)
     }
 
     /**
@@ -1022,7 +1023,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getScale3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScale3dMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScale3dMaxBind, segment)
     }
 
     /**
@@ -1032,7 +1033,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setUseRotation3d(usingRotation3d: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseRotation3dBind, segment, usingRotation3d)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseRotation3dBind, segment, usingRotation3d)
     }
 
     /**
@@ -1042,7 +1043,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isUsingRotation3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotation3dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRotation3dBind, segment)
     }
 
     /**
@@ -1052,7 +1053,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRotation3dMin(rotation3dMin: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotation3dMinBind, segment, rotation3dMin)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setRotation3dMinBind, segment, rotation3dMin)
     }
 
     /**
@@ -1062,7 +1063,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotation3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotation3dMinBind, segment)
     }
 
     /**
@@ -1072,7 +1073,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRotation3dMax(rotation3dMax: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotation3dMaxBind, segment, rotation3dMax)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setRotation3dMaxBind, segment, rotation3dMax)
     }
 
     /**
@@ -1082,7 +1083,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotation3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotation3dMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotation3dMaxBind, segment)
     }
 
     /**
@@ -1096,7 +1097,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setColorRamp(ramp: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1110,7 +1111,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getColorRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
     }
 
     /**
@@ -1124,7 +1125,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setAlphaCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAlphaCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setAlphaCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1138,7 +1139,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAlphaCurveBind, segment))
     }
 
     /**
@@ -1152,7 +1153,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1166,7 +1167,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionCurveBind, segment))
     }
 
     /**
@@ -1180,7 +1181,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setColorInitialRamp(ramp: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1194,7 +1195,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getColorInitialRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorInitialRampBind, segment))
     }
 
     /**
@@ -1204,7 +1205,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setVelocityLimitCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setVelocityLimitCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setVelocityLimitCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1214,7 +1215,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getVelocityLimitCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVelocityLimitCurveBind, segment))
     }
 
     /**
@@ -1224,7 +1225,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag.value, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setParticleFlagBind, segment, particleFlag.value, enable)
     }
 
     /**
@@ -1234,7 +1235,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getParticleFlagBind, segment, particleFlag.value)
     }
 
     /**
@@ -1244,7 +1245,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setVelocityPivot(pivot: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setVelocityPivotBind, segment, pivot)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setVelocityPivotBind, segment, pivot)
     }
 
     /**
@@ -1254,7 +1255,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getVelocityPivot(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityPivotBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getVelocityPivotBind, segment)
     }
 
     /**
@@ -1264,7 +1265,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionShape(shape: ParticleProcessMaterial.EmissionShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEmissionShapeBind, segment, shape.value)
     }
 
     /**
@@ -1274,7 +1275,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionShape(): ParticleProcessMaterial.EmissionShape {
         checkOpen()
-        return ParticleProcessMaterial.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment))
+        return ParticleProcessMaterial.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionShapeBind, segment))
     }
 
     /**
@@ -1284,7 +1285,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionSphereRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionSphereRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionSphereRadiusBind, segment, radius)
     }
 
     /**
@@ -1294,7 +1295,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionSphereRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionSphereRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionSphereRadiusBind, segment)
     }
 
     /**
@@ -1306,7 +1307,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionBoxExtents(extents: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionBoxExtentsBind, segment, extents)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionBoxExtentsBind, segment, extents)
     }
 
     /**
@@ -1318,7 +1319,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionBoxExtents(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionBoxExtentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionBoxExtentsBind, segment)
     }
 
     /**
@@ -1331,7 +1332,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionPointTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionPointTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionPointTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1344,7 +1345,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionPointTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionPointTextureBind, segment))
     }
 
     /**
@@ -1357,7 +1358,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionNormalTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1370,7 +1371,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionNormalTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionNormalTextureBind, segment))
     }
 
     /**
@@ -1385,7 +1386,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionColorTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEmissionColorTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionColorTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -1400,7 +1401,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionColorTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEmissionColorTextureBind, segment))
     }
 
     /**
@@ -1411,7 +1412,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionPointCount(pointCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setEmissionPointCountBind, segment, pointCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setEmissionPointCountBind, segment, pointCount)
     }
 
     /**
@@ -1422,7 +1423,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEmissionPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEmissionPointCountBind, segment)
     }
 
     /**
@@ -1432,7 +1433,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionRingAxis(axis: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionRingAxisBind, segment, axis)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionRingAxisBind, segment, axis)
     }
 
     /**
@@ -1442,7 +1443,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingAxis(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionRingAxisBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionRingAxisBind, segment)
     }
 
     /**
@@ -1452,7 +1453,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionRingHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingHeightBind, segment, height)
     }
 
     /**
@@ -1462,7 +1463,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingHeightBind, segment)
     }
 
     /**
@@ -1472,7 +1473,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionRingRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingRadiusBind, segment, radius)
     }
 
     /**
@@ -1482,7 +1483,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingRadiusBind, segment)
     }
 
     /**
@@ -1492,7 +1493,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionRingInnerRadius(innerRadius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingInnerRadiusBind, segment, innerRadius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingInnerRadiusBind, segment, innerRadius)
     }
 
     /**
@@ -1502,7 +1503,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingInnerRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingInnerRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingInnerRadiusBind, segment)
     }
 
     /**
@@ -1516,7 +1517,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionRingConeAngle(coneAngle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionRingConeAngleBind, segment, coneAngle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionRingConeAngleBind, segment, coneAngle)
     }
 
     /**
@@ -1530,7 +1531,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionRingConeAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionRingConeAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionRingConeAngleBind, segment)
     }
 
     /**
@@ -1540,7 +1541,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionShapeOffset(emissionShapeOffset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeOffsetBind, segment, emissionShapeOffset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionShapeOffsetBind, segment, emissionShapeOffset)
     }
 
     /**
@@ -1550,7 +1551,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionShapeOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionShapeOffsetBind, segment)
     }
 
     /**
@@ -1560,7 +1561,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionShapeScale(emissionShapeScale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setEmissionShapeScaleBind, segment, emissionShapeScale)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setEmissionShapeScaleBind, segment, emissionShapeScale)
     }
 
     /**
@@ -1570,7 +1571,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionShapeScale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getEmissionShapeScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getEmissionShapeScaleBind, segment)
     }
 
     /**
@@ -1586,7 +1587,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getTurbulenceEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getTurbulenceEnabledBind, segment)
     }
 
     /**
@@ -1602,7 +1603,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setTurbulenceEnabled(turbulenceEnabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setTurbulenceEnabledBind, segment, turbulenceEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTurbulenceEnabledBind, segment, turbulenceEnabled)
     }
 
     /**
@@ -1613,7 +1614,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseStrengthBind, segment)
     }
 
     /**
@@ -1624,7 +1625,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setTurbulenceNoiseStrength(turbulenceNoiseStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseStrengthBind, segment, turbulenceNoiseStrength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbulenceNoiseStrengthBind, segment, turbulenceNoiseStrength)
     }
 
     /**
@@ -1636,7 +1637,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseScaleBind, segment)
     }
 
     /**
@@ -1648,7 +1649,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setTurbulenceNoiseScale(turbulenceNoiseScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseScaleBind, segment, turbulenceNoiseScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbulenceNoiseScaleBind, segment, turbulenceNoiseScale)
     }
 
     /**
@@ -1659,7 +1660,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseSpeedRandom(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbulenceNoiseSpeedRandomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbulenceNoiseSpeedRandomBind, segment)
     }
 
     /**
@@ -1670,7 +1671,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setTurbulenceNoiseSpeedRandom(turbulenceNoiseSpeedRandom: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbulenceNoiseSpeedRandomBind, segment, turbulenceNoiseSpeedRandom)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbulenceNoiseSpeedRandomBind, segment, turbulenceNoiseSpeedRandom)
     }
 
     /**
@@ -1681,7 +1682,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbulenceNoiseSpeed(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTurbulenceNoiseSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTurbulenceNoiseSpeedBind, segment)
     }
 
     /**
@@ -1692,7 +1693,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setTurbulenceNoiseSpeed(turbulenceNoiseSpeed: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setTurbulenceNoiseSpeedBind, segment, turbulenceNoiseSpeed)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setTurbulenceNoiseSpeedBind, segment, turbulenceNoiseSpeed)
     }
 
     /**
@@ -1702,7 +1703,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGravity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityBind, segment)
     }
 
     /**
@@ -1712,7 +1713,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setGravity(accelVec: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, segment, accelVec)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGravityBind, segment, accelVec)
     }
 
     /**
@@ -1724,7 +1725,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setLifetimeRandomness(randomness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeRandomnessBind, segment, randomness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLifetimeRandomnessBind, segment, randomness)
     }
 
     /**
@@ -1736,7 +1737,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getLifetimeRandomness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLifetimeRandomnessBind, segment)
     }
 
     /**
@@ -1747,7 +1748,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterMode(): ParticleProcessMaterial.SubEmitterMode {
         checkOpen()
-        return ParticleProcessMaterial.SubEmitterMode(ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, segment))
+        return ParticleProcessMaterial.SubEmitterMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubEmitterModeBind, segment))
     }
 
     /**
@@ -1758,7 +1759,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSubEmitterMode(mode: ParticleProcessMaterial.SubEmitterMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSubEmitterModeBind, segment, mode.value)
     }
 
     /**
@@ -1772,7 +1773,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSubEmitterFrequencyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubEmitterFrequencyBind, segment)
     }
 
     /**
@@ -1786,7 +1787,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSubEmitterFrequency(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSubEmitterFrequencyBind, segment, hz)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSubEmitterFrequencyBind, segment, hz)
     }
 
     /**
@@ -1800,7 +1801,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterAmountAtEnd(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtEndBind, segment)
     }
 
     /**
@@ -1814,7 +1815,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSubEmitterAmountAtEnd(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtEndBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubEmitterAmountAtEndBind, segment, amount)
     }
 
     /**
@@ -1829,7 +1830,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterAmountAtCollision(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtCollisionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtCollisionBind, segment)
     }
 
     /**
@@ -1844,7 +1845,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSubEmitterAmountAtCollision(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtCollisionBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubEmitterAmountAtCollisionBind, segment, amount)
     }
 
     /**
@@ -1858,7 +1859,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterAmountAtStart(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubEmitterAmountAtStartBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubEmitterAmountAtStartBind, segment)
     }
 
     /**
@@ -1872,7 +1873,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSubEmitterAmountAtStart(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubEmitterAmountAtStartBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubEmitterAmountAtStartBind, segment, amount)
     }
 
     /**
@@ -1882,7 +1883,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSubEmitterKeepVelocity(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSubEmitterKeepVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSubEmitterKeepVelocityBind, segment)
     }
 
     /**
@@ -1892,7 +1893,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSubEmitterKeepVelocity(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSubEmitterKeepVelocityBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSubEmitterKeepVelocityBind, segment, enable)
     }
 
     /**
@@ -1903,7 +1904,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setAttractorInteractionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAttractorInteractionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAttractorInteractionEnabledBind, segment, enabled)
     }
 
     /**
@@ -1914,7 +1915,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isAttractorInteractionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAttractorInteractionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAttractorInteractionEnabledBind, segment)
     }
 
     /**
@@ -1929,7 +1930,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setCollisionMode(mode: ParticleProcessMaterial.CollisionMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCollisionModeBind, segment, mode.value)
     }
 
     /**
@@ -1944,7 +1945,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getCollisionMode(): ParticleProcessMaterial.CollisionMode {
         checkOpen()
-        return ParticleProcessMaterial.CollisionMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, segment))
+        return ParticleProcessMaterial.CollisionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCollisionModeBind, segment))
     }
 
     /**
@@ -1955,7 +1956,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setCollisionUseScale(radius: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollisionUseScaleBind, segment, radius)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollisionUseScaleBind, segment, radius)
     }
 
     /**
@@ -1966,7 +1967,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isCollisionUsingScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollisionUsingScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollisionUsingScaleBind, segment)
     }
 
     /**
@@ -1977,7 +1978,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setCollisionFriction(friction: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionFrictionBind, segment, friction)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionFrictionBind, segment, friction)
     }
 
     /**
@@ -1988,7 +1989,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getCollisionFriction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionFrictionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionFrictionBind, segment)
     }
 
     /**
@@ -1999,7 +2000,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setCollisionBounce(bounce: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionBounceBind, segment, bounce)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionBounceBind, segment, bounce)
     }
 
     /**
@@ -2010,7 +2011,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getCollisionBounce(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBounceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionBounceBind, segment)
     }
 
     /**
@@ -2020,7 +2021,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setUsingRotationVelocity3d(useRotationVelocity3d: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUsingRotationVelocity3dBind, segment, useRotationVelocity3d)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUsingRotationVelocity3dBind, segment, useRotationVelocity3d)
     }
 
     /**
@@ -2030,7 +2031,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isUsingRotationVelocity3d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRotationVelocity3dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRotationVelocity3dBind, segment)
     }
 
     /**
@@ -2041,7 +2042,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRotationVelocity3dMax(rotationVelocity3dMax: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMaxBind, segment, rotationVelocity3dMax)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setRotationVelocity3dMaxBind, segment, rotationVelocity3dMax)
     }
 
     /**
@@ -2052,7 +2053,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotationVelocity3dMax(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationVelocity3dMaxBind, segment)
     }
 
     /**
@@ -2063,7 +2064,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRotationVelocity3dMin(rotationVelocity3dMin: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setRotationVelocity3dMinBind, segment, rotationVelocity3dMin)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setRotationVelocity3dMinBind, segment, rotationVelocity3dMin)
     }
 
     /**
@@ -2074,7 +2075,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotationVelocity3dMin(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationVelocity3dMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationVelocity3dMinBind, segment)
     }
 
     /**
@@ -2084,7 +2085,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRotationVelocity3dCurve(rotationVelocity3dCurve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setRotationVelocity3dCurveBind, segment, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setRotationVelocity3dCurveBind, segment, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -2094,7 +2095,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRotationVelocity3dCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRotationVelocity3dCurveBind, segment))
     }
 
     /** Signal `emission_shape_changed()`; see [TypedSignal]. */
@@ -2453,585 +2454,587 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =
             if (value.isClass("ParticleProcessMaterial")) RefCounted.retained(ParticleProcessMaterial(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_DIRECTION_HASH = 3460891852L
-        private val setDirectionBind by lazy {
+        @JvmField
+        val setDirectionBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_direction", SET_DIRECTION_HASH)
-        }
 
         private const val GET_DIRECTION_HASH = 3360562783L
-        private val getDirectionBind by lazy {
+        @JvmField
+        val getDirectionBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_direction", GET_DIRECTION_HASH)
-        }
 
         private const val SET_INHERIT_VELOCITY_RATIO_HASH = 373806689L
-        private val setInheritVelocityRatioBind by lazy {
+        @JvmField
+        val setInheritVelocityRatioBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_inherit_velocity_ratio", SET_INHERIT_VELOCITY_RATIO_HASH)
-        }
 
         private const val GET_INHERIT_VELOCITY_RATIO_HASH = 191475506L
-        private val getInheritVelocityRatioBind by lazy {
+        @JvmField
+        val getInheritVelocityRatioBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_inherit_velocity_ratio", GET_INHERIT_VELOCITY_RATIO_HASH)
-        }
 
         private const val SET_SPREAD_HASH = 373806689L
-        private val setSpreadBind by lazy {
+        @JvmField
+        val setSpreadBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_spread", SET_SPREAD_HASH)
-        }
 
         private const val GET_SPREAD_HASH = 1740695150L
-        private val getSpreadBind by lazy {
+        @JvmField
+        val getSpreadBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_spread", GET_SPREAD_HASH)
-        }
 
         private const val SET_FLATNESS_HASH = 373806689L
-        private val setFlatnessBind by lazy {
+        @JvmField
+        val setFlatnessBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_flatness", SET_FLATNESS_HASH)
-        }
 
         private const val GET_FLATNESS_HASH = 1740695150L
-        private val getFlatnessBind by lazy {
+        @JvmField
+        val getFlatnessBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_flatness", GET_FLATNESS_HASH)
-        }
 
         private const val SET_PARAM_HASH = 676779352L
-        private val setParamBind by lazy {
+        @JvmField
+        val setParamBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_param", SET_PARAM_HASH)
-        }
 
         private const val GET_PARAM_HASH = 2623708480L
-        private val getParamBind by lazy {
+        @JvmField
+        val getParamBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_param", GET_PARAM_HASH)
-        }
 
         private const val SET_PARAM_MIN_HASH = 2295964248L
-        private val setParamMinBind by lazy {
+        @JvmField
+        val setParamMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_param_min", SET_PARAM_MIN_HASH)
-        }
 
         private const val GET_PARAM_MIN_HASH = 3903786503L
-        private val getParamMinBind by lazy {
+        @JvmField
+        val getParamMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_param_min", GET_PARAM_MIN_HASH)
-        }
 
         private const val SET_PARAM_MAX_HASH = 2295964248L
-        private val setParamMaxBind by lazy {
+        @JvmField
+        val setParamMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_param_max", SET_PARAM_MAX_HASH)
-        }
 
         private const val GET_PARAM_MAX_HASH = 3903786503L
-        private val getParamMaxBind by lazy {
+        @JvmField
+        val getParamMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_param_max", GET_PARAM_MAX_HASH)
-        }
 
         private const val SET_PARAM_TEXTURE_HASH = 526976089L
-        private val setParamTextureBind by lazy {
+        @JvmField
+        val setParamTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_param_texture", SET_PARAM_TEXTURE_HASH)
-        }
 
         private const val GET_PARAM_TEXTURE_HASH = 3489372978L
-        private val getParamTextureBind by lazy {
+        @JvmField
+        val getParamTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_param_texture", GET_PARAM_TEXTURE_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_USE_SCALE_3D_HASH = 2586408642L
-        private val setUseScale3dBind by lazy {
+        @JvmField
+        val setUseScale3dBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_use_scale_3d", SET_USE_SCALE_3D_HASH)
-        }
 
         private const val IS_USING_SCALE_3D_HASH = 36873697L
-        private val isUsingScale3dBind by lazy {
+        @JvmField
+        val isUsingScale3dBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "is_using_scale_3d", IS_USING_SCALE_3D_HASH)
-        }
 
         private const val SET_SCALE_3D_MIN_HASH = 3460891852L
-        private val setScale3dMinBind by lazy {
+        @JvmField
+        val setScale3dMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_scale_3d_min", SET_SCALE_3D_MIN_HASH)
-        }
 
         private const val GET_SCALE_3D_MIN_HASH = 3360562783L
-        private val getScale3dMinBind by lazy {
+        @JvmField
+        val getScale3dMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_scale_3d_min", GET_SCALE_3D_MIN_HASH)
-        }
 
         private const val SET_SCALE_3D_MAX_HASH = 3460891852L
-        private val setScale3dMaxBind by lazy {
+        @JvmField
+        val setScale3dMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_scale_3d_max", SET_SCALE_3D_MAX_HASH)
-        }
 
         private const val GET_SCALE_3D_MAX_HASH = 3360562783L
-        private val getScale3dMaxBind by lazy {
+        @JvmField
+        val getScale3dMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_scale_3d_max", GET_SCALE_3D_MAX_HASH)
-        }
 
         private const val SET_USE_ROTATION_3D_HASH = 2586408642L
-        private val setUseRotation3dBind by lazy {
+        @JvmField
+        val setUseRotation3dBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_use_rotation_3d", SET_USE_ROTATION_3D_HASH)
-        }
 
         private const val IS_USING_ROTATION_3D_HASH = 36873697L
-        private val isUsingRotation3dBind by lazy {
+        @JvmField
+        val isUsingRotation3dBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "is_using_rotation_3d", IS_USING_ROTATION_3D_HASH)
-        }
 
         private const val SET_ROTATION_3D_MIN_HASH = 3460891852L
-        private val setRotation3dMinBind by lazy {
+        @JvmField
+        val setRotation3dMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_rotation_3d_min", SET_ROTATION_3D_MIN_HASH)
-        }
 
         private const val GET_ROTATION_3D_MIN_HASH = 3360562783L
-        private val getRotation3dMinBind by lazy {
+        @JvmField
+        val getRotation3dMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_rotation_3d_min", GET_ROTATION_3D_MIN_HASH)
-        }
 
         private const val SET_ROTATION_3D_MAX_HASH = 3460891852L
-        private val setRotation3dMaxBind by lazy {
+        @JvmField
+        val setRotation3dMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_rotation_3d_max", SET_ROTATION_3D_MAX_HASH)
-        }
 
         private const val GET_ROTATION_3D_MAX_HASH = 3360562783L
-        private val getRotation3dMaxBind by lazy {
+        @JvmField
+        val getRotation3dMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_rotation_3d_max", GET_ROTATION_3D_MAX_HASH)
-        }
 
         private const val SET_COLOR_RAMP_HASH = 4051416890L
-        private val setColorRampBind by lazy {
+        @JvmField
+        val setColorRampBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_color_ramp", SET_COLOR_RAMP_HASH)
-        }
 
         private const val GET_COLOR_RAMP_HASH = 3635182373L
-        private val getColorRampBind by lazy {
+        @JvmField
+        val getColorRampBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_color_ramp", GET_COLOR_RAMP_HASH)
-        }
 
         private const val SET_ALPHA_CURVE_HASH = 4051416890L
-        private val setAlphaCurveBind by lazy {
+        @JvmField
+        val setAlphaCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_alpha_curve", SET_ALPHA_CURVE_HASH)
-        }
 
         private const val GET_ALPHA_CURVE_HASH = 3635182373L
-        private val getAlphaCurveBind by lazy {
+        @JvmField
+        val getAlphaCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_alpha_curve", GET_ALPHA_CURVE_HASH)
-        }
 
         private const val SET_EMISSION_CURVE_HASH = 4051416890L
-        private val setEmissionCurveBind by lazy {
+        @JvmField
+        val setEmissionCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_curve", SET_EMISSION_CURVE_HASH)
-        }
 
         private const val GET_EMISSION_CURVE_HASH = 3635182373L
-        private val getEmissionCurveBind by lazy {
+        @JvmField
+        val getEmissionCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_curve", GET_EMISSION_CURVE_HASH)
-        }
 
         private const val SET_COLOR_INITIAL_RAMP_HASH = 4051416890L
-        private val setColorInitialRampBind by lazy {
+        @JvmField
+        val setColorInitialRampBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_color_initial_ramp", SET_COLOR_INITIAL_RAMP_HASH)
-        }
 
         private const val GET_COLOR_INITIAL_RAMP_HASH = 3635182373L
-        private val getColorInitialRampBind by lazy {
+        @JvmField
+        val getColorInitialRampBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_color_initial_ramp", GET_COLOR_INITIAL_RAMP_HASH)
-        }
 
         private const val SET_VELOCITY_LIMIT_CURVE_HASH = 4051416890L
-        private val setVelocityLimitCurveBind by lazy {
+        @JvmField
+        val setVelocityLimitCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_velocity_limit_curve", SET_VELOCITY_LIMIT_CURVE_HASH)
-        }
 
         private const val GET_VELOCITY_LIMIT_CURVE_HASH = 3635182373L
-        private val getVelocityLimitCurveBind by lazy {
+        @JvmField
+        val getVelocityLimitCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_velocity_limit_curve", GET_VELOCITY_LIMIT_CURVE_HASH)
-        }
 
         private const val SET_PARTICLE_FLAG_HASH = 1711815571L
-        private val setParticleFlagBind by lazy {
+        @JvmField
+        val setParticleFlagBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_particle_flag", SET_PARTICLE_FLAG_HASH)
-        }
 
         private const val GET_PARTICLE_FLAG_HASH = 3895316907L
-        private val getParticleFlagBind by lazy {
+        @JvmField
+        val getParticleFlagBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_particle_flag", GET_PARTICLE_FLAG_HASH)
-        }
 
         private const val SET_VELOCITY_PIVOT_HASH = 3460891852L
-        private val setVelocityPivotBind by lazy {
+        @JvmField
+        val setVelocityPivotBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_velocity_pivot", SET_VELOCITY_PIVOT_HASH)
-        }
 
         private const val GET_VELOCITY_PIVOT_HASH = 3783033775L
-        private val getVelocityPivotBind by lazy {
+        @JvmField
+        val getVelocityPivotBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_velocity_pivot", GET_VELOCITY_PIVOT_HASH)
-        }
 
         private const val SET_EMISSION_SHAPE_HASH = 461501442L
-        private val setEmissionShapeBind by lazy {
+        @JvmField
+        val setEmissionShapeBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_shape", SET_EMISSION_SHAPE_HASH)
-        }
 
         private const val GET_EMISSION_SHAPE_HASH = 3719733018L
-        private val getEmissionShapeBind by lazy {
+        @JvmField
+        val getEmissionShapeBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_shape", GET_EMISSION_SHAPE_HASH)
-        }
 
         private const val SET_EMISSION_SPHERE_RADIUS_HASH = 373806689L
-        private val setEmissionSphereRadiusBind by lazy {
+        @JvmField
+        val setEmissionSphereRadiusBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_sphere_radius", SET_EMISSION_SPHERE_RADIUS_HASH)
-        }
 
         private const val GET_EMISSION_SPHERE_RADIUS_HASH = 1740695150L
-        private val getEmissionSphereRadiusBind by lazy {
+        @JvmField
+        val getEmissionSphereRadiusBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_sphere_radius", GET_EMISSION_SPHERE_RADIUS_HASH)
-        }
 
         private const val SET_EMISSION_BOX_EXTENTS_HASH = 3460891852L
-        private val setEmissionBoxExtentsBind by lazy {
+        @JvmField
+        val setEmissionBoxExtentsBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_box_extents", SET_EMISSION_BOX_EXTENTS_HASH)
-        }
 
         private const val GET_EMISSION_BOX_EXTENTS_HASH = 3360562783L
-        private val getEmissionBoxExtentsBind by lazy {
+        @JvmField
+        val getEmissionBoxExtentsBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_box_extents", GET_EMISSION_BOX_EXTENTS_HASH)
-        }
 
         private const val SET_EMISSION_POINT_TEXTURE_HASH = 4051416890L
-        private val setEmissionPointTextureBind by lazy {
+        @JvmField
+        val setEmissionPointTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_point_texture", SET_EMISSION_POINT_TEXTURE_HASH)
-        }
 
         private const val GET_EMISSION_POINT_TEXTURE_HASH = 3635182373L
-        private val getEmissionPointTextureBind by lazy {
+        @JvmField
+        val getEmissionPointTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_point_texture", GET_EMISSION_POINT_TEXTURE_HASH)
-        }
 
         private const val SET_EMISSION_NORMAL_TEXTURE_HASH = 4051416890L
-        private val setEmissionNormalTextureBind by lazy {
+        @JvmField
+        val setEmissionNormalTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_normal_texture", SET_EMISSION_NORMAL_TEXTURE_HASH)
-        }
 
         private const val GET_EMISSION_NORMAL_TEXTURE_HASH = 3635182373L
-        private val getEmissionNormalTextureBind by lazy {
+        @JvmField
+        val getEmissionNormalTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_normal_texture", GET_EMISSION_NORMAL_TEXTURE_HASH)
-        }
 
         private const val SET_EMISSION_COLOR_TEXTURE_HASH = 4051416890L
-        private val setEmissionColorTextureBind by lazy {
+        @JvmField
+        val setEmissionColorTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_color_texture", SET_EMISSION_COLOR_TEXTURE_HASH)
-        }
 
         private const val GET_EMISSION_COLOR_TEXTURE_HASH = 3635182373L
-        private val getEmissionColorTextureBind by lazy {
+        @JvmField
+        val getEmissionColorTextureBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_color_texture", GET_EMISSION_COLOR_TEXTURE_HASH)
-        }
 
         private const val SET_EMISSION_POINT_COUNT_HASH = 1286410249L
-        private val setEmissionPointCountBind by lazy {
+        @JvmField
+        val setEmissionPointCountBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_point_count", SET_EMISSION_POINT_COUNT_HASH)
-        }
 
         private const val GET_EMISSION_POINT_COUNT_HASH = 3905245786L
-        private val getEmissionPointCountBind by lazy {
+        @JvmField
+        val getEmissionPointCountBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_point_count", GET_EMISSION_POINT_COUNT_HASH)
-        }
 
         private const val SET_EMISSION_RING_AXIS_HASH = 3460891852L
-        private val setEmissionRingAxisBind by lazy {
+        @JvmField
+        val setEmissionRingAxisBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_ring_axis", SET_EMISSION_RING_AXIS_HASH)
-        }
 
         private const val GET_EMISSION_RING_AXIS_HASH = 3360562783L
-        private val getEmissionRingAxisBind by lazy {
+        @JvmField
+        val getEmissionRingAxisBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_ring_axis", GET_EMISSION_RING_AXIS_HASH)
-        }
 
         private const val SET_EMISSION_RING_HEIGHT_HASH = 373806689L
-        private val setEmissionRingHeightBind by lazy {
+        @JvmField
+        val setEmissionRingHeightBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_ring_height", SET_EMISSION_RING_HEIGHT_HASH)
-        }
 
         private const val GET_EMISSION_RING_HEIGHT_HASH = 1740695150L
-        private val getEmissionRingHeightBind by lazy {
+        @JvmField
+        val getEmissionRingHeightBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_ring_height", GET_EMISSION_RING_HEIGHT_HASH)
-        }
 
         private const val SET_EMISSION_RING_RADIUS_HASH = 373806689L
-        private val setEmissionRingRadiusBind by lazy {
+        @JvmField
+        val setEmissionRingRadiusBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_ring_radius", SET_EMISSION_RING_RADIUS_HASH)
-        }
 
         private const val GET_EMISSION_RING_RADIUS_HASH = 1740695150L
-        private val getEmissionRingRadiusBind by lazy {
+        @JvmField
+        val getEmissionRingRadiusBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_ring_radius", GET_EMISSION_RING_RADIUS_HASH)
-        }
 
         private const val SET_EMISSION_RING_INNER_RADIUS_HASH = 373806689L
-        private val setEmissionRingInnerRadiusBind by lazy {
+        @JvmField
+        val setEmissionRingInnerRadiusBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_ring_inner_radius", SET_EMISSION_RING_INNER_RADIUS_HASH)
-        }
 
         private const val GET_EMISSION_RING_INNER_RADIUS_HASH = 1740695150L
-        private val getEmissionRingInnerRadiusBind by lazy {
+        @JvmField
+        val getEmissionRingInnerRadiusBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_ring_inner_radius", GET_EMISSION_RING_INNER_RADIUS_HASH)
-        }
 
         private const val SET_EMISSION_RING_CONE_ANGLE_HASH = 373806689L
-        private val setEmissionRingConeAngleBind by lazy {
+        @JvmField
+        val setEmissionRingConeAngleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_ring_cone_angle", SET_EMISSION_RING_CONE_ANGLE_HASH)
-        }
 
         private const val GET_EMISSION_RING_CONE_ANGLE_HASH = 1740695150L
-        private val getEmissionRingConeAngleBind by lazy {
+        @JvmField
+        val getEmissionRingConeAngleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_ring_cone_angle", GET_EMISSION_RING_CONE_ANGLE_HASH)
-        }
 
         private const val SET_EMISSION_SHAPE_OFFSET_HASH = 3460891852L
-        private val setEmissionShapeOffsetBind by lazy {
+        @JvmField
+        val setEmissionShapeOffsetBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_shape_offset", SET_EMISSION_SHAPE_OFFSET_HASH)
-        }
 
         private const val GET_EMISSION_SHAPE_OFFSET_HASH = 3360562783L
-        private val getEmissionShapeOffsetBind by lazy {
+        @JvmField
+        val getEmissionShapeOffsetBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_shape_offset", GET_EMISSION_SHAPE_OFFSET_HASH)
-        }
 
         private const val SET_EMISSION_SHAPE_SCALE_HASH = 3460891852L
-        private val setEmissionShapeScaleBind by lazy {
+        @JvmField
+        val setEmissionShapeScaleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_emission_shape_scale", SET_EMISSION_SHAPE_SCALE_HASH)
-        }
 
         private const val GET_EMISSION_SHAPE_SCALE_HASH = 3360562783L
-        private val getEmissionShapeScaleBind by lazy {
+        @JvmField
+        val getEmissionShapeScaleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_emission_shape_scale", GET_EMISSION_SHAPE_SCALE_HASH)
-        }
 
         private const val GET_TURBULENCE_ENABLED_HASH = 36873697L
-        private val getTurbulenceEnabledBind by lazy {
+        @JvmField
+        val getTurbulenceEnabledBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_turbulence_enabled", GET_TURBULENCE_ENABLED_HASH)
-        }
 
         private const val SET_TURBULENCE_ENABLED_HASH = 2586408642L
-        private val setTurbulenceEnabledBind by lazy {
+        @JvmField
+        val setTurbulenceEnabledBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_turbulence_enabled", SET_TURBULENCE_ENABLED_HASH)
-        }
 
         private const val GET_TURBULENCE_NOISE_STRENGTH_HASH = 1740695150L
-        private val getTurbulenceNoiseStrengthBind by lazy {
+        @JvmField
+        val getTurbulenceNoiseStrengthBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_turbulence_noise_strength", GET_TURBULENCE_NOISE_STRENGTH_HASH)
-        }
 
         private const val SET_TURBULENCE_NOISE_STRENGTH_HASH = 373806689L
-        private val setTurbulenceNoiseStrengthBind by lazy {
+        @JvmField
+        val setTurbulenceNoiseStrengthBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_turbulence_noise_strength", SET_TURBULENCE_NOISE_STRENGTH_HASH)
-        }
 
         private const val GET_TURBULENCE_NOISE_SCALE_HASH = 1740695150L
-        private val getTurbulenceNoiseScaleBind by lazy {
+        @JvmField
+        val getTurbulenceNoiseScaleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_turbulence_noise_scale", GET_TURBULENCE_NOISE_SCALE_HASH)
-        }
 
         private const val SET_TURBULENCE_NOISE_SCALE_HASH = 373806689L
-        private val setTurbulenceNoiseScaleBind by lazy {
+        @JvmField
+        val setTurbulenceNoiseScaleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_turbulence_noise_scale", SET_TURBULENCE_NOISE_SCALE_HASH)
-        }
 
         private const val GET_TURBULENCE_NOISE_SPEED_RANDOM_HASH = 1740695150L
-        private val getTurbulenceNoiseSpeedRandomBind by lazy {
+        @JvmField
+        val getTurbulenceNoiseSpeedRandomBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_turbulence_noise_speed_random", GET_TURBULENCE_NOISE_SPEED_RANDOM_HASH)
-        }
 
         private const val SET_TURBULENCE_NOISE_SPEED_RANDOM_HASH = 373806689L
-        private val setTurbulenceNoiseSpeedRandomBind by lazy {
+        @JvmField
+        val setTurbulenceNoiseSpeedRandomBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_turbulence_noise_speed_random", SET_TURBULENCE_NOISE_SPEED_RANDOM_HASH)
-        }
 
         private const val GET_TURBULENCE_NOISE_SPEED_HASH = 3360562783L
-        private val getTurbulenceNoiseSpeedBind by lazy {
+        @JvmField
+        val getTurbulenceNoiseSpeedBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_turbulence_noise_speed", GET_TURBULENCE_NOISE_SPEED_HASH)
-        }
 
         private const val SET_TURBULENCE_NOISE_SPEED_HASH = 3460891852L
-        private val setTurbulenceNoiseSpeedBind by lazy {
+        @JvmField
+        val setTurbulenceNoiseSpeedBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_turbulence_noise_speed", SET_TURBULENCE_NOISE_SPEED_HASH)
-        }
 
         private const val GET_GRAVITY_HASH = 3360562783L
-        private val getGravityBind by lazy {
+        @JvmField
+        val getGravityBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_gravity", GET_GRAVITY_HASH)
-        }
 
         private const val SET_GRAVITY_HASH = 3460891852L
-        private val setGravityBind by lazy {
+        @JvmField
+        val setGravityBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_gravity", SET_GRAVITY_HASH)
-        }
 
         private const val SET_LIFETIME_RANDOMNESS_HASH = 373806689L
-        private val setLifetimeRandomnessBind by lazy {
+        @JvmField
+        val setLifetimeRandomnessBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_lifetime_randomness", SET_LIFETIME_RANDOMNESS_HASH)
-        }
 
         private const val GET_LIFETIME_RANDOMNESS_HASH = 1740695150L
-        private val getLifetimeRandomnessBind by lazy {
+        @JvmField
+        val getLifetimeRandomnessBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_lifetime_randomness", GET_LIFETIME_RANDOMNESS_HASH)
-        }
 
         private const val GET_SUB_EMITTER_MODE_HASH = 2399052877L
-        private val getSubEmitterModeBind by lazy {
+        @JvmField
+        val getSubEmitterModeBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_sub_emitter_mode", GET_SUB_EMITTER_MODE_HASH)
-        }
 
         private const val SET_SUB_EMITTER_MODE_HASH = 2161806672L
-        private val setSubEmitterModeBind by lazy {
+        @JvmField
+        val setSubEmitterModeBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_sub_emitter_mode", SET_SUB_EMITTER_MODE_HASH)
-        }
 
         private const val GET_SUB_EMITTER_FREQUENCY_HASH = 1740695150L
-        private val getSubEmitterFrequencyBind by lazy {
+        @JvmField
+        val getSubEmitterFrequencyBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_sub_emitter_frequency", GET_SUB_EMITTER_FREQUENCY_HASH)
-        }
 
         private const val SET_SUB_EMITTER_FREQUENCY_HASH = 373806689L
-        private val setSubEmitterFrequencyBind by lazy {
+        @JvmField
+        val setSubEmitterFrequencyBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_sub_emitter_frequency", SET_SUB_EMITTER_FREQUENCY_HASH)
-        }
 
         private const val GET_SUB_EMITTER_AMOUNT_AT_END_HASH = 3905245786L
-        private val getSubEmitterAmountAtEndBind by lazy {
+        @JvmField
+        val getSubEmitterAmountAtEndBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_sub_emitter_amount_at_end", GET_SUB_EMITTER_AMOUNT_AT_END_HASH)
-        }
 
         private const val SET_SUB_EMITTER_AMOUNT_AT_END_HASH = 1286410249L
-        private val setSubEmitterAmountAtEndBind by lazy {
+        @JvmField
+        val setSubEmitterAmountAtEndBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_sub_emitter_amount_at_end", SET_SUB_EMITTER_AMOUNT_AT_END_HASH)
-        }
 
         private const val GET_SUB_EMITTER_AMOUNT_AT_COLLISION_HASH = 3905245786L
-        private val getSubEmitterAmountAtCollisionBind by lazy {
+        @JvmField
+        val getSubEmitterAmountAtCollisionBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_sub_emitter_amount_at_collision", GET_SUB_EMITTER_AMOUNT_AT_COLLISION_HASH)
-        }
 
         private const val SET_SUB_EMITTER_AMOUNT_AT_COLLISION_HASH = 1286410249L
-        private val setSubEmitterAmountAtCollisionBind by lazy {
+        @JvmField
+        val setSubEmitterAmountAtCollisionBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_sub_emitter_amount_at_collision", SET_SUB_EMITTER_AMOUNT_AT_COLLISION_HASH)
-        }
 
         private const val GET_SUB_EMITTER_AMOUNT_AT_START_HASH = 3905245786L
-        private val getSubEmitterAmountAtStartBind by lazy {
+        @JvmField
+        val getSubEmitterAmountAtStartBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_sub_emitter_amount_at_start", GET_SUB_EMITTER_AMOUNT_AT_START_HASH)
-        }
 
         private const val SET_SUB_EMITTER_AMOUNT_AT_START_HASH = 1286410249L
-        private val setSubEmitterAmountAtStartBind by lazy {
+        @JvmField
+        val setSubEmitterAmountAtStartBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_sub_emitter_amount_at_start", SET_SUB_EMITTER_AMOUNT_AT_START_HASH)
-        }
 
         private const val GET_SUB_EMITTER_KEEP_VELOCITY_HASH = 36873697L
-        private val getSubEmitterKeepVelocityBind by lazy {
+        @JvmField
+        val getSubEmitterKeepVelocityBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_sub_emitter_keep_velocity", GET_SUB_EMITTER_KEEP_VELOCITY_HASH)
-        }
 
         private const val SET_SUB_EMITTER_KEEP_VELOCITY_HASH = 2586408642L
-        private val setSubEmitterKeepVelocityBind by lazy {
+        @JvmField
+        val setSubEmitterKeepVelocityBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_sub_emitter_keep_velocity", SET_SUB_EMITTER_KEEP_VELOCITY_HASH)
-        }
 
         private const val SET_ATTRACTOR_INTERACTION_ENABLED_HASH = 2586408642L
-        private val setAttractorInteractionEnabledBind by lazy {
+        @JvmField
+        val setAttractorInteractionEnabledBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_attractor_interaction_enabled", SET_ATTRACTOR_INTERACTION_ENABLED_HASH)
-        }
 
         private const val IS_ATTRACTOR_INTERACTION_ENABLED_HASH = 36873697L
-        private val isAttractorInteractionEnabledBind by lazy {
+        @JvmField
+        val isAttractorInteractionEnabledBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "is_attractor_interaction_enabled", IS_ATTRACTOR_INTERACTION_ENABLED_HASH)
-        }
 
         private const val SET_COLLISION_MODE_HASH = 653804659L
-        private val setCollisionModeBind by lazy {
+        @JvmField
+        val setCollisionModeBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_collision_mode", SET_COLLISION_MODE_HASH)
-        }
 
         private const val GET_COLLISION_MODE_HASH = 139371864L
-        private val getCollisionModeBind by lazy {
+        @JvmField
+        val getCollisionModeBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_collision_mode", GET_COLLISION_MODE_HASH)
-        }
 
         private const val SET_COLLISION_USE_SCALE_HASH = 2586408642L
-        private val setCollisionUseScaleBind by lazy {
+        @JvmField
+        val setCollisionUseScaleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_collision_use_scale", SET_COLLISION_USE_SCALE_HASH)
-        }
 
         private const val IS_COLLISION_USING_SCALE_HASH = 36873697L
-        private val isCollisionUsingScaleBind by lazy {
+        @JvmField
+        val isCollisionUsingScaleBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "is_collision_using_scale", IS_COLLISION_USING_SCALE_HASH)
-        }
 
         private const val SET_COLLISION_FRICTION_HASH = 373806689L
-        private val setCollisionFrictionBind by lazy {
+        @JvmField
+        val setCollisionFrictionBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_collision_friction", SET_COLLISION_FRICTION_HASH)
-        }
 
         private const val GET_COLLISION_FRICTION_HASH = 1740695150L
-        private val getCollisionFrictionBind by lazy {
+        @JvmField
+        val getCollisionFrictionBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_collision_friction", GET_COLLISION_FRICTION_HASH)
-        }
 
         private const val SET_COLLISION_BOUNCE_HASH = 373806689L
-        private val setCollisionBounceBind by lazy {
+        @JvmField
+        val setCollisionBounceBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_collision_bounce", SET_COLLISION_BOUNCE_HASH)
-        }
 
         private const val GET_COLLISION_BOUNCE_HASH = 1740695150L
-        private val getCollisionBounceBind by lazy {
+        @JvmField
+        val getCollisionBounceBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_collision_bounce", GET_COLLISION_BOUNCE_HASH)
-        }
 
         private const val SET_USING_ROTATION_VELOCITY_3D_HASH = 2586408642L
-        private val setUsingRotationVelocity3dBind by lazy {
+        @JvmField
+        val setUsingRotationVelocity3dBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_using_rotation_velocity_3d", SET_USING_ROTATION_VELOCITY_3D_HASH)
-        }
 
         private const val IS_USING_ROTATION_VELOCITY_3D_HASH = 36873697L
-        private val isUsingRotationVelocity3dBind by lazy {
+        @JvmField
+        val isUsingRotationVelocity3dBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "is_using_rotation_velocity_3d", IS_USING_ROTATION_VELOCITY_3D_HASH)
-        }
 
         private const val SET_ROTATION_VELOCITY_3D_MAX_HASH = 3460891852L
-        private val setRotationVelocity3dMaxBind by lazy {
+        @JvmField
+        val setRotationVelocity3dMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_rotation_velocity_3d_max", SET_ROTATION_VELOCITY_3D_MAX_HASH)
-        }
 
         private const val GET_ROTATION_VELOCITY_3D_MAX_HASH = 3360562783L
-        private val getRotationVelocity3dMaxBind by lazy {
+        @JvmField
+        val getRotationVelocity3dMaxBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_rotation_velocity_3d_max", GET_ROTATION_VELOCITY_3D_MAX_HASH)
-        }
 
         private const val SET_ROTATION_VELOCITY_3D_MIN_HASH = 3460891852L
-        private val setRotationVelocity3dMinBind by lazy {
+        @JvmField
+        val setRotationVelocity3dMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_rotation_velocity_3d_min", SET_ROTATION_VELOCITY_3D_MIN_HASH)
-        }
 
         private const val GET_ROTATION_VELOCITY_3D_MIN_HASH = 3360562783L
-        private val getRotationVelocity3dMinBind by lazy {
+        @JvmField
+        val getRotationVelocity3dMinBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_rotation_velocity_3d_min", GET_ROTATION_VELOCITY_3D_MIN_HASH)
-        }
 
         private const val SET_ROTATION_VELOCITY_3D_CURVE_HASH = 4051416890L
-        private val setRotationVelocity3dCurveBind by lazy {
+        @JvmField
+        val setRotationVelocity3dCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "set_rotation_velocity_3d_curve", SET_ROTATION_VELOCITY_3D_CURVE_HASH)
-        }
 
         private const val GET_ROTATION_VELOCITY_3D_CURVE_HASH = 3635182373L
-        private val getRotationVelocity3dCurveBind by lazy {
+        @JvmField
+        val getRotationVelocity3dCurveBind =
             ObjectCalls.getMethodBind("ParticleProcessMaterial", "get_rotation_velocity_3d_curve", GET_ROTATION_VELOCITY_3D_CURVE_HASH)
-        }
     }
 }

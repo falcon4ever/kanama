@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -63,7 +64,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -74,7 +75,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleDataChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setJiggleDataChainLengthBind, segment, length)
+        ObjectCalls.ptrcallWithIntArg(Binds.setJiggleDataChainLengthBind, segment, length)
     }
 
     /**
@@ -94,7 +95,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleDataChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getJiggleDataChainLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getJiggleDataChainLengthBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setStiffness(stiffness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, segment, stiffness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStiffnessBind, segment, stiffness)
     }
 
     /**
@@ -116,7 +117,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getStiffness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStiffnessBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setMass(mass: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMassBind, segment, mass)
     }
 
     /**
@@ -138,7 +139,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getMass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
     }
 
     /**
@@ -149,7 +150,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setDamping(damping: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, segment, damping)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDampingBind, segment, damping)
     }
 
     /**
@@ -160,7 +161,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getDamping(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingBind, segment)
     }
 
     /**
@@ -171,7 +172,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setUseGravity(useGravity: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseGravityBind, segment, useGravity)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseGravityBind, segment, useGravity)
     }
 
     /**
@@ -182,7 +183,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getUseGravity(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseGravityBind, segment)
     }
 
     /**
@@ -192,7 +193,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setGravity(gravity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGravityBind, segment, gravity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGravityBind, segment, gravity)
     }
 
     /**
@@ -202,7 +203,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getGravity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGravityBind, segment)
     }
 
     /**
@@ -213,7 +214,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setUseColliders(useColliders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseCollidersBind, segment, useColliders)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCollidersBind, segment, useColliders)
     }
 
     /**
@@ -223,7 +224,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getUseColliders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseCollidersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseCollidersBind, segment)
     }
 
     /**
@@ -234,7 +235,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setCollisionMask(collisionMask: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCollisionMaskBind, segment, collisionMask)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -244,7 +245,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getCollisionMask(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionMaskBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun reset() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetBind, segment)
     }
 
     /**
@@ -265,7 +266,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointBone2dNode(jointIdx: Int, bone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setJiggleJointBone2dNodeBind, segment, jointIdx, bone2dNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setJiggleJointBone2dNodeBind, segment, jointIdx, bone2dNode)
     }
 
     /**
@@ -275,7 +276,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointBone2dNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getJiggleJointBone2dNodeBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getJiggleJointBone2dNodeBind, segment, jointIdx)
     }
 
     /**
@@ -286,7 +287,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setJiggleJointBoneIndexBind, segment, jointIdx, boneIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setJiggleJointBoneIndexBind, segment, jointIdx, boneIdx)
     }
 
     /**
@@ -296,7 +297,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointBoneIndex(jointIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getJiggleJointBoneIndexBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getJiggleJointBoneIndexBind, segment, jointIdx)
     }
 
     /**
@@ -308,7 +309,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointOverride(jointIdx: Int, override: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointOverrideBind, segment, jointIdx, override)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setJiggleJointOverrideBind, segment, jointIdx, override)
     }
 
     /**
@@ -319,7 +320,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointOverride(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointOverrideBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getJiggleJointOverrideBind, segment, jointIdx)
     }
 
     /**
@@ -329,7 +330,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointStiffness(jointIdx: Int, stiffness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointStiffnessBind, segment, jointIdx, stiffness)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setJiggleJointStiffnessBind, segment, jointIdx, stiffness)
     }
 
     /**
@@ -339,7 +340,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointStiffness(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointStiffnessBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getJiggleJointStiffnessBind, segment, jointIdx)
     }
 
     /**
@@ -349,7 +350,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointMass(jointIdx: Int, mass: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointMassBind, segment, jointIdx, mass)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setJiggleJointMassBind, segment, jointIdx, mass)
     }
 
     /**
@@ -359,7 +360,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointMass(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointMassBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getJiggleJointMassBind, segment, jointIdx)
     }
 
     /**
@@ -369,7 +370,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointDamping(jointIdx: Int, damping: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setJiggleJointDampingBind, segment, jointIdx, damping)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setJiggleJointDampingBind, segment, jointIdx, damping)
     }
 
     /**
@@ -379,7 +380,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointDamping(jointIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJiggleJointDampingBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getJiggleJointDampingBind, segment, jointIdx)
     }
 
     /**
@@ -389,7 +390,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointUseGravity(jointIdx: Int, useGravity: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setJiggleJointUseGravityBind, segment, jointIdx, useGravity)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setJiggleJointUseGravityBind, segment, jointIdx, useGravity)
     }
 
     /**
@@ -399,7 +400,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointUseGravity(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getJiggleJointUseGravityBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getJiggleJointUseGravityBind, segment, jointIdx)
     }
 
     /**
@@ -409,7 +410,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun setJiggleJointGravity(jointIdx: Int, gravity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setJiggleJointGravityBind, segment, jointIdx, gravity)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setJiggleJointGravityBind, segment, jointIdx, gravity)
     }
 
     /**
@@ -420,7 +421,7 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
      */
     fun getJiggleJointGravity(jointIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getJiggleJointGravityBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getJiggleJointGravityBind, segment, jointIdx)
     }
 
     companion object {
@@ -433,180 +434,182 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DJiggle? =
             if (handle.address() == 0L) null else SkeletonModification2DJiggle(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TARGET_NODE_HASH = 1348162250L
-        private val setTargetNodeBind by lazy {
+        @JvmField
+        val setTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_target_node", SET_TARGET_NODE_HASH)
-        }
 
         private const val GET_TARGET_NODE_HASH = 4075236667L
-        private val getTargetNodeBind by lazy {
+        @JvmField
+        val getTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_target_node", GET_TARGET_NODE_HASH)
-        }
 
         private const val SET_JIGGLE_DATA_CHAIN_LENGTH_HASH = 1286410249L
-        private val setJiggleDataChainLengthBind by lazy {
+        @JvmField
+        val setJiggleDataChainLengthBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_data_chain_length", SET_JIGGLE_DATA_CHAIN_LENGTH_HASH)
-        }
 
         private const val GET_JIGGLE_DATA_CHAIN_LENGTH_HASH = 2455072627L
-        private val getJiggleDataChainLengthBind by lazy {
+        @JvmField
+        val getJiggleDataChainLengthBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_data_chain_length", GET_JIGGLE_DATA_CHAIN_LENGTH_HASH)
-        }
 
         private const val SET_STIFFNESS_HASH = 373806689L
-        private val setStiffnessBind by lazy {
+        @JvmField
+        val setStiffnessBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_stiffness", SET_STIFFNESS_HASH)
-        }
 
         private const val GET_STIFFNESS_HASH = 1740695150L
-        private val getStiffnessBind by lazy {
+        @JvmField
+        val getStiffnessBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_stiffness", GET_STIFFNESS_HASH)
-        }
 
         private const val SET_MASS_HASH = 373806689L
-        private val setMassBind by lazy {
+        @JvmField
+        val setMassBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_mass", SET_MASS_HASH)
-        }
 
         private const val GET_MASS_HASH = 1740695150L
-        private val getMassBind by lazy {
+        @JvmField
+        val getMassBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_mass", GET_MASS_HASH)
-        }
 
         private const val SET_DAMPING_HASH = 373806689L
-        private val setDampingBind by lazy {
+        @JvmField
+        val setDampingBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_damping", SET_DAMPING_HASH)
-        }
 
         private const val GET_DAMPING_HASH = 1740695150L
-        private val getDampingBind by lazy {
+        @JvmField
+        val getDampingBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_damping", GET_DAMPING_HASH)
-        }
 
         private const val SET_USE_GRAVITY_HASH = 2586408642L
-        private val setUseGravityBind by lazy {
+        @JvmField
+        val setUseGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_use_gravity", SET_USE_GRAVITY_HASH)
-        }
 
         private const val GET_USE_GRAVITY_HASH = 36873697L
-        private val getUseGravityBind by lazy {
+        @JvmField
+        val getUseGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_use_gravity", GET_USE_GRAVITY_HASH)
-        }
 
         private const val SET_GRAVITY_HASH = 743155724L
-        private val setGravityBind by lazy {
+        @JvmField
+        val setGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_gravity", SET_GRAVITY_HASH)
-        }
 
         private const val GET_GRAVITY_HASH = 3341600327L
-        private val getGravityBind by lazy {
+        @JvmField
+        val getGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_gravity", GET_GRAVITY_HASH)
-        }
 
         private const val SET_USE_COLLIDERS_HASH = 2586408642L
-        private val setUseCollidersBind by lazy {
+        @JvmField
+        val setUseCollidersBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_use_colliders", SET_USE_COLLIDERS_HASH)
-        }
 
         private const val GET_USE_COLLIDERS_HASH = 36873697L
-        private val getUseCollidersBind by lazy {
+        @JvmField
+        val getUseCollidersBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_use_colliders", GET_USE_COLLIDERS_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val RESET_HASH = 3218959716L
-        private val resetBind by lazy {
+        @JvmField
+        val resetBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "reset", RESET_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_BONE2D_NODE_HASH = 2761262315L
-        private val setJiggleJointBone2dNodeBind by lazy {
+        @JvmField
+        val setJiggleJointBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_bone2d_node", SET_JIGGLE_JOINT_BONE2D_NODE_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_BONE2D_NODE_HASH = 408788394L
-        private val getJiggleJointBone2dNodeBind by lazy {
+        @JvmField
+        val getJiggleJointBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_bone2d_node", GET_JIGGLE_JOINT_BONE2D_NODE_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_BONE_INDEX_HASH = 3937882851L
-        private val setJiggleJointBoneIndexBind by lazy {
+        @JvmField
+        val setJiggleJointBoneIndexBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_bone_index", SET_JIGGLE_JOINT_BONE_INDEX_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_BONE_INDEX_HASH = 923996154L
-        private val getJiggleJointBoneIndexBind by lazy {
+        @JvmField
+        val getJiggleJointBoneIndexBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_bone_index", GET_JIGGLE_JOINT_BONE_INDEX_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_OVERRIDE_HASH = 300928843L
-        private val setJiggleJointOverrideBind by lazy {
+        @JvmField
+        val setJiggleJointOverrideBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_override", SET_JIGGLE_JOINT_OVERRIDE_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_OVERRIDE_HASH = 1116898809L
-        private val getJiggleJointOverrideBind by lazy {
+        @JvmField
+        val getJiggleJointOverrideBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_override", GET_JIGGLE_JOINT_OVERRIDE_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_STIFFNESS_HASH = 1602489585L
-        private val setJiggleJointStiffnessBind by lazy {
+        @JvmField
+        val setJiggleJointStiffnessBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_stiffness", SET_JIGGLE_JOINT_STIFFNESS_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_STIFFNESS_HASH = 2339986948L
-        private val getJiggleJointStiffnessBind by lazy {
+        @JvmField
+        val getJiggleJointStiffnessBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_stiffness", GET_JIGGLE_JOINT_STIFFNESS_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_MASS_HASH = 1602489585L
-        private val setJiggleJointMassBind by lazy {
+        @JvmField
+        val setJiggleJointMassBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_mass", SET_JIGGLE_JOINT_MASS_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_MASS_HASH = 2339986948L
-        private val getJiggleJointMassBind by lazy {
+        @JvmField
+        val getJiggleJointMassBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_mass", GET_JIGGLE_JOINT_MASS_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_DAMPING_HASH = 1602489585L
-        private val setJiggleJointDampingBind by lazy {
+        @JvmField
+        val setJiggleJointDampingBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_damping", SET_JIGGLE_JOINT_DAMPING_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_DAMPING_HASH = 2339986948L
-        private val getJiggleJointDampingBind by lazy {
+        @JvmField
+        val getJiggleJointDampingBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_damping", GET_JIGGLE_JOINT_DAMPING_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_USE_GRAVITY_HASH = 300928843L
-        private val setJiggleJointUseGravityBind by lazy {
+        @JvmField
+        val setJiggleJointUseGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_use_gravity", SET_JIGGLE_JOINT_USE_GRAVITY_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_USE_GRAVITY_HASH = 1116898809L
-        private val getJiggleJointUseGravityBind by lazy {
+        @JvmField
+        val getJiggleJointUseGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_use_gravity", GET_JIGGLE_JOINT_USE_GRAVITY_HASH)
-        }
 
         private const val SET_JIGGLE_JOINT_GRAVITY_HASH = 163021252L
-        private val setJiggleJointGravityBind by lazy {
+        @JvmField
+        val setJiggleJointGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "set_jiggle_joint_gravity", SET_JIGGLE_JOINT_GRAVITY_HASH)
-        }
 
         private const val GET_JIGGLE_JOINT_GRAVITY_HASH = 2299179447L
-        private val getJiggleJointGravityBind by lazy {
+        @JvmField
+        val getJiggleJointGravityBind =
             ObjectCalls.getMethodBind("SkeletonModification2DJiggle", "get_jiggle_joint_gravity", GET_JIGGLE_JOINT_GRAVITY_HASH)
-        }
     }
 }

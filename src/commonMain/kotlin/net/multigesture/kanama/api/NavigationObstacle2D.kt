@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -62,7 +63,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_avoidance_enabled
      */
     fun setAvoidanceEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAvoidanceEnabledBind, segment, enabled)
     }
 
     /**
@@ -80,7 +81,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_avoidance_enabled
      */
     fun getAvoidanceEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAvoidanceEnabledBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -104,7 +105,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -122,7 +123,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -133,7 +134,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityBind, segment, velocity)
     }
 
     /**
@@ -144,7 +145,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_velocity
      */
     fun getVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_vertices
      */
     fun setVertices(vertices: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, segment, vertices)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setVerticesBind, segment, vertices)
     }
 
     /**
@@ -168,7 +169,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_vertices
      */
     fun getVertices(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getVerticesBind, segment)
     }
 
     /**
@@ -178,7 +179,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_avoidance_layers
      */
     fun setAvoidanceLayers(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, segment, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setAvoidanceLayersBind, segment, layers)
     }
 
     /**
@@ -188,7 +189,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_avoidance_layers
      */
     fun getAvoidanceLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getAvoidanceLayersBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_avoidance_layer_value
      */
     fun setAvoidanceLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAvoidanceLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -208,7 +209,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_avoidance_layer_value
      */
     fun getAvoidanceLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getAvoidanceLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -218,7 +219,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_affect_navigation_mesh
      */
     fun setAffectNavigationMesh(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAffectNavigationMeshBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAffectNavigationMeshBind, segment, enabled)
     }
 
     /**
@@ -228,7 +229,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_affect_navigation_mesh
      */
     fun getAffectNavigationMesh(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAffectNavigationMeshBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAffectNavigationMeshBind, segment)
     }
 
     /**
@@ -240,7 +241,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.set_carve_navigation_mesh
      */
     fun setCarveNavigationMesh(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCarveNavigationMeshBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCarveNavigationMeshBind, segment, enabled)
     }
 
     /**
@@ -252,7 +253,7 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationObstacle2D.get_carve_navigation_mesh
      */
     fun getCarveNavigationMesh(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCarveNavigationMeshBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCarveNavigationMeshBind, segment)
     }
 
     companion object {
@@ -262,100 +263,102 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationObstacle2D? =
             if (handle.address() == 0L) null else NavigationObstacle2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_rid", GET_RID_HASH)
-        }
 
         private const val SET_AVOIDANCE_ENABLED_HASH = 2586408642L
-        private val setAvoidanceEnabledBind by lazy {
+        @JvmField
+        val setAvoidanceEnabledBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_avoidance_enabled", SET_AVOIDANCE_ENABLED_HASH)
-        }
 
         private const val GET_AVOIDANCE_ENABLED_HASH = 36873697L
-        private val getAvoidanceEnabledBind by lazy {
+        @JvmField
+        val getAvoidanceEnabledBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_avoidance_enabled", GET_AVOIDANCE_ENABLED_HASH)
-        }
 
         private const val SET_NAVIGATION_MAP_HASH = 2722037293L
-        private val setNavigationMapBind by lazy {
+        @JvmField
+        val setNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_navigation_map", SET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_VELOCITY_HASH = 743155724L
-        private val setVelocityBind by lazy {
+        @JvmField
+        val setVelocityBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_velocity", SET_VELOCITY_HASH)
-        }
 
         private const val GET_VELOCITY_HASH = 3341600327L
-        private val getVelocityBind by lazy {
+        @JvmField
+        val getVelocityBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_velocity", GET_VELOCITY_HASH)
-        }
 
         private const val SET_VERTICES_HASH = 1509147220L
-        private val setVerticesBind by lazy {
+        @JvmField
+        val setVerticesBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_vertices", SET_VERTICES_HASH)
-        }
 
         private const val GET_VERTICES_HASH = 2961356807L
-        private val getVerticesBind by lazy {
+        @JvmField
+        val getVerticesBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_vertices", GET_VERTICES_HASH)
-        }
 
         private const val SET_AVOIDANCE_LAYERS_HASH = 1286410249L
-        private val setAvoidanceLayersBind by lazy {
+        @JvmField
+        val setAvoidanceLayersBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_avoidance_layers", SET_AVOIDANCE_LAYERS_HASH)
-        }
 
         private const val GET_AVOIDANCE_LAYERS_HASH = 3905245786L
-        private val getAvoidanceLayersBind by lazy {
+        @JvmField
+        val getAvoidanceLayersBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_avoidance_layers", GET_AVOIDANCE_LAYERS_HASH)
-        }
 
         private const val SET_AVOIDANCE_LAYER_VALUE_HASH = 300928843L
-        private val setAvoidanceLayerValueBind by lazy {
+        @JvmField
+        val setAvoidanceLayerValueBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_avoidance_layer_value", SET_AVOIDANCE_LAYER_VALUE_HASH)
-        }
 
         private const val GET_AVOIDANCE_LAYER_VALUE_HASH = 1116898809L
-        private val getAvoidanceLayerValueBind by lazy {
+        @JvmField
+        val getAvoidanceLayerValueBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_avoidance_layer_value", GET_AVOIDANCE_LAYER_VALUE_HASH)
-        }
 
         private const val SET_AFFECT_NAVIGATION_MESH_HASH = 2586408642L
-        private val setAffectNavigationMeshBind by lazy {
+        @JvmField
+        val setAffectNavigationMeshBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_affect_navigation_mesh", SET_AFFECT_NAVIGATION_MESH_HASH)
-        }
 
         private const val GET_AFFECT_NAVIGATION_MESH_HASH = 36873697L
-        private val getAffectNavigationMeshBind by lazy {
+        @JvmField
+        val getAffectNavigationMeshBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_affect_navigation_mesh", GET_AFFECT_NAVIGATION_MESH_HASH)
-        }
 
         private const val SET_CARVE_NAVIGATION_MESH_HASH = 2586408642L
-        private val setCarveNavigationMeshBind by lazy {
+        @JvmField
+        val setCarveNavigationMeshBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "set_carve_navigation_mesh", SET_CARVE_NAVIGATION_MESH_HASH)
-        }
 
         private const val GET_CARVE_NAVIGATION_MESH_HASH = 36873697L
-        private val getCarveNavigationMeshBind by lazy {
+        @JvmField
+        val getCarveNavigationMeshBind =
             ObjectCalls.getMethodBind("NavigationObstacle2D", "get_carve_navigation_mesh", GET_CARVE_NAVIGATION_MESH_HASH)
-        }
     }
 }

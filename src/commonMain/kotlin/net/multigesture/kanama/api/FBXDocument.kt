@@ -20,7 +20,5 @@ class FBXDocument(handle: GodotHandle) : GLTFDocument(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FBXDocument? =
             if (handle.address() == 0L) null else FBXDocument(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

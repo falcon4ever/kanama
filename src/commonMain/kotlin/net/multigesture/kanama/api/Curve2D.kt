@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -32,7 +33,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
     }
 
     /**
@@ -42,7 +43,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPointCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPointCountBind, segment, count)
     }
 
     /**
@@ -57,7 +58,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0.0, 0.0), out: Vector2 = Vector2(0.0, 0.0), index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, segment, position, inValue, out, index)
+        ObjectCalls.ptrcallWithThreeVector2AndIntArg(Binds.addPointBind, segment, position, inValue, out, index)
     }
 
     /**
@@ -68,7 +69,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointPosition(idx: Int, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, segment, idx, position)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointPositionBind, segment, idx, position)
     }
 
     /**
@@ -79,7 +80,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointPosition(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, idx)
     }
 
     /**
@@ -90,7 +91,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointIn(idx: Int, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointInBind, segment, idx, position)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointInBind, segment, idx, position)
     }
 
     /**
@@ -102,7 +103,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointIn(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointInBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointInBind, segment, idx)
     }
 
     /**
@@ -113,7 +114,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointOut(idx: Int, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointOutBind, segment, idx, position)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointOutBind, segment, idx, position)
     }
 
     /**
@@ -125,7 +126,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointOut(idx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointOutBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointOutBind, segment, idx)
     }
 
     /**
@@ -135,7 +136,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun removePoint(idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, idx)
     }
 
     /**
@@ -145,7 +146,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun clearPoints() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPointsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)
     }
 
     /**
@@ -159,7 +160,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(idx: Int, t: Double): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(sampleBind, segment, idx, t)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetVector2(Binds.sampleBind, segment, idx, t)
     }
 
     /**
@@ -170,7 +171,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun samplef(fofs: Double): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetVector2(samplefBind, segment, fofs)
+        return ObjectCalls.ptrcallWithDoubleArgRetVector2(Binds.samplefBind, segment, fofs)
     }
 
     /**
@@ -183,7 +184,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setBakeInterval(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBakeIntervalBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeIntervalBind, segment, distance)
     }
 
     /**
@@ -196,7 +197,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakeInterval(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeIntervalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeIntervalBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakedLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakedLengthBind, segment)
     }
 
     /**
@@ -221,7 +222,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBaked(offset: Double = 0.0, cubic: Boolean = false): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(sampleBakedBind, segment, offset, cubic)
+        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetVector2(Binds.sampleBakedBind, segment, offset, cubic)
     }
 
     /**
@@ -234,7 +235,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBakedWithRotation(offset: Double = 0.0, cubic: Boolean = false): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(sampleBakedWithRotationBind, segment, offset, cubic)
+        return ObjectCalls.ptrcallWithDoubleAndBoolArgRetTransform2D(Binds.sampleBakedWithRotationBind, segment, offset, cubic)
     }
 
     /**
@@ -244,7 +245,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakedPoints(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getBakedPointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getBakedPointsBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getClosestPoint(toPoint: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPointBind, segment, toPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPointBind, segment, toPoint)
     }
 
     /**
@@ -266,7 +267,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getClosestOffset(toPoint: Vector2): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getClosestOffsetBind, segment, toPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getClosestOffsetBind, segment, toPoint)
     }
 
     /**
@@ -283,7 +284,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun tessellate(maxStages: Int = 5, toleranceDegrees: Double = 4.0): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(tessellateBind, segment, maxStages, toleranceDegrees)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(Binds.tessellateBind, segment, maxStages, toleranceDegrees)
     }
 
     /**
@@ -297,7 +298,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      */
     fun tessellateEvenLength(maxStages: Int = 5, toleranceLength: Double = 20.0): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(tessellateEvenLengthBind, segment, maxStages, toleranceLength)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetPackedVector2List(Binds.tessellateEvenLengthBind, segment, maxStages, toleranceLength)
     }
 
     companion object {
@@ -310,120 +311,122 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Curve2D? =
             if (handle.address() == 0L) null else Curve2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_POINT_COUNT_HASH = 3905245786L
-        private val getPointCountBind by lazy {
+        @JvmField
+        val getPointCountBind =
             ObjectCalls.getMethodBind("Curve2D", "get_point_count", GET_POINT_COUNT_HASH)
-        }
 
         private const val SET_POINT_COUNT_HASH = 1286410249L
-        private val setPointCountBind by lazy {
+        @JvmField
+        val setPointCountBind =
             ObjectCalls.getMethodBind("Curve2D", "set_point_count", SET_POINT_COUNT_HASH)
-        }
 
         private const val ADD_POINT_HASH = 4175465202L
-        private val addPointBind by lazy {
+        @JvmField
+        val addPointBind =
             ObjectCalls.getMethodBind("Curve2D", "add_point", ADD_POINT_HASH)
-        }
 
         private const val SET_POINT_POSITION_HASH = 163021252L
-        private val setPointPositionBind by lazy {
+        @JvmField
+        val setPointPositionBind =
             ObjectCalls.getMethodBind("Curve2D", "set_point_position", SET_POINT_POSITION_HASH)
-        }
 
         private const val GET_POINT_POSITION_HASH = 2299179447L
-        private val getPointPositionBind by lazy {
+        @JvmField
+        val getPointPositionBind =
             ObjectCalls.getMethodBind("Curve2D", "get_point_position", GET_POINT_POSITION_HASH)
-        }
 
         private const val SET_POINT_IN_HASH = 163021252L
-        private val setPointInBind by lazy {
+        @JvmField
+        val setPointInBind =
             ObjectCalls.getMethodBind("Curve2D", "set_point_in", SET_POINT_IN_HASH)
-        }
 
         private const val GET_POINT_IN_HASH = 2299179447L
-        private val getPointInBind by lazy {
+        @JvmField
+        val getPointInBind =
             ObjectCalls.getMethodBind("Curve2D", "get_point_in", GET_POINT_IN_HASH)
-        }
 
         private const val SET_POINT_OUT_HASH = 163021252L
-        private val setPointOutBind by lazy {
+        @JvmField
+        val setPointOutBind =
             ObjectCalls.getMethodBind("Curve2D", "set_point_out", SET_POINT_OUT_HASH)
-        }
 
         private const val GET_POINT_OUT_HASH = 2299179447L
-        private val getPointOutBind by lazy {
+        @JvmField
+        val getPointOutBind =
             ObjectCalls.getMethodBind("Curve2D", "get_point_out", GET_POINT_OUT_HASH)
-        }
 
         private const val REMOVE_POINT_HASH = 1286410249L
-        private val removePointBind by lazy {
+        @JvmField
+        val removePointBind =
             ObjectCalls.getMethodBind("Curve2D", "remove_point", REMOVE_POINT_HASH)
-        }
 
         private const val CLEAR_POINTS_HASH = 3218959716L
-        private val clearPointsBind by lazy {
+        @JvmField
+        val clearPointsBind =
             ObjectCalls.getMethodBind("Curve2D", "clear_points", CLEAR_POINTS_HASH)
-        }
 
         private const val SAMPLE_HASH = 26514310L
-        private val sampleBind by lazy {
+        @JvmField
+        val sampleBind =
             ObjectCalls.getMethodBind("Curve2D", "sample", SAMPLE_HASH)
-        }
 
         private const val SAMPLEF_HASH = 3588506812L
-        private val samplefBind by lazy {
+        @JvmField
+        val samplefBind =
             ObjectCalls.getMethodBind("Curve2D", "samplef", SAMPLEF_HASH)
-        }
 
         private const val SET_BAKE_INTERVAL_HASH = 373806689L
-        private val setBakeIntervalBind by lazy {
+        @JvmField
+        val setBakeIntervalBind =
             ObjectCalls.getMethodBind("Curve2D", "set_bake_interval", SET_BAKE_INTERVAL_HASH)
-        }
 
         private const val GET_BAKE_INTERVAL_HASH = 1740695150L
-        private val getBakeIntervalBind by lazy {
+        @JvmField
+        val getBakeIntervalBind =
             ObjectCalls.getMethodBind("Curve2D", "get_bake_interval", GET_BAKE_INTERVAL_HASH)
-        }
 
         private const val GET_BAKED_LENGTH_HASH = 1740695150L
-        private val getBakedLengthBind by lazy {
+        @JvmField
+        val getBakedLengthBind =
             ObjectCalls.getMethodBind("Curve2D", "get_baked_length", GET_BAKED_LENGTH_HASH)
-        }
 
         private const val SAMPLE_BAKED_HASH = 3464257706L
-        private val sampleBakedBind by lazy {
+        @JvmField
+        val sampleBakedBind =
             ObjectCalls.getMethodBind("Curve2D", "sample_baked", SAMPLE_BAKED_HASH)
-        }
 
         private const val SAMPLE_BAKED_WITH_ROTATION_HASH = 3296056341L
-        private val sampleBakedWithRotationBind by lazy {
+        @JvmField
+        val sampleBakedWithRotationBind =
             ObjectCalls.getMethodBind("Curve2D", "sample_baked_with_rotation", SAMPLE_BAKED_WITH_ROTATION_HASH)
-        }
 
         private const val GET_BAKED_POINTS_HASH = 2961356807L
-        private val getBakedPointsBind by lazy {
+        @JvmField
+        val getBakedPointsBind =
             ObjectCalls.getMethodBind("Curve2D", "get_baked_points", GET_BAKED_POINTS_HASH)
-        }
 
         private const val GET_CLOSEST_POINT_HASH = 2656412154L
-        private val getClosestPointBind by lazy {
+        @JvmField
+        val getClosestPointBind =
             ObjectCalls.getMethodBind("Curve2D", "get_closest_point", GET_CLOSEST_POINT_HASH)
-        }
 
         private const val GET_CLOSEST_OFFSET_HASH = 2276447920L
-        private val getClosestOffsetBind by lazy {
+        @JvmField
+        val getClosestOffsetBind =
             ObjectCalls.getMethodBind("Curve2D", "get_closest_offset", GET_CLOSEST_OFFSET_HASH)
-        }
 
         private const val TESSELLATE_HASH = 958145977L
-        private val tessellateBind by lazy {
+        @JvmField
+        val tessellateBind =
             ObjectCalls.getMethodBind("Curve2D", "tessellate", TESSELLATE_HASH)
-        }
 
         private const val TESSELLATE_EVEN_LENGTH_HASH = 2319761637L
-        private val tessellateEvenLengthBind by lazy {
+        @JvmField
+        val tessellateEvenLengthBind =
             ObjectCalls.getMethodBind("Curve2D", "tessellate_even_length", TESSELLATE_EVEN_LENGTH_HASH)
-        }
     }
 }

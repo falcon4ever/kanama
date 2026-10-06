@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -28,7 +29,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun addInput(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(addInputBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.addInputBind, segment, name)
     }
 
     /**
@@ -38,7 +39,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun removeInput(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeInputBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeInputBind, segment, index)
     }
 
     /**
@@ -48,7 +49,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun setInputName(input: Int, name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetBool(setInputNameBind, segment, input, name)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetBool(Binds.setInputNameBind, segment, input, name)
     }
 
     /**
@@ -58,7 +59,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getInputName(input: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getInputNameBind, segment, input)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getInputNameBind, segment, input)
     }
 
     /**
@@ -69,7 +70,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getInputCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputCountBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun findInput(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(findInputBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findInputBind, segment, name)
     }
 
     /**
@@ -89,7 +90,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterPath(path: NodePath, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(setFilterPathBind, segment, path, enable)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.setFilterPathBind, segment, path, enable)
     }
 
     /**
@@ -99,7 +100,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun isPathFiltered(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(isPathFilteredBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.isPathFilteredBind, segment, path)
     }
 
     /**
@@ -109,7 +110,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun setFilterEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFilterEnabledBind, segment, enable)
     }
 
     /**
@@ -119,7 +120,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun isFilterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFilterEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFilterEnabledBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getProcessingAnimationTreeInstanceId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessingAnimationTreeInstanceIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessingAnimationTreeInstanceIdBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun isProcessTesting(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessTestingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessTestingBind, segment)
     }
 
     /**
@@ -153,7 +154,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Animation.LoopedFlag = Animation.LoopedFlag.NONE) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, segment, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag.value)
+        ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(Binds.blendAnimationBind, segment, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag.value)
     }
 
     /**
@@ -165,7 +166,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: AnimationNode.FilterAction = AnimationNode.FilterAction.IGNORE, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
+        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(Binds.blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
     }
 
     /**
@@ -177,7 +178,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: AnimationNode.FilterAction = AnimationNode.FilterAction.IGNORE, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
+        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(Binds.blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
     }
 
     /**
@@ -188,7 +189,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun setParameter(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setParameterBind, segment, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setParameterBind, segment, name, value)
     }
 
     /**
@@ -199,7 +200,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun getParameter(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getParameterBind, segment, name)
     }
 
     /** Signal `tree_changed()`; see [TypedSignal]. */
@@ -275,90 +276,92 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNode? =
             if (handle.address() == 0L) null else AnimationNode(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_INPUT_HASH = 2323990056L
-        private val addInputBind by lazy {
+        @JvmField
+        val addInputBind =
             ObjectCalls.getMethodBind("AnimationNode", "add_input", ADD_INPUT_HASH)
-        }
 
         private const val REMOVE_INPUT_HASH = 1286410249L
-        private val removeInputBind by lazy {
+        @JvmField
+        val removeInputBind =
             ObjectCalls.getMethodBind("AnimationNode", "remove_input", REMOVE_INPUT_HASH)
-        }
 
         private const val SET_INPUT_NAME_HASH = 215573526L
-        private val setInputNameBind by lazy {
+        @JvmField
+        val setInputNameBind =
             ObjectCalls.getMethodBind("AnimationNode", "set_input_name", SET_INPUT_NAME_HASH)
-        }
 
         private const val GET_INPUT_NAME_HASH = 844755477L
-        private val getInputNameBind by lazy {
+        @JvmField
+        val getInputNameBind =
             ObjectCalls.getMethodBind("AnimationNode", "get_input_name", GET_INPUT_NAME_HASH)
-        }
 
         private const val GET_INPUT_COUNT_HASH = 3905245786L
-        private val getInputCountBind by lazy {
+        @JvmField
+        val getInputCountBind =
             ObjectCalls.getMethodBind("AnimationNode", "get_input_count", GET_INPUT_COUNT_HASH)
-        }
 
         private const val FIND_INPUT_HASH = 1321353865L
-        private val findInputBind by lazy {
+        @JvmField
+        val findInputBind =
             ObjectCalls.getMethodBind("AnimationNode", "find_input", FIND_INPUT_HASH)
-        }
 
         private const val SET_FILTER_PATH_HASH = 3868023870L
-        private val setFilterPathBind by lazy {
+        @JvmField
+        val setFilterPathBind =
             ObjectCalls.getMethodBind("AnimationNode", "set_filter_path", SET_FILTER_PATH_HASH)
-        }
 
         private const val IS_PATH_FILTERED_HASH = 861721659L
-        private val isPathFilteredBind by lazy {
+        @JvmField
+        val isPathFilteredBind =
             ObjectCalls.getMethodBind("AnimationNode", "is_path_filtered", IS_PATH_FILTERED_HASH)
-        }
 
         private const val SET_FILTER_ENABLED_HASH = 2586408642L
-        private val setFilterEnabledBind by lazy {
+        @JvmField
+        val setFilterEnabledBind =
             ObjectCalls.getMethodBind("AnimationNode", "set_filter_enabled", SET_FILTER_ENABLED_HASH)
-        }
 
         private const val IS_FILTER_ENABLED_HASH = 36873697L
-        private val isFilterEnabledBind by lazy {
+        @JvmField
+        val isFilterEnabledBind =
             ObjectCalls.getMethodBind("AnimationNode", "is_filter_enabled", IS_FILTER_ENABLED_HASH)
-        }
 
         private const val GET_PROCESSING_ANIMATION_TREE_INSTANCE_ID_HASH = 3905245786L
-        private val getProcessingAnimationTreeInstanceIdBind by lazy {
+        @JvmField
+        val getProcessingAnimationTreeInstanceIdBind =
             ObjectCalls.getMethodBind("AnimationNode", "get_processing_animation_tree_instance_id", GET_PROCESSING_ANIMATION_TREE_INSTANCE_ID_HASH)
-        }
 
         private const val IS_PROCESS_TESTING_HASH = 36873697L
-        private val isProcessTestingBind by lazy {
+        @JvmField
+        val isProcessTestingBind =
             ObjectCalls.getMethodBind("AnimationNode", "is_process_testing", IS_PROCESS_TESTING_HASH)
-        }
 
         private const val BLEND_ANIMATION_HASH = 1630801826L
-        private val blendAnimationBind by lazy {
+        @JvmField
+        val blendAnimationBind =
             ObjectCalls.getMethodBind("AnimationNode", "blend_animation", BLEND_ANIMATION_HASH)
-        }
 
         private const val BLEND_NODE_HASH = 1746075988L
-        private val blendNodeBind by lazy {
+        @JvmField
+        val blendNodeBind =
             ObjectCalls.getMethodBind("AnimationNode", "blend_node", BLEND_NODE_HASH)
-        }
 
         private const val BLEND_INPUT_HASH = 1361527350L
-        private val blendInputBind by lazy {
+        @JvmField
+        val blendInputBind =
             ObjectCalls.getMethodBind("AnimationNode", "blend_input", BLEND_INPUT_HASH)
-        }
 
         private const val SET_PARAMETER_HASH = 3776071444L
-        private val setParameterBind by lazy {
+        @JvmField
+        val setParameterBind =
             ObjectCalls.getMethodBind("AnimationNode", "set_parameter", SET_PARAMETER_HASH)
-        }
 
         private const val GET_PARAMETER_HASH = 2760726917L
-        private val getParameterBind by lazy {
+        @JvmField
+        val getParameterBind =
             ObjectCalls.getMethodBind("AnimationNode", "get_parameter", GET_PARAMETER_HASH)
-        }
     }
 }

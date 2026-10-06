@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -55,7 +56,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_sprite_frames
      */
     fun setSpriteFrames(spriteFrames: SpriteFrames?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSpriteFramesBind, segment, listOf(spriteFrames?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -65,7 +66,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_sprite_frames
      */
     fun getSpriteFrames(): SpriteFrames? {
-        return SpriteFrames.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
+        return SpriteFrames.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpriteFramesBind, segment))
     }
 
     /**
@@ -75,7 +76,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_animation
      */
     fun setAnimation(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAnimationBind, segment, name)
     }
 
     /**
@@ -85,7 +86,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_animation
      */
     fun getAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAnimationBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_autoplay
      */
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAutoplayBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAutoplayBind, segment, name)
     }
 
     /**
@@ -103,7 +104,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_autoplay
      */
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAutoplayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAutoplayBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.play
      */
     fun play(name: String = "", customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(playBind, segment, name, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleBoolArgs(Binds.playBind, segment, name, customSpeed, fromEnd)
     }
 
     /**
@@ -135,7 +136,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.play_backwards
      */
     fun playBackwards(name: String = "") {
-        ObjectCalls.ptrcallWithStringNameArg(playBackwardsBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.playBackwardsBind, segment, name)
     }
 
     /**
@@ -146,7 +147,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pauseBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -166,7 +167,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFrameBind, segment, frame)
     }
 
     /**
@@ -176,7 +177,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameBind, segment)
     }
 
     /**
@@ -186,7 +187,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_frame_progress
      */
     fun setFrameProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrameProgressBind, segment, progress)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrameProgressBind, segment, progress)
     }
 
     /**
@@ -196,7 +197,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_frame_progress
      */
     fun getFrameProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrameProgressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrameProgressBind, segment)
     }
 
     /**
@@ -206,7 +207,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_frame_and_progress
      */
     fun setFrameAndProgress(frame: Int, progress: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameAndProgressBind, segment, frame, progress)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setFrameAndProgressBind, segment, frame, progress)
     }
 
     /**
@@ -218,7 +219,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.set_speed_scale
      */
     fun setSpeedScale(speedScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speedScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, speedScale)
     }
 
     /**
@@ -230,7 +231,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -241,7 +242,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_playing_speed
      */
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPlayingSpeedBind, segment)
     }
 
     /** Signal `sprite_frames_changed()`; see [TypedSignal]. */
@@ -284,100 +285,102 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatedSprite3D? =
             if (handle.address() == 0L) null else AnimatedSprite3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SPRITE_FRAMES_HASH = 905781144L
-        private val setSpriteFramesBind by lazy {
+        @JvmField
+        val setSpriteFramesBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_sprite_frames", SET_SPRITE_FRAMES_HASH)
-        }
 
         private const val GET_SPRITE_FRAMES_HASH = 3804851214L
-        private val getSpriteFramesBind by lazy {
+        @JvmField
+        val getSpriteFramesBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_sprite_frames", GET_SPRITE_FRAMES_HASH)
-        }
 
         private const val SET_ANIMATION_HASH = 3304788590L
-        private val setAnimationBind by lazy {
+        @JvmField
+        val setAnimationBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_animation", SET_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_HASH = 2002593661L
-        private val getAnimationBind by lazy {
+        @JvmField
+        val getAnimationBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_animation", GET_ANIMATION_HASH)
-        }
 
         private const val SET_AUTOPLAY_HASH = 83702148L
-        private val setAutoplayBind by lazy {
+        @JvmField
+        val setAutoplayBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_autoplay", SET_AUTOPLAY_HASH)
-        }
 
         private const val GET_AUTOPLAY_HASH = 201670096L
-        private val getAutoplayBind by lazy {
+        @JvmField
+        val getAutoplayBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_autoplay", GET_AUTOPLAY_HASH)
-        }
 
         private const val IS_PLAYING_HASH = 36873697L
-        private val isPlayingBind by lazy {
+        @JvmField
+        val isPlayingBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "is_playing", IS_PLAYING_HASH)
-        }
 
         private const val PLAY_HASH = 3269405555L
-        private val playBind by lazy {
+        @JvmField
+        val playBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "play", PLAY_HASH)
-        }
 
         private const val PLAY_BACKWARDS_HASH = 3323268493L
-        private val playBackwardsBind by lazy {
+        @JvmField
+        val playBackwardsBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "play_backwards", PLAY_BACKWARDS_HASH)
-        }
 
         private const val PAUSE_HASH = 3218959716L
-        private val pauseBind by lazy {
+        @JvmField
+        val pauseBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "pause", PAUSE_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "stop", STOP_HASH)
-        }
 
         private const val SET_FRAME_HASH = 1286410249L
-        private val setFrameBind by lazy {
+        @JvmField
+        val setFrameBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_frame", SET_FRAME_HASH)
-        }
 
         private const val GET_FRAME_HASH = 3905245786L
-        private val getFrameBind by lazy {
+        @JvmField
+        val getFrameBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_frame", GET_FRAME_HASH)
-        }
 
         private const val SET_FRAME_PROGRESS_HASH = 373806689L
-        private val setFrameProgressBind by lazy {
+        @JvmField
+        val setFrameProgressBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_frame_progress", SET_FRAME_PROGRESS_HASH)
-        }
 
         private const val GET_FRAME_PROGRESS_HASH = 1740695150L
-        private val getFrameProgressBind by lazy {
+        @JvmField
+        val getFrameProgressBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_frame_progress", GET_FRAME_PROGRESS_HASH)
-        }
 
         private const val SET_FRAME_AND_PROGRESS_HASH = 1602489585L
-        private val setFrameAndProgressBind by lazy {
+        @JvmField
+        val setFrameAndProgressBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_frame_and_progress", SET_FRAME_AND_PROGRESS_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_PLAYING_SPEED_HASH = 1740695150L
-        private val getPlayingSpeedBind by lazy {
+        @JvmField
+        val getPlayingSpeedBind =
             ObjectCalls.getMethodBind("AnimatedSprite3D", "get_playing_speed", GET_PLAYING_SPEED_HASH)
-        }
     }
 }

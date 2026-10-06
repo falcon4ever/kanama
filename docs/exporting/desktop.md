@@ -128,6 +128,90 @@ kit or store addon, clear quarantine on the project copy you trust:
 xattr -dr com.apple.quarantine /absolute/path/to/project
 ```
 
+## JVM Options
+
+The native bootstrap starts the JVM inside Godot's process with only the options
+Kanama needs (classpath, native access, its exit hook, JDWP when enabled); heap
+and GC sizes are HotSpot's defaults. Your own options come from three places,
+applied in this order, so a later one wins:
+
+1. `kanama-jvm-options.txt` next to `kanama.jar` — how an **exported game**
+   carries them, since a player sets no environment variable and the export has
+   no `project.godot` on disk. `scripts/export_game_assemble.sh` writes it from
+   the project setting below (or from `--jvm-options "…"`); lines starting with
+   `#` are comments.
+2. The project setting **`kanama/jvm/options`** (listed in Project Settings once
+   the `kanama_tools` plugin is enabled, or `[kanama]` `jvm/options="…"` in
+   `project.godot`) — editor and source-tree runs. Restart the game after
+   changing it.
+3. The `KANAMA_JVM_OPTIONS` environment variable — one-off runs.
+
+Options are separated by whitespace and may quote a part with `"…"` or `'…'`, as
+in `JAVA_TOOL_OPTIONS`: `-Dgame.title="My Game"`, or a path with spaces. A word
+that does not start with `-` is reported and skipped; more than 64 options in all
+are reported and the rest dropped.
+
+```sh
+KANAMA_JVM_OPTIONS="-XX:MaxNewSize=128m -Xlog:gc" godot --path my_game
+```
+
+They reach the JVM as JNI options, which HotSpot treats exactly like
+command-line options. `JAVA_TOOL_OPTIONS` works as for any JVM, with one HotSpot
+rule to know: the JVM reads it as environment options, and G1 sizes its young
+generation only from command-line ones, so a `-XX:MaxNewSize` or `-XX:NewSize`
+there is silently discarded. Use one of the three above for those (`-Xmn` works
+anywhere).
+
+### Slow frames after a large spawn
+
+After a game creates many script objects at once (a level load, 10,000 Bunnymark
+sprites), frames that walk those objects can run ~20–30 % slower until the next
+young garbage collection, and with HotSpot's defaults that collection can be
+seconds away. The cause is memory layout: the new objects sit in eden interleaved
+with the garbage the spawn produced (~2–6 KB per Bunnymark bunny), and G1, seeing
+a small live set and short pauses, grows eden to ~450–600 MiB, so it fills slowly.
+The first young collection copies the survivors together and the frames recover
+at once. Measured on Bunnymark V1 Sprites (100-frame windows after the spawn):
+the phase lasts ~900 frames at ~2,250 µs per frame instead of ~1,750 µs; forcing a
+young collection right after the spawn removes it; adding 4 KB of garbage per
+bunny makes it ~15 % worse.
+
+**Recommendation for games that spawn many objects at once:**
+`-XX:MaxNewSize=128m` (in `kanama/jvm/options` or `KANAMA_JVM_OPTIONS`). Capping
+the young generation makes that collection come after at most 128 MiB of
+allocation (~200 frames in Bunnymark). It is not the default because it costs
+steady-state frame time, and the cost grows with how much the game allocates and
+with how loaded the machine is: ~5× more, shorter young pauses (~1.1 ms instead
+of ~2.6 ms each). On Bunnymark V3, which allocates ~0.9 GB/s, four interleaved
+runs of 10–12 rounds each measured +0.4 % and +0.9 % (load average 4–7) and
++4.6 % and +7.6 % (load 4–6 with other builds running, one spike to 103): plan
+for ~5–8 % on a busy machine in a game that allocates like V3. V2 (~0.5 GB/s)
+measured −1 % to +3.5 %, V1 Sprites +1.5 % to +3.5 %. A game that allocates less
+pays less — and, without the cap, waits longer for that first collection.
+
+`-Xmn64m` ends the phase as well, but measured head to head with the 128m cap
+(10 interleaved rounds, load 4–7) it costs as much or more in steady state (V3
++1.4 %, V2 +1.4 %, V1 Sprites −1 % against the cap), runs twice the collections
+and has the worse p99 frames, so the cap is the one recommended.
+
+| Young generation (Bunnymark, 10,000 bunnies) | Frames 100–800 after the spawn vs steady state (V1 Sprites) | Steady state vs G1 default, V3 / V2 / V1 Sprites | Young GCs per second (V3) | Rounds |
+| --- | --- | --- | --- | --- |
+| G1 default | +22–30 % | — | ~1.4 | — |
+| `-XX:MaxNewSize=128m` (recommended for spawn-heavy games) | +1 % | +0.4…+7.6 % / −1…+3.5 % / +1.5…+3.5 % | ~7 | 4 runs of 10–12 |
+| `-Xmn64m` | −1 % | +1 % / +2 % / +3 % | ~14 | 10 |
+| `-XX:MaxNewSize=256m` | +17–24 % | +2.5 % / +1 % / −1 % | ~3.3 | 12 |
+| `-XX:MaxNewSize=64m` | 0 % | +3 % / −5 % / +1.5 % | ~15 | 4 |
+| `-Xms64m` | +1 % | +3 % / −2 % / +3 % | ~6 (falling as the heap grows) | 4 |
+
+Apple M1 Max, editor binary, median frame time after a 1,500–3,000-frame
+warm-up, each option interleaved with the default in the same rounds on a
+machine shared with other builds; at 4 rounds ±3 % is noise. `-Xms64m` ends the
+phase only while the heap is small: G1 grows the heap (and eden with it, to
+~300 MiB in V3) as the game runs, so a later spawn is slow again. ZGC and
+generational Shenandoah were dropped after one screening run each (Shenandoah:
+V3 frames ~2× slower; ZGC: the slow phase lasted ~2,000 frames and V3 had 70 ms
+p99 frames).
+
 ## Exported Games
 
 The decided end state (issue #102) is **unpack-and-play**: exported desktop
@@ -167,7 +251,8 @@ Evidence, so you can judge how far it has been taken:
 
 An exported game needs four pieces next to each other: the platform bootstrap
 library referenced by `kanama.gdextension` (Godot's export copies it),
-`kanama.jar`, the project `kanama-scripts.jar`, and the `runtime/` image.
+`kanama.jar`, the project `kanama-scripts.jar`, and the `runtime/` image — plus
+`kanama-jvm-options.txt` when the project sets [JVM options](#jvm-options).
 Assembly is three steps:
 
 ```sh

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_data_dir
      */
     fun getDataDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDataDirBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDataDirBind, segment)
     }
 
     /**
@@ -27,7 +28,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_config_dir
      */
     fun getConfigDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getConfigDirBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConfigDirBind, segment)
     }
 
     /**
@@ -38,7 +39,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_cache_dir
      */
     fun getCacheDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCacheDirBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCacheDirBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.is_self_contained
      */
     fun isSelfContained(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelfContainedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelfContainedBind, segment)
     }
 
     /**
@@ -69,7 +70,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_self_contained_file
      */
     fun getSelfContainedFile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelfContainedFileBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSelfContainedFileBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorPaths.get_project_settings_dir
      */
     fun getProjectSettingsDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getProjectSettingsDirBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getProjectSettingsDirBind, segment)
     }
 
     companion object {
@@ -90,35 +91,37 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): EditorPaths? =
             if (handle.address() == 0L) null else EditorPaths(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_DATA_DIR_HASH = 201670096L
-        private val getDataDirBind by lazy {
+        @JvmField
+        val getDataDirBind =
             ObjectCalls.getMethodBind("EditorPaths", "get_data_dir", GET_DATA_DIR_HASH)
-        }
 
         private const val GET_CONFIG_DIR_HASH = 201670096L
-        private val getConfigDirBind by lazy {
+        @JvmField
+        val getConfigDirBind =
             ObjectCalls.getMethodBind("EditorPaths", "get_config_dir", GET_CONFIG_DIR_HASH)
-        }
 
         private const val GET_CACHE_DIR_HASH = 201670096L
-        private val getCacheDirBind by lazy {
+        @JvmField
+        val getCacheDirBind =
             ObjectCalls.getMethodBind("EditorPaths", "get_cache_dir", GET_CACHE_DIR_HASH)
-        }
 
         private const val IS_SELF_CONTAINED_HASH = 36873697L
-        private val isSelfContainedBind by lazy {
+        @JvmField
+        val isSelfContainedBind =
             ObjectCalls.getMethodBind("EditorPaths", "is_self_contained", IS_SELF_CONTAINED_HASH)
-        }
 
         private const val GET_SELF_CONTAINED_FILE_HASH = 201670096L
-        private val getSelfContainedFileBind by lazy {
+        @JvmField
+        val getSelfContainedFileBind =
             ObjectCalls.getMethodBind("EditorPaths", "get_self_contained_file", GET_SELF_CONTAINED_FILE_HASH)
-        }
 
         private const val GET_PROJECT_SETTINGS_DIR_HASH = 201670096L
-        private val getProjectSettingsDirBind by lazy {
+        @JvmField
+        val getProjectSettingsDirBind =
             ObjectCalls.getMethodBind("EditorPaths", "get_project_settings_dir", GET_PROJECT_SETTINGS_DIR_HASH)
-        }
     }
 }

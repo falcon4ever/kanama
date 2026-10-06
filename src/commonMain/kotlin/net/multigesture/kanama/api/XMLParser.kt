@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun read(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(readBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.readBind, segment))
     }
 
     /**
@@ -28,7 +29,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeType(): XMLParser.NodeType {
         checkOpen()
-        return XMLParser.NodeType(ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, segment))
+        return XMLParser.NodeType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNodeTypeBind, segment))
     }
 
     /**
@@ -40,7 +41,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNodeNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNodeNameBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeData(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNodeDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNodeDataBind, segment)
     }
 
     /**
@@ -62,7 +63,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNodeOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getNodeOffsetBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttributeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAttributeCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAttributeCountBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttributeName(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeNameBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getAttributeNameBind, segment, idx)
     }
 
     /**
@@ -94,7 +95,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttributeValue(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getAttributeValueBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getAttributeValueBind, segment, idx)
     }
 
     /**
@@ -104,7 +105,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasAttribute(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasAttributeBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasAttributeBind, segment, name)
     }
 
     /**
@@ -115,7 +116,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNamedAttributeValue(name: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getNamedAttributeValueBind, segment, name)
     }
 
     /**
@@ -126,7 +127,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNamedAttributeValueSafe(name: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getNamedAttributeValueSafeBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getNamedAttributeValueSafeBind, segment, name)
     }
 
     /**
@@ -136,7 +137,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
     }
 
     /**
@@ -146,7 +147,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCurrentLine(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentLineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentLineBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun skipSection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(skipSectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.skipSectionBind, segment)
     }
 
     /**
@@ -168,7 +169,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun seek(position: Long): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(seekBind, segment, position))
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.seekBind, segment, position))
     }
 
     /**
@@ -178,7 +179,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun open(file: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, file))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.openBind, segment, file))
     }
 
     /**
@@ -188,7 +189,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      */
     fun openBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.openBufferBind, segment, buffer))
     }
 
     /**
@@ -255,90 +256,92 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XMLParser? =
             if (handle.address() == 0L) null else XMLParser(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val READ_HASH = 166280745L
-        private val readBind by lazy {
+        @JvmField
+        val readBind =
             ObjectCalls.getMethodBind("XMLParser", "read", READ_HASH)
-        }
 
         private const val GET_NODE_TYPE_HASH = 2984359541L
-        private val getNodeTypeBind by lazy {
+        @JvmField
+        val getNodeTypeBind =
             ObjectCalls.getMethodBind("XMLParser", "get_node_type", GET_NODE_TYPE_HASH)
-        }
 
         private const val GET_NODE_NAME_HASH = 201670096L
-        private val getNodeNameBind by lazy {
+        @JvmField
+        val getNodeNameBind =
             ObjectCalls.getMethodBind("XMLParser", "get_node_name", GET_NODE_NAME_HASH)
-        }
 
         private const val GET_NODE_DATA_HASH = 201670096L
-        private val getNodeDataBind by lazy {
+        @JvmField
+        val getNodeDataBind =
             ObjectCalls.getMethodBind("XMLParser", "get_node_data", GET_NODE_DATA_HASH)
-        }
 
         private const val GET_NODE_OFFSET_HASH = 3905245786L
-        private val getNodeOffsetBind by lazy {
+        @JvmField
+        val getNodeOffsetBind =
             ObjectCalls.getMethodBind("XMLParser", "get_node_offset", GET_NODE_OFFSET_HASH)
-        }
 
         private const val GET_ATTRIBUTE_COUNT_HASH = 3905245786L
-        private val getAttributeCountBind by lazy {
+        @JvmField
+        val getAttributeCountBind =
             ObjectCalls.getMethodBind("XMLParser", "get_attribute_count", GET_ATTRIBUTE_COUNT_HASH)
-        }
 
         private const val GET_ATTRIBUTE_NAME_HASH = 844755477L
-        private val getAttributeNameBind by lazy {
+        @JvmField
+        val getAttributeNameBind =
             ObjectCalls.getMethodBind("XMLParser", "get_attribute_name", GET_ATTRIBUTE_NAME_HASH)
-        }
 
         private const val GET_ATTRIBUTE_VALUE_HASH = 844755477L
-        private val getAttributeValueBind by lazy {
+        @JvmField
+        val getAttributeValueBind =
             ObjectCalls.getMethodBind("XMLParser", "get_attribute_value", GET_ATTRIBUTE_VALUE_HASH)
-        }
 
         private const val HAS_ATTRIBUTE_HASH = 3927539163L
-        private val hasAttributeBind by lazy {
+        @JvmField
+        val hasAttributeBind =
             ObjectCalls.getMethodBind("XMLParser", "has_attribute", HAS_ATTRIBUTE_HASH)
-        }
 
         private const val GET_NAMED_ATTRIBUTE_VALUE_HASH = 3135753539L
-        private val getNamedAttributeValueBind by lazy {
+        @JvmField
+        val getNamedAttributeValueBind =
             ObjectCalls.getMethodBind("XMLParser", "get_named_attribute_value", GET_NAMED_ATTRIBUTE_VALUE_HASH)
-        }
 
         private const val GET_NAMED_ATTRIBUTE_VALUE_SAFE_HASH = 3135753539L
-        private val getNamedAttributeValueSafeBind by lazy {
+        @JvmField
+        val getNamedAttributeValueSafeBind =
             ObjectCalls.getMethodBind("XMLParser", "get_named_attribute_value_safe", GET_NAMED_ATTRIBUTE_VALUE_SAFE_HASH)
-        }
 
         private const val IS_EMPTY_HASH = 36873697L
-        private val isEmptyBind by lazy {
+        @JvmField
+        val isEmptyBind =
             ObjectCalls.getMethodBind("XMLParser", "is_empty", IS_EMPTY_HASH)
-        }
 
         private const val GET_CURRENT_LINE_HASH = 3905245786L
-        private val getCurrentLineBind by lazy {
+        @JvmField
+        val getCurrentLineBind =
             ObjectCalls.getMethodBind("XMLParser", "get_current_line", GET_CURRENT_LINE_HASH)
-        }
 
         private const val SKIP_SECTION_HASH = 3218959716L
-        private val skipSectionBind by lazy {
+        @JvmField
+        val skipSectionBind =
             ObjectCalls.getMethodBind("XMLParser", "skip_section", SKIP_SECTION_HASH)
-        }
 
         private const val SEEK_HASH = 844576869L
-        private val seekBind by lazy {
+        @JvmField
+        val seekBind =
             ObjectCalls.getMethodBind("XMLParser", "seek", SEEK_HASH)
-        }
 
         private const val OPEN_HASH = 166001499L
-        private val openBind by lazy {
+        @JvmField
+        val openBind =
             ObjectCalls.getMethodBind("XMLParser", "open", OPEN_HASH)
-        }
 
         private const val OPEN_BUFFER_HASH = 680677267L
-        private val openBufferBind by lazy {
+        @JvmField
+        val openBufferBind =
             ObjectCalls.getMethodBind("XMLParser", "open_buffer", OPEN_BUFFER_HASH)
-        }
     }
 }

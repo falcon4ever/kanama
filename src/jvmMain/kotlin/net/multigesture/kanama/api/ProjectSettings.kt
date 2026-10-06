@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,9 +12,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ProjectSettings
  */
 object ProjectSettings {
-    private val singleton: MemorySegment by lazy {
-        ObjectCalls.getSingleton("ProjectSettings")
-    }
+    private inline val singleton: MemorySegment
+        get() = Binds.singleton
 
     /**
      * Returns `true` if a configuration value is present. Note: In order to be be detected, custom
@@ -24,7 +24,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun hasSetting(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasSettingBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasSettingBind, singleton, name)
     }
 
     /**
@@ -34,7 +34,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun setSetting(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringAndVariantArg(setSettingBind, singleton, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(Binds.setSettingBind, singleton, name, value)
     }
 
     /**
@@ -46,7 +46,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun getSetting(name: String, defaultValue: Any? = null): Any? {
-        return ObjectCalls.ptrcallWithStringAndVariantArgRetVariantScalar(getSettingBind, singleton, name, defaultValue)
+        return ObjectCalls.ptrcallWithStringAndVariantArgRetVariantScalar(Binds.getSettingBind, singleton, name, defaultValue)
     }
 
     /**
@@ -56,7 +56,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun getSettingWithOverride(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getSettingWithOverrideBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getSettingWithOverrideBind, singleton, name)
     }
 
     /**
@@ -72,7 +72,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun getGlobalClassList(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getGlobalClassListBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getGlobalClassListBind, singleton)
     }
 
     /**
@@ -83,7 +83,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun getSettingWithOverrideAndCustomFeatures(name: String, features: List<String>): Any? {
-        return ObjectCalls.ptrcallWithStringNamePackedStringListArgRetVariantScalar(getSettingWithOverrideAndCustomFeaturesBind, singleton, name, features)
+        return ObjectCalls.ptrcallWithStringNamePackedStringListArgRetVariantScalar(Binds.getSettingWithOverrideAndCustomFeaturesBind, singleton, name, features)
     }
 
     /**
@@ -93,7 +93,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun setOrder(name: String, position: Int) {
-        ObjectCalls.ptrcallWithStringAndIntArg(setOrderBind, singleton, name, position)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.setOrderBind, singleton, name, position)
     }
 
     /**
@@ -103,7 +103,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun getOrder(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(getOrderBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.getOrderBind, singleton, name)
     }
 
     /**
@@ -115,7 +115,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun setInitialValue(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringAndVariantArg(setInitialValueBind, singleton, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(Binds.setInitialValueBind, singleton, name, value)
     }
 
     /**
@@ -127,7 +127,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun setAsBasic(name: String, basic: Boolean) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(setAsBasicBind, singleton, name, basic)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setAsBasicBind, singleton, name, basic)
     }
 
     /**
@@ -139,7 +139,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun setAsInternal(name: String, internalValue: Boolean) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(setAsInternalBind, singleton, name, internalValue)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setAsInternalBind, singleton, name, internalValue)
     }
 
     /**
@@ -151,7 +151,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun addPropertyInfo(hint: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithDictionaryArg(addPropertyInfoBind, singleton, hint)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.addPropertyInfoBind, singleton, hint)
     }
 
     /**
@@ -163,7 +163,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun setRestartIfChanged(name: String, restart: Boolean) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(setRestartIfChangedBind, singleton, name, restart)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setRestartIfChangedBind, singleton, name, restart)
     }
 
     /**
@@ -173,7 +173,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun clear(name: String) {
-        ObjectCalls.ptrcallWithStringArg(clearBind, singleton, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.clearBind, singleton, name)
     }
 
     /**
@@ -184,7 +184,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun localizePath(path: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(localizePathBind, singleton, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.localizePathBind, singleton, path)
     }
 
     /**
@@ -198,7 +198,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun globalizePath(path: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(globalizePathBind, singleton, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.globalizePathBind, singleton, path)
     }
 
     /**
@@ -211,7 +211,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun save(): GodotError {
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(saveBind, singleton))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.saveBind, singleton))
     }
 
     /**
@@ -227,7 +227,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun loadResourcePack(pack: String, replaceFiles: Boolean = true, offset: Int = 0): Boolean {
-        return ObjectCalls.ptrcallWithStringBoolIntArgsRetBool(loadResourcePackBind, singleton, pack, replaceFiles, offset)
+        return ObjectCalls.ptrcallWithStringBoolIntArgsRetBool(Binds.loadResourcePackBind, singleton, pack, replaceFiles, offset)
     }
 
     /**
@@ -240,7 +240,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun saveCustom(file: String): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveCustomBind, singleton, file))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveCustomBind, singleton, file))
     }
 
     /**
@@ -252,7 +252,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun getChangedSettings(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getChangedSettingsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getChangedSettingsBind, singleton)
     }
 
     /**
@@ -263,7 +263,7 @@ object ProjectSettings {
      */
     @JvmStatic
     fun checkChangedSettingsInGroup(settingPrefix: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(checkChangedSettingsInGroupBind, singleton, settingPrefix)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.checkChangedSettingsInGroupBind, singleton, settingPrefix)
     }
 
     @JvmStatic
@@ -360,108 +360,113 @@ object ProjectSettings {
     internal fun wrap(handle: MemorySegment): ProjectSettings? =
         if (handle.address() == 0L) null else this
 
-    private const val HAS_SETTING_HASH = 3927539163L
-    private val hasSettingBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "has_setting", HAS_SETTING_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("ProjectSettings")
 
-    private const val SET_SETTING_HASH = 402577236L
-    private val setSettingBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "set_setting", SET_SETTING_HASH)
-    }
+        private const val HAS_SETTING_HASH = 3927539163L
+        @JvmField
+        val hasSettingBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "has_setting", HAS_SETTING_HASH)
 
-    private const val GET_SETTING_HASH = 223050753L
-    private val getSettingBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "get_setting", GET_SETTING_HASH)
-    }
+        private const val SET_SETTING_HASH = 402577236L
+        @JvmField
+        val setSettingBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "set_setting", SET_SETTING_HASH)
 
-    private const val GET_SETTING_WITH_OVERRIDE_HASH = 2760726917L
-    private val getSettingWithOverrideBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "get_setting_with_override", GET_SETTING_WITH_OVERRIDE_HASH)
-    }
+        private const val GET_SETTING_HASH = 223050753L
+        @JvmField
+        val getSettingBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "get_setting", GET_SETTING_HASH)
 
-    private const val GET_GLOBAL_CLASS_LIST_HASH = 2915620761L
-    private val getGlobalClassListBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "get_global_class_list", GET_GLOBAL_CLASS_LIST_HASH)
-    }
+        private const val GET_SETTING_WITH_OVERRIDE_HASH = 2760726917L
+        @JvmField
+        val getSettingWithOverrideBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "get_setting_with_override", GET_SETTING_WITH_OVERRIDE_HASH)
 
-    private const val GET_SETTING_WITH_OVERRIDE_AND_CUSTOM_FEATURES_HASH = 2434817427L
-    private val getSettingWithOverrideAndCustomFeaturesBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "get_setting_with_override_and_custom_features", GET_SETTING_WITH_OVERRIDE_AND_CUSTOM_FEATURES_HASH)
-    }
+        private const val GET_GLOBAL_CLASS_LIST_HASH = 2915620761L
+        @JvmField
+        val getGlobalClassListBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "get_global_class_list", GET_GLOBAL_CLASS_LIST_HASH)
 
-    private const val SET_ORDER_HASH = 2956805083L
-    private val setOrderBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "set_order", SET_ORDER_HASH)
-    }
+        private const val GET_SETTING_WITH_OVERRIDE_AND_CUSTOM_FEATURES_HASH = 2434817427L
+        @JvmField
+        val getSettingWithOverrideAndCustomFeaturesBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "get_setting_with_override_and_custom_features", GET_SETTING_WITH_OVERRIDE_AND_CUSTOM_FEATURES_HASH)
 
-    private const val GET_ORDER_HASH = 1321353865L
-    private val getOrderBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "get_order", GET_ORDER_HASH)
-    }
+        private const val SET_ORDER_HASH = 2956805083L
+        @JvmField
+        val setOrderBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "set_order", SET_ORDER_HASH)
 
-    private const val SET_INITIAL_VALUE_HASH = 402577236L
-    private val setInitialValueBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "set_initial_value", SET_INITIAL_VALUE_HASH)
-    }
+        private const val GET_ORDER_HASH = 1321353865L
+        @JvmField
+        val getOrderBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "get_order", GET_ORDER_HASH)
 
-    private const val SET_AS_BASIC_HASH = 2678287736L
-    private val setAsBasicBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "set_as_basic", SET_AS_BASIC_HASH)
-    }
+        private const val SET_INITIAL_VALUE_HASH = 402577236L
+        @JvmField
+        val setInitialValueBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "set_initial_value", SET_INITIAL_VALUE_HASH)
 
-    private const val SET_AS_INTERNAL_HASH = 2678287736L
-    private val setAsInternalBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "set_as_internal", SET_AS_INTERNAL_HASH)
-    }
+        private const val SET_AS_BASIC_HASH = 2678287736L
+        @JvmField
+        val setAsBasicBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "set_as_basic", SET_AS_BASIC_HASH)
 
-    private const val ADD_PROPERTY_INFO_HASH = 4155329257L
-    private val addPropertyInfoBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "add_property_info", ADD_PROPERTY_INFO_HASH)
-    }
+        private const val SET_AS_INTERNAL_HASH = 2678287736L
+        @JvmField
+        val setAsInternalBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "set_as_internal", SET_AS_INTERNAL_HASH)
 
-    private const val SET_RESTART_IF_CHANGED_HASH = 2678287736L
-    private val setRestartIfChangedBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "set_restart_if_changed", SET_RESTART_IF_CHANGED_HASH)
-    }
+        private const val ADD_PROPERTY_INFO_HASH = 4155329257L
+        @JvmField
+        val addPropertyInfoBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "add_property_info", ADD_PROPERTY_INFO_HASH)
 
-    private const val CLEAR_HASH = 83702148L
-    private val clearBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "clear", CLEAR_HASH)
-    }
+        private const val SET_RESTART_IF_CHANGED_HASH = 2678287736L
+        @JvmField
+        val setRestartIfChangedBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "set_restart_if_changed", SET_RESTART_IF_CHANGED_HASH)
 
-    private const val LOCALIZE_PATH_HASH = 3135753539L
-    private val localizePathBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "localize_path", LOCALIZE_PATH_HASH)
-    }
+        private const val CLEAR_HASH = 83702148L
+        @JvmField
+        val clearBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "clear", CLEAR_HASH)
 
-    private const val GLOBALIZE_PATH_HASH = 3135753539L
-    private val globalizePathBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "globalize_path", GLOBALIZE_PATH_HASH)
-    }
+        private const val LOCALIZE_PATH_HASH = 3135753539L
+        @JvmField
+        val localizePathBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "localize_path", LOCALIZE_PATH_HASH)
 
-    private const val SAVE_HASH = 166280745L
-    private val saveBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "save", SAVE_HASH)
-    }
+        private const val GLOBALIZE_PATH_HASH = 3135753539L
+        @JvmField
+        val globalizePathBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "globalize_path", GLOBALIZE_PATH_HASH)
 
-    private const val LOAD_RESOURCE_PACK_HASH = 708980503L
-    private val loadResourcePackBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "load_resource_pack", LOAD_RESOURCE_PACK_HASH)
-    }
+        private const val SAVE_HASH = 166280745L
+        @JvmField
+        val saveBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "save", SAVE_HASH)
 
-    private const val SAVE_CUSTOM_HASH = 166001499L
-    private val saveCustomBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "save_custom", SAVE_CUSTOM_HASH)
-    }
+        private const val LOAD_RESOURCE_PACK_HASH = 708980503L
+        @JvmField
+        val loadResourcePackBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "load_resource_pack", LOAD_RESOURCE_PACK_HASH)
 
-    private const val GET_CHANGED_SETTINGS_HASH = 1139954409L
-    private val getChangedSettingsBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "get_changed_settings", GET_CHANGED_SETTINGS_HASH)
-    }
+        private const val SAVE_CUSTOM_HASH = 166001499L
+        @JvmField
+        val saveCustomBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "save_custom", SAVE_CUSTOM_HASH)
 
-    private const val CHECK_CHANGED_SETTINGS_IN_GROUP_HASH = 3927539163L
-    private val checkChangedSettingsInGroupBind by lazy {
-        ObjectCalls.getMethodBind("ProjectSettings", "check_changed_settings_in_group", CHECK_CHANGED_SETTINGS_IN_GROUP_HASH)
+        private const val GET_CHANGED_SETTINGS_HASH = 1139954409L
+        @JvmField
+        val getChangedSettingsBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "get_changed_settings", GET_CHANGED_SETTINGS_HASH)
+
+        private const val CHECK_CHANGED_SETTINGS_IN_GROUP_HASH = 3927539163L
+        @JvmField
+        val checkChangedSettingsInGroupBind =
+            ObjectCalls.getMethodBind("ProjectSettings", "check_changed_settings_in_group", CHECK_CHANGED_SETTINGS_IN_GROUP_HASH)
     }
 }

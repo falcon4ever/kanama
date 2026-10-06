@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -46,7 +47,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
     /**
@@ -58,7 +59,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_skeleton_path
      */
     fun setSkeletonPath(skeletonPath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSkeletonPathBind, segment, skeletonPath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setSkeletonPathBind, segment, skeletonPath)
     }
 
     /**
@@ -70,7 +71,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skeleton_path
      */
     fun getSkeletonPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getSkeletonPathBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_skin
      */
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -88,7 +89,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skin
      */
     fun getSkin(): Skin? {
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
     }
 
     /**
@@ -99,7 +100,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skin_reference
      */
     fun getSkinReference(): SkinReference? {
-        return SkinReference.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinReferenceBind, segment))
+        return SkinReference.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinReferenceBind, segment))
     }
 
     /**
@@ -109,7 +110,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_surface_override_material_count
      */
     fun getSurfaceOverrideMaterialCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceOverrideMaterialCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceOverrideMaterialCountBind, segment)
     }
 
     /**
@@ -122,7 +123,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_surface_override_material
      */
     fun setSurfaceOverrideMaterial(surface: Int, material: Material?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceOverrideMaterialBind, segment, surface, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSurfaceOverrideMaterialBind, segment, surface, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -135,7 +136,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_surface_override_material
      */
     fun getSurfaceOverrideMaterial(surface: Int): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceOverrideMaterialBind, segment, surface))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSurfaceOverrideMaterialBind, segment, surface))
     }
 
     /**
@@ -148,7 +149,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_active_material
      */
     fun getActiveMaterial(surface: Int): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getActiveMaterialBind, segment, surface))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getActiveMaterialBind, segment, surface))
     }
 
     /**
@@ -158,7 +159,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_trimesh_collision
      */
     fun createTrimeshCollision() {
-        ObjectCalls.ptrcallNoArgs(createTrimeshCollisionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.createTrimeshCollisionBind, segment)
     }
 
     /**
@@ -171,7 +172,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_convex_collision
      */
     fun createConvexCollision(clean: Boolean = true, simplify: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoBoolArgs(createConvexCollisionBind, segment, clean, simplify)
+        ObjectCalls.ptrcallWithTwoBoolArgs(Binds.createConvexCollisionBind, segment, clean, simplify)
     }
 
     /**
@@ -182,7 +183,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_multiple_convex_collisions
      */
     fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings?) {
-        ObjectCalls.ptrcallWithObjectArgs(createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -191,7 +192,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_blend_shape_count
      */
     fun getBlendShapeCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendShapeCountBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.find_blend_shape_by_name
      */
     fun findBlendShapeByName(name: String): Int {
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendShapeByNameBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBlendShapeByNameBind, segment, name)
     }
 
     /**
@@ -211,7 +212,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_blend_shape_value
      */
     fun getBlendShapeValue(blendShapeIdx: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendShapeValueBind, segment, blendShapeIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getBlendShapeValueBind, segment, blendShapeIdx)
     }
 
     /**
@@ -221,7 +222,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_blend_shape_value
      */
     fun setBlendShapeValue(blendShapeIdx: Int, value: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendShapeValueBind, segment, blendShapeIdx, value)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setBlendShapeValueBind, segment, blendShapeIdx, value)
     }
 
     /**
@@ -231,7 +232,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_debug_tangents
      */
     fun createDebugTangents() {
-        ObjectCalls.ptrcallNoArgs(createDebugTangentsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.createDebugTangentsBind, segment)
     }
 
     /**
@@ -244,7 +245,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_blend_shape_mix
      */
     fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -257,7 +258,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_skeleton_pose
      */
     fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -267,110 +268,112 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): MeshInstance3D? =
             if (handle.address() == 0L) null else MeshInstance3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MESH_HASH = 194775623L
-        private val setMeshBind by lazy {
+        @JvmField
+        val setMeshBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "set_mesh", SET_MESH_HASH)
-        }
 
         private const val GET_MESH_HASH = 1808005922L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val SET_SKELETON_PATH_HASH = 1348162250L
-        private val setSkeletonPathBind by lazy {
+        @JvmField
+        val setSkeletonPathBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "set_skeleton_path", SET_SKELETON_PATH_HASH)
-        }
 
         private const val GET_SKELETON_PATH_HASH = 277076166L
-        private val getSkeletonPathBind by lazy {
+        @JvmField
+        val getSkeletonPathBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_skeleton_path", GET_SKELETON_PATH_HASH)
-        }
 
         private const val SET_SKIN_HASH = 3971435618L
-        private val setSkinBind by lazy {
+        @JvmField
+        val setSkinBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "set_skin", SET_SKIN_HASH)
-        }
 
         private const val GET_SKIN_HASH = 2074563878L
-        private val getSkinBind by lazy {
+        @JvmField
+        val getSkinBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_skin", GET_SKIN_HASH)
-        }
 
         private const val GET_SKIN_REFERENCE_HASH = 2060603409L
-        private val getSkinReferenceBind by lazy {
+        @JvmField
+        val getSkinReferenceBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_skin_reference", GET_SKIN_REFERENCE_HASH)
-        }
 
         private const val GET_SURFACE_OVERRIDE_MATERIAL_COUNT_HASH = 3905245786L
-        private val getSurfaceOverrideMaterialCountBind by lazy {
+        @JvmField
+        val getSurfaceOverrideMaterialCountBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_surface_override_material_count", GET_SURFACE_OVERRIDE_MATERIAL_COUNT_HASH)
-        }
 
         private const val SET_SURFACE_OVERRIDE_MATERIAL_HASH = 3671737478L
-        private val setSurfaceOverrideMaterialBind by lazy {
+        @JvmField
+        val setSurfaceOverrideMaterialBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "set_surface_override_material", SET_SURFACE_OVERRIDE_MATERIAL_HASH)
-        }
 
         private const val GET_SURFACE_OVERRIDE_MATERIAL_HASH = 2897466400L
-        private val getSurfaceOverrideMaterialBind by lazy {
+        @JvmField
+        val getSurfaceOverrideMaterialBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_surface_override_material", GET_SURFACE_OVERRIDE_MATERIAL_HASH)
-        }
 
         private const val GET_ACTIVE_MATERIAL_HASH = 2897466400L
-        private val getActiveMaterialBind by lazy {
+        @JvmField
+        val getActiveMaterialBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_active_material", GET_ACTIVE_MATERIAL_HASH)
-        }
 
         private const val CREATE_TRIMESH_COLLISION_HASH = 3218959716L
-        private val createTrimeshCollisionBind by lazy {
+        @JvmField
+        val createTrimeshCollisionBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "create_trimesh_collision", CREATE_TRIMESH_COLLISION_HASH)
-        }
 
         private const val CREATE_CONVEX_COLLISION_HASH = 2751962654L
-        private val createConvexCollisionBind by lazy {
+        @JvmField
+        val createConvexCollisionBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "create_convex_collision", CREATE_CONVEX_COLLISION_HASH)
-        }
 
         private const val CREATE_MULTIPLE_CONVEX_COLLISIONS_HASH = 628789669L
-        private val createMultipleConvexCollisionsBind by lazy {
+        @JvmField
+        val createMultipleConvexCollisionsBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "create_multiple_convex_collisions", CREATE_MULTIPLE_CONVEX_COLLISIONS_HASH)
-        }
 
         private const val GET_BLEND_SHAPE_COUNT_HASH = 3905245786L
-        private val getBlendShapeCountBind by lazy {
+        @JvmField
+        val getBlendShapeCountBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_blend_shape_count", GET_BLEND_SHAPE_COUNT_HASH)
-        }
 
         private const val FIND_BLEND_SHAPE_BY_NAME_HASH = 4150868206L
-        private val findBlendShapeByNameBind by lazy {
+        @JvmField
+        val findBlendShapeByNameBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "find_blend_shape_by_name", FIND_BLEND_SHAPE_BY_NAME_HASH)
-        }
 
         private const val GET_BLEND_SHAPE_VALUE_HASH = 2339986948L
-        private val getBlendShapeValueBind by lazy {
+        @JvmField
+        val getBlendShapeValueBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "get_blend_shape_value", GET_BLEND_SHAPE_VALUE_HASH)
-        }
 
         private const val SET_BLEND_SHAPE_VALUE_HASH = 1602489585L
-        private val setBlendShapeValueBind by lazy {
+        @JvmField
+        val setBlendShapeValueBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "set_blend_shape_value", SET_BLEND_SHAPE_VALUE_HASH)
-        }
 
         private const val CREATE_DEBUG_TANGENTS_HASH = 3218959716L
-        private val createDebugTangentsBind by lazy {
+        @JvmField
+        val createDebugTangentsBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "create_debug_tangents", CREATE_DEBUG_TANGENTS_HASH)
-        }
 
         private const val BAKE_MESH_FROM_CURRENT_BLEND_SHAPE_MIX_HASH = 1457573577L
-        private val bakeMeshFromCurrentBlendShapeMixBind by lazy {
+        @JvmField
+        val bakeMeshFromCurrentBlendShapeMixBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "bake_mesh_from_current_blend_shape_mix", BAKE_MESH_FROM_CURRENT_BLEND_SHAPE_MIX_HASH)
-        }
 
         private const val BAKE_MESH_FROM_CURRENT_SKELETON_POSE_HASH = 1457573577L
-        private val bakeMeshFromCurrentSkeletonPoseBind by lazy {
+        @JvmField
+        val bakeMeshFromCurrentSkeletonPoseBind =
             ObjectCalls.getMethodBind("MeshInstance3D", "bake_mesh_from_current_skeleton_pose", BAKE_MESH_FROM_CURRENT_SKELETON_POSE_HASH)
-        }
     }
 }

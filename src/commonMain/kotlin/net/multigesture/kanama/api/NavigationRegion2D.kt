@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -58,7 +59,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -67,7 +68,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_polygon
      */
     fun setNavigationPolygon(navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithObjectArgs(setNavigationPolygonBind, segment, listOf(navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNavigationPolygonBind, segment, listOf(navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -76,7 +77,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_polygon
      */
     fun getNavigationPolygon(): NavigationPolygon? {
-        return NavigationPolygon.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNavigationPolygonBind, segment))
+        return NavigationPolygon.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNavigationPolygonBind, segment))
     }
 
     /**
@@ -85,7 +86,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -94,7 +95,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -114,7 +115,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_use_edge_connections
      */
     fun setUseEdgeConnections(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseEdgeConnectionsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseEdgeConnectionsBind, segment, enabled)
     }
 
     /**
@@ -134,7 +135,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_use_edge_connections
      */
     fun getUseEdgeConnections(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseEdgeConnectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseEdgeConnectionsBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -154,7 +155,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getNavigationLayersBind, segment)
     }
 
     /**
@@ -164,7 +165,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_navigation_layer_value
      */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setNavigationLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -174,7 +175,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_layer_value
      */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getNavigationLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -183,7 +184,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_region_rid
      */
     fun getRegionRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRegionRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRegionRidBind, segment)
     }
 
     /**
@@ -193,7 +194,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_enter_cost
      */
     fun setEnterCost(enterCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, segment, enterCost)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnterCostBind, segment, enterCost)
     }
 
     /**
@@ -203,7 +204,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_enter_cost
      */
     fun getEnterCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnterCostBind, segment)
     }
 
     /**
@@ -213,7 +214,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.set_travel_cost
      */
     fun setTravelCost(travelCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, segment, travelCost)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTravelCostBind, segment, travelCost)
     }
 
     /**
@@ -223,7 +224,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_travel_cost
      */
     fun getTravelCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTravelCostBind, segment)
     }
 
     /**
@@ -233,7 +234,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.bake_navigation_polygon
      */
     fun bakeNavigationPolygon(onThread: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(bakeNavigationPolygonBind, segment, onThread)
+        ObjectCalls.ptrcallWithBoolArg(Binds.bakeNavigationPolygonBind, segment, onThread)
     }
 
     /**
@@ -242,7 +243,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.is_baking
      */
     fun isBaking(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBakingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBakingBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_bounds
      */
     fun getBounds(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
     }
 
     /** Signal `navigation_polygon_changed()`; see [TypedSignal]. */
@@ -276,110 +277,112 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationRegion2D? =
             if (handle.address() == 0L) null else NavigationRegion2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_rid", GET_RID_HASH)
-        }
 
         private const val SET_NAVIGATION_POLYGON_HASH = 1515040758L
-        private val setNavigationPolygonBind by lazy {
+        @JvmField
+        val setNavigationPolygonBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_navigation_polygon", SET_NAVIGATION_POLYGON_HASH)
-        }
 
         private const val GET_NAVIGATION_POLYGON_HASH = 1046532237L
-        private val getNavigationPolygonBind by lazy {
+        @JvmField
+        val getNavigationPolygonBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_navigation_polygon", GET_NAVIGATION_POLYGON_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_NAVIGATION_MAP_HASH = 2722037293L
-        private val setNavigationMapBind by lazy {
+        @JvmField
+        val setNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_navigation_map", SET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val SET_USE_EDGE_CONNECTIONS_HASH = 2586408642L
-        private val setUseEdgeConnectionsBind by lazy {
+        @JvmField
+        val setUseEdgeConnectionsBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_use_edge_connections", SET_USE_EDGE_CONNECTIONS_HASH)
-        }
 
         private const val GET_USE_EDGE_CONNECTIONS_HASH = 36873697L
-        private val getUseEdgeConnectionsBind by lazy {
+        @JvmField
+        val getUseEdgeConnectionsBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_use_edge_connections", GET_USE_EDGE_CONNECTIONS_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYERS_HASH = 1286410249L
-        private val setNavigationLayersBind by lazy {
+        @JvmField
+        val setNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_navigation_layers", SET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYERS_HASH = 3905245786L
-        private val getNavigationLayersBind by lazy {
+        @JvmField
+        val getNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_navigation_layers", GET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYER_VALUE_HASH = 300928843L
-        private val setNavigationLayerValueBind by lazy {
+        @JvmField
+        val setNavigationLayerValueBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_navigation_layer_value", SET_NAVIGATION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYER_VALUE_HASH = 1116898809L
-        private val getNavigationLayerValueBind by lazy {
+        @JvmField
+        val getNavigationLayerValueBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_navigation_layer_value", GET_NAVIGATION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_REGION_RID_HASH = 2944877500L
-        private val getRegionRidBind by lazy {
+        @JvmField
+        val getRegionRidBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_region_rid", GET_REGION_RID_HASH)
-        }
 
         private const val SET_ENTER_COST_HASH = 373806689L
-        private val setEnterCostBind by lazy {
+        @JvmField
+        val setEnterCostBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_enter_cost", SET_ENTER_COST_HASH)
-        }
 
         private const val GET_ENTER_COST_HASH = 1740695150L
-        private val getEnterCostBind by lazy {
+        @JvmField
+        val getEnterCostBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_enter_cost", GET_ENTER_COST_HASH)
-        }
 
         private const val SET_TRAVEL_COST_HASH = 373806689L
-        private val setTravelCostBind by lazy {
+        @JvmField
+        val setTravelCostBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "set_travel_cost", SET_TRAVEL_COST_HASH)
-        }
 
         private const val GET_TRAVEL_COST_HASH = 1740695150L
-        private val getTravelCostBind by lazy {
+        @JvmField
+        val getTravelCostBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_travel_cost", GET_TRAVEL_COST_HASH)
-        }
 
         private const val BAKE_NAVIGATION_POLYGON_HASH = 3216645846L
-        private val bakeNavigationPolygonBind by lazy {
+        @JvmField
+        val bakeNavigationPolygonBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "bake_navigation_polygon", BAKE_NAVIGATION_POLYGON_HASH)
-        }
 
         private const val IS_BAKING_HASH = 36873697L
-        private val isBakingBind by lazy {
+        @JvmField
+        val isBakingBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "is_baking", IS_BAKING_HASH)
-        }
 
         private const val GET_BOUNDS_HASH = 1639390495L
-        private val getBoundsBind by lazy {
+        @JvmField
+        val getBoundsBind =
             ObjectCalls.getMethodBind("NavigationRegion2D", "get_bounds", GET_BOUNDS_HASH)
-        }
     }
 }

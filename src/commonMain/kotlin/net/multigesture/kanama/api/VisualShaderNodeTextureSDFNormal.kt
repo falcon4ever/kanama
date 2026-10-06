@@ -20,7 +20,5 @@ class VisualShaderNodeTextureSDFNormal(handle: GodotHandle) : VisualShaderNode(h
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureSDFNormal? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureSDFNormal(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

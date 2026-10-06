@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,11 +18,11 @@ class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(h
         set(value) = setQuadSize(value)
 
     fun setQuadSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setQuadSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setQuadSizeBind, segment, size)
     }
 
     fun getQuadSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getQuadSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getQuadSizeBind, segment)
     }
 
     companion object {
@@ -31,15 +32,17 @@ class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(h
 
         internal fun wrap(handle: RawSegment): OpenXRCompositionLayerQuad? =
             if (handle.address() == 0L) null else OpenXRCompositionLayerQuad(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_QUAD_SIZE_HASH = 743155724L
-        private val setQuadSizeBind by lazy {
+        @JvmField
+        val setQuadSizeBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayerQuad", "set_quad_size", SET_QUAD_SIZE_HASH)
-        }
 
         private const val GET_QUAD_SIZE_HASH = 3341600327L
-        private val getQuadSizeBind by lazy {
+        @JvmField
+        val getQuadSizeBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayerQuad", "get_quad_size", GET_QUAD_SIZE_HASH)
-        }
     }
 }

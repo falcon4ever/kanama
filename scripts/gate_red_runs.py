@@ -394,7 +394,7 @@ case("audit_generator_shape_policy.py", py("audit_generator_shape_policy.py"),
      [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", "BuiltinTypes.initDictionary(", "BuiltinTypes.initDictionaryRedRun(")],
      "Dictionary argument is not initialized through BuiltinTypes.initDictionary", "a Dictionary-argument helper stops using the explicit initializer", env=ENV_PY)
 case("audit_godot_object_script_paths.py", py("audit_godot_object_script_paths.py"),
-     [Edit(f"{COMMON}/api/GodotObject.kt", "ptrcallWithStringNameAndVariantArg(objectSetBind", "ptrcallWithStringNameAndVariantArgX(objectSetBind")],
+     [Edit(f"{COMMON}/api/GodotObject.kt", "ptrcallWithStringNameAndVariantArg(Binds.objectSetBind", "ptrcallWithStringNameAndVariantArgX(Binds.objectSetBind")],
      "must call the Object.set MethodBind", "GodotObject.set stops calling the Object.set bind")
 case("audit_ptrcall_helper_layouts.py", py("audit_ptrcall_helper_layouts.py"),
      [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", "    return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL\n  }\n\n  /** Calls [methodBind] with no arguments and RID return value. */",
@@ -439,10 +439,10 @@ case("audit_variant_marshalling_policy.py", py("audit_variant_marshalling_policy
      [Edit(f"{JVM}/binding/runtime/BuiltinTypes.kt", 'else -> error("Unsupported Variant value type:', 'else -> println("Unsupported Variant value type:')],
      "variant_marshalling_policy_audit] FAIL", "the Variant marshaller coerces an unknown value instead of failing")
 case("audit_wrapper_abi_policy.py", py("audit_wrapper_abi_policy.py", "--strict"),
-     [Edit(f"{COMMON}/api/Node.kt", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetBool(getParentBind, segment))")],
+     [Edit(f"{COMMON}/api/Node.kt", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentBind, segment))", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetBool(Binds.getParentBind, segment))")],
      "return helper slot is bool", "a wrapper selects a bool return helper for an object return", env=ENV_PY)
 case("audit_wrapper_signatures.py", py("audit_wrapper_signatures.py"),
-     [Edit(f"{COMMON}/api/Node.kt", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetBool(getParentBind, segment))")],
+     [Edit(f"{COMMON}/api/Node.kt", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentBind, segment))", "return Node.wrap(ObjectCalls.ptrcallNoArgsRetBool(Binds.getParentBind, segment))")],
      "wrapper_signature_audit] FAIL", "a wrapper's return helper disagrees with extension_api.json")
 
 # ---- the other python gates local_ci runs ------------------------------------------------------------------

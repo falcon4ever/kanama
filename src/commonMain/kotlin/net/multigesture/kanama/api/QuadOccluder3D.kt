@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class QuadOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -35,7 +36,7 @@ class QuadOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     companion object {
@@ -48,15 +49,17 @@ class QuadOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): QuadOccluder3D? =
             if (handle.address() == 0L) null else QuadOccluder3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 743155724L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("QuadOccluder3D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("QuadOccluder3D", "get_size", GET_SIZE_HASH)
-        }
     }
 }

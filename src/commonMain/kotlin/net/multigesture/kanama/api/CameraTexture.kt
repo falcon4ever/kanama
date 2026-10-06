@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCameraFeedId(feedId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, segment, feedId)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCameraFeedIdBind, segment, feedId)
     }
 
     /**
@@ -46,7 +47,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
     }
 
     /**
@@ -57,7 +58,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setWhichFeed(whichFeed: CameraServer.FeedImage) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, segment, whichFeed.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setWhichFeedBind, segment, whichFeed.value)
     }
 
     /**
@@ -68,7 +69,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getWhichFeed(): CameraServer.FeedImage {
         checkOpen()
-        return CameraServer.FeedImage(ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, segment))
+        return CameraServer.FeedImage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWhichFeedBind, segment))
     }
 
     /**
@@ -78,7 +79,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCameraActive(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCameraActiveBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCameraActiveBind, segment, active)
     }
 
     /**
@@ -88,7 +89,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCameraActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getCameraActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCameraActiveBind, segment)
     }
 
     companion object {
@@ -101,35 +102,37 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraTexture? =
             if (handle.address() == 0L) null else CameraTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CAMERA_FEED_ID_HASH = 1286410249L
-        private val setCameraFeedIdBind by lazy {
+        @JvmField
+        val setCameraFeedIdBind =
             ObjectCalls.getMethodBind("CameraTexture", "set_camera_feed_id", SET_CAMERA_FEED_ID_HASH)
-        }
 
         private const val GET_CAMERA_FEED_ID_HASH = 3905245786L
-        private val getCameraFeedIdBind by lazy {
+        @JvmField
+        val getCameraFeedIdBind =
             ObjectCalls.getMethodBind("CameraTexture", "get_camera_feed_id", GET_CAMERA_FEED_ID_HASH)
-        }
 
         private const val SET_WHICH_FEED_HASH = 1595299230L
-        private val setWhichFeedBind by lazy {
+        @JvmField
+        val setWhichFeedBind =
             ObjectCalls.getMethodBind("CameraTexture", "set_which_feed", SET_WHICH_FEED_HASH)
-        }
 
         private const val GET_WHICH_FEED_HASH = 91039457L
-        private val getWhichFeedBind by lazy {
+        @JvmField
+        val getWhichFeedBind =
             ObjectCalls.getMethodBind("CameraTexture", "get_which_feed", GET_WHICH_FEED_HASH)
-        }
 
         private const val SET_CAMERA_ACTIVE_HASH = 2586408642L
-        private val setCameraActiveBind by lazy {
+        @JvmField
+        val setCameraActiveBind =
             ObjectCalls.getMethodBind("CameraTexture", "set_camera_active", SET_CAMERA_ACTIVE_HASH)
-        }
 
         private const val GET_CAMERA_ACTIVE_HASH = 36873697L
-        private val getCameraActiveBind by lazy {
+        @JvmField
+        val getCameraActiveBind =
             ObjectCalls.getMethodBind("CameraTexture", "get_camera_active", GET_CAMERA_ACTIVE_HASH)
-        }
     }
 }

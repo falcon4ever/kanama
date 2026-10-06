@@ -22,7 +22,5 @@ class RenderSceneBuffersExtension(handle: GodotHandle) : RenderSceneBuffers(hand
 
         internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersExtension? =
             if (handle.address() == 0L) null else RenderSceneBuffersExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

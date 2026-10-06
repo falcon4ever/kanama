@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -151,7 +152,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.clear_filters
      */
     fun clearFilters() {
-        ObjectCalls.ptrcallNoArgs(clearFiltersBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearFiltersBind, segment)
     }
 
     /**
@@ -167,7 +168,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.add_filter
      */
     fun addFilter(filter: String, description: String = "", mimeType: String = "") {
-        ObjectCalls.ptrcallWithThreeStringArgs(addFilterBind, segment, filter, description, mimeType)
+        ObjectCalls.ptrcallWithThreeStringArgs(Binds.addFilterBind, segment, filter, description, mimeType)
     }
 
     /**
@@ -180,7 +181,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_filters
      */
     fun setFilters(filters: List<String>) {
-        ObjectCalls.ptrcallWithPackedStringListArg(setFiltersBind, segment, filters)
+        ObjectCalls.ptrcallWithPackedStringListArg(Binds.setFiltersBind, segment, filters)
     }
 
     /**
@@ -193,7 +194,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_filters
      */
     fun getFilters(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFiltersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFiltersBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.clear_filename_filter
      */
     fun clearFilenameFilter() {
-        ObjectCalls.ptrcallNoArgs(clearFilenameFilterBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearFilenameFilterBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_filename_filter
      */
     fun setFilenameFilter(filter: String) {
-        ObjectCalls.ptrcallWithStringArg(setFilenameFilterBind, segment, filter)
+        ObjectCalls.ptrcallWithStringArg(Binds.setFilenameFilterBind, segment, filter)
     }
 
     /**
@@ -228,7 +229,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_filename_filter
      */
     fun getFilenameFilter(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getFilenameFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFilenameFilterBind, segment)
     }
 
     /**
@@ -237,7 +238,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_name
      */
     fun getOptionName(option: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getOptionNameBind, segment, option)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getOptionNameBind, segment, option)
     }
 
     /**
@@ -246,7 +247,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_values
      */
     fun getOptionValues(option: Int): List<String> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getOptionValuesBind, segment, option)
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(Binds.getOptionValuesBind, segment, option)
     }
 
     /**
@@ -255,7 +256,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_default
      */
     fun getOptionDefault(option: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOptionDefaultBind, segment, option)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOptionDefaultBind, segment, option)
     }
 
     /**
@@ -264,7 +265,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_name
      */
     fun setOptionName(option: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setOptionNameBind, segment, option, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setOptionNameBind, segment, option, name)
     }
 
     /**
@@ -273,7 +274,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_values
      */
     fun setOptionValues(option: Int, values: List<String>) {
-        ObjectCalls.ptrcallWithIntAndPackedStringListArg(setOptionValuesBind, segment, option, values)
+        ObjectCalls.ptrcallWithIntAndPackedStringListArg(Binds.setOptionValuesBind, segment, option, values)
     }
 
     /**
@@ -282,7 +283,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_default
      */
     fun setOptionDefault(option: Int, defaultValueIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setOptionDefaultBind, segment, option, defaultValueIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setOptionDefaultBind, segment, option, defaultValueIndex)
     }
 
     /**
@@ -291,7 +292,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_option_count
      */
     fun setOptionCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOptionCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOptionCountBind, segment, count)
     }
 
     /**
@@ -300,7 +301,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_option_count
      */
     fun getOptionCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOptionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOptionCountBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.add_option
      */
     fun addOption(name: String, values: List<String>, defaultValueIndex: Int) {
-        ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(addOptionBind, segment, name, values, defaultValueIndex)
+        ObjectCalls.ptrcallWithStringPackedStringListAndIntArgs(Binds.addOptionBind, segment, name, values, defaultValueIndex)
     }
 
     /**
@@ -321,7 +322,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_selected_options
      */
     fun getSelectedOptions(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSelectedOptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSelectedOptionsBind, segment)
     }
 
     /**
@@ -331,7 +332,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_current_dir
      */
     fun getCurrentDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentDirBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentDirBind, segment)
     }
 
     /**
@@ -340,7 +341,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_current_file
      */
     fun getCurrentFile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentFileBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentFileBind, segment)
     }
 
     /**
@@ -349,7 +350,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_current_path
      */
     fun getCurrentPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentPathBind, segment)
     }
 
     /**
@@ -359,7 +360,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_current_dir
      */
     fun setCurrentDir(dir: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentDirBind, segment, dir)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCurrentDirBind, segment, dir)
     }
 
     /**
@@ -368,7 +369,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_current_file
      */
     fun setCurrentFile(file: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentFileBind, segment, file)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCurrentFileBind, segment, file)
     }
 
     /**
@@ -377,7 +378,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_current_path
      */
     fun setCurrentPath(path: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentPathBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCurrentPathBind, segment, path)
     }
 
     /**
@@ -387,7 +388,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_mode_overrides_title
      */
     fun setModeOverridesTitle(override: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setModeOverridesTitleBind, segment, override)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setModeOverridesTitleBind, segment, override)
     }
 
     /**
@@ -397,7 +398,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.is_mode_overriding_title
      */
     fun isModeOverridingTitle(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isModeOverridingTitleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModeOverridingTitleBind, segment)
     }
 
     /**
@@ -406,7 +407,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_file_mode
      */
     fun setFileMode(mode: FileDialog.FileMode) {
-        ObjectCalls.ptrcallWithLongArg(setFileModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFileModeBind, segment, mode.value)
     }
 
     /**
@@ -415,7 +416,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_file_mode
      */
     fun getFileMode(): FileDialog.FileMode {
-        return FileDialog.FileMode(ObjectCalls.ptrcallNoArgsRetLong(getFileModeBind, segment))
+        return FileDialog.FileMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFileModeBind, segment))
     }
 
     /**
@@ -424,7 +425,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_display_mode
      */
     fun setDisplayMode(mode: FileDialog.DisplayMode) {
-        ObjectCalls.ptrcallWithLongArg(setDisplayModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDisplayModeBind, segment, mode.value)
     }
 
     /**
@@ -433,7 +434,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_display_mode
      */
     fun getDisplayMode(): FileDialog.DisplayMode {
-        return FileDialog.DisplayMode(ObjectCalls.ptrcallNoArgsRetLong(getDisplayModeBind, segment))
+        return FileDialog.DisplayMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDisplayModeBind, segment))
     }
 
     /**
@@ -446,7 +447,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_vbox
      */
     fun getVbox(): VBoxContainer? {
-        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVboxBind, segment))
+        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVboxBind, segment))
     }
 
     /**
@@ -457,7 +458,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_line_edit
      */
     fun getLineEdit(): LineEdit? {
-        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, segment))
+        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLineEditBind, segment))
     }
 
     /**
@@ -468,7 +469,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_access
      */
     fun setAccess(access: FileDialog.Access) {
-        ObjectCalls.ptrcallWithLongArg(setAccessBind, segment, access.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAccessBind, segment, access.value)
     }
 
     /**
@@ -479,7 +480,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_access
      */
     fun getAccess(): FileDialog.Access {
-        return FileDialog.Access(ObjectCalls.ptrcallNoArgsRetLong(getAccessBind, segment))
+        return FileDialog.Access(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessBind, segment))
     }
 
     /**
@@ -489,7 +490,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_root_subfolder
      */
     fun setRootSubfolder(dir: String) {
-        ObjectCalls.ptrcallWithStringArg(setRootSubfolderBind, segment, dir)
+        ObjectCalls.ptrcallWithStringArg(Binds.setRootSubfolderBind, segment, dir)
     }
 
     /**
@@ -499,7 +500,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_root_subfolder
      */
     fun getRootSubfolder(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getRootSubfolderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRootSubfolderBind, segment)
     }
 
     /**
@@ -509,7 +510,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_show_hidden_files
      */
     fun setShowHiddenFiles(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowHiddenFilesBind, segment, show)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowHiddenFilesBind, segment, show)
     }
 
     /**
@@ -519,7 +520,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.is_showing_hidden_files
      */
     fun isShowingHiddenFiles(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingHiddenFilesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingHiddenFilesBind, segment)
     }
 
     /**
@@ -536,7 +537,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_use_native_dialog
      */
     fun setUseNativeDialog(native: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseNativeDialogBind, segment, native)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseNativeDialogBind, segment, native)
     }
 
     /**
@@ -553,7 +554,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.get_use_native_dialog
      */
     fun getUseNativeDialog(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseNativeDialogBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseNativeDialogBind, segment)
     }
 
     /**
@@ -562,7 +563,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.set_customization_flag_enabled
      */
     fun setCustomizationFlagEnabled(flag: FileDialog.Customization, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setCustomizationFlagEnabledBind, segment, flag.value, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setCustomizationFlagEnabledBind, segment, flag.value, enabled)
     }
 
     /**
@@ -571,7 +572,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.is_customization_flag_enabled
      */
     fun isCustomizationFlagEnabled(flag: FileDialog.Customization): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isCustomizationFlagEnabledBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isCustomizationFlagEnabledBind, segment, flag.value)
     }
 
     /**
@@ -580,7 +581,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.deselect_all
      */
     fun deselectAll() {
-        ObjectCalls.ptrcallNoArgs(deselectAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.deselectAllBind, segment)
     }
 
     /**
@@ -590,7 +591,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.popup_file_dialog
      */
     fun popupFileDialog() {
-        ObjectCalls.ptrcallNoArgs(popupFileDialogBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.popupFileDialogBind, segment)
     }
 
     /**
@@ -600,7 +601,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: FileDialog.invalidate
      */
     fun invalidate() {
-        ObjectCalls.ptrcallNoArgs(invalidateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.invalidateBind, segment)
     }
 
     /** Signal `file_selected(path: String)`; see [TypedSignal]. */
@@ -810,7 +811,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_favorite_list
          */
         fun setFavoriteList(favorites: List<String>) {
-            ObjectCalls.ptrcallWithPackedStringListArg(setFavoriteListBind, NULL_SEGMENT, favorites)
+            ObjectCalls.ptrcallWithPackedStringListArg(Binds.setFavoriteListBind, NULL_SEGMENT, favorites)
         }
 
         /**
@@ -821,7 +822,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.get_favorite_list
          */
         fun getFavoriteList(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFavoriteListBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFavoriteListBind, NULL_SEGMENT)
         }
 
         /**
@@ -834,7 +835,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_recent_list
          */
         fun setRecentList(recents: List<String>) {
-            ObjectCalls.ptrcallWithPackedStringListArg(setRecentListBind, NULL_SEGMENT, recents)
+            ObjectCalls.ptrcallWithPackedStringListArg(Binds.setRecentListBind, NULL_SEGMENT, recents)
         }
 
         /**
@@ -845,7 +846,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.get_recent_list
          */
         fun getRecentList(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRecentListBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getRecentListBind, NULL_SEGMENT)
         }
 
         /**
@@ -856,7 +857,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_get_icon_callback
          */
         fun setGetIconCallback(callback: GodotCallable) {
-            ObjectCalls.ptrcallWithCallableArg(setGetIconCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
+            ObjectCalls.ptrcallWithCallableArg(Binds.setGetIconCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
         }
 
         /**
@@ -869,7 +870,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
          * Generated from Godot docs: FileDialog.set_get_thumbnail_callback
          */
         fun setGetThumbnailCallback(callback: GodotCallable) {
-            ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
+            ObjectCalls.ptrcallWithCallableArg(Binds.setGetThumbnailCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
         }
 
         @JvmStatic
@@ -878,255 +879,257 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): FileDialog? =
             if (handle.address() == 0L) null else FileDialog(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLEAR_FILTERS_HASH = 3218959716L
-        private val clearFiltersBind by lazy {
+        @JvmField
+        val clearFiltersBind =
             ObjectCalls.getMethodBind("FileDialog", "clear_filters", CLEAR_FILTERS_HASH)
-        }
 
         private const val ADD_FILTER_HASH = 914921954L
-        private val addFilterBind by lazy {
+        @JvmField
+        val addFilterBind =
             ObjectCalls.getMethodBind("FileDialog", "add_filter", ADD_FILTER_HASH)
-        }
 
         private const val SET_FILTERS_HASH = 4015028928L
-        private val setFiltersBind by lazy {
+        @JvmField
+        val setFiltersBind =
             ObjectCalls.getMethodBind("FileDialog", "set_filters", SET_FILTERS_HASH)
-        }
 
         private const val GET_FILTERS_HASH = 1139954409L
-        private val getFiltersBind by lazy {
+        @JvmField
+        val getFiltersBind =
             ObjectCalls.getMethodBind("FileDialog", "get_filters", GET_FILTERS_HASH)
-        }
 
         private const val CLEAR_FILENAME_FILTER_HASH = 3218959716L
-        private val clearFilenameFilterBind by lazy {
+        @JvmField
+        val clearFilenameFilterBind =
             ObjectCalls.getMethodBind("FileDialog", "clear_filename_filter", CLEAR_FILENAME_FILTER_HASH)
-        }
 
         private const val SET_FILENAME_FILTER_HASH = 83702148L
-        private val setFilenameFilterBind by lazy {
+        @JvmField
+        val setFilenameFilterBind =
             ObjectCalls.getMethodBind("FileDialog", "set_filename_filter", SET_FILENAME_FILTER_HASH)
-        }
 
         private const val GET_FILENAME_FILTER_HASH = 201670096L
-        private val getFilenameFilterBind by lazy {
+        @JvmField
+        val getFilenameFilterBind =
             ObjectCalls.getMethodBind("FileDialog", "get_filename_filter", GET_FILENAME_FILTER_HASH)
-        }
 
         private const val GET_OPTION_NAME_HASH = 844755477L
-        private val getOptionNameBind by lazy {
+        @JvmField
+        val getOptionNameBind =
             ObjectCalls.getMethodBind("FileDialog", "get_option_name", GET_OPTION_NAME_HASH)
-        }
 
         private const val GET_OPTION_VALUES_HASH = 647634434L
-        private val getOptionValuesBind by lazy {
+        @JvmField
+        val getOptionValuesBind =
             ObjectCalls.getMethodBind("FileDialog", "get_option_values", GET_OPTION_VALUES_HASH)
-        }
 
         private const val GET_OPTION_DEFAULT_HASH = 923996154L
-        private val getOptionDefaultBind by lazy {
+        @JvmField
+        val getOptionDefaultBind =
             ObjectCalls.getMethodBind("FileDialog", "get_option_default", GET_OPTION_DEFAULT_HASH)
-        }
 
         private const val SET_OPTION_NAME_HASH = 501894301L
-        private val setOptionNameBind by lazy {
+        @JvmField
+        val setOptionNameBind =
             ObjectCalls.getMethodBind("FileDialog", "set_option_name", SET_OPTION_NAME_HASH)
-        }
 
         private const val SET_OPTION_VALUES_HASH = 3353661094L
-        private val setOptionValuesBind by lazy {
+        @JvmField
+        val setOptionValuesBind =
             ObjectCalls.getMethodBind("FileDialog", "set_option_values", SET_OPTION_VALUES_HASH)
-        }
 
         private const val SET_OPTION_DEFAULT_HASH = 3937882851L
-        private val setOptionDefaultBind by lazy {
+        @JvmField
+        val setOptionDefaultBind =
             ObjectCalls.getMethodBind("FileDialog", "set_option_default", SET_OPTION_DEFAULT_HASH)
-        }
 
         private const val SET_OPTION_COUNT_HASH = 1286410249L
-        private val setOptionCountBind by lazy {
+        @JvmField
+        val setOptionCountBind =
             ObjectCalls.getMethodBind("FileDialog", "set_option_count", SET_OPTION_COUNT_HASH)
-        }
 
         private const val GET_OPTION_COUNT_HASH = 3905245786L
-        private val getOptionCountBind by lazy {
+        @JvmField
+        val getOptionCountBind =
             ObjectCalls.getMethodBind("FileDialog", "get_option_count", GET_OPTION_COUNT_HASH)
-        }
 
         private const val ADD_OPTION_HASH = 149592325L
-        private val addOptionBind by lazy {
+        @JvmField
+        val addOptionBind =
             ObjectCalls.getMethodBind("FileDialog", "add_option", ADD_OPTION_HASH)
-        }
 
         private const val GET_SELECTED_OPTIONS_HASH = 3102165223L
-        private val getSelectedOptionsBind by lazy {
+        @JvmField
+        val getSelectedOptionsBind =
             ObjectCalls.getMethodBind("FileDialog", "get_selected_options", GET_SELECTED_OPTIONS_HASH)
-        }
 
         private const val GET_CURRENT_DIR_HASH = 201670096L
-        private val getCurrentDirBind by lazy {
+        @JvmField
+        val getCurrentDirBind =
             ObjectCalls.getMethodBind("FileDialog", "get_current_dir", GET_CURRENT_DIR_HASH)
-        }
 
         private const val GET_CURRENT_FILE_HASH = 201670096L
-        private val getCurrentFileBind by lazy {
+        @JvmField
+        val getCurrentFileBind =
             ObjectCalls.getMethodBind("FileDialog", "get_current_file", GET_CURRENT_FILE_HASH)
-        }
 
         private const val GET_CURRENT_PATH_HASH = 201670096L
-        private val getCurrentPathBind by lazy {
+        @JvmField
+        val getCurrentPathBind =
             ObjectCalls.getMethodBind("FileDialog", "get_current_path", GET_CURRENT_PATH_HASH)
-        }
 
         private const val SET_CURRENT_DIR_HASH = 83702148L
-        private val setCurrentDirBind by lazy {
+        @JvmField
+        val setCurrentDirBind =
             ObjectCalls.getMethodBind("FileDialog", "set_current_dir", SET_CURRENT_DIR_HASH)
-        }
 
         private const val SET_CURRENT_FILE_HASH = 83702148L
-        private val setCurrentFileBind by lazy {
+        @JvmField
+        val setCurrentFileBind =
             ObjectCalls.getMethodBind("FileDialog", "set_current_file", SET_CURRENT_FILE_HASH)
-        }
 
         private const val SET_CURRENT_PATH_HASH = 83702148L
-        private val setCurrentPathBind by lazy {
+        @JvmField
+        val setCurrentPathBind =
             ObjectCalls.getMethodBind("FileDialog", "set_current_path", SET_CURRENT_PATH_HASH)
-        }
 
         private const val SET_MODE_OVERRIDES_TITLE_HASH = 2586408642L
-        private val setModeOverridesTitleBind by lazy {
+        @JvmField
+        val setModeOverridesTitleBind =
             ObjectCalls.getMethodBind("FileDialog", "set_mode_overrides_title", SET_MODE_OVERRIDES_TITLE_HASH)
-        }
 
         private const val IS_MODE_OVERRIDING_TITLE_HASH = 36873697L
-        private val isModeOverridingTitleBind by lazy {
+        @JvmField
+        val isModeOverridingTitleBind =
             ObjectCalls.getMethodBind("FileDialog", "is_mode_overriding_title", IS_MODE_OVERRIDING_TITLE_HASH)
-        }
 
         private const val SET_FILE_MODE_HASH = 3654936397L
-        private val setFileModeBind by lazy {
+        @JvmField
+        val setFileModeBind =
             ObjectCalls.getMethodBind("FileDialog", "set_file_mode", SET_FILE_MODE_HASH)
-        }
 
         private const val GET_FILE_MODE_HASH = 4074825319L
-        private val getFileModeBind by lazy {
+        @JvmField
+        val getFileModeBind =
             ObjectCalls.getMethodBind("FileDialog", "get_file_mode", GET_FILE_MODE_HASH)
-        }
 
         private const val SET_DISPLAY_MODE_HASH = 2692197101L
-        private val setDisplayModeBind by lazy {
+        @JvmField
+        val setDisplayModeBind =
             ObjectCalls.getMethodBind("FileDialog", "set_display_mode", SET_DISPLAY_MODE_HASH)
-        }
 
         private const val GET_DISPLAY_MODE_HASH = 1092104624L
-        private val getDisplayModeBind by lazy {
+        @JvmField
+        val getDisplayModeBind =
             ObjectCalls.getMethodBind("FileDialog", "get_display_mode", GET_DISPLAY_MODE_HASH)
-        }
 
         private const val GET_VBOX_HASH = 915758477L
-        private val getVboxBind by lazy {
+        @JvmField
+        val getVboxBind =
             ObjectCalls.getMethodBind("FileDialog", "get_vbox", GET_VBOX_HASH)
-        }
 
         private const val GET_LINE_EDIT_HASH = 4071694264L
-        private val getLineEditBind by lazy {
+        @JvmField
+        val getLineEditBind =
             ObjectCalls.getMethodBind("FileDialog", "get_line_edit", GET_LINE_EDIT_HASH)
-        }
 
         private const val SET_ACCESS_HASH = 4104413466L
-        private val setAccessBind by lazy {
+        @JvmField
+        val setAccessBind =
             ObjectCalls.getMethodBind("FileDialog", "set_access", SET_ACCESS_HASH)
-        }
 
         private const val GET_ACCESS_HASH = 3344081076L
-        private val getAccessBind by lazy {
+        @JvmField
+        val getAccessBind =
             ObjectCalls.getMethodBind("FileDialog", "get_access", GET_ACCESS_HASH)
-        }
 
         private const val SET_ROOT_SUBFOLDER_HASH = 83702148L
-        private val setRootSubfolderBind by lazy {
+        @JvmField
+        val setRootSubfolderBind =
             ObjectCalls.getMethodBind("FileDialog", "set_root_subfolder", SET_ROOT_SUBFOLDER_HASH)
-        }
 
         private const val GET_ROOT_SUBFOLDER_HASH = 201670096L
-        private val getRootSubfolderBind by lazy {
+        @JvmField
+        val getRootSubfolderBind =
             ObjectCalls.getMethodBind("FileDialog", "get_root_subfolder", GET_ROOT_SUBFOLDER_HASH)
-        }
 
         private const val SET_SHOW_HIDDEN_FILES_HASH = 2586408642L
-        private val setShowHiddenFilesBind by lazy {
+        @JvmField
+        val setShowHiddenFilesBind =
             ObjectCalls.getMethodBind("FileDialog", "set_show_hidden_files", SET_SHOW_HIDDEN_FILES_HASH)
-        }
 
         private const val IS_SHOWING_HIDDEN_FILES_HASH = 36873697L
-        private val isShowingHiddenFilesBind by lazy {
+        @JvmField
+        val isShowingHiddenFilesBind =
             ObjectCalls.getMethodBind("FileDialog", "is_showing_hidden_files", IS_SHOWING_HIDDEN_FILES_HASH)
-        }
 
         private const val SET_USE_NATIVE_DIALOG_HASH = 2586408642L
-        private val setUseNativeDialogBind by lazy {
+        @JvmField
+        val setUseNativeDialogBind =
             ObjectCalls.getMethodBind("FileDialog", "set_use_native_dialog", SET_USE_NATIVE_DIALOG_HASH)
-        }
 
         private const val GET_USE_NATIVE_DIALOG_HASH = 36873697L
-        private val getUseNativeDialogBind by lazy {
+        @JvmField
+        val getUseNativeDialogBind =
             ObjectCalls.getMethodBind("FileDialog", "get_use_native_dialog", GET_USE_NATIVE_DIALOG_HASH)
-        }
 
         private const val SET_CUSTOMIZATION_FLAG_ENABLED_HASH = 3849177100L
-        private val setCustomizationFlagEnabledBind by lazy {
+        @JvmField
+        val setCustomizationFlagEnabledBind =
             ObjectCalls.getMethodBind("FileDialog", "set_customization_flag_enabled", SET_CUSTOMIZATION_FLAG_ENABLED_HASH)
-        }
 
         private const val IS_CUSTOMIZATION_FLAG_ENABLED_HASH = 3722277863L
-        private val isCustomizationFlagEnabledBind by lazy {
+        @JvmField
+        val isCustomizationFlagEnabledBind =
             ObjectCalls.getMethodBind("FileDialog", "is_customization_flag_enabled", IS_CUSTOMIZATION_FLAG_ENABLED_HASH)
-        }
 
         private const val DESELECT_ALL_HASH = 3218959716L
-        private val deselectAllBind by lazy {
+        @JvmField
+        val deselectAllBind =
             ObjectCalls.getMethodBind("FileDialog", "deselect_all", DESELECT_ALL_HASH)
-        }
 
         private const val SET_FAVORITE_LIST_HASH = 4015028928L
-        private val setFavoriteListBind by lazy {
+        @JvmField
+        val setFavoriteListBind =
             ObjectCalls.getMethodBind("FileDialog", "set_favorite_list", SET_FAVORITE_LIST_HASH)
-        }
 
         private const val GET_FAVORITE_LIST_HASH = 2981934095L
-        private val getFavoriteListBind by lazy {
+        @JvmField
+        val getFavoriteListBind =
             ObjectCalls.getMethodBind("FileDialog", "get_favorite_list", GET_FAVORITE_LIST_HASH)
-        }
 
         private const val SET_RECENT_LIST_HASH = 4015028928L
-        private val setRecentListBind by lazy {
+        @JvmField
+        val setRecentListBind =
             ObjectCalls.getMethodBind("FileDialog", "set_recent_list", SET_RECENT_LIST_HASH)
-        }
 
         private const val GET_RECENT_LIST_HASH = 2981934095L
-        private val getRecentListBind by lazy {
+        @JvmField
+        val getRecentListBind =
             ObjectCalls.getMethodBind("FileDialog", "get_recent_list", GET_RECENT_LIST_HASH)
-        }
 
         private const val SET_GET_ICON_CALLBACK_HASH = 1611583062L
-        private val setGetIconCallbackBind by lazy {
+        @JvmField
+        val setGetIconCallbackBind =
             ObjectCalls.getMethodBind("FileDialog", "set_get_icon_callback", SET_GET_ICON_CALLBACK_HASH)
-        }
 
         private const val SET_GET_THUMBNAIL_CALLBACK_HASH = 1611583062L
-        private val setGetThumbnailCallbackBind by lazy {
+        @JvmField
+        val setGetThumbnailCallbackBind =
             ObjectCalls.getMethodBind("FileDialog", "set_get_thumbnail_callback", SET_GET_THUMBNAIL_CALLBACK_HASH)
-        }
 
         private const val POPUP_FILE_DIALOG_HASH = 3218959716L
-        private val popupFileDialogBind by lazy {
+        @JvmField
+        val popupFileDialogBind =
             ObjectCalls.getMethodBind("FileDialog", "popup_file_dialog", POPUP_FILE_DIALOG_HASH)
-        }
 
         private const val INVALIDATE_HASH = 3218959716L
-        private val invalidateBind by lazy {
+        @JvmField
+        val invalidateBind =
             ObjectCalls.getMethodBind("FileDialog", "invalidate", INVALIDATE_HASH)
-        }
     }
 }

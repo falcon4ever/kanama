@@ -22,7 +22,5 @@ class PlaceholderCubemap(handle: GodotHandle) : PlaceholderTextureLayered(handle
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderCubemap? =
             if (handle.address() == 0L) null else PlaceholderCubemap(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

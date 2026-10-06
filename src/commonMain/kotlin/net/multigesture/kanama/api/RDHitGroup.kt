@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setClosestHitShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setClosestHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setClosestHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -47,7 +48,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, segment))
+        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getClosestHitShaderBind, segment))
     }
 
     /**
@@ -57,7 +58,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAnyHitShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAnyHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setAnyHitShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -67,7 +68,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAnyHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, segment))
+        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAnyHitShaderBind, segment))
     }
 
     /**
@@ -78,7 +79,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIntersectionShader(pMember: RDPipelineShader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setIntersectionShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setIntersectionShaderBind, segment, listOf(pMember?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -89,7 +90,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIntersectionShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, segment))
+        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getIntersectionShaderBind, segment))
     }
 
     companion object {
@@ -102,35 +103,37 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDHitGroup? =
             if (handle.address() == 0L) null else RDHitGroup(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CLOSEST_HIT_SHADER_HASH = 2556777288L
-        private val setClosestHitShaderBind by lazy {
+        @JvmField
+        val setClosestHitShaderBind =
             ObjectCalls.getMethodBind("RDHitGroup", "set_closest_hit_shader", SET_CLOSEST_HIT_SHADER_HASH)
-        }
 
         private const val GET_CLOSEST_HIT_SHADER_HASH = 2937716847L
-        private val getClosestHitShaderBind by lazy {
+        @JvmField
+        val getClosestHitShaderBind =
             ObjectCalls.getMethodBind("RDHitGroup", "get_closest_hit_shader", GET_CLOSEST_HIT_SHADER_HASH)
-        }
 
         private const val SET_ANY_HIT_SHADER_HASH = 2556777288L
-        private val setAnyHitShaderBind by lazy {
+        @JvmField
+        val setAnyHitShaderBind =
             ObjectCalls.getMethodBind("RDHitGroup", "set_any_hit_shader", SET_ANY_HIT_SHADER_HASH)
-        }
 
         private const val GET_ANY_HIT_SHADER_HASH = 2937716847L
-        private val getAnyHitShaderBind by lazy {
+        @JvmField
+        val getAnyHitShaderBind =
             ObjectCalls.getMethodBind("RDHitGroup", "get_any_hit_shader", GET_ANY_HIT_SHADER_HASH)
-        }
 
         private const val SET_INTERSECTION_SHADER_HASH = 2556777288L
-        private val setIntersectionShaderBind by lazy {
+        @JvmField
+        val setIntersectionShaderBind =
             ObjectCalls.getMethodBind("RDHitGroup", "set_intersection_shader", SET_INTERSECTION_SHADER_HASH)
-        }
 
         private const val GET_INTERSECTION_SHADER_HASH = 2937716847L
-        private val getIntersectionShaderBind by lazy {
+        @JvmField
+        val getIntersectionShaderBind =
             ObjectCalls.getMethodBind("RDHitGroup", "get_intersection_shader", GET_INTERSECTION_SHADER_HASH)
-        }
     }
 }

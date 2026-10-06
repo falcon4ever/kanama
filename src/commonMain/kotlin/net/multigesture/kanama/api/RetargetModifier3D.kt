@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -38,7 +39,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_profile
      */
     fun setProfile(profile: SkeletonProfile?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -47,7 +48,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.get_profile
      */
     fun getProfile(): SkeletonProfile? {
-        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
+        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProfileBind, segment))
     }
 
     /**
@@ -63,7 +64,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_use_global_pose
      */
     fun setUseGlobalPose(useGlobalPose: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseGlobalPoseBind, segment, useGlobalPose)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseGlobalPoseBind, segment, useGlobalPose)
     }
 
     /**
@@ -79,7 +80,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_using_global_pose
      */
     fun isUsingGlobalPose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingGlobalPoseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingGlobalPoseBind, segment)
     }
 
     /**
@@ -89,7 +90,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_enable_flags
      */
     fun setEnableFlags(enableFlags: RetargetModifier3D.TransformFlag) {
-        ObjectCalls.ptrcallWithLongArg(setEnableFlagsBind, segment, enableFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEnableFlagsBind, segment, enableFlags.value)
     }
 
     /**
@@ -99,7 +100,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.get_enable_flags
      */
     fun getEnableFlags(): RetargetModifier3D.TransformFlag {
-        return RetargetModifier3D.TransformFlag(ObjectCalls.ptrcallNoArgsRetLong(getEnableFlagsBind, segment))
+        return RetargetModifier3D.TransformFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEnableFlagsBind, segment))
     }
 
     /**
@@ -108,7 +109,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_position_enabled
      */
     fun setPositionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPositionEnabledBind, segment, enabled)
     }
 
     /**
@@ -117,7 +118,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_position_enabled
      */
     fun isPositionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPositionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPositionEnabledBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_rotation_enabled
      */
     fun setRotationEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRotationEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRotationEnabledBind, segment, enabled)
     }
 
     /**
@@ -135,7 +136,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_rotation_enabled
      */
     fun isRotationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRotationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRotationEnabledBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.set_scale_enabled
      */
     fun setScaleEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScaleEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScaleEnabledBind, segment, enabled)
     }
 
     /**
@@ -153,7 +154,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.is_scale_enabled
      */
     fun isScaleEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScaleEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScaleEnabledBind, segment)
     }
 
     /**
@@ -210,65 +211,67 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): RetargetModifier3D? =
             if (handle.address() == 0L) null else RetargetModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PROFILE_HASH = 3870374136L
-        private val setProfileBind by lazy {
+        @JvmField
+        val setProfileBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "set_profile", SET_PROFILE_HASH)
-        }
 
         private const val GET_PROFILE_HASH = 4291782652L
-        private val getProfileBind by lazy {
+        @JvmField
+        val getProfileBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "get_profile", GET_PROFILE_HASH)
-        }
 
         private const val SET_USE_GLOBAL_POSE_HASH = 2586408642L
-        private val setUseGlobalPoseBind by lazy {
+        @JvmField
+        val setUseGlobalPoseBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "set_use_global_pose", SET_USE_GLOBAL_POSE_HASH)
-        }
 
         private const val IS_USING_GLOBAL_POSE_HASH = 36873697L
-        private val isUsingGlobalPoseBind by lazy {
+        @JvmField
+        val isUsingGlobalPoseBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "is_using_global_pose", IS_USING_GLOBAL_POSE_HASH)
-        }
 
         private const val SET_ENABLE_FLAGS_HASH = 2687954213L
-        private val setEnableFlagsBind by lazy {
+        @JvmField
+        val setEnableFlagsBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "set_enable_flags", SET_ENABLE_FLAGS_HASH)
-        }
 
         private const val GET_ENABLE_FLAGS_HASH = 358995420L
-        private val getEnableFlagsBind by lazy {
+        @JvmField
+        val getEnableFlagsBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "get_enable_flags", GET_ENABLE_FLAGS_HASH)
-        }
 
         private const val SET_POSITION_ENABLED_HASH = 2586408642L
-        private val setPositionEnabledBind by lazy {
+        @JvmField
+        val setPositionEnabledBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "set_position_enabled", SET_POSITION_ENABLED_HASH)
-        }
 
         private const val IS_POSITION_ENABLED_HASH = 36873697L
-        private val isPositionEnabledBind by lazy {
+        @JvmField
+        val isPositionEnabledBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "is_position_enabled", IS_POSITION_ENABLED_HASH)
-        }
 
         private const val SET_ROTATION_ENABLED_HASH = 2586408642L
-        private val setRotationEnabledBind by lazy {
+        @JvmField
+        val setRotationEnabledBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "set_rotation_enabled", SET_ROTATION_ENABLED_HASH)
-        }
 
         private const val IS_ROTATION_ENABLED_HASH = 36873697L
-        private val isRotationEnabledBind by lazy {
+        @JvmField
+        val isRotationEnabledBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "is_rotation_enabled", IS_ROTATION_ENABLED_HASH)
-        }
 
         private const val SET_SCALE_ENABLED_HASH = 2586408642L
-        private val setScaleEnabledBind by lazy {
+        @JvmField
+        val setScaleEnabledBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "set_scale_enabled", SET_SCALE_ENABLED_HASH)
-        }
 
         private const val IS_SCALE_ENABLED_HASH = 36873697L
-        private val isScaleEnabledBind by lazy {
+        @JvmField
+        val isScaleEnabledBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "is_scale_enabled", IS_SCALE_ENABLED_HASH)
-        }
     }
 }

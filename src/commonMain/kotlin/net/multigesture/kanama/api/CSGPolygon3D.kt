@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -116,139 +117,139 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPolygonBind, segment, polygon)
     }
 
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
     }
 
     fun setMode(mode: CSGPolygon3D.Mode) {
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
     }
 
     fun getMode(): CSGPolygon3D.Mode {
-        return CSGPolygon3D.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
+        return CSGPolygon3D.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
     }
 
     fun setDepth(depth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBind, segment, depth)
     }
 
     fun getDepth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
     }
 
     fun setSpinDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpinDegreesBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpinDegreesBind, segment, degrees)
     }
 
     fun getSpinDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpinDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpinDegreesBind, segment)
     }
 
     fun setSpinSides(spinSides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSpinSidesBind, segment, spinSides)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSpinSidesBind, segment, spinSides)
     }
 
     fun getSpinSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSpinSidesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSpinSidesBind, segment)
     }
 
     fun setPathNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setPathNodeBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setPathNodeBind, segment, path)
     }
 
     fun getPathNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getPathNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getPathNodeBind, segment)
     }
 
     fun setPathIntervalType(intervalType: CSGPolygon3D.PathIntervalType) {
-        ObjectCalls.ptrcallWithLongArg(setPathIntervalTypeBind, segment, intervalType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathIntervalTypeBind, segment, intervalType.value)
     }
 
     fun getPathIntervalType(): CSGPolygon3D.PathIntervalType {
-        return CSGPolygon3D.PathIntervalType(ObjectCalls.ptrcallNoArgsRetLong(getPathIntervalTypeBind, segment))
+        return CSGPolygon3D.PathIntervalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathIntervalTypeBind, segment))
     }
 
     fun setPathInterval(interval: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathIntervalBind, segment, interval)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathIntervalBind, segment, interval)
     }
 
     fun getPathInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathIntervalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathIntervalBind, segment)
     }
 
     fun setPathSimplifyAngle(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathSimplifyAngleBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathSimplifyAngleBind, segment, degrees)
     }
 
     fun getPathSimplifyAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSimplifyAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathSimplifyAngleBind, segment)
     }
 
     fun setPathRotation(pathRotation: CSGPolygon3D.PathRotation) {
-        ObjectCalls.ptrcallWithLongArg(setPathRotationBind, segment, pathRotation.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathRotationBind, segment, pathRotation.value)
     }
 
     fun getPathRotation(): CSGPolygon3D.PathRotation {
-        return CSGPolygon3D.PathRotation(ObjectCalls.ptrcallNoArgsRetLong(getPathRotationBind, segment))
+        return CSGPolygon3D.PathRotation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathRotationBind, segment))
     }
 
     fun setPathRotationAccurate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathRotationAccurateBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPathRotationAccurateBind, segment, enable)
     }
 
     fun getPathRotationAccurate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPathRotationAccurateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPathRotationAccurateBind, segment)
     }
 
     fun setPathLocal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathLocalBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPathLocalBind, segment, enable)
     }
 
     fun isPathLocal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPathLocalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPathLocalBind, segment)
     }
 
     fun setPathContinuousU(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathContinuousUBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPathContinuousUBind, segment, enable)
     }
 
     fun isPathContinuousU(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPathContinuousUBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPathContinuousUBind, segment)
     }
 
     fun setPathUDistance(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathUDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathUDistanceBind, segment, distance)
     }
 
     fun getPathUDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathUDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathUDistanceBind, segment)
     }
 
     fun setPathJoined(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPathJoinedBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPathJoinedBind, segment, enable)
     }
 
     fun isPathJoined(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPathJoinedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPathJoinedBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSmoothFacesBind, segment)
     }
 
     @JvmInline
@@ -284,175 +285,177 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGPolygon3D? =
             if (handle.address() == 0L) null else CSGPolygon3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POLYGON_HASH = 1509147220L
-        private val setPolygonBind by lazy {
+        @JvmField
+        val setPolygonBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_polygon", SET_POLYGON_HASH)
-        }
 
         private const val GET_POLYGON_HASH = 2961356807L
-        private val getPolygonBind by lazy {
+        @JvmField
+        val getPolygonBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_polygon", GET_POLYGON_HASH)
-        }
 
         private const val SET_MODE_HASH = 3158377035L
-        private val setModeBind by lazy {
+        @JvmField
+        val setModeBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_mode", SET_MODE_HASH)
-        }
 
         private const val GET_MODE_HASH = 1201612222L
-        private val getModeBind by lazy {
+        @JvmField
+        val getModeBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_mode", GET_MODE_HASH)
-        }
 
         private const val SET_DEPTH_HASH = 373806689L
-        private val setDepthBind by lazy {
+        @JvmField
+        val setDepthBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_depth", SET_DEPTH_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 1740695150L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val SET_SPIN_DEGREES_HASH = 373806689L
-        private val setSpinDegreesBind by lazy {
+        @JvmField
+        val setSpinDegreesBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_spin_degrees", SET_SPIN_DEGREES_HASH)
-        }
 
         private const val GET_SPIN_DEGREES_HASH = 1740695150L
-        private val getSpinDegreesBind by lazy {
+        @JvmField
+        val getSpinDegreesBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_spin_degrees", GET_SPIN_DEGREES_HASH)
-        }
 
         private const val SET_SPIN_SIDES_HASH = 1286410249L
-        private val setSpinSidesBind by lazy {
+        @JvmField
+        val setSpinSidesBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_spin_sides", SET_SPIN_SIDES_HASH)
-        }
 
         private const val GET_SPIN_SIDES_HASH = 3905245786L
-        private val getSpinSidesBind by lazy {
+        @JvmField
+        val getSpinSidesBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_spin_sides", GET_SPIN_SIDES_HASH)
-        }
 
         private const val SET_PATH_NODE_HASH = 1348162250L
-        private val setPathNodeBind by lazy {
+        @JvmField
+        val setPathNodeBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_node", SET_PATH_NODE_HASH)
-        }
 
         private const val GET_PATH_NODE_HASH = 4075236667L
-        private val getPathNodeBind by lazy {
+        @JvmField
+        val getPathNodeBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_node", GET_PATH_NODE_HASH)
-        }
 
         private const val SET_PATH_INTERVAL_TYPE_HASH = 3744240707L
-        private val setPathIntervalTypeBind by lazy {
+        @JvmField
+        val setPathIntervalTypeBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_interval_type", SET_PATH_INTERVAL_TYPE_HASH)
-        }
 
         private const val GET_PATH_INTERVAL_TYPE_HASH = 3434618397L
-        private val getPathIntervalTypeBind by lazy {
+        @JvmField
+        val getPathIntervalTypeBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_interval_type", GET_PATH_INTERVAL_TYPE_HASH)
-        }
 
         private const val SET_PATH_INTERVAL_HASH = 373806689L
-        private val setPathIntervalBind by lazy {
+        @JvmField
+        val setPathIntervalBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_interval", SET_PATH_INTERVAL_HASH)
-        }
 
         private const val GET_PATH_INTERVAL_HASH = 1740695150L
-        private val getPathIntervalBind by lazy {
+        @JvmField
+        val getPathIntervalBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_interval", GET_PATH_INTERVAL_HASH)
-        }
 
         private const val SET_PATH_SIMPLIFY_ANGLE_HASH = 373806689L
-        private val setPathSimplifyAngleBind by lazy {
+        @JvmField
+        val setPathSimplifyAngleBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_simplify_angle", SET_PATH_SIMPLIFY_ANGLE_HASH)
-        }
 
         private const val GET_PATH_SIMPLIFY_ANGLE_HASH = 1740695150L
-        private val getPathSimplifyAngleBind by lazy {
+        @JvmField
+        val getPathSimplifyAngleBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_simplify_angle", GET_PATH_SIMPLIFY_ANGLE_HASH)
-        }
 
         private const val SET_PATH_ROTATION_HASH = 1412947288L
-        private val setPathRotationBind by lazy {
+        @JvmField
+        val setPathRotationBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_rotation", SET_PATH_ROTATION_HASH)
-        }
 
         private const val GET_PATH_ROTATION_HASH = 647219346L
-        private val getPathRotationBind by lazy {
+        @JvmField
+        val getPathRotationBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_rotation", GET_PATH_ROTATION_HASH)
-        }
 
         private const val SET_PATH_ROTATION_ACCURATE_HASH = 2586408642L
-        private val setPathRotationAccurateBind by lazy {
+        @JvmField
+        val setPathRotationAccurateBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_rotation_accurate", SET_PATH_ROTATION_ACCURATE_HASH)
-        }
 
         private const val GET_PATH_ROTATION_ACCURATE_HASH = 36873697L
-        private val getPathRotationAccurateBind by lazy {
+        @JvmField
+        val getPathRotationAccurateBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_rotation_accurate", GET_PATH_ROTATION_ACCURATE_HASH)
-        }
 
         private const val SET_PATH_LOCAL_HASH = 2586408642L
-        private val setPathLocalBind by lazy {
+        @JvmField
+        val setPathLocalBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_local", SET_PATH_LOCAL_HASH)
-        }
 
         private const val IS_PATH_LOCAL_HASH = 36873697L
-        private val isPathLocalBind by lazy {
+        @JvmField
+        val isPathLocalBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "is_path_local", IS_PATH_LOCAL_HASH)
-        }
 
         private const val SET_PATH_CONTINUOUS_U_HASH = 2586408642L
-        private val setPathContinuousUBind by lazy {
+        @JvmField
+        val setPathContinuousUBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_continuous_u", SET_PATH_CONTINUOUS_U_HASH)
-        }
 
         private const val IS_PATH_CONTINUOUS_U_HASH = 36873697L
-        private val isPathContinuousUBind by lazy {
+        @JvmField
+        val isPathContinuousUBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "is_path_continuous_u", IS_PATH_CONTINUOUS_U_HASH)
-        }
 
         private const val SET_PATH_U_DISTANCE_HASH = 373806689L
-        private val setPathUDistanceBind by lazy {
+        @JvmField
+        val setPathUDistanceBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_u_distance", SET_PATH_U_DISTANCE_HASH)
-        }
 
         private const val GET_PATH_U_DISTANCE_HASH = 1740695150L
-        private val getPathUDistanceBind by lazy {
+        @JvmField
+        val getPathUDistanceBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_path_u_distance", GET_PATH_U_DISTANCE_HASH)
-        }
 
         private const val SET_PATH_JOINED_HASH = 2586408642L
-        private val setPathJoinedBind by lazy {
+        @JvmField
+        val setPathJoinedBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_path_joined", SET_PATH_JOINED_HASH)
-        }
 
         private const val IS_PATH_JOINED_HASH = 36873697L
-        private val isPathJoinedBind by lazy {
+        @JvmField
+        val isPathJoinedBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "is_path_joined", IS_PATH_JOINED_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_material", GET_MATERIAL_HASH)
-        }
 
         private const val SET_SMOOTH_FACES_HASH = 2586408642L
-        private val setSmoothFacesBind by lazy {
+        @JvmField
+        val setSmoothFacesBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "set_smooth_faces", SET_SMOOTH_FACES_HASH)
-        }
 
         private const val GET_SMOOTH_FACES_HASH = 36873697L
-        private val getSmoothFacesBind by lazy {
+        @JvmField
+        val getSmoothFacesBind =
             ObjectCalls.getMethodBind("CSGPolygon3D", "get_smooth_faces", GET_SMOOTH_FACES_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -10,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 open class OpenXRInteractionProfileEditorBase(handle: GodotHandle) : HBoxContainer(handle) {
     fun setup(actionMap: OpenXRActionMap?, interactionProfile: OpenXRInteractionProfile?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     companion object {
@@ -20,10 +21,12 @@ open class OpenXRInteractionProfileEditorBase(handle: GodotHandle) : HBoxContain
 
         internal fun wrap(handle: RawSegment): OpenXRInteractionProfileEditorBase? =
             if (handle.address() == 0L) null else OpenXRInteractionProfileEditorBase(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SETUP_HASH = 421962938L
-        private val setupBind by lazy {
+        @JvmField
+        val setupBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfileEditorBase", "setup", SETUP_HASH)
-        }
     }
 }

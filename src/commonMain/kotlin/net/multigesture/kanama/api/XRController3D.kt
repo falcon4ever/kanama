@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.is_button_pressed
      */
     fun isButtonPressed(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isButtonPressedBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isButtonPressedBind, segment, name)
     }
 
     /**
@@ -32,7 +33,7 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_input
      */
     fun getInput(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInputBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getInputBind, segment, name)
     }
 
     /**
@@ -43,7 +44,7 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_float
      */
     fun getFloat(name: String): Double {
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getFloatBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getFloatBind, segment, name)
     }
 
     /**
@@ -54,7 +55,7 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_vector2
      */
     fun getVector2(name: String): Vector2 {
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getVector2Bind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getVector2Bind, segment, name)
     }
 
     /**
@@ -63,7 +64,7 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
      * Generated from Godot docs: XRController3D.get_tracker_hand
      */
     fun getTrackerHand(): XRPositionalTracker.TrackerHand {
-        return XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment))
+        return XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerHandBind, segment))
     }
 
     /** Signal `button_pressed(action_name: String)`; see [TypedSignal]. */
@@ -106,30 +107,32 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRController3D? =
             if (handle.address() == 0L) null else XRController3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_BUTTON_PRESSED_HASH = 2619796661L
-        private val isButtonPressedBind by lazy {
+        @JvmField
+        val isButtonPressedBind =
             ObjectCalls.getMethodBind("XRController3D", "is_button_pressed", IS_BUTTON_PRESSED_HASH)
-        }
 
         private const val GET_INPUT_HASH = 2760726917L
-        private val getInputBind by lazy {
+        @JvmField
+        val getInputBind =
             ObjectCalls.getMethodBind("XRController3D", "get_input", GET_INPUT_HASH)
-        }
 
         private const val GET_FLOAT_HASH = 2349060816L
-        private val getFloatBind by lazy {
+        @JvmField
+        val getFloatBind =
             ObjectCalls.getMethodBind("XRController3D", "get_float", GET_FLOAT_HASH)
-        }
 
         private const val GET_VECTOR2_HASH = 3100822709L
-        private val getVector2Bind by lazy {
+        @JvmField
+        val getVector2Bind =
             ObjectCalls.getMethodBind("XRController3D", "get_vector2", GET_VECTOR2_HASH)
-        }
 
         private const val GET_TRACKER_HAND_HASH = 4181770860L
-        private val getTrackerHandBind by lazy {
+        @JvmField
+        val getTrackerHandBind =
             ObjectCalls.getMethodBind("XRController3D", "get_tracker_hand", GET_TRACKER_HAND_HASH)
-        }
     }
 }

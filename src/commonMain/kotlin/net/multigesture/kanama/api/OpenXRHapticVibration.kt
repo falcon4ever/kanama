@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -29,32 +30,32 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
 
     fun setDuration(duration: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDurationBind, segment, duration)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDurationBind, segment, duration)
     }
 
     fun getDuration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDurationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDurationBind, segment)
     }
 
     fun setFrequency(frequency: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, segment, frequency)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrequencyBind, segment, frequency)
     }
 
     fun getFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
     }
 
     fun setAmplitude(amplitude: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAmplitudeBind, segment, amplitude)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAmplitudeBind, segment, amplitude)
     }
 
     fun getAmplitude(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmplitudeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmplitudeBind, segment)
     }
 
     companion object {
@@ -67,35 +68,37 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRHapticVibration? =
             if (handle.address() == 0L) null else OpenXRHapticVibration(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DURATION_HASH = 1286410249L
-        private val setDurationBind by lazy {
+        @JvmField
+        val setDurationBind =
             ObjectCalls.getMethodBind("OpenXRHapticVibration", "set_duration", SET_DURATION_HASH)
-        }
 
         private const val GET_DURATION_HASH = 3905245786L
-        private val getDurationBind by lazy {
+        @JvmField
+        val getDurationBind =
             ObjectCalls.getMethodBind("OpenXRHapticVibration", "get_duration", GET_DURATION_HASH)
-        }
 
         private const val SET_FREQUENCY_HASH = 373806689L
-        private val setFrequencyBind by lazy {
+        @JvmField
+        val setFrequencyBind =
             ObjectCalls.getMethodBind("OpenXRHapticVibration", "set_frequency", SET_FREQUENCY_HASH)
-        }
 
         private const val GET_FREQUENCY_HASH = 1740695150L
-        private val getFrequencyBind by lazy {
+        @JvmField
+        val getFrequencyBind =
             ObjectCalls.getMethodBind("OpenXRHapticVibration", "get_frequency", GET_FREQUENCY_HASH)
-        }
 
         private const val SET_AMPLITUDE_HASH = 373806689L
-        private val setAmplitudeBind by lazy {
+        @JvmField
+        val setAmplitudeBind =
             ObjectCalls.getMethodBind("OpenXRHapticVibration", "set_amplitude", SET_AMPLITUDE_HASH)
-        }
 
         private const val GET_AMPLITUDE_HASH = 1740695150L
-        private val getAmplitudeBind by lazy {
+        @JvmField
+        val getAmplitudeBind =
             ObjectCalls.getMethodBind("OpenXRHapticVibration", "get_amplitude", GET_AMPLITUDE_HASH)
-        }
     }
 }

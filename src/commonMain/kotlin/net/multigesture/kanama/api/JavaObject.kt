@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaClass(): JavaClass? {
         checkOpen()
-        return JavaClass.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, segment))
+        return JavaClass.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getJavaClassBind, segment))
     }
 
     /**
@@ -27,7 +28,7 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasJavaMethod(method: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, segment, method)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasJavaMethodBind, segment, method)
     }
 
     companion object {
@@ -40,15 +41,17 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JavaObject? =
             if (handle.address() == 0L) null else JavaObject(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_JAVA_CLASS_HASH = 541536347L
-        private val getJavaClassBind by lazy {
+        @JvmField
+        val getJavaClassBind =
             ObjectCalls.getMethodBind("JavaObject", "get_java_class", GET_JAVA_CLASS_HASH)
-        }
 
         private const val HAS_JAVA_METHOD_HASH = 2619796661L
-        private val hasJavaMethodBind by lazy {
+        @JvmField
+        val hasJavaMethodBind =
             ObjectCalls.getMethodBind("JavaObject", "has_java_method", HAS_JAVA_METHOD_HASH)
-        }
     }
 }

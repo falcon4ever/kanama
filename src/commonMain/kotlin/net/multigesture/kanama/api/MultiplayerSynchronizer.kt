@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -49,71 +50,71 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
         set(value) = setVisibilityPublic(value)
 
     fun setRootPath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setRootPathBind, segment, path)
     }
 
     fun getRootPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootPathBind, segment)
     }
 
     fun setReplicationInterval(milliseconds: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setReplicationIntervalBind, segment, milliseconds)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setReplicationIntervalBind, segment, milliseconds)
     }
 
     fun getReplicationInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReplicationIntervalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReplicationIntervalBind, segment)
     }
 
     fun setDeltaInterval(milliseconds: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDeltaIntervalBind, segment, milliseconds)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDeltaIntervalBind, segment, milliseconds)
     }
 
     fun getDeltaInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDeltaIntervalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDeltaIntervalBind, segment)
     }
 
     fun setReplicationConfig(config: SceneReplicationConfig?) {
-        ObjectCalls.ptrcallWithObjectArgs(setReplicationConfigBind, segment, listOf(config?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setReplicationConfigBind, segment, listOf(config?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getReplicationConfig(): SceneReplicationConfig? {
-        return SceneReplicationConfig.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getReplicationConfigBind, segment))
+        return SceneReplicationConfig.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getReplicationConfigBind, segment))
     }
 
     fun setVisibilityUpdateMode(mode: MultiplayerSynchronizer.VisibilityUpdateMode) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityUpdateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityUpdateModeBind, segment, mode.value)
     }
 
     fun getVisibilityUpdateMode(): MultiplayerSynchronizer.VisibilityUpdateMode {
-        return MultiplayerSynchronizer.VisibilityUpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityUpdateModeBind, segment))
+        return MultiplayerSynchronizer.VisibilityUpdateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityUpdateModeBind, segment))
     }
 
     fun updateVisibility(forPeer: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(updateVisibilityBind, segment, forPeer)
+        ObjectCalls.ptrcallWithIntArg(Binds.updateVisibilityBind, segment, forPeer)
     }
 
     fun setVisibilityPublic(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibilityPublicBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibilityPublicBind, segment, visible)
     }
 
     fun isVisibilityPublic(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibilityPublicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibilityPublicBind, segment)
     }
 
     fun addVisibilityFilter(filter: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addVisibilityFilterBind, segment, filter.target.segment, filter.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.addVisibilityFilterBind, segment, filter.target.segment, filter.method)
     }
 
     fun removeVisibilityFilter(filter: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(removeVisibilityFilterBind, segment, filter.target.segment, filter.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.removeVisibilityFilterBind, segment, filter.target.segment, filter.method)
     }
 
     fun setVisibilityFor(peer: Int, visible: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setVisibilityForBind, segment, peer, visible)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setVisibilityForBind, segment, peer, visible)
     }
 
     fun getVisibilityFor(peer: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getVisibilityForBind, segment, peer)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getVisibilityForBind, segment, peer)
     }
 
     /** Signal `synchronized()`; see [TypedSignal]. */
@@ -153,90 +154,92 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): MultiplayerSynchronizer? =
             if (handle.address() == 0L) null else MultiplayerSynchronizer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ROOT_PATH_HASH = 1348162250L
-        private val setRootPathBind by lazy {
+        @JvmField
+        val setRootPathBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_root_path", SET_ROOT_PATH_HASH)
-        }
 
         private const val GET_ROOT_PATH_HASH = 4075236667L
-        private val getRootPathBind by lazy {
+        @JvmField
+        val getRootPathBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "get_root_path", GET_ROOT_PATH_HASH)
-        }
 
         private const val SET_REPLICATION_INTERVAL_HASH = 373806689L
-        private val setReplicationIntervalBind by lazy {
+        @JvmField
+        val setReplicationIntervalBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_replication_interval", SET_REPLICATION_INTERVAL_HASH)
-        }
 
         private const val GET_REPLICATION_INTERVAL_HASH = 1740695150L
-        private val getReplicationIntervalBind by lazy {
+        @JvmField
+        val getReplicationIntervalBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "get_replication_interval", GET_REPLICATION_INTERVAL_HASH)
-        }
 
         private const val SET_DELTA_INTERVAL_HASH = 373806689L
-        private val setDeltaIntervalBind by lazy {
+        @JvmField
+        val setDeltaIntervalBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_delta_interval", SET_DELTA_INTERVAL_HASH)
-        }
 
         private const val GET_DELTA_INTERVAL_HASH = 1740695150L
-        private val getDeltaIntervalBind by lazy {
+        @JvmField
+        val getDeltaIntervalBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "get_delta_interval", GET_DELTA_INTERVAL_HASH)
-        }
 
         private const val SET_REPLICATION_CONFIG_HASH = 3889206742L
-        private val setReplicationConfigBind by lazy {
+        @JvmField
+        val setReplicationConfigBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_replication_config", SET_REPLICATION_CONFIG_HASH)
-        }
 
         private const val GET_REPLICATION_CONFIG_HASH = 3200254614L
-        private val getReplicationConfigBind by lazy {
+        @JvmField
+        val getReplicationConfigBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "get_replication_config", GET_REPLICATION_CONFIG_HASH)
-        }
 
         private const val SET_VISIBILITY_UPDATE_MODE_HASH = 3494860300L
-        private val setVisibilityUpdateModeBind by lazy {
+        @JvmField
+        val setVisibilityUpdateModeBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_visibility_update_mode", SET_VISIBILITY_UPDATE_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_UPDATE_MODE_HASH = 3352241418L
-        private val getVisibilityUpdateModeBind by lazy {
+        @JvmField
+        val getVisibilityUpdateModeBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "get_visibility_update_mode", GET_VISIBILITY_UPDATE_MODE_HASH)
-        }
 
         private const val UPDATE_VISIBILITY_HASH = 1995695955L
-        private val updateVisibilityBind by lazy {
+        @JvmField
+        val updateVisibilityBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "update_visibility", UPDATE_VISIBILITY_HASH)
-        }
 
         private const val SET_VISIBILITY_PUBLIC_HASH = 2586408642L
-        private val setVisibilityPublicBind by lazy {
+        @JvmField
+        val setVisibilityPublicBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_visibility_public", SET_VISIBILITY_PUBLIC_HASH)
-        }
 
         private const val IS_VISIBILITY_PUBLIC_HASH = 36873697L
-        private val isVisibilityPublicBind by lazy {
+        @JvmField
+        val isVisibilityPublicBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "is_visibility_public", IS_VISIBILITY_PUBLIC_HASH)
-        }
 
         private const val ADD_VISIBILITY_FILTER_HASH = 1611583062L
-        private val addVisibilityFilterBind by lazy {
+        @JvmField
+        val addVisibilityFilterBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "add_visibility_filter", ADD_VISIBILITY_FILTER_HASH)
-        }
 
         private const val REMOVE_VISIBILITY_FILTER_HASH = 1611583062L
-        private val removeVisibilityFilterBind by lazy {
+        @JvmField
+        val removeVisibilityFilterBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "remove_visibility_filter", REMOVE_VISIBILITY_FILTER_HASH)
-        }
 
         private const val SET_VISIBILITY_FOR_HASH = 300928843L
-        private val setVisibilityForBind by lazy {
+        @JvmField
+        val setVisibilityForBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "set_visibility_for", SET_VISIBILITY_FOR_HASH)
-        }
 
         private const val GET_VISIBILITY_FOR_HASH = 1116898809L
-        private val getVisibilityForBind by lazy {
+        @JvmField
+        val getVisibilityForBind =
             ObjectCalls.getMethodBind("MultiplayerSynchronizer", "get_visibility_for", GET_VISIBILITY_FOR_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
      */
     fun beginResample() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(beginResampleBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.beginResampleBind, segment)
     }
 
     companion object {
@@ -31,10 +32,12 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackResampled? =
             if (handle.address() == 0L) null else AudioStreamPlaybackResampled(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val BEGIN_RESAMPLE_HASH = 3218959716L
-        private val beginResampleBind by lazy {
+        @JvmField
+        val beginResampleBind =
             ObjectCalls.getMethodBind("AudioStreamPlaybackResampled", "begin_resample", BEGIN_RESAMPLE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -26,7 +27,7 @@ class AnimatableBody3D(handle: GodotHandle) : StaticBody3D(handle) {
      * Generated from Godot docs: AnimatableBody3D.set_sync_to_physics
      */
     fun setSyncToPhysics(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSyncToPhysicsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSyncToPhysicsBind, segment, enable)
     }
 
     /**
@@ -37,7 +38,7 @@ class AnimatableBody3D(handle: GodotHandle) : StaticBody3D(handle) {
      * Generated from Godot docs: AnimatableBody3D.is_sync_to_physics_enabled
      */
     fun isSyncToPhysicsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSyncToPhysicsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSyncToPhysicsEnabledBind, segment)
     }
 
     companion object {
@@ -47,15 +48,17 @@ class AnimatableBody3D(handle: GodotHandle) : StaticBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): AnimatableBody3D? =
             if (handle.address() == 0L) null else AnimatableBody3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SYNC_TO_PHYSICS_HASH = 2586408642L
-        private val setSyncToPhysicsBind by lazy {
+        @JvmField
+        val setSyncToPhysicsBind =
             ObjectCalls.getMethodBind("AnimatableBody3D", "set_sync_to_physics", SET_SYNC_TO_PHYSICS_HASH)
-        }
 
         private const val IS_SYNC_TO_PHYSICS_ENABLED_HASH = 36873697L
-        private val isSyncToPhysicsEnabledBind by lazy {
+        @JvmField
+        val isSyncToPhysicsEnabledBind =
             ObjectCalls.getMethodBind("AnimatableBody3D", "is_sync_to_physics_enabled", IS_SYNC_TO_PHYSICS_ENABLED_HASH)
-        }
     }
 }

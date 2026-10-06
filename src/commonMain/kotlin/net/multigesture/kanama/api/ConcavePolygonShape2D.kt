@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,7 +28,7 @@ class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun setSegments(segments: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setSegmentsBind, segment, segments)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setSegmentsBind, segment, segments)
     }
 
     /**
@@ -39,7 +40,7 @@ class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getSegments(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getSegmentsBind, segment)
     }
 
     companion object {
@@ -52,15 +53,17 @@ class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConcavePolygonShape2D? =
             if (handle.address() == 0L) null else ConcavePolygonShape2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SEGMENTS_HASH = 1509147220L
-        private val setSegmentsBind by lazy {
+        @JvmField
+        val setSegmentsBind =
             ObjectCalls.getMethodBind("ConcavePolygonShape2D", "set_segments", SET_SEGMENTS_HASH)
-        }
 
         private const val GET_SEGMENTS_HASH = 2961356807L
-        private val getSegmentsBind by lazy {
+        @JvmField
+        val getSegmentsBind =
             ObjectCalls.getMethodBind("ConcavePolygonShape2D", "get_segments", GET_SEGMENTS_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -27,7 +28,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0.0, 0.0)) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
+        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(Binds.addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
     }
 
     /**
@@ -37,7 +38,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getNode(name: String): AnimationNode? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getNodeBind, segment, name)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -52,7 +53,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun removeNode(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeNodeBind, segment, name)
     }
 
     /**
@@ -62,7 +63,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun renameNode(name: String, newName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, segment, name, newName)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameNodeBind, segment, name, newName)
     }
 
     /**
@@ -72,7 +73,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun hasNode(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasNodeBind, segment, name)
     }
 
     /**
@@ -83,7 +84,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun connectNode(inputNode: String, inputIndex: Int, outputNode: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameIntAndStringNameArgs(connectNodeBind, segment, inputNode, inputIndex, outputNode)
+        ObjectCalls.ptrcallWithStringNameIntAndStringNameArgs(Binds.connectNodeBind, segment, inputNode, inputIndex, outputNode)
     }
 
     /**
@@ -93,7 +94,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun disconnectNode(inputNode: String, inputIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndIntArg(disconnectNodeBind, segment, inputNode, inputIndex)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.disconnectNodeBind, segment, inputNode, inputIndex)
     }
 
     /**
@@ -103,7 +104,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getNodeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getNodeListBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setNodePosition(name: String, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, segment, name, position)
+        ObjectCalls.ptrcallWithStringNameAndVector2Arg(Binds.setNodePositionBind, segment, name, position)
     }
 
     /**
@@ -123,7 +124,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getNodePosition(name: String): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getNodePositionBind, segment, name)
     }
 
     /**
@@ -133,7 +134,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGraphOffsetBind, segment, offset)
     }
 
     /**
@@ -143,7 +144,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
     }
 
     /** Signal `node_changed(node_name: StringName)`; see [TypedSignal]. */
@@ -172,65 +173,67 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendTree? =
             if (handle.address() == 0L) null else AnimationNodeBlendTree(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_NODE_HASH = 1980270704L
-        private val addNodeBind by lazy {
+        @JvmField
+        val addNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "add_node", ADD_NODE_HASH)
-        }
 
         private const val GET_NODE_HASH = 625644256L
-        private val getNodeBind by lazy {
+        @JvmField
+        val getNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "get_node", GET_NODE_HASH)
-        }
 
         private const val REMOVE_NODE_HASH = 3304788590L
-        private val removeNodeBind by lazy {
+        @JvmField
+        val removeNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "remove_node", REMOVE_NODE_HASH)
-        }
 
         private const val RENAME_NODE_HASH = 3740211285L
-        private val renameNodeBind by lazy {
+        @JvmField
+        val renameNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "rename_node", RENAME_NODE_HASH)
-        }
 
         private const val HAS_NODE_HASH = 2619796661L
-        private val hasNodeBind by lazy {
+        @JvmField
+        val hasNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "has_node", HAS_NODE_HASH)
-        }
 
         private const val CONNECT_NODE_HASH = 2168001410L
-        private val connectNodeBind by lazy {
+        @JvmField
+        val connectNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "connect_node", CONNECT_NODE_HASH)
-        }
 
         private const val DISCONNECT_NODE_HASH = 2415702435L
-        private val disconnectNodeBind by lazy {
+        @JvmField
+        val disconnectNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "disconnect_node", DISCONNECT_NODE_HASH)
-        }
 
         private const val GET_NODE_LIST_HASH = 3995934104L
-        private val getNodeListBind by lazy {
+        @JvmField
+        val getNodeListBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "get_node_list", GET_NODE_LIST_HASH)
-        }
 
         private const val SET_NODE_POSITION_HASH = 1999414630L
-        private val setNodePositionBind by lazy {
+        @JvmField
+        val setNodePositionBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "set_node_position", SET_NODE_POSITION_HASH)
-        }
 
         private const val GET_NODE_POSITION_HASH = 3100822709L
-        private val getNodePositionBind by lazy {
+        @JvmField
+        val getNodePositionBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "get_node_position", GET_NODE_POSITION_HASH)
-        }
 
         private const val SET_GRAPH_OFFSET_HASH = 743155724L
-        private val setGraphOffsetBind by lazy {
+        @JvmField
+        val setGraphOffsetBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "set_graph_offset", SET_GRAPH_OFFSET_HASH)
-        }
 
         private const val GET_GRAPH_OFFSET_HASH = 3341600327L
-        private val getGraphOffsetBind by lazy {
+        @JvmField
+        val getGraphOffsetBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendTree", "get_graph_offset", GET_GRAPH_OFFSET_HASH)
-        }
     }
 }

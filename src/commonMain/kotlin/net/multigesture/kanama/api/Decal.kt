@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -115,7 +116,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -128,7 +129,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_texture
      */
     fun setTexture(type: Decal.DecalTexture, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, type.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setTextureBind, segment, type.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -166,7 +167,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_texture
      */
     fun getTexture(type: Decal.DecalTexture): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, type.value))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getTextureBind, segment, type.value))
     }
 
     /**
@@ -176,7 +177,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_emission_energy
      */
     fun setEmissionEnergy(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionEnergyBind, segment, energy)
     }
 
     /**
@@ -186,7 +187,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_emission_energy
      */
     fun getEmissionEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionEnergyBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_albedo_mix
      */
     fun setAlbedoMix(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlbedoMixBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlbedoMixBind, segment, energy)
     }
 
     /**
@@ -210,7 +211,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_albedo_mix
      */
     fun getAlbedoMix(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlbedoMixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlbedoMixBind, segment)
     }
 
     /**
@@ -222,7 +223,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_modulate
      */
     fun setModulate(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, color)
     }
 
     /**
@@ -234,7 +235,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
     }
 
     /**
@@ -245,7 +246,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_upper_fade
      */
     fun setUpperFade(fade: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setUpperFadeBind, segment, fade)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setUpperFadeBind, segment, fade)
     }
 
     /**
@@ -256,7 +257,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_upper_fade
      */
     fun getUpperFade(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUpperFadeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUpperFadeBind, segment)
     }
 
     /**
@@ -267,7 +268,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_lower_fade
      */
     fun setLowerFade(fade: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLowerFadeBind, segment, fade)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLowerFadeBind, segment, fade)
     }
 
     /**
@@ -278,7 +279,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_lower_fade
      */
     fun getLowerFade(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLowerFadeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLowerFadeBind, segment)
     }
 
     /**
@@ -290,7 +291,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_normal_fade
      */
     fun setNormalFade(fade: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNormalFadeBind, segment, fade)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNormalFadeBind, segment, fade)
     }
 
     /**
@@ -302,7 +303,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_normal_fade
      */
     fun getNormalFade(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalFadeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalFadeBind, segment)
     }
 
     /**
@@ -314,7 +315,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_enable_distance_fade
      */
     fun setEnableDistanceFade(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDistanceFadeBind, segment, enable)
     }
 
     /**
@@ -326,7 +327,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.is_distance_fade_enabled
      */
     fun isDistanceFadeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDistanceFadeEnabledBind, segment)
     }
 
     /**
@@ -335,7 +336,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_distance_fade_begin
      */
     fun setDistanceFadeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeBeginBind, segment, distance)
     }
 
     /**
@@ -344,7 +345,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_distance_fade_begin
      */
     fun getDistanceFadeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeBeginBind, segment)
     }
 
     /**
@@ -355,7 +356,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_distance_fade_length
      */
     fun setDistanceFadeLength(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeLengthBind, segment, distance)
     }
 
     /**
@@ -366,7 +367,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_distance_fade_length
      */
     fun getDistanceFadeLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeLengthBind, segment)
     }
 
     /**
@@ -378,7 +379,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCullMaskBind, segment, mask)
     }
 
     /**
@@ -390,7 +391,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCullMaskBind, segment)
     }
 
     /**
@@ -442,125 +443,127 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): Decal? =
             if (handle.address() == 0L) null else Decal(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("Decal", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("Decal", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 2086764391L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("Decal", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3244119503L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("Decal", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_EMISSION_ENERGY_HASH = 373806689L
-        private val setEmissionEnergyBind by lazy {
+        @JvmField
+        val setEmissionEnergyBind =
             ObjectCalls.getMethodBind("Decal", "set_emission_energy", SET_EMISSION_ENERGY_HASH)
-        }
 
         private const val GET_EMISSION_ENERGY_HASH = 1740695150L
-        private val getEmissionEnergyBind by lazy {
+        @JvmField
+        val getEmissionEnergyBind =
             ObjectCalls.getMethodBind("Decal", "get_emission_energy", GET_EMISSION_ENERGY_HASH)
-        }
 
         private const val SET_ALBEDO_MIX_HASH = 373806689L
-        private val setAlbedoMixBind by lazy {
+        @JvmField
+        val setAlbedoMixBind =
             ObjectCalls.getMethodBind("Decal", "set_albedo_mix", SET_ALBEDO_MIX_HASH)
-        }
 
         private const val GET_ALBEDO_MIX_HASH = 1740695150L
-        private val getAlbedoMixBind by lazy {
+        @JvmField
+        val getAlbedoMixBind =
             ObjectCalls.getMethodBind("Decal", "get_albedo_mix", GET_ALBEDO_MIX_HASH)
-        }
 
         private const val SET_MODULATE_HASH = 2920490490L
-        private val setModulateBind by lazy {
+        @JvmField
+        val setModulateBind =
             ObjectCalls.getMethodBind("Decal", "set_modulate", SET_MODULATE_HASH)
-        }
 
         private const val GET_MODULATE_HASH = 3444240500L
-        private val getModulateBind by lazy {
+        @JvmField
+        val getModulateBind =
             ObjectCalls.getMethodBind("Decal", "get_modulate", GET_MODULATE_HASH)
-        }
 
         private const val SET_UPPER_FADE_HASH = 373806689L
-        private val setUpperFadeBind by lazy {
+        @JvmField
+        val setUpperFadeBind =
             ObjectCalls.getMethodBind("Decal", "set_upper_fade", SET_UPPER_FADE_HASH)
-        }
 
         private const val GET_UPPER_FADE_HASH = 1740695150L
-        private val getUpperFadeBind by lazy {
+        @JvmField
+        val getUpperFadeBind =
             ObjectCalls.getMethodBind("Decal", "get_upper_fade", GET_UPPER_FADE_HASH)
-        }
 
         private const val SET_LOWER_FADE_HASH = 373806689L
-        private val setLowerFadeBind by lazy {
+        @JvmField
+        val setLowerFadeBind =
             ObjectCalls.getMethodBind("Decal", "set_lower_fade", SET_LOWER_FADE_HASH)
-        }
 
         private const val GET_LOWER_FADE_HASH = 1740695150L
-        private val getLowerFadeBind by lazy {
+        @JvmField
+        val getLowerFadeBind =
             ObjectCalls.getMethodBind("Decal", "get_lower_fade", GET_LOWER_FADE_HASH)
-        }
 
         private const val SET_NORMAL_FADE_HASH = 373806689L
-        private val setNormalFadeBind by lazy {
+        @JvmField
+        val setNormalFadeBind =
             ObjectCalls.getMethodBind("Decal", "set_normal_fade", SET_NORMAL_FADE_HASH)
-        }
 
         private const val GET_NORMAL_FADE_HASH = 1740695150L
-        private val getNormalFadeBind by lazy {
+        @JvmField
+        val getNormalFadeBind =
             ObjectCalls.getMethodBind("Decal", "get_normal_fade", GET_NORMAL_FADE_HASH)
-        }
 
         private const val SET_ENABLE_DISTANCE_FADE_HASH = 2586408642L
-        private val setEnableDistanceFadeBind by lazy {
+        @JvmField
+        val setEnableDistanceFadeBind =
             ObjectCalls.getMethodBind("Decal", "set_enable_distance_fade", SET_ENABLE_DISTANCE_FADE_HASH)
-        }
 
         private const val IS_DISTANCE_FADE_ENABLED_HASH = 36873697L
-        private val isDistanceFadeEnabledBind by lazy {
+        @JvmField
+        val isDistanceFadeEnabledBind =
             ObjectCalls.getMethodBind("Decal", "is_distance_fade_enabled", IS_DISTANCE_FADE_ENABLED_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_BEGIN_HASH = 373806689L
-        private val setDistanceFadeBeginBind by lazy {
+        @JvmField
+        val setDistanceFadeBeginBind =
             ObjectCalls.getMethodBind("Decal", "set_distance_fade_begin", SET_DISTANCE_FADE_BEGIN_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_BEGIN_HASH = 1740695150L
-        private val getDistanceFadeBeginBind by lazy {
+        @JvmField
+        val getDistanceFadeBeginBind =
             ObjectCalls.getMethodBind("Decal", "get_distance_fade_begin", GET_DISTANCE_FADE_BEGIN_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_LENGTH_HASH = 373806689L
-        private val setDistanceFadeLengthBind by lazy {
+        @JvmField
+        val setDistanceFadeLengthBind =
             ObjectCalls.getMethodBind("Decal", "set_distance_fade_length", SET_DISTANCE_FADE_LENGTH_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_LENGTH_HASH = 1740695150L
-        private val getDistanceFadeLengthBind by lazy {
+        @JvmField
+        val getDistanceFadeLengthBind =
             ObjectCalls.getMethodBind("Decal", "get_distance_fade_length", GET_DISTANCE_FADE_LENGTH_HASH)
-        }
 
         private const val SET_CULL_MASK_HASH = 1286410249L
-        private val setCullMaskBind by lazy {
+        @JvmField
+        val setCullMaskBind =
             ObjectCalls.getMethodBind("Decal", "set_cull_mask", SET_CULL_MASK_HASH)
-        }
 
         private const val GET_CULL_MASK_HASH = 3905245786L
-        private val getCullMaskBind by lazy {
+        @JvmField
+        val getCullMaskBind =
             ObjectCalls.getMethodBind("Decal", "get_cull_mask", GET_CULL_MASK_HASH)
-        }
     }
 }

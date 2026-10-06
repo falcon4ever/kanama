@@ -22,7 +22,5 @@ open class JointLimitation3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JointLimitation3D? =
             if (handle.address() == 0L) null else JointLimitation3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

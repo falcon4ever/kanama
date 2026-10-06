@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,9 +11,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: NavigationServer2DManager
  */
 object NavigationServer2DManager {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("NavigationServer2DManager")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Registers a `NavigationServer2D` implementation by passing a `name` and a `Callable` that
@@ -22,7 +22,7 @@ object NavigationServer2DManager {
      */
     @JvmStatic
     fun registerServer(name: String, createCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringCallableArgs(registerServerBind, singleton, name, createCallback.target.segment, createCallback.method)
+        ObjectCalls.ptrcallWithStringCallableArgs(Binds.registerServerBind, singleton, name, createCallback.target.segment, createCallback.method)
     }
 
     /**
@@ -33,7 +33,7 @@ object NavigationServer2DManager {
      */
     @JvmStatic
     fun setDefaultServer(name: String, priority: Int) {
-        ObjectCalls.ptrcallWithStringAndIntArg(setDefaultServerBind, singleton, name, priority)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.setDefaultServerBind, singleton, name, priority)
     }
 
     @JvmStatic
@@ -43,13 +43,18 @@ object NavigationServer2DManager {
     internal fun wrap(handle: RawSegment): NavigationServer2DManager? =
         if (handle.address() == 0L) null else this
 
-    private const val REGISTER_SERVER_HASH = 2137474292L
-    private val registerServerBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2DManager", "register_server", REGISTER_SERVER_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("NavigationServer2DManager")
 
-    private const val SET_DEFAULT_SERVER_HASH = 2956805083L
-    private val setDefaultServerBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2DManager", "set_default_server", SET_DEFAULT_SERVER_HASH)
+        private const val REGISTER_SERVER_HASH = 2137474292L
+        @JvmField
+        val registerServerBind =
+            ObjectCalls.getMethodBind("NavigationServer2DManager", "register_server", REGISTER_SERVER_HASH)
+
+        private const val SET_DEFAULT_SERVER_HASH = 2956805083L
+        @JvmField
+        val setDefaultServerBind =
+            ObjectCalls.getMethodBind("NavigationServer2DManager", "set_default_server", SET_DEFAULT_SERVER_HASH)
     }
 }

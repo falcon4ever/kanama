@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -39,7 +40,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_base
      */
     fun setBase(base: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setBaseBind, segment, base)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setBaseBind, segment, base)
     }
 
     /**
@@ -49,7 +50,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_base
      */
     fun getBase(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getBaseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getBaseBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_instance
      */
     fun getInstance(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getInstanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getInstanceBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_layer_mask
      */
     fun setLayerMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setLayerMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setLayerMaskBind, segment, mask)
     }
 
     /**
@@ -98,7 +99,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_layer_mask
      */
     fun getLayerMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getLayerMaskBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_layer_mask_value
      */
     fun setLayerMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setLayerMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setLayerMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -118,7 +119,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_layer_mask_value
      */
     fun getLayerMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getLayerMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getLayerMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -132,7 +133,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_sorting_offset
      */
     fun setSortingOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSortingOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSortingOffsetBind, segment, offset)
     }
 
     /**
@@ -146,7 +147,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_sorting_offset
      */
     fun getSortingOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSortingOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSortingOffsetBind, segment)
     }
 
     /**
@@ -158,7 +159,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.set_sorting_use_aabb_center
      */
     fun setSortingUseAabbCenter(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSortingUseAabbCenterBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSortingUseAabbCenterBind, segment, enabled)
     }
 
     /**
@@ -170,7 +171,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.is_sorting_use_aabb_center
      */
     fun isSortingUseAabbCenter(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSortingUseAabbCenterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSortingUseAabbCenterBind, segment)
     }
 
     /**
@@ -179,7 +180,7 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VisualInstance3D.get_aabb
      */
     fun getAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
     }
 
     companion object {
@@ -189,65 +190,67 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): VisualInstance3D? =
             if (handle.address() == 0L) null else VisualInstance3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BASE_HASH = 2722037293L
-        private val setBaseBind by lazy {
+        @JvmField
+        val setBaseBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "set_base", SET_BASE_HASH)
-        }
 
         private const val GET_BASE_HASH = 2944877500L
-        private val getBaseBind by lazy {
+        @JvmField
+        val getBaseBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "get_base", GET_BASE_HASH)
-        }
 
         private const val GET_INSTANCE_HASH = 2944877500L
-        private val getInstanceBind by lazy {
+        @JvmField
+        val getInstanceBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "get_instance", GET_INSTANCE_HASH)
-        }
 
         private const val SET_LAYER_MASK_HASH = 1286410249L
-        private val setLayerMaskBind by lazy {
+        @JvmField
+        val setLayerMaskBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "set_layer_mask", SET_LAYER_MASK_HASH)
-        }
 
         private const val GET_LAYER_MASK_HASH = 3905245786L
-        private val getLayerMaskBind by lazy {
+        @JvmField
+        val getLayerMaskBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "get_layer_mask", GET_LAYER_MASK_HASH)
-        }
 
         private const val SET_LAYER_MASK_VALUE_HASH = 300928843L
-        private val setLayerMaskValueBind by lazy {
+        @JvmField
+        val setLayerMaskValueBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "set_layer_mask_value", SET_LAYER_MASK_VALUE_HASH)
-        }
 
         private const val GET_LAYER_MASK_VALUE_HASH = 1116898809L
-        private val getLayerMaskValueBind by lazy {
+        @JvmField
+        val getLayerMaskValueBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "get_layer_mask_value", GET_LAYER_MASK_VALUE_HASH)
-        }
 
         private const val SET_SORTING_OFFSET_HASH = 373806689L
-        private val setSortingOffsetBind by lazy {
+        @JvmField
+        val setSortingOffsetBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "set_sorting_offset", SET_SORTING_OFFSET_HASH)
-        }
 
         private const val GET_SORTING_OFFSET_HASH = 1740695150L
-        private val getSortingOffsetBind by lazy {
+        @JvmField
+        val getSortingOffsetBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "get_sorting_offset", GET_SORTING_OFFSET_HASH)
-        }
 
         private const val SET_SORTING_USE_AABB_CENTER_HASH = 2586408642L
-        private val setSortingUseAabbCenterBind by lazy {
+        @JvmField
+        val setSortingUseAabbCenterBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "set_sorting_use_aabb_center", SET_SORTING_USE_AABB_CENTER_HASH)
-        }
 
         private const val IS_SORTING_USE_AABB_CENTER_HASH = 36873697L
-        private val isSortingUseAabbCenterBind by lazy {
+        @JvmField
+        val isSortingUseAabbCenterBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "is_sorting_use_aabb_center", IS_SORTING_USE_AABB_CENTER_HASH)
-        }
 
         private const val GET_AABB_HASH = 1068685055L
-        private val getAabbBind by lazy {
+        @JvmField
+        val getAabbBind =
             ObjectCalls.getMethodBind("VisualInstance3D", "get_aabb", GET_AABB_HASH)
-        }
     }
 }

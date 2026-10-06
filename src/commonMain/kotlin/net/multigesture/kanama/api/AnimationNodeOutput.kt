@@ -22,7 +22,5 @@ class AnimationNodeOutput(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeOutput? =
             if (handle.address() == 0L) null else AnimationNodeOutput(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

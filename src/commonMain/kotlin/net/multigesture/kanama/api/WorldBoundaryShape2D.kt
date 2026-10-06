@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -32,7 +33,7 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun setNormal(normal: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setNormalBind, segment, normal)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setNormalBind, segment, normal)
     }
 
     /**
@@ -43,7 +44,7 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getNormal(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNormalBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun setDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceBind, segment, distance)
     }
 
     /**
@@ -69,7 +70,7 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceBind, segment)
     }
 
     companion object {
@@ -82,25 +83,27 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape2D? =
             if (handle.address() == 0L) null else WorldBoundaryShape2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_NORMAL_HASH = 743155724L
-        private val setNormalBind by lazy {
+        @JvmField
+        val setNormalBind =
             ObjectCalls.getMethodBind("WorldBoundaryShape2D", "set_normal", SET_NORMAL_HASH)
-        }
 
         private const val GET_NORMAL_HASH = 3341600327L
-        private val getNormalBind by lazy {
+        @JvmField
+        val getNormalBind =
             ObjectCalls.getMethodBind("WorldBoundaryShape2D", "get_normal", GET_NORMAL_HASH)
-        }
 
         private const val SET_DISTANCE_HASH = 373806689L
-        private val setDistanceBind by lazy {
+        @JvmField
+        val setDistanceBind =
             ObjectCalls.getMethodBind("WorldBoundaryShape2D", "set_distance", SET_DISTANCE_HASH)
-        }
 
         private const val GET_DISTANCE_HASH = 1740695150L
-        private val getDistanceBind by lazy {
+        @JvmField
+        val getDistanceBind =
             ObjectCalls.getMethodBind("WorldBoundaryShape2D", "get_distance", GET_DISTANCE_HASH)
-        }
     }
 }

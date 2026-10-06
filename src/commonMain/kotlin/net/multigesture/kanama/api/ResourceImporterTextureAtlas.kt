@@ -23,7 +23,5 @@ class ResourceImporterTextureAtlas(handle: GodotHandle) : ResourceImporter(handl
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterTextureAtlas? =
             if (handle.address() == 0L) null else ResourceImporterTextureAtlas(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

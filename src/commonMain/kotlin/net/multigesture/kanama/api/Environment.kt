@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -580,7 +581,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setBackground(mode: Environment.BGMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackgroundBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBackgroundBind, segment, mode.value)
     }
 
     /**
@@ -590,7 +591,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBackground(): Environment.BGMode {
         checkOpen()
-        return Environment.BGMode(ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, segment))
+        return Environment.BGMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBackgroundBind, segment))
     }
 
     /**
@@ -600,7 +601,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSky(sky: Sky?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSkyBind, segment, listOf(sky?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkyBind, segment, listOf(sky?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -610,7 +611,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSky(): Sky? {
         checkOpen()
-        return Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, segment))
+        return Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkyBind, segment))
     }
 
     /**
@@ -621,7 +622,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSkyCustomFov(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyCustomFovBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSkyCustomFovBind, segment, scale)
     }
 
     /**
@@ -632,7 +633,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkyCustomFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCustomFovBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyCustomFovBind, segment)
     }
 
     /**
@@ -642,7 +643,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSkyRotation(eulerRadians: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSkyRotationBind, segment, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSkyRotationBind, segment, eulerRadians)
     }
 
     /**
@@ -652,7 +653,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkyRotation(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSkyRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSkyRotationBind, segment)
     }
 
     /**
@@ -663,7 +664,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setBgColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBgColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBgColorBind, segment, color)
     }
 
     /**
@@ -674,7 +675,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBgColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBgColorBind, segment)
     }
 
     /**
@@ -685,7 +686,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setBgEnergyMultiplier(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBgEnergyMultiplierBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBgEnergyMultiplierBind, segment, energy)
     }
 
     /**
@@ -696,7 +697,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBgEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBgEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBgEnergyMultiplierBind, segment)
     }
 
     /**
@@ -708,7 +709,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setBgIntensity(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBgIntensityBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBgIntensityBind, segment, energy)
     }
 
     /**
@@ -720,7 +721,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getBgIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBgIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBgIntensityBind, segment)
     }
 
     /**
@@ -730,7 +731,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setCanvasMaxLayer(layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCanvasMaxLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCanvasMaxLayerBind, segment, layer)
     }
 
     /**
@@ -740,7 +741,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getCanvasMaxLayer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCanvasMaxLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCanvasMaxLayerBind, segment)
     }
 
     /**
@@ -750,7 +751,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setCameraFeedId(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCameraFeedIdBind, segment, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCameraFeedIdBind, segment, id)
     }
 
     /**
@@ -760,7 +761,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
     }
 
     /**
@@ -771,7 +772,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAmbientLightColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setAmbientLightColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setAmbientLightColorBind, segment, color)
     }
 
     /**
@@ -782,7 +783,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientLightColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getAmbientLightColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getAmbientLightColorBind, segment)
     }
 
     /**
@@ -792,7 +793,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAmbientSource(source: Environment.AmbientSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, segment, source.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAmbientSourceBind, segment, source.value)
     }
 
     /**
@@ -802,7 +803,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientSource(): Environment.AmbientSource {
         checkOpen()
-        return Environment.AmbientSource(ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, segment))
+        return Environment.AmbientSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAmbientSourceBind, segment))
     }
 
     /**
@@ -813,7 +814,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAmbientLightEnergy(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAmbientLightEnergyBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAmbientLightEnergyBind, segment, energy)
     }
 
     /**
@@ -824,7 +825,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientLightEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientLightEnergyBind, segment)
     }
 
     /**
@@ -839,7 +840,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAmbientLightSkyContribution(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAmbientLightSkyContributionBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAmbientLightSkyContributionBind, segment, ratio)
     }
 
     /**
@@ -854,7 +855,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAmbientLightSkyContribution(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmbientLightSkyContributionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmbientLightSkyContributionBind, segment)
     }
 
     /**
@@ -864,7 +865,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setReflectionSource(source: Environment.ReflectionSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, segment, source.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setReflectionSourceBind, segment, source.value)
     }
 
     /**
@@ -874,7 +875,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getReflectionSource(): Environment.ReflectionSource {
         checkOpen()
-        return Environment.ReflectionSource(ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, segment))
+        return Environment.ReflectionSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReflectionSourceBind, segment))
     }
 
     /**
@@ -885,7 +886,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setTonemapper(mode: Environment.ToneMapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTonemapperBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTonemapperBind, segment, mode.value)
     }
 
     /**
@@ -896,7 +897,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapper(): Environment.ToneMapper {
         checkOpen()
-        return Environment.ToneMapper(ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, segment))
+        return Environment.ToneMapper(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTonemapperBind, segment))
     }
 
     /**
@@ -910,7 +911,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setTonemapExposure(exposure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapExposureBind, segment, exposure)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapExposureBind, segment, exposure)
     }
 
     /**
@@ -924,7 +925,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapExposure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapExposureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapExposureBind, segment)
     }
 
     /**
@@ -942,7 +943,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setTonemapWhite(white: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapWhiteBind, segment, white)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapWhiteBind, segment, white)
     }
 
     /**
@@ -960,7 +961,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapWhite(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapWhiteBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapWhiteBind, segment)
     }
 
     /**
@@ -979,7 +980,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setTonemapAgxWhite(white: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxWhiteBind, segment, white)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapAgxWhiteBind, segment, white)
     }
 
     /**
@@ -998,7 +999,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapAgxWhite(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxWhiteBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapAgxWhiteBind, segment)
     }
 
     /**
@@ -1010,7 +1011,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setTonemapAgxContrast(contrast: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTonemapAgxContrastBind, segment, contrast)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTonemapAgxContrastBind, segment, contrast)
     }
 
     /**
@@ -1022,7 +1023,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getTonemapAgxContrast(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTonemapAgxContrastBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTonemapAgxContrastBind, segment)
     }
 
     /**
@@ -1036,7 +1037,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsrEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSsrEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSsrEnabledBind, segment, enabled)
     }
 
     /**
@@ -1050,7 +1051,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSsrEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSsrEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsrEnabledBind, segment)
     }
 
     /**
@@ -1060,7 +1061,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsrMaxSteps(maxSteps: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSsrMaxStepsBind, segment, maxSteps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSsrMaxStepsBind, segment, maxSteps)
     }
 
     /**
@@ -1070,7 +1071,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrMaxSteps(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSsrMaxStepsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSsrMaxStepsBind, segment)
     }
 
     /**
@@ -1082,7 +1083,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsrFadeIn(fadeIn: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsrFadeInBind, segment, fadeIn)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsrFadeInBind, segment, fadeIn)
     }
 
     /**
@@ -1094,7 +1095,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrFadeIn(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeInBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrFadeInBind, segment)
     }
 
     /**
@@ -1106,7 +1107,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsrFadeOut(fadeOut: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsrFadeOutBind, segment, fadeOut)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsrFadeOutBind, segment, fadeOut)
     }
 
     /**
@@ -1118,7 +1119,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrFadeOut(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrFadeOutBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrFadeOutBind, segment)
     }
 
     /**
@@ -1128,7 +1129,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsrDepthTolerance(depthTolerance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsrDepthToleranceBind, segment, depthTolerance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsrDepthToleranceBind, segment, depthTolerance)
     }
 
     /**
@@ -1138,7 +1139,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsrDepthTolerance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsrDepthToleranceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsrDepthToleranceBind, segment)
     }
 
     /**
@@ -1154,7 +1155,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSsaoEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSsaoEnabledBind, segment, enabled)
     }
 
     /**
@@ -1170,7 +1171,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSsaoEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSsaoEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsaoEnabledBind, segment)
     }
 
     /**
@@ -1182,7 +1183,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoRadiusBind, segment, radius)
     }
 
     /**
@@ -1194,7 +1195,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoRadiusBind, segment)
     }
 
     /**
@@ -1205,7 +1206,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoIntensityBind, segment, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoIntensityBind, segment, intensity)
     }
 
     /**
@@ -1216,7 +1217,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoIntensityBind, segment)
     }
 
     /**
@@ -1227,7 +1228,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoPower(power: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoPowerBind, segment, power)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoPowerBind, segment, power)
     }
 
     /**
@@ -1238,7 +1239,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoPower(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoPowerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoPowerBind, segment)
     }
 
     /**
@@ -1250,7 +1251,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoDetail(detail: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoDetailBind, segment, detail)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoDetailBind, segment, detail)
     }
 
     /**
@@ -1262,7 +1263,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoDetail(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDetailBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoDetailBind, segment)
     }
 
     /**
@@ -1274,7 +1275,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoHorizon(horizon: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoHorizonBind, segment, horizon)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoHorizonBind, segment, horizon)
     }
 
     /**
@@ -1286,7 +1287,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoHorizon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoHorizonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoHorizonBind, segment)
     }
 
     /**
@@ -1298,7 +1299,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoSharpnessBind, segment, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1310,7 +1311,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoSharpnessBind, segment)
     }
 
     /**
@@ -1322,7 +1323,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoDirectLightAffect(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoDirectLightAffectBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoDirectLightAffectBind, segment, amount)
     }
 
     /**
@@ -1334,7 +1335,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoDirectLightAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoDirectLightAffectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoDirectLightAffectBind, segment)
     }
 
     /**
@@ -1345,7 +1346,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsaoAoChannelAffect(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsaoAoChannelAffectBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsaoAoChannelAffectBind, segment, amount)
     }
 
     /**
@@ -1356,7 +1357,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsaoAoChannelAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsaoAoChannelAffectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsaoAoChannelAffectBind, segment)
     }
 
     /**
@@ -1372,7 +1373,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsilEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSsilEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSsilEnabledBind, segment, enabled)
     }
 
     /**
@@ -1388,7 +1389,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSsilEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSsilEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSsilEnabledBind, segment)
     }
 
     /**
@@ -1400,7 +1401,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsilRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilRadiusBind, segment, radius)
     }
 
     /**
@@ -1412,7 +1413,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilRadiusBind, segment)
     }
 
     /**
@@ -1423,7 +1424,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsilIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilIntensityBind, segment, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilIntensityBind, segment, intensity)
     }
 
     /**
@@ -1434,7 +1435,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilIntensityBind, segment)
     }
 
     /**
@@ -1446,7 +1447,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsilSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilSharpnessBind, segment, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1458,7 +1459,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilSharpnessBind, segment)
     }
 
     /**
@@ -1473,7 +1474,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSsilNormalRejection(normalRejection: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSsilNormalRejectionBind, segment, normalRejection)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSsilNormalRejectionBind, segment, normalRejection)
     }
 
     /**
@@ -1488,7 +1489,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSsilNormalRejection(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSsilNormalRejectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSsilNormalRejectionBind, segment)
     }
 
     /**
@@ -1510,7 +1511,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSdfgiEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSdfgiEnabledBind, segment, enabled)
     }
 
     /**
@@ -1532,7 +1533,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSdfgiEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiEnabledBind, segment)
     }
 
     /**
@@ -1545,7 +1546,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiCascades(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSdfgiCascadesBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSdfgiCascadesBind, segment, amount)
     }
 
     /**
@@ -1558,7 +1559,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiCascades(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSdfgiCascadesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSdfgiCascadesBind, segment)
     }
 
     /**
@@ -1573,7 +1574,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiMinCellSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiMinCellSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiMinCellSizeBind, segment, size)
     }
 
     /**
@@ -1588,7 +1589,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiMinCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMinCellSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiMinCellSizeBind, segment)
     }
 
     /**
@@ -1601,7 +1602,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiMaxDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiMaxDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -1614,7 +1615,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiMaxDistanceBind, segment)
     }
 
     /**
@@ -1625,7 +1626,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiCascade0Distance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiCascade0DistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiCascade0DistanceBind, segment, distance)
     }
 
     /**
@@ -1636,7 +1637,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiCascade0Distance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiCascade0DistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiCascade0DistanceBind, segment)
     }
 
     /**
@@ -1649,7 +1650,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiYScale(scale: Environment.SDFGIYScale) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, segment, scale.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSdfgiYScaleBind, segment, scale.value)
     }
 
     /**
@@ -1662,7 +1663,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiYScale(): Environment.SDFGIYScale {
         checkOpen()
-        return Environment.SDFGIYScale(ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, segment))
+        return Environment.SDFGIYScale(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSdfgiYScaleBind, segment))
     }
 
     /**
@@ -1674,7 +1675,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiUseOcclusion(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSdfgiUseOcclusionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSdfgiUseOcclusionBind, segment, enable)
     }
 
     /**
@@ -1686,7 +1687,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSdfgiUsingOcclusion(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiUsingOcclusionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiUsingOcclusionBind, segment)
     }
 
     /**
@@ -1701,7 +1702,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiBounceFeedback(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiBounceFeedbackBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiBounceFeedbackBind, segment, amount)
     }
 
     /**
@@ -1716,7 +1717,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiBounceFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiBounceFeedbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiBounceFeedbackBind, segment)
     }
 
     /**
@@ -1727,7 +1728,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiReadSkyLight(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSdfgiReadSkyLightBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSdfgiReadSkyLightBind, segment, enable)
     }
 
     /**
@@ -1738,7 +1739,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isSdfgiReadingSkyLight(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSdfgiReadingSkyLightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSdfgiReadingSkyLightBind, segment)
     }
 
     /**
@@ -1749,7 +1750,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiEnergy(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiEnergyBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiEnergyBind, segment, amount)
     }
 
     /**
@@ -1760,7 +1761,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiEnergyBind, segment)
     }
 
     /**
@@ -1771,7 +1772,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiNormalBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiNormalBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiNormalBiasBind, segment, bias)
     }
 
     /**
@@ -1782,7 +1783,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiNormalBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiNormalBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiNormalBiasBind, segment)
     }
 
     /**
@@ -1793,7 +1794,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSdfgiProbeBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSdfgiProbeBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSdfgiProbeBiasBind, segment, bias)
     }
 
     /**
@@ -1804,7 +1805,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSdfgiProbeBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSdfgiProbeBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSdfgiProbeBiasBind, segment)
     }
 
     /**
@@ -1821,7 +1822,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGlowEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGlowEnabledBind, segment, enabled)
     }
 
     /**
@@ -1838,7 +1839,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isGlowEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGlowEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlowEnabledBind, segment)
     }
 
     /**
@@ -1850,7 +1851,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowLevel(idx: Int, intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setGlowLevelBind, segment, idx, intensity)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setGlowLevelBind, segment, idx, intensity)
     }
 
     /**
@@ -1862,7 +1863,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowLevel(idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getGlowLevelBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getGlowLevelBind, segment, idx)
     }
 
     /**
@@ -1874,7 +1875,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowNormalized(normalize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGlowNormalizedBind, segment, normalize)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGlowNormalizedBind, segment, normalize)
     }
 
     /**
@@ -1886,7 +1887,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isGlowNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGlowNormalizedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlowNormalizedBind, segment)
     }
 
     /**
@@ -1898,7 +1899,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowIntensity(intensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowIntensityBind, segment, intensity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowIntensityBind, segment, intensity)
     }
 
     /**
@@ -1910,7 +1911,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowIntensityBind, segment)
     }
 
     /**
@@ -1924,7 +1925,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowStrengthBind, segment, strength)
     }
 
     /**
@@ -1938,7 +1939,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowStrengthBind, segment)
     }
 
     /**
@@ -1952,7 +1953,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowMix(mix: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowMixBind, segment, mix)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowMixBind, segment, mix)
     }
 
     /**
@@ -1966,7 +1967,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMix(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowMixBind, segment)
     }
 
     /**
@@ -1977,7 +1978,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowBloom(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowBloomBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowBloomBind, segment, amount)
     }
 
     /**
@@ -1988,7 +1989,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowBloom(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowBloomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowBloomBind, segment)
     }
 
     /**
@@ -1999,7 +2000,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowBlendMode(mode: Environment.GlowBlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGlowBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -2010,7 +2011,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowBlendMode(): Environment.GlowBlendMode {
         checkOpen()
-        return Environment.GlowBlendMode(ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, segment))
+        return Environment.GlowBlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGlowBlendModeBind, segment))
     }
 
     /**
@@ -2023,7 +2024,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowHdrBleedThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedThresholdBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowHdrBleedThresholdBind, segment, threshold)
     }
 
     /**
@@ -2036,7 +2037,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowHdrBleedThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrBleedThresholdBind, segment)
     }
 
     /**
@@ -2048,7 +2049,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowHdrBleedScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrBleedScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowHdrBleedScaleBind, segment, scale)
     }
 
     /**
@@ -2060,7 +2061,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowHdrBleedScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrBleedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrBleedScaleBind, segment)
     }
 
     /**
@@ -2071,7 +2072,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowHdrLuminanceCap(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowHdrLuminanceCapBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowHdrLuminanceCapBind, segment, amount)
     }
 
     /**
@@ -2082,7 +2083,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowHdrLuminanceCap(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowHdrLuminanceCapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowHdrLuminanceCapBind, segment)
     }
 
     /**
@@ -2097,7 +2098,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowMapStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGlowMapStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlowMapStrengthBind, segment, strength)
     }
 
     /**
@@ -2112,7 +2113,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMapStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlowMapStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlowMapStrengthBind, segment)
     }
 
     /**
@@ -2128,7 +2129,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowMap(mode: Texture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, segment, listOf(mode?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGlowMapBind, segment, listOf(mode?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2144,7 +2145,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMap(): Texture? {
         checkOpen()
-        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, segment))
+        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGlowMapBind, segment))
     }
 
     /**
@@ -2154,7 +2155,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFogEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFogEnabledBind, segment, enabled)
     }
 
     /**
@@ -2164,7 +2165,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isFogEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFogEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFogEnabledBind, segment)
     }
 
     /**
@@ -2174,7 +2175,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogMode(mode: Environment.FogMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFogModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFogModeBind, segment, mode.value)
     }
 
     /**
@@ -2184,7 +2185,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogMode(): Environment.FogMode {
         checkOpen()
-        return Environment.FogMode(ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, segment))
+        return Environment.FogMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFogModeBind, segment))
     }
 
     /**
@@ -2194,7 +2195,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogLightColor(lightColor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setFogLightColorBind, segment, lightColor)
+        ObjectCalls.ptrcallWithColorArg(Binds.setFogLightColorBind, segment, lightColor)
     }
 
     /**
@@ -2204,7 +2205,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogLightColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getFogLightColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getFogLightColorBind, segment)
     }
 
     /**
@@ -2214,7 +2215,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogLightEnergy(lightEnergy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogLightEnergyBind, segment, lightEnergy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogLightEnergyBind, segment, lightEnergy)
     }
 
     /**
@@ -2224,7 +2225,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogLightEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogLightEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogLightEnergyBind, segment)
     }
 
     /**
@@ -2235,7 +2236,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogSunScatter(sunScatter: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogSunScatterBind, segment, sunScatter)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogSunScatterBind, segment, sunScatter)
     }
 
     /**
@@ -2246,7 +2247,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogSunScatter(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogSunScatterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogSunScatterBind, segment)
     }
 
     /**
@@ -2260,7 +2261,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogDensity(density: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDensityBind, segment, density)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDensityBind, segment, density)
     }
 
     /**
@@ -2274,7 +2275,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDensityBind, segment)
     }
 
     /**
@@ -2284,7 +2285,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogHeightBind, segment, height)
     }
 
     /**
@@ -2294,7 +2295,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogHeightBind, segment)
     }
 
     /**
@@ -2305,7 +2306,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogHeightDensity(heightDensity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogHeightDensityBind, segment, heightDensity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogHeightDensityBind, segment, heightDensity)
     }
 
     /**
@@ -2316,7 +2317,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogHeightDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogHeightDensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogHeightDensityBind, segment)
     }
 
     /**
@@ -2336,7 +2337,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogAerialPerspective(aerialPerspective: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogAerialPerspectiveBind, segment, aerialPerspective)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogAerialPerspectiveBind, segment, aerialPerspective)
     }
 
     /**
@@ -2356,7 +2357,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogAerialPerspective(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogAerialPerspectiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogAerialPerspectiveBind, segment)
     }
 
     /**
@@ -2369,7 +2370,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogSkyAffect(skyAffect: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogSkyAffectBind, segment, skyAffect)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogSkyAffectBind, segment, skyAffect)
     }
 
     /**
@@ -2382,7 +2383,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogSkyAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogSkyAffectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogSkyAffectBind, segment)
     }
 
     /**
@@ -2393,7 +2394,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogDepthCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDepthCurveBind, segment, curve)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDepthCurveBind, segment, curve)
     }
 
     /**
@@ -2404,7 +2405,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDepthCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthCurveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthCurveBind, segment)
     }
 
     /**
@@ -2415,7 +2416,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogDepthBegin(begin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDepthBeginBind, segment, begin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDepthBeginBind, segment, begin)
     }
 
     /**
@@ -2426,7 +2427,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDepthBegin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthBeginBind, segment)
     }
 
     /**
@@ -2438,7 +2439,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setFogDepthEnd(end: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFogDepthEndBind, segment, end)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFogDepthEndBind, segment, end)
     }
 
     /**
@@ -2450,7 +2451,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getFogDepthEnd(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFogDepthEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFogDepthEndBind, segment)
     }
 
     /**
@@ -2465,7 +2466,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVolumetricFogEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVolumetricFogEnabledBind, segment, enabled)
     }
 
     /**
@@ -2480,7 +2481,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isVolumetricFogEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVolumetricFogEnabledBind, segment)
     }
 
     /**
@@ -2493,7 +2494,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogEmission(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setVolumetricFogEmissionBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setVolumetricFogEmissionBind, segment, color)
     }
 
     /**
@@ -2506,7 +2507,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogEmissionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getVolumetricFogEmissionBind, segment)
     }
 
     /**
@@ -2517,7 +2518,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogAlbedo(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setVolumetricFogAlbedoBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setVolumetricFogAlbedoBind, segment, color)
     }
 
     /**
@@ -2528,7 +2529,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getVolumetricFogAlbedoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getVolumetricFogAlbedoBind, segment)
     }
 
     /**
@@ -2544,7 +2545,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogDensity(density: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDensityBind, segment, density)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogDensityBind, segment, density)
     }
 
     /**
@@ -2560,7 +2561,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogDensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogDensityBind, segment)
     }
 
     /**
@@ -2570,7 +2571,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogEmissionEnergy(begin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogEmissionEnergyBind, segment, begin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogEmissionEnergyBind, segment, begin)
     }
 
     /**
@@ -2580,7 +2581,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogEmissionEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogEmissionEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogEmissionEnergyBind, segment)
     }
 
     /**
@@ -2593,7 +2594,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogAnisotropy(anisotropy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAnisotropyBind, segment, anisotropy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogAnisotropyBind, segment, anisotropy)
     }
 
     /**
@@ -2606,7 +2607,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogAnisotropy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAnisotropyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogAnisotropyBind, segment)
     }
 
     /**
@@ -2619,7 +2620,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogLengthBind, segment, length)
     }
 
     /**
@@ -2632,7 +2633,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogLengthBind, segment)
     }
 
     /**
@@ -2643,7 +2644,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogDetailSpread(detailSpread: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogDetailSpreadBind, segment, detailSpread)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogDetailSpreadBind, segment, detailSpread)
     }
 
     /**
@@ -2654,7 +2655,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogDetailSpread(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogDetailSpreadBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogDetailSpreadBind, segment)
     }
 
     /**
@@ -2670,7 +2671,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogGiInject(giInject: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogGiInjectBind, segment, giInject)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogGiInjectBind, segment, giInject)
     }
 
     /**
@@ -2686,7 +2687,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogGiInject(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogGiInjectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogGiInjectBind, segment)
     }
 
     /**
@@ -2699,7 +2700,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogAmbientInject(enabled: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogAmbientInjectBind, segment, enabled)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogAmbientInjectBind, segment, enabled)
     }
 
     /**
@@ -2712,7 +2713,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogAmbientInject(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogAmbientInjectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogAmbientInjectBind, segment)
     }
 
     /**
@@ -2726,7 +2727,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogSkyAffect(skyAffect: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogSkyAffectBind, segment, skyAffect)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogSkyAffectBind, segment, skyAffect)
     }
 
     /**
@@ -2740,7 +2741,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogSkyAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogSkyAffectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogSkyAffectBind, segment)
     }
 
     /**
@@ -2755,7 +2756,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogTemporalReprojectionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVolumetricFogTemporalReprojectionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVolumetricFogTemporalReprojectionEnabledBind, segment, enabled)
     }
 
     /**
@@ -2770,7 +2771,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isVolumetricFogTemporalReprojectionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVolumetricFogTemporalReprojectionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVolumetricFogTemporalReprojectionEnabledBind, segment)
     }
 
     /**
@@ -2782,7 +2783,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setVolumetricFogTemporalReprojectionAmount(temporalReprojectionAmount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumetricFogTemporalReprojectionAmountBind, segment, temporalReprojectionAmount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumetricFogTemporalReprojectionAmountBind, segment, temporalReprojectionAmount)
     }
 
     /**
@@ -2794,7 +2795,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getVolumetricFogTemporalReprojectionAmount(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumetricFogTemporalReprojectionAmountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumetricFogTemporalReprojectionAmountBind, segment)
     }
 
     /**
@@ -2805,7 +2806,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAdjustmentEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAdjustmentEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAdjustmentEnabledBind, segment, enabled)
     }
 
     /**
@@ -2816,7 +2817,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun isAdjustmentEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAdjustmentEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAdjustmentEnabledBind, segment)
     }
 
     /**
@@ -2828,7 +2829,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAdjustmentBrightness(brightness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentBrightnessBind, segment, brightness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAdjustmentBrightnessBind, segment, brightness)
     }
 
     /**
@@ -2840,7 +2841,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentBrightness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentBrightnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentBrightnessBind, segment)
     }
 
     /**
@@ -2853,7 +2854,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAdjustmentContrast(contrast: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentContrastBind, segment, contrast)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAdjustmentContrastBind, segment, contrast)
     }
 
     /**
@@ -2866,7 +2867,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentContrast(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentContrastBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentContrastBind, segment)
     }
 
     /**
@@ -2878,7 +2879,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAdjustmentSaturation(saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAdjustmentSaturationBind, segment, saturation)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAdjustmentSaturationBind, segment, saturation)
     }
 
     /**
@@ -2890,7 +2891,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentSaturation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAdjustmentSaturationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAdjustmentSaturationBind, segment)
     }
 
     /**
@@ -2903,7 +2904,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAdjustmentColorCorrection(colorCorrection: Texture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, segment, listOf(colorCorrection?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setAdjustmentColorCorrectionBind, segment, listOf(colorCorrection?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2916,7 +2917,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentColorCorrection(): Texture? {
         checkOpen()
-        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, segment))
+        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAdjustmentColorCorrectionBind, segment))
     }
 
     /**
@@ -3225,945 +3226,947 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Environment? =
             if (handle.address() == 0L) null else Environment(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BACKGROUND_HASH = 4071623990L
-        private val setBackgroundBind by lazy {
+        @JvmField
+        val setBackgroundBind =
             ObjectCalls.getMethodBind("Environment", "set_background", SET_BACKGROUND_HASH)
-        }
 
         private const val GET_BACKGROUND_HASH = 1843210413L
-        private val getBackgroundBind by lazy {
+        @JvmField
+        val getBackgroundBind =
             ObjectCalls.getMethodBind("Environment", "get_background", GET_BACKGROUND_HASH)
-        }
 
         private const val SET_SKY_HASH = 3336722921L
-        private val setSkyBind by lazy {
+        @JvmField
+        val setSkyBind =
             ObjectCalls.getMethodBind("Environment", "set_sky", SET_SKY_HASH)
-        }
 
         private const val GET_SKY_HASH = 1177136966L
-        private val getSkyBind by lazy {
+        @JvmField
+        val getSkyBind =
             ObjectCalls.getMethodBind("Environment", "get_sky", GET_SKY_HASH)
-        }
 
         private const val SET_SKY_CUSTOM_FOV_HASH = 373806689L
-        private val setSkyCustomFovBind by lazy {
+        @JvmField
+        val setSkyCustomFovBind =
             ObjectCalls.getMethodBind("Environment", "set_sky_custom_fov", SET_SKY_CUSTOM_FOV_HASH)
-        }
 
         private const val GET_SKY_CUSTOM_FOV_HASH = 1740695150L
-        private val getSkyCustomFovBind by lazy {
+        @JvmField
+        val getSkyCustomFovBind =
             ObjectCalls.getMethodBind("Environment", "get_sky_custom_fov", GET_SKY_CUSTOM_FOV_HASH)
-        }
 
         private const val SET_SKY_ROTATION_HASH = 3460891852L
-        private val setSkyRotationBind by lazy {
+        @JvmField
+        val setSkyRotationBind =
             ObjectCalls.getMethodBind("Environment", "set_sky_rotation", SET_SKY_ROTATION_HASH)
-        }
 
         private const val GET_SKY_ROTATION_HASH = 3360562783L
-        private val getSkyRotationBind by lazy {
+        @JvmField
+        val getSkyRotationBind =
             ObjectCalls.getMethodBind("Environment", "get_sky_rotation", GET_SKY_ROTATION_HASH)
-        }
 
         private const val SET_BG_COLOR_HASH = 2920490490L
-        private val setBgColorBind by lazy {
+        @JvmField
+        val setBgColorBind =
             ObjectCalls.getMethodBind("Environment", "set_bg_color", SET_BG_COLOR_HASH)
-        }
 
         private const val GET_BG_COLOR_HASH = 3444240500L
-        private val getBgColorBind by lazy {
+        @JvmField
+        val getBgColorBind =
             ObjectCalls.getMethodBind("Environment", "get_bg_color", GET_BG_COLOR_HASH)
-        }
 
         private const val SET_BG_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setBgEnergyMultiplierBind by lazy {
+        @JvmField
+        val setBgEnergyMultiplierBind =
             ObjectCalls.getMethodBind("Environment", "set_bg_energy_multiplier", SET_BG_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_BG_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getBgEnergyMultiplierBind by lazy {
+        @JvmField
+        val getBgEnergyMultiplierBind =
             ObjectCalls.getMethodBind("Environment", "get_bg_energy_multiplier", GET_BG_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val SET_BG_INTENSITY_HASH = 373806689L
-        private val setBgIntensityBind by lazy {
+        @JvmField
+        val setBgIntensityBind =
             ObjectCalls.getMethodBind("Environment", "set_bg_intensity", SET_BG_INTENSITY_HASH)
-        }
 
         private const val GET_BG_INTENSITY_HASH = 1740695150L
-        private val getBgIntensityBind by lazy {
+        @JvmField
+        val getBgIntensityBind =
             ObjectCalls.getMethodBind("Environment", "get_bg_intensity", GET_BG_INTENSITY_HASH)
-        }
 
         private const val SET_CANVAS_MAX_LAYER_HASH = 1286410249L
-        private val setCanvasMaxLayerBind by lazy {
+        @JvmField
+        val setCanvasMaxLayerBind =
             ObjectCalls.getMethodBind("Environment", "set_canvas_max_layer", SET_CANVAS_MAX_LAYER_HASH)
-        }
 
         private const val GET_CANVAS_MAX_LAYER_HASH = 3905245786L
-        private val getCanvasMaxLayerBind by lazy {
+        @JvmField
+        val getCanvasMaxLayerBind =
             ObjectCalls.getMethodBind("Environment", "get_canvas_max_layer", GET_CANVAS_MAX_LAYER_HASH)
-        }
 
         private const val SET_CAMERA_FEED_ID_HASH = 1286410249L
-        private val setCameraFeedIdBind by lazy {
+        @JvmField
+        val setCameraFeedIdBind =
             ObjectCalls.getMethodBind("Environment", "set_camera_feed_id", SET_CAMERA_FEED_ID_HASH)
-        }
 
         private const val GET_CAMERA_FEED_ID_HASH = 3905245786L
-        private val getCameraFeedIdBind by lazy {
+        @JvmField
+        val getCameraFeedIdBind =
             ObjectCalls.getMethodBind("Environment", "get_camera_feed_id", GET_CAMERA_FEED_ID_HASH)
-        }
 
         private const val SET_AMBIENT_LIGHT_COLOR_HASH = 2920490490L
-        private val setAmbientLightColorBind by lazy {
+        @JvmField
+        val setAmbientLightColorBind =
             ObjectCalls.getMethodBind("Environment", "set_ambient_light_color", SET_AMBIENT_LIGHT_COLOR_HASH)
-        }
 
         private const val GET_AMBIENT_LIGHT_COLOR_HASH = 3444240500L
-        private val getAmbientLightColorBind by lazy {
+        @JvmField
+        val getAmbientLightColorBind =
             ObjectCalls.getMethodBind("Environment", "get_ambient_light_color", GET_AMBIENT_LIGHT_COLOR_HASH)
-        }
 
         private const val SET_AMBIENT_SOURCE_HASH = 2607780160L
-        private val setAmbientSourceBind by lazy {
+        @JvmField
+        val setAmbientSourceBind =
             ObjectCalls.getMethodBind("Environment", "set_ambient_source", SET_AMBIENT_SOURCE_HASH)
-        }
 
         private const val GET_AMBIENT_SOURCE_HASH = 67453933L
-        private val getAmbientSourceBind by lazy {
+        @JvmField
+        val getAmbientSourceBind =
             ObjectCalls.getMethodBind("Environment", "get_ambient_source", GET_AMBIENT_SOURCE_HASH)
-        }
 
         private const val SET_AMBIENT_LIGHT_ENERGY_HASH = 373806689L
-        private val setAmbientLightEnergyBind by lazy {
+        @JvmField
+        val setAmbientLightEnergyBind =
             ObjectCalls.getMethodBind("Environment", "set_ambient_light_energy", SET_AMBIENT_LIGHT_ENERGY_HASH)
-        }
 
         private const val GET_AMBIENT_LIGHT_ENERGY_HASH = 1740695150L
-        private val getAmbientLightEnergyBind by lazy {
+        @JvmField
+        val getAmbientLightEnergyBind =
             ObjectCalls.getMethodBind("Environment", "get_ambient_light_energy", GET_AMBIENT_LIGHT_ENERGY_HASH)
-        }
 
         private const val SET_AMBIENT_LIGHT_SKY_CONTRIBUTION_HASH = 373806689L
-        private val setAmbientLightSkyContributionBind by lazy {
+        @JvmField
+        val setAmbientLightSkyContributionBind =
             ObjectCalls.getMethodBind("Environment", "set_ambient_light_sky_contribution", SET_AMBIENT_LIGHT_SKY_CONTRIBUTION_HASH)
-        }
 
         private const val GET_AMBIENT_LIGHT_SKY_CONTRIBUTION_HASH = 1740695150L
-        private val getAmbientLightSkyContributionBind by lazy {
+        @JvmField
+        val getAmbientLightSkyContributionBind =
             ObjectCalls.getMethodBind("Environment", "get_ambient_light_sky_contribution", GET_AMBIENT_LIGHT_SKY_CONTRIBUTION_HASH)
-        }
 
         private const val SET_REFLECTION_SOURCE_HASH = 299673197L
-        private val setReflectionSourceBind by lazy {
+        @JvmField
+        val setReflectionSourceBind =
             ObjectCalls.getMethodBind("Environment", "set_reflection_source", SET_REFLECTION_SOURCE_HASH)
-        }
 
         private const val GET_REFLECTION_SOURCE_HASH = 777700713L
-        private val getReflectionSourceBind by lazy {
+        @JvmField
+        val getReflectionSourceBind =
             ObjectCalls.getMethodBind("Environment", "get_reflection_source", GET_REFLECTION_SOURCE_HASH)
-        }
 
         private const val SET_TONEMAPPER_HASH = 1509116664L
-        private val setTonemapperBind by lazy {
+        @JvmField
+        val setTonemapperBind =
             ObjectCalls.getMethodBind("Environment", "set_tonemapper", SET_TONEMAPPER_HASH)
-        }
 
         private const val GET_TONEMAPPER_HASH = 2908408137L
-        private val getTonemapperBind by lazy {
+        @JvmField
+        val getTonemapperBind =
             ObjectCalls.getMethodBind("Environment", "get_tonemapper", GET_TONEMAPPER_HASH)
-        }
 
         private const val SET_TONEMAP_EXPOSURE_HASH = 373806689L
-        private val setTonemapExposureBind by lazy {
+        @JvmField
+        val setTonemapExposureBind =
             ObjectCalls.getMethodBind("Environment", "set_tonemap_exposure", SET_TONEMAP_EXPOSURE_HASH)
-        }
 
         private const val GET_TONEMAP_EXPOSURE_HASH = 1740695150L
-        private val getTonemapExposureBind by lazy {
+        @JvmField
+        val getTonemapExposureBind =
             ObjectCalls.getMethodBind("Environment", "get_tonemap_exposure", GET_TONEMAP_EXPOSURE_HASH)
-        }
 
         private const val SET_TONEMAP_WHITE_HASH = 373806689L
-        private val setTonemapWhiteBind by lazy {
+        @JvmField
+        val setTonemapWhiteBind =
             ObjectCalls.getMethodBind("Environment", "set_tonemap_white", SET_TONEMAP_WHITE_HASH)
-        }
 
         private const val GET_TONEMAP_WHITE_HASH = 1740695150L
-        private val getTonemapWhiteBind by lazy {
+        @JvmField
+        val getTonemapWhiteBind =
             ObjectCalls.getMethodBind("Environment", "get_tonemap_white", GET_TONEMAP_WHITE_HASH)
-        }
 
         private const val SET_TONEMAP_AGX_WHITE_HASH = 373806689L
-        private val setTonemapAgxWhiteBind by lazy {
+        @JvmField
+        val setTonemapAgxWhiteBind =
             ObjectCalls.getMethodBind("Environment", "set_tonemap_agx_white", SET_TONEMAP_AGX_WHITE_HASH)
-        }
 
         private const val GET_TONEMAP_AGX_WHITE_HASH = 1740695150L
-        private val getTonemapAgxWhiteBind by lazy {
+        @JvmField
+        val getTonemapAgxWhiteBind =
             ObjectCalls.getMethodBind("Environment", "get_tonemap_agx_white", GET_TONEMAP_AGX_WHITE_HASH)
-        }
 
         private const val SET_TONEMAP_AGX_CONTRAST_HASH = 373806689L
-        private val setTonemapAgxContrastBind by lazy {
+        @JvmField
+        val setTonemapAgxContrastBind =
             ObjectCalls.getMethodBind("Environment", "set_tonemap_agx_contrast", SET_TONEMAP_AGX_CONTRAST_HASH)
-        }
 
         private const val GET_TONEMAP_AGX_CONTRAST_HASH = 1740695150L
-        private val getTonemapAgxContrastBind by lazy {
+        @JvmField
+        val getTonemapAgxContrastBind =
             ObjectCalls.getMethodBind("Environment", "get_tonemap_agx_contrast", GET_TONEMAP_AGX_CONTRAST_HASH)
-        }
 
         private const val SET_SSR_ENABLED_HASH = 2586408642L
-        private val setSsrEnabledBind by lazy {
+        @JvmField
+        val setSsrEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_ssr_enabled", SET_SSR_ENABLED_HASH)
-        }
 
         private const val IS_SSR_ENABLED_HASH = 36873697L
-        private val isSsrEnabledBind by lazy {
+        @JvmField
+        val isSsrEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_ssr_enabled", IS_SSR_ENABLED_HASH)
-        }
 
         private const val SET_SSR_MAX_STEPS_HASH = 1286410249L
-        private val setSsrMaxStepsBind by lazy {
+        @JvmField
+        val setSsrMaxStepsBind =
             ObjectCalls.getMethodBind("Environment", "set_ssr_max_steps", SET_SSR_MAX_STEPS_HASH)
-        }
 
         private const val GET_SSR_MAX_STEPS_HASH = 3905245786L
-        private val getSsrMaxStepsBind by lazy {
+        @JvmField
+        val getSsrMaxStepsBind =
             ObjectCalls.getMethodBind("Environment", "get_ssr_max_steps", GET_SSR_MAX_STEPS_HASH)
-        }
 
         private const val SET_SSR_FADE_IN_HASH = 373806689L
-        private val setSsrFadeInBind by lazy {
+        @JvmField
+        val setSsrFadeInBind =
             ObjectCalls.getMethodBind("Environment", "set_ssr_fade_in", SET_SSR_FADE_IN_HASH)
-        }
 
         private const val GET_SSR_FADE_IN_HASH = 1740695150L
-        private val getSsrFadeInBind by lazy {
+        @JvmField
+        val getSsrFadeInBind =
             ObjectCalls.getMethodBind("Environment", "get_ssr_fade_in", GET_SSR_FADE_IN_HASH)
-        }
 
         private const val SET_SSR_FADE_OUT_HASH = 373806689L
-        private val setSsrFadeOutBind by lazy {
+        @JvmField
+        val setSsrFadeOutBind =
             ObjectCalls.getMethodBind("Environment", "set_ssr_fade_out", SET_SSR_FADE_OUT_HASH)
-        }
 
         private const val GET_SSR_FADE_OUT_HASH = 1740695150L
-        private val getSsrFadeOutBind by lazy {
+        @JvmField
+        val getSsrFadeOutBind =
             ObjectCalls.getMethodBind("Environment", "get_ssr_fade_out", GET_SSR_FADE_OUT_HASH)
-        }
 
         private const val SET_SSR_DEPTH_TOLERANCE_HASH = 373806689L
-        private val setSsrDepthToleranceBind by lazy {
+        @JvmField
+        val setSsrDepthToleranceBind =
             ObjectCalls.getMethodBind("Environment", "set_ssr_depth_tolerance", SET_SSR_DEPTH_TOLERANCE_HASH)
-        }
 
         private const val GET_SSR_DEPTH_TOLERANCE_HASH = 1740695150L
-        private val getSsrDepthToleranceBind by lazy {
+        @JvmField
+        val getSsrDepthToleranceBind =
             ObjectCalls.getMethodBind("Environment", "get_ssr_depth_tolerance", GET_SSR_DEPTH_TOLERANCE_HASH)
-        }
 
         private const val SET_SSAO_ENABLED_HASH = 2586408642L
-        private val setSsaoEnabledBind by lazy {
+        @JvmField
+        val setSsaoEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_enabled", SET_SSAO_ENABLED_HASH)
-        }
 
         private const val IS_SSAO_ENABLED_HASH = 36873697L
-        private val isSsaoEnabledBind by lazy {
+        @JvmField
+        val isSsaoEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_ssao_enabled", IS_SSAO_ENABLED_HASH)
-        }
 
         private const val SET_SSAO_RADIUS_HASH = 373806689L
-        private val setSsaoRadiusBind by lazy {
+        @JvmField
+        val setSsaoRadiusBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_radius", SET_SSAO_RADIUS_HASH)
-        }
 
         private const val GET_SSAO_RADIUS_HASH = 1740695150L
-        private val getSsaoRadiusBind by lazy {
+        @JvmField
+        val getSsaoRadiusBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_radius", GET_SSAO_RADIUS_HASH)
-        }
 
         private const val SET_SSAO_INTENSITY_HASH = 373806689L
-        private val setSsaoIntensityBind by lazy {
+        @JvmField
+        val setSsaoIntensityBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_intensity", SET_SSAO_INTENSITY_HASH)
-        }
 
         private const val GET_SSAO_INTENSITY_HASH = 1740695150L
-        private val getSsaoIntensityBind by lazy {
+        @JvmField
+        val getSsaoIntensityBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_intensity", GET_SSAO_INTENSITY_HASH)
-        }
 
         private const val SET_SSAO_POWER_HASH = 373806689L
-        private val setSsaoPowerBind by lazy {
+        @JvmField
+        val setSsaoPowerBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_power", SET_SSAO_POWER_HASH)
-        }
 
         private const val GET_SSAO_POWER_HASH = 1740695150L
-        private val getSsaoPowerBind by lazy {
+        @JvmField
+        val getSsaoPowerBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_power", GET_SSAO_POWER_HASH)
-        }
 
         private const val SET_SSAO_DETAIL_HASH = 373806689L
-        private val setSsaoDetailBind by lazy {
+        @JvmField
+        val setSsaoDetailBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_detail", SET_SSAO_DETAIL_HASH)
-        }
 
         private const val GET_SSAO_DETAIL_HASH = 1740695150L
-        private val getSsaoDetailBind by lazy {
+        @JvmField
+        val getSsaoDetailBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_detail", GET_SSAO_DETAIL_HASH)
-        }
 
         private const val SET_SSAO_HORIZON_HASH = 373806689L
-        private val setSsaoHorizonBind by lazy {
+        @JvmField
+        val setSsaoHorizonBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_horizon", SET_SSAO_HORIZON_HASH)
-        }
 
         private const val GET_SSAO_HORIZON_HASH = 1740695150L
-        private val getSsaoHorizonBind by lazy {
+        @JvmField
+        val getSsaoHorizonBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_horizon", GET_SSAO_HORIZON_HASH)
-        }
 
         private const val SET_SSAO_SHARPNESS_HASH = 373806689L
-        private val setSsaoSharpnessBind by lazy {
+        @JvmField
+        val setSsaoSharpnessBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_sharpness", SET_SSAO_SHARPNESS_HASH)
-        }
 
         private const val GET_SSAO_SHARPNESS_HASH = 1740695150L
-        private val getSsaoSharpnessBind by lazy {
+        @JvmField
+        val getSsaoSharpnessBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_sharpness", GET_SSAO_SHARPNESS_HASH)
-        }
 
         private const val SET_SSAO_DIRECT_LIGHT_AFFECT_HASH = 373806689L
-        private val setSsaoDirectLightAffectBind by lazy {
+        @JvmField
+        val setSsaoDirectLightAffectBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_direct_light_affect", SET_SSAO_DIRECT_LIGHT_AFFECT_HASH)
-        }
 
         private const val GET_SSAO_DIRECT_LIGHT_AFFECT_HASH = 1740695150L
-        private val getSsaoDirectLightAffectBind by lazy {
+        @JvmField
+        val getSsaoDirectLightAffectBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_direct_light_affect", GET_SSAO_DIRECT_LIGHT_AFFECT_HASH)
-        }
 
         private const val SET_SSAO_AO_CHANNEL_AFFECT_HASH = 373806689L
-        private val setSsaoAoChannelAffectBind by lazy {
+        @JvmField
+        val setSsaoAoChannelAffectBind =
             ObjectCalls.getMethodBind("Environment", "set_ssao_ao_channel_affect", SET_SSAO_AO_CHANNEL_AFFECT_HASH)
-        }
 
         private const val GET_SSAO_AO_CHANNEL_AFFECT_HASH = 1740695150L
-        private val getSsaoAoChannelAffectBind by lazy {
+        @JvmField
+        val getSsaoAoChannelAffectBind =
             ObjectCalls.getMethodBind("Environment", "get_ssao_ao_channel_affect", GET_SSAO_AO_CHANNEL_AFFECT_HASH)
-        }
 
         private const val SET_SSIL_ENABLED_HASH = 2586408642L
-        private val setSsilEnabledBind by lazy {
+        @JvmField
+        val setSsilEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_ssil_enabled", SET_SSIL_ENABLED_HASH)
-        }
 
         private const val IS_SSIL_ENABLED_HASH = 36873697L
-        private val isSsilEnabledBind by lazy {
+        @JvmField
+        val isSsilEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_ssil_enabled", IS_SSIL_ENABLED_HASH)
-        }
 
         private const val SET_SSIL_RADIUS_HASH = 373806689L
-        private val setSsilRadiusBind by lazy {
+        @JvmField
+        val setSsilRadiusBind =
             ObjectCalls.getMethodBind("Environment", "set_ssil_radius", SET_SSIL_RADIUS_HASH)
-        }
 
         private const val GET_SSIL_RADIUS_HASH = 1740695150L
-        private val getSsilRadiusBind by lazy {
+        @JvmField
+        val getSsilRadiusBind =
             ObjectCalls.getMethodBind("Environment", "get_ssil_radius", GET_SSIL_RADIUS_HASH)
-        }
 
         private const val SET_SSIL_INTENSITY_HASH = 373806689L
-        private val setSsilIntensityBind by lazy {
+        @JvmField
+        val setSsilIntensityBind =
             ObjectCalls.getMethodBind("Environment", "set_ssil_intensity", SET_SSIL_INTENSITY_HASH)
-        }
 
         private const val GET_SSIL_INTENSITY_HASH = 1740695150L
-        private val getSsilIntensityBind by lazy {
+        @JvmField
+        val getSsilIntensityBind =
             ObjectCalls.getMethodBind("Environment", "get_ssil_intensity", GET_SSIL_INTENSITY_HASH)
-        }
 
         private const val SET_SSIL_SHARPNESS_HASH = 373806689L
-        private val setSsilSharpnessBind by lazy {
+        @JvmField
+        val setSsilSharpnessBind =
             ObjectCalls.getMethodBind("Environment", "set_ssil_sharpness", SET_SSIL_SHARPNESS_HASH)
-        }
 
         private const val GET_SSIL_SHARPNESS_HASH = 1740695150L
-        private val getSsilSharpnessBind by lazy {
+        @JvmField
+        val getSsilSharpnessBind =
             ObjectCalls.getMethodBind("Environment", "get_ssil_sharpness", GET_SSIL_SHARPNESS_HASH)
-        }
 
         private const val SET_SSIL_NORMAL_REJECTION_HASH = 373806689L
-        private val setSsilNormalRejectionBind by lazy {
+        @JvmField
+        val setSsilNormalRejectionBind =
             ObjectCalls.getMethodBind("Environment", "set_ssil_normal_rejection", SET_SSIL_NORMAL_REJECTION_HASH)
-        }
 
         private const val GET_SSIL_NORMAL_REJECTION_HASH = 1740695150L
-        private val getSsilNormalRejectionBind by lazy {
+        @JvmField
+        val getSsilNormalRejectionBind =
             ObjectCalls.getMethodBind("Environment", "get_ssil_normal_rejection", GET_SSIL_NORMAL_REJECTION_HASH)
-        }
 
         private const val SET_SDFGI_ENABLED_HASH = 2586408642L
-        private val setSdfgiEnabledBind by lazy {
+        @JvmField
+        val setSdfgiEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_enabled", SET_SDFGI_ENABLED_HASH)
-        }
 
         private const val IS_SDFGI_ENABLED_HASH = 36873697L
-        private val isSdfgiEnabledBind by lazy {
+        @JvmField
+        val isSdfgiEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_sdfgi_enabled", IS_SDFGI_ENABLED_HASH)
-        }
 
         private const val SET_SDFGI_CASCADES_HASH = 1286410249L
-        private val setSdfgiCascadesBind by lazy {
+        @JvmField
+        val setSdfgiCascadesBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_cascades", SET_SDFGI_CASCADES_HASH)
-        }
 
         private const val GET_SDFGI_CASCADES_HASH = 3905245786L
-        private val getSdfgiCascadesBind by lazy {
+        @JvmField
+        val getSdfgiCascadesBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_cascades", GET_SDFGI_CASCADES_HASH)
-        }
 
         private const val SET_SDFGI_MIN_CELL_SIZE_HASH = 373806689L
-        private val setSdfgiMinCellSizeBind by lazy {
+        @JvmField
+        val setSdfgiMinCellSizeBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_min_cell_size", SET_SDFGI_MIN_CELL_SIZE_HASH)
-        }
 
         private const val GET_SDFGI_MIN_CELL_SIZE_HASH = 1740695150L
-        private val getSdfgiMinCellSizeBind by lazy {
+        @JvmField
+        val getSdfgiMinCellSizeBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_min_cell_size", GET_SDFGI_MIN_CELL_SIZE_HASH)
-        }
 
         private const val SET_SDFGI_MAX_DISTANCE_HASH = 373806689L
-        private val setSdfgiMaxDistanceBind by lazy {
+        @JvmField
+        val setSdfgiMaxDistanceBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_max_distance", SET_SDFGI_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_SDFGI_MAX_DISTANCE_HASH = 1740695150L
-        private val getSdfgiMaxDistanceBind by lazy {
+        @JvmField
+        val getSdfgiMaxDistanceBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_max_distance", GET_SDFGI_MAX_DISTANCE_HASH)
-        }
 
         private const val SET_SDFGI_CASCADE0_DISTANCE_HASH = 373806689L
-        private val setSdfgiCascade0DistanceBind by lazy {
+        @JvmField
+        val setSdfgiCascade0DistanceBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_cascade0_distance", SET_SDFGI_CASCADE0_DISTANCE_HASH)
-        }
 
         private const val GET_SDFGI_CASCADE0_DISTANCE_HASH = 1740695150L
-        private val getSdfgiCascade0DistanceBind by lazy {
+        @JvmField
+        val getSdfgiCascade0DistanceBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_cascade0_distance", GET_SDFGI_CASCADE0_DISTANCE_HASH)
-        }
 
         private const val SET_SDFGI_Y_SCALE_HASH = 3608608372L
-        private val setSdfgiYScaleBind by lazy {
+        @JvmField
+        val setSdfgiYScaleBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_y_scale", SET_SDFGI_Y_SCALE_HASH)
-        }
 
         private const val GET_SDFGI_Y_SCALE_HASH = 2568002245L
-        private val getSdfgiYScaleBind by lazy {
+        @JvmField
+        val getSdfgiYScaleBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_y_scale", GET_SDFGI_Y_SCALE_HASH)
-        }
 
         private const val SET_SDFGI_USE_OCCLUSION_HASH = 2586408642L
-        private val setSdfgiUseOcclusionBind by lazy {
+        @JvmField
+        val setSdfgiUseOcclusionBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_use_occlusion", SET_SDFGI_USE_OCCLUSION_HASH)
-        }
 
         private const val IS_SDFGI_USING_OCCLUSION_HASH = 36873697L
-        private val isSdfgiUsingOcclusionBind by lazy {
+        @JvmField
+        val isSdfgiUsingOcclusionBind =
             ObjectCalls.getMethodBind("Environment", "is_sdfgi_using_occlusion", IS_SDFGI_USING_OCCLUSION_HASH)
-        }
 
         private const val SET_SDFGI_BOUNCE_FEEDBACK_HASH = 373806689L
-        private val setSdfgiBounceFeedbackBind by lazy {
+        @JvmField
+        val setSdfgiBounceFeedbackBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_bounce_feedback", SET_SDFGI_BOUNCE_FEEDBACK_HASH)
-        }
 
         private const val GET_SDFGI_BOUNCE_FEEDBACK_HASH = 1740695150L
-        private val getSdfgiBounceFeedbackBind by lazy {
+        @JvmField
+        val getSdfgiBounceFeedbackBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_bounce_feedback", GET_SDFGI_BOUNCE_FEEDBACK_HASH)
-        }
 
         private const val SET_SDFGI_READ_SKY_LIGHT_HASH = 2586408642L
-        private val setSdfgiReadSkyLightBind by lazy {
+        @JvmField
+        val setSdfgiReadSkyLightBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_read_sky_light", SET_SDFGI_READ_SKY_LIGHT_HASH)
-        }
 
         private const val IS_SDFGI_READING_SKY_LIGHT_HASH = 36873697L
-        private val isSdfgiReadingSkyLightBind by lazy {
+        @JvmField
+        val isSdfgiReadingSkyLightBind =
             ObjectCalls.getMethodBind("Environment", "is_sdfgi_reading_sky_light", IS_SDFGI_READING_SKY_LIGHT_HASH)
-        }
 
         private const val SET_SDFGI_ENERGY_HASH = 373806689L
-        private val setSdfgiEnergyBind by lazy {
+        @JvmField
+        val setSdfgiEnergyBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_energy", SET_SDFGI_ENERGY_HASH)
-        }
 
         private const val GET_SDFGI_ENERGY_HASH = 1740695150L
-        private val getSdfgiEnergyBind by lazy {
+        @JvmField
+        val getSdfgiEnergyBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_energy", GET_SDFGI_ENERGY_HASH)
-        }
 
         private const val SET_SDFGI_NORMAL_BIAS_HASH = 373806689L
-        private val setSdfgiNormalBiasBind by lazy {
+        @JvmField
+        val setSdfgiNormalBiasBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_normal_bias", SET_SDFGI_NORMAL_BIAS_HASH)
-        }
 
         private const val GET_SDFGI_NORMAL_BIAS_HASH = 1740695150L
-        private val getSdfgiNormalBiasBind by lazy {
+        @JvmField
+        val getSdfgiNormalBiasBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_normal_bias", GET_SDFGI_NORMAL_BIAS_HASH)
-        }
 
         private const val SET_SDFGI_PROBE_BIAS_HASH = 373806689L
-        private val setSdfgiProbeBiasBind by lazy {
+        @JvmField
+        val setSdfgiProbeBiasBind =
             ObjectCalls.getMethodBind("Environment", "set_sdfgi_probe_bias", SET_SDFGI_PROBE_BIAS_HASH)
-        }
 
         private const val GET_SDFGI_PROBE_BIAS_HASH = 1740695150L
-        private val getSdfgiProbeBiasBind by lazy {
+        @JvmField
+        val getSdfgiProbeBiasBind =
             ObjectCalls.getMethodBind("Environment", "get_sdfgi_probe_bias", GET_SDFGI_PROBE_BIAS_HASH)
-        }
 
         private const val SET_GLOW_ENABLED_HASH = 2586408642L
-        private val setGlowEnabledBind by lazy {
+        @JvmField
+        val setGlowEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_enabled", SET_GLOW_ENABLED_HASH)
-        }
 
         private const val IS_GLOW_ENABLED_HASH = 36873697L
-        private val isGlowEnabledBind by lazy {
+        @JvmField
+        val isGlowEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_glow_enabled", IS_GLOW_ENABLED_HASH)
-        }
 
         private const val SET_GLOW_LEVEL_HASH = 1602489585L
-        private val setGlowLevelBind by lazy {
+        @JvmField
+        val setGlowLevelBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_level", SET_GLOW_LEVEL_HASH)
-        }
 
         private const val GET_GLOW_LEVEL_HASH = 2339986948L
-        private val getGlowLevelBind by lazy {
+        @JvmField
+        val getGlowLevelBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_level", GET_GLOW_LEVEL_HASH)
-        }
 
         private const val SET_GLOW_NORMALIZED_HASH = 2586408642L
-        private val setGlowNormalizedBind by lazy {
+        @JvmField
+        val setGlowNormalizedBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_normalized", SET_GLOW_NORMALIZED_HASH)
-        }
 
         private const val IS_GLOW_NORMALIZED_HASH = 36873697L
-        private val isGlowNormalizedBind by lazy {
+        @JvmField
+        val isGlowNormalizedBind =
             ObjectCalls.getMethodBind("Environment", "is_glow_normalized", IS_GLOW_NORMALIZED_HASH)
-        }
 
         private const val SET_GLOW_INTENSITY_HASH = 373806689L
-        private val setGlowIntensityBind by lazy {
+        @JvmField
+        val setGlowIntensityBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_intensity", SET_GLOW_INTENSITY_HASH)
-        }
 
         private const val GET_GLOW_INTENSITY_HASH = 1740695150L
-        private val getGlowIntensityBind by lazy {
+        @JvmField
+        val getGlowIntensityBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_intensity", GET_GLOW_INTENSITY_HASH)
-        }
 
         private const val SET_GLOW_STRENGTH_HASH = 373806689L
-        private val setGlowStrengthBind by lazy {
+        @JvmField
+        val setGlowStrengthBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_strength", SET_GLOW_STRENGTH_HASH)
-        }
 
         private const val GET_GLOW_STRENGTH_HASH = 1740695150L
-        private val getGlowStrengthBind by lazy {
+        @JvmField
+        val getGlowStrengthBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_strength", GET_GLOW_STRENGTH_HASH)
-        }
 
         private const val SET_GLOW_MIX_HASH = 373806689L
-        private val setGlowMixBind by lazy {
+        @JvmField
+        val setGlowMixBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_mix", SET_GLOW_MIX_HASH)
-        }
 
         private const val GET_GLOW_MIX_HASH = 1740695150L
-        private val getGlowMixBind by lazy {
+        @JvmField
+        val getGlowMixBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_mix", GET_GLOW_MIX_HASH)
-        }
 
         private const val SET_GLOW_BLOOM_HASH = 373806689L
-        private val setGlowBloomBind by lazy {
+        @JvmField
+        val setGlowBloomBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_bloom", SET_GLOW_BLOOM_HASH)
-        }
 
         private const val GET_GLOW_BLOOM_HASH = 1740695150L
-        private val getGlowBloomBind by lazy {
+        @JvmField
+        val getGlowBloomBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_bloom", GET_GLOW_BLOOM_HASH)
-        }
 
         private const val SET_GLOW_BLEND_MODE_HASH = 2561587761L
-        private val setGlowBlendModeBind by lazy {
+        @JvmField
+        val setGlowBlendModeBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_blend_mode", SET_GLOW_BLEND_MODE_HASH)
-        }
 
         private const val GET_GLOW_BLEND_MODE_HASH = 1529667332L
-        private val getGlowBlendModeBind by lazy {
+        @JvmField
+        val getGlowBlendModeBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_blend_mode", GET_GLOW_BLEND_MODE_HASH)
-        }
 
         private const val SET_GLOW_HDR_BLEED_THRESHOLD_HASH = 373806689L
-        private val setGlowHdrBleedThresholdBind by lazy {
+        @JvmField
+        val setGlowHdrBleedThresholdBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_hdr_bleed_threshold", SET_GLOW_HDR_BLEED_THRESHOLD_HASH)
-        }
 
         private const val GET_GLOW_HDR_BLEED_THRESHOLD_HASH = 1740695150L
-        private val getGlowHdrBleedThresholdBind by lazy {
+        @JvmField
+        val getGlowHdrBleedThresholdBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_hdr_bleed_threshold", GET_GLOW_HDR_BLEED_THRESHOLD_HASH)
-        }
 
         private const val SET_GLOW_HDR_BLEED_SCALE_HASH = 373806689L
-        private val setGlowHdrBleedScaleBind by lazy {
+        @JvmField
+        val setGlowHdrBleedScaleBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_hdr_bleed_scale", SET_GLOW_HDR_BLEED_SCALE_HASH)
-        }
 
         private const val GET_GLOW_HDR_BLEED_SCALE_HASH = 1740695150L
-        private val getGlowHdrBleedScaleBind by lazy {
+        @JvmField
+        val getGlowHdrBleedScaleBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_hdr_bleed_scale", GET_GLOW_HDR_BLEED_SCALE_HASH)
-        }
 
         private const val SET_GLOW_HDR_LUMINANCE_CAP_HASH = 373806689L
-        private val setGlowHdrLuminanceCapBind by lazy {
+        @JvmField
+        val setGlowHdrLuminanceCapBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_hdr_luminance_cap", SET_GLOW_HDR_LUMINANCE_CAP_HASH)
-        }
 
         private const val GET_GLOW_HDR_LUMINANCE_CAP_HASH = 1740695150L
-        private val getGlowHdrLuminanceCapBind by lazy {
+        @JvmField
+        val getGlowHdrLuminanceCapBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_hdr_luminance_cap", GET_GLOW_HDR_LUMINANCE_CAP_HASH)
-        }
 
         private const val SET_GLOW_MAP_STRENGTH_HASH = 373806689L
-        private val setGlowMapStrengthBind by lazy {
+        @JvmField
+        val setGlowMapStrengthBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_map_strength", SET_GLOW_MAP_STRENGTH_HASH)
-        }
 
         private const val GET_GLOW_MAP_STRENGTH_HASH = 1740695150L
-        private val getGlowMapStrengthBind by lazy {
+        @JvmField
+        val getGlowMapStrengthBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_map_strength", GET_GLOW_MAP_STRENGTH_HASH)
-        }
 
         private const val SET_GLOW_MAP_HASH = 1790811099L
-        private val setGlowMapBind by lazy {
+        @JvmField
+        val setGlowMapBind =
             ObjectCalls.getMethodBind("Environment", "set_glow_map", SET_GLOW_MAP_HASH)
-        }
 
         private const val GET_GLOW_MAP_HASH = 4037048985L
-        private val getGlowMapBind by lazy {
+        @JvmField
+        val getGlowMapBind =
             ObjectCalls.getMethodBind("Environment", "get_glow_map", GET_GLOW_MAP_HASH)
-        }
 
         private const val SET_FOG_ENABLED_HASH = 2586408642L
-        private val setFogEnabledBind by lazy {
+        @JvmField
+        val setFogEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_enabled", SET_FOG_ENABLED_HASH)
-        }
 
         private const val IS_FOG_ENABLED_HASH = 36873697L
-        private val isFogEnabledBind by lazy {
+        @JvmField
+        val isFogEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_fog_enabled", IS_FOG_ENABLED_HASH)
-        }
 
         private const val SET_FOG_MODE_HASH = 3059806579L
-        private val setFogModeBind by lazy {
+        @JvmField
+        val setFogModeBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_mode", SET_FOG_MODE_HASH)
-        }
 
         private const val GET_FOG_MODE_HASH = 2456062483L
-        private val getFogModeBind by lazy {
+        @JvmField
+        val getFogModeBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_mode", GET_FOG_MODE_HASH)
-        }
 
         private const val SET_FOG_LIGHT_COLOR_HASH = 2920490490L
-        private val setFogLightColorBind by lazy {
+        @JvmField
+        val setFogLightColorBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_light_color", SET_FOG_LIGHT_COLOR_HASH)
-        }
 
         private const val GET_FOG_LIGHT_COLOR_HASH = 3444240500L
-        private val getFogLightColorBind by lazy {
+        @JvmField
+        val getFogLightColorBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_light_color", GET_FOG_LIGHT_COLOR_HASH)
-        }
 
         private const val SET_FOG_LIGHT_ENERGY_HASH = 373806689L
-        private val setFogLightEnergyBind by lazy {
+        @JvmField
+        val setFogLightEnergyBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_light_energy", SET_FOG_LIGHT_ENERGY_HASH)
-        }
 
         private const val GET_FOG_LIGHT_ENERGY_HASH = 1740695150L
-        private val getFogLightEnergyBind by lazy {
+        @JvmField
+        val getFogLightEnergyBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_light_energy", GET_FOG_LIGHT_ENERGY_HASH)
-        }
 
         private const val SET_FOG_SUN_SCATTER_HASH = 373806689L
-        private val setFogSunScatterBind by lazy {
+        @JvmField
+        val setFogSunScatterBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_sun_scatter", SET_FOG_SUN_SCATTER_HASH)
-        }
 
         private const val GET_FOG_SUN_SCATTER_HASH = 1740695150L
-        private val getFogSunScatterBind by lazy {
+        @JvmField
+        val getFogSunScatterBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_sun_scatter", GET_FOG_SUN_SCATTER_HASH)
-        }
 
         private const val SET_FOG_DENSITY_HASH = 373806689L
-        private val setFogDensityBind by lazy {
+        @JvmField
+        val setFogDensityBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_density", SET_FOG_DENSITY_HASH)
-        }
 
         private const val GET_FOG_DENSITY_HASH = 1740695150L
-        private val getFogDensityBind by lazy {
+        @JvmField
+        val getFogDensityBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_density", GET_FOG_DENSITY_HASH)
-        }
 
         private const val SET_FOG_HEIGHT_HASH = 373806689L
-        private val setFogHeightBind by lazy {
+        @JvmField
+        val setFogHeightBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_height", SET_FOG_HEIGHT_HASH)
-        }
 
         private const val GET_FOG_HEIGHT_HASH = 1740695150L
-        private val getFogHeightBind by lazy {
+        @JvmField
+        val getFogHeightBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_height", GET_FOG_HEIGHT_HASH)
-        }
 
         private const val SET_FOG_HEIGHT_DENSITY_HASH = 373806689L
-        private val setFogHeightDensityBind by lazy {
+        @JvmField
+        val setFogHeightDensityBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_height_density", SET_FOG_HEIGHT_DENSITY_HASH)
-        }
 
         private const val GET_FOG_HEIGHT_DENSITY_HASH = 1740695150L
-        private val getFogHeightDensityBind by lazy {
+        @JvmField
+        val getFogHeightDensityBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_height_density", GET_FOG_HEIGHT_DENSITY_HASH)
-        }
 
         private const val SET_FOG_AERIAL_PERSPECTIVE_HASH = 373806689L
-        private val setFogAerialPerspectiveBind by lazy {
+        @JvmField
+        val setFogAerialPerspectiveBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_aerial_perspective", SET_FOG_AERIAL_PERSPECTIVE_HASH)
-        }
 
         private const val GET_FOG_AERIAL_PERSPECTIVE_HASH = 1740695150L
-        private val getFogAerialPerspectiveBind by lazy {
+        @JvmField
+        val getFogAerialPerspectiveBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_aerial_perspective", GET_FOG_AERIAL_PERSPECTIVE_HASH)
-        }
 
         private const val SET_FOG_SKY_AFFECT_HASH = 373806689L
-        private val setFogSkyAffectBind by lazy {
+        @JvmField
+        val setFogSkyAffectBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_sky_affect", SET_FOG_SKY_AFFECT_HASH)
-        }
 
         private const val GET_FOG_SKY_AFFECT_HASH = 1740695150L
-        private val getFogSkyAffectBind by lazy {
+        @JvmField
+        val getFogSkyAffectBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_sky_affect", GET_FOG_SKY_AFFECT_HASH)
-        }
 
         private const val SET_FOG_DEPTH_CURVE_HASH = 373806689L
-        private val setFogDepthCurveBind by lazy {
+        @JvmField
+        val setFogDepthCurveBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_depth_curve", SET_FOG_DEPTH_CURVE_HASH)
-        }
 
         private const val GET_FOG_DEPTH_CURVE_HASH = 1740695150L
-        private val getFogDepthCurveBind by lazy {
+        @JvmField
+        val getFogDepthCurveBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_depth_curve", GET_FOG_DEPTH_CURVE_HASH)
-        }
 
         private const val SET_FOG_DEPTH_BEGIN_HASH = 373806689L
-        private val setFogDepthBeginBind by lazy {
+        @JvmField
+        val setFogDepthBeginBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_depth_begin", SET_FOG_DEPTH_BEGIN_HASH)
-        }
 
         private const val GET_FOG_DEPTH_BEGIN_HASH = 1740695150L
-        private val getFogDepthBeginBind by lazy {
+        @JvmField
+        val getFogDepthBeginBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_depth_begin", GET_FOG_DEPTH_BEGIN_HASH)
-        }
 
         private const val SET_FOG_DEPTH_END_HASH = 373806689L
-        private val setFogDepthEndBind by lazy {
+        @JvmField
+        val setFogDepthEndBind =
             ObjectCalls.getMethodBind("Environment", "set_fog_depth_end", SET_FOG_DEPTH_END_HASH)
-        }
 
         private const val GET_FOG_DEPTH_END_HASH = 1740695150L
-        private val getFogDepthEndBind by lazy {
+        @JvmField
+        val getFogDepthEndBind =
             ObjectCalls.getMethodBind("Environment", "get_fog_depth_end", GET_FOG_DEPTH_END_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_ENABLED_HASH = 2586408642L
-        private val setVolumetricFogEnabledBind by lazy {
+        @JvmField
+        val setVolumetricFogEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_enabled", SET_VOLUMETRIC_FOG_ENABLED_HASH)
-        }
 
         private const val IS_VOLUMETRIC_FOG_ENABLED_HASH = 36873697L
-        private val isVolumetricFogEnabledBind by lazy {
+        @JvmField
+        val isVolumetricFogEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_volumetric_fog_enabled", IS_VOLUMETRIC_FOG_ENABLED_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_EMISSION_HASH = 2920490490L
-        private val setVolumetricFogEmissionBind by lazy {
+        @JvmField
+        val setVolumetricFogEmissionBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_emission", SET_VOLUMETRIC_FOG_EMISSION_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_EMISSION_HASH = 3444240500L
-        private val getVolumetricFogEmissionBind by lazy {
+        @JvmField
+        val getVolumetricFogEmissionBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_emission", GET_VOLUMETRIC_FOG_EMISSION_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_ALBEDO_HASH = 2920490490L
-        private val setVolumetricFogAlbedoBind by lazy {
+        @JvmField
+        val setVolumetricFogAlbedoBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_albedo", SET_VOLUMETRIC_FOG_ALBEDO_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_ALBEDO_HASH = 3444240500L
-        private val getVolumetricFogAlbedoBind by lazy {
+        @JvmField
+        val getVolumetricFogAlbedoBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_albedo", GET_VOLUMETRIC_FOG_ALBEDO_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_DENSITY_HASH = 373806689L
-        private val setVolumetricFogDensityBind by lazy {
+        @JvmField
+        val setVolumetricFogDensityBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_density", SET_VOLUMETRIC_FOG_DENSITY_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_DENSITY_HASH = 1740695150L
-        private val getVolumetricFogDensityBind by lazy {
+        @JvmField
+        val getVolumetricFogDensityBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_density", GET_VOLUMETRIC_FOG_DENSITY_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_EMISSION_ENERGY_HASH = 373806689L
-        private val setVolumetricFogEmissionEnergyBind by lazy {
+        @JvmField
+        val setVolumetricFogEmissionEnergyBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_emission_energy", SET_VOLUMETRIC_FOG_EMISSION_ENERGY_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_EMISSION_ENERGY_HASH = 1740695150L
-        private val getVolumetricFogEmissionEnergyBind by lazy {
+        @JvmField
+        val getVolumetricFogEmissionEnergyBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_emission_energy", GET_VOLUMETRIC_FOG_EMISSION_ENERGY_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_ANISOTROPY_HASH = 373806689L
-        private val setVolumetricFogAnisotropyBind by lazy {
+        @JvmField
+        val setVolumetricFogAnisotropyBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_anisotropy", SET_VOLUMETRIC_FOG_ANISOTROPY_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_ANISOTROPY_HASH = 1740695150L
-        private val getVolumetricFogAnisotropyBind by lazy {
+        @JvmField
+        val getVolumetricFogAnisotropyBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_anisotropy", GET_VOLUMETRIC_FOG_ANISOTROPY_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_LENGTH_HASH = 373806689L
-        private val setVolumetricFogLengthBind by lazy {
+        @JvmField
+        val setVolumetricFogLengthBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_length", SET_VOLUMETRIC_FOG_LENGTH_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_LENGTH_HASH = 1740695150L
-        private val getVolumetricFogLengthBind by lazy {
+        @JvmField
+        val getVolumetricFogLengthBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_length", GET_VOLUMETRIC_FOG_LENGTH_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_DETAIL_SPREAD_HASH = 373806689L
-        private val setVolumetricFogDetailSpreadBind by lazy {
+        @JvmField
+        val setVolumetricFogDetailSpreadBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_detail_spread", SET_VOLUMETRIC_FOG_DETAIL_SPREAD_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_DETAIL_SPREAD_HASH = 1740695150L
-        private val getVolumetricFogDetailSpreadBind by lazy {
+        @JvmField
+        val getVolumetricFogDetailSpreadBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_detail_spread", GET_VOLUMETRIC_FOG_DETAIL_SPREAD_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_GI_INJECT_HASH = 373806689L
-        private val setVolumetricFogGiInjectBind by lazy {
+        @JvmField
+        val setVolumetricFogGiInjectBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_gi_inject", SET_VOLUMETRIC_FOG_GI_INJECT_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_GI_INJECT_HASH = 1740695150L
-        private val getVolumetricFogGiInjectBind by lazy {
+        @JvmField
+        val getVolumetricFogGiInjectBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_gi_inject", GET_VOLUMETRIC_FOG_GI_INJECT_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_AMBIENT_INJECT_HASH = 373806689L
-        private val setVolumetricFogAmbientInjectBind by lazy {
+        @JvmField
+        val setVolumetricFogAmbientInjectBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_ambient_inject", SET_VOLUMETRIC_FOG_AMBIENT_INJECT_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_AMBIENT_INJECT_HASH = 1740695150L
-        private val getVolumetricFogAmbientInjectBind by lazy {
+        @JvmField
+        val getVolumetricFogAmbientInjectBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_ambient_inject", GET_VOLUMETRIC_FOG_AMBIENT_INJECT_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_SKY_AFFECT_HASH = 373806689L
-        private val setVolumetricFogSkyAffectBind by lazy {
+        @JvmField
+        val setVolumetricFogSkyAffectBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_sky_affect", SET_VOLUMETRIC_FOG_SKY_AFFECT_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_SKY_AFFECT_HASH = 1740695150L
-        private val getVolumetricFogSkyAffectBind by lazy {
+        @JvmField
+        val getVolumetricFogSkyAffectBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_sky_affect", GET_VOLUMETRIC_FOG_SKY_AFFECT_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_ENABLED_HASH = 2586408642L
-        private val setVolumetricFogTemporalReprojectionEnabledBind by lazy {
+        @JvmField
+        val setVolumetricFogTemporalReprojectionEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_temporal_reprojection_enabled", SET_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_ENABLED_HASH)
-        }
 
         private const val IS_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_ENABLED_HASH = 36873697L
-        private val isVolumetricFogTemporalReprojectionEnabledBind by lazy {
+        @JvmField
+        val isVolumetricFogTemporalReprojectionEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_volumetric_fog_temporal_reprojection_enabled", IS_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_ENABLED_HASH)
-        }
 
         private const val SET_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_AMOUNT_HASH = 373806689L
-        private val setVolumetricFogTemporalReprojectionAmountBind by lazy {
+        @JvmField
+        val setVolumetricFogTemporalReprojectionAmountBind =
             ObjectCalls.getMethodBind("Environment", "set_volumetric_fog_temporal_reprojection_amount", SET_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_AMOUNT_HASH)
-        }
 
         private const val GET_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_AMOUNT_HASH = 1740695150L
-        private val getVolumetricFogTemporalReprojectionAmountBind by lazy {
+        @JvmField
+        val getVolumetricFogTemporalReprojectionAmountBind =
             ObjectCalls.getMethodBind("Environment", "get_volumetric_fog_temporal_reprojection_amount", GET_VOLUMETRIC_FOG_TEMPORAL_REPROJECTION_AMOUNT_HASH)
-        }
 
         private const val SET_ADJUSTMENT_ENABLED_HASH = 2586408642L
-        private val setAdjustmentEnabledBind by lazy {
+        @JvmField
+        val setAdjustmentEnabledBind =
             ObjectCalls.getMethodBind("Environment", "set_adjustment_enabled", SET_ADJUSTMENT_ENABLED_HASH)
-        }
 
         private const val IS_ADJUSTMENT_ENABLED_HASH = 36873697L
-        private val isAdjustmentEnabledBind by lazy {
+        @JvmField
+        val isAdjustmentEnabledBind =
             ObjectCalls.getMethodBind("Environment", "is_adjustment_enabled", IS_ADJUSTMENT_ENABLED_HASH)
-        }
 
         private const val SET_ADJUSTMENT_BRIGHTNESS_HASH = 373806689L
-        private val setAdjustmentBrightnessBind by lazy {
+        @JvmField
+        val setAdjustmentBrightnessBind =
             ObjectCalls.getMethodBind("Environment", "set_adjustment_brightness", SET_ADJUSTMENT_BRIGHTNESS_HASH)
-        }
 
         private const val GET_ADJUSTMENT_BRIGHTNESS_HASH = 1740695150L
-        private val getAdjustmentBrightnessBind by lazy {
+        @JvmField
+        val getAdjustmentBrightnessBind =
             ObjectCalls.getMethodBind("Environment", "get_adjustment_brightness", GET_ADJUSTMENT_BRIGHTNESS_HASH)
-        }
 
         private const val SET_ADJUSTMENT_CONTRAST_HASH = 373806689L
-        private val setAdjustmentContrastBind by lazy {
+        @JvmField
+        val setAdjustmentContrastBind =
             ObjectCalls.getMethodBind("Environment", "set_adjustment_contrast", SET_ADJUSTMENT_CONTRAST_HASH)
-        }
 
         private const val GET_ADJUSTMENT_CONTRAST_HASH = 1740695150L
-        private val getAdjustmentContrastBind by lazy {
+        @JvmField
+        val getAdjustmentContrastBind =
             ObjectCalls.getMethodBind("Environment", "get_adjustment_contrast", GET_ADJUSTMENT_CONTRAST_HASH)
-        }
 
         private const val SET_ADJUSTMENT_SATURATION_HASH = 373806689L
-        private val setAdjustmentSaturationBind by lazy {
+        @JvmField
+        val setAdjustmentSaturationBind =
             ObjectCalls.getMethodBind("Environment", "set_adjustment_saturation", SET_ADJUSTMENT_SATURATION_HASH)
-        }
 
         private const val GET_ADJUSTMENT_SATURATION_HASH = 1740695150L
-        private val getAdjustmentSaturationBind by lazy {
+        @JvmField
+        val getAdjustmentSaturationBind =
             ObjectCalls.getMethodBind("Environment", "get_adjustment_saturation", GET_ADJUSTMENT_SATURATION_HASH)
-        }
 
         private const val SET_ADJUSTMENT_COLOR_CORRECTION_HASH = 1790811099L
-        private val setAdjustmentColorCorrectionBind by lazy {
+        @JvmField
+        val setAdjustmentColorCorrectionBind =
             ObjectCalls.getMethodBind("Environment", "set_adjustment_color_correction", SET_ADJUSTMENT_COLOR_CORRECTION_HASH)
-        }
 
         private const val GET_ADJUSTMENT_COLOR_CORRECTION_HASH = 4037048985L
-        private val getAdjustmentColorCorrectionBind by lazy {
+        @JvmField
+        val getAdjustmentColorCorrectionBind =
             ObjectCalls.getMethodBind("Environment", "get_adjustment_color_correction", GET_ADJUSTMENT_COLOR_CORRECTION_HASH)
-        }
     }
 }

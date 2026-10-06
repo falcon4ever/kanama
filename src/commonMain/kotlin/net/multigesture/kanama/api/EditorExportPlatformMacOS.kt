@@ -20,7 +20,5 @@ class EditorExportPlatformMacOS(handle: GodotHandle) : EditorExportPlatform(hand
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformMacOS? =
             if (handle.address() == 0L) null else EditorExportPlatformMacOS(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

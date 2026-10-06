@@ -23,12 +23,12 @@ API_PATH = ROOT / "extension_api.json"
 API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 
 BIND_RE = re.compile(
-    r"(?:private\s+)?val\s+([A-Za-z_][A-Za-z0-9_]*)\s+by\s+lazy\s*\{\s*"
+    r"(?:private\s+)?(?:@JvmField\s+)?val\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:by\s+lazy\s*\{|=)\s*"
     r"ObjectCalls\.getMethodBind\(\s*"
     r'"([^"]+)"\s*,\s*"([^"]+)"',
     re.DOTALL,
 )
-PTRCALL_RE_TEMPLATE = r"ObjectCalls\.ptrcall[A-Za-z0-9_]*\(\s*{}\b"
+PTRCALL_RE_TEMPLATE = r"ObjectCalls\.ptrcall[A-Za-z0-9_]*\(\s*(?:Binds\.|[A-Za-z0-9_]+JvmBinds\.)?{}\b"
 
 
 @dataclass(frozen=True)

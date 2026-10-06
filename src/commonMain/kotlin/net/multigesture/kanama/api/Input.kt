@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -16,9 +17,8 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Input
  */
 object Input {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("Input")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var mouseMode: Input.MouseMode
         @JvmName("mouseModeProperty")
@@ -58,7 +58,7 @@ object Input {
      */
     @JvmStatic
     fun isAnythingPressed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAnythingPressedBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAnythingPressedBind, singleton)
     }
 
     /**
@@ -75,7 +75,7 @@ object Input {
      */
     @JvmStatic
     fun isKeyPressed(keycode: Key): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isKeyPressedBind, singleton, keycode.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isKeyPressedBind, singleton, keycode.value)
     }
 
     /**
@@ -92,7 +92,7 @@ object Input {
      */
     @JvmStatic
     fun isPhysicalKeyPressed(keycode: Key): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isPhysicalKeyPressedBind, singleton, keycode.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isPhysicalKeyPressedBind, singleton, keycode.value)
     }
 
     /**
@@ -103,7 +103,7 @@ object Input {
      */
     @JvmStatic
     fun isKeyLabelPressed(keycode: Key): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isKeyLabelPressedBind, singleton, keycode.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isKeyLabelPressedBind, singleton, keycode.value)
     }
 
     /**
@@ -113,7 +113,7 @@ object Input {
      */
     @JvmStatic
     fun isMouseButtonPressed(button: MouseButton): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isMouseButtonPressedBind, singleton, button.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isMouseButtonPressedBind, singleton, button.value)
     }
 
     /**
@@ -123,7 +123,7 @@ object Input {
      */
     @JvmStatic
     fun isJoyButtonPressed(device: Int, button: JoyButton): Boolean {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetBool(isJoyButtonPressedBind, singleton, device, button.value)
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetBool(Binds.isJoyButtonPressedBind, singleton, device, button.value)
     }
 
     /**
@@ -138,7 +138,7 @@ object Input {
      */
     @JvmStatic
     fun isActionPressed(action: String, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionPressedBind, singleton, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionPressedBind, singleton, action, exactMatch)
     }
 
     /**
@@ -160,7 +160,7 @@ object Input {
      */
     @JvmStatic
     fun isActionJustPressed(action: String, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionJustPressedBind, singleton, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionJustPressedBind, singleton, action, exactMatch)
     }
 
     /**
@@ -177,7 +177,7 @@ object Input {
      */
     @JvmStatic
     fun isActionJustReleased(action: String, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionJustReleasedBind, singleton, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionJustReleasedBind, singleton, action, exactMatch)
     }
 
     /**
@@ -198,7 +198,7 @@ object Input {
      */
     @JvmStatic
     fun isActionJustPressedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustPressedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
+        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(Binds.isActionJustPressedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
     }
 
     /**
@@ -215,7 +215,7 @@ object Input {
      */
     @JvmStatic
     fun isActionJustReleasedByEvent(action: String, event: InputEvent, exactMatch: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(isActionJustReleasedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
+        return ObjectCalls.ptrcallWithStringNameObjectAndBoolArgRetBool(Binds.isActionJustReleasedByEventBind, singleton, action, event.requireOpenHandle(), exactMatch)
     }
 
     /**
@@ -230,7 +230,7 @@ object Input {
      */
     @JvmStatic
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionStrengthBind, singleton, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(Binds.getActionStrengthBind, singleton, action, exactMatch)
     }
 
     /**
@@ -243,7 +243,7 @@ object Input {
      */
     @JvmStatic
     fun getActionRawStrength(action: String, exactMatch: Boolean = false): Double {
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionRawStrengthBind, singleton, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(Binds.getActionRawStrengthBind, singleton, action, exactMatch)
     }
 
     /**
@@ -255,7 +255,7 @@ object Input {
      */
     @JvmStatic
     fun getAxis(negativeAction: String, positiveAction: String): Double {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getAxisBind, singleton, negativeAction, positiveAction)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(Binds.getAxisBind, singleton, negativeAction, positiveAction)
     }
 
     /**
@@ -270,7 +270,7 @@ object Input {
      */
     @JvmStatic
     fun getVector(negativeX: String, positiveX: String, negativeY: String, positiveY: String, deadzone: Double = -1.0): Vector2 {
-        return ObjectCalls.ptrcallWithFourStringNameAndFloatArgRetVector2(getVectorBind, singleton, negativeX, positiveX, negativeY, positiveY, deadzone)
+        return ObjectCalls.ptrcallWithFourStringNameAndFloatArgRetVector2(Binds.getVectorBind, singleton, negativeX, positiveX, negativeY, positiveY, deadzone)
     }
 
     /**
@@ -281,7 +281,7 @@ object Input {
      */
     @JvmStatic
     fun addJoyMapping(mapping: String, updateExisting: Boolean = false) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(addJoyMappingBind, singleton, mapping, updateExisting)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.addJoyMappingBind, singleton, mapping, updateExisting)
     }
 
     /**
@@ -293,7 +293,7 @@ object Input {
      */
     @JvmStatic
     fun removeJoyMapping(guid: String) {
-        ObjectCalls.ptrcallWithStringArg(removeJoyMappingBind, singleton, guid)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeJoyMappingBind, singleton, guid)
     }
 
     /**
@@ -305,7 +305,7 @@ object Input {
      */
     @JvmStatic
     fun isJoyKnown(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isJoyKnownBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyKnownBind, singleton, device)
     }
 
     /**
@@ -315,7 +315,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyAxis(device: Int, axis: JoyAxis): Double {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetDouble(getJoyAxisBind, singleton, device, axis.value)
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetDouble(Binds.getJoyAxisBind, singleton, device, axis.value)
     }
 
     /**
@@ -327,7 +327,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyName(device: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getJoyNameBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getJoyNameBind, singleton, device)
     }
 
     /**
@@ -341,7 +341,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyGuid(device: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getJoyGuidBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getJoyGuidBind, singleton, device)
     }
 
     /**
@@ -361,7 +361,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyInfo(device: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getJoyInfoBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getJoyInfoBind, singleton, device)
     }
 
     /**
@@ -376,7 +376,7 @@ object Input {
      */
     @JvmStatic
     fun shouldIgnoreDevice(vendorId: Int, productId: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(shouldIgnoreDeviceBind, singleton, vendorId, productId)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.shouldIgnoreDeviceBind, singleton, vendorId, productId)
     }
 
     /**
@@ -389,7 +389,7 @@ object Input {
      */
     @JvmStatic
     fun getConnectedJoypads(): List<Long> {
-        return ObjectCalls.ptrcallNoArgsRetLongList(getConnectedJoypadsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLongList(Binds.getConnectedJoypadsBind, singleton)
     }
 
     /**
@@ -403,7 +403,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyVibrationStrength(device: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getJoyVibrationStrengthBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getJoyVibrationStrengthBind, singleton, device)
     }
 
     /**
@@ -416,7 +416,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyVibrationDuration(device: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJoyVibrationDurationBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getJoyVibrationDurationBind, singleton, device)
     }
 
     /**
@@ -426,7 +426,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyVibrationRemainingDuration(device: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJoyVibrationRemainingDurationBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getJoyVibrationRemainingDurationBind, singleton, device)
     }
 
     /**
@@ -438,7 +438,7 @@ object Input {
      */
     @JvmStatic
     fun isJoyVibrating(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isJoyVibratingBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyVibratingBind, singleton, device)
     }
 
     /**
@@ -451,7 +451,7 @@ object Input {
      */
     @JvmStatic
     fun hasJoyVibration(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasJoyVibrationBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasJoyVibrationBind, singleton, device)
     }
 
     /**
@@ -470,7 +470,7 @@ object Input {
      */
     @JvmStatic
     fun startJoyVibration(device: Int, weakMagnitude: Double, strongMagnitude: Double, duration: Double = 0.0) {
-        ObjectCalls.ptrcallWithIntAndThreeDoubleArgs(startJoyVibrationBind, singleton, device, weakMagnitude, strongMagnitude, duration)
+        ObjectCalls.ptrcallWithIntAndThreeDoubleArgs(Binds.startJoyVibrationBind, singleton, device, weakMagnitude, strongMagnitude, duration)
     }
 
     /**
@@ -480,7 +480,7 @@ object Input {
      */
     @JvmStatic
     fun stopJoyVibration(device: Int) {
-        ObjectCalls.ptrcallWithIntArg(stopJoyVibrationBind, singleton, device)
+        ObjectCalls.ptrcallWithIntArg(Binds.stopJoyVibrationBind, singleton, device)
     }
 
     /**
@@ -498,7 +498,7 @@ object Input {
      */
     @JvmStatic
     fun vibrateHandheld(durationMs: Int = 500, amplitude: Double = -1.0) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(vibrateHandheldBind, singleton, durationMs, amplitude)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.vibrateHandheldBind, singleton, durationMs, amplitude)
     }
 
     /**
@@ -509,7 +509,7 @@ object Input {
      */
     @JvmStatic
     fun setIgnoreJoypadOnUnfocusedApplication(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreJoypadOnUnfocusedApplicationBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreJoypadOnUnfocusedApplicationBind, singleton, enable)
     }
 
     /**
@@ -520,7 +520,7 @@ object Input {
      */
     @JvmStatic
     fun isIgnoringJoypadOnUnfocusedApplication(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringJoypadOnUnfocusedApplicationBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIgnoringJoypadOnUnfocusedApplicationBind, singleton)
     }
 
     /**
@@ -533,7 +533,7 @@ object Input {
      */
     @JvmStatic
     fun getGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityBind, singleton)
     }
 
     /**
@@ -548,7 +548,7 @@ object Input {
      */
     @JvmStatic
     fun getAccelerometer(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAccelerometerBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAccelerometerBind, singleton)
     }
 
     /**
@@ -561,7 +561,7 @@ object Input {
      */
     @JvmStatic
     fun getMagnetometer(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getMagnetometerBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getMagnetometerBind, singleton)
     }
 
     /**
@@ -574,7 +574,7 @@ object Input {
      */
     @JvmStatic
     fun getGyroscope(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGyroscopeBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGyroscopeBind, singleton)
     }
 
     /**
@@ -591,7 +591,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyAccelerometer(device: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getJoyAccelerometerBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getJoyAccelerometerBind, singleton, device)
     }
 
     /**
@@ -608,7 +608,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyGravity(device: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getJoyGravityBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getJoyGravityBind, singleton, device)
     }
 
     /**
@@ -625,7 +625,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyGyroscope(device: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getJoyGyroscopeBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getJoyGyroscopeBind, singleton, device)
     }
 
     /**
@@ -637,7 +637,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyMotionSensorsRate(device: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getJoyMotionSensorsRateBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getJoyMotionSensorsRateBind, singleton, device)
     }
 
     /**
@@ -651,7 +651,7 @@ object Input {
      */
     @JvmStatic
     fun isJoyMotionSensorsEnabled(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isJoyMotionSensorsEnabledBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyMotionSensorsEnabledBind, singleton, device)
     }
 
     /**
@@ -665,7 +665,7 @@ object Input {
      */
     @JvmStatic
     fun setJoyMotionSensorsEnabled(device: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setJoyMotionSensorsEnabledBind, singleton, device, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setJoyMotionSensorsEnabledBind, singleton, device, enable)
     }
 
     /**
@@ -677,7 +677,7 @@ object Input {
      */
     @JvmStatic
     fun hasJoyMotionSensors(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasJoyMotionSensorsBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasJoyMotionSensorsBind, singleton, device)
     }
 
     /**
@@ -690,7 +690,7 @@ object Input {
      */
     @JvmStatic
     fun startJoyMotionSensorsCalibration(device: Int) {
-        ObjectCalls.ptrcallWithIntArg(startJoyMotionSensorsCalibrationBind, singleton, device)
+        ObjectCalls.ptrcallWithIntArg(Binds.startJoyMotionSensorsCalibrationBind, singleton, device)
     }
 
     /**
@@ -703,7 +703,7 @@ object Input {
      */
     @JvmStatic
     fun stopJoyMotionSensorsCalibration(device: Int) {
-        ObjectCalls.ptrcallWithIntArg(stopJoyMotionSensorsCalibrationBind, singleton, device)
+        ObjectCalls.ptrcallWithIntArg(Binds.stopJoyMotionSensorsCalibrationBind, singleton, device)
     }
 
     /**
@@ -716,7 +716,7 @@ object Input {
      */
     @JvmStatic
     fun clearJoyMotionSensorsCalibration(device: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearJoyMotionSensorsCalibrationBind, singleton, device)
+        ObjectCalls.ptrcallWithIntArg(Binds.clearJoyMotionSensorsCalibrationBind, singleton, device)
     }
 
     /**
@@ -731,7 +731,7 @@ object Input {
      */
     @JvmStatic
     fun getJoyMotionSensorsCalibration(device: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getJoyMotionSensorsCalibrationBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getJoyMotionSensorsCalibrationBind, singleton, device)
     }
 
     /**
@@ -744,7 +744,7 @@ object Input {
      */
     @JvmStatic
     fun setJoyMotionSensorsCalibration(device: Int, calibrationInfo: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithIntAndDictionaryArg(setJoyMotionSensorsCalibrationBind, singleton, device, calibrationInfo)
+        ObjectCalls.ptrcallWithIntAndDictionaryArg(Binds.setJoyMotionSensorsCalibrationBind, singleton, device, calibrationInfo)
     }
 
     /**
@@ -757,7 +757,7 @@ object Input {
      */
     @JvmStatic
     fun isJoyMotionSensorsCalibrated(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isJoyMotionSensorsCalibratedBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyMotionSensorsCalibratedBind, singleton, device)
     }
 
     /**
@@ -770,7 +770,7 @@ object Input {
      */
     @JvmStatic
     fun isJoyMotionSensorsCalibrating(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isJoyMotionSensorsCalibratingBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyMotionSensorsCalibratingBind, singleton, device)
     }
 
     /**
@@ -782,7 +782,7 @@ object Input {
      */
     @JvmStatic
     fun setGravity(value: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityBind, singleton, value)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGravityBind, singleton, value)
     }
 
     /**
@@ -794,7 +794,7 @@ object Input {
      */
     @JvmStatic
     fun setAccelerometer(value: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAccelerometerBind, singleton, value)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAccelerometerBind, singleton, value)
     }
 
     /**
@@ -806,7 +806,7 @@ object Input {
      */
     @JvmStatic
     fun setMagnetometer(value: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setMagnetometerBind, singleton, value)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setMagnetometerBind, singleton, value)
     }
 
     /**
@@ -818,7 +818,7 @@ object Input {
      */
     @JvmStatic
     fun setGyroscope(value: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGyroscopeBind, singleton, value)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGyroscopeBind, singleton, value)
     }
 
     /**
@@ -831,7 +831,7 @@ object Input {
      */
     @JvmStatic
     fun setJoyLight(device: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setJoyLightBind, singleton, device, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setJoyLightBind, singleton, device, color)
     }
 
     /**
@@ -842,7 +842,7 @@ object Input {
      */
     @JvmStatic
     fun hasJoyLight(device: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasJoyLightBind, singleton, device)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasJoyLightBind, singleton, device)
     }
 
     /**
@@ -853,7 +853,7 @@ object Input {
      */
     @JvmStatic
     fun getLastMouseVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLastMouseVelocityBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLastMouseVelocityBind, singleton)
     }
 
     /**
@@ -865,7 +865,7 @@ object Input {
      */
     @JvmStatic
     fun getLastMouseScreenVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLastMouseScreenVelocityBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLastMouseScreenVelocityBind, singleton)
     }
 
     /**
@@ -876,7 +876,7 @@ object Input {
      */
     @JvmStatic
     fun getMouseButtonMask(): MouseButtonMask {
-        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(getMouseButtonMaskBind, singleton))
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMouseButtonMaskBind, singleton))
     }
 
     /**
@@ -886,7 +886,7 @@ object Input {
      */
     @JvmStatic
     fun setMouseMode(mode: Input.MouseMode) {
-        ObjectCalls.ptrcallWithLongArg(setMouseModeBind, singleton, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMouseModeBind, singleton, mode.value)
     }
 
     /**
@@ -896,7 +896,7 @@ object Input {
      */
     @JvmStatic
     fun getMouseMode(): Input.MouseMode {
-        return Input.MouseMode(ObjectCalls.ptrcallNoArgsRetLong(getMouseModeBind, singleton))
+        return Input.MouseMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMouseModeBind, singleton))
     }
 
     /**
@@ -910,7 +910,7 @@ object Input {
      */
     @JvmStatic
     fun warpMouse(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, singleton, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.warpMouseBind, singleton, position)
     }
 
     /**
@@ -924,7 +924,7 @@ object Input {
      */
     @JvmStatic
     fun actionPress(action: String, strength: Double = 1.0) {
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(actionPressBind, singleton, action, strength)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(Binds.actionPressBind, singleton, action, strength)
     }
 
     /**
@@ -934,7 +934,7 @@ object Input {
      */
     @JvmStatic
     fun actionRelease(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(actionReleaseBind, singleton, action)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.actionReleaseBind, singleton, action)
     }
 
     /**
@@ -947,7 +947,7 @@ object Input {
      */
     @JvmStatic
     fun setDefaultCursorShape(shape: Input.CursorShape = Input.CursorShape.ARROW) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, singleton, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultCursorShapeBind, singleton, shape.value)
     }
 
     /**
@@ -957,7 +957,7 @@ object Input {
      */
     @JvmStatic
     fun getCurrentCursorShape(): Input.CursorShape {
-        return Input.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(getCurrentCursorShapeBind, singleton))
+        return Input.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCurrentCursorShapeBind, singleton))
     }
 
     /**
@@ -978,7 +978,7 @@ object Input {
      */
     @JvmStatic
     fun setCustomMouseCursor(image: Resource?, shape: Input.CursorShape = Input.CursorShape.ARROW, hotspot: Vector2 = Vector2(0.0, 0.0)) {
-        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
+        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(Binds.setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
     }
 
     /**
@@ -989,7 +989,7 @@ object Input {
      */
     @JvmStatic
     fun parseInputEvent(event: InputEvent) {
-        ObjectCalls.ptrcallWithObjectArgs(parseInputEventBind, singleton, listOf(event.requireOpenHandle()))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.parseInputEventBind, singleton, listOf(event.requireOpenHandle()))
     }
 
     /**
@@ -1006,7 +1006,7 @@ object Input {
      */
     @JvmStatic
     fun setUseAccumulatedInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAccumulatedInputBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseAccumulatedInputBind, singleton, enable)
     }
 
     /**
@@ -1023,7 +1023,7 @@ object Input {
      */
     @JvmStatic
     fun isUsingAccumulatedInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingAccumulatedInputBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingAccumulatedInputBind, singleton)
     }
 
     /**
@@ -1037,7 +1037,7 @@ object Input {
      */
     @JvmStatic
     fun flushBufferedEvents() {
-        ObjectCalls.ptrcallNoArgs(flushBufferedEventsBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.flushBufferedEventsBind, singleton)
     }
 
     /**
@@ -1048,7 +1048,7 @@ object Input {
      */
     @JvmStatic
     fun setEmulateMouseFromTouch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmulateMouseFromTouchBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmulateMouseFromTouchBind, singleton, enable)
     }
 
     /**
@@ -1059,7 +1059,7 @@ object Input {
      */
     @JvmStatic
     fun isEmulatingMouseFromTouch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmulatingMouseFromTouchBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmulatingMouseFromTouchBind, singleton)
     }
 
     /**
@@ -1070,7 +1070,7 @@ object Input {
      */
     @JvmStatic
     fun setEmulateTouchFromMouse(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmulateTouchFromMouseBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmulateTouchFromMouseBind, singleton, enable)
     }
 
     /**
@@ -1081,7 +1081,7 @@ object Input {
      */
     @JvmStatic
     fun isEmulatingTouchFromMouse(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmulatingTouchFromMouseBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmulatingTouchFromMouseBind, singleton)
     }
 
     /** Signal `joy_connection_changed(device: int, connected: bool)`; see [TypedSignal]. */
@@ -1277,388 +1277,393 @@ object Input {
     internal fun wrap(handle: RawSegment): Input? =
         if (handle.address() == 0L) null else this
 
-    private const val IS_ANYTHING_PRESSED_HASH = 36873697L
-    private val isAnythingPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_anything_pressed", IS_ANYTHING_PRESSED_HASH)
-    }
-
-    private const val IS_KEY_PRESSED_HASH = 1938909964L
-    private val isKeyPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_key_pressed", IS_KEY_PRESSED_HASH)
-    }
-
-    private const val IS_PHYSICAL_KEY_PRESSED_HASH = 1938909964L
-    private val isPhysicalKeyPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_physical_key_pressed", IS_PHYSICAL_KEY_PRESSED_HASH)
-    }
-
-    private const val IS_KEY_LABEL_PRESSED_HASH = 1938909964L
-    private val isKeyLabelPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_key_label_pressed", IS_KEY_LABEL_PRESSED_HASH)
-    }
-
-    private const val IS_MOUSE_BUTTON_PRESSED_HASH = 1821097125L
-    private val isMouseButtonPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_mouse_button_pressed", IS_MOUSE_BUTTON_PRESSED_HASH)
-    }
-
-    private const val IS_JOY_BUTTON_PRESSED_HASH = 787208542L
-    private val isJoyButtonPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_joy_button_pressed", IS_JOY_BUTTON_PRESSED_HASH)
-    }
-
-    private const val IS_ACTION_PRESSED_HASH = 1558498928L
-    private val isActionPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_action_pressed", IS_ACTION_PRESSED_HASH)
-    }
-
-    private const val IS_ACTION_JUST_PRESSED_HASH = 1558498928L
-    private val isActionJustPressedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_action_just_pressed", IS_ACTION_JUST_PRESSED_HASH)
-    }
-
-    private const val IS_ACTION_JUST_RELEASED_HASH = 1558498928L
-    private val isActionJustReleasedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_action_just_released", IS_ACTION_JUST_RELEASED_HASH)
-    }
-
-    private const val IS_ACTION_JUST_PRESSED_BY_EVENT_HASH = 551972873L
-    private val isActionJustPressedByEventBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_action_just_pressed_by_event", IS_ACTION_JUST_PRESSED_BY_EVENT_HASH)
-    }
-
-    private const val IS_ACTION_JUST_RELEASED_BY_EVENT_HASH = 551972873L
-    private val isActionJustReleasedByEventBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_action_just_released_by_event", IS_ACTION_JUST_RELEASED_BY_EVENT_HASH)
-    }
-
-    private const val GET_ACTION_STRENGTH_HASH = 801543509L
-    private val getActionStrengthBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_action_strength", GET_ACTION_STRENGTH_HASH)
-    }
-
-    private const val GET_ACTION_RAW_STRENGTH_HASH = 801543509L
-    private val getActionRawStrengthBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_action_raw_strength", GET_ACTION_RAW_STRENGTH_HASH)
-    }
-
-    private const val GET_AXIS_HASH = 1958752504L
-    private val getAxisBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_axis", GET_AXIS_HASH)
-    }
-
-    private const val GET_VECTOR_HASH = 2479607902L
-    private val getVectorBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_vector", GET_VECTOR_HASH)
-    }
-
-    private const val ADD_JOY_MAPPING_HASH = 1168363258L
-    private val addJoyMappingBind by lazy {
-        ObjectCalls.getMethodBind("Input", "add_joy_mapping", ADD_JOY_MAPPING_HASH)
-    }
-
-    private const val REMOVE_JOY_MAPPING_HASH = 83702148L
-    private val removeJoyMappingBind by lazy {
-        ObjectCalls.getMethodBind("Input", "remove_joy_mapping", REMOVE_JOY_MAPPING_HASH)
-    }
-
-    private const val IS_JOY_KNOWN_HASH = 3067735520L
-    private val isJoyKnownBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_joy_known", IS_JOY_KNOWN_HASH)
-    }
-
-    private const val GET_JOY_AXIS_HASH = 4063175957L
-    private val getJoyAxisBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_axis", GET_JOY_AXIS_HASH)
-    }
-
-    private const val GET_JOY_NAME_HASH = 990163283L
-    private val getJoyNameBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_name", GET_JOY_NAME_HASH)
-    }
-
-    private const val GET_JOY_GUID_HASH = 844755477L
-    private val getJoyGuidBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_guid", GET_JOY_GUID_HASH)
-    }
-
-    private const val GET_JOY_INFO_HASH = 3485342025L
-    private val getJoyInfoBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_info", GET_JOY_INFO_HASH)
-    }
-
-    private const val SHOULD_IGNORE_DEVICE_HASH = 2522259332L
-    private val shouldIgnoreDeviceBind by lazy {
-        ObjectCalls.getMethodBind("Input", "should_ignore_device", SHOULD_IGNORE_DEVICE_HASH)
-    }
-
-    private const val GET_CONNECTED_JOYPADS_HASH = 2915620761L
-    private val getConnectedJoypadsBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_connected_joypads", GET_CONNECTED_JOYPADS_HASH)
-    }
-
-    private const val GET_JOY_VIBRATION_STRENGTH_HASH = 3114997196L
-    private val getJoyVibrationStrengthBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_vibration_strength", GET_JOY_VIBRATION_STRENGTH_HASH)
-    }
-
-    private const val GET_JOY_VIBRATION_DURATION_HASH = 4025615559L
-    private val getJoyVibrationDurationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_vibration_duration", GET_JOY_VIBRATION_DURATION_HASH)
-    }
-
-    private const val GET_JOY_VIBRATION_REMAINING_DURATION_HASH = 4025615559L
-    private val getJoyVibrationRemainingDurationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_vibration_remaining_duration", GET_JOY_VIBRATION_REMAINING_DURATION_HASH)
-    }
-
-    private const val IS_JOY_VIBRATING_HASH = 3067735520L
-    private val isJoyVibratingBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_joy_vibrating", IS_JOY_VIBRATING_HASH)
-    }
-
-    private const val HAS_JOY_VIBRATION_HASH = 1116898809L
-    private val hasJoyVibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "has_joy_vibration", HAS_JOY_VIBRATION_HASH)
-    }
-
-    private const val START_JOY_VIBRATION_HASH = 2576575033L
-    private val startJoyVibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "start_joy_vibration", START_JOY_VIBRATION_HASH)
-    }
-
-    private const val STOP_JOY_VIBRATION_HASH = 1286410249L
-    private val stopJoyVibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "stop_joy_vibration", STOP_JOY_VIBRATION_HASH)
-    }
-
-    private const val VIBRATE_HANDHELD_HASH = 544894297L
-    private val vibrateHandheldBind by lazy {
-        ObjectCalls.getMethodBind("Input", "vibrate_handheld", VIBRATE_HANDHELD_HASH)
-    }
-
-    private const val SET_IGNORE_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH = 2586408642L
-    private val setIgnoreJoypadOnUnfocusedApplicationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_ignore_joypad_on_unfocused_application", SET_IGNORE_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH)
-    }
-
-    private const val IS_IGNORING_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH = 36873697L
-    private val isIgnoringJoypadOnUnfocusedApplicationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_ignoring_joypad_on_unfocused_application", IS_IGNORING_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH)
-    }
-
-    private const val GET_GRAVITY_HASH = 3360562783L
-    private val getGravityBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_gravity", GET_GRAVITY_HASH)
-    }
-
-    private const val GET_ACCELEROMETER_HASH = 3360562783L
-    private val getAccelerometerBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_accelerometer", GET_ACCELEROMETER_HASH)
-    }
-
-    private const val GET_MAGNETOMETER_HASH = 3360562783L
-    private val getMagnetometerBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_magnetometer", GET_MAGNETOMETER_HASH)
-    }
-
-    private const val GET_GYROSCOPE_HASH = 3360562783L
-    private val getGyroscopeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_gyroscope", GET_GYROSCOPE_HASH)
-    }
-
-    private const val GET_JOY_ACCELEROMETER_HASH = 711720468L
-    private val getJoyAccelerometerBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_accelerometer", GET_JOY_ACCELEROMETER_HASH)
-    }
-
-    private const val GET_JOY_GRAVITY_HASH = 711720468L
-    private val getJoyGravityBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_gravity", GET_JOY_GRAVITY_HASH)
-    }
-
-    private const val GET_JOY_GYROSCOPE_HASH = 711720468L
-    private val getJoyGyroscopeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_gyroscope", GET_JOY_GYROSCOPE_HASH)
-    }
-
-    private const val GET_JOY_MOTION_SENSORS_RATE_HASH = 2339986948L
-    private val getJoyMotionSensorsRateBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_motion_sensors_rate", GET_JOY_MOTION_SENSORS_RATE_HASH)
-    }
-
-    private const val IS_JOY_MOTION_SENSORS_ENABLED_HASH = 1116898809L
-    private val isJoyMotionSensorsEnabledBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_enabled", IS_JOY_MOTION_SENSORS_ENABLED_HASH)
-    }
-
-    private const val SET_JOY_MOTION_SENSORS_ENABLED_HASH = 300928843L
-    private val setJoyMotionSensorsEnabledBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_joy_motion_sensors_enabled", SET_JOY_MOTION_SENSORS_ENABLED_HASH)
-    }
-
-    private const val HAS_JOY_MOTION_SENSORS_HASH = 1116898809L
-    private val hasJoyMotionSensorsBind by lazy {
-        ObjectCalls.getMethodBind("Input", "has_joy_motion_sensors", HAS_JOY_MOTION_SENSORS_HASH)
-    }
-
-    private const val START_JOY_MOTION_SENSORS_CALIBRATION_HASH = 1286410249L
-    private val startJoyMotionSensorsCalibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "start_joy_motion_sensors_calibration", START_JOY_MOTION_SENSORS_CALIBRATION_HASH)
-    }
-
-    private const val STOP_JOY_MOTION_SENSORS_CALIBRATION_HASH = 1286410249L
-    private val stopJoyMotionSensorsCalibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "stop_joy_motion_sensors_calibration", STOP_JOY_MOTION_SENSORS_CALIBRATION_HASH)
-    }
-
-    private const val CLEAR_JOY_MOTION_SENSORS_CALIBRATION_HASH = 1286410249L
-    private val clearJoyMotionSensorsCalibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "clear_joy_motion_sensors_calibration", CLEAR_JOY_MOTION_SENSORS_CALIBRATION_HASH)
-    }
-
-    private const val GET_JOY_MOTION_SENSORS_CALIBRATION_HASH = 3485342025L
-    private val getJoyMotionSensorsCalibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_joy_motion_sensors_calibration", GET_JOY_MOTION_SENSORS_CALIBRATION_HASH)
-    }
-
-    private const val SET_JOY_MOTION_SENSORS_CALIBRATION_HASH = 64545446L
-    private val setJoyMotionSensorsCalibrationBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_joy_motion_sensors_calibration", SET_JOY_MOTION_SENSORS_CALIBRATION_HASH)
-    }
-
-    private const val IS_JOY_MOTION_SENSORS_CALIBRATED_HASH = 1116898809L
-    private val isJoyMotionSensorsCalibratedBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_calibrated", IS_JOY_MOTION_SENSORS_CALIBRATED_HASH)
-    }
-
-    private const val IS_JOY_MOTION_SENSORS_CALIBRATING_HASH = 1116898809L
-    private val isJoyMotionSensorsCalibratingBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_calibrating", IS_JOY_MOTION_SENSORS_CALIBRATING_HASH)
-    }
-
-    private const val SET_GRAVITY_HASH = 3460891852L
-    private val setGravityBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_gravity", SET_GRAVITY_HASH)
-    }
-
-    private const val SET_ACCELEROMETER_HASH = 3460891852L
-    private val setAccelerometerBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_accelerometer", SET_ACCELEROMETER_HASH)
-    }
-
-    private const val SET_MAGNETOMETER_HASH = 3460891852L
-    private val setMagnetometerBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_magnetometer", SET_MAGNETOMETER_HASH)
-    }
-
-    private const val SET_GYROSCOPE_HASH = 3460891852L
-    private val setGyroscopeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_gyroscope", SET_GYROSCOPE_HASH)
-    }
-
-    private const val SET_JOY_LIGHT_HASH = 2878471219L
-    private val setJoyLightBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_joy_light", SET_JOY_LIGHT_HASH)
-    }
-
-    private const val HAS_JOY_LIGHT_HASH = 1116898809L
-    private val hasJoyLightBind by lazy {
-        ObjectCalls.getMethodBind("Input", "has_joy_light", HAS_JOY_LIGHT_HASH)
-    }
-
-    private const val GET_LAST_MOUSE_VELOCITY_HASH = 1497962370L
-    private val getLastMouseVelocityBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_last_mouse_velocity", GET_LAST_MOUSE_VELOCITY_HASH)
-    }
-
-    private const val GET_LAST_MOUSE_SCREEN_VELOCITY_HASH = 1497962370L
-    private val getLastMouseScreenVelocityBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_last_mouse_screen_velocity", GET_LAST_MOUSE_SCREEN_VELOCITY_HASH)
-    }
-
-    private const val GET_MOUSE_BUTTON_MASK_HASH = 2512161324L
-    private val getMouseButtonMaskBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_mouse_button_mask", GET_MOUSE_BUTTON_MASK_HASH)
-    }
-
-    private const val SET_MOUSE_MODE_HASH = 2228490894L
-    private val setMouseModeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_mouse_mode", SET_MOUSE_MODE_HASH)
-    }
-
-    private const val GET_MOUSE_MODE_HASH = 965286182L
-    private val getMouseModeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_mouse_mode", GET_MOUSE_MODE_HASH)
-    }
-
-    private const val WARP_MOUSE_HASH = 743155724L
-    private val warpMouseBind by lazy {
-        ObjectCalls.getMethodBind("Input", "warp_mouse", WARP_MOUSE_HASH)
-    }
-
-    private const val ACTION_PRESS_HASH = 1713091165L
-    private val actionPressBind by lazy {
-        ObjectCalls.getMethodBind("Input", "action_press", ACTION_PRESS_HASH)
-    }
-
-    private const val ACTION_RELEASE_HASH = 3304788590L
-    private val actionReleaseBind by lazy {
-        ObjectCalls.getMethodBind("Input", "action_release", ACTION_RELEASE_HASH)
-    }
-
-    private const val SET_DEFAULT_CURSOR_SHAPE_HASH = 2124816902L
-    private val setDefaultCursorShapeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_default_cursor_shape", SET_DEFAULT_CURSOR_SHAPE_HASH)
-    }
-
-    private const val GET_CURRENT_CURSOR_SHAPE_HASH = 3455658929L
-    private val getCurrentCursorShapeBind by lazy {
-        ObjectCalls.getMethodBind("Input", "get_current_cursor_shape", GET_CURRENT_CURSOR_SHAPE_HASH)
-    }
-
-    private const val SET_CUSTOM_MOUSE_CURSOR_HASH = 703945977L
-    private val setCustomMouseCursorBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_custom_mouse_cursor", SET_CUSTOM_MOUSE_CURSOR_HASH)
-    }
-
-    private const val PARSE_INPUT_EVENT_HASH = 3754044979L
-    private val parseInputEventBind by lazy {
-        ObjectCalls.getMethodBind("Input", "parse_input_event", PARSE_INPUT_EVENT_HASH)
-    }
-
-    private const val SET_USE_ACCUMULATED_INPUT_HASH = 2586408642L
-    private val setUseAccumulatedInputBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_use_accumulated_input", SET_USE_ACCUMULATED_INPUT_HASH)
-    }
-
-    private const val IS_USING_ACCUMULATED_INPUT_HASH = 2240911060L
-    private val isUsingAccumulatedInputBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_using_accumulated_input", IS_USING_ACCUMULATED_INPUT_HASH)
-    }
-
-    private const val FLUSH_BUFFERED_EVENTS_HASH = 3218959716L
-    private val flushBufferedEventsBind by lazy {
-        ObjectCalls.getMethodBind("Input", "flush_buffered_events", FLUSH_BUFFERED_EVENTS_HASH)
-    }
-
-    private const val SET_EMULATE_MOUSE_FROM_TOUCH_HASH = 2586408642L
-    private val setEmulateMouseFromTouchBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_emulate_mouse_from_touch", SET_EMULATE_MOUSE_FROM_TOUCH_HASH)
-    }
-
-    private const val IS_EMULATING_MOUSE_FROM_TOUCH_HASH = 36873697L
-    private val isEmulatingMouseFromTouchBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_emulating_mouse_from_touch", IS_EMULATING_MOUSE_FROM_TOUCH_HASH)
-    }
-
-    private const val SET_EMULATE_TOUCH_FROM_MOUSE_HASH = 2586408642L
-    private val setEmulateTouchFromMouseBind by lazy {
-        ObjectCalls.getMethodBind("Input", "set_emulate_touch_from_mouse", SET_EMULATE_TOUCH_FROM_MOUSE_HASH)
-    }
-
-    private const val IS_EMULATING_TOUCH_FROM_MOUSE_HASH = 36873697L
-    private val isEmulatingTouchFromMouseBind by lazy {
-        ObjectCalls.getMethodBind("Input", "is_emulating_touch_from_mouse", IS_EMULATING_TOUCH_FROM_MOUSE_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("Input")
+
+        private const val IS_ANYTHING_PRESSED_HASH = 36873697L
+        @JvmField
+        val isAnythingPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_anything_pressed", IS_ANYTHING_PRESSED_HASH)
+
+        private const val IS_KEY_PRESSED_HASH = 1938909964L
+        @JvmField
+        val isKeyPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_key_pressed", IS_KEY_PRESSED_HASH)
+
+        private const val IS_PHYSICAL_KEY_PRESSED_HASH = 1938909964L
+        @JvmField
+        val isPhysicalKeyPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_physical_key_pressed", IS_PHYSICAL_KEY_PRESSED_HASH)
+
+        private const val IS_KEY_LABEL_PRESSED_HASH = 1938909964L
+        @JvmField
+        val isKeyLabelPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_key_label_pressed", IS_KEY_LABEL_PRESSED_HASH)
+
+        private const val IS_MOUSE_BUTTON_PRESSED_HASH = 1821097125L
+        @JvmField
+        val isMouseButtonPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_mouse_button_pressed", IS_MOUSE_BUTTON_PRESSED_HASH)
+
+        private const val IS_JOY_BUTTON_PRESSED_HASH = 787208542L
+        @JvmField
+        val isJoyButtonPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_button_pressed", IS_JOY_BUTTON_PRESSED_HASH)
+
+        private const val IS_ACTION_PRESSED_HASH = 1558498928L
+        @JvmField
+        val isActionPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_action_pressed", IS_ACTION_PRESSED_HASH)
+
+        private const val IS_ACTION_JUST_PRESSED_HASH = 1558498928L
+        @JvmField
+        val isActionJustPressedBind =
+            ObjectCalls.getMethodBind("Input", "is_action_just_pressed", IS_ACTION_JUST_PRESSED_HASH)
+
+        private const val IS_ACTION_JUST_RELEASED_HASH = 1558498928L
+        @JvmField
+        val isActionJustReleasedBind =
+            ObjectCalls.getMethodBind("Input", "is_action_just_released", IS_ACTION_JUST_RELEASED_HASH)
+
+        private const val IS_ACTION_JUST_PRESSED_BY_EVENT_HASH = 551972873L
+        @JvmField
+        val isActionJustPressedByEventBind =
+            ObjectCalls.getMethodBind("Input", "is_action_just_pressed_by_event", IS_ACTION_JUST_PRESSED_BY_EVENT_HASH)
+
+        private const val IS_ACTION_JUST_RELEASED_BY_EVENT_HASH = 551972873L
+        @JvmField
+        val isActionJustReleasedByEventBind =
+            ObjectCalls.getMethodBind("Input", "is_action_just_released_by_event", IS_ACTION_JUST_RELEASED_BY_EVENT_HASH)
+
+        private const val GET_ACTION_STRENGTH_HASH = 801543509L
+        @JvmField
+        val getActionStrengthBind =
+            ObjectCalls.getMethodBind("Input", "get_action_strength", GET_ACTION_STRENGTH_HASH)
+
+        private const val GET_ACTION_RAW_STRENGTH_HASH = 801543509L
+        @JvmField
+        val getActionRawStrengthBind =
+            ObjectCalls.getMethodBind("Input", "get_action_raw_strength", GET_ACTION_RAW_STRENGTH_HASH)
+
+        private const val GET_AXIS_HASH = 1958752504L
+        @JvmField
+        val getAxisBind =
+            ObjectCalls.getMethodBind("Input", "get_axis", GET_AXIS_HASH)
+
+        private const val GET_VECTOR_HASH = 2479607902L
+        @JvmField
+        val getVectorBind =
+            ObjectCalls.getMethodBind("Input", "get_vector", GET_VECTOR_HASH)
+
+        private const val ADD_JOY_MAPPING_HASH = 1168363258L
+        @JvmField
+        val addJoyMappingBind =
+            ObjectCalls.getMethodBind("Input", "add_joy_mapping", ADD_JOY_MAPPING_HASH)
+
+        private const val REMOVE_JOY_MAPPING_HASH = 83702148L
+        @JvmField
+        val removeJoyMappingBind =
+            ObjectCalls.getMethodBind("Input", "remove_joy_mapping", REMOVE_JOY_MAPPING_HASH)
+
+        private const val IS_JOY_KNOWN_HASH = 3067735520L
+        @JvmField
+        val isJoyKnownBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_known", IS_JOY_KNOWN_HASH)
+
+        private const val GET_JOY_AXIS_HASH = 4063175957L
+        @JvmField
+        val getJoyAxisBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_axis", GET_JOY_AXIS_HASH)
+
+        private const val GET_JOY_NAME_HASH = 990163283L
+        @JvmField
+        val getJoyNameBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_name", GET_JOY_NAME_HASH)
+
+        private const val GET_JOY_GUID_HASH = 844755477L
+        @JvmField
+        val getJoyGuidBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_guid", GET_JOY_GUID_HASH)
+
+        private const val GET_JOY_INFO_HASH = 3485342025L
+        @JvmField
+        val getJoyInfoBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_info", GET_JOY_INFO_HASH)
+
+        private const val SHOULD_IGNORE_DEVICE_HASH = 2522259332L
+        @JvmField
+        val shouldIgnoreDeviceBind =
+            ObjectCalls.getMethodBind("Input", "should_ignore_device", SHOULD_IGNORE_DEVICE_HASH)
+
+        private const val GET_CONNECTED_JOYPADS_HASH = 2915620761L
+        @JvmField
+        val getConnectedJoypadsBind =
+            ObjectCalls.getMethodBind("Input", "get_connected_joypads", GET_CONNECTED_JOYPADS_HASH)
+
+        private const val GET_JOY_VIBRATION_STRENGTH_HASH = 3114997196L
+        @JvmField
+        val getJoyVibrationStrengthBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_vibration_strength", GET_JOY_VIBRATION_STRENGTH_HASH)
+
+        private const val GET_JOY_VIBRATION_DURATION_HASH = 4025615559L
+        @JvmField
+        val getJoyVibrationDurationBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_vibration_duration", GET_JOY_VIBRATION_DURATION_HASH)
+
+        private const val GET_JOY_VIBRATION_REMAINING_DURATION_HASH = 4025615559L
+        @JvmField
+        val getJoyVibrationRemainingDurationBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_vibration_remaining_duration", GET_JOY_VIBRATION_REMAINING_DURATION_HASH)
+
+        private const val IS_JOY_VIBRATING_HASH = 3067735520L
+        @JvmField
+        val isJoyVibratingBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_vibrating", IS_JOY_VIBRATING_HASH)
+
+        private const val HAS_JOY_VIBRATION_HASH = 1116898809L
+        @JvmField
+        val hasJoyVibrationBind =
+            ObjectCalls.getMethodBind("Input", "has_joy_vibration", HAS_JOY_VIBRATION_HASH)
+
+        private const val START_JOY_VIBRATION_HASH = 2576575033L
+        @JvmField
+        val startJoyVibrationBind =
+            ObjectCalls.getMethodBind("Input", "start_joy_vibration", START_JOY_VIBRATION_HASH)
+
+        private const val STOP_JOY_VIBRATION_HASH = 1286410249L
+        @JvmField
+        val stopJoyVibrationBind =
+            ObjectCalls.getMethodBind("Input", "stop_joy_vibration", STOP_JOY_VIBRATION_HASH)
+
+        private const val VIBRATE_HANDHELD_HASH = 544894297L
+        @JvmField
+        val vibrateHandheldBind =
+            ObjectCalls.getMethodBind("Input", "vibrate_handheld", VIBRATE_HANDHELD_HASH)
+
+        private const val SET_IGNORE_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH = 2586408642L
+        @JvmField
+        val setIgnoreJoypadOnUnfocusedApplicationBind =
+            ObjectCalls.getMethodBind("Input", "set_ignore_joypad_on_unfocused_application", SET_IGNORE_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH)
+
+        private const val IS_IGNORING_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH = 36873697L
+        @JvmField
+        val isIgnoringJoypadOnUnfocusedApplicationBind =
+            ObjectCalls.getMethodBind("Input", "is_ignoring_joypad_on_unfocused_application", IS_IGNORING_JOYPAD_ON_UNFOCUSED_APPLICATION_HASH)
+
+        private const val GET_GRAVITY_HASH = 3360562783L
+        @JvmField
+        val getGravityBind =
+            ObjectCalls.getMethodBind("Input", "get_gravity", GET_GRAVITY_HASH)
+
+        private const val GET_ACCELEROMETER_HASH = 3360562783L
+        @JvmField
+        val getAccelerometerBind =
+            ObjectCalls.getMethodBind("Input", "get_accelerometer", GET_ACCELEROMETER_HASH)
+
+        private const val GET_MAGNETOMETER_HASH = 3360562783L
+        @JvmField
+        val getMagnetometerBind =
+            ObjectCalls.getMethodBind("Input", "get_magnetometer", GET_MAGNETOMETER_HASH)
+
+        private const val GET_GYROSCOPE_HASH = 3360562783L
+        @JvmField
+        val getGyroscopeBind =
+            ObjectCalls.getMethodBind("Input", "get_gyroscope", GET_GYROSCOPE_HASH)
+
+        private const val GET_JOY_ACCELEROMETER_HASH = 711720468L
+        @JvmField
+        val getJoyAccelerometerBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_accelerometer", GET_JOY_ACCELEROMETER_HASH)
+
+        private const val GET_JOY_GRAVITY_HASH = 711720468L
+        @JvmField
+        val getJoyGravityBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_gravity", GET_JOY_GRAVITY_HASH)
+
+        private const val GET_JOY_GYROSCOPE_HASH = 711720468L
+        @JvmField
+        val getJoyGyroscopeBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_gyroscope", GET_JOY_GYROSCOPE_HASH)
+
+        private const val GET_JOY_MOTION_SENSORS_RATE_HASH = 2339986948L
+        @JvmField
+        val getJoyMotionSensorsRateBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_motion_sensors_rate", GET_JOY_MOTION_SENSORS_RATE_HASH)
+
+        private const val IS_JOY_MOTION_SENSORS_ENABLED_HASH = 1116898809L
+        @JvmField
+        val isJoyMotionSensorsEnabledBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_enabled", IS_JOY_MOTION_SENSORS_ENABLED_HASH)
+
+        private const val SET_JOY_MOTION_SENSORS_ENABLED_HASH = 300928843L
+        @JvmField
+        val setJoyMotionSensorsEnabledBind =
+            ObjectCalls.getMethodBind("Input", "set_joy_motion_sensors_enabled", SET_JOY_MOTION_SENSORS_ENABLED_HASH)
+
+        private const val HAS_JOY_MOTION_SENSORS_HASH = 1116898809L
+        @JvmField
+        val hasJoyMotionSensorsBind =
+            ObjectCalls.getMethodBind("Input", "has_joy_motion_sensors", HAS_JOY_MOTION_SENSORS_HASH)
+
+        private const val START_JOY_MOTION_SENSORS_CALIBRATION_HASH = 1286410249L
+        @JvmField
+        val startJoyMotionSensorsCalibrationBind =
+            ObjectCalls.getMethodBind("Input", "start_joy_motion_sensors_calibration", START_JOY_MOTION_SENSORS_CALIBRATION_HASH)
+
+        private const val STOP_JOY_MOTION_SENSORS_CALIBRATION_HASH = 1286410249L
+        @JvmField
+        val stopJoyMotionSensorsCalibrationBind =
+            ObjectCalls.getMethodBind("Input", "stop_joy_motion_sensors_calibration", STOP_JOY_MOTION_SENSORS_CALIBRATION_HASH)
+
+        private const val CLEAR_JOY_MOTION_SENSORS_CALIBRATION_HASH = 1286410249L
+        @JvmField
+        val clearJoyMotionSensorsCalibrationBind =
+            ObjectCalls.getMethodBind("Input", "clear_joy_motion_sensors_calibration", CLEAR_JOY_MOTION_SENSORS_CALIBRATION_HASH)
+
+        private const val GET_JOY_MOTION_SENSORS_CALIBRATION_HASH = 3485342025L
+        @JvmField
+        val getJoyMotionSensorsCalibrationBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_motion_sensors_calibration", GET_JOY_MOTION_SENSORS_CALIBRATION_HASH)
+
+        private const val SET_JOY_MOTION_SENSORS_CALIBRATION_HASH = 64545446L
+        @JvmField
+        val setJoyMotionSensorsCalibrationBind =
+            ObjectCalls.getMethodBind("Input", "set_joy_motion_sensors_calibration", SET_JOY_MOTION_SENSORS_CALIBRATION_HASH)
+
+        private const val IS_JOY_MOTION_SENSORS_CALIBRATED_HASH = 1116898809L
+        @JvmField
+        val isJoyMotionSensorsCalibratedBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_calibrated", IS_JOY_MOTION_SENSORS_CALIBRATED_HASH)
+
+        private const val IS_JOY_MOTION_SENSORS_CALIBRATING_HASH = 1116898809L
+        @JvmField
+        val isJoyMotionSensorsCalibratingBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_calibrating", IS_JOY_MOTION_SENSORS_CALIBRATING_HASH)
+
+        private const val SET_GRAVITY_HASH = 3460891852L
+        @JvmField
+        val setGravityBind =
+            ObjectCalls.getMethodBind("Input", "set_gravity", SET_GRAVITY_HASH)
+
+        private const val SET_ACCELEROMETER_HASH = 3460891852L
+        @JvmField
+        val setAccelerometerBind =
+            ObjectCalls.getMethodBind("Input", "set_accelerometer", SET_ACCELEROMETER_HASH)
+
+        private const val SET_MAGNETOMETER_HASH = 3460891852L
+        @JvmField
+        val setMagnetometerBind =
+            ObjectCalls.getMethodBind("Input", "set_magnetometer", SET_MAGNETOMETER_HASH)
+
+        private const val SET_GYROSCOPE_HASH = 3460891852L
+        @JvmField
+        val setGyroscopeBind =
+            ObjectCalls.getMethodBind("Input", "set_gyroscope", SET_GYROSCOPE_HASH)
+
+        private const val SET_JOY_LIGHT_HASH = 2878471219L
+        @JvmField
+        val setJoyLightBind =
+            ObjectCalls.getMethodBind("Input", "set_joy_light", SET_JOY_LIGHT_HASH)
+
+        private const val HAS_JOY_LIGHT_HASH = 1116898809L
+        @JvmField
+        val hasJoyLightBind =
+            ObjectCalls.getMethodBind("Input", "has_joy_light", HAS_JOY_LIGHT_HASH)
+
+        private const val GET_LAST_MOUSE_VELOCITY_HASH = 1497962370L
+        @JvmField
+        val getLastMouseVelocityBind =
+            ObjectCalls.getMethodBind("Input", "get_last_mouse_velocity", GET_LAST_MOUSE_VELOCITY_HASH)
+
+        private const val GET_LAST_MOUSE_SCREEN_VELOCITY_HASH = 1497962370L
+        @JvmField
+        val getLastMouseScreenVelocityBind =
+            ObjectCalls.getMethodBind("Input", "get_last_mouse_screen_velocity", GET_LAST_MOUSE_SCREEN_VELOCITY_HASH)
+
+        private const val GET_MOUSE_BUTTON_MASK_HASH = 2512161324L
+        @JvmField
+        val getMouseButtonMaskBind =
+            ObjectCalls.getMethodBind("Input", "get_mouse_button_mask", GET_MOUSE_BUTTON_MASK_HASH)
+
+        private const val SET_MOUSE_MODE_HASH = 2228490894L
+        @JvmField
+        val setMouseModeBind =
+            ObjectCalls.getMethodBind("Input", "set_mouse_mode", SET_MOUSE_MODE_HASH)
+
+        private const val GET_MOUSE_MODE_HASH = 965286182L
+        @JvmField
+        val getMouseModeBind =
+            ObjectCalls.getMethodBind("Input", "get_mouse_mode", GET_MOUSE_MODE_HASH)
+
+        private const val WARP_MOUSE_HASH = 743155724L
+        @JvmField
+        val warpMouseBind =
+            ObjectCalls.getMethodBind("Input", "warp_mouse", WARP_MOUSE_HASH)
+
+        private const val ACTION_PRESS_HASH = 1713091165L
+        @JvmField
+        val actionPressBind =
+            ObjectCalls.getMethodBind("Input", "action_press", ACTION_PRESS_HASH)
+
+        private const val ACTION_RELEASE_HASH = 3304788590L
+        @JvmField
+        val actionReleaseBind =
+            ObjectCalls.getMethodBind("Input", "action_release", ACTION_RELEASE_HASH)
+
+        private const val SET_DEFAULT_CURSOR_SHAPE_HASH = 2124816902L
+        @JvmField
+        val setDefaultCursorShapeBind =
+            ObjectCalls.getMethodBind("Input", "set_default_cursor_shape", SET_DEFAULT_CURSOR_SHAPE_HASH)
+
+        private const val GET_CURRENT_CURSOR_SHAPE_HASH = 3455658929L
+        @JvmField
+        val getCurrentCursorShapeBind =
+            ObjectCalls.getMethodBind("Input", "get_current_cursor_shape", GET_CURRENT_CURSOR_SHAPE_HASH)
+
+        private const val SET_CUSTOM_MOUSE_CURSOR_HASH = 703945977L
+        @JvmField
+        val setCustomMouseCursorBind =
+            ObjectCalls.getMethodBind("Input", "set_custom_mouse_cursor", SET_CUSTOM_MOUSE_CURSOR_HASH)
+
+        private const val PARSE_INPUT_EVENT_HASH = 3754044979L
+        @JvmField
+        val parseInputEventBind =
+            ObjectCalls.getMethodBind("Input", "parse_input_event", PARSE_INPUT_EVENT_HASH)
+
+        private const val SET_USE_ACCUMULATED_INPUT_HASH = 2586408642L
+        @JvmField
+        val setUseAccumulatedInputBind =
+            ObjectCalls.getMethodBind("Input", "set_use_accumulated_input", SET_USE_ACCUMULATED_INPUT_HASH)
+
+        private const val IS_USING_ACCUMULATED_INPUT_HASH = 2240911060L
+        @JvmField
+        val isUsingAccumulatedInputBind =
+            ObjectCalls.getMethodBind("Input", "is_using_accumulated_input", IS_USING_ACCUMULATED_INPUT_HASH)
+
+        private const val FLUSH_BUFFERED_EVENTS_HASH = 3218959716L
+        @JvmField
+        val flushBufferedEventsBind =
+            ObjectCalls.getMethodBind("Input", "flush_buffered_events", FLUSH_BUFFERED_EVENTS_HASH)
+
+        private const val SET_EMULATE_MOUSE_FROM_TOUCH_HASH = 2586408642L
+        @JvmField
+        val setEmulateMouseFromTouchBind =
+            ObjectCalls.getMethodBind("Input", "set_emulate_mouse_from_touch", SET_EMULATE_MOUSE_FROM_TOUCH_HASH)
+
+        private const val IS_EMULATING_MOUSE_FROM_TOUCH_HASH = 36873697L
+        @JvmField
+        val isEmulatingMouseFromTouchBind =
+            ObjectCalls.getMethodBind("Input", "is_emulating_mouse_from_touch", IS_EMULATING_MOUSE_FROM_TOUCH_HASH)
+
+        private const val SET_EMULATE_TOUCH_FROM_MOUSE_HASH = 2586408642L
+        @JvmField
+        val setEmulateTouchFromMouseBind =
+            ObjectCalls.getMethodBind("Input", "set_emulate_touch_from_mouse", SET_EMULATE_TOUCH_FROM_MOUSE_HASH)
+
+        private const val IS_EMULATING_TOUCH_FROM_MOUSE_HASH = 36873697L
+        @JvmField
+        val isEmulatingTouchFromMouseBind =
+            ObjectCalls.getMethodBind("Input", "is_emulating_touch_from_mouse", IS_EMULATING_TOUCH_FROM_MOUSE_HASH)
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -73,7 +74,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun addBlendPoint(node: AnimationRootNode?, pos: Double, atIndex: Int = -1, name: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(addBlendPointBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT, pos, atIndex, name)
+        ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(Binds.addBlendPointBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT, pos, atIndex, name)
     }
 
     /**
@@ -83,7 +84,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setBlendPointPosition(point: Int, pos: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBlendPointPositionBind, segment, point, pos)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setBlendPointPositionBind, segment, point, pos)
     }
 
     /**
@@ -93,7 +94,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointPosition(point: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getBlendPointPositionBind, segment, point)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getBlendPointPositionBind, segment, point)
     }
 
     /**
@@ -103,7 +104,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, segment, point, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setBlendPointNodeBind, segment, point, node?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -113,7 +114,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointNode(point: Int): AnimationRootNode? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getBlendPointNodeBind, segment, point)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBlendPointNodeBind, segment, point)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -129,7 +130,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setBlendPointName(point: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBlendPointNameBind, segment, point, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBlendPointNameBind, segment, point, name)
     }
 
     /**
@@ -139,7 +140,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointName(point: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBlendPointNameBind, segment, point)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBlendPointNameBind, segment, point)
     }
 
     /**
@@ -150,7 +151,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun findBlendPointByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBlendPointByNameBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBlendPointByNameBind, segment, name)
     }
 
     /**
@@ -160,7 +161,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun removeBlendPoint(point: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeBlendPointBind, segment, point)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeBlendPointBind, segment, point)
     }
 
     /**
@@ -170,7 +171,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendPointCountBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun reorderBlendPoint(fromIndex: Int, toIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(reorderBlendPointBind, segment, fromIndex, toIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.reorderBlendPointBind, segment, fromIndex, toIndex)
     }
 
     /**
@@ -191,7 +192,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setMinSpace(minSpace: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinSpaceBind, segment, minSpace)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinSpaceBind, segment, minSpace)
     }
 
     /**
@@ -201,7 +202,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getMinSpace(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinSpaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinSpaceBind, segment)
     }
 
     /**
@@ -211,7 +212,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setMaxSpace(maxSpace: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxSpaceBind, segment, maxSpace)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxSpaceBind, segment, maxSpace)
     }
 
     /**
@@ -221,7 +222,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getMaxSpace(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxSpaceBind, segment)
     }
 
     /**
@@ -231,7 +232,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setSnap(snap: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSnapBind, segment, snap)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSnapBind, segment, snap)
     }
 
     /**
@@ -241,7 +242,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getSnap(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSnapBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setValueLabel(text: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setValueLabelBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setValueLabelBind, segment, text)
     }
 
     /**
@@ -261,7 +262,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getValueLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getValueLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getValueLabelBind, segment)
     }
 
     /**
@@ -271,7 +272,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setBlendMode(mode: AnimationNodeBlendSpace1D.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -281,7 +282,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getBlendMode(): AnimationNodeBlendSpace1D.BlendMode {
         checkOpen()
-        return AnimationNodeBlendSpace1D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
+        return AnimationNodeBlendSpace1D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
     }
 
     /**
@@ -292,7 +293,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setUseSync(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseSyncBind, segment, enable)
     }
 
     /**
@@ -303,7 +304,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun isUsingSync(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSyncBind, segment)
     }
 
     /**
@@ -313,7 +314,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setSyncMode(syncMode: AnimationNodeBlendSpace1D.SyncMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSyncModeBind, segment, syncMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSyncModeBind, segment, syncMode.value)
     }
 
     /**
@@ -323,7 +324,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getSyncMode(): AnimationNodeBlendSpace1D.SyncMode {
         checkOpen()
-        return AnimationNodeBlendSpace1D.SyncMode(ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, segment))
+        return AnimationNodeBlendSpace1D.SyncMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSyncModeBind, segment))
     }
 
     /**
@@ -335,7 +336,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setCyclicLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCyclicLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCyclicLengthBind, segment, length)
     }
 
     /**
@@ -347,7 +348,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getCyclicLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCyclicLengthBind, segment)
     }
 
     /**
@@ -439,140 +440,142 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendSpace1D? =
             if (handle.address() == 0L) null else AnimationNodeBlendSpace1D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_BLEND_POINT_HASH = 398361042L
-        private val addBlendPointBind by lazy {
+        @JvmField
+        val addBlendPointBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "add_blend_point", ADD_BLEND_POINT_HASH)
-        }
 
         private const val SET_BLEND_POINT_POSITION_HASH = 1602489585L
-        private val setBlendPointPositionBind by lazy {
+        @JvmField
+        val setBlendPointPositionBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_blend_point_position", SET_BLEND_POINT_POSITION_HASH)
-        }
 
         private const val GET_BLEND_POINT_POSITION_HASH = 2339986948L
-        private val getBlendPointPositionBind by lazy {
+        @JvmField
+        val getBlendPointPositionBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_blend_point_position", GET_BLEND_POINT_POSITION_HASH)
-        }
 
         private const val SET_BLEND_POINT_NODE_HASH = 4240341528L
-        private val setBlendPointNodeBind by lazy {
+        @JvmField
+        val setBlendPointNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_blend_point_node", SET_BLEND_POINT_NODE_HASH)
-        }
 
         private const val GET_BLEND_POINT_NODE_HASH = 665599029L
-        private val getBlendPointNodeBind by lazy {
+        @JvmField
+        val getBlendPointNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_blend_point_node", GET_BLEND_POINT_NODE_HASH)
-        }
 
         private const val SET_BLEND_POINT_NAME_HASH = 3780747571L
-        private val setBlendPointNameBind by lazy {
+        @JvmField
+        val setBlendPointNameBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_blend_point_name", SET_BLEND_POINT_NAME_HASH)
-        }
 
         private const val GET_BLEND_POINT_NAME_HASH = 659327637L
-        private val getBlendPointNameBind by lazy {
+        @JvmField
+        val getBlendPointNameBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_blend_point_name", GET_BLEND_POINT_NAME_HASH)
-        }
 
         private const val FIND_BLEND_POINT_BY_NAME_HASH = 2458036349L
-        private val findBlendPointByNameBind by lazy {
+        @JvmField
+        val findBlendPointByNameBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "find_blend_point_by_name", FIND_BLEND_POINT_BY_NAME_HASH)
-        }
 
         private const val REMOVE_BLEND_POINT_HASH = 1286410249L
-        private val removeBlendPointBind by lazy {
+        @JvmField
+        val removeBlendPointBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "remove_blend_point", REMOVE_BLEND_POINT_HASH)
-        }
 
         private const val GET_BLEND_POINT_COUNT_HASH = 3905245786L
-        private val getBlendPointCountBind by lazy {
+        @JvmField
+        val getBlendPointCountBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_blend_point_count", GET_BLEND_POINT_COUNT_HASH)
-        }
 
         private const val REORDER_BLEND_POINT_HASH = 3937882851L
-        private val reorderBlendPointBind by lazy {
+        @JvmField
+        val reorderBlendPointBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "reorder_blend_point", REORDER_BLEND_POINT_HASH)
-        }
 
         private const val SET_MIN_SPACE_HASH = 373806689L
-        private val setMinSpaceBind by lazy {
+        @JvmField
+        val setMinSpaceBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_min_space", SET_MIN_SPACE_HASH)
-        }
 
         private const val GET_MIN_SPACE_HASH = 1740695150L
-        private val getMinSpaceBind by lazy {
+        @JvmField
+        val getMinSpaceBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_min_space", GET_MIN_SPACE_HASH)
-        }
 
         private const val SET_MAX_SPACE_HASH = 373806689L
-        private val setMaxSpaceBind by lazy {
+        @JvmField
+        val setMaxSpaceBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_max_space", SET_MAX_SPACE_HASH)
-        }
 
         private const val GET_MAX_SPACE_HASH = 1740695150L
-        private val getMaxSpaceBind by lazy {
+        @JvmField
+        val getMaxSpaceBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_max_space", GET_MAX_SPACE_HASH)
-        }
 
         private const val SET_SNAP_HASH = 373806689L
-        private val setSnapBind by lazy {
+        @JvmField
+        val setSnapBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_snap", SET_SNAP_HASH)
-        }
 
         private const val GET_SNAP_HASH = 1740695150L
-        private val getSnapBind by lazy {
+        @JvmField
+        val getSnapBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_snap", GET_SNAP_HASH)
-        }
 
         private const val SET_VALUE_LABEL_HASH = 83702148L
-        private val setValueLabelBind by lazy {
+        @JvmField
+        val setValueLabelBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_value_label", SET_VALUE_LABEL_HASH)
-        }
 
         private const val GET_VALUE_LABEL_HASH = 201670096L
-        private val getValueLabelBind by lazy {
+        @JvmField
+        val getValueLabelBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_value_label", GET_VALUE_LABEL_HASH)
-        }
 
         private const val SET_BLEND_MODE_HASH = 2600869457L
-        private val setBlendModeBind by lazy {
+        @JvmField
+        val setBlendModeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_blend_mode", SET_BLEND_MODE_HASH)
-        }
 
         private const val GET_BLEND_MODE_HASH = 1547667849L
-        private val getBlendModeBind by lazy {
+        @JvmField
+        val getBlendModeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_blend_mode", GET_BLEND_MODE_HASH)
-        }
 
         private const val SET_USE_SYNC_HASH = 2586408642L
-        private val setUseSyncBind by lazy {
+        @JvmField
+        val setUseSyncBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_use_sync", SET_USE_SYNC_HASH)
-        }
 
         private const val IS_USING_SYNC_HASH = 36873697L
-        private val isUsingSyncBind by lazy {
+        @JvmField
+        val isUsingSyncBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "is_using_sync", IS_USING_SYNC_HASH)
-        }
 
         private const val SET_SYNC_MODE_HASH = 1065895142L
-        private val setSyncModeBind by lazy {
+        @JvmField
+        val setSyncModeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_sync_mode", SET_SYNC_MODE_HASH)
-        }
 
         private const val GET_SYNC_MODE_HASH = 132474921L
-        private val getSyncModeBind by lazy {
+        @JvmField
+        val getSyncModeBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_sync_mode", GET_SYNC_MODE_HASH)
-        }
 
         private const val SET_CYCLIC_LENGTH_HASH = 373806689L
-        private val setCyclicLengthBind by lazy {
+        @JvmField
+        val setCyclicLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "set_cyclic_length", SET_CYCLIC_LENGTH_HASH)
-        }
 
         private const val GET_CYCLIC_LENGTH_HASH = 1740695150L
-        private val getCyclicLengthBind by lazy {
+        @JvmField
+        val getCyclicLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeBlendSpace1D", "get_cyclic_length", GET_CYCLIC_LENGTH_HASH)
-        }
     }
 }

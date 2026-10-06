@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -48,62 +49,62 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
 
     fun setHint(hint: VisualShaderNodeFloatParameter.Hint) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHintBind, segment, hint.value)
     }
 
     fun getHint(): VisualShaderNodeFloatParameter.Hint {
         checkOpen()
-        return VisualShaderNodeFloatParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment))
+        return VisualShaderNodeFloatParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
     }
 
     fun setMin(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinBind, segment, value)
     }
 
     fun getMin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinBind, segment)
     }
 
     fun setMax(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxBind, segment, value)
     }
 
     fun getMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxBind, segment)
     }
 
     fun setStep(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStepBind, segment, value)
     }
 
     fun getStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
     }
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultValueBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultValueBind, segment)
     }
 
     @JvmInline
@@ -126,65 +127,67 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatParameter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HINT_HASH = 3712586466L
-        private val setHintBind by lazy {
+        @JvmField
+        val setHintBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "set_hint", SET_HINT_HASH)
-        }
 
         private const val GET_HINT_HASH = 3042240429L
-        private val getHintBind by lazy {
+        @JvmField
+        val getHintBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "get_hint", GET_HINT_HASH)
-        }
 
         private const val SET_MIN_HASH = 373806689L
-        private val setMinBind by lazy {
+        @JvmField
+        val setMinBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "set_min", SET_MIN_HASH)
-        }
 
         private const val GET_MIN_HASH = 1740695150L
-        private val getMinBind by lazy {
+        @JvmField
+        val getMinBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "get_min", GET_MIN_HASH)
-        }
 
         private const val SET_MAX_HASH = 373806689L
-        private val setMaxBind by lazy {
+        @JvmField
+        val setMaxBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "set_max", SET_MAX_HASH)
-        }
 
         private const val GET_MAX_HASH = 1740695150L
-        private val getMaxBind by lazy {
+        @JvmField
+        val getMaxBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "get_max", GET_MAX_HASH)
-        }
 
         private const val SET_STEP_HASH = 373806689L
-        private val setStepBind by lazy {
+        @JvmField
+        val setStepBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "set_step", SET_STEP_HASH)
-        }
 
         private const val GET_STEP_HASH = 1740695150L
-        private val getStepBind by lazy {
+        @JvmField
+        val getStepBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "get_step", GET_STEP_HASH)
-        }
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
-        private val setDefaultValueEnabledBind by lazy {
+        @JvmField
+        val setDefaultValueEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "set_default_value_enabled", SET_DEFAULT_VALUE_ENABLED_HASH)
-        }
 
         private const val IS_DEFAULT_VALUE_ENABLED_HASH = 36873697L
-        private val isDefaultValueEnabledBind by lazy {
+        @JvmField
+        val isDefaultValueEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "is_default_value_enabled", IS_DEFAULT_VALUE_ENABLED_HASH)
-        }
 
         private const val SET_DEFAULT_VALUE_HASH = 373806689L
-        private val setDefaultValueBind by lazy {
+        @JvmField
+        val setDefaultValueBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "set_default_value", SET_DEFAULT_VALUE_HASH)
-        }
 
         private const val GET_DEFAULT_VALUE_HASH = 1740695150L
-        private val getDefaultValueBind by lazy {
+        @JvmField
+        val getDefaultValueBind =
             ObjectCalls.getMethodBind("VisualShaderNodeFloatParameter", "get_default_value", GET_DEFAULT_VALUE_HASH)
-        }
     }
 }

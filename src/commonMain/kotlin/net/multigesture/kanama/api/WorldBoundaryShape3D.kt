@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setPlane(plane: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithPlaneArg(setPlaneBind, segment, plane)
+        ObjectCalls.ptrcallWithPlaneArg(Binds.setPlaneBind, segment, plane)
     }
 
     /**
@@ -35,7 +36,7 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getPlane(): Plane {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPlane(getPlaneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPlane(Binds.getPlaneBind, segment)
     }
 
     companion object {
@@ -48,15 +49,17 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape3D? =
             if (handle.address() == 0L) null else WorldBoundaryShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PLANE_HASH = 3505987427L
-        private val setPlaneBind by lazy {
+        @JvmField
+        val setPlaneBind =
             ObjectCalls.getMethodBind("WorldBoundaryShape3D", "set_plane", SET_PLANE_HASH)
-        }
 
         private const val GET_PLANE_HASH = 2753500971L
-        private val getPlaneBind by lazy {
+        @JvmField
+        val getPlaneBind =
             ObjectCalls.getMethodBind("WorldBoundaryShape3D", "get_plane", GET_PLANE_HASH)
-        }
     }
 }

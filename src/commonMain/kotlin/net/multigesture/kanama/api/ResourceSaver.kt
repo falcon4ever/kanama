@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,9 +12,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: ResourceSaver
  */
 object ResourceSaver {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("ResourceSaver")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Saves a resource to disk to the given path, using a `ResourceFormatSaver` that recognizes the
@@ -26,7 +26,7 @@ object ResourceSaver {
      */
     @JvmStatic
     fun save(resource: Resource, path: String = "", flags: ResourceSaver.SaverFlags = ResourceSaver.SaverFlags.NONE): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource.requireOpenHandle(), path, flags.value))
+        return GodotError(ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(Binds.saveBind, singleton, resource.requireOpenHandle(), path, flags.value))
     }
 
     /**
@@ -38,7 +38,7 @@ object ResourceSaver {
      */
     @JvmStatic
     fun setUid(resource: String, uid: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUidBind, singleton, resource, uid))
+        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.setUidBind, singleton, resource, uid))
     }
 
     /**
@@ -48,7 +48,7 @@ object ResourceSaver {
      */
     @JvmStatic
     fun getRecognizedExtensions(type: Resource): List<String> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getRecognizedExtensionsBind, singleton, type.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getRecognizedExtensionsBind, singleton, type.requireOpenHandle())
     }
 
     /**
@@ -60,7 +60,7 @@ object ResourceSaver {
      */
     @JvmStatic
     fun addResourceFormatSaver(formatSaver: ResourceFormatSaver, atFront: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addResourceFormatSaverBind, singleton, formatSaver.requireOpenHandle(), atFront)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addResourceFormatSaverBind, singleton, formatSaver.requireOpenHandle(), atFront)
     }
 
     /**
@@ -70,7 +70,7 @@ object ResourceSaver {
      */
     @JvmStatic
     fun removeResourceFormatSaver(formatSaver: ResourceFormatSaver) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceFormatSaverBind, singleton, listOf(formatSaver.requireOpenHandle()))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceFormatSaverBind, singleton, listOf(formatSaver.requireOpenHandle()))
     }
 
     /**
@@ -82,7 +82,7 @@ object ResourceSaver {
      */
     @JvmStatic
     fun getResourceIdForPath(path: String, generate: Boolean = false): Long {
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(getResourceIdForPathBind, singleton, path, generate)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.getResourceIdForPathBind, singleton, path, generate)
     }
 
     /**
@@ -163,33 +163,38 @@ object ResourceSaver {
     internal fun wrap(handle: RawSegment): ResourceSaver? =
         if (handle.address() == 0L) null else this
 
-    private const val SAVE_HASH = 2983274697L
-    private val saveBind by lazy {
-        ObjectCalls.getMethodBind("ResourceSaver", "save", SAVE_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("ResourceSaver")
 
-    private const val SET_UID_HASH = 993915709L
-    private val setUidBind by lazy {
-        ObjectCalls.getMethodBind("ResourceSaver", "set_uid", SET_UID_HASH)
-    }
+        private const val SAVE_HASH = 2983274697L
+        @JvmField
+        val saveBind =
+            ObjectCalls.getMethodBind("ResourceSaver", "save", SAVE_HASH)
 
-    private const val GET_RECOGNIZED_EXTENSIONS_HASH = 4223597960L
-    private val getRecognizedExtensionsBind by lazy {
-        ObjectCalls.getMethodBind("ResourceSaver", "get_recognized_extensions", GET_RECOGNIZED_EXTENSIONS_HASH)
-    }
+        private const val SET_UID_HASH = 993915709L
+        @JvmField
+        val setUidBind =
+            ObjectCalls.getMethodBind("ResourceSaver", "set_uid", SET_UID_HASH)
 
-    private const val ADD_RESOURCE_FORMAT_SAVER_HASH = 362894272L
-    private val addResourceFormatSaverBind by lazy {
-        ObjectCalls.getMethodBind("ResourceSaver", "add_resource_format_saver", ADD_RESOURCE_FORMAT_SAVER_HASH)
-    }
+        private const val GET_RECOGNIZED_EXTENSIONS_HASH = 4223597960L
+        @JvmField
+        val getRecognizedExtensionsBind =
+            ObjectCalls.getMethodBind("ResourceSaver", "get_recognized_extensions", GET_RECOGNIZED_EXTENSIONS_HASH)
 
-    private const val REMOVE_RESOURCE_FORMAT_SAVER_HASH = 3373026878L
-    private val removeResourceFormatSaverBind by lazy {
-        ObjectCalls.getMethodBind("ResourceSaver", "remove_resource_format_saver", REMOVE_RESOURCE_FORMAT_SAVER_HASH)
-    }
+        private const val ADD_RESOURCE_FORMAT_SAVER_HASH = 362894272L
+        @JvmField
+        val addResourceFormatSaverBind =
+            ObjectCalls.getMethodBind("ResourceSaver", "add_resource_format_saver", ADD_RESOURCE_FORMAT_SAVER_HASH)
 
-    private const val GET_RESOURCE_ID_FOR_PATH_HASH = 150756522L
-    private val getResourceIdForPathBind by lazy {
-        ObjectCalls.getMethodBind("ResourceSaver", "get_resource_id_for_path", GET_RESOURCE_ID_FOR_PATH_HASH)
+        private const val REMOVE_RESOURCE_FORMAT_SAVER_HASH = 3373026878L
+        @JvmField
+        val removeResourceFormatSaverBind =
+            ObjectCalls.getMethodBind("ResourceSaver", "remove_resource_format_saver", REMOVE_RESOURCE_FORMAT_SAVER_HASH)
+
+        private const val GET_RESOURCE_ID_FOR_PATH_HASH = 150756522L
+        @JvmField
+        val getResourceIdForPathBind =
+            ObjectCalls.getMethodBind("ResourceSaver", "get_resource_id_for_path", GET_RESOURCE_ID_FOR_PATH_HASH)
     }
 }

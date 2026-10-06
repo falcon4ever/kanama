@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_environment
      */
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -46,7 +47,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_environment
      */
     fun getEnvironment(): Environment? {
-        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEnvironmentBind, segment))
     }
 
     /**
@@ -55,7 +56,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_camera_attributes
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -64,7 +65,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCameraAttributesBind, segment))
     }
 
     /**
@@ -73,7 +74,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.set_compositor
      */
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -82,7 +83,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_compositor
      */
     fun getCompositor(): Compositor? {
-        return Compositor.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
+        return Compositor.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCompositorBind, segment))
     }
 
     companion object {
@@ -92,35 +93,37 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): WorldEnvironment? =
             if (handle.address() == 0L) null else WorldEnvironment(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENVIRONMENT_HASH = 4143518816L
-        private val setEnvironmentBind by lazy {
+        @JvmField
+        val setEnvironmentBind =
             ObjectCalls.getMethodBind("WorldEnvironment", "set_environment", SET_ENVIRONMENT_HASH)
-        }
 
         private const val GET_ENVIRONMENT_HASH = 3082064660L
-        private val getEnvironmentBind by lazy {
+        @JvmField
+        val getEnvironmentBind =
             ObjectCalls.getMethodBind("WorldEnvironment", "get_environment", GET_ENVIRONMENT_HASH)
-        }
 
         private const val SET_CAMERA_ATTRIBUTES_HASH = 2817810567L
-        private val setCameraAttributesBind by lazy {
+        @JvmField
+        val setCameraAttributesBind =
             ObjectCalls.getMethodBind("WorldEnvironment", "set_camera_attributes", SET_CAMERA_ATTRIBUTES_HASH)
-        }
 
         private const val GET_CAMERA_ATTRIBUTES_HASH = 3921283215L
-        private val getCameraAttributesBind by lazy {
+        @JvmField
+        val getCameraAttributesBind =
             ObjectCalls.getMethodBind("WorldEnvironment", "get_camera_attributes", GET_CAMERA_ATTRIBUTES_HASH)
-        }
 
         private const val SET_COMPOSITOR_HASH = 1586754307L
-        private val setCompositorBind by lazy {
+        @JvmField
+        val setCompositorBind =
             ObjectCalls.getMethodBind("WorldEnvironment", "set_compositor", SET_COMPOSITOR_HASH)
-        }
 
         private const val GET_COMPOSITOR_HASH = 3647707413L
-        private val getCompositorBind by lazy {
+        @JvmField
+        val getCompositorBind =
             ObjectCalls.getMethodBind("WorldEnvironment", "get_compositor", GET_COMPOSITOR_HASH)
-        }
     }
 }

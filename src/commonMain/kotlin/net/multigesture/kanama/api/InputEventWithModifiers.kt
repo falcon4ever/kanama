@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun setCommandOrControlAutoremap(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCommandOrControlAutoremapBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCommandOrControlAutoremapBind, segment, enable)
     }
 
     /**
@@ -60,7 +61,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isCommandOrControlAutoremap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlAutoremapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommandOrControlAutoremapBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isCommandOrControlPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommandOrControlPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommandOrControlPressedBind, segment)
     }
 
     /**
@@ -81,7 +82,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun setAltPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAltPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAltPressedBind, segment, pressed)
     }
 
     /**
@@ -91,7 +92,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isAltPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAltPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAltPressedBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun setShiftPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setShiftPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShiftPressedBind, segment, pressed)
     }
 
     /**
@@ -111,7 +112,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isShiftPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isShiftPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShiftPressedBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun setCtrlPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCtrlPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCtrlPressedBind, segment, pressed)
     }
 
     /**
@@ -131,7 +132,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isCtrlPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCtrlPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCtrlPressedBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun setMetaPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMetaPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMetaPressedBind, segment, pressed)
     }
 
     /**
@@ -153,7 +154,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun isMetaPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMetaPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaPressedBind, segment)
     }
 
     /**
@@ -163,7 +164,7 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      */
     fun getModifiersMask(): KeyModifierMask {
         checkOpen()
-        return KeyModifierMask(ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, segment))
+        return KeyModifierMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModifiersMaskBind, segment))
     }
 
     companion object {
@@ -176,65 +177,67 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventWithModifiers? =
             if (handle.address() == 0L) null else InputEventWithModifiers(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COMMAND_OR_CONTROL_AUTOREMAP_HASH = 2586408642L
-        private val setCommandOrControlAutoremapBind by lazy {
+        @JvmField
+        val setCommandOrControlAutoremapBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "set_command_or_control_autoremap", SET_COMMAND_OR_CONTROL_AUTOREMAP_HASH)
-        }
 
         private const val IS_COMMAND_OR_CONTROL_AUTOREMAP_HASH = 36873697L
-        private val isCommandOrControlAutoremapBind by lazy {
+        @JvmField
+        val isCommandOrControlAutoremapBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "is_command_or_control_autoremap", IS_COMMAND_OR_CONTROL_AUTOREMAP_HASH)
-        }
 
         private const val IS_COMMAND_OR_CONTROL_PRESSED_HASH = 36873697L
-        private val isCommandOrControlPressedBind by lazy {
+        @JvmField
+        val isCommandOrControlPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "is_command_or_control_pressed", IS_COMMAND_OR_CONTROL_PRESSED_HASH)
-        }
 
         private const val SET_ALT_PRESSED_HASH = 2586408642L
-        private val setAltPressedBind by lazy {
+        @JvmField
+        val setAltPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "set_alt_pressed", SET_ALT_PRESSED_HASH)
-        }
 
         private const val IS_ALT_PRESSED_HASH = 36873697L
-        private val isAltPressedBind by lazy {
+        @JvmField
+        val isAltPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "is_alt_pressed", IS_ALT_PRESSED_HASH)
-        }
 
         private const val SET_SHIFT_PRESSED_HASH = 2586408642L
-        private val setShiftPressedBind by lazy {
+        @JvmField
+        val setShiftPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "set_shift_pressed", SET_SHIFT_PRESSED_HASH)
-        }
 
         private const val IS_SHIFT_PRESSED_HASH = 36873697L
-        private val isShiftPressedBind by lazy {
+        @JvmField
+        val isShiftPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "is_shift_pressed", IS_SHIFT_PRESSED_HASH)
-        }
 
         private const val SET_CTRL_PRESSED_HASH = 2586408642L
-        private val setCtrlPressedBind by lazy {
+        @JvmField
+        val setCtrlPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "set_ctrl_pressed", SET_CTRL_PRESSED_HASH)
-        }
 
         private const val IS_CTRL_PRESSED_HASH = 36873697L
-        private val isCtrlPressedBind by lazy {
+        @JvmField
+        val isCtrlPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "is_ctrl_pressed", IS_CTRL_PRESSED_HASH)
-        }
 
         private const val SET_META_PRESSED_HASH = 2586408642L
-        private val setMetaPressedBind by lazy {
+        @JvmField
+        val setMetaPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "set_meta_pressed", SET_META_PRESSED_HASH)
-        }
 
         private const val IS_META_PRESSED_HASH = 36873697L
-        private val isMetaPressedBind by lazy {
+        @JvmField
+        val isMetaPressedBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "is_meta_pressed", IS_META_PRESSED_HASH)
-        }
 
         private const val GET_MODIFIERS_MASK_HASH = 1258259499L
-        private val getModifiersMaskBind by lazy {
+        @JvmField
+        val getModifiersMaskBind =
             ObjectCalls.getMethodBind("InputEventWithModifiers", "get_modifiers_mask", GET_MODIFIERS_MASK_HASH)
-        }
     }
 }

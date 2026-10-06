@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.set_pick_color
      */
     fun setPickColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setPickColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setPickColorBind, segment, color)
     }
 
     /**
@@ -45,7 +46,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.get_pick_color
      */
     fun getPickColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getPickColorBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.get_picker
      */
     fun getPicker(): ColorPicker? {
-        return ColorPicker.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPickerBind, segment))
+        return ColorPicker.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPickerBind, segment))
     }
 
     /**
@@ -68,7 +69,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.get_popup
      */
     fun getPopup(): PopupPanel? {
-        return PopupPanel.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
+        return PopupPanel.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPopupBind, segment))
     }
 
     /**
@@ -77,7 +78,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.set_edit_alpha
      */
     fun setEditAlpha(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, segment, show)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditAlphaBind, segment, show)
     }
 
     /**
@@ -86,7 +87,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.is_editing_alpha
      */
     fun isEditingAlpha(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditingAlphaBind, segment)
     }
 
     /**
@@ -95,7 +96,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.set_edit_intensity
      */
     fun setEditIntensity(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, segment, show)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditIntensityBind, segment, show)
     }
 
     /**
@@ -104,7 +105,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: ColorPickerButton.is_editing_intensity
      */
     fun isEditingIntensity(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditingIntensityBind, segment)
     }
 
     /** Signal `color_changed(color: Color)`; see [TypedSignal]. */
@@ -135,45 +136,47 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): ColorPickerButton? =
             if (handle.address() == 0L) null else ColorPickerButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PICK_COLOR_HASH = 2920490490L
-        private val setPickColorBind by lazy {
+        @JvmField
+        val setPickColorBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "set_pick_color", SET_PICK_COLOR_HASH)
-        }
 
         private const val GET_PICK_COLOR_HASH = 3444240500L
-        private val getPickColorBind by lazy {
+        @JvmField
+        val getPickColorBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "get_pick_color", GET_PICK_COLOR_HASH)
-        }
 
         private const val GET_PICKER_HASH = 331835996L
-        private val getPickerBind by lazy {
+        @JvmField
+        val getPickerBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "get_picker", GET_PICKER_HASH)
-        }
 
         private const val GET_POPUP_HASH = 1322440207L
-        private val getPopupBind by lazy {
+        @JvmField
+        val getPopupBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "get_popup", GET_POPUP_HASH)
-        }
 
         private const val SET_EDIT_ALPHA_HASH = 2586408642L
-        private val setEditAlphaBind by lazy {
+        @JvmField
+        val setEditAlphaBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "set_edit_alpha", SET_EDIT_ALPHA_HASH)
-        }
 
         private const val IS_EDITING_ALPHA_HASH = 36873697L
-        private val isEditingAlphaBind by lazy {
+        @JvmField
+        val isEditingAlphaBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "is_editing_alpha", IS_EDITING_ALPHA_HASH)
-        }
 
         private const val SET_EDIT_INTENSITY_HASH = 2586408642L
-        private val setEditIntensityBind by lazy {
+        @JvmField
+        val setEditIntensityBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "set_edit_intensity", SET_EDIT_INTENSITY_HASH)
-        }
 
         private const val IS_EDITING_INTENSITY_HASH = 36873697L
-        private val isEditingIntensityBind by lazy {
+        @JvmField
+        val isEditingIntensityBind =
             ObjectCalls.getMethodBind("ColorPickerButton", "is_editing_intensity", IS_EDITING_INTENSITY_HASH)
-        }
     }
 }

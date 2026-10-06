@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -55,7 +56,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_resizable
      */
     fun setResizable(resizable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setResizableBind, segment, resizable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setResizableBind, segment, resizable)
     }
 
     /**
@@ -65,7 +66,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_resizable
      */
     fun isResizable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isResizableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResizableBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_draggable
      */
     fun setDraggable(draggable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDraggableBind, segment, draggable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDraggableBind, segment, draggable)
     }
 
     /**
@@ -83,7 +84,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_draggable
      */
     fun isDraggable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDraggableBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_selectable
      */
     fun setSelectable(selectable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectableBind, segment, selectable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectableBind, segment, selectable)
     }
 
     /**
@@ -101,7 +102,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_selectable
      */
     fun isSelectable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectableBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_selected
      */
     fun setSelected(selected: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectedBind, segment, selected)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectedBind, segment, selected)
     }
 
     /**
@@ -119,7 +120,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_selected
      */
     fun isSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectedBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_scaling_menus
      */
     fun setScalingMenus(scalingMenus: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScalingMenusBind, segment, scalingMenus)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScalingMenusBind, segment, scalingMenus)
     }
 
     /**
@@ -139,7 +140,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.is_scaling_menus
      */
     fun isScalingMenus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScalingMenusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScalingMenusBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.set_position_offset
      */
     fun setPositionOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPositionOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionOffsetBind, segment, offset)
     }
 
     /**
@@ -157,7 +158,7 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: GraphElement.get_position_offset
      */
     fun getPositionOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionOffsetBind, segment)
     }
 
     /** Signal `node_selected()`; see [TypedSignal]. */
@@ -218,65 +219,67 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): GraphElement? =
             if (handle.address() == 0L) null else GraphElement(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RESIZABLE_HASH = 2586408642L
-        private val setResizableBind by lazy {
+        @JvmField
+        val setResizableBind =
             ObjectCalls.getMethodBind("GraphElement", "set_resizable", SET_RESIZABLE_HASH)
-        }
 
         private const val IS_RESIZABLE_HASH = 36873697L
-        private val isResizableBind by lazy {
+        @JvmField
+        val isResizableBind =
             ObjectCalls.getMethodBind("GraphElement", "is_resizable", IS_RESIZABLE_HASH)
-        }
 
         private const val SET_DRAGGABLE_HASH = 2586408642L
-        private val setDraggableBind by lazy {
+        @JvmField
+        val setDraggableBind =
             ObjectCalls.getMethodBind("GraphElement", "set_draggable", SET_DRAGGABLE_HASH)
-        }
 
         private const val IS_DRAGGABLE_HASH = 2240911060L
-        private val isDraggableBind by lazy {
+        @JvmField
+        val isDraggableBind =
             ObjectCalls.getMethodBind("GraphElement", "is_draggable", IS_DRAGGABLE_HASH)
-        }
 
         private const val SET_SELECTABLE_HASH = 2586408642L
-        private val setSelectableBind by lazy {
+        @JvmField
+        val setSelectableBind =
             ObjectCalls.getMethodBind("GraphElement", "set_selectable", SET_SELECTABLE_HASH)
-        }
 
         private const val IS_SELECTABLE_HASH = 2240911060L
-        private val isSelectableBind by lazy {
+        @JvmField
+        val isSelectableBind =
             ObjectCalls.getMethodBind("GraphElement", "is_selectable", IS_SELECTABLE_HASH)
-        }
 
         private const val SET_SELECTED_HASH = 2586408642L
-        private val setSelectedBind by lazy {
+        @JvmField
+        val setSelectedBind =
             ObjectCalls.getMethodBind("GraphElement", "set_selected", SET_SELECTED_HASH)
-        }
 
         private const val IS_SELECTED_HASH = 2240911060L
-        private val isSelectedBind by lazy {
+        @JvmField
+        val isSelectedBind =
             ObjectCalls.getMethodBind("GraphElement", "is_selected", IS_SELECTED_HASH)
-        }
 
         private const val SET_SCALING_MENUS_HASH = 2586408642L
-        private val setScalingMenusBind by lazy {
+        @JvmField
+        val setScalingMenusBind =
             ObjectCalls.getMethodBind("GraphElement", "set_scaling_menus", SET_SCALING_MENUS_HASH)
-        }
 
         private const val IS_SCALING_MENUS_HASH = 36873697L
-        private val isScalingMenusBind by lazy {
+        @JvmField
+        val isScalingMenusBind =
             ObjectCalls.getMethodBind("GraphElement", "is_scaling_menus", IS_SCALING_MENUS_HASH)
-        }
 
         private const val SET_POSITION_OFFSET_HASH = 743155724L
-        private val setPositionOffsetBind by lazy {
+        @JvmField
+        val setPositionOffsetBind =
             ObjectCalls.getMethodBind("GraphElement", "set_position_offset", SET_POSITION_OFFSET_HASH)
-        }
 
         private const val GET_POSITION_OFFSET_HASH = 3341600327L
-        private val getPositionOffsetBind by lazy {
+        @JvmField
+        val getPositionOffsetBind =
             ObjectCalls.getMethodBind("GraphElement", "get_position_offset", GET_POSITION_OFFSET_HASH)
-        }
     }
 }

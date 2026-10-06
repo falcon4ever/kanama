@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -41,7 +42,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_original_class
      */
     fun setOriginalClass(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOriginalClassBind, segment, name)
     }
 
     /**
@@ -50,7 +51,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.get_original_class
      */
     fun getOriginalClass(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalClassBind, segment)
     }
 
     /**
@@ -59,7 +60,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_original_scene
      */
     fun setOriginalScene(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setOriginalSceneBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOriginalSceneBind, segment, name)
     }
 
     /**
@@ -68,7 +69,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.get_original_scene
      */
     fun getOriginalScene(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalSceneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalSceneBind, segment)
     }
 
     /**
@@ -78,7 +79,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_recording_properties
      */
     fun setRecordingProperties(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRecordingPropertiesBind, segment, enable)
     }
 
     /**
@@ -88,7 +89,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.is_recording_properties
      */
     fun isRecordingProperties(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingPropertiesBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.set_recording_signals
      */
     fun setRecordingSignals(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRecordingSignalsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRecordingSignalsBind, segment, enable)
     }
 
     /**
@@ -108,7 +109,7 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: MissingNode.is_recording_signals
      */
     fun isRecordingSignals(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingSignalsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingSignalsBind, segment)
     }
 
     companion object {
@@ -118,45 +119,47 @@ class MissingNode(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): MissingNode? =
             if (handle.address() == 0L) null else MissingNode(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ORIGINAL_CLASS_HASH = 83702148L
-        private val setOriginalClassBind by lazy {
+        @JvmField
+        val setOriginalClassBind =
             ObjectCalls.getMethodBind("MissingNode", "set_original_class", SET_ORIGINAL_CLASS_HASH)
-        }
 
         private const val GET_ORIGINAL_CLASS_HASH = 201670096L
-        private val getOriginalClassBind by lazy {
+        @JvmField
+        val getOriginalClassBind =
             ObjectCalls.getMethodBind("MissingNode", "get_original_class", GET_ORIGINAL_CLASS_HASH)
-        }
 
         private const val SET_ORIGINAL_SCENE_HASH = 83702148L
-        private val setOriginalSceneBind by lazy {
+        @JvmField
+        val setOriginalSceneBind =
             ObjectCalls.getMethodBind("MissingNode", "set_original_scene", SET_ORIGINAL_SCENE_HASH)
-        }
 
         private const val GET_ORIGINAL_SCENE_HASH = 201670096L
-        private val getOriginalSceneBind by lazy {
+        @JvmField
+        val getOriginalSceneBind =
             ObjectCalls.getMethodBind("MissingNode", "get_original_scene", GET_ORIGINAL_SCENE_HASH)
-        }
 
         private const val SET_RECORDING_PROPERTIES_HASH = 2586408642L
-        private val setRecordingPropertiesBind by lazy {
+        @JvmField
+        val setRecordingPropertiesBind =
             ObjectCalls.getMethodBind("MissingNode", "set_recording_properties", SET_RECORDING_PROPERTIES_HASH)
-        }
 
         private const val IS_RECORDING_PROPERTIES_HASH = 36873697L
-        private val isRecordingPropertiesBind by lazy {
+        @JvmField
+        val isRecordingPropertiesBind =
             ObjectCalls.getMethodBind("MissingNode", "is_recording_properties", IS_RECORDING_PROPERTIES_HASH)
-        }
 
         private const val SET_RECORDING_SIGNALS_HASH = 2586408642L
-        private val setRecordingSignalsBind by lazy {
+        @JvmField
+        val setRecordingSignalsBind =
             ObjectCalls.getMethodBind("MissingNode", "set_recording_signals", SET_RECORDING_SIGNALS_HASH)
-        }
 
         private const val IS_RECORDING_SIGNALS_HASH = 36873697L
-        private val isRecordingSignalsBind by lazy {
+        @JvmField
+        val isRecordingSignalsBind =
             ObjectCalls.getMethodBind("MissingNode", "is_recording_signals", IS_RECORDING_SIGNALS_HASH)
-        }
     }
 }

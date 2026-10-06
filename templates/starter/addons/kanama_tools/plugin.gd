@@ -19,6 +19,9 @@ const MODE_BUILD := "build"
 const MODE_RUNTIME := "runtime"
 const SETTING_JDWP_ENABLED := "kanama/debug/jdwp_enabled"
 const SETTING_JDWP_PORT := "kanama/debug/jdwp_port"
+# Extra JVM options the native bootstrap passes to the embedded JVM (task 131 item 18). Read from
+# project.godot by bootstrap.c before the JVM starts; restart the game after changing it.
+const SETTING_JVM_OPTIONS := "kanama/jvm/options"
 # Read by the Kanama runtime at startup: log each RefCounted the GC released because its owned
 # Kotlin wrapper was never closed, once per creation site (task 132).
 const SETTING_LOG_GC_RELEASES := "kanama/debug/log_gc_releases"
@@ -281,11 +284,14 @@ func _ensure_project_settings() -> void:
         ProjectSettings.set_setting(SETTING_JDWP_ENABLED, false)
     if not ProjectSettings.has_setting(SETTING_JDWP_PORT):
         ProjectSettings.set_setting(SETTING_JDWP_PORT, DEFAULT_JDWP_PORT)
+    if not ProjectSettings.has_setting(SETTING_JVM_OPTIONS):
+        ProjectSettings.set_setting(SETTING_JVM_OPTIONS, "")
     if not ProjectSettings.has_setting(SETTING_LOG_GC_RELEASES):
         ProjectSettings.set_setting(SETTING_LOG_GC_RELEASES, false)
     ProjectSettings.set_initial_value(SETTING_LOG_GC_RELEASES, false)
     ProjectSettings.set_initial_value(SETTING_JDWP_ENABLED, false)
     ProjectSettings.set_initial_value(SETTING_JDWP_PORT, DEFAULT_JDWP_PORT)
+    ProjectSettings.set_initial_value(SETTING_JVM_OPTIONS, "")
 
     ProjectSettings.add_property_info({
         "name": SETTING_REPO_DIR,
@@ -326,6 +332,10 @@ func _ensure_project_settings() -> void:
     ProjectSettings.add_property_info({
         "name": SETTING_LOG_GC_RELEASES,
         "type": TYPE_BOOL,
+    })
+    ProjectSettings.add_property_info({
+        "name": SETTING_JVM_OPTIONS,
+        "type": TYPE_STRING,
     })
     ProjectSettings.add_property_info({
         "name": SETTING_JDWP_PORT,

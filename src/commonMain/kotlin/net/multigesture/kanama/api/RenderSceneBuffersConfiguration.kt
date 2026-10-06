@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -80,7 +81,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getRenderTarget(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRenderTargetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRenderTargetBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setRenderTarget(renderTarget: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setRenderTargetBind, segment, renderTarget)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setRenderTargetBind, segment, renderTarget)
     }
 
     /**
@@ -100,7 +101,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getInternalSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getInternalSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getInternalSizeBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setInternalSize(internalSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setInternalSizeBind, segment, internalSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setInternalSizeBind, segment, internalSize)
     }
 
     /**
@@ -120,7 +121,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTargetSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTargetSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTargetSizeBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setTargetSize(targetSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setTargetSizeBind, segment, targetSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setTargetSizeBind, segment, targetSize)
     }
 
     /**
@@ -140,7 +141,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setViewCount(viewCount: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setViewCountBind, segment, viewCount)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setViewCountBind, segment, viewCount)
     }
 
     /**
@@ -161,7 +162,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getScaling3dMode(): RenderingServer.ViewportScaling3DMode {
         checkOpen()
-        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment))
+        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScaling3dModeBind, segment))
     }
 
     /**
@@ -172,7 +173,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setScaling3dMode(scaling3dMode: RenderingServer.ViewportScaling3DMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScaling3dModeBind, segment, scaling3dMode.value)
     }
 
     /**
@@ -182,7 +183,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMsaa3d(): RenderingServer.ViewportMSAA {
         checkOpen()
-        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment))
+        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMsaa3dBind, segment))
     }
 
     /**
@@ -192,7 +193,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMsaa3d(msaa3d: RenderingServer.ViewportMSAA) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa3d.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMsaa3dBind, segment, msaa3d.value)
     }
 
     /**
@@ -202,7 +203,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getScreenSpaceAa(): RenderingServer.ViewportScreenSpaceAA {
         checkOpen()
-        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment))
+        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScreenSpaceAaBind, segment))
     }
 
     /**
@@ -212,7 +213,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setScreenSpaceAa(screenSpaceAa: RenderingServer.ViewportScreenSpaceAA) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScreenSpaceAaBind, segment, screenSpaceAa.value)
     }
 
     /**
@@ -222,7 +223,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getFsrSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFsrSharpnessBind, segment)
     }
 
     /**
@@ -232,7 +233,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setFsrSharpness(fsrSharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, segment, fsrSharpness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFsrSharpnessBind, segment, fsrSharpness)
     }
 
     /**
@@ -244,7 +245,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTextureMipmapBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTextureMipmapBiasBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, segment, textureMipmapBias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTextureMipmapBiasBind, segment, textureMipmapBias)
     }
 
     /**
@@ -266,7 +267,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getAnisotropicFilteringLevel(): RenderingServer.ViewportAnisotropicFiltering {
         checkOpen()
-        return RenderingServer.ViewportAnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment))
+        return RenderingServer.ViewportAnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAnisotropicFilteringLevelBind, segment))
     }
 
     /**
@@ -276,7 +277,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: RenderingServer.ViewportAnisotropicFiltering) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
     }
 
     companion object {
@@ -289,105 +290,107 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersConfiguration? =
             if (handle.address() == 0L) null else RenderSceneBuffersConfiguration(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RENDER_TARGET_HASH = 2944877500L
-        private val getRenderTargetBind by lazy {
+        @JvmField
+        val getRenderTargetBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_render_target", GET_RENDER_TARGET_HASH)
-        }
 
         private const val SET_RENDER_TARGET_HASH = 2722037293L
-        private val setRenderTargetBind by lazy {
+        @JvmField
+        val setRenderTargetBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_render_target", SET_RENDER_TARGET_HASH)
-        }
 
         private const val GET_INTERNAL_SIZE_HASH = 3690982128L
-        private val getInternalSizeBind by lazy {
+        @JvmField
+        val getInternalSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_internal_size", GET_INTERNAL_SIZE_HASH)
-        }
 
         private const val SET_INTERNAL_SIZE_HASH = 1130785943L
-        private val setInternalSizeBind by lazy {
+        @JvmField
+        val setInternalSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_internal_size", SET_INTERNAL_SIZE_HASH)
-        }
 
         private const val GET_TARGET_SIZE_HASH = 3690982128L
-        private val getTargetSizeBind by lazy {
+        @JvmField
+        val getTargetSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_target_size", GET_TARGET_SIZE_HASH)
-        }
 
         private const val SET_TARGET_SIZE_HASH = 1130785943L
-        private val setTargetSizeBind by lazy {
+        @JvmField
+        val setTargetSizeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_target_size", SET_TARGET_SIZE_HASH)
-        }
 
         private const val GET_VIEW_COUNT_HASH = 3905245786L
-        private val getViewCountBind by lazy {
+        @JvmField
+        val getViewCountBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_view_count", GET_VIEW_COUNT_HASH)
-        }
 
         private const val SET_VIEW_COUNT_HASH = 1286410249L
-        private val setViewCountBind by lazy {
+        @JvmField
+        val setViewCountBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_view_count", SET_VIEW_COUNT_HASH)
-        }
 
         private const val GET_SCALING_3D_MODE_HASH = 976778074L
-        private val getScaling3dModeBind by lazy {
+        @JvmField
+        val getScaling3dModeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_scaling_3d_mode", GET_SCALING_3D_MODE_HASH)
-        }
 
         private const val SET_SCALING_3D_MODE_HASH = 447477857L
-        private val setScaling3dModeBind by lazy {
+        @JvmField
+        val setScaling3dModeBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_scaling_3d_mode", SET_SCALING_3D_MODE_HASH)
-        }
 
         private const val GET_MSAA_3D_HASH = 3109158617L
-        private val getMsaa3dBind by lazy {
+        @JvmField
+        val getMsaa3dBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_msaa_3d", GET_MSAA_3D_HASH)
-        }
 
         private const val SET_MSAA_3D_HASH = 3952630748L
-        private val setMsaa3dBind by lazy {
+        @JvmField
+        val setMsaa3dBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_msaa_3d", SET_MSAA_3D_HASH)
-        }
 
         private const val GET_SCREEN_SPACE_AA_HASH = 641513172L
-        private val getScreenSpaceAaBind by lazy {
+        @JvmField
+        val getScreenSpaceAaBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_screen_space_aa", GET_SCREEN_SPACE_AA_HASH)
-        }
 
         private const val SET_SCREEN_SPACE_AA_HASH = 139543108L
-        private val setScreenSpaceAaBind by lazy {
+        @JvmField
+        val setScreenSpaceAaBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_screen_space_aa", SET_SCREEN_SPACE_AA_HASH)
-        }
 
         private const val GET_FSR_SHARPNESS_HASH = 1740695150L
-        private val getFsrSharpnessBind by lazy {
+        @JvmField
+        val getFsrSharpnessBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_fsr_sharpness", GET_FSR_SHARPNESS_HASH)
-        }
 
         private const val SET_FSR_SHARPNESS_HASH = 373806689L
-        private val setFsrSharpnessBind by lazy {
+        @JvmField
+        val setFsrSharpnessBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_fsr_sharpness", SET_FSR_SHARPNESS_HASH)
-        }
 
         private const val GET_TEXTURE_MIPMAP_BIAS_HASH = 1740695150L
-        private val getTextureMipmapBiasBind by lazy {
+        @JvmField
+        val getTextureMipmapBiasBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_texture_mipmap_bias", GET_TEXTURE_MIPMAP_BIAS_HASH)
-        }
 
         private const val SET_TEXTURE_MIPMAP_BIAS_HASH = 373806689L
-        private val setTextureMipmapBiasBind by lazy {
+        @JvmField
+        val setTextureMipmapBiasBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_texture_mipmap_bias", SET_TEXTURE_MIPMAP_BIAS_HASH)
-        }
 
         private const val GET_ANISOTROPIC_FILTERING_LEVEL_HASH = 1617414954L
-        private val getAnisotropicFilteringLevelBind by lazy {
+        @JvmField
+        val getAnisotropicFilteringLevelBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "get_anisotropic_filtering_level", GET_ANISOTROPIC_FILTERING_LEVEL_HASH)
-        }
 
         private const val SET_ANISOTROPIC_FILTERING_LEVEL_HASH = 2559658741L
-        private val setAnisotropicFilteringLevelBind by lazy {
+        @JvmField
+        val setAnisotropicFilteringLevelBind =
             ObjectCalls.getMethodBind("RenderSceneBuffersConfiguration", "set_anisotropic_filtering_level", SET_ANISOTROPIC_FILTERING_LEVEL_HASH)
-        }
     }
 }

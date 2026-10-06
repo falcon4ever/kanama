@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -64,7 +65,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrom(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFromBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getFromBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFrom(from: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setFromBind, segment, from)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setFromBind, segment, from)
     }
 
     /**
@@ -85,7 +86,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMotion(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMotionBind, segment)
     }
 
     /**
@@ -95,7 +96,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMotion(motion: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setMotionBind, segment, motion)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setMotionBind, segment, motion)
     }
 
     /**
@@ -105,7 +106,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMargin(margin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMarginBind, segment, margin)
     }
 
     /**
@@ -128,7 +129,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCollideSeparationRayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideSeparationRayEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideSeparationRayEnabledBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCollideSeparationRayEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideSeparationRayEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollideSeparationRayEnabledBind, segment, enabled)
     }
 
     /**
@@ -152,7 +153,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExcludeBodies(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBodiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludeBodiesBind, segment)
     }
 
     /**
@@ -163,7 +164,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setExcludeBodies(excludeList: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBodiesBind, segment, excludeList)
+        ObjectCalls.ptrcallWithRIDListArg(Binds.setExcludeBodiesBind, segment, excludeList)
     }
 
     /**
@@ -174,7 +175,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExcludeObjects(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLongList(getExcludeObjectsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLongList(Binds.getExcludeObjectsBind, segment)
     }
 
     /**
@@ -185,7 +186,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setExcludeObjects(excludeList: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedIntListArg(setExcludeObjectsBind, segment, excludeList)
+        ObjectCalls.ptrcallWithTypedIntListArg(Binds.setExcludeObjectsBind, segment, excludeList)
     }
 
     /**
@@ -198,7 +199,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRecoveryAsCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecoveryAsCollisionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecoveryAsCollisionEnabledBind, segment)
     }
 
     /**
@@ -211,7 +212,7 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRecoveryAsCollisionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRecoveryAsCollisionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRecoveryAsCollisionEnabledBind, segment, enabled)
     }
 
     companion object {
@@ -224,75 +225,77 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsTestMotionParameters2D? =
             if (handle.address() == 0L) null else PhysicsTestMotionParameters2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_FROM_HASH = 3814499831L
-        private val getFromBind by lazy {
+        @JvmField
+        val getFromBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "get_from", GET_FROM_HASH)
-        }
 
         private const val SET_FROM_HASH = 2761652528L
-        private val setFromBind by lazy {
+        @JvmField
+        val setFromBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_from", SET_FROM_HASH)
-        }
 
         private const val GET_MOTION_HASH = 3341600327L
-        private val getMotionBind by lazy {
+        @JvmField
+        val getMotionBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "get_motion", GET_MOTION_HASH)
-        }
 
         private const val SET_MOTION_HASH = 743155724L
-        private val setMotionBind by lazy {
+        @JvmField
+        val setMotionBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_motion", SET_MOTION_HASH)
-        }
 
         private const val GET_MARGIN_HASH = 1740695150L
-        private val getMarginBind by lazy {
+        @JvmField
+        val getMarginBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "get_margin", GET_MARGIN_HASH)
-        }
 
         private const val SET_MARGIN_HASH = 373806689L
-        private val setMarginBind by lazy {
+        @JvmField
+        val setMarginBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_margin", SET_MARGIN_HASH)
-        }
 
         private const val IS_COLLIDE_SEPARATION_RAY_ENABLED_HASH = 36873697L
-        private val isCollideSeparationRayEnabledBind by lazy {
+        @JvmField
+        val isCollideSeparationRayEnabledBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "is_collide_separation_ray_enabled", IS_COLLIDE_SEPARATION_RAY_ENABLED_HASH)
-        }
 
         private const val SET_COLLIDE_SEPARATION_RAY_ENABLED_HASH = 2586408642L
-        private val setCollideSeparationRayEnabledBind by lazy {
+        @JvmField
+        val setCollideSeparationRayEnabledBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_collide_separation_ray_enabled", SET_COLLIDE_SEPARATION_RAY_ENABLED_HASH)
-        }
 
         private const val GET_EXCLUDE_BODIES_HASH = 3995934104L
-        private val getExcludeBodiesBind by lazy {
+        @JvmField
+        val getExcludeBodiesBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "get_exclude_bodies", GET_EXCLUDE_BODIES_HASH)
-        }
 
         private const val SET_EXCLUDE_BODIES_HASH = 381264803L
-        private val setExcludeBodiesBind by lazy {
+        @JvmField
+        val setExcludeBodiesBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_exclude_bodies", SET_EXCLUDE_BODIES_HASH)
-        }
 
         private const val GET_EXCLUDE_OBJECTS_HASH = 3995934104L
-        private val getExcludeObjectsBind by lazy {
+        @JvmField
+        val getExcludeObjectsBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "get_exclude_objects", GET_EXCLUDE_OBJECTS_HASH)
-        }
 
         private const val SET_EXCLUDE_OBJECTS_HASH = 381264803L
-        private val setExcludeObjectsBind by lazy {
+        @JvmField
+        val setExcludeObjectsBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_exclude_objects", SET_EXCLUDE_OBJECTS_HASH)
-        }
 
         private const val IS_RECOVERY_AS_COLLISION_ENABLED_HASH = 36873697L
-        private val isRecoveryAsCollisionEnabledBind by lazy {
+        @JvmField
+        val isRecoveryAsCollisionEnabledBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "is_recovery_as_collision_enabled", IS_RECOVERY_AS_COLLISION_ENABLED_HASH)
-        }
 
         private const val SET_RECOVERY_AS_COLLISION_ENABLED_HASH = 2586408642L
-        private val setRecoveryAsCollisionEnabledBind by lazy {
+        @JvmField
+        val setRecoveryAsCollisionEnabledBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionParameters2D", "set_recovery_as_collision_enabled", SET_RECOVERY_AS_COLLISION_ENABLED_HASH)
-        }
     }
 }

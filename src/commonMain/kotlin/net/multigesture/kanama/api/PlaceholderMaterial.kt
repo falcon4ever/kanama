@@ -22,7 +22,5 @@ class PlaceholderMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderMaterial? =
             if (handle.address() == 0L) null else PlaceholderMaterial(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

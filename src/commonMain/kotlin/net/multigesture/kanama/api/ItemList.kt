@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -133,7 +134,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.add_item
      */
     fun addItem(text: String, icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(addItemBind, segment, text, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
+        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(Binds.addItemBind, segment, text, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
     }
 
     /**
@@ -142,7 +143,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.add_icon_item
      */
     fun addIconItem(icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(addIconItemBind, segment, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(Binds.addIconItemBind, segment, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
     }
 
     /**
@@ -151,7 +152,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_text
      */
     fun setItemText(idx: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, idx, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemTextBind, segment, idx, text)
     }
 
     /**
@@ -160,7 +161,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_text
      */
     fun getItemText(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemTextBind, segment, idx)
     }
 
     /**
@@ -169,7 +170,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon
      */
     fun setItemIcon(idx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemIconBind, segment, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -178,7 +179,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_icon
      */
     fun getItemIcon(idx: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemIconBind, segment, idx))
     }
 
     /**
@@ -187,7 +188,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_text_direction
      */
     fun setItemTextDirection(idx: Int, direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, idx, direction.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemTextDirectionBind, segment, idx, direction.value)
     }
 
     /**
@@ -196,7 +197,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_text_direction
      */
     fun getItemTextDirection(idx: Int): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, idx))
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemTextDirectionBind, segment, idx))
     }
 
     /**
@@ -207,7 +208,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_language
      */
     fun setItemLanguage(idx: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, segment, idx, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemLanguageBind, segment, idx, language)
     }
 
     /**
@@ -216,7 +217,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_language
      */
     fun getItemLanguage(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemLanguageBind, segment, idx)
     }
 
     /**
@@ -227,7 +228,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_auto_translate_mode
      */
     fun setItemAutoTranslateMode(idx: Int, mode: Node.AutoTranslateMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemAutoTranslateModeBind, segment, idx, mode.value)
     }
 
     /**
@@ -236,7 +237,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_auto_translate_mode
      */
     fun getItemAutoTranslateMode(idx: Int): Node.AutoTranslateMode {
-        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx))
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemAutoTranslateModeBind, segment, idx))
     }
 
     /**
@@ -245,7 +246,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon_transposed
      */
     fun setItemIconTransposed(idx: Int, transposed: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemIconTransposedBind, segment, idx, transposed)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemIconTransposedBind, segment, idx, transposed)
     }
 
     /**
@@ -254,7 +255,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_icon_transposed
      */
     fun isItemIconTransposed(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemIconTransposedBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemIconTransposedBind, segment, idx)
     }
 
     /**
@@ -263,7 +264,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon_region
      */
     fun setItemIconRegion(idx: Int, rect: Rect2) {
-        ObjectCalls.ptrcallWithIntAndRect2Arg(setItemIconRegionBind, segment, idx, rect)
+        ObjectCalls.ptrcallWithIntAndRect2Arg(Binds.setItemIconRegionBind, segment, idx, rect)
     }
 
     /**
@@ -272,7 +273,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_icon_region
      */
     fun getItemIconRegion(idx: Int): Rect2 {
-        return ObjectCalls.ptrcallWithIntArgRetRect2(getItemIconRegionBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetRect2(Binds.getItemIconRegionBind, segment, idx)
     }
 
     /**
@@ -281,7 +282,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon_modulate
      */
     fun setItemIconModulate(idx: Int, modulate: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, segment, idx, modulate)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setItemIconModulateBind, segment, idx, modulate)
     }
 
     /**
@@ -290,7 +291,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_icon_modulate
      */
     fun getItemIconModulate(idx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getItemIconModulateBind, segment, idx)
     }
 
     /**
@@ -299,7 +300,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_selectable
      */
     fun setItemSelectable(idx: Int, selectable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemSelectableBind, segment, idx, selectable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemSelectableBind, segment, idx, selectable)
     }
 
     /**
@@ -308,7 +309,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_selectable
      */
     fun isItemSelectable(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSelectableBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemSelectableBind, segment, idx)
     }
 
     /**
@@ -318,7 +319,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_disabled
      */
     fun setItemDisabled(idx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, idx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemDisabledBind, segment, idx, disabled)
     }
 
     /**
@@ -327,7 +328,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_disabled
      */
     fun isItemDisabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemDisabledBind, segment, idx)
     }
 
     /**
@@ -336,7 +337,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_metadata
      */
     fun setItemMetadata(idx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, idx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setItemMetadataBind, segment, idx, metadata)
     }
 
     /**
@@ -345,7 +346,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_metadata
      */
     fun getItemMetadata(idx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getItemMetadataBind, segment, idx)
     }
 
     /**
@@ -354,7 +355,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_custom_bg_color
      */
     fun setItemCustomBgColor(idx: Int, customBgColor: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomBgColorBind, segment, idx, customBgColor)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setItemCustomBgColorBind, segment, idx, customBgColor)
     }
 
     /**
@@ -363,7 +364,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_custom_bg_color
      */
     fun getItemCustomBgColor(idx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomBgColorBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getItemCustomBgColorBind, segment, idx)
     }
 
     /**
@@ -372,7 +373,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_custom_fg_color
      */
     fun setItemCustomFgColor(idx: Int, customFgColor: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemCustomFgColorBind, segment, idx, customFgColor)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setItemCustomFgColorBind, segment, idx, customFgColor)
     }
 
     /**
@@ -381,7 +382,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_custom_fg_color
      */
     fun getItemCustomFgColor(idx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemCustomFgColorBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getItemCustomFgColorBind, segment, idx)
     }
 
     /**
@@ -393,7 +394,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_rect
      */
     fun getItemRect(idx: Int, expand: Boolean = true): Rect2 {
-        return ObjectCalls.ptrcallWithIntAndBoolArgRetRect2(getItemRectBind, segment, idx, expand)
+        return ObjectCalls.ptrcallWithIntAndBoolArgRetRect2(Binds.getItemRectBind, segment, idx, expand)
     }
 
     /**
@@ -402,7 +403,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_tooltip_enabled
      */
     fun setItemTooltipEnabled(idx: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemTooltipEnabledBind, segment, idx, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemTooltipEnabledBind, segment, idx, enable)
     }
 
     /**
@@ -411,7 +412,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_item_tooltip_enabled
      */
     fun isItemTooltipEnabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemTooltipEnabledBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemTooltipEnabledBind, segment, idx)
     }
 
     /**
@@ -420,7 +421,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_tooltip
      */
     fun setItemTooltip(idx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, idx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemTooltipBind, segment, idx, tooltip)
     }
 
     /**
@@ -429,7 +430,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_tooltip
      */
     fun getItemTooltip(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemTooltipBind, segment, idx)
     }
 
     /**
@@ -439,7 +440,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.select
      */
     fun select(idx: Int, single: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(selectBind, segment, idx, single)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.selectBind, segment, idx, single)
     }
 
     /**
@@ -448,7 +449,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.deselect
      */
     fun deselect(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(deselectBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.deselectBind, segment, idx)
     }
 
     /**
@@ -457,7 +458,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.deselect_all
      */
     fun deselectAll() {
-        ObjectCalls.ptrcallNoArgs(deselectAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.deselectAllBind, segment)
     }
 
     /**
@@ -466,7 +467,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_selected
      */
     fun isSelected(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSelectedBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSelectedBind, segment, idx)
     }
 
     /**
@@ -475,7 +476,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_selected_items
      */
     fun getSelectedItems(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSelectedItemsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getSelectedItemsBind, segment)
     }
 
     /**
@@ -484,7 +485,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.move_item
      */
     fun moveItem(fromIdx: Int, toIdx: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(moveItemBind, segment, fromIdx, toIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveItemBind, segment, fromIdx, toIdx)
     }
 
     /**
@@ -493,7 +494,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setItemCountBind, segment, count)
     }
 
     /**
@@ -502,7 +503,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
     }
 
     /**
@@ -511,7 +512,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.remove_item
      */
     fun removeItem(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeItemBind, segment, idx)
     }
 
     /**
@@ -520,7 +521,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -529,7 +530,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.sort_items_by_text
      */
     fun sortItemsByText() {
-        ObjectCalls.ptrcallNoArgs(sortItemsByTextBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.sortItemsByTextBind, segment)
     }
 
     /**
@@ -539,7 +540,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_fixed_column_width
      */
     fun setFixedColumnWidth(width: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFixedColumnWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFixedColumnWidthBind, segment, width)
     }
 
     /**
@@ -549,7 +550,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_fixed_column_width
      */
     fun getFixedColumnWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedColumnWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFixedColumnWidthBind, segment)
     }
 
     /**
@@ -559,7 +560,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_same_column_width
      */
     fun setSameColumnWidth(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSameColumnWidthBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSameColumnWidthBind, segment, enable)
     }
 
     /**
@@ -569,7 +570,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_same_column_width
      */
     fun isSameColumnWidth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSameColumnWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSameColumnWidthBind, segment)
     }
 
     /**
@@ -580,7 +581,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_max_text_lines
      */
     fun setMaxTextLines(lines: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxTextLinesBind, segment, lines)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxTextLinesBind, segment, lines)
     }
 
     /**
@@ -591,7 +592,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_max_text_lines
      */
     fun getMaxTextLines(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTextLinesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxTextLinesBind, segment)
     }
 
     /**
@@ -602,7 +603,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_max_columns
      */
     fun setMaxColumns(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxColumnsBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxColumnsBind, segment, amount)
     }
 
     /**
@@ -613,7 +614,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_max_columns
      */
     fun getMaxColumns(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxColumnsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxColumnsBind, segment)
     }
 
     /**
@@ -622,7 +623,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_select_mode
      */
     fun setSelectMode(mode: ItemList.SelectMode) {
-        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSelectModeBind, segment, mode.value)
     }
 
     /**
@@ -631,7 +632,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_select_mode
      */
     fun getSelectMode(): ItemList.SelectMode {
-        return ItemList.SelectMode(ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment))
+        return ItemList.SelectMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSelectModeBind, segment))
     }
 
     /**
@@ -640,7 +641,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_icon_mode
      */
     fun setIconMode(mode: ItemList.IconMode) {
-        ObjectCalls.ptrcallWithLongArg(setIconModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setIconModeBind, segment, mode.value)
     }
 
     /**
@@ -649,7 +650,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_icon_mode
      */
     fun getIconMode(): ItemList.IconMode {
-        return ItemList.IconMode(ObjectCalls.ptrcallNoArgsRetLong(getIconModeBind, segment))
+        return ItemList.IconMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getIconModeBind, segment))
     }
 
     /**
@@ -659,7 +660,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_fixed_icon_size
      */
     fun setFixedIconSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setFixedIconSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setFixedIconSizeBind, segment, size)
     }
 
     /**
@@ -669,7 +670,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_fixed_icon_size
      */
     fun getFixedIconSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getFixedIconSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getFixedIconSizeBind, segment)
     }
 
     /**
@@ -678,7 +679,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_icon_scale
      */
     fun setIconScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setIconScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setIconScaleBind, segment, scale)
     }
 
     /**
@@ -687,7 +688,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_icon_scale
      */
     fun getIconScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getIconScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIconScaleBind, segment)
     }
 
     /**
@@ -696,7 +697,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_allow_rmb_select
      */
     fun setAllowRmbSelect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowRmbSelectBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowRmbSelectBind, segment, allow)
     }
 
     /**
@@ -705,7 +706,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_allow_rmb_select
      */
     fun getAllowRmbSelect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowRmbSelectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowRmbSelectBind, segment)
     }
 
     /**
@@ -714,7 +715,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_allow_reselect
      */
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowReselectBind, segment, allow)
     }
 
     /**
@@ -723,7 +724,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_allow_reselect
      */
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowReselectBind, segment)
     }
 
     /**
@@ -732,7 +733,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_allow_search
      */
     fun setAllowSearch(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSearchBind, segment, allow)
     }
 
     /**
@@ -741,7 +742,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_allow_search
      */
     fun getAllowSearch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowSearchBind, segment)
     }
 
     /**
@@ -750,7 +751,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_auto_width
      */
     fun setAutoWidth(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoWidthBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoWidthBind, segment, enable)
     }
 
     /**
@@ -759,7 +760,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.has_auto_width
      */
     fun hasAutoWidth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutoWidthBind, segment)
     }
 
     /**
@@ -768,7 +769,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_auto_height
      */
     fun setAutoHeight(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoHeightBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoHeightBind, segment, enable)
     }
 
     /**
@@ -777,7 +778,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.has_auto_height
      */
     fun hasAutoHeight(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutoHeightBind, segment)
     }
 
     /**
@@ -786,7 +787,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_anything_selected
      */
     fun isAnythingSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAnythingSelectedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAnythingSelectedBind, segment)
     }
 
     /**
@@ -798,7 +799,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_item_at_position
      */
     fun getItemAtPosition(position: Vector2, exact: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithVector2AndBoolArgRetInt(getItemAtPositionBind, segment, position, exact)
+        return ObjectCalls.ptrcallWithVector2AndBoolArgRetInt(Binds.getItemAtPositionBind, segment, position, exact)
     }
 
     /**
@@ -808,7 +809,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.ensure_current_is_visible
      */
     fun ensureCurrentIsVisible() {
-        ObjectCalls.ptrcallNoArgs(ensureCurrentIsVisibleBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.ensureCurrentIsVisibleBind, segment)
     }
 
     /**
@@ -820,7 +821,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.center_on_current
      */
     fun centerOnCurrent(centerVerically: Boolean = true, centerHorizontally: Boolean = true) {
-        ObjectCalls.ptrcallWithTwoBoolArgs(centerOnCurrentBind, segment, centerVerically, centerHorizontally)
+        ObjectCalls.ptrcallWithTwoBoolArgs(Binds.centerOnCurrentBind, segment, centerVerically, centerHorizontally)
     }
 
     /**
@@ -831,7 +832,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVScrollBarBind, segment))
     }
 
     /**
@@ -842,7 +843,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_h_scroll_bar
      */
     fun getHScrollBar(): HScrollBar? {
-        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, segment))
+        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHScrollBarBind, segment))
     }
 
     /**
@@ -852,7 +853,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_scroll_hint_mode
      */
     fun setScrollHintMode(scrollHintMode: ItemList.ScrollHintMode) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScrollHintModeBind, segment, scrollHintMode.value)
     }
 
     /**
@@ -862,7 +863,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_scroll_hint_mode
      */
     fun getScrollHintMode(): ItemList.ScrollHintMode {
-        return ItemList.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment))
+        return ItemList.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScrollHintModeBind, segment))
     }
 
     /**
@@ -871,7 +872,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_tile_scroll_hint
      */
     fun setTileScrollHint(tileScrollHint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, segment, tileScrollHint)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTileScrollHintBind, segment, tileScrollHint)
     }
 
     /**
@@ -880,7 +881,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.is_scroll_hint_tiled
      */
     fun isScrollHintTiled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollHintTiledBind, segment)
     }
 
     /**
@@ -889,7 +890,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -898,7 +899,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -909,7 +910,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_wraparound_items
      */
     fun setWraparoundItems(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setWraparoundItemsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWraparoundItemsBind, segment, enable)
     }
 
     /**
@@ -920,7 +921,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.has_wraparound_items
      */
     fun hasWraparoundItems(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasWraparoundItemsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasWraparoundItemsBind, segment)
     }
 
     /**
@@ -931,7 +932,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.force_update_list_size
      */
     fun forceUpdateListSize() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateListSizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceUpdateListSizeBind, segment)
     }
 
     /** Signal `item_selected(index: int)`; see [TypedSignal]. */
@@ -1064,430 +1065,432 @@ class ItemList(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ItemList? =
             if (handle.address() == 0L) null else ItemList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_ITEM_HASH = 359861678L
-        private val addItemBind by lazy {
+        @JvmField
+        val addItemBind =
             ObjectCalls.getMethodBind("ItemList", "add_item", ADD_ITEM_HASH)
-        }
 
         private const val ADD_ICON_ITEM_HASH = 4256579627L
-        private val addIconItemBind by lazy {
+        @JvmField
+        val addIconItemBind =
             ObjectCalls.getMethodBind("ItemList", "add_icon_item", ADD_ICON_ITEM_HASH)
-        }
 
         private const val SET_ITEM_TEXT_HASH = 501894301L
-        private val setItemTextBind by lazy {
+        @JvmField
+        val setItemTextBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_text", SET_ITEM_TEXT_HASH)
-        }
 
         private const val GET_ITEM_TEXT_HASH = 844755477L
-        private val getItemTextBind by lazy {
+        @JvmField
+        val getItemTextBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_text", GET_ITEM_TEXT_HASH)
-        }
 
         private const val SET_ITEM_ICON_HASH = 666127730L
-        private val setItemIconBind by lazy {
+        @JvmField
+        val setItemIconBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_icon", SET_ITEM_ICON_HASH)
-        }
 
         private const val GET_ITEM_ICON_HASH = 3536238170L
-        private val getItemIconBind by lazy {
+        @JvmField
+        val getItemIconBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_icon", GET_ITEM_ICON_HASH)
-        }
 
         private const val SET_ITEM_TEXT_DIRECTION_HASH = 1707680378L
-        private val setItemTextDirectionBind by lazy {
+        @JvmField
+        val setItemTextDirectionBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_text_direction", SET_ITEM_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_ITEM_TEXT_DIRECTION_HASH = 4235602388L
-        private val getItemTextDirectionBind by lazy {
+        @JvmField
+        val getItemTextDirectionBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_text_direction", GET_ITEM_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_ITEM_LANGUAGE_HASH = 501894301L
-        private val setItemLanguageBind by lazy {
+        @JvmField
+        val setItemLanguageBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_language", SET_ITEM_LANGUAGE_HASH)
-        }
 
         private const val GET_ITEM_LANGUAGE_HASH = 844755477L
-        private val getItemLanguageBind by lazy {
+        @JvmField
+        val getItemLanguageBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_language", GET_ITEM_LANGUAGE_HASH)
-        }
 
         private const val SET_ITEM_AUTO_TRANSLATE_MODE_HASH = 287402019L
-        private val setItemAutoTranslateModeBind by lazy {
+        @JvmField
+        val setItemAutoTranslateModeBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_auto_translate_mode", SET_ITEM_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val GET_ITEM_AUTO_TRANSLATE_MODE_HASH = 906302372L
-        private val getItemAutoTranslateModeBind by lazy {
+        @JvmField
+        val getItemAutoTranslateModeBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_auto_translate_mode", GET_ITEM_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val SET_ITEM_ICON_TRANSPOSED_HASH = 300928843L
-        private val setItemIconTransposedBind by lazy {
+        @JvmField
+        val setItemIconTransposedBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_icon_transposed", SET_ITEM_ICON_TRANSPOSED_HASH)
-        }
 
         private const val IS_ITEM_ICON_TRANSPOSED_HASH = 1116898809L
-        private val isItemIconTransposedBind by lazy {
+        @JvmField
+        val isItemIconTransposedBind =
             ObjectCalls.getMethodBind("ItemList", "is_item_icon_transposed", IS_ITEM_ICON_TRANSPOSED_HASH)
-        }
 
         private const val SET_ITEM_ICON_REGION_HASH = 1356297692L
-        private val setItemIconRegionBind by lazy {
+        @JvmField
+        val setItemIconRegionBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_icon_region", SET_ITEM_ICON_REGION_HASH)
-        }
 
         private const val GET_ITEM_ICON_REGION_HASH = 3327874267L
-        private val getItemIconRegionBind by lazy {
+        @JvmField
+        val getItemIconRegionBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_icon_region", GET_ITEM_ICON_REGION_HASH)
-        }
 
         private const val SET_ITEM_ICON_MODULATE_HASH = 2878471219L
-        private val setItemIconModulateBind by lazy {
+        @JvmField
+        val setItemIconModulateBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_icon_modulate", SET_ITEM_ICON_MODULATE_HASH)
-        }
 
         private const val GET_ITEM_ICON_MODULATE_HASH = 3457211756L
-        private val getItemIconModulateBind by lazy {
+        @JvmField
+        val getItemIconModulateBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_icon_modulate", GET_ITEM_ICON_MODULATE_HASH)
-        }
 
         private const val SET_ITEM_SELECTABLE_HASH = 300928843L
-        private val setItemSelectableBind by lazy {
+        @JvmField
+        val setItemSelectableBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_selectable", SET_ITEM_SELECTABLE_HASH)
-        }
 
         private const val IS_ITEM_SELECTABLE_HASH = 1116898809L
-        private val isItemSelectableBind by lazy {
+        @JvmField
+        val isItemSelectableBind =
             ObjectCalls.getMethodBind("ItemList", "is_item_selectable", IS_ITEM_SELECTABLE_HASH)
-        }
 
         private const val SET_ITEM_DISABLED_HASH = 300928843L
-        private val setItemDisabledBind by lazy {
+        @JvmField
+        val setItemDisabledBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_disabled", SET_ITEM_DISABLED_HASH)
-        }
 
         private const val IS_ITEM_DISABLED_HASH = 1116898809L
-        private val isItemDisabledBind by lazy {
+        @JvmField
+        val isItemDisabledBind =
             ObjectCalls.getMethodBind("ItemList", "is_item_disabled", IS_ITEM_DISABLED_HASH)
-        }
 
         private const val SET_ITEM_METADATA_HASH = 2152698145L
-        private val setItemMetadataBind by lazy {
+        @JvmField
+        val setItemMetadataBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_metadata", SET_ITEM_METADATA_HASH)
-        }
 
         private const val GET_ITEM_METADATA_HASH = 4227898402L
-        private val getItemMetadataBind by lazy {
+        @JvmField
+        val getItemMetadataBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_metadata", GET_ITEM_METADATA_HASH)
-        }
 
         private const val SET_ITEM_CUSTOM_BG_COLOR_HASH = 2878471219L
-        private val setItemCustomBgColorBind by lazy {
+        @JvmField
+        val setItemCustomBgColorBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_custom_bg_color", SET_ITEM_CUSTOM_BG_COLOR_HASH)
-        }
 
         private const val GET_ITEM_CUSTOM_BG_COLOR_HASH = 3457211756L
-        private val getItemCustomBgColorBind by lazy {
+        @JvmField
+        val getItemCustomBgColorBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_custom_bg_color", GET_ITEM_CUSTOM_BG_COLOR_HASH)
-        }
 
         private const val SET_ITEM_CUSTOM_FG_COLOR_HASH = 2878471219L
-        private val setItemCustomFgColorBind by lazy {
+        @JvmField
+        val setItemCustomFgColorBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_custom_fg_color", SET_ITEM_CUSTOM_FG_COLOR_HASH)
-        }
 
         private const val GET_ITEM_CUSTOM_FG_COLOR_HASH = 3457211756L
-        private val getItemCustomFgColorBind by lazy {
+        @JvmField
+        val getItemCustomFgColorBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_custom_fg_color", GET_ITEM_CUSTOM_FG_COLOR_HASH)
-        }
 
         private const val GET_ITEM_RECT_HASH = 159227807L
-        private val getItemRectBind by lazy {
+        @JvmField
+        val getItemRectBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_rect", GET_ITEM_RECT_HASH)
-        }
 
         private const val SET_ITEM_TOOLTIP_ENABLED_HASH = 300928843L
-        private val setItemTooltipEnabledBind by lazy {
+        @JvmField
+        val setItemTooltipEnabledBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_tooltip_enabled", SET_ITEM_TOOLTIP_ENABLED_HASH)
-        }
 
         private const val IS_ITEM_TOOLTIP_ENABLED_HASH = 1116898809L
-        private val isItemTooltipEnabledBind by lazy {
+        @JvmField
+        val isItemTooltipEnabledBind =
             ObjectCalls.getMethodBind("ItemList", "is_item_tooltip_enabled", IS_ITEM_TOOLTIP_ENABLED_HASH)
-        }
 
         private const val SET_ITEM_TOOLTIP_HASH = 501894301L
-        private val setItemTooltipBind by lazy {
+        @JvmField
+        val setItemTooltipBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_tooltip", SET_ITEM_TOOLTIP_HASH)
-        }
 
         private const val GET_ITEM_TOOLTIP_HASH = 844755477L
-        private val getItemTooltipBind by lazy {
+        @JvmField
+        val getItemTooltipBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
-        }
 
         private const val SELECT_HASH = 972357352L
-        private val selectBind by lazy {
+        @JvmField
+        val selectBind =
             ObjectCalls.getMethodBind("ItemList", "select", SELECT_HASH)
-        }
 
         private const val DESELECT_HASH = 1286410249L
-        private val deselectBind by lazy {
+        @JvmField
+        val deselectBind =
             ObjectCalls.getMethodBind("ItemList", "deselect", DESELECT_HASH)
-        }
 
         private const val DESELECT_ALL_HASH = 3218959716L
-        private val deselectAllBind by lazy {
+        @JvmField
+        val deselectAllBind =
             ObjectCalls.getMethodBind("ItemList", "deselect_all", DESELECT_ALL_HASH)
-        }
 
         private const val IS_SELECTED_HASH = 1116898809L
-        private val isSelectedBind by lazy {
+        @JvmField
+        val isSelectedBind =
             ObjectCalls.getMethodBind("ItemList", "is_selected", IS_SELECTED_HASH)
-        }
 
         private const val GET_SELECTED_ITEMS_HASH = 969006518L
-        private val getSelectedItemsBind by lazy {
+        @JvmField
+        val getSelectedItemsBind =
             ObjectCalls.getMethodBind("ItemList", "get_selected_items", GET_SELECTED_ITEMS_HASH)
-        }
 
         private const val MOVE_ITEM_HASH = 3937882851L
-        private val moveItemBind by lazy {
+        @JvmField
+        val moveItemBind =
             ObjectCalls.getMethodBind("ItemList", "move_item", MOVE_ITEM_HASH)
-        }
 
         private const val SET_ITEM_COUNT_HASH = 1286410249L
-        private val setItemCountBind by lazy {
+        @JvmField
+        val setItemCountBind =
             ObjectCalls.getMethodBind("ItemList", "set_item_count", SET_ITEM_COUNT_HASH)
-        }
 
         private const val GET_ITEM_COUNT_HASH = 3905245786L
-        private val getItemCountBind by lazy {
+        @JvmField
+        val getItemCountBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_count", GET_ITEM_COUNT_HASH)
-        }
 
         private const val REMOVE_ITEM_HASH = 1286410249L
-        private val removeItemBind by lazy {
+        @JvmField
+        val removeItemBind =
             ObjectCalls.getMethodBind("ItemList", "remove_item", REMOVE_ITEM_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("ItemList", "clear", CLEAR_HASH)
-        }
 
         private const val SORT_ITEMS_BY_TEXT_HASH = 3218959716L
-        private val sortItemsByTextBind by lazy {
+        @JvmField
+        val sortItemsByTextBind =
             ObjectCalls.getMethodBind("ItemList", "sort_items_by_text", SORT_ITEMS_BY_TEXT_HASH)
-        }
 
         private const val SET_FIXED_COLUMN_WIDTH_HASH = 1286410249L
-        private val setFixedColumnWidthBind by lazy {
+        @JvmField
+        val setFixedColumnWidthBind =
             ObjectCalls.getMethodBind("ItemList", "set_fixed_column_width", SET_FIXED_COLUMN_WIDTH_HASH)
-        }
 
         private const val GET_FIXED_COLUMN_WIDTH_HASH = 3905245786L
-        private val getFixedColumnWidthBind by lazy {
+        @JvmField
+        val getFixedColumnWidthBind =
             ObjectCalls.getMethodBind("ItemList", "get_fixed_column_width", GET_FIXED_COLUMN_WIDTH_HASH)
-        }
 
         private const val SET_SAME_COLUMN_WIDTH_HASH = 2586408642L
-        private val setSameColumnWidthBind by lazy {
+        @JvmField
+        val setSameColumnWidthBind =
             ObjectCalls.getMethodBind("ItemList", "set_same_column_width", SET_SAME_COLUMN_WIDTH_HASH)
-        }
 
         private const val IS_SAME_COLUMN_WIDTH_HASH = 36873697L
-        private val isSameColumnWidthBind by lazy {
+        @JvmField
+        val isSameColumnWidthBind =
             ObjectCalls.getMethodBind("ItemList", "is_same_column_width", IS_SAME_COLUMN_WIDTH_HASH)
-        }
 
         private const val SET_MAX_TEXT_LINES_HASH = 1286410249L
-        private val setMaxTextLinesBind by lazy {
+        @JvmField
+        val setMaxTextLinesBind =
             ObjectCalls.getMethodBind("ItemList", "set_max_text_lines", SET_MAX_TEXT_LINES_HASH)
-        }
 
         private const val GET_MAX_TEXT_LINES_HASH = 3905245786L
-        private val getMaxTextLinesBind by lazy {
+        @JvmField
+        val getMaxTextLinesBind =
             ObjectCalls.getMethodBind("ItemList", "get_max_text_lines", GET_MAX_TEXT_LINES_HASH)
-        }
 
         private const val SET_MAX_COLUMNS_HASH = 1286410249L
-        private val setMaxColumnsBind by lazy {
+        @JvmField
+        val setMaxColumnsBind =
             ObjectCalls.getMethodBind("ItemList", "set_max_columns", SET_MAX_COLUMNS_HASH)
-        }
 
         private const val GET_MAX_COLUMNS_HASH = 3905245786L
-        private val getMaxColumnsBind by lazy {
+        @JvmField
+        val getMaxColumnsBind =
             ObjectCalls.getMethodBind("ItemList", "get_max_columns", GET_MAX_COLUMNS_HASH)
-        }
 
         private const val SET_SELECT_MODE_HASH = 928267388L
-        private val setSelectModeBind by lazy {
+        @JvmField
+        val setSelectModeBind =
             ObjectCalls.getMethodBind("ItemList", "set_select_mode", SET_SELECT_MODE_HASH)
-        }
 
         private const val GET_SELECT_MODE_HASH = 1191945842L
-        private val getSelectModeBind by lazy {
+        @JvmField
+        val getSelectModeBind =
             ObjectCalls.getMethodBind("ItemList", "get_select_mode", GET_SELECT_MODE_HASH)
-        }
 
         private const val SET_ICON_MODE_HASH = 2025053633L
-        private val setIconModeBind by lazy {
+        @JvmField
+        val setIconModeBind =
             ObjectCalls.getMethodBind("ItemList", "set_icon_mode", SET_ICON_MODE_HASH)
-        }
 
         private const val GET_ICON_MODE_HASH = 3353929232L
-        private val getIconModeBind by lazy {
+        @JvmField
+        val getIconModeBind =
             ObjectCalls.getMethodBind("ItemList", "get_icon_mode", GET_ICON_MODE_HASH)
-        }
 
         private const val SET_FIXED_ICON_SIZE_HASH = 1130785943L
-        private val setFixedIconSizeBind by lazy {
+        @JvmField
+        val setFixedIconSizeBind =
             ObjectCalls.getMethodBind("ItemList", "set_fixed_icon_size", SET_FIXED_ICON_SIZE_HASH)
-        }
 
         private const val GET_FIXED_ICON_SIZE_HASH = 3690982128L
-        private val getFixedIconSizeBind by lazy {
+        @JvmField
+        val getFixedIconSizeBind =
             ObjectCalls.getMethodBind("ItemList", "get_fixed_icon_size", GET_FIXED_ICON_SIZE_HASH)
-        }
 
         private const val SET_ICON_SCALE_HASH = 373806689L
-        private val setIconScaleBind by lazy {
+        @JvmField
+        val setIconScaleBind =
             ObjectCalls.getMethodBind("ItemList", "set_icon_scale", SET_ICON_SCALE_HASH)
-        }
 
         private const val GET_ICON_SCALE_HASH = 1740695150L
-        private val getIconScaleBind by lazy {
+        @JvmField
+        val getIconScaleBind =
             ObjectCalls.getMethodBind("ItemList", "get_icon_scale", GET_ICON_SCALE_HASH)
-        }
 
         private const val SET_ALLOW_RMB_SELECT_HASH = 2586408642L
-        private val setAllowRmbSelectBind by lazy {
+        @JvmField
+        val setAllowRmbSelectBind =
             ObjectCalls.getMethodBind("ItemList", "set_allow_rmb_select", SET_ALLOW_RMB_SELECT_HASH)
-        }
 
         private const val GET_ALLOW_RMB_SELECT_HASH = 36873697L
-        private val getAllowRmbSelectBind by lazy {
+        @JvmField
+        val getAllowRmbSelectBind =
             ObjectCalls.getMethodBind("ItemList", "get_allow_rmb_select", GET_ALLOW_RMB_SELECT_HASH)
-        }
 
         private const val SET_ALLOW_RESELECT_HASH = 2586408642L
-        private val setAllowReselectBind by lazy {
+        @JvmField
+        val setAllowReselectBind =
             ObjectCalls.getMethodBind("ItemList", "set_allow_reselect", SET_ALLOW_RESELECT_HASH)
-        }
 
         private const val GET_ALLOW_RESELECT_HASH = 36873697L
-        private val getAllowReselectBind by lazy {
+        @JvmField
+        val getAllowReselectBind =
             ObjectCalls.getMethodBind("ItemList", "get_allow_reselect", GET_ALLOW_RESELECT_HASH)
-        }
 
         private const val SET_ALLOW_SEARCH_HASH = 2586408642L
-        private val setAllowSearchBind by lazy {
+        @JvmField
+        val setAllowSearchBind =
             ObjectCalls.getMethodBind("ItemList", "set_allow_search", SET_ALLOW_SEARCH_HASH)
-        }
 
         private const val GET_ALLOW_SEARCH_HASH = 36873697L
-        private val getAllowSearchBind by lazy {
+        @JvmField
+        val getAllowSearchBind =
             ObjectCalls.getMethodBind("ItemList", "get_allow_search", GET_ALLOW_SEARCH_HASH)
-        }
 
         private const val SET_AUTO_WIDTH_HASH = 2586408642L
-        private val setAutoWidthBind by lazy {
+        @JvmField
+        val setAutoWidthBind =
             ObjectCalls.getMethodBind("ItemList", "set_auto_width", SET_AUTO_WIDTH_HASH)
-        }
 
         private const val HAS_AUTO_WIDTH_HASH = 36873697L
-        private val hasAutoWidthBind by lazy {
+        @JvmField
+        val hasAutoWidthBind =
             ObjectCalls.getMethodBind("ItemList", "has_auto_width", HAS_AUTO_WIDTH_HASH)
-        }
 
         private const val SET_AUTO_HEIGHT_HASH = 2586408642L
-        private val setAutoHeightBind by lazy {
+        @JvmField
+        val setAutoHeightBind =
             ObjectCalls.getMethodBind("ItemList", "set_auto_height", SET_AUTO_HEIGHT_HASH)
-        }
 
         private const val HAS_AUTO_HEIGHT_HASH = 36873697L
-        private val hasAutoHeightBind by lazy {
+        @JvmField
+        val hasAutoHeightBind =
             ObjectCalls.getMethodBind("ItemList", "has_auto_height", HAS_AUTO_HEIGHT_HASH)
-        }
 
         private const val IS_ANYTHING_SELECTED_HASH = 2240911060L
-        private val isAnythingSelectedBind by lazy {
+        @JvmField
+        val isAnythingSelectedBind =
             ObjectCalls.getMethodBind("ItemList", "is_anything_selected", IS_ANYTHING_SELECTED_HASH)
-        }
 
         private const val GET_ITEM_AT_POSITION_HASH = 2300324924L
-        private val getItemAtPositionBind by lazy {
+        @JvmField
+        val getItemAtPositionBind =
             ObjectCalls.getMethodBind("ItemList", "get_item_at_position", GET_ITEM_AT_POSITION_HASH)
-        }
 
         private const val ENSURE_CURRENT_IS_VISIBLE_HASH = 3218959716L
-        private val ensureCurrentIsVisibleBind by lazy {
+        @JvmField
+        val ensureCurrentIsVisibleBind =
             ObjectCalls.getMethodBind("ItemList", "ensure_current_is_visible", ENSURE_CURRENT_IS_VISIBLE_HASH)
-        }
 
         private const val CENTER_ON_CURRENT_HASH = 3058350285L
-        private val centerOnCurrentBind by lazy {
+        @JvmField
+        val centerOnCurrentBind =
             ObjectCalls.getMethodBind("ItemList", "center_on_current", CENTER_ON_CURRENT_HASH)
-        }
 
         private const val GET_V_SCROLL_BAR_HASH = 2630340773L
-        private val getVScrollBarBind by lazy {
+        @JvmField
+        val getVScrollBarBind =
             ObjectCalls.getMethodBind("ItemList", "get_v_scroll_bar", GET_V_SCROLL_BAR_HASH)
-        }
 
         private const val GET_H_SCROLL_BAR_HASH = 4004517983L
-        private val getHScrollBarBind by lazy {
+        @JvmField
+        val getHScrollBarBind =
             ObjectCalls.getMethodBind("ItemList", "get_h_scroll_bar", GET_H_SCROLL_BAR_HASH)
-        }
 
         private const val SET_SCROLL_HINT_MODE_HASH = 2917787337L
-        private val setScrollHintModeBind by lazy {
+        @JvmField
+        val setScrollHintModeBind =
             ObjectCalls.getMethodBind("ItemList", "set_scroll_hint_mode", SET_SCROLL_HINT_MODE_HASH)
-        }
 
         private const val GET_SCROLL_HINT_MODE_HASH = 2522227939L
-        private val getScrollHintModeBind by lazy {
+        @JvmField
+        val getScrollHintModeBind =
             ObjectCalls.getMethodBind("ItemList", "get_scroll_hint_mode", GET_SCROLL_HINT_MODE_HASH)
-        }
 
         private const val SET_TILE_SCROLL_HINT_HASH = 2586408642L
-        private val setTileScrollHintBind by lazy {
+        @JvmField
+        val setTileScrollHintBind =
             ObjectCalls.getMethodBind("ItemList", "set_tile_scroll_hint", SET_TILE_SCROLL_HINT_HASH)
-        }
 
         private const val IS_SCROLL_HINT_TILED_HASH = 2240911060L
-        private val isScrollHintTiledBind by lazy {
+        @JvmField
+        val isScrollHintTiledBind =
             ObjectCalls.getMethodBind("ItemList", "is_scroll_hint_tiled", IS_SCROLL_HINT_TILED_HASH)
-        }
 
         private const val SET_TEXT_OVERRUN_BEHAVIOR_HASH = 1008890932L
-        private val setTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("ItemList", "set_text_overrun_behavior", SET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TEXT_OVERRUN_BEHAVIOR_HASH = 3779142101L
-        private val getTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("ItemList", "get_text_overrun_behavior", GET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_WRAPAROUND_ITEMS_HASH = 2586408642L
-        private val setWraparoundItemsBind by lazy {
+        @JvmField
+        val setWraparoundItemsBind =
             ObjectCalls.getMethodBind("ItemList", "set_wraparound_items", SET_WRAPAROUND_ITEMS_HASH)
-        }
 
         private const val HAS_WRAPAROUND_ITEMS_HASH = 36873697L
-        private val hasWraparoundItemsBind by lazy {
+        @JvmField
+        val hasWraparoundItemsBind =
             ObjectCalls.getMethodBind("ItemList", "has_wraparound_items", HAS_WRAPAROUND_ITEMS_HASH)
-        }
 
         private const val FORCE_UPDATE_LIST_SIZE_HASH = 3218959716L
-        private val forceUpdateListSizeBind by lazy {
+        @JvmField
+        val forceUpdateListSizeBind =
             ObjectCalls.getMethodBind("ItemList", "force_update_list_size", FORCE_UPDATE_LIST_SIZE_HASH)
-        }
     }
 }

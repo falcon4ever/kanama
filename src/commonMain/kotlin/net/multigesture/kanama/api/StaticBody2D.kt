@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -39,7 +40,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_constant_linear_velocity
      */
     fun setConstantLinearVelocity(vel: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setConstantLinearVelocityBind, segment, vel)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setConstantLinearVelocityBind, segment, vel)
     }
 
     /**
@@ -49,7 +50,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_constant_angular_velocity
      */
     fun setConstantAngularVelocity(vel: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConstantAngularVelocityBind, segment, vel)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setConstantAngularVelocityBind, segment, vel)
     }
 
     /**
@@ -59,7 +60,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.get_constant_linear_velocity
      */
     fun getConstantLinearVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getConstantLinearVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getConstantLinearVelocityBind, segment)
     }
 
     /**
@@ -69,7 +70,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.get_constant_angular_velocity
      */
     fun getConstantAngularVelocity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConstantAngularVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConstantAngularVelocityBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -89,7 +90,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.get_physics_material_override
      */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
-        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPhysicsMaterialOverrideBind, segment))
     }
 
     companion object {
@@ -99,35 +100,37 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): StaticBody2D? =
             if (handle.address() == 0L) null else StaticBody2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CONSTANT_LINEAR_VELOCITY_HASH = 743155724L
-        private val setConstantLinearVelocityBind by lazy {
+        @JvmField
+        val setConstantLinearVelocityBind =
             ObjectCalls.getMethodBind("StaticBody2D", "set_constant_linear_velocity", SET_CONSTANT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_CONSTANT_ANGULAR_VELOCITY_HASH = 373806689L
-        private val setConstantAngularVelocityBind by lazy {
+        @JvmField
+        val setConstantAngularVelocityBind =
             ObjectCalls.getMethodBind("StaticBody2D", "set_constant_angular_velocity", SET_CONSTANT_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_CONSTANT_LINEAR_VELOCITY_HASH = 3341600327L
-        private val getConstantLinearVelocityBind by lazy {
+        @JvmField
+        val getConstantLinearVelocityBind =
             ObjectCalls.getMethodBind("StaticBody2D", "get_constant_linear_velocity", GET_CONSTANT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_CONSTANT_ANGULAR_VELOCITY_HASH = 1740695150L
-        private val getConstantAngularVelocityBind by lazy {
+        @JvmField
+        val getConstantAngularVelocityBind =
             ObjectCalls.getMethodBind("StaticBody2D", "get_constant_angular_velocity", GET_CONSTANT_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val SET_PHYSICS_MATERIAL_OVERRIDE_HASH = 1784508650L
-        private val setPhysicsMaterialOverrideBind by lazy {
+        @JvmField
+        val setPhysicsMaterialOverrideBind =
             ObjectCalls.getMethodBind("StaticBody2D", "set_physics_material_override", SET_PHYSICS_MATERIAL_OVERRIDE_HASH)
-        }
 
         private const val GET_PHYSICS_MATERIAL_OVERRIDE_HASH = 2521850424L
-        private val getPhysicsMaterialOverrideBind by lazy {
+        @JvmField
+        val getPhysicsMaterialOverrideBind =
             ObjectCalls.getMethodBind("StaticBody2D", "get_physics_material_override", GET_PHYSICS_MATERIAL_OVERRIDE_HASH)
-        }
     }
 }

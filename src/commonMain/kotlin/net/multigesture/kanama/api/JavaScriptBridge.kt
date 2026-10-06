@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -12,9 +13,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: JavaScriptBridge
  */
 object JavaScriptBridge {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("JavaScriptBridge")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Execute the string `code` as JavaScript code within the browser window. This is a call to the
@@ -26,7 +26,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun eval(code: String, useGlobalExecutionContext: Boolean = false): Any? {
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(evalBind, singleton, code, useGlobalExecutionContext)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetVariantScalar(Binds.evalBind, singleton, code, useGlobalExecutionContext)
     }
 
     /**
@@ -38,7 +38,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun getInterface(interfaceValue: String): JavaScriptObject? {
-        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getInterfaceBind, singleton, interfaceValue))
+        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getInterfaceBind, singleton, interfaceValue))
     }
 
     /**
@@ -53,7 +53,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun createCallback(callable: GodotCallable): JavaScriptObject? {
-        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(createCallbackBind, singleton, callable.target.segment, callable.method))
+        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.createCallbackBind, singleton, callable.target.segment, callable.method))
     }
 
     /**
@@ -68,7 +68,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun isJsBuffer(javascriptObject: JavaScriptObject?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isJsBufferBind, singleton, javascriptObject?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isJsBufferBind, singleton, javascriptObject?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -79,7 +79,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun jsBufferToPackedByteArray(javascriptBuffer: JavaScriptObject?): ByteArray {
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -90,7 +90,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun createObject(objectValue: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(createObjectBind, singleton, listOf(objectValue, *extraArgs))
+        return ObjectCalls.callWithVariantArgs(Binds.createObjectBind, singleton, listOf(objectValue, *extraArgs))
     }
 
     /**
@@ -105,7 +105,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun downloadBuffer(buffer: ByteArray, name: String, mime: String = "application/octet-stream") {
-        ObjectCalls.ptrcallWithByteArrayTwoStringArgs(downloadBufferBind, singleton, buffer, name, mime)
+        ObjectCalls.ptrcallWithByteArrayTwoStringArgs(Binds.downloadBufferBind, singleton, buffer, name, mime)
     }
 
     /**
@@ -116,7 +116,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun pwaNeedsUpdate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(pwaNeedsUpdateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.pwaNeedsUpdateBind, singleton)
     }
 
     /**
@@ -128,7 +128,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun pwaUpdate(): GodotError {
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pwaUpdateBind, singleton))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pwaUpdateBind, singleton))
     }
 
     /**
@@ -139,7 +139,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun forceFsSync() {
-        ObjectCalls.ptrcallNoArgs(forceFsSyncBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.forceFsSyncBind, singleton)
     }
 
     /** Signal `pwa_update_available()`; see [TypedSignal]. */
@@ -158,53 +158,58 @@ object JavaScriptBridge {
     internal fun wrap(handle: RawSegment): JavaScriptBridge? =
         if (handle.address() == 0L) null else this
 
-    private const val EVAL_HASH = 218087648L
-    private val evalBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "eval", EVAL_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("JavaScriptBridge")
 
-    private const val GET_INTERFACE_HASH = 1355533281L
-    private val getInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "get_interface", GET_INTERFACE_HASH)
-    }
+        private const val EVAL_HASH = 218087648L
+        @JvmField
+        val evalBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "eval", EVAL_HASH)
 
-    private const val CREATE_CALLBACK_HASH = 422818440L
-    private val createCallbackBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "create_callback", CREATE_CALLBACK_HASH)
-    }
+        private const val GET_INTERFACE_HASH = 1355533281L
+        @JvmField
+        val getInterfaceBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "get_interface", GET_INTERFACE_HASH)
 
-    private const val IS_JS_BUFFER_HASH = 821968997L
-    private val isJsBufferBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "is_js_buffer", IS_JS_BUFFER_HASH)
-    }
+        private const val CREATE_CALLBACK_HASH = 422818440L
+        @JvmField
+        val createCallbackBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "create_callback", CREATE_CALLBACK_HASH)
 
-    private const val JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH = 64409880L
-    private val jsBufferToPackedByteArrayBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "js_buffer_to_packed_byte_array", JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH)
-    }
+        private const val IS_JS_BUFFER_HASH = 821968997L
+        @JvmField
+        val isJsBufferBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "is_js_buffer", IS_JS_BUFFER_HASH)
 
-    private const val CREATE_OBJECT_HASH = 3093893586L
-    private val createObjectBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "create_object", CREATE_OBJECT_HASH)
-    }
+        private const val JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH = 64409880L
+        @JvmField
+        val jsBufferToPackedByteArrayBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "js_buffer_to_packed_byte_array", JS_BUFFER_TO_PACKED_BYTE_ARRAY_HASH)
 
-    private const val DOWNLOAD_BUFFER_HASH = 3352272093L
-    private val downloadBufferBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "download_buffer", DOWNLOAD_BUFFER_HASH)
-    }
+        private const val CREATE_OBJECT_HASH = 3093893586L
+        @JvmField
+        val createObjectBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "create_object", CREATE_OBJECT_HASH)
 
-    private const val PWA_NEEDS_UPDATE_HASH = 36873697L
-    private val pwaNeedsUpdateBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "pwa_needs_update", PWA_NEEDS_UPDATE_HASH)
-    }
+        private const val DOWNLOAD_BUFFER_HASH = 3352272093L
+        @JvmField
+        val downloadBufferBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "download_buffer", DOWNLOAD_BUFFER_HASH)
 
-    private const val PWA_UPDATE_HASH = 166280745L
-    private val pwaUpdateBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "pwa_update", PWA_UPDATE_HASH)
-    }
+        private const val PWA_NEEDS_UPDATE_HASH = 36873697L
+        @JvmField
+        val pwaNeedsUpdateBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "pwa_needs_update", PWA_NEEDS_UPDATE_HASH)
 
-    private const val FORCE_FS_SYNC_HASH = 3218959716L
-    private val forceFsSyncBind by lazy {
-        ObjectCalls.getMethodBind("JavaScriptBridge", "force_fs_sync", FORCE_FS_SYNC_HASH)
+        private const val PWA_UPDATE_HASH = 166280745L
+        @JvmField
+        val pwaUpdateBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "pwa_update", PWA_UPDATE_HASH)
+
+        private const val FORCE_FS_SYNC_HASH = 3218959716L
+        @JvmField
+        val forceFsSyncBind =
+            ObjectCalls.getMethodBind("JavaScriptBridge", "force_fs_sync", FORCE_FS_SYNC_HASH)
     }
 }

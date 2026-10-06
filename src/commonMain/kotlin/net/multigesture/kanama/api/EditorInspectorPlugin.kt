@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addCustomControl(control: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addCustomControlBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addCustomControlBind, segment, listOf(control.segment))
     }
 
     /**
@@ -33,7 +34,7 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addPropertyEditor(property: String, editor: Control, addToEnd: Boolean = false, label: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithStringObjectBoolStringArgs(addPropertyEditorBind, segment, property, editor.segment, addToEnd, label)
+        ObjectCalls.ptrcallWithStringObjectBoolStringArgs(Binds.addPropertyEditorBind, segment, property, editor.segment, addToEnd, label)
     }
 
     /**
@@ -44,7 +45,7 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addPropertyEditorForMultipleProperties(label: String, properties: List<String>, editor: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(addPropertyEditorForMultiplePropertiesBind, segment, label, properties, editor.segment)
+        ObjectCalls.ptrcallWithStringPackedStringListAndObjectArgs(Binds.addPropertyEditorForMultiplePropertiesBind, segment, label, properties, editor.segment)
     }
 
     companion object {
@@ -57,20 +58,22 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorInspectorPlugin? =
             if (handle.address() == 0L) null else EditorInspectorPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_CUSTOM_CONTROL_HASH = 1496901182L
-        private val addCustomControlBind by lazy {
+        @JvmField
+        val addCustomControlBind =
             ObjectCalls.getMethodBind("EditorInspectorPlugin", "add_custom_control", ADD_CUSTOM_CONTROL_HASH)
-        }
 
         private const val ADD_PROPERTY_EDITOR_HASH = 2042698479L
-        private val addPropertyEditorBind by lazy {
+        @JvmField
+        val addPropertyEditorBind =
             ObjectCalls.getMethodBind("EditorInspectorPlugin", "add_property_editor", ADD_PROPERTY_EDITOR_HASH)
-        }
 
         private const val ADD_PROPERTY_EDITOR_FOR_MULTIPLE_PROPERTIES_HASH = 788598683L
-        private val addPropertyEditorForMultiplePropertiesBind by lazy {
+        @JvmField
+        val addPropertyEditorForMultiplePropertiesBind =
             ObjectCalls.getMethodBind("EditorInspectorPlugin", "add_property_editor_for_multiple_properties", ADD_PROPERTY_EDITOR_FOR_MULTIPLE_PROPERTIES_HASH)
-        }
     }
 }

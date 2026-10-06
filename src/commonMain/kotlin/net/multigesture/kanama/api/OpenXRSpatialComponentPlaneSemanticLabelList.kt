@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getPlaneSemanticLabel(index: Long): OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel {
         checkOpen()
-        return OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel(ObjectCalls.ptrcallWithLongArgRetLong(getPlaneSemanticLabelBind, segment, index))
+        return OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneSemanticLabelBind, segment, index))
     }
 
     @JvmInline
@@ -35,10 +36,12 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PLANE_SEMANTIC_LABEL_HASH = 1889332427L
-        private val getPlaneSemanticLabelBind by lazy {
+        @JvmField
+        val getPlaneSemanticLabelBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentPlaneSemanticLabelList", "get_plane_semantic_label", GET_PLANE_SEMANTIC_LABEL_HASH)
-        }
     }
 }

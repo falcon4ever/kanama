@@ -20,7 +20,5 @@ class TextServerAdvanced(handle: GodotHandle) : TextServerExtension(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerAdvanced? =
             if (handle.address() == 0L) null else TextServerAdvanced(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

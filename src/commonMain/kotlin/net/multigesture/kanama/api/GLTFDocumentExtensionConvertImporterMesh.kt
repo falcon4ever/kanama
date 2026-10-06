@@ -20,7 +20,5 @@ class GLTFDocumentExtensionConvertImporterMesh(handle: GodotHandle) : GLTFDocume
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFDocumentExtensionConvertImporterMesh? =
             if (handle.address() == 0L) null else GLTFDocumentExtensionConvertImporterMesh(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

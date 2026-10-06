@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -13,57 +14,57 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
     fun initialize(configuration: Map<String, Any?> = emptyMap()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithDictionaryArgRetLong(initializeBind, segment, configuration))
+        return GodotError(ObjectCalls.ptrcallWithDictionaryArgRetLong(Binds.initializeBind, segment, configuration))
     }
 
     fun createDataChannel(label: String, options: Map<String, Any?> = emptyMap()): WebRTCDataChannel? {
         checkOpen()
-        return WebRTCDataChannel.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(createDataChannelBind, segment, label, options))
+        return WebRTCDataChannel.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(Binds.createDataChannelBind, segment, label, options))
     }
 
     fun createOffer(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(createOfferBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.createOfferBind, segment))
     }
 
     fun setLocalDescription(type: String, sdp: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(setLocalDescriptionBind, segment, type, sdp))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.setLocalDescriptionBind, segment, type, sdp))
     }
 
     fun setRemoteDescription(type: String, sdp: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(setRemoteDescriptionBind, segment, type, sdp))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.setRemoteDescriptionBind, segment, type, sdp))
     }
 
     fun addIceCandidate(media: String, index: Int, name: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringIntStringArgsRetLong(addIceCandidateBind, segment, media, index, name))
+        return GodotError(ObjectCalls.ptrcallWithStringIntStringArgsRetLong(Binds.addIceCandidateBind, segment, media, index, name))
     }
 
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
     }
 
     fun getConnectionState(): WebRTCPeerConnection.ConnectionState {
         checkOpen()
-        return WebRTCPeerConnection.ConnectionState(ObjectCalls.ptrcallNoArgsRetLong(getConnectionStateBind, segment))
+        return WebRTCPeerConnection.ConnectionState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConnectionStateBind, segment))
     }
 
     fun getGatheringState(): WebRTCPeerConnection.GatheringState {
         checkOpen()
-        return WebRTCPeerConnection.GatheringState(ObjectCalls.ptrcallNoArgsRetLong(getGatheringStateBind, segment))
+        return WebRTCPeerConnection.GatheringState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGatheringStateBind, segment))
     }
 
     fun getSignalingState(): WebRTCPeerConnection.SignalingState {
         checkOpen()
-        return WebRTCPeerConnection.SignalingState(ObjectCalls.ptrcallNoArgsRetLong(getSignalingStateBind, segment))
+        return WebRTCPeerConnection.SignalingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSignalingStateBind, segment))
     }
 
     /** Signal `session_description_created(type: String, sdp: String)`; see [TypedSignal]. */
@@ -122,7 +123,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
     companion object {
         fun setDefaultExtension(extensionClass: String) {
-            ObjectCalls.ptrcallWithStringNameArg(setDefaultExtensionBind, NULL_SEGMENT, extensionClass)
+            ObjectCalls.ptrcallWithStringNameArg(Binds.setDefaultExtensionBind, NULL_SEGMENT, extensionClass)
         }
 
         @JvmStatic
@@ -134,65 +135,67 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnection? =
             if (handle.address() == 0L) null else WebRTCPeerConnection(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DEFAULT_EXTENSION_HASH = 3304788590L
-        private val setDefaultExtensionBind by lazy {
+        @JvmField
+        val setDefaultExtensionBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "set_default_extension", SET_DEFAULT_EXTENSION_HASH)
-        }
 
         private const val INITIALIZE_HASH = 2625064318L
-        private val initializeBind by lazy {
+        @JvmField
+        val initializeBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "initialize", INITIALIZE_HASH)
-        }
 
         private const val CREATE_DATA_CHANNEL_HASH = 1288557393L
-        private val createDataChannelBind by lazy {
+        @JvmField
+        val createDataChannelBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "create_data_channel", CREATE_DATA_CHANNEL_HASH)
-        }
 
         private const val CREATE_OFFER_HASH = 166280745L
-        private val createOfferBind by lazy {
+        @JvmField
+        val createOfferBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "create_offer", CREATE_OFFER_HASH)
-        }
 
         private const val SET_LOCAL_DESCRIPTION_HASH = 852856452L
-        private val setLocalDescriptionBind by lazy {
+        @JvmField
+        val setLocalDescriptionBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "set_local_description", SET_LOCAL_DESCRIPTION_HASH)
-        }
 
         private const val SET_REMOTE_DESCRIPTION_HASH = 852856452L
-        private val setRemoteDescriptionBind by lazy {
+        @JvmField
+        val setRemoteDescriptionBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "set_remote_description", SET_REMOTE_DESCRIPTION_HASH)
-        }
 
         private const val ADD_ICE_CANDIDATE_HASH = 3958950400L
-        private val addIceCandidateBind by lazy {
+        @JvmField
+        val addIceCandidateBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "add_ice_candidate", ADD_ICE_CANDIDATE_HASH)
-        }
 
         private const val POLL_HASH = 166280745L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "poll", POLL_HASH)
-        }
 
         private const val CLOSE_HASH = 3218959716L
-        private val closeConnectionBind by lazy {
+        @JvmField
+        val closeConnectionBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "close", CLOSE_HASH)
-        }
 
         private const val GET_CONNECTION_STATE_HASH = 2275710506L
-        private val getConnectionStateBind by lazy {
+        @JvmField
+        val getConnectionStateBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "get_connection_state", GET_CONNECTION_STATE_HASH)
-        }
 
         private const val GET_GATHERING_STATE_HASH = 4262591401L
-        private val getGatheringStateBind by lazy {
+        @JvmField
+        val getGatheringStateBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "get_gathering_state", GET_GATHERING_STATE_HASH)
-        }
 
         private const val GET_SIGNALING_STATE_HASH = 3342956226L
-        private val getSignalingStateBind by lazy {
+        @JvmField
+        val getSignalingStateBind =
             ObjectCalls.getMethodBind("WebRTCPeerConnection", "get_signaling_state", GET_SIGNALING_STATE_HASH)
-        }
     }
 }

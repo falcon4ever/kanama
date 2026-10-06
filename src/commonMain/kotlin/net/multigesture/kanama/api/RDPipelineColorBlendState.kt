@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -43,7 +44,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnableLogicOp(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableLogicOpBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableLogicOpBind, segment, pMember)
     }
 
     /**
@@ -53,7 +54,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableLogicOp(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableLogicOpBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableLogicOpBind, segment)
     }
 
     /**
@@ -63,7 +64,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLogicOp(pMember: RenderingDevice.LogicOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLogicOpBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLogicOpBind, segment, pMember.value)
     }
 
     /**
@@ -73,7 +74,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLogicOp(): RenderingDevice.LogicOperation {
         checkOpen()
-        return RenderingDevice.LogicOperation(ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, segment))
+        return RenderingDevice.LogicOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLogicOpBind, segment))
     }
 
     /**
@@ -83,7 +84,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBlendConstant(pMember: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBlendConstantBind, segment, pMember)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBlendConstantBind, segment, pMember)
     }
 
     /**
@@ -93,7 +94,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBlendConstant(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBlendConstantBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBlendConstantBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAttachments(attachments: List<RDPipelineColorBlendStateAttachment>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setAttachmentsBind, segment, attachments)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setAttachmentsBind, segment, attachments)
     }
 
     /**
@@ -113,7 +114,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrapBorrowed)
     }
 
     companion object {
@@ -126,45 +127,47 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineColorBlendState? =
             if (handle.address() == 0L) null else RDPipelineColorBlendState(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLE_LOGIC_OP_HASH = 2586408642L
-        private val setEnableLogicOpBind by lazy {
+        @JvmField
+        val setEnableLogicOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "set_enable_logic_op", SET_ENABLE_LOGIC_OP_HASH)
-        }
 
         private const val GET_ENABLE_LOGIC_OP_HASH = 36873697L
-        private val getEnableLogicOpBind by lazy {
+        @JvmField
+        val getEnableLogicOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "get_enable_logic_op", GET_ENABLE_LOGIC_OP_HASH)
-        }
 
         private const val SET_LOGIC_OP_HASH = 3610841058L
-        private val setLogicOpBind by lazy {
+        @JvmField
+        val setLogicOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "set_logic_op", SET_LOGIC_OP_HASH)
-        }
 
         private const val GET_LOGIC_OP_HASH = 988254690L
-        private val getLogicOpBind by lazy {
+        @JvmField
+        val getLogicOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "get_logic_op", GET_LOGIC_OP_HASH)
-        }
 
         private const val SET_BLEND_CONSTANT_HASH = 2920490490L
-        private val setBlendConstantBind by lazy {
+        @JvmField
+        val setBlendConstantBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "set_blend_constant", SET_BLEND_CONSTANT_HASH)
-        }
 
         private const val GET_BLEND_CONSTANT_HASH = 3444240500L
-        private val getBlendConstantBind by lazy {
+        @JvmField
+        val getBlendConstantBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "get_blend_constant", GET_BLEND_CONSTANT_HASH)
-        }
 
         private const val SET_ATTACHMENTS_HASH = 381264803L
-        private val setAttachmentsBind by lazy {
+        @JvmField
+        val setAttachmentsBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "set_attachments", SET_ATTACHMENTS_HASH)
-        }
 
         private const val GET_ATTACHMENTS_HASH = 3995934104L
-        private val getAttachmentsBind by lazy {
+        @JvmField
+        val getAttachmentsBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendState", "get_attachments", GET_ATTACHMENTS_HASH)
-        }
     }
 }

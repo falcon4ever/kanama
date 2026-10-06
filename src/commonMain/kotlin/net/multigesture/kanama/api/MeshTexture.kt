@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -38,7 +39,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -48,7 +49,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
     /**
@@ -58,7 +59,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setImageSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setImageSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setImageSizeBind, segment, size)
     }
 
     /**
@@ -68,7 +69,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getImageSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getImageSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getImageSizeBind, segment)
     }
 
     /**
@@ -78,7 +79,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setBaseTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setBaseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -88,7 +89,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getBaseTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseTextureBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -106,35 +107,37 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MeshTexture? =
             if (handle.address() == 0L) null else MeshTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MESH_HASH = 194775623L
-        private val setMeshBind by lazy {
+        @JvmField
+        val setMeshBind =
             ObjectCalls.getMethodBind("MeshTexture", "set_mesh", SET_MESH_HASH)
-        }
 
         private const val GET_MESH_HASH = 1808005922L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("MeshTexture", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val SET_IMAGE_SIZE_HASH = 743155724L
-        private val setImageSizeBind by lazy {
+        @JvmField
+        val setImageSizeBind =
             ObjectCalls.getMethodBind("MeshTexture", "set_image_size", SET_IMAGE_SIZE_HASH)
-        }
 
         private const val GET_IMAGE_SIZE_HASH = 3341600327L
-        private val getImageSizeBind by lazy {
+        @JvmField
+        val getImageSizeBind =
             ObjectCalls.getMethodBind("MeshTexture", "get_image_size", GET_IMAGE_SIZE_HASH)
-        }
 
         private const val SET_BASE_TEXTURE_HASH = 4051416890L
-        private val setBaseTextureBind by lazy {
+        @JvmField
+        val setBaseTextureBind =
             ObjectCalls.getMethodBind("MeshTexture", "set_base_texture", SET_BASE_TEXTURE_HASH)
-        }
 
         private const val GET_BASE_TEXTURE_HASH = 3635182373L
-        private val getBaseTextureBind by lazy {
+        @JvmField
+        val getBaseTextureBind =
             ObjectCalls.getMethodBind("MeshTexture", "get_base_texture", GET_BASE_TEXTURE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_diff_line
      */
     fun createDiffLine(newLineNo: Int, oldLineNo: Int, content: String, status: String): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithTwoIntTwoStringArgsRetDictionary(createDiffLineBind, segment, newLineNo, oldLineNo, content, status)
+        return ObjectCalls.ptrcallWithTwoIntTwoStringArgsRetDictionary(Binds.createDiffLineBind, segment, newLineNo, oldLineNo, content, status)
     }
 
     /**
@@ -31,7 +32,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_diff_hunk
      */
     fun createDiffHunk(oldStart: Int, newStart: Int, oldLines: Int, newLines: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithFourIntArgsRetDictionary(createDiffHunkBind, segment, oldStart, newStart, oldLines, newLines)
+        return ObjectCalls.ptrcallWithFourIntArgsRetDictionary(Binds.createDiffHunkBind, segment, oldStart, newStart, oldLines, newLines)
     }
 
     /**
@@ -40,7 +41,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_diff_file
      */
     fun createDiffFile(newFile: String, oldFile: String): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithTwoStringArgsRetDictionary(createDiffFileBind, segment, newFile, oldFile)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetDictionary(Binds.createDiffFileBind, segment, newFile, oldFile)
     }
 
     /**
@@ -54,7 +55,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_commit
      */
     fun createCommit(msg: String, author: String, id: String, unixTimestamp: Long, offsetMinutes: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithThreeStringTwoLongArgsRetDictionary(createCommitBind, segment, msg, author, id, unixTimestamp, offsetMinutes)
+        return ObjectCalls.ptrcallWithThreeStringTwoLongArgsRetDictionary(Binds.createCommitBind, segment, msg, author, id, unixTimestamp, offsetMinutes)
     }
 
     /**
@@ -63,7 +64,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.create_status_file
      */
     fun createStatusFile(filePath: String, changeType: EditorVCSInterface.ChangeType, area: EditorVCSInterface.TreeArea): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetDictionary(createStatusFileBind, segment, filePath, changeType.value, area.value)
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetDictionary(Binds.createStatusFileBind, segment, filePath, changeType.value, area.value)
     }
 
     /**
@@ -72,7 +73,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.add_diff_hunks_into_diff_file
      */
     fun addDiffHunksIntoDiffFile(diffFile: Map<String, Any?>, diffHunks: List<Map<String, Any?>>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addDiffHunksIntoDiffFileBind, segment, diffFile, diffHunks)
+        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(Binds.addDiffHunksIntoDiffFileBind, segment, diffFile, diffHunks)
     }
 
     /**
@@ -81,7 +82,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.add_line_diffs_into_diff_hunk
      */
     fun addLineDiffsIntoDiffHunk(diffHunk: Map<String, Any?>, lineDiffs: List<Map<String, Any?>>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(addLineDiffsIntoDiffHunkBind, segment, diffHunk, lineDiffs)
+        return ObjectCalls.ptrcallWithDictionaryDictionaryListArgsRetDictionary(Binds.addLineDiffsIntoDiffHunkBind, segment, diffHunk, lineDiffs)
     }
 
     /**
@@ -91,7 +92,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorVCSInterface.popup_error
      */
     fun popupError(msg: String) {
-        ObjectCalls.ptrcallWithStringArg(popupErrorBind, segment, msg)
+        ObjectCalls.ptrcallWithStringArg(Binds.popupErrorBind, segment, msg)
     }
 
     /**
@@ -179,45 +180,47 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): EditorVCSInterface? =
             if (handle.address() == 0L) null else EditorVCSInterface(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_DIFF_LINE_HASH = 2901184053L
-        private val createDiffLineBind by lazy {
+        @JvmField
+        val createDiffLineBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "create_diff_line", CREATE_DIFF_LINE_HASH)
-        }
 
         private const val CREATE_DIFF_HUNK_HASH = 3784842090L
-        private val createDiffHunkBind by lazy {
+        @JvmField
+        val createDiffHunkBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "create_diff_hunk", CREATE_DIFF_HUNK_HASH)
-        }
 
         private const val CREATE_DIFF_FILE_HASH = 2723227684L
-        private val createDiffFileBind by lazy {
+        @JvmField
+        val createDiffFileBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "create_diff_file", CREATE_DIFF_FILE_HASH)
-        }
 
         private const val CREATE_COMMIT_HASH = 1075983584L
-        private val createCommitBind by lazy {
+        @JvmField
+        val createCommitBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "create_commit", CREATE_COMMIT_HASH)
-        }
 
         private const val CREATE_STATUS_FILE_HASH = 1083471673L
-        private val createStatusFileBind by lazy {
+        @JvmField
+        val createStatusFileBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "create_status_file", CREATE_STATUS_FILE_HASH)
-        }
 
         private const val ADD_DIFF_HUNKS_INTO_DIFF_FILE_HASH = 4015243225L
-        private val addDiffHunksIntoDiffFileBind by lazy {
+        @JvmField
+        val addDiffHunksIntoDiffFileBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "add_diff_hunks_into_diff_file", ADD_DIFF_HUNKS_INTO_DIFF_FILE_HASH)
-        }
 
         private const val ADD_LINE_DIFFS_INTO_DIFF_HUNK_HASH = 4015243225L
-        private val addLineDiffsIntoDiffHunkBind by lazy {
+        @JvmField
+        val addLineDiffsIntoDiffHunkBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "add_line_diffs_into_diff_hunk", ADD_LINE_DIFFS_INTO_DIFF_HUNK_HASH)
-        }
 
         private const val POPUP_ERROR_HASH = 83702148L
-        private val popupErrorBind by lazy {
+        @JvmField
+        val popupErrorBind =
             ObjectCalls.getMethodBind("EditorVCSInterface", "popup_error", POPUP_ERROR_HASH)
-        }
     }
 }

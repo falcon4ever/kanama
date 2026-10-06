@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -63,101 +64,101 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
 
     fun toNode(): CollisionObject3D? {
         checkOpen()
-        return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, segment))
+        return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
     fun getBodyType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getBodyTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBodyTypeBind, segment)
     }
 
     fun setBodyType(bodyType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBodyTypeBind, segment, bodyType)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBodyTypeBind, segment, bodyType)
     }
 
     fun getMass(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
     }
 
     fun setMass(mass: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMassBind, segment, mass)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMassBind, segment, mass)
     }
 
     fun getLinearVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
     }
 
     fun setLinearVelocity(linearVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, linearVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, linearVelocity)
     }
 
     fun getAngularVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
     }
 
     fun setAngularVelocity(angularVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, angularVelocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, angularVelocity)
     }
 
     fun getCenterOfMass(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassBind, segment)
     }
 
     fun setCenterOfMass(centerOfMass: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setCenterOfMassBind, segment, centerOfMass)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setCenterOfMassBind, segment, centerOfMass)
     }
 
     fun getInertiaDiagonal(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getInertiaDiagonalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getInertiaDiagonalBind, segment)
     }
 
     fun setInertiaDiagonal(inertiaDiagonal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setInertiaDiagonalBind, segment, inertiaDiagonal)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setInertiaDiagonalBind, segment, inertiaDiagonal)
     }
 
     fun getInertiaOrientation(): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getInertiaOrientationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getInertiaOrientationBind, segment)
     }
 
     fun setInertiaOrientation(inertiaOrientation: Quaternion) {
         checkOpen()
-        ObjectCalls.ptrcallWithQuaternionArg(setInertiaOrientationBind, segment, inertiaOrientation)
+        ObjectCalls.ptrcallWithQuaternionArg(Binds.setInertiaOrientationBind, segment, inertiaOrientation)
     }
 
     fun getInertiaTensor(): Basis {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBasis(getInertiaTensorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getInertiaTensorBind, segment)
     }
 
     fun setInertiaTensor(inertiaTensor: Basis) {
         checkOpen()
-        ObjectCalls.ptrcallWithBasisArg(setInertiaTensorBind, segment, inertiaTensor)
+        ObjectCalls.ptrcallWithBasisArg(Binds.setInertiaTensorBind, segment, inertiaTensor)
     }
 
     companion object {
         fun fromNode(bodyNode: CollisionObject3D): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, bodyNode.segment))
+            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, bodyNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
@@ -169,105 +170,107 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFPhysicsBody? =
             if (handle.address() == 0L) null else GLTFPhysicsBody(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FROM_NODE_HASH = 420544174L
-        private val fromNodeBind by lazy {
+        @JvmField
+        val fromNodeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "from_node", FROM_NODE_HASH)
-        }
 
         private const val TO_NODE_HASH = 3224013656L
-        private val toNodeBind by lazy {
+        @JvmField
+        val toNodeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "to_node", TO_NODE_HASH)
-        }
 
         private const val FROM_DICTIONARY_HASH = 1177544336L
-        private val fromDictionaryBind by lazy {
+        @JvmField
+        val fromDictionaryBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "from_dictionary", FROM_DICTIONARY_HASH)
-        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
-        private val toDictionaryBind by lazy {
+        @JvmField
+        val toDictionaryBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "to_dictionary", TO_DICTIONARY_HASH)
-        }
 
         private const val GET_BODY_TYPE_HASH = 201670096L
-        private val getBodyTypeBind by lazy {
+        @JvmField
+        val getBodyTypeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_body_type", GET_BODY_TYPE_HASH)
-        }
 
         private const val SET_BODY_TYPE_HASH = 83702148L
-        private val setBodyTypeBind by lazy {
+        @JvmField
+        val setBodyTypeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_body_type", SET_BODY_TYPE_HASH)
-        }
 
         private const val GET_MASS_HASH = 1740695150L
-        private val getMassBind by lazy {
+        @JvmField
+        val getMassBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_mass", GET_MASS_HASH)
-        }
 
         private const val SET_MASS_HASH = 373806689L
-        private val setMassBind by lazy {
+        @JvmField
+        val setMassBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_mass", SET_MASS_HASH)
-        }
 
         private const val GET_LINEAR_VELOCITY_HASH = 3360562783L
-        private val getLinearVelocityBind by lazy {
+        @JvmField
+        val getLinearVelocityBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_linear_velocity", GET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_LINEAR_VELOCITY_HASH = 3460891852L
-        private val setLinearVelocityBind by lazy {
+        @JvmField
+        val setLinearVelocityBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_linear_velocity", SET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_ANGULAR_VELOCITY_HASH = 3360562783L
-        private val getAngularVelocityBind by lazy {
+        @JvmField
+        val getAngularVelocityBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_angular_velocity", GET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val SET_ANGULAR_VELOCITY_HASH = 3460891852L
-        private val setAngularVelocityBind by lazy {
+        @JvmField
+        val setAngularVelocityBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_angular_velocity", SET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_CENTER_OF_MASS_HASH = 3360562783L
-        private val getCenterOfMassBind by lazy {
+        @JvmField
+        val getCenterOfMassBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_center_of_mass", GET_CENTER_OF_MASS_HASH)
-        }
 
         private const val SET_CENTER_OF_MASS_HASH = 3460891852L
-        private val setCenterOfMassBind by lazy {
+        @JvmField
+        val setCenterOfMassBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_center_of_mass", SET_CENTER_OF_MASS_HASH)
-        }
 
         private const val GET_INERTIA_DIAGONAL_HASH = 3360562783L
-        private val getInertiaDiagonalBind by lazy {
+        @JvmField
+        val getInertiaDiagonalBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_inertia_diagonal", GET_INERTIA_DIAGONAL_HASH)
-        }
 
         private const val SET_INERTIA_DIAGONAL_HASH = 3460891852L
-        private val setInertiaDiagonalBind by lazy {
+        @JvmField
+        val setInertiaDiagonalBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_inertia_diagonal", SET_INERTIA_DIAGONAL_HASH)
-        }
 
         private const val GET_INERTIA_ORIENTATION_HASH = 1222331677L
-        private val getInertiaOrientationBind by lazy {
+        @JvmField
+        val getInertiaOrientationBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_inertia_orientation", GET_INERTIA_ORIENTATION_HASH)
-        }
 
         private const val SET_INERTIA_ORIENTATION_HASH = 1727505552L
-        private val setInertiaOrientationBind by lazy {
+        @JvmField
+        val setInertiaOrientationBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_inertia_orientation", SET_INERTIA_ORIENTATION_HASH)
-        }
 
         private const val GET_INERTIA_TENSOR_HASH = 2716978435L
-        private val getInertiaTensorBind by lazy {
+        @JvmField
+        val getInertiaTensorBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "get_inertia_tensor", GET_INERTIA_TENSOR_HASH)
-        }
 
         private const val SET_INERTIA_TENSOR_HASH = 1055510324L
-        private val setInertiaTensorBind by lazy {
+        @JvmField
+        val setInertiaTensorBind =
             ObjectCalls.getMethodBind("GLTFPhysicsBody", "set_inertia_tensor", SET_INERTIA_TENSOR_HASH)
-        }
     }
 }

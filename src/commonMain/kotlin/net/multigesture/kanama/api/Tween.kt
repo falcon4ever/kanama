@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -25,7 +26,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenProperty(target: GodotObject, property: NodePath, finalValue: Any?, duration: Double): PropertyTweener {
         checkOpen()
-        return requireGodotReturn(PropertyTweener.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(tweenPropertyBind, segment, target.segment, property, finalValue, duration)), "Tween.tween_property")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(Binds.tweenPropertyBind, segment, target.segment, property, finalValue, duration)), "Tween.tween_property")
     }
 
     /**
@@ -38,7 +39,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenInterval(time: Double): IntervalTweener {
         checkOpen()
-        return requireGodotReturn(IntervalTweener.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, segment, time)), "Tween.tween_interval")
+        return requireGodotReturn(IntervalTweener.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.tweenIntervalBind, segment, time)), "Tween.tween_interval")
     }
 
     /**
@@ -49,7 +50,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenCallback(callback: GodotCallable): CallbackTweener {
         checkOpen()
-        return requireGodotReturn(CallbackTweener.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(tweenCallbackBind, segment, callback.target.segment, callback.method)), "Tween.tween_callback")
+        return requireGodotReturn(CallbackTweener.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(Binds.tweenCallbackBind, segment, callback.target.segment, callback.method)), "Tween.tween_callback")
     }
 
     /**
@@ -64,7 +65,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenMethod(method: GodotCallable, from: Any?, to: Any?, duration: Double): MethodTweener {
         checkOpen()
-        return requireGodotReturn(MethodTweener.wrapOwned(ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(tweenMethodBind, segment, method.target.segment, method.method, from, to, duration)), "Tween.tween_method")
+        return requireGodotReturn(MethodTweener.wrapOwned(ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(Binds.tweenMethodBind, segment, method.target.segment, method.method, from, to, duration)), "Tween.tween_method")
     }
 
     /**
@@ -75,7 +76,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenSubtween(subtween: Tween): SubtweenTweener {
         checkOpen()
-        return requireGodotReturn(SubtweenTweener.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(tweenSubtweenBind, segment, subtween.requireOpenHandle())), "Tween.tween_subtween")
+        return requireGodotReturn(SubtweenTweener.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.tweenSubtweenBind, segment, subtween.requireOpenHandle())), "Tween.tween_subtween")
     }
 
     /**
@@ -90,7 +91,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tweenAwait(signal: GodotSignal): AwaitTweener {
         checkOpen()
-        return requireGodotReturn(AwaitTweener.wrapOwned(ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, segment, signal.owner.segment, signal.name)), "Tween.tween_await")
+        return requireGodotReturn(AwaitTweener.wrapOwned(ObjectCalls.ptrcallWithSignalArgRetObject(Binds.tweenAwaitBind, segment, signal.owner.segment, signal.name)), "Tween.tween_await")
     }
 
     /**
@@ -103,7 +104,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun customStep(delta: Double): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetBool(customStepBind, segment, delta)
+        return ObjectCalls.ptrcallWithDoubleArgRetBool(Binds.customStepBind, segment, delta)
     }
 
     /**
@@ -115,7 +116,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun pause() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pauseBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun play() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(playBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.playBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun kill() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(killBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.killBind, segment)
     }
 
     /**
@@ -160,7 +161,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTotalElapsedTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalElapsedTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTotalElapsedTimeBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTweeners(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasTweenersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTweenersBind, segment)
     }
 
     /**
@@ -182,7 +183,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRunning(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
     }
 
     /**
@@ -195,7 +196,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isValid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isValidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidBind, segment)
     }
 
     /**
@@ -210,7 +211,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun bindNode(node: Node): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment)
+        val ret = ObjectCalls.ptrcallWithObjectArgRetObject(Binds.bindNodeBind, segment, node.segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -226,7 +227,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setProcessMode(mode: Tween.TweenProcessMode): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setProcessModeBind, segment, mode.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setProcessModeBind, segment, mode.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -242,7 +243,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPauseMode(mode: Tween.TweenPauseMode): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setPauseModeBind, segment, mode.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setPauseModeBind, segment, mode.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -258,7 +259,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIgnoreTimeScale(ignore: Boolean = true): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(setIgnoreTimeScaleBind, segment, ignore)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(Binds.setIgnoreTimeScaleBind, segment, ignore)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -275,7 +276,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setParallel(parallel: Boolean = true): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(setParallelBind, segment, parallel)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(Binds.setParallelBind, segment, parallel)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -297,7 +298,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLoops(loops: Int = 0): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(setLoopsBind, segment, loops)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.setLoopsBind, segment, loops)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -314,7 +315,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLoopsLeft(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopsLeftBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopsLeftBind, segment)
     }
 
     /**
@@ -324,7 +325,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSpeedScale(speed: Double): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setSpeedScaleBind, segment, speed)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setSpeedScaleBind, segment, speed)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -340,7 +341,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTrans(trans: Tween.TransitionType): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setTransBind, segment, trans.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -356,7 +357,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEase(ease: Tween.EaseType): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.setEaseBind, segment, ease.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -371,7 +372,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parallel(): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(parallelBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.parallelBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -386,7 +387,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
      */
     fun chain(): Tween {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(chainBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.chainBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -647,7 +648,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: Tween.interpolate_value
          */
         fun interpolateValue(initialValue: Any?, deltaValue: Any?, elapsedTime: Double, duration: Double, transType: Tween.TransitionType, easeType: Tween.EaseType): Any? {
-            return ObjectCalls.ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(interpolateValueBind, NULL_SEGMENT, initialValue, deltaValue, elapsedTime, duration, transType.value, easeType.value)
+            return ObjectCalls.ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(Binds.interpolateValueBind, NULL_SEGMENT, initialValue, deltaValue, elapsedTime, duration, transType.value, easeType.value)
         }
 
         @JvmStatic
@@ -659,145 +660,147 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Tween? =
             if (handle.address() == 0L) null else Tween(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val TWEEN_PROPERTY_HASH = 4049770449L
-        private val tweenPropertyBind by lazy {
+        @JvmField
+        val tweenPropertyBind =
             ObjectCalls.getMethodBind("Tween", "tween_property", TWEEN_PROPERTY_HASH)
-        }
 
         private const val TWEEN_INTERVAL_HASH = 413360199L
-        private val tweenIntervalBind by lazy {
+        @JvmField
+        val tweenIntervalBind =
             ObjectCalls.getMethodBind("Tween", "tween_interval", TWEEN_INTERVAL_HASH)
-        }
 
         private const val TWEEN_CALLBACK_HASH = 1540176488L
-        private val tweenCallbackBind by lazy {
+        @JvmField
+        val tweenCallbackBind =
             ObjectCalls.getMethodBind("Tween", "tween_callback", TWEEN_CALLBACK_HASH)
-        }
 
         private const val TWEEN_METHOD_HASH = 2337877153L
-        private val tweenMethodBind by lazy {
+        @JvmField
+        val tweenMethodBind =
             ObjectCalls.getMethodBind("Tween", "tween_method", TWEEN_METHOD_HASH)
-        }
 
         private const val TWEEN_SUBTWEEN_HASH = 1567358477L
-        private val tweenSubtweenBind by lazy {
+        @JvmField
+        val tweenSubtweenBind =
             ObjectCalls.getMethodBind("Tween", "tween_subtween", TWEEN_SUBTWEEN_HASH)
-        }
 
         private const val TWEEN_AWAIT_HASH = 2242837462L
-        private val tweenAwaitBind by lazy {
+        @JvmField
+        val tweenAwaitBind =
             ObjectCalls.getMethodBind("Tween", "tween_await", TWEEN_AWAIT_HASH)
-        }
 
         private const val CUSTOM_STEP_HASH = 330693286L
-        private val customStepBind by lazy {
+        @JvmField
+        val customStepBind =
             ObjectCalls.getMethodBind("Tween", "custom_step", CUSTOM_STEP_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("Tween", "stop", STOP_HASH)
-        }
 
         private const val PAUSE_HASH = 3218959716L
-        private val pauseBind by lazy {
+        @JvmField
+        val pauseBind =
             ObjectCalls.getMethodBind("Tween", "pause", PAUSE_HASH)
-        }
 
         private const val PLAY_HASH = 3218959716L
-        private val playBind by lazy {
+        @JvmField
+        val playBind =
             ObjectCalls.getMethodBind("Tween", "play", PLAY_HASH)
-        }
 
         private const val KILL_HASH = 3218959716L
-        private val killBind by lazy {
+        @JvmField
+        val killBind =
             ObjectCalls.getMethodBind("Tween", "kill", KILL_HASH)
-        }
 
         private const val GET_TOTAL_ELAPSED_TIME_HASH = 1740695150L
-        private val getTotalElapsedTimeBind by lazy {
+        @JvmField
+        val getTotalElapsedTimeBind =
             ObjectCalls.getMethodBind("Tween", "get_total_elapsed_time", GET_TOTAL_ELAPSED_TIME_HASH)
-        }
 
         private const val HAS_TWEENERS_HASH = 36873697L
-        private val hasTweenersBind by lazy {
+        @JvmField
+        val hasTweenersBind =
             ObjectCalls.getMethodBind("Tween", "has_tweeners", HAS_TWEENERS_HASH)
-        }
 
         private const val IS_RUNNING_HASH = 2240911060L
-        private val isRunningBind by lazy {
+        @JvmField
+        val isRunningBind =
             ObjectCalls.getMethodBind("Tween", "is_running", IS_RUNNING_HASH)
-        }
 
         private const val IS_VALID_HASH = 2240911060L
-        private val isValidBind by lazy {
+        @JvmField
+        val isValidBind =
             ObjectCalls.getMethodBind("Tween", "is_valid", IS_VALID_HASH)
-        }
 
         private const val BIND_NODE_HASH = 2946786331L
-        private val bindNodeBind by lazy {
+        @JvmField
+        val bindNodeBind =
             ObjectCalls.getMethodBind("Tween", "bind_node", BIND_NODE_HASH)
-        }
 
         private const val SET_PROCESS_MODE_HASH = 855258840L
-        private val setProcessModeBind by lazy {
+        @JvmField
+        val setProcessModeBind =
             ObjectCalls.getMethodBind("Tween", "set_process_mode", SET_PROCESS_MODE_HASH)
-        }
 
         private const val SET_PAUSE_MODE_HASH = 3363368837L
-        private val setPauseModeBind by lazy {
+        @JvmField
+        val setPauseModeBind =
             ObjectCalls.getMethodBind("Tween", "set_pause_mode", SET_PAUSE_MODE_HASH)
-        }
 
         private const val SET_IGNORE_TIME_SCALE_HASH = 1942052223L
-        private val setIgnoreTimeScaleBind by lazy {
+        @JvmField
+        val setIgnoreTimeScaleBind =
             ObjectCalls.getMethodBind("Tween", "set_ignore_time_scale", SET_IGNORE_TIME_SCALE_HASH)
-        }
 
         private const val SET_PARALLEL_HASH = 1942052223L
-        private val setParallelBind by lazy {
+        @JvmField
+        val setParallelBind =
             ObjectCalls.getMethodBind("Tween", "set_parallel", SET_PARALLEL_HASH)
-        }
 
         private const val SET_LOOPS_HASH = 2670836414L
-        private val setLoopsBind by lazy {
+        @JvmField
+        val setLoopsBind =
             ObjectCalls.getMethodBind("Tween", "set_loops", SET_LOOPS_HASH)
-        }
 
         private const val GET_LOOPS_LEFT_HASH = 3905245786L
-        private val getLoopsLeftBind by lazy {
+        @JvmField
+        val getLoopsLeftBind =
             ObjectCalls.getMethodBind("Tween", "get_loops_left", GET_LOOPS_LEFT_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 3961971106L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("Tween", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val SET_TRANS_HASH = 3965963875L
-        private val setTransBind by lazy {
+        @JvmField
+        val setTransBind =
             ObjectCalls.getMethodBind("Tween", "set_trans", SET_TRANS_HASH)
-        }
 
         private const val SET_EASE_HASH = 1208117252L
-        private val setEaseBind by lazy {
+        @JvmField
+        val setEaseBind =
             ObjectCalls.getMethodBind("Tween", "set_ease", SET_EASE_HASH)
-        }
 
         private const val PARALLEL_HASH = 3426978995L
-        private val parallelBind by lazy {
+        @JvmField
+        val parallelBind =
             ObjectCalls.getMethodBind("Tween", "parallel", PARALLEL_HASH)
-        }
 
         private const val CHAIN_HASH = 3426978995L
-        private val chainBind by lazy {
+        @JvmField
+        val chainBind =
             ObjectCalls.getMethodBind("Tween", "chain", CHAIN_HASH)
-        }
 
         private const val INTERPOLATE_VALUE_HASH = 3452526450L
-        private val interpolateValueBind by lazy {
+        @JvmField
+        val interpolateValueBind =
             ObjectCalls.getMethodBind("Tween", "interpolate_value", INTERPOLATE_VALUE_HASH)
-        }
     }
 }

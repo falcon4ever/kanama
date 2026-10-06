@@ -22,7 +22,5 @@ class CompressedCubemap(handle: GodotHandle) : CompressedTextureLayered(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedCubemap? =
             if (handle.address() == 0L) null else CompressedCubemap(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

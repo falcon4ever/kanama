@@ -20,7 +20,5 @@ class VisualShaderNodeVectorRefract(handle: GodotHandle) : VisualShaderNodeVecto
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorRefract? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorRefract(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

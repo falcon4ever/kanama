@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.set_length
      */
     fun setLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, length)
     }
 
     /**
@@ -40,7 +41,7 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.get_length
      */
     fun getLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.set_initial_offset
      */
     fun setInitialOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInitialOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInitialOffsetBind, segment, offset)
     }
 
     /**
@@ -60,7 +61,7 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: GrooveJoint2D.get_initial_offset
      */
     fun getInitialOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInitialOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInitialOffsetBind, segment)
     }
 
     companion object {
@@ -70,25 +71,27 @@ class GrooveJoint2D(handle: GodotHandle) : Joint2D(handle) {
 
         internal fun wrap(handle: RawSegment): GrooveJoint2D? =
             if (handle.address() == 0L) null else GrooveJoint2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LENGTH_HASH = 373806689L
-        private val setLengthBind by lazy {
+        @JvmField
+        val setLengthBind =
             ObjectCalls.getMethodBind("GrooveJoint2D", "set_length", SET_LENGTH_HASH)
-        }
 
         private const val GET_LENGTH_HASH = 1740695150L
-        private val getLengthBind by lazy {
+        @JvmField
+        val getLengthBind =
             ObjectCalls.getMethodBind("GrooveJoint2D", "get_length", GET_LENGTH_HASH)
-        }
 
         private const val SET_INITIAL_OFFSET_HASH = 373806689L
-        private val setInitialOffsetBind by lazy {
+        @JvmField
+        val setInitialOffsetBind =
             ObjectCalls.getMethodBind("GrooveJoint2D", "set_initial_offset", SET_INITIAL_OFFSET_HASH)
-        }
 
         private const val GET_INITIAL_OFFSET_HASH = 1740695150L
-        private val getInitialOffsetBind by lazy {
+        @JvmField
+        val getInitialOffsetBind =
             ObjectCalls.getMethodBind("GrooveJoint2D", "get_initial_offset", GET_INITIAL_OFFSET_HASH)
-        }
     }
 }

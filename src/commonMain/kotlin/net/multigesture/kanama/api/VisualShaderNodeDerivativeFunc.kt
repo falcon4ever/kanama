@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -30,32 +31,32 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
 
     fun setOpType(type: VisualShaderNodeDerivativeFunc.OpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
     }
 
     fun getOpType(): VisualShaderNodeDerivativeFunc.OpType {
         checkOpen()
-        return VisualShaderNodeDerivativeFunc.OpType(ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment))
+        return VisualShaderNodeDerivativeFunc.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
     }
 
     fun setFunction(func: VisualShaderNodeDerivativeFunc.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
     fun getFunction(): VisualShaderNodeDerivativeFunc.Function {
         checkOpen()
-        return VisualShaderNodeDerivativeFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+        return VisualShaderNodeDerivativeFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
     fun setPrecision(precision: VisualShaderNodeDerivativeFunc.Precision) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPrecisionBind, segment, precision.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPrecisionBind, segment, precision.value)
     }
 
     fun getPrecision(): VisualShaderNodeDerivativeFunc.Precision {
         checkOpen()
-        return VisualShaderNodeDerivativeFunc.Precision(ObjectCalls.ptrcallNoArgsRetLong(getPrecisionBind, segment))
+        return VisualShaderNodeDerivativeFunc.Precision(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPrecisionBind, segment))
     }
 
     @JvmInline
@@ -99,35 +100,37 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDerivativeFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeDerivativeFunc(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OP_TYPE_HASH = 377800221L
-        private val setOpTypeBind by lazy {
+        @JvmField
+        val setOpTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeDerivativeFunc", "set_op_type", SET_OP_TYPE_HASH)
-        }
 
         private const val GET_OP_TYPE_HASH = 3997800514L
-        private val getOpTypeBind by lazy {
+        @JvmField
+        val getOpTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeDerivativeFunc", "get_op_type", GET_OP_TYPE_HASH)
-        }
 
         private const val SET_FUNCTION_HASH = 1944704156L
-        private val setFunctionBind by lazy {
+        @JvmField
+        val setFunctionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeDerivativeFunc", "set_function", SET_FUNCTION_HASH)
-        }
 
         private const val GET_FUNCTION_HASH = 2389093396L
-        private val getFunctionBind by lazy {
+        @JvmField
+        val getFunctionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeDerivativeFunc", "get_function", GET_FUNCTION_HASH)
-        }
 
         private const val SET_PRECISION_HASH = 797270566L
-        private val setPrecisionBind by lazy {
+        @JvmField
+        val setPrecisionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeDerivativeFunc", "set_precision", SET_PRECISION_HASH)
-        }
 
         private const val GET_PRECISION_HASH = 3822547323L
-        private val getPrecisionBind by lazy {
+        @JvmField
+        val getPrecisionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeDerivativeFunc", "get_precision", GET_PRECISION_HASH)
-        }
     }
 }

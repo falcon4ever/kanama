@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setMapWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMapWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMapWidthBind, segment, width)
     }
 
     /**
@@ -47,7 +48,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMapWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMapWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMapWidthBind, segment)
     }
 
     /**
@@ -57,7 +58,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setMapDepth(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMapDepthBind, segment, height)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMapDepthBind, segment, height)
     }
 
     /**
@@ -67,7 +68,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMapDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMapDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMapDepthBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setMapData(data: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setMapDataBind, segment, data)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setMapDataBind, segment, data)
     }
 
     /**
@@ -87,7 +88,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMapData(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getMapDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getMapDataBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMinHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinHeightBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getMaxHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxHeightBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun updateMapDataFromImage(image: Image?, heightMin: Double, heightMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectTwoDoubleArgs(updateMapDataFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, heightMin, heightMax)
+        ObjectCalls.ptrcallWithObjectTwoDoubleArgs(Binds.updateMapDataFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, heightMin, heightMax)
     }
 
     companion object {
@@ -138,50 +139,52 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HeightMapShape3D? =
             if (handle.address() == 0L) null else HeightMapShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MAP_WIDTH_HASH = 1286410249L
-        private val setMapWidthBind by lazy {
+        @JvmField
+        val setMapWidthBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "set_map_width", SET_MAP_WIDTH_HASH)
-        }
 
         private const val GET_MAP_WIDTH_HASH = 3905245786L
-        private val getMapWidthBind by lazy {
+        @JvmField
+        val getMapWidthBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "get_map_width", GET_MAP_WIDTH_HASH)
-        }
 
         private const val SET_MAP_DEPTH_HASH = 1286410249L
-        private val setMapDepthBind by lazy {
+        @JvmField
+        val setMapDepthBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "set_map_depth", SET_MAP_DEPTH_HASH)
-        }
 
         private const val GET_MAP_DEPTH_HASH = 3905245786L
-        private val getMapDepthBind by lazy {
+        @JvmField
+        val getMapDepthBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "get_map_depth", GET_MAP_DEPTH_HASH)
-        }
 
         private const val SET_MAP_DATA_HASH = 2899603908L
-        private val setMapDataBind by lazy {
+        @JvmField
+        val setMapDataBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "set_map_data", SET_MAP_DATA_HASH)
-        }
 
         private const val GET_MAP_DATA_HASH = 675695659L
-        private val getMapDataBind by lazy {
+        @JvmField
+        val getMapDataBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "get_map_data", GET_MAP_DATA_HASH)
-        }
 
         private const val GET_MIN_HEIGHT_HASH = 1740695150L
-        private val getMinHeightBind by lazy {
+        @JvmField
+        val getMinHeightBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "get_min_height", GET_MIN_HEIGHT_HASH)
-        }
 
         private const val GET_MAX_HEIGHT_HASH = 1740695150L
-        private val getMaxHeightBind by lazy {
+        @JvmField
+        val getMaxHeightBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "get_max_height", GET_MAX_HEIGHT_HASH)
-        }
 
         private const val UPDATE_MAP_DATA_FROM_IMAGE_HASH = 2636652979L
-        private val updateMapDataFromImageBind by lazy {
+        @JvmField
+        val updateMapDataFromImageBind =
             ObjectCalls.getMethodBind("HeightMapShape3D", "update_map_data_from_image", UPDATE_MAP_DATA_FROM_IMAGE_HASH)
-        }
     }
 }

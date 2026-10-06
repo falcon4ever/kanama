@@ -112,7 +112,5 @@ class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptLanguageExtension? =
             if (handle.address() == 0L) null else ScriptLanguageExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

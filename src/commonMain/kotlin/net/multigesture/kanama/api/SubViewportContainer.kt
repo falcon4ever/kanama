@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.set_stretch
      */
     fun setStretch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setStretchBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setStretchBind, segment, enable)
     }
 
     /**
@@ -46,7 +47,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.is_stretch_enabled
      */
     fun isStretchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStretchEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStretchEnabledBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.set_stretch_shrink
      */
     fun setStretchShrink(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setStretchShrinkBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStretchShrinkBind, segment, amount)
     }
 
     /**
@@ -70,7 +71,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.get_stretch_shrink
      */
     fun getStretchShrink(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getStretchShrinkBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStretchShrinkBind, segment)
     }
 
     /**
@@ -83,7 +84,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.set_mouse_target
      */
     fun setMouseTarget(amount: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMouseTargetBind, segment, amount)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMouseTargetBind, segment, amount)
     }
 
     /**
@@ -96,7 +97,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SubViewportContainer.is_mouse_target_enabled
      */
     fun isMouseTargetEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMouseTargetEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMouseTargetEnabledBind, segment)
     }
 
     companion object {
@@ -106,35 +107,37 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): SubViewportContainer? =
             if (handle.address() == 0L) null else SubViewportContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STRETCH_HASH = 2586408642L
-        private val setStretchBind by lazy {
+        @JvmField
+        val setStretchBind =
             ObjectCalls.getMethodBind("SubViewportContainer", "set_stretch", SET_STRETCH_HASH)
-        }
 
         private const val IS_STRETCH_ENABLED_HASH = 36873697L
-        private val isStretchEnabledBind by lazy {
+        @JvmField
+        val isStretchEnabledBind =
             ObjectCalls.getMethodBind("SubViewportContainer", "is_stretch_enabled", IS_STRETCH_ENABLED_HASH)
-        }
 
         private const val SET_STRETCH_SHRINK_HASH = 1286410249L
-        private val setStretchShrinkBind by lazy {
+        @JvmField
+        val setStretchShrinkBind =
             ObjectCalls.getMethodBind("SubViewportContainer", "set_stretch_shrink", SET_STRETCH_SHRINK_HASH)
-        }
 
         private const val GET_STRETCH_SHRINK_HASH = 3905245786L
-        private val getStretchShrinkBind by lazy {
+        @JvmField
+        val getStretchShrinkBind =
             ObjectCalls.getMethodBind("SubViewportContainer", "get_stretch_shrink", GET_STRETCH_SHRINK_HASH)
-        }
 
         private const val SET_MOUSE_TARGET_HASH = 2586408642L
-        private val setMouseTargetBind by lazy {
+        @JvmField
+        val setMouseTargetBind =
             ObjectCalls.getMethodBind("SubViewportContainer", "set_mouse_target", SET_MOUSE_TARGET_HASH)
-        }
 
         private const val IS_MOUSE_TARGET_ENABLED_HASH = 2240911060L
-        private val isMouseTargetEnabledBind by lazy {
+        @JvmField
+        val isMouseTargetEnabledBind =
             ObjectCalls.getMethodBind("SubViewportContainer", "is_mouse_target_enabled", IS_MOUSE_TARGET_ENABLED_HASH)
-        }
     }
 }

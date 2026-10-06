@@ -20,7 +20,5 @@ class VisualShaderNodeFaceForward(handle: GodotHandle) : VisualShaderNodeVectorB
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFaceForward? =
             if (handle.address() == 0L) null else VisualShaderNodeFaceForward(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

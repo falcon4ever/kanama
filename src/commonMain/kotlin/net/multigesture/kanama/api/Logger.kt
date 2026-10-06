@@ -59,7 +59,5 @@ class Logger(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Logger? =
             if (handle.address() == 0L) null else Logger(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

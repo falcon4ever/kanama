@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -129,7 +130,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setHorizontalAlignment(alignment: HorizontalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -140,7 +141,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHorizontalAlignment(): HorizontalAlignment {
         checkOpen()
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -150,7 +151,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setVerticalAlignment(alignment: VerticalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -160,7 +161,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getVerticalAlignment(): VerticalAlignment {
         checkOpen()
-        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -172,7 +173,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setText(text: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -184,7 +185,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -204,7 +205,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
     }
 
     /**
@@ -219,7 +220,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setFontSize(fontSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, segment, fontSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontSizeBind, segment, fontSize)
     }
 
     /**
@@ -234,7 +235,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
     }
 
     /**
@@ -245,7 +246,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setLineSpacing(lineSpacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, lineSpacing)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, lineSpacing)
     }
 
     /**
@@ -256,7 +257,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
     }
 
     /**
@@ -268,7 +269,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -280,7 +281,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getAutowrapMode(): TextServer.AutowrapMode {
         checkOpen()
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
     }
 
     /**
@@ -290,7 +291,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -300,7 +301,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getJustificationFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
     }
 
     /**
@@ -311,7 +312,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setDepth(depth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBind, segment, depth)
     }
 
     /**
@@ -322,7 +323,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
     }
 
     /**
@@ -332,7 +333,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setWidth(width: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -342,7 +343,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
     }
 
     /**
@@ -355,7 +356,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setPixelSize(pixelSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, segment, pixelSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPixelSizeBind, segment, pixelSize)
     }
 
     /**
@@ -368,7 +369,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getPixelSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPixelSizeBind, segment)
     }
 
     /**
@@ -380,7 +381,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -392,7 +393,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -405,7 +406,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCurveStep(curveStep: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCurveStepBind, segment, curveStep)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCurveStepBind, segment, curveStep)
     }
 
     /**
@@ -418,7 +419,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurveStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurveStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurveStepBind, segment)
     }
 
     /**
@@ -428,7 +429,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setTextDirection(direction: TextServer.Direction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -438,7 +439,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getTextDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
     }
 
     /**
@@ -449,7 +450,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setLanguage(language: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -460,7 +461,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getLanguage(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -470,7 +471,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -480,7 +481,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
         checkOpen()
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -490,7 +491,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -500,7 +501,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -510,7 +511,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setUppercase(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUppercaseBind, segment, enable)
     }
 
     /**
@@ -520,7 +521,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isUppercase(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUppercaseBind, segment)
     }
 
     companion object {
@@ -533,185 +534,187 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextMesh? =
             if (handle.address() == 0L) null else TextMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
-        private val setHorizontalAlignmentBind by lazy {
+        @JvmField
+        val setHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("TextMesh", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_HORIZONTAL_ALIGNMENT_HASH = 341400642L
-        private val getHorizontalAlignmentBind by lazy {
+        @JvmField
+        val getHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("TextMesh", "get_horizontal_alignment", GET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_VERTICAL_ALIGNMENT_HASH = 1796458609L
-        private val setVerticalAlignmentBind by lazy {
+        @JvmField
+        val setVerticalAlignmentBind =
             ObjectCalls.getMethodBind("TextMesh", "set_vertical_alignment", SET_VERTICAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_VERTICAL_ALIGNMENT_HASH = 3274884059L
-        private val getVerticalAlignmentBind by lazy {
+        @JvmField
+        val getVerticalAlignmentBind =
             ObjectCalls.getMethodBind("TextMesh", "get_vertical_alignment", GET_VERTICAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("TextMesh", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("TextMesh", "get_text", GET_TEXT_HASH)
-        }
 
         private const val SET_FONT_HASH = 1262170328L
-        private val setFontBind by lazy {
+        @JvmField
+        val setFontBind =
             ObjectCalls.getMethodBind("TextMesh", "set_font", SET_FONT_HASH)
-        }
 
         private const val GET_FONT_HASH = 3229501585L
-        private val getFontBind by lazy {
+        @JvmField
+        val getFontBind =
             ObjectCalls.getMethodBind("TextMesh", "get_font", GET_FONT_HASH)
-        }
 
         private const val SET_FONT_SIZE_HASH = 1286410249L
-        private val setFontSizeBind by lazy {
+        @JvmField
+        val setFontSizeBind =
             ObjectCalls.getMethodBind("TextMesh", "set_font_size", SET_FONT_SIZE_HASH)
-        }
 
         private const val GET_FONT_SIZE_HASH = 3905245786L
-        private val getFontSizeBind by lazy {
+        @JvmField
+        val getFontSizeBind =
             ObjectCalls.getMethodBind("TextMesh", "get_font_size", GET_FONT_SIZE_HASH)
-        }
 
         private const val SET_LINE_SPACING_HASH = 373806689L
-        private val setLineSpacingBind by lazy {
+        @JvmField
+        val setLineSpacingBind =
             ObjectCalls.getMethodBind("TextMesh", "set_line_spacing", SET_LINE_SPACING_HASH)
-        }
 
         private const val GET_LINE_SPACING_HASH = 1740695150L
-        private val getLineSpacingBind by lazy {
+        @JvmField
+        val getLineSpacingBind =
             ObjectCalls.getMethodBind("TextMesh", "get_line_spacing", GET_LINE_SPACING_HASH)
-        }
 
         private const val SET_AUTOWRAP_MODE_HASH = 3289138044L
-        private val setAutowrapModeBind by lazy {
+        @JvmField
+        val setAutowrapModeBind =
             ObjectCalls.getMethodBind("TextMesh", "set_autowrap_mode", SET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val GET_AUTOWRAP_MODE_HASH = 1549071663L
-        private val getAutowrapModeBind by lazy {
+        @JvmField
+        val getAutowrapModeBind =
             ObjectCalls.getMethodBind("TextMesh", "get_autowrap_mode", GET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val SET_JUSTIFICATION_FLAGS_HASH = 2877345813L
-        private val setJustificationFlagsBind by lazy {
+        @JvmField
+        val setJustificationFlagsBind =
             ObjectCalls.getMethodBind("TextMesh", "set_justification_flags", SET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val GET_JUSTIFICATION_FLAGS_HASH = 1583363614L
-        private val getJustificationFlagsBind by lazy {
+        @JvmField
+        val getJustificationFlagsBind =
             ObjectCalls.getMethodBind("TextMesh", "get_justification_flags", GET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val SET_DEPTH_HASH = 373806689L
-        private val setDepthBind by lazy {
+        @JvmField
+        val setDepthBind =
             ObjectCalls.getMethodBind("TextMesh", "set_depth", SET_DEPTH_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 1740695150L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("TextMesh", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 373806689L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("TextMesh", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 1740695150L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("TextMesh", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val SET_PIXEL_SIZE_HASH = 373806689L
-        private val setPixelSizeBind by lazy {
+        @JvmField
+        val setPixelSizeBind =
             ObjectCalls.getMethodBind("TextMesh", "set_pixel_size", SET_PIXEL_SIZE_HASH)
-        }
 
         private const val GET_PIXEL_SIZE_HASH = 1740695150L
-        private val getPixelSizeBind by lazy {
+        @JvmField
+        val getPixelSizeBind =
             ObjectCalls.getMethodBind("TextMesh", "get_pixel_size", GET_PIXEL_SIZE_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("TextMesh", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("TextMesh", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_CURVE_STEP_HASH = 373806689L
-        private val setCurveStepBind by lazy {
+        @JvmField
+        val setCurveStepBind =
             ObjectCalls.getMethodBind("TextMesh", "set_curve_step", SET_CURVE_STEP_HASH)
-        }
 
         private const val GET_CURVE_STEP_HASH = 1740695150L
-        private val getCurveStepBind by lazy {
+        @JvmField
+        val getCurveStepBind =
             ObjectCalls.getMethodBind("TextMesh", "get_curve_step", GET_CURVE_STEP_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 1418190634L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("TextMesh", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 2516697328L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("TextMesh", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("TextMesh", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("TextMesh", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 55961453L
-        private val setStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("TextMesh", "set_structured_text_bidi_override", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
-        private val getStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("TextMesh", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
-        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("TextMesh", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L
-        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("TextMesh", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val SET_UPPERCASE_HASH = 2586408642L
-        private val setUppercaseBind by lazy {
+        @JvmField
+        val setUppercaseBind =
             ObjectCalls.getMethodBind("TextMesh", "set_uppercase", SET_UPPERCASE_HASH)
-        }
 
         private const val IS_UPPERCASE_HASH = 36873697L
-        private val isUppercaseBind by lazy {
+        @JvmField
+        val isUppercaseBind =
             ObjectCalls.getMethodBind("TextMesh", "is_uppercase", IS_UPPERCASE_HASH)
-        }
     }
 }

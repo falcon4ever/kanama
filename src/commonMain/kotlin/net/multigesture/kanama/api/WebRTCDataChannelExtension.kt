@@ -20,7 +20,5 @@ class WebRTCDataChannelExtension(handle: GodotHandle) : WebRTCDataChannel(handle
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCDataChannelExtension? =
             if (handle.address() == 0L) null else WebRTCDataChannelExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -22,7 +22,5 @@ class ResourceImporterCSVTranslation(handle: GodotHandle) : ResourceImporter(han
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterCSVTranslation? =
             if (handle.address() == 0L) null else ResourceImporterCSVTranslation(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

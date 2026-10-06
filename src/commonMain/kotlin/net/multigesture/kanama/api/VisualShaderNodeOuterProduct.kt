@@ -20,7 +20,5 @@ class VisualShaderNodeOuterProduct(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeOuterProduct? =
             if (handle.address() == 0L) null else VisualShaderNodeOuterProduct(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

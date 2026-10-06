@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -158,7 +159,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setBgColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBgColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBgColorBind, segment, color)
     }
 
     /**
@@ -168,7 +169,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBgColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBgColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBgColorBind, segment)
     }
 
     /**
@@ -178,7 +179,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setBorderColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBorderColorBind, segment, color)
     }
 
     /**
@@ -188,7 +189,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBorderColorBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setBorderWidthAll(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBorderWidthAllBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBorderWidthAllBind, segment, width)
     }
 
     /**
@@ -208,7 +209,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderWidthMin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBorderWidthMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBorderWidthMinBind, segment)
     }
 
     /**
@@ -218,7 +219,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setBorderWidth(margin: Side, width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, segment, margin.value, width)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setBorderWidthBind, segment, margin.value, width)
     }
 
     /**
@@ -228,7 +229,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderWidth(margin: Side): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getBorderWidthBind, segment, margin.value)
     }
 
     /**
@@ -238,7 +239,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setBorderBlend(blend: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBorderBlendBind, segment, blend)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBorderBlendBind, segment, blend)
     }
 
     /**
@@ -248,7 +249,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getBorderBlend(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getBorderBlendBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getBorderBlendBind, segment)
     }
 
     /**
@@ -258,7 +259,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setCornerRadiusAll(radius: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCornerRadiusAllBind, segment, radius)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCornerRadiusAllBind, segment, radius)
     }
 
     /**
@@ -268,7 +269,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setCornerRadius(corner: Corner, radius: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, segment, corner.value, radius)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setCornerRadiusBind, segment, corner.value, radius)
     }
 
     /**
@@ -278,7 +279,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getCornerRadius(corner: Corner): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, segment, corner.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getCornerRadiusBind, segment, corner.value)
     }
 
     /**
@@ -292,7 +293,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setExpandMargin(margin: Side, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin.value, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setExpandMarginBind, segment, margin.value, size)
     }
 
     /**
@@ -302,7 +303,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setExpandMarginAll(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setExpandMarginAllBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExpandMarginAllBind, segment, size)
     }
 
     /**
@@ -316,7 +317,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getExpandMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getExpandMarginBind, segment, margin.value)
     }
 
     /**
@@ -326,7 +327,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setDrawCenter(drawCenter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, segment, drawCenter)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawCenterBind, segment, drawCenter)
     }
 
     /**
@@ -336,7 +337,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isDrawCenterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
     }
 
     /**
@@ -353,7 +354,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setSkew(skew: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSkewBind, segment, skew)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSkewBind, segment, skew)
     }
 
     /**
@@ -370,7 +371,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getSkew(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSkewBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSkewBind, segment)
     }
 
     /**
@@ -380,7 +381,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setShadowColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setShadowColorBind, segment, color)
     }
 
     /**
@@ -390,7 +391,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getShadowColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
     }
 
     /**
@@ -400,7 +401,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setShadowSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setShadowSizeBind, segment, size)
     }
 
     /**
@@ -410,7 +411,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getShadowSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getShadowSizeBind, segment)
     }
 
     /**
@@ -420,7 +421,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setShadowOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setShadowOffsetBind, segment, offset)
     }
 
     /**
@@ -430,7 +431,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getShadowOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getShadowOffsetBind, segment)
     }
 
     /**
@@ -443,7 +444,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setAntiAliased(antiAliased: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAntiAliasedBind, segment, antiAliased)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAntiAliasedBind, segment, antiAliased)
     }
 
     /**
@@ -456,7 +457,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isAntiAliased(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAntiAliasedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAntiAliasedBind, segment)
     }
 
     /**
@@ -469,7 +470,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setAaSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAaSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAaSizeBind, segment, size)
     }
 
     /**
@@ -482,7 +483,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getAaSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAaSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAaSizeBind, segment)
     }
 
     /**
@@ -497,7 +498,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setCornerDetail(detail: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCornerDetailBind, segment, detail)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCornerDetailBind, segment, detail)
     }
 
     /**
@@ -512,7 +513,7 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getCornerDetail(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCornerDetailBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCornerDetailBind, segment)
     }
 
     companion object {
@@ -525,165 +526,167 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxFlat? =
             if (handle.address() == 0L) null else StyleBoxFlat(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BG_COLOR_HASH = 2920490490L
-        private val setBgColorBind by lazy {
+        @JvmField
+        val setBgColorBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_bg_color", SET_BG_COLOR_HASH)
-        }
 
         private const val GET_BG_COLOR_HASH = 3444240500L
-        private val getBgColorBind by lazy {
+        @JvmField
+        val getBgColorBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_bg_color", GET_BG_COLOR_HASH)
-        }
 
         private const val SET_BORDER_COLOR_HASH = 2920490490L
-        private val setBorderColorBind by lazy {
+        @JvmField
+        val setBorderColorBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_border_color", SET_BORDER_COLOR_HASH)
-        }
 
         private const val GET_BORDER_COLOR_HASH = 3444240500L
-        private val getBorderColorBind by lazy {
+        @JvmField
+        val getBorderColorBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_border_color", GET_BORDER_COLOR_HASH)
-        }
 
         private const val SET_BORDER_WIDTH_ALL_HASH = 1286410249L
-        private val setBorderWidthAllBind by lazy {
+        @JvmField
+        val setBorderWidthAllBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_border_width_all", SET_BORDER_WIDTH_ALL_HASH)
-        }
 
         private const val GET_BORDER_WIDTH_MIN_HASH = 3905245786L
-        private val getBorderWidthMinBind by lazy {
+        @JvmField
+        val getBorderWidthMinBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_border_width_min", GET_BORDER_WIDTH_MIN_HASH)
-        }
 
         private const val SET_BORDER_WIDTH_HASH = 437707142L
-        private val setBorderWidthBind by lazy {
+        @JvmField
+        val setBorderWidthBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_border_width", SET_BORDER_WIDTH_HASH)
-        }
 
         private const val GET_BORDER_WIDTH_HASH = 1983885014L
-        private val getBorderWidthBind by lazy {
+        @JvmField
+        val getBorderWidthBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_border_width", GET_BORDER_WIDTH_HASH)
-        }
 
         private const val SET_BORDER_BLEND_HASH = 2586408642L
-        private val setBorderBlendBind by lazy {
+        @JvmField
+        val setBorderBlendBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_border_blend", SET_BORDER_BLEND_HASH)
-        }
 
         private const val GET_BORDER_BLEND_HASH = 36873697L
-        private val getBorderBlendBind by lazy {
+        @JvmField
+        val getBorderBlendBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_border_blend", GET_BORDER_BLEND_HASH)
-        }
 
         private const val SET_CORNER_RADIUS_ALL_HASH = 1286410249L
-        private val setCornerRadiusAllBind by lazy {
+        @JvmField
+        val setCornerRadiusAllBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_corner_radius_all", SET_CORNER_RADIUS_ALL_HASH)
-        }
 
         private const val SET_CORNER_RADIUS_HASH = 2696158768L
-        private val setCornerRadiusBind by lazy {
+        @JvmField
+        val setCornerRadiusBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_corner_radius", SET_CORNER_RADIUS_HASH)
-        }
 
         private const val GET_CORNER_RADIUS_HASH = 3982397690L
-        private val getCornerRadiusBind by lazy {
+        @JvmField
+        val getCornerRadiusBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_corner_radius", GET_CORNER_RADIUS_HASH)
-        }
 
         private const val SET_EXPAND_MARGIN_HASH = 4290182280L
-        private val setExpandMarginBind by lazy {
+        @JvmField
+        val setExpandMarginBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_expand_margin", SET_EXPAND_MARGIN_HASH)
-        }
 
         private const val SET_EXPAND_MARGIN_ALL_HASH = 373806689L
-        private val setExpandMarginAllBind by lazy {
+        @JvmField
+        val setExpandMarginAllBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_expand_margin_all", SET_EXPAND_MARGIN_ALL_HASH)
-        }
 
         private const val GET_EXPAND_MARGIN_HASH = 2869120046L
-        private val getExpandMarginBind by lazy {
+        @JvmField
+        val getExpandMarginBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_expand_margin", GET_EXPAND_MARGIN_HASH)
-        }
 
         private const val SET_DRAW_CENTER_HASH = 2586408642L
-        private val setDrawCenterBind by lazy {
+        @JvmField
+        val setDrawCenterBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_draw_center", SET_DRAW_CENTER_HASH)
-        }
 
         private const val IS_DRAW_CENTER_ENABLED_HASH = 36873697L
-        private val isDrawCenterEnabledBind by lazy {
+        @JvmField
+        val isDrawCenterEnabledBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "is_draw_center_enabled", IS_DRAW_CENTER_ENABLED_HASH)
-        }
 
         private const val SET_SKEW_HASH = 743155724L
-        private val setSkewBind by lazy {
+        @JvmField
+        val setSkewBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_skew", SET_SKEW_HASH)
-        }
 
         private const val GET_SKEW_HASH = 3341600327L
-        private val getSkewBind by lazy {
+        @JvmField
+        val getSkewBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_skew", GET_SKEW_HASH)
-        }
 
         private const val SET_SHADOW_COLOR_HASH = 2920490490L
-        private val setShadowColorBind by lazy {
+        @JvmField
+        val setShadowColorBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_shadow_color", SET_SHADOW_COLOR_HASH)
-        }
 
         private const val GET_SHADOW_COLOR_HASH = 3444240500L
-        private val getShadowColorBind by lazy {
+        @JvmField
+        val getShadowColorBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_shadow_color", GET_SHADOW_COLOR_HASH)
-        }
 
         private const val SET_SHADOW_SIZE_HASH = 1286410249L
-        private val setShadowSizeBind by lazy {
+        @JvmField
+        val setShadowSizeBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_shadow_size", SET_SHADOW_SIZE_HASH)
-        }
 
         private const val GET_SHADOW_SIZE_HASH = 3905245786L
-        private val getShadowSizeBind by lazy {
+        @JvmField
+        val getShadowSizeBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_shadow_size", GET_SHADOW_SIZE_HASH)
-        }
 
         private const val SET_SHADOW_OFFSET_HASH = 743155724L
-        private val setShadowOffsetBind by lazy {
+        @JvmField
+        val setShadowOffsetBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_shadow_offset", SET_SHADOW_OFFSET_HASH)
-        }
 
         private const val GET_SHADOW_OFFSET_HASH = 3341600327L
-        private val getShadowOffsetBind by lazy {
+        @JvmField
+        val getShadowOffsetBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_shadow_offset", GET_SHADOW_OFFSET_HASH)
-        }
 
         private const val SET_ANTI_ALIASED_HASH = 2586408642L
-        private val setAntiAliasedBind by lazy {
+        @JvmField
+        val setAntiAliasedBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_anti_aliased", SET_ANTI_ALIASED_HASH)
-        }
 
         private const val IS_ANTI_ALIASED_HASH = 36873697L
-        private val isAntiAliasedBind by lazy {
+        @JvmField
+        val isAntiAliasedBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "is_anti_aliased", IS_ANTI_ALIASED_HASH)
-        }
 
         private const val SET_AA_SIZE_HASH = 373806689L
-        private val setAaSizeBind by lazy {
+        @JvmField
+        val setAaSizeBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_aa_size", SET_AA_SIZE_HASH)
-        }
 
         private const val GET_AA_SIZE_HASH = 1740695150L
-        private val getAaSizeBind by lazy {
+        @JvmField
+        val getAaSizeBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_aa_size", GET_AA_SIZE_HASH)
-        }
 
         private const val SET_CORNER_DETAIL_HASH = 1286410249L
-        private val setCornerDetailBind by lazy {
+        @JvmField
+        val setCornerDetailBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "set_corner_detail", SET_CORNER_DETAIL_HASH)
-        }
 
         private const val GET_CORNER_DETAIL_HASH = 3905245786L
-        private val getCornerDetailBind by lazy {
+        @JvmField
+        val getCornerDetailBind =
             ObjectCalls.getMethodBind("StyleBoxFlat", "get_corner_detail", GET_CORNER_DETAIL_HASH)
-        }
     }
 }

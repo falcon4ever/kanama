@@ -172,7 +172,7 @@ def split_top(text: str) -> list[str]:
 
 
 FUN_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s+)?(?:([\w.]+)\.)?(\w+)\s*\(")
-BIND_RE = re.compile(r'(?:private\s+)?val\s+(\w+)\s+by\s+lazy\s*\{\s*ObjectCalls\.getMethodBind\(\s*"(\w+)"\s*,\s*"(\w+)"', re.S)
+BIND_RE = re.compile(r'(?:private\s+)?(?:@JvmField\s+)?val\s+(\w+)\s*(?:by\s+lazy\s*\{|=)\s*ObjectCalls\.getMethodBind\(\s*"(\w+)"\s*,\s*"(\w+)"', re.S)
 PROPERTY_RE = re.compile(r"\b(?:val|var)\s+(\w+)\s*:\s*([\w.<>?, ]+?)\s*\n(?:\s*@JvmName\([^)]*\)\s*\n)?\s*get\(\)\s*=\s*(\w+)\(")
 
 

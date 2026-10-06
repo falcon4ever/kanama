@@ -22,7 +22,5 @@ open class Lightmapper(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Lightmapper? =
             if (handle.address() == 0L) null else Lightmapper(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

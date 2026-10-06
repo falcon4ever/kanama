@@ -22,7 +22,5 @@ class AudioEffectBandLimitFilter(handle: GodotHandle) : AudioEffectFilter(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectBandLimitFilter? =
             if (handle.address() == 0L) null else AudioEffectBandLimitFilter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

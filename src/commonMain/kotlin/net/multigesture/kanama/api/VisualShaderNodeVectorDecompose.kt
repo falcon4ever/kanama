@@ -20,7 +20,5 @@ class VisualShaderNodeVectorDecompose(handle: GodotHandle) : VisualShaderNodeVec
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDecompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDecompose(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -111,7 +112,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.add_sibling
      */
     fun addSibling(sibling: Node, forceReadableName: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addSiblingBind, segment, sibling.segment, forceReadableName)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addSiblingBind, segment, sibling.segment, forceReadableName)
     }
 
     /**
@@ -124,7 +125,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_name
      */
     fun setName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setNameBind, segment, name)
     }
 
     /**
@@ -137,7 +138,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_name
      */
     fun getName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getNameBind, segment)
     }
 
     /**
@@ -158,7 +159,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.add_child
      */
     fun addChild(node: Node, forceReadableName: Boolean = false, internalValue: Node.InternalMode = Node.InternalMode.DISABLED) {
-        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, segment, node.segment, forceReadableName, internalValue.value)
+        ObjectCalls.ptrcallWithObjectBoolLongArgs(Binds.addChildBind, segment, node.segment, forceReadableName, internalValue.value)
     }
 
     /**
@@ -170,7 +171,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.remove_child
      */
     fun removeChild(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeChildBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeChildBind, segment, listOf(node.segment))
     }
 
     /**
@@ -186,7 +187,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.reparent
      */
     fun reparent(newParent: Node, keepGlobalTransform: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(reparentBind, segment, newParent.segment, keepGlobalTransform)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.reparentBind, segment, newParent.segment, keepGlobalTransform)
     }
 
     /**
@@ -196,7 +197,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_child_count
      */
     fun getChildCount(includeInternal: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getChildCountBind, segment, includeInternal)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(Binds.getChildCountBind, segment, includeInternal)
     }
 
     /**
@@ -206,7 +207,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_children
      */
     fun getChildren(includeInternal: Boolean = false): List<Node> {
-        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(getChildrenBind, segment, includeInternal, Node::wrap)
+        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(Binds.getChildrenBind, segment, includeInternal, Node::wrap)
     }
 
     /**
@@ -220,7 +221,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_child
      */
     fun getChild(idx: Int, includeInternal: Boolean = false): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithIntAndBoolArgsRetObject(getChildBind, segment, idx, includeInternal))
+        return Node.wrap(ObjectCalls.ptrcallWithIntAndBoolArgsRetObject(Binds.getChildBind, segment, idx, includeInternal))
     }
 
     /**
@@ -229,7 +230,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.has_node
      */
     fun hasNode(path: NodePath): Boolean {
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.hasNodeBind, segment, path)
     }
 
     /**
@@ -242,7 +243,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node
      */
     fun getNode(path: NodePath): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeBind, segment, path))
+        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(Binds.getNodeBind, segment, path))
     }
 
     /**
@@ -252,7 +253,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node_or_null
      */
     fun getNodeOrNull(path: NodePath): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getNodeOrNullBind, segment, path))
+        return Node.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(Binds.getNodeOrNullBind, segment, path))
     }
 
     /**
@@ -261,7 +262,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_parent
      */
     fun getParent(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentBind, segment))
     }
 
     /**
@@ -280,7 +281,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.find_child
      */
     fun findChild(pattern: String, recursive: Boolean = true, owned: Boolean = true): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithStringAndTwoBoolArgsRetObject(findChildBind, segment, pattern, recursive, owned))
+        return Node.wrap(ObjectCalls.ptrcallWithStringAndTwoBoolArgsRetObject(Binds.findChildBind, segment, pattern, recursive, owned))
     }
 
     /**
@@ -299,7 +300,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.find_children
      */
     fun findChildren(pattern: String, type: String = "", recursive: Boolean = true, owned: Boolean = true): List<Node> {
-        return ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(findChildrenBind, segment, pattern, type, recursive, owned, Node::wrap)
+        return ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(Binds.findChildrenBind, segment, pattern, type, recursive, owned, Node::wrap)
     }
 
     /**
@@ -313,7 +314,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.find_parent
      */
     fun findParent(pattern: String): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findParentBind, segment, pattern))
+        return Node.wrap(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findParentBind, segment, pattern))
     }
 
     /**
@@ -324,7 +325,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.has_node_and_resource
      */
     fun hasNodeAndResource(path: NodePath): Boolean {
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasNodeAndResourceBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.hasNodeAndResourceBind, segment, path)
     }
 
     /**
@@ -336,7 +337,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node_and_resource
      */
     fun getNodeAndResource(path: NodePath): List<Any?> {
-        return ObjectCalls.ptrcallWithNodePathArgRetArray(getNodeAndResourceBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetArray(Binds.getNodeAndResourceBind, segment, path)
     }
 
     /**
@@ -345,7 +346,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_inside_tree
      */
     fun isInsideTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInsideTreeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInsideTreeBind, segment)
     }
 
     /**
@@ -354,7 +355,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_part_of_edited_scene
      */
     fun isPartOfEditedScene(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPartOfEditedSceneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPartOfEditedSceneBind, segment)
     }
 
     /**
@@ -363,7 +364,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_ancestor_of
      */
     fun isAncestorOf(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isAncestorOfBind, segment, node.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isAncestorOfBind, segment, node.segment)
     }
 
     /**
@@ -373,7 +374,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_greater_than
      */
     fun isGreaterThan(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isGreaterThanBind, segment, node.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isGreaterThanBind, segment, node.segment)
     }
 
     /**
@@ -383,7 +384,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_path
      */
     fun getPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getPathBind, segment)
     }
 
     /**
@@ -397,7 +398,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_path_to
      */
     fun getPathTo(node: Node, useUniquePath: Boolean = false): NodePath {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(getPathToBind, segment, node.segment, useUniquePath)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(Binds.getPathToBind, segment, node.segment, useUniquePath)
     }
 
     /**
@@ -412,7 +413,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.add_to_group
      */
     fun addToGroup(group: String, persistent: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(addToGroupBind, segment, group, persistent)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.addToGroupBind, segment, group, persistent)
     }
 
     /**
@@ -422,7 +423,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.remove_from_group
      */
     fun removeFromGroup(group: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeFromGroupBind, segment, group)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeFromGroupBind, segment, group)
     }
 
     /**
@@ -432,7 +433,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_in_group
      */
     fun isInGroup(group: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isInGroupBind, segment, group)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isInGroupBind, segment, group)
     }
 
     /**
@@ -445,7 +446,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.move_child
      */
     fun moveChild(childNode: Node, toIndex: Int) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(moveChildBind, segment, childNode.segment, toIndex)
+        ObjectCalls.ptrcallWithObjectAndIntArg(Binds.moveChildBind, segment, childNode.segment, toIndex)
     }
 
     /**
@@ -458,7 +459,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_groups
      */
     fun getGroups(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getGroupsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getGroupsBind, segment)
     }
 
     /**
@@ -473,7 +474,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_owner
      */
     fun setOwner(owner: Node?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, segment, listOf(owner?.segment ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setOwnerBind, segment, listOf(owner?.segment ?: NULL_SEGMENT))
     }
 
     /**
@@ -488,7 +489,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_owner
      */
     fun getOwner(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnerBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOwnerBind, segment))
     }
 
     /**
@@ -499,7 +500,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_index
      */
     fun getIndex(includeInternal: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getIndexBind, segment, includeInternal)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(Binds.getIndexBind, segment, includeInternal)
     }
 
     /**
@@ -510,7 +511,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.print_tree
      */
     fun printTree() {
-        ObjectCalls.ptrcallNoArgs(printTreeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.printTreeBind, segment)
     }
 
     /**
@@ -521,7 +522,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.print_tree_pretty
      */
     fun printTreePretty() {
-        ObjectCalls.ptrcallNoArgs(printTreePrettyBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.printTreePrettyBind, segment)
     }
 
     /**
@@ -532,7 +533,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_tree_string
      */
     fun getTreeString(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTreeStringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTreeStringBind, segment)
     }
 
     /**
@@ -543,7 +544,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_tree_string_pretty
      */
     fun getTreeStringPretty(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTreeStringPrettyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTreeStringPrettyBind, segment)
     }
 
     /**
@@ -553,7 +554,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_scene_file_path
      */
     fun setSceneFilePath(sceneFilePath: String) {
-        ObjectCalls.ptrcallWithStringArg(setSceneFilePathBind, segment, sceneFilePath)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSceneFilePathBind, segment, sceneFilePath)
     }
 
     /**
@@ -563,7 +564,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_scene_file_path
      */
     fun getSceneFilePath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneFilePathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneFilePathBind, segment)
     }
 
     /**
@@ -572,7 +573,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.propagate_notification
      */
     fun propagateNotification(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(propagateNotificationBind, segment, what)
+        ObjectCalls.ptrcallWithIntArg(Binds.propagateNotificationBind, segment, what)
     }
 
     /**
@@ -583,7 +584,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.propagate_call
      */
     fun propagateCall(method: String, args: List<Any?> = emptyList(), parentFirst: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(propagateCallBind, segment, method, args, parentFirst)
+        ObjectCalls.ptrcallWithStringNameArrayBoolArgs(Binds.propagateCallBind, segment, method, args, parentFirst)
     }
 
     /**
@@ -596,7 +597,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_process
      */
     fun setPhysicsProcess(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPhysicsProcessBind, segment, enable)
     }
 
     /**
@@ -613,7 +614,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_physics_process_delta_time
      */
     fun getPhysicsProcessDeltaTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsProcessDeltaTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPhysicsProcessDeltaTimeBind, segment)
     }
 
     /**
@@ -622,7 +623,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_processing
      */
     fun isPhysicsProcessing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPhysicsProcessingBind, segment)
     }
 
     /**
@@ -639,7 +640,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_delta_time
      */
     fun getProcessDeltaTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProcessDeltaTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProcessDeltaTimeBind, segment)
     }
 
     /**
@@ -653,7 +654,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process
      */
     fun setProcess(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProcessBind, segment, enable)
     }
 
     /**
@@ -664,7 +665,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_priority
      */
     fun setProcessPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setProcessPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setProcessPriorityBind, segment, priority)
     }
 
     /**
@@ -675,7 +676,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_priority
      */
     fun getProcessPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProcessPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getProcessPriorityBind, segment)
     }
 
     /**
@@ -685,7 +686,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_process_priority
      */
     fun setPhysicsProcessPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPhysicsProcessPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPhysicsProcessPriorityBind, segment, priority)
     }
 
     /**
@@ -695,7 +696,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_physics_process_priority
      */
     fun getPhysicsProcessPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsProcessPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicsProcessPriorityBind, segment)
     }
 
     /**
@@ -704,7 +705,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing
      */
     fun isProcessing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessingBind, segment)
     }
 
     /**
@@ -715,7 +716,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_input
      */
     fun setProcessInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessInputBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProcessInputBind, segment, enable)
     }
 
     /**
@@ -724,7 +725,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_input
      */
     fun isProcessingInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingInputBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessingInputBind, segment)
     }
 
     /**
@@ -734,7 +735,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_shortcut_input
      */
     fun setProcessShortcutInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessShortcutInputBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProcessShortcutInputBind, segment, enable)
     }
 
     /**
@@ -743,7 +744,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_shortcut_input
      */
     fun isProcessingShortcutInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingShortcutInputBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessingShortcutInputBind, segment)
     }
 
     /**
@@ -755,7 +756,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_unhandled_input
      */
     fun setProcessUnhandledInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledInputBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProcessUnhandledInputBind, segment, enable)
     }
 
     /**
@@ -764,7 +765,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_unhandled_input
      */
     fun isProcessingUnhandledInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledInputBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessingUnhandledInputBind, segment)
     }
 
     /**
@@ -774,7 +775,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_unhandled_key_input
      */
     fun setProcessUnhandledKeyInput(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessUnhandledKeyInputBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProcessUnhandledKeyInputBind, segment, enable)
     }
 
     /**
@@ -784,7 +785,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_unhandled_key_input
      */
     fun isProcessingUnhandledKeyInput(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingUnhandledKeyInputBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessingUnhandledKeyInputBind, segment)
     }
 
     /**
@@ -794,7 +795,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_mode
      */
     fun setProcessMode(mode: Node.ProcessMode) {
-        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessModeBind, segment, mode.value)
     }
 
     /**
@@ -804,7 +805,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_mode
      */
     fun getProcessMode(): Node.ProcessMode {
-        return Node.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment))
+        return Node.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessModeBind, segment))
     }
 
     /**
@@ -821,7 +822,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.can_process
      */
     fun canProcess(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(canProcessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canProcessBind, segment)
     }
 
     /**
@@ -847,7 +848,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_thread_group
      */
     fun setProcessThreadGroup(mode: Node.ProcessThreadGroup) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessThreadGroupBind, segment, mode.value)
     }
 
     /**
@@ -873,7 +874,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_thread_group
      */
     fun getProcessThreadGroup(): Node.ProcessThreadGroup {
-        return Node.ProcessThreadGroup(ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, segment))
+        return Node.ProcessThreadGroup(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessThreadGroupBind, segment))
     }
 
     /**
@@ -884,7 +885,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_thread_messages
      */
     fun setProcessThreadMessages(flags: Node.ProcessThreadMessages) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessThreadMessagesBind, segment, flags.value)
     }
 
     /**
@@ -895,7 +896,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_thread_messages
      */
     fun getProcessThreadMessages(): Node.ProcessThreadMessages {
-        return Node.ProcessThreadMessages(ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, segment))
+        return Node.ProcessThreadMessages(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessThreadMessagesBind, segment))
     }
 
     /**
@@ -906,7 +907,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_thread_group_order
      */
     fun setProcessThreadGroupOrder(order: Int) {
-        ObjectCalls.ptrcallWithIntArg(setProcessThreadGroupOrderBind, segment, order)
+        ObjectCalls.ptrcallWithIntArg(Binds.setProcessThreadGroupOrderBind, segment, order)
     }
 
     /**
@@ -917,7 +918,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_process_thread_group_order
      */
     fun getProcessThreadGroupOrder(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProcessThreadGroupOrderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getProcessThreadGroupOrderBind, segment)
     }
 
     /**
@@ -926,7 +927,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.queue_accessibility_update
      */
     fun queueAccessibilityUpdate() {
-        ObjectCalls.ptrcallNoArgs(queueAccessibilityUpdateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.queueAccessibilityUpdateBind, segment)
     }
 
     /**
@@ -936,7 +937,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_accessibility_element
      */
     fun getAccessibilityElement(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getAccessibilityElementBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getAccessibilityElementBind, segment)
     }
 
     /**
@@ -947,7 +948,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_display_folded
      */
     fun setDisplayFolded(fold: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisplayFoldedBind, segment, fold)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisplayFoldedBind, segment, fold)
     }
 
     /**
@@ -957,7 +958,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_displayed_folded
      */
     fun isDisplayedFolded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisplayedFoldedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDisplayedFoldedBind, segment)
     }
 
     /**
@@ -971,7 +972,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_process_internal
      */
     fun setProcessInternal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProcessInternalBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProcessInternalBind, segment, enable)
     }
 
     /**
@@ -980,7 +981,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_processing_internal
      */
     fun isProcessingInternal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProcessingInternalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProcessingInternalBind, segment)
     }
 
     /**
@@ -994,7 +995,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_process_internal
      */
     fun setPhysicsProcessInternal(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsProcessInternalBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPhysicsProcessInternalBind, segment, enable)
     }
 
     /**
@@ -1003,7 +1004,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_processing_internal
      */
     fun isPhysicsProcessingInternal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsProcessingInternalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPhysicsProcessingInternalBind, segment)
     }
 
     /**
@@ -1020,7 +1021,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_physics_interpolation_mode
      */
     fun setPhysicsInterpolationMode(mode: Node.PhysicsInterpolationMode) {
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPhysicsInterpolationModeBind, segment, mode.value)
     }
 
     /**
@@ -1037,7 +1038,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_physics_interpolation_mode
      */
     fun getPhysicsInterpolationMode(): Node.PhysicsInterpolationMode {
-        return Node.PhysicsInterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, segment))
+        return Node.PhysicsInterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicsInterpolationModeBind, segment))
     }
 
     /**
@@ -1049,7 +1050,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_interpolated
      */
     fun isPhysicsInterpolated(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPhysicsInterpolatedBind, segment)
     }
 
     /**
@@ -1061,7 +1062,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_physics_interpolated_and_enabled
      */
     fun isPhysicsInterpolatedAndEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolatedAndEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPhysicsInterpolatedAndEnabledBind, segment)
     }
 
     /**
@@ -1076,7 +1077,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.reset_physics_interpolation
      */
     fun resetPhysicsInterpolation() {
-        ObjectCalls.ptrcallNoArgs(resetPhysicsInterpolationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetPhysicsInterpolationBind, segment)
     }
 
     /**
@@ -1089,7 +1090,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_auto_translate_mode
      */
     fun setAutoTranslateMode(mode: Node.AutoTranslateMode) {
-        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutoTranslateModeBind, segment, mode.value)
     }
 
     /**
@@ -1102,7 +1103,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_auto_translate_mode
      */
     fun getAutoTranslateMode(): Node.AutoTranslateMode {
-        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, segment))
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutoTranslateModeBind, segment))
     }
 
     /**
@@ -1112,7 +1113,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.can_auto_translate
      */
     fun canAutoTranslate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(canAutoTranslateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canAutoTranslateBind, segment)
     }
 
     /**
@@ -1123,7 +1124,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_translation_domain_inherited
      */
     fun setTranslationDomainInherited() {
-        ObjectCalls.ptrcallNoArgs(setTranslationDomainInheritedBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setTranslationDomainInheritedBind, segment)
     }
 
     /**
@@ -1133,7 +1134,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_window
      */
     fun getWindow(): Window? {
-        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWindowBind, segment))
+        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getWindowBind, segment))
     }
 
     /**
@@ -1143,7 +1144,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_last_exclusive_window
      */
     fun getLastExclusiveWindow(): Window? {
-        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastExclusiveWindowBind, segment))
+        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLastExclusiveWindowBind, segment))
     }
 
     /**
@@ -1153,7 +1154,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_tree
      */
     fun getTree(): SceneTree? {
-        return SceneTree.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, segment))
+        return SceneTree.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTreeBind, segment))
     }
 
     /**
@@ -1162,7 +1163,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.create_tween
      */
     fun createTween(): Tween {
-        return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "Node.create_tween")
+        return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTweenBind, segment)), "Node.create_tween")
     }
 
     /**
@@ -1177,7 +1178,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.duplicate
      */
     fun duplicate(flags: Int = 15): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(duplicateBind, segment, flags))
+        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.duplicateBind, segment, flags))
     }
 
     /**
@@ -1190,7 +1191,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.replace_by
      */
     fun replaceBy(node: Node, keepGroups: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(replaceByBind, segment, node.segment, keepGroups)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.replaceByBind, segment, node.segment, keepGroups)
     }
 
     /**
@@ -1200,7 +1201,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_scene_instance_load_placeholder
      */
     fun setSceneInstanceLoadPlaceholder(loadPlaceholder: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSceneInstanceLoadPlaceholderBind, segment, loadPlaceholder)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSceneInstanceLoadPlaceholderBind, segment, loadPlaceholder)
     }
 
     /**
@@ -1210,7 +1211,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_scene_instance_load_placeholder
      */
     fun getSceneInstanceLoadPlaceholder(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSceneInstanceLoadPlaceholderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSceneInstanceLoadPlaceholderBind, segment)
     }
 
     /**
@@ -1221,7 +1222,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_editable_instance
      */
     fun setEditableInstance(node: Node, isEditable: Boolean) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(setEditableInstanceBind, segment, node.segment, isEditable)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.setEditableInstanceBind, segment, node.segment, isEditable)
     }
 
     /**
@@ -1231,7 +1232,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_editable_instance
      */
     fun isEditableInstance(node: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isEditableInstanceBind, segment, node.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isEditableInstanceBind, segment, node.segment)
     }
 
     /**
@@ -1241,7 +1242,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_viewport
      */
     fun getViewport(): Viewport? {
-        return Viewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getViewportBind, segment))
+        return Viewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getViewportBind, segment))
     }
 
     /**
@@ -1256,7 +1257,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.queue_free
      */
     fun queueFree() {
-        ObjectCalls.ptrcallNoArgs(queueFreeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.queueFreeBind, segment)
     }
 
     /**
@@ -1269,7 +1270,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.request_ready
      */
     fun requestReady() {
-        ObjectCalls.ptrcallNoArgs(requestReadyBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.requestReadyBind, segment)
     }
 
     /**
@@ -1279,7 +1280,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_node_ready
      */
     fun isNodeReady(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNodeReadyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNodeReadyBind, segment)
     }
 
     /**
@@ -1295,7 +1296,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_multiplayer_authority
      */
     fun setMultiplayerAuthority(id: Int, recursive: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setMultiplayerAuthorityBind, segment, id, recursive)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setMultiplayerAuthorityBind, segment, id, recursive)
     }
 
     /**
@@ -1304,7 +1305,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_multiplayer_authority
      */
     fun getMultiplayerAuthority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMultiplayerAuthorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMultiplayerAuthorityBind, segment)
     }
 
     /**
@@ -1313,7 +1314,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_multiplayer_authority
      */
     fun isMultiplayerAuthority(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultiplayerAuthorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultiplayerAuthorityBind, segment)
     }
 
     /**
@@ -1324,7 +1325,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_multiplayer
      */
     fun getMultiplayer(): MultiplayerAPI? {
-        return MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, segment))
+        return MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMultiplayerBind, segment))
     }
 
     /**
@@ -1340,7 +1341,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.rpc_config
      */
     fun rpcConfig(method: String, config: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(rpcConfigBind, segment, method, config)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.rpcConfigBind, segment, method, config)
     }
 
     /**
@@ -1351,7 +1352,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_node_rpc_config
      */
     fun getNodeRpcConfig(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getNodeRpcConfigBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getNodeRpcConfigBind, segment)
     }
 
     /**
@@ -1361,7 +1362,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_editor_description
      */
     fun setEditorDescription(editorDescription: String) {
-        ObjectCalls.ptrcallWithStringArg(setEditorDescriptionBind, segment, editorDescription)
+        ObjectCalls.ptrcallWithStringArg(Binds.setEditorDescriptionBind, segment, editorDescription)
     }
 
     /**
@@ -1371,7 +1372,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_editor_description
      */
     fun getEditorDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getEditorDescriptionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEditorDescriptionBind, segment)
     }
 
     /**
@@ -1382,7 +1383,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_unique_name_in_owner
      */
     fun setUniqueNameInOwner(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUniqueNameInOwnerBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUniqueNameInOwnerBind, segment, enable)
     }
 
     /**
@@ -1393,7 +1394,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.is_unique_name_in_owner
      */
     fun isUniqueNameInOwner(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUniqueNameInOwnerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUniqueNameInOwnerBind, segment)
     }
 
     /**
@@ -1409,7 +1410,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.atr
      */
     fun atr(message: String, context: String = ""): String {
-        return ObjectCalls.ptrcallWithStringAndStringNameArgRetString(atrBind, segment, message, context)
+        return ObjectCalls.ptrcallWithStringAndStringNameArgRetString(Binds.atrBind, segment, message, context)
     }
 
     /**
@@ -1428,7 +1429,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.atr_n
      */
     fun atrN(message: String, pluralMessage: String, n: Int, context: String = ""): String {
-        return ObjectCalls.ptrcallWithStringStringNameIntStringNameArgsRetString(atrNBind, segment, message, pluralMessage, n, context)
+        return ObjectCalls.ptrcallWithStringStringNameIntStringNameArgsRetString(Binds.atrNBind, segment, message, pluralMessage, n, context)
     }
 
     /**
@@ -1449,7 +1450,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.rpc
      */
     fun rpc(method: String, vararg extraArgs: Any?): GodotError {
-        return GodotError((ObjectCalls.callWithVariantArgs(rpcBind, segment, listOf(method, *extraArgs)) as Number).toLong())
+        return GodotError((ObjectCalls.callWithVariantArgs(Binds.rpcBind, segment, listOf(method, *extraArgs)) as Number).toLong())
     }
 
     /**
@@ -1463,7 +1464,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.rpc_id
      */
     fun rpcId(peerId: Long, method: String, vararg extraArgs: Any?): GodotError {
-        return GodotError((ObjectCalls.callWithVariantArgs(rpcIdBind, segment, listOf(peerId, method, *extraArgs)) as Number).toLong())
+        return GodotError((ObjectCalls.callWithVariantArgs(Binds.rpcIdBind, segment, listOf(peerId, method, *extraArgs)) as Number).toLong())
     }
 
     /**
@@ -1473,7 +1474,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.update_configuration_warnings
      */
     fun updateConfigurationWarnings() {
-        ObjectCalls.ptrcallNoArgs(updateConfigurationWarningsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateConfigurationWarningsBind, segment)
     }
 
     /**
@@ -1486,7 +1487,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.call_deferred_thread_group
      */
     fun callDeferredThreadGroup(method: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(callDeferredThreadGroupBind, segment, listOf(method, *extraArgs))
+        return ObjectCalls.callWithVariantArgs(Binds.callDeferredThreadGroupBind, segment, listOf(method, *extraArgs))
     }
 
     /**
@@ -1495,7 +1496,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_deferred_thread_group
      */
     fun setDeferredThreadGroup(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredThreadGroupBind, segment, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setDeferredThreadGroupBind, segment, property, value)
     }
 
     /**
@@ -1504,7 +1505,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.notify_deferred_thread_group
      */
     fun notifyDeferredThreadGroup(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(notifyDeferredThreadGroupBind, segment, what)
+        ObjectCalls.ptrcallWithIntArg(Binds.notifyDeferredThreadGroupBind, segment, what)
     }
 
     /**
@@ -1515,7 +1516,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.call_thread_safe
      */
     fun callThreadSafe(method: String, vararg extraArgs: Any?): Any? {
-        return ObjectCalls.callWithVariantArgs(callThreadSafeBind, segment, listOf(method, *extraArgs))
+        return ObjectCalls.callWithVariantArgs(Binds.callThreadSafeBind, segment, listOf(method, *extraArgs))
     }
 
     /**
@@ -1524,7 +1525,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.set_thread_safe
      */
     fun setThreadSafe(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setThreadSafeBind, segment, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setThreadSafeBind, segment, property, value)
     }
 
     /**
@@ -1533,7 +1534,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.notify_thread_safe
      */
     fun notifyThreadSafe(what: Int) {
-        ObjectCalls.ptrcallWithIntArg(notifyThreadSafeBind, segment, what)
+        ObjectCalls.ptrcallWithIntArg(Binds.notifyThreadSafeBind, segment, what)
     }
 
     // ── Kanama Node ergonomics (generator custom-section, not from Godot docs) ────────────────
@@ -2055,7 +2056,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: Node.print_orphan_nodes
          */
         fun printOrphanNodes() {
-            ObjectCalls.ptrcallNoArgs(printOrphanNodesBind, NULL_SEGMENT)
+            ObjectCalls.ptrcallNoArgs(Binds.printOrphanNodesBind, NULL_SEGMENT)
         }
 
         /**
@@ -2066,7 +2067,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: Node.get_orphan_node_ids
          */
         fun getOrphanNodeIds(): List<Long> {
-            return ObjectCalls.ptrcallNoArgsRetLongList(getOrphanNodeIdsBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetLongList(Binds.getOrphanNodeIdsBind, NULL_SEGMENT)
         }
 
         const val NOTIFICATION_ENTER_TREE: Long = 10L
@@ -2125,610 +2126,612 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): Node? =
             if (handle.address() == 0L) null else Node(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PRINT_ORPHAN_NODES_HASH = 3218959716L
-        private val printOrphanNodesBind by lazy {
+        @JvmField
+        val printOrphanNodesBind =
             ObjectCalls.getMethodBind("Node", "print_orphan_nodes", PRINT_ORPHAN_NODES_HASH)
-        }
 
         private const val GET_ORPHAN_NODE_IDS_HASH = 2915620761L
-        private val getOrphanNodeIdsBind by lazy {
+        @JvmField
+        val getOrphanNodeIdsBind =
             ObjectCalls.getMethodBind("Node", "get_orphan_node_ids", GET_ORPHAN_NODE_IDS_HASH)
-        }
 
         private const val ADD_SIBLING_HASH = 2570952461L
-        private val addSiblingBind by lazy {
+        @JvmField
+        val addSiblingBind =
             ObjectCalls.getMethodBind("Node", "add_sibling", ADD_SIBLING_HASH)
-        }
 
         private const val SET_NAME_HASH = 3304788590L
-        private val setNameBind by lazy {
+        @JvmField
+        val setNameBind =
             ObjectCalls.getMethodBind("Node", "set_name", SET_NAME_HASH)
-        }
 
         private const val GET_NAME_HASH = 2002593661L
-        private val getNameBind by lazy {
+        @JvmField
+        val getNameBind =
             ObjectCalls.getMethodBind("Node", "get_name", GET_NAME_HASH)
-        }
 
         private const val ADD_CHILD_HASH = 3863233950L
-        private val addChildBind by lazy {
+        @JvmField
+        val addChildBind =
             ObjectCalls.getMethodBind("Node", "add_child", ADD_CHILD_HASH)
-        }
 
         private const val REMOVE_CHILD_HASH = 1078189570L
-        private val removeChildBind by lazy {
+        @JvmField
+        val removeChildBind =
             ObjectCalls.getMethodBind("Node", "remove_child", REMOVE_CHILD_HASH)
-        }
 
         private const val REPARENT_HASH = 3685795103L
-        private val reparentBind by lazy {
+        @JvmField
+        val reparentBind =
             ObjectCalls.getMethodBind("Node", "reparent", REPARENT_HASH)
-        }
 
         private const val GET_CHILD_COUNT_HASH = 894402480L
-        private val getChildCountBind by lazy {
+        @JvmField
+        val getChildCountBind =
             ObjectCalls.getMethodBind("Node", "get_child_count", GET_CHILD_COUNT_HASH)
-        }
 
         private const val GET_CHILDREN_HASH = 873284517L
-        private val getChildrenBind by lazy {
+        @JvmField
+        val getChildrenBind =
             ObjectCalls.getMethodBind("Node", "get_children", GET_CHILDREN_HASH)
-        }
 
         private const val GET_CHILD_HASH = 541253412L
-        private val getChildBind by lazy {
+        @JvmField
+        val getChildBind =
             ObjectCalls.getMethodBind("Node", "get_child", GET_CHILD_HASH)
-        }
 
         private const val HAS_NODE_HASH = 861721659L
-        private val hasNodeBind by lazy {
+        @JvmField
+        val hasNodeBind =
             ObjectCalls.getMethodBind("Node", "has_node", HAS_NODE_HASH)
-        }
 
         private const val GET_NODE_HASH = 2734337346L
-        private val getNodeBind by lazy {
+        @JvmField
+        val getNodeBind =
             ObjectCalls.getMethodBind("Node", "get_node", GET_NODE_HASH)
-        }
 
         private const val GET_NODE_OR_NULL_HASH = 2734337346L
-        private val getNodeOrNullBind by lazy {
+        @JvmField
+        val getNodeOrNullBind =
             ObjectCalls.getMethodBind("Node", "get_node_or_null", GET_NODE_OR_NULL_HASH)
-        }
 
         private const val GET_PARENT_HASH = 3160264692L
-        private val getParentBind by lazy {
+        @JvmField
+        val getParentBind =
             ObjectCalls.getMethodBind("Node", "get_parent", GET_PARENT_HASH)
-        }
 
         private const val FIND_CHILD_HASH = 2008217037L
-        private val findChildBind by lazy {
+        @JvmField
+        val findChildBind =
             ObjectCalls.getMethodBind("Node", "find_child", FIND_CHILD_HASH)
-        }
 
         private const val FIND_CHILDREN_HASH = 2560337219L
-        private val findChildrenBind by lazy {
+        @JvmField
+        val findChildrenBind =
             ObjectCalls.getMethodBind("Node", "find_children", FIND_CHILDREN_HASH)
-        }
 
         private const val FIND_PARENT_HASH = 1140089439L
-        private val findParentBind by lazy {
+        @JvmField
+        val findParentBind =
             ObjectCalls.getMethodBind("Node", "find_parent", FIND_PARENT_HASH)
-        }
 
         private const val HAS_NODE_AND_RESOURCE_HASH = 861721659L
-        private val hasNodeAndResourceBind by lazy {
+        @JvmField
+        val hasNodeAndResourceBind =
             ObjectCalls.getMethodBind("Node", "has_node_and_resource", HAS_NODE_AND_RESOURCE_HASH)
-        }
 
         private const val GET_NODE_AND_RESOURCE_HASH = 502563882L
-        private val getNodeAndResourceBind by lazy {
+        @JvmField
+        val getNodeAndResourceBind =
             ObjectCalls.getMethodBind("Node", "get_node_and_resource", GET_NODE_AND_RESOURCE_HASH)
-        }
 
         private const val IS_INSIDE_TREE_HASH = 36873697L
-        private val isInsideTreeBind by lazy {
+        @JvmField
+        val isInsideTreeBind =
             ObjectCalls.getMethodBind("Node", "is_inside_tree", IS_INSIDE_TREE_HASH)
-        }
 
         private const val IS_PART_OF_EDITED_SCENE_HASH = 36873697L
-        private val isPartOfEditedSceneBind by lazy {
+        @JvmField
+        val isPartOfEditedSceneBind =
             ObjectCalls.getMethodBind("Node", "is_part_of_edited_scene", IS_PART_OF_EDITED_SCENE_HASH)
-        }
 
         private const val IS_ANCESTOR_OF_HASH = 3093956946L
-        private val isAncestorOfBind by lazy {
+        @JvmField
+        val isAncestorOfBind =
             ObjectCalls.getMethodBind("Node", "is_ancestor_of", IS_ANCESTOR_OF_HASH)
-        }
 
         private const val IS_GREATER_THAN_HASH = 3093956946L
-        private val isGreaterThanBind by lazy {
+        @JvmField
+        val isGreaterThanBind =
             ObjectCalls.getMethodBind("Node", "is_greater_than", IS_GREATER_THAN_HASH)
-        }
 
         private const val GET_PATH_HASH = 4075236667L
-        private val getPathBind by lazy {
+        @JvmField
+        val getPathBind =
             ObjectCalls.getMethodBind("Node", "get_path", GET_PATH_HASH)
-        }
 
         private const val GET_PATH_TO_HASH = 498846349L
-        private val getPathToBind by lazy {
+        @JvmField
+        val getPathToBind =
             ObjectCalls.getMethodBind("Node", "get_path_to", GET_PATH_TO_HASH)
-        }
 
         private const val ADD_TO_GROUP_HASH = 3683006648L
-        private val addToGroupBind by lazy {
+        @JvmField
+        val addToGroupBind =
             ObjectCalls.getMethodBind("Node", "add_to_group", ADD_TO_GROUP_HASH)
-        }
 
         private const val REMOVE_FROM_GROUP_HASH = 3304788590L
-        private val removeFromGroupBind by lazy {
+        @JvmField
+        val removeFromGroupBind =
             ObjectCalls.getMethodBind("Node", "remove_from_group", REMOVE_FROM_GROUP_HASH)
-        }
 
         private const val IS_IN_GROUP_HASH = 2619796661L
-        private val isInGroupBind by lazy {
+        @JvmField
+        val isInGroupBind =
             ObjectCalls.getMethodBind("Node", "is_in_group", IS_IN_GROUP_HASH)
-        }
 
         private const val MOVE_CHILD_HASH = 3315886247L
-        private val moveChildBind by lazy {
+        @JvmField
+        val moveChildBind =
             ObjectCalls.getMethodBind("Node", "move_child", MOVE_CHILD_HASH)
-        }
 
         private const val GET_GROUPS_HASH = 3995934104L
-        private val getGroupsBind by lazy {
+        @JvmField
+        val getGroupsBind =
             ObjectCalls.getMethodBind("Node", "get_groups", GET_GROUPS_HASH)
-        }
 
         private const val SET_OWNER_HASH = 1078189570L
-        private val setOwnerBind by lazy {
+        @JvmField
+        val setOwnerBind =
             ObjectCalls.getMethodBind("Node", "set_owner", SET_OWNER_HASH)
-        }
 
         private const val GET_OWNER_HASH = 3160264692L
-        private val getOwnerBind by lazy {
+        @JvmField
+        val getOwnerBind =
             ObjectCalls.getMethodBind("Node", "get_owner", GET_OWNER_HASH)
-        }
 
         private const val GET_INDEX_HASH = 894402480L
-        private val getIndexBind by lazy {
+        @JvmField
+        val getIndexBind =
             ObjectCalls.getMethodBind("Node", "get_index", GET_INDEX_HASH)
-        }
 
         private const val PRINT_TREE_HASH = 3218959716L
-        private val printTreeBind by lazy {
+        @JvmField
+        val printTreeBind =
             ObjectCalls.getMethodBind("Node", "print_tree", PRINT_TREE_HASH)
-        }
 
         private const val PRINT_TREE_PRETTY_HASH = 3218959716L
-        private val printTreePrettyBind by lazy {
+        @JvmField
+        val printTreePrettyBind =
             ObjectCalls.getMethodBind("Node", "print_tree_pretty", PRINT_TREE_PRETTY_HASH)
-        }
 
         private const val GET_TREE_STRING_HASH = 2841200299L
-        private val getTreeStringBind by lazy {
+        @JvmField
+        val getTreeStringBind =
             ObjectCalls.getMethodBind("Node", "get_tree_string", GET_TREE_STRING_HASH)
-        }
 
         private const val GET_TREE_STRING_PRETTY_HASH = 2841200299L
-        private val getTreeStringPrettyBind by lazy {
+        @JvmField
+        val getTreeStringPrettyBind =
             ObjectCalls.getMethodBind("Node", "get_tree_string_pretty", GET_TREE_STRING_PRETTY_HASH)
-        }
 
         private const val SET_SCENE_FILE_PATH_HASH = 83702148L
-        private val setSceneFilePathBind by lazy {
+        @JvmField
+        val setSceneFilePathBind =
             ObjectCalls.getMethodBind("Node", "set_scene_file_path", SET_SCENE_FILE_PATH_HASH)
-        }
 
         private const val GET_SCENE_FILE_PATH_HASH = 201670096L
-        private val getSceneFilePathBind by lazy {
+        @JvmField
+        val getSceneFilePathBind =
             ObjectCalls.getMethodBind("Node", "get_scene_file_path", GET_SCENE_FILE_PATH_HASH)
-        }
 
         private const val PROPAGATE_NOTIFICATION_HASH = 1286410249L
-        private val propagateNotificationBind by lazy {
+        @JvmField
+        val propagateNotificationBind =
             ObjectCalls.getMethodBind("Node", "propagate_notification", PROPAGATE_NOTIFICATION_HASH)
-        }
 
         private const val PROPAGATE_CALL_HASH = 1871007965L
-        private val propagateCallBind by lazy {
+        @JvmField
+        val propagateCallBind =
             ObjectCalls.getMethodBind("Node", "propagate_call", PROPAGATE_CALL_HASH)
-        }
 
         private const val SET_PHYSICS_PROCESS_HASH = 2586408642L
-        private val setPhysicsProcessBind by lazy {
+        @JvmField
+        val setPhysicsProcessBind =
             ObjectCalls.getMethodBind("Node", "set_physics_process", SET_PHYSICS_PROCESS_HASH)
-        }
 
         private const val GET_PHYSICS_PROCESS_DELTA_TIME_HASH = 1740695150L
-        private val getPhysicsProcessDeltaTimeBind by lazy {
+        @JvmField
+        val getPhysicsProcessDeltaTimeBind =
             ObjectCalls.getMethodBind("Node", "get_physics_process_delta_time", GET_PHYSICS_PROCESS_DELTA_TIME_HASH)
-        }
 
         private const val IS_PHYSICS_PROCESSING_HASH = 36873697L
-        private val isPhysicsProcessingBind by lazy {
+        @JvmField
+        val isPhysicsProcessingBind =
             ObjectCalls.getMethodBind("Node", "is_physics_processing", IS_PHYSICS_PROCESSING_HASH)
-        }
 
         private const val GET_PROCESS_DELTA_TIME_HASH = 1740695150L
-        private val getProcessDeltaTimeBind by lazy {
+        @JvmField
+        val getProcessDeltaTimeBind =
             ObjectCalls.getMethodBind("Node", "get_process_delta_time", GET_PROCESS_DELTA_TIME_HASH)
-        }
 
         private const val SET_PROCESS_HASH = 2586408642L
-        private val setProcessBind by lazy {
+        @JvmField
+        val setProcessBind =
             ObjectCalls.getMethodBind("Node", "set_process", SET_PROCESS_HASH)
-        }
 
         private const val SET_PROCESS_PRIORITY_HASH = 1286410249L
-        private val setProcessPriorityBind by lazy {
+        @JvmField
+        val setProcessPriorityBind =
             ObjectCalls.getMethodBind("Node", "set_process_priority", SET_PROCESS_PRIORITY_HASH)
-        }
 
         private const val GET_PROCESS_PRIORITY_HASH = 3905245786L
-        private val getProcessPriorityBind by lazy {
+        @JvmField
+        val getProcessPriorityBind =
             ObjectCalls.getMethodBind("Node", "get_process_priority", GET_PROCESS_PRIORITY_HASH)
-        }
 
         private const val SET_PHYSICS_PROCESS_PRIORITY_HASH = 1286410249L
-        private val setPhysicsProcessPriorityBind by lazy {
+        @JvmField
+        val setPhysicsProcessPriorityBind =
             ObjectCalls.getMethodBind("Node", "set_physics_process_priority", SET_PHYSICS_PROCESS_PRIORITY_HASH)
-        }
 
         private const val GET_PHYSICS_PROCESS_PRIORITY_HASH = 3905245786L
-        private val getPhysicsProcessPriorityBind by lazy {
+        @JvmField
+        val getPhysicsProcessPriorityBind =
             ObjectCalls.getMethodBind("Node", "get_physics_process_priority", GET_PHYSICS_PROCESS_PRIORITY_HASH)
-        }
 
         private const val IS_PROCESSING_HASH = 36873697L
-        private val isProcessingBind by lazy {
+        @JvmField
+        val isProcessingBind =
             ObjectCalls.getMethodBind("Node", "is_processing", IS_PROCESSING_HASH)
-        }
 
         private const val SET_PROCESS_INPUT_HASH = 2586408642L
-        private val setProcessInputBind by lazy {
+        @JvmField
+        val setProcessInputBind =
             ObjectCalls.getMethodBind("Node", "set_process_input", SET_PROCESS_INPUT_HASH)
-        }
 
         private const val IS_PROCESSING_INPUT_HASH = 36873697L
-        private val isProcessingInputBind by lazy {
+        @JvmField
+        val isProcessingInputBind =
             ObjectCalls.getMethodBind("Node", "is_processing_input", IS_PROCESSING_INPUT_HASH)
-        }
 
         private const val SET_PROCESS_SHORTCUT_INPUT_HASH = 2586408642L
-        private val setProcessShortcutInputBind by lazy {
+        @JvmField
+        val setProcessShortcutInputBind =
             ObjectCalls.getMethodBind("Node", "set_process_shortcut_input", SET_PROCESS_SHORTCUT_INPUT_HASH)
-        }
 
         private const val IS_PROCESSING_SHORTCUT_INPUT_HASH = 36873697L
-        private val isProcessingShortcutInputBind by lazy {
+        @JvmField
+        val isProcessingShortcutInputBind =
             ObjectCalls.getMethodBind("Node", "is_processing_shortcut_input", IS_PROCESSING_SHORTCUT_INPUT_HASH)
-        }
 
         private const val SET_PROCESS_UNHANDLED_INPUT_HASH = 2586408642L
-        private val setProcessUnhandledInputBind by lazy {
+        @JvmField
+        val setProcessUnhandledInputBind =
             ObjectCalls.getMethodBind("Node", "set_process_unhandled_input", SET_PROCESS_UNHANDLED_INPUT_HASH)
-        }
 
         private const val IS_PROCESSING_UNHANDLED_INPUT_HASH = 36873697L
-        private val isProcessingUnhandledInputBind by lazy {
+        @JvmField
+        val isProcessingUnhandledInputBind =
             ObjectCalls.getMethodBind("Node", "is_processing_unhandled_input", IS_PROCESSING_UNHANDLED_INPUT_HASH)
-        }
 
         private const val SET_PROCESS_UNHANDLED_KEY_INPUT_HASH = 2586408642L
-        private val setProcessUnhandledKeyInputBind by lazy {
+        @JvmField
+        val setProcessUnhandledKeyInputBind =
             ObjectCalls.getMethodBind("Node", "set_process_unhandled_key_input", SET_PROCESS_UNHANDLED_KEY_INPUT_HASH)
-        }
 
         private const val IS_PROCESSING_UNHANDLED_KEY_INPUT_HASH = 36873697L
-        private val isProcessingUnhandledKeyInputBind by lazy {
+        @JvmField
+        val isProcessingUnhandledKeyInputBind =
             ObjectCalls.getMethodBind("Node", "is_processing_unhandled_key_input", IS_PROCESSING_UNHANDLED_KEY_INPUT_HASH)
-        }
 
         private const val SET_PROCESS_MODE_HASH = 1841290486L
-        private val setProcessModeBind by lazy {
+        @JvmField
+        val setProcessModeBind =
             ObjectCalls.getMethodBind("Node", "set_process_mode", SET_PROCESS_MODE_HASH)
-        }
 
         private const val GET_PROCESS_MODE_HASH = 739966102L
-        private val getProcessModeBind by lazy {
+        @JvmField
+        val getProcessModeBind =
             ObjectCalls.getMethodBind("Node", "get_process_mode", GET_PROCESS_MODE_HASH)
-        }
 
         private const val CAN_PROCESS_HASH = 36873697L
-        private val canProcessBind by lazy {
+        @JvmField
+        val canProcessBind =
             ObjectCalls.getMethodBind("Node", "can_process", CAN_PROCESS_HASH)
-        }
 
         private const val SET_PROCESS_THREAD_GROUP_HASH = 2275442745L
-        private val setProcessThreadGroupBind by lazy {
+        @JvmField
+        val setProcessThreadGroupBind =
             ObjectCalls.getMethodBind("Node", "set_process_thread_group", SET_PROCESS_THREAD_GROUP_HASH)
-        }
 
         private const val GET_PROCESS_THREAD_GROUP_HASH = 1866404740L
-        private val getProcessThreadGroupBind by lazy {
+        @JvmField
+        val getProcessThreadGroupBind =
             ObjectCalls.getMethodBind("Node", "get_process_thread_group", GET_PROCESS_THREAD_GROUP_HASH)
-        }
 
         private const val SET_PROCESS_THREAD_MESSAGES_HASH = 1357280998L
-        private val setProcessThreadMessagesBind by lazy {
+        @JvmField
+        val setProcessThreadMessagesBind =
             ObjectCalls.getMethodBind("Node", "set_process_thread_messages", SET_PROCESS_THREAD_MESSAGES_HASH)
-        }
 
         private const val GET_PROCESS_THREAD_MESSAGES_HASH = 4228993612L
-        private val getProcessThreadMessagesBind by lazy {
+        @JvmField
+        val getProcessThreadMessagesBind =
             ObjectCalls.getMethodBind("Node", "get_process_thread_messages", GET_PROCESS_THREAD_MESSAGES_HASH)
-        }
 
         private const val SET_PROCESS_THREAD_GROUP_ORDER_HASH = 1286410249L
-        private val setProcessThreadGroupOrderBind by lazy {
+        @JvmField
+        val setProcessThreadGroupOrderBind =
             ObjectCalls.getMethodBind("Node", "set_process_thread_group_order", SET_PROCESS_THREAD_GROUP_ORDER_HASH)
-        }
 
         private const val GET_PROCESS_THREAD_GROUP_ORDER_HASH = 3905245786L
-        private val getProcessThreadGroupOrderBind by lazy {
+        @JvmField
+        val getProcessThreadGroupOrderBind =
             ObjectCalls.getMethodBind("Node", "get_process_thread_group_order", GET_PROCESS_THREAD_GROUP_ORDER_HASH)
-        }
 
         private const val QUEUE_ACCESSIBILITY_UPDATE_HASH = 3218959716L
-        private val queueAccessibilityUpdateBind by lazy {
+        @JvmField
+        val queueAccessibilityUpdateBind =
             ObjectCalls.getMethodBind("Node", "queue_accessibility_update", QUEUE_ACCESSIBILITY_UPDATE_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_ELEMENT_HASH = 2944877500L
-        private val getAccessibilityElementBind by lazy {
+        @JvmField
+        val getAccessibilityElementBind =
             ObjectCalls.getMethodBind("Node", "get_accessibility_element", GET_ACCESSIBILITY_ELEMENT_HASH)
-        }
 
         private const val SET_DISPLAY_FOLDED_HASH = 2586408642L
-        private val setDisplayFoldedBind by lazy {
+        @JvmField
+        val setDisplayFoldedBind =
             ObjectCalls.getMethodBind("Node", "set_display_folded", SET_DISPLAY_FOLDED_HASH)
-        }
 
         private const val IS_DISPLAYED_FOLDED_HASH = 36873697L
-        private val isDisplayedFoldedBind by lazy {
+        @JvmField
+        val isDisplayedFoldedBind =
             ObjectCalls.getMethodBind("Node", "is_displayed_folded", IS_DISPLAYED_FOLDED_HASH)
-        }
 
         private const val SET_PROCESS_INTERNAL_HASH = 2586408642L
-        private val setProcessInternalBind by lazy {
+        @JvmField
+        val setProcessInternalBind =
             ObjectCalls.getMethodBind("Node", "set_process_internal", SET_PROCESS_INTERNAL_HASH)
-        }
 
         private const val IS_PROCESSING_INTERNAL_HASH = 36873697L
-        private val isProcessingInternalBind by lazy {
+        @JvmField
+        val isProcessingInternalBind =
             ObjectCalls.getMethodBind("Node", "is_processing_internal", IS_PROCESSING_INTERNAL_HASH)
-        }
 
         private const val SET_PHYSICS_PROCESS_INTERNAL_HASH = 2586408642L
-        private val setPhysicsProcessInternalBind by lazy {
+        @JvmField
+        val setPhysicsProcessInternalBind =
             ObjectCalls.getMethodBind("Node", "set_physics_process_internal", SET_PHYSICS_PROCESS_INTERNAL_HASH)
-        }
 
         private const val IS_PHYSICS_PROCESSING_INTERNAL_HASH = 36873697L
-        private val isPhysicsProcessingInternalBind by lazy {
+        @JvmField
+        val isPhysicsProcessingInternalBind =
             ObjectCalls.getMethodBind("Node", "is_physics_processing_internal", IS_PHYSICS_PROCESSING_INTERNAL_HASH)
-        }
 
         private const val SET_PHYSICS_INTERPOLATION_MODE_HASH = 3202404928L
-        private val setPhysicsInterpolationModeBind by lazy {
+        @JvmField
+        val setPhysicsInterpolationModeBind =
             ObjectCalls.getMethodBind("Node", "set_physics_interpolation_mode", SET_PHYSICS_INTERPOLATION_MODE_HASH)
-        }
 
         private const val GET_PHYSICS_INTERPOLATION_MODE_HASH = 2920385216L
-        private val getPhysicsInterpolationModeBind by lazy {
+        @JvmField
+        val getPhysicsInterpolationModeBind =
             ObjectCalls.getMethodBind("Node", "get_physics_interpolation_mode", GET_PHYSICS_INTERPOLATION_MODE_HASH)
-        }
 
         private const val IS_PHYSICS_INTERPOLATED_HASH = 36873697L
-        private val isPhysicsInterpolatedBind by lazy {
+        @JvmField
+        val isPhysicsInterpolatedBind =
             ObjectCalls.getMethodBind("Node", "is_physics_interpolated", IS_PHYSICS_INTERPOLATED_HASH)
-        }
 
         private const val IS_PHYSICS_INTERPOLATED_AND_ENABLED_HASH = 36873697L
-        private val isPhysicsInterpolatedAndEnabledBind by lazy {
+        @JvmField
+        val isPhysicsInterpolatedAndEnabledBind =
             ObjectCalls.getMethodBind("Node", "is_physics_interpolated_and_enabled", IS_PHYSICS_INTERPOLATED_AND_ENABLED_HASH)
-        }
 
         private const val RESET_PHYSICS_INTERPOLATION_HASH = 3218959716L
-        private val resetPhysicsInterpolationBind by lazy {
+        @JvmField
+        val resetPhysicsInterpolationBind =
             ObjectCalls.getMethodBind("Node", "reset_physics_interpolation", RESET_PHYSICS_INTERPOLATION_HASH)
-        }
 
         private const val SET_AUTO_TRANSLATE_MODE_HASH = 776149714L
-        private val setAutoTranslateModeBind by lazy {
+        @JvmField
+        val setAutoTranslateModeBind =
             ObjectCalls.getMethodBind("Node", "set_auto_translate_mode", SET_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val GET_AUTO_TRANSLATE_MODE_HASH = 2498906432L
-        private val getAutoTranslateModeBind by lazy {
+        @JvmField
+        val getAutoTranslateModeBind =
             ObjectCalls.getMethodBind("Node", "get_auto_translate_mode", GET_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val CAN_AUTO_TRANSLATE_HASH = 36873697L
-        private val canAutoTranslateBind by lazy {
+        @JvmField
+        val canAutoTranslateBind =
             ObjectCalls.getMethodBind("Node", "can_auto_translate", CAN_AUTO_TRANSLATE_HASH)
-        }
 
         private const val SET_TRANSLATION_DOMAIN_INHERITED_HASH = 3218959716L
-        private val setTranslationDomainInheritedBind by lazy {
+        @JvmField
+        val setTranslationDomainInheritedBind =
             ObjectCalls.getMethodBind("Node", "set_translation_domain_inherited", SET_TRANSLATION_DOMAIN_INHERITED_HASH)
-        }
 
         private const val GET_WINDOW_HASH = 1757182445L
-        private val getWindowBind by lazy {
+        @JvmField
+        val getWindowBind =
             ObjectCalls.getMethodBind("Node", "get_window", GET_WINDOW_HASH)
-        }
 
         private const val GET_LAST_EXCLUSIVE_WINDOW_HASH = 1757182445L
-        private val getLastExclusiveWindowBind by lazy {
+        @JvmField
+        val getLastExclusiveWindowBind =
             ObjectCalls.getMethodBind("Node", "get_last_exclusive_window", GET_LAST_EXCLUSIVE_WINDOW_HASH)
-        }
 
         private const val GET_TREE_HASH = 2958820483L
-        private val getTreeBind by lazy {
+        @JvmField
+        val getTreeBind =
             ObjectCalls.getMethodBind("Node", "get_tree", GET_TREE_HASH)
-        }
 
         private const val CREATE_TWEEN_HASH = 3426978995L
-        private val createTweenBind by lazy {
+        @JvmField
+        val createTweenBind =
             ObjectCalls.getMethodBind("Node", "create_tween", CREATE_TWEEN_HASH)
-        }
 
         private const val DUPLICATE_HASH = 3511555459L
-        private val duplicateBind by lazy {
+        @JvmField
+        val duplicateBind =
             ObjectCalls.getMethodBind("Node", "duplicate", DUPLICATE_HASH)
-        }
 
         private const val REPLACE_BY_HASH = 2570952461L
-        private val replaceByBind by lazy {
+        @JvmField
+        val replaceByBind =
             ObjectCalls.getMethodBind("Node", "replace_by", REPLACE_BY_HASH)
-        }
 
         private const val SET_SCENE_INSTANCE_LOAD_PLACEHOLDER_HASH = 2586408642L
-        private val setSceneInstanceLoadPlaceholderBind by lazy {
+        @JvmField
+        val setSceneInstanceLoadPlaceholderBind =
             ObjectCalls.getMethodBind("Node", "set_scene_instance_load_placeholder", SET_SCENE_INSTANCE_LOAD_PLACEHOLDER_HASH)
-        }
 
         private const val GET_SCENE_INSTANCE_LOAD_PLACEHOLDER_HASH = 36873697L
-        private val getSceneInstanceLoadPlaceholderBind by lazy {
+        @JvmField
+        val getSceneInstanceLoadPlaceholderBind =
             ObjectCalls.getMethodBind("Node", "get_scene_instance_load_placeholder", GET_SCENE_INSTANCE_LOAD_PLACEHOLDER_HASH)
-        }
 
         private const val SET_EDITABLE_INSTANCE_HASH = 2731852923L
-        private val setEditableInstanceBind by lazy {
+        @JvmField
+        val setEditableInstanceBind =
             ObjectCalls.getMethodBind("Node", "set_editable_instance", SET_EDITABLE_INSTANCE_HASH)
-        }
 
         private const val IS_EDITABLE_INSTANCE_HASH = 3093956946L
-        private val isEditableInstanceBind by lazy {
+        @JvmField
+        val isEditableInstanceBind =
             ObjectCalls.getMethodBind("Node", "is_editable_instance", IS_EDITABLE_INSTANCE_HASH)
-        }
 
         private const val GET_VIEWPORT_HASH = 3596683776L
-        private val getViewportBind by lazy {
+        @JvmField
+        val getViewportBind =
             ObjectCalls.getMethodBind("Node", "get_viewport", GET_VIEWPORT_HASH)
-        }
 
         private const val QUEUE_FREE_HASH = 3218959716L
-        private val queueFreeBind by lazy {
+        @JvmField
+        val queueFreeBind =
             ObjectCalls.getMethodBind("Node", "queue_free", QUEUE_FREE_HASH)
-        }
 
         private const val REQUEST_READY_HASH = 3218959716L
-        private val requestReadyBind by lazy {
+        @JvmField
+        val requestReadyBind =
             ObjectCalls.getMethodBind("Node", "request_ready", REQUEST_READY_HASH)
-        }
 
         private const val IS_NODE_READY_HASH = 36873697L
-        private val isNodeReadyBind by lazy {
+        @JvmField
+        val isNodeReadyBind =
             ObjectCalls.getMethodBind("Node", "is_node_ready", IS_NODE_READY_HASH)
-        }
 
         private const val SET_MULTIPLAYER_AUTHORITY_HASH = 972357352L
-        private val setMultiplayerAuthorityBind by lazy {
+        @JvmField
+        val setMultiplayerAuthorityBind =
             ObjectCalls.getMethodBind("Node", "set_multiplayer_authority", SET_MULTIPLAYER_AUTHORITY_HASH)
-        }
 
         private const val GET_MULTIPLAYER_AUTHORITY_HASH = 3905245786L
-        private val getMultiplayerAuthorityBind by lazy {
+        @JvmField
+        val getMultiplayerAuthorityBind =
             ObjectCalls.getMethodBind("Node", "get_multiplayer_authority", GET_MULTIPLAYER_AUTHORITY_HASH)
-        }
 
         private const val IS_MULTIPLAYER_AUTHORITY_HASH = 36873697L
-        private val isMultiplayerAuthorityBind by lazy {
+        @JvmField
+        val isMultiplayerAuthorityBind =
             ObjectCalls.getMethodBind("Node", "is_multiplayer_authority", IS_MULTIPLAYER_AUTHORITY_HASH)
-        }
 
         private const val GET_MULTIPLAYER_HASH = 406750475L
-        private val getMultiplayerBind by lazy {
+        @JvmField
+        val getMultiplayerBind =
             ObjectCalls.getMethodBind("Node", "get_multiplayer", GET_MULTIPLAYER_HASH)
-        }
 
         private const val RPC_CONFIG_HASH = 3776071444L
-        private val rpcConfigBind by lazy {
+        @JvmField
+        val rpcConfigBind =
             ObjectCalls.getMethodBind("Node", "rpc_config", RPC_CONFIG_HASH)
-        }
 
         private const val GET_NODE_RPC_CONFIG_HASH = 1214101251L
-        private val getNodeRpcConfigBind by lazy {
+        @JvmField
+        val getNodeRpcConfigBind =
             ObjectCalls.getMethodBind("Node", "get_node_rpc_config", GET_NODE_RPC_CONFIG_HASH)
-        }
 
         private const val SET_EDITOR_DESCRIPTION_HASH = 83702148L
-        private val setEditorDescriptionBind by lazy {
+        @JvmField
+        val setEditorDescriptionBind =
             ObjectCalls.getMethodBind("Node", "set_editor_description", SET_EDITOR_DESCRIPTION_HASH)
-        }
 
         private const val GET_EDITOR_DESCRIPTION_HASH = 201670096L
-        private val getEditorDescriptionBind by lazy {
+        @JvmField
+        val getEditorDescriptionBind =
             ObjectCalls.getMethodBind("Node", "get_editor_description", GET_EDITOR_DESCRIPTION_HASH)
-        }
 
         private const val SET_UNIQUE_NAME_IN_OWNER_HASH = 2586408642L
-        private val setUniqueNameInOwnerBind by lazy {
+        @JvmField
+        val setUniqueNameInOwnerBind =
             ObjectCalls.getMethodBind("Node", "set_unique_name_in_owner", SET_UNIQUE_NAME_IN_OWNER_HASH)
-        }
 
         private const val IS_UNIQUE_NAME_IN_OWNER_HASH = 36873697L
-        private val isUniqueNameInOwnerBind by lazy {
+        @JvmField
+        val isUniqueNameInOwnerBind =
             ObjectCalls.getMethodBind("Node", "is_unique_name_in_owner", IS_UNIQUE_NAME_IN_OWNER_HASH)
-        }
 
         private const val ATR_HASH = 3344478075L
-        private val atrBind by lazy {
+        @JvmField
+        val atrBind =
             ObjectCalls.getMethodBind("Node", "atr", ATR_HASH)
-        }
 
         private const val ATR_N_HASH = 259354841L
-        private val atrNBind by lazy {
+        @JvmField
+        val atrNBind =
             ObjectCalls.getMethodBind("Node", "atr_n", ATR_N_HASH)
-        }
 
         private const val RPC_HASH = 4047867050L
-        private val rpcBind by lazy {
+        @JvmField
+        val rpcBind =
             ObjectCalls.getMethodBind("Node", "rpc", RPC_HASH)
-        }
 
         private const val RPC_ID_HASH = 361499283L
-        private val rpcIdBind by lazy {
+        @JvmField
+        val rpcIdBind =
             ObjectCalls.getMethodBind("Node", "rpc_id", RPC_ID_HASH)
-        }
 
         private const val UPDATE_CONFIGURATION_WARNINGS_HASH = 3218959716L
-        private val updateConfigurationWarningsBind by lazy {
+        @JvmField
+        val updateConfigurationWarningsBind =
             ObjectCalls.getMethodBind("Node", "update_configuration_warnings", UPDATE_CONFIGURATION_WARNINGS_HASH)
-        }
 
         private const val CALL_DEFERRED_THREAD_GROUP_HASH = 3400424181L
-        private val callDeferredThreadGroupBind by lazy {
+        @JvmField
+        val callDeferredThreadGroupBind =
             ObjectCalls.getMethodBind("Node", "call_deferred_thread_group", CALL_DEFERRED_THREAD_GROUP_HASH)
-        }
 
         private const val SET_DEFERRED_THREAD_GROUP_HASH = 3776071444L
-        private val setDeferredThreadGroupBind by lazy {
+        @JvmField
+        val setDeferredThreadGroupBind =
             ObjectCalls.getMethodBind("Node", "set_deferred_thread_group", SET_DEFERRED_THREAD_GROUP_HASH)
-        }
 
         private const val NOTIFY_DEFERRED_THREAD_GROUP_HASH = 1286410249L
-        private val notifyDeferredThreadGroupBind by lazy {
+        @JvmField
+        val notifyDeferredThreadGroupBind =
             ObjectCalls.getMethodBind("Node", "notify_deferred_thread_group", NOTIFY_DEFERRED_THREAD_GROUP_HASH)
-        }
 
         private const val CALL_THREAD_SAFE_HASH = 3400424181L
-        private val callThreadSafeBind by lazy {
+        @JvmField
+        val callThreadSafeBind =
             ObjectCalls.getMethodBind("Node", "call_thread_safe", CALL_THREAD_SAFE_HASH)
-        }
 
         private const val SET_THREAD_SAFE_HASH = 3776071444L
-        private val setThreadSafeBind by lazy {
+        @JvmField
+        val setThreadSafeBind =
             ObjectCalls.getMethodBind("Node", "set_thread_safe", SET_THREAD_SAFE_HASH)
-        }
 
         private const val NOTIFY_THREAD_SAFE_HASH = 1286410249L
-        private val notifyThreadSafeBind by lazy {
+        @JvmField
+        val notifyThreadSafeBind =
             ObjectCalls.getMethodBind("Node", "notify_thread_safe", NOTIFY_THREAD_SAFE_HASH)
-        }
     }
 }

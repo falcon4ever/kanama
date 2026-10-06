@@ -20,7 +20,5 @@ open class OpenXRActionBindingModifier(handle: GodotHandle) : OpenXRBindingModif
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRActionBindingModifier? =
             if (handle.address() == 0L) null else OpenXRActionBindingModifier(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

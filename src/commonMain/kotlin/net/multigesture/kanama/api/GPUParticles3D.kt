@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -223,7 +224,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_emitting
      */
     fun setEmitting(emitting: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmittingBind, segment, emitting)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmittingBind, segment, emitting)
     }
 
     /**
@@ -236,7 +237,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_amount
      */
     fun setAmount(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAmountBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setAmountBind, segment, amount)
     }
 
     /**
@@ -246,7 +247,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_lifetime
      */
     fun setLifetime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLifetimeBind, segment, secs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLifetimeBind, segment, secs)
     }
 
     /**
@@ -255,7 +256,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_one_shot
      */
     fun setOneShot(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOneShotBind, segment, enable)
     }
 
     /**
@@ -268,7 +269,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_pre_process_time
      */
     fun setPreProcessTime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPreProcessTimeBind, segment, secs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPreProcessTimeBind, segment, secs)
     }
 
     /**
@@ -278,7 +279,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_explosiveness_ratio
      */
     fun setExplosivenessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setExplosivenessRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExplosivenessRatioBind, segment, ratio)
     }
 
     /**
@@ -287,7 +288,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_randomness_ratio
      */
     fun setRandomnessRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRandomnessRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRandomnessRatioBind, segment, ratio)
     }
 
     /**
@@ -301,7 +302,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_visibility_aabb
      */
     fun setVisibilityAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setVisibilityAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setVisibilityAabbBind, segment, aabb)
     }
 
     /**
@@ -313,7 +314,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_use_local_coordinates
      */
     fun setUseLocalCoordinates(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseLocalCoordinatesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseLocalCoordinatesBind, segment, enable)
     }
 
     /**
@@ -324,7 +325,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_fixed_fps
      */
     fun setFixedFps(fps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFixedFpsBind, segment, fps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFixedFpsBind, segment, fps)
     }
 
     /**
@@ -334,7 +335,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_fractional_delta
      */
     fun setFractionalDelta(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFractionalDeltaBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFractionalDeltaBind, segment, enable)
     }
 
     /**
@@ -344,7 +345,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_interpolate
      */
     fun setInterpolate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInterpolateBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setInterpolateBind, segment, enable)
     }
 
     /**
@@ -353,7 +354,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_process_material
      */
     fun setProcessMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProcessMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setProcessMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -362,7 +363,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_speed_scale
      */
     fun setSpeedScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, scale)
     }
 
     /**
@@ -376,7 +377,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_collision_base_size
      */
     fun setCollisionBaseSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionBaseSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionBaseSizeBind, segment, size)
     }
 
     /**
@@ -387,7 +388,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_interp_to_end
      */
     fun setInterpToEnd(interp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInterpToEndBind, segment, interp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInterpToEndBind, segment, interp)
     }
 
     /**
@@ -403,7 +404,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.is_emitting
      */
     fun isEmitting(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmittingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmittingBind, segment)
     }
 
     /**
@@ -416,7 +417,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_amount
      */
     fun getAmount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAmountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAmountBind, segment)
     }
 
     /**
@@ -426,7 +427,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_lifetime
      */
     fun getLifetime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLifetimeBind, segment)
     }
 
     /**
@@ -435,7 +436,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_one_shot
      */
     fun getOneShot(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getOneShotBind, segment)
     }
 
     /**
@@ -448,7 +449,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_pre_process_time
      */
     fun getPreProcessTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreProcessTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreProcessTimeBind, segment)
     }
 
     /**
@@ -458,7 +459,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_explosiveness_ratio
      */
     fun getExplosivenessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExplosivenessRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExplosivenessRatioBind, segment)
     }
 
     /**
@@ -467,7 +468,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_randomness_ratio
      */
     fun getRandomnessRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRandomnessRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRandomnessRatioBind, segment)
     }
 
     /**
@@ -481,7 +482,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_visibility_aabb
      */
     fun getVisibilityAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getVisibilityAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getVisibilityAabbBind, segment)
     }
 
     /**
@@ -493,7 +494,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_use_local_coordinates
      */
     fun getUseLocalCoordinates(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseLocalCoordinatesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseLocalCoordinatesBind, segment)
     }
 
     /**
@@ -504,7 +505,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_fixed_fps
      */
     fun getFixedFps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedFpsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFixedFpsBind, segment)
     }
 
     /**
@@ -514,7 +515,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_fractional_delta
      */
     fun getFractionalDelta(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFractionalDeltaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFractionalDeltaBind, segment)
     }
 
     /**
@@ -524,7 +525,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_interpolate
      */
     fun getInterpolate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getInterpolateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getInterpolateBind, segment)
     }
 
     /**
@@ -533,7 +534,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_process_material
      */
     fun getProcessMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProcessMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProcessMaterialBind, segment))
     }
 
     /**
@@ -542,7 +543,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -556,7 +557,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_collision_base_size
      */
     fun getCollisionBaseSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionBaseSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionBaseSizeBind, segment)
     }
 
     /**
@@ -567,7 +568,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_interp_to_end
      */
     fun getInterpToEnd(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpToEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInterpToEndBind, segment)
     }
 
     /**
@@ -578,7 +579,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_use_fixed_seed
      */
     fun setUseFixedSeed(useFixedSeed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFixedSeedBind, segment, useFixedSeed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseFixedSeedBind, segment, useFixedSeed)
     }
 
     /**
@@ -589,7 +590,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_use_fixed_seed
      */
     fun getUseFixedSeed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseFixedSeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseFixedSeedBind, segment)
     }
 
     /**
@@ -598,7 +599,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_seed
      */
     fun setSeed(seed: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSeedBind, segment, seed)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setSeedBind, segment, seed)
     }
 
     /**
@@ -607,7 +608,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_seed
      */
     fun getSeed(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getSeedBind, segment)
     }
 
     /**
@@ -618,7 +619,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_draw_order
      */
     fun setDrawOrder(order: GPUParticles3D.DrawOrder) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDrawOrderBind, segment, order.value)
     }
 
     /**
@@ -629,7 +630,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_draw_order
      */
     fun getDrawOrder(): GPUParticles3D.DrawOrder {
-        return GPUParticles3D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment))
+        return GPUParticles3D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDrawOrderBind, segment))
     }
 
     /**
@@ -638,7 +639,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_draw_passes
      */
     fun setDrawPasses(passes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDrawPassesBind, segment, passes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDrawPassesBind, segment, passes)
     }
 
     /**
@@ -647,7 +648,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_draw_pass_mesh
      */
     fun setDrawPassMesh(pass: Int, mesh: Mesh?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDrawPassMeshBind, segment, pass, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDrawPassMeshBind, segment, pass, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -656,7 +657,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_draw_passes
      */
     fun getDrawPasses(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDrawPassesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDrawPassesBind, segment)
     }
 
     /**
@@ -665,15 +666,15 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_draw_pass_mesh
      */
     fun getDrawPassMesh(pass: Int): Mesh? {
-        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDrawPassMeshBind, segment, pass))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getDrawPassMeshBind, segment, pass))
     }
 
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getSkin(): Skin? {
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
     }
 
     /**
@@ -685,7 +686,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.restart
      */
     fun restart(keepSeed: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(restartBind, segment, keepSeed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.restartBind, segment, keepSeed)
     }
 
     /**
@@ -695,7 +696,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.capture_aabb
      */
     fun captureAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(captureAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.captureAabbBind, segment)
     }
 
     /**
@@ -707,7 +708,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_sub_emitter
      */
     fun setSubEmitter(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSubEmitterBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setSubEmitterBind, segment, path)
     }
 
     /**
@@ -719,7 +720,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_sub_emitter
      */
     fun getSubEmitter(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSubEmitterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getSubEmitterBind, segment)
     }
 
     /**
@@ -732,7 +733,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.emit_particle
      */
     fun emitParticle(xform: Transform3D, velocity: Vector3, color: Color, custom: Color, flags: Long) {
-        ObjectCalls.ptrcallWithTransform3DVector3TwoColorUInt32Args(emitParticleBind, segment, xform, velocity, color, custom, flags)
+        ObjectCalls.ptrcallWithTransform3DVector3TwoColorUInt32Args(Binds.emitParticleBind, segment, xform, velocity, color, custom, flags)
     }
 
     /**
@@ -745,7 +746,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_trail_enabled
      */
     fun setTrailEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTrailEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTrailEnabledBind, segment, enabled)
     }
 
     /**
@@ -755,7 +756,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_trail_lifetime
      */
     fun setTrailLifetime(secs: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTrailLifetimeBind, segment, secs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTrailLifetimeBind, segment, secs)
     }
 
     /**
@@ -768,7 +769,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.is_trail_enabled
      */
     fun isTrailEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTrailEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTrailEnabledBind, segment)
     }
 
     /**
@@ -778,7 +779,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_trail_lifetime
      */
     fun getTrailLifetime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTrailLifetimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTrailLifetimeBind, segment)
     }
 
     /**
@@ -787,7 +788,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_transform_align
      */
     fun setTransformAlign(align: GPUParticles3D.TransformAlign) {
-        ObjectCalls.ptrcallWithLongArg(setTransformAlignBind, segment, align.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransformAlignBind, segment, align.value)
     }
 
     /**
@@ -796,7 +797,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_transform_align
      */
     fun getTransformAlign(): GPUParticles3D.TransformAlign {
-        return GPUParticles3D.TransformAlign(ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignBind, segment))
+        return GPUParticles3D.TransformAlign(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransformAlignBind, segment))
     }
 
     /**
@@ -806,7 +807,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_transform_align_channel_filter
      */
     fun setTransformAlignChannelFilter(channelFilter: RenderingServer.ParticlesTransformAlignCustomSrc) {
-        ObjectCalls.ptrcallWithLongArg(setTransformAlignChannelFilterBind, segment, channelFilter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransformAlignChannelFilterBind, segment, channelFilter.value)
     }
 
     /**
@@ -816,7 +817,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_transform_align_channel_filter
      */
     fun getTransformAlignChannelFilter(): RenderingServer.ParticlesTransformAlignCustomSrc {
-        return RenderingServer.ParticlesTransformAlignCustomSrc(ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignChannelFilterBind, segment))
+        return RenderingServer.ParticlesTransformAlignCustomSrc(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransformAlignChannelFilterBind, segment))
     }
 
     /**
@@ -826,7 +827,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_transform_align_axis
      */
     fun setTransformAlignAxis(align: RenderingServer.ParticlesTransformAlignAxis) {
-        ObjectCalls.ptrcallWithLongArg(setTransformAlignAxisBind, segment, align.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransformAlignAxisBind, segment, align.value)
     }
 
     /**
@@ -836,7 +837,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_transform_align_axis
      */
     fun getTransformAlignAxis(): RenderingServer.ParticlesTransformAlignAxis {
-        return RenderingServer.ParticlesTransformAlignAxis(ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignAxisBind, segment))
+        return RenderingServer.ParticlesTransformAlignAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransformAlignAxisBind, segment))
     }
 
     /**
@@ -845,7 +846,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.convert_from_particles
      */
     fun convertFromParticles(particles: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(convertFromParticlesBind, segment, listOf(particles.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.convertFromParticlesBind, segment, listOf(particles.segment))
     }
 
     /**
@@ -862,7 +863,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.set_amount_ratio
      */
     fun setAmountRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAmountRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAmountRatioBind, segment, ratio)
     }
 
     /**
@@ -879,7 +880,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_amount_ratio
      */
     fun getAmountRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAmountRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmountRatioBind, segment)
     }
 
     /**
@@ -892,7 +893,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.request_particles_process
      */
     fun requestParticlesProcess(processTime: Double, processTimeResidual: Double = 0.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(requestParticlesProcessBind, segment, processTime, processTimeResidual)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(Binds.requestParticlesProcessBind, segment, processTime, processTimeResidual)
     }
 
     /** Signal `finished()`; see [TypedSignal]. */
@@ -1036,320 +1037,322 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): GPUParticles3D? =
             if (handle.address() == 0L) null else GPUParticles3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EMITTING_HASH = 2586408642L
-        private val setEmittingBind by lazy {
+        @JvmField
+        val setEmittingBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_emitting", SET_EMITTING_HASH)
-        }
 
         private const val SET_AMOUNT_HASH = 1286410249L
-        private val setAmountBind by lazy {
+        @JvmField
+        val setAmountBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_amount", SET_AMOUNT_HASH)
-        }
 
         private const val SET_LIFETIME_HASH = 373806689L
-        private val setLifetimeBind by lazy {
+        @JvmField
+        val setLifetimeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_lifetime", SET_LIFETIME_HASH)
-        }
 
         private const val SET_ONE_SHOT_HASH = 2586408642L
-        private val setOneShotBind by lazy {
+        @JvmField
+        val setOneShotBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_one_shot", SET_ONE_SHOT_HASH)
-        }
 
         private const val SET_PRE_PROCESS_TIME_HASH = 373806689L
-        private val setPreProcessTimeBind by lazy {
+        @JvmField
+        val setPreProcessTimeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_pre_process_time", SET_PRE_PROCESS_TIME_HASH)
-        }
 
         private const val SET_EXPLOSIVENESS_RATIO_HASH = 373806689L
-        private val setExplosivenessRatioBind by lazy {
+        @JvmField
+        val setExplosivenessRatioBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_explosiveness_ratio", SET_EXPLOSIVENESS_RATIO_HASH)
-        }
 
         private const val SET_RANDOMNESS_RATIO_HASH = 373806689L
-        private val setRandomnessRatioBind by lazy {
+        @JvmField
+        val setRandomnessRatioBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_randomness_ratio", SET_RANDOMNESS_RATIO_HASH)
-        }
 
         private const val SET_VISIBILITY_AABB_HASH = 259215842L
-        private val setVisibilityAabbBind by lazy {
+        @JvmField
+        val setVisibilityAabbBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_visibility_aabb", SET_VISIBILITY_AABB_HASH)
-        }
 
         private const val SET_USE_LOCAL_COORDINATES_HASH = 2586408642L
-        private val setUseLocalCoordinatesBind by lazy {
+        @JvmField
+        val setUseLocalCoordinatesBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_use_local_coordinates", SET_USE_LOCAL_COORDINATES_HASH)
-        }
 
         private const val SET_FIXED_FPS_HASH = 1286410249L
-        private val setFixedFpsBind by lazy {
+        @JvmField
+        val setFixedFpsBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_fixed_fps", SET_FIXED_FPS_HASH)
-        }
 
         private const val SET_FRACTIONAL_DELTA_HASH = 2586408642L
-        private val setFractionalDeltaBind by lazy {
+        @JvmField
+        val setFractionalDeltaBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_fractional_delta", SET_FRACTIONAL_DELTA_HASH)
-        }
 
         private const val SET_INTERPOLATE_HASH = 2586408642L
-        private val setInterpolateBind by lazy {
+        @JvmField
+        val setInterpolateBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_interpolate", SET_INTERPOLATE_HASH)
-        }
 
         private const val SET_PROCESS_MATERIAL_HASH = 2757459619L
-        private val setProcessMaterialBind by lazy {
+        @JvmField
+        val setProcessMaterialBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_process_material", SET_PROCESS_MATERIAL_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val SET_COLLISION_BASE_SIZE_HASH = 373806689L
-        private val setCollisionBaseSizeBind by lazy {
+        @JvmField
+        val setCollisionBaseSizeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_collision_base_size", SET_COLLISION_BASE_SIZE_HASH)
-        }
 
         private const val SET_INTERP_TO_END_HASH = 373806689L
-        private val setInterpToEndBind by lazy {
+        @JvmField
+        val setInterpToEndBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_interp_to_end", SET_INTERP_TO_END_HASH)
-        }
 
         private const val IS_EMITTING_HASH = 36873697L
-        private val isEmittingBind by lazy {
+        @JvmField
+        val isEmittingBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "is_emitting", IS_EMITTING_HASH)
-        }
 
         private const val GET_AMOUNT_HASH = 3905245786L
-        private val getAmountBind by lazy {
+        @JvmField
+        val getAmountBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_amount", GET_AMOUNT_HASH)
-        }
 
         private const val GET_LIFETIME_HASH = 1740695150L
-        private val getLifetimeBind by lazy {
+        @JvmField
+        val getLifetimeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_lifetime", GET_LIFETIME_HASH)
-        }
 
         private const val GET_ONE_SHOT_HASH = 36873697L
-        private val getOneShotBind by lazy {
+        @JvmField
+        val getOneShotBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_one_shot", GET_ONE_SHOT_HASH)
-        }
 
         private const val GET_PRE_PROCESS_TIME_HASH = 1740695150L
-        private val getPreProcessTimeBind by lazy {
+        @JvmField
+        val getPreProcessTimeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_pre_process_time", GET_PRE_PROCESS_TIME_HASH)
-        }
 
         private const val GET_EXPLOSIVENESS_RATIO_HASH = 1740695150L
-        private val getExplosivenessRatioBind by lazy {
+        @JvmField
+        val getExplosivenessRatioBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_explosiveness_ratio", GET_EXPLOSIVENESS_RATIO_HASH)
-        }
 
         private const val GET_RANDOMNESS_RATIO_HASH = 1740695150L
-        private val getRandomnessRatioBind by lazy {
+        @JvmField
+        val getRandomnessRatioBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_randomness_ratio", GET_RANDOMNESS_RATIO_HASH)
-        }
 
         private const val GET_VISIBILITY_AABB_HASH = 1068685055L
-        private val getVisibilityAabbBind by lazy {
+        @JvmField
+        val getVisibilityAabbBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_visibility_aabb", GET_VISIBILITY_AABB_HASH)
-        }
 
         private const val GET_USE_LOCAL_COORDINATES_HASH = 36873697L
-        private val getUseLocalCoordinatesBind by lazy {
+        @JvmField
+        val getUseLocalCoordinatesBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_use_local_coordinates", GET_USE_LOCAL_COORDINATES_HASH)
-        }
 
         private const val GET_FIXED_FPS_HASH = 3905245786L
-        private val getFixedFpsBind by lazy {
+        @JvmField
+        val getFixedFpsBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_fixed_fps", GET_FIXED_FPS_HASH)
-        }
 
         private const val GET_FRACTIONAL_DELTA_HASH = 36873697L
-        private val getFractionalDeltaBind by lazy {
+        @JvmField
+        val getFractionalDeltaBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_fractional_delta", GET_FRACTIONAL_DELTA_HASH)
-        }
 
         private const val GET_INTERPOLATE_HASH = 36873697L
-        private val getInterpolateBind by lazy {
+        @JvmField
+        val getInterpolateBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_interpolate", GET_INTERPOLATE_HASH)
-        }
 
         private const val GET_PROCESS_MATERIAL_HASH = 5934680L
-        private val getProcessMaterialBind by lazy {
+        @JvmField
+        val getProcessMaterialBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_process_material", GET_PROCESS_MATERIAL_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_COLLISION_BASE_SIZE_HASH = 1740695150L
-        private val getCollisionBaseSizeBind by lazy {
+        @JvmField
+        val getCollisionBaseSizeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_collision_base_size", GET_COLLISION_BASE_SIZE_HASH)
-        }
 
         private const val GET_INTERP_TO_END_HASH = 1740695150L
-        private val getInterpToEndBind by lazy {
+        @JvmField
+        val getInterpToEndBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_interp_to_end", GET_INTERP_TO_END_HASH)
-        }
 
         private const val SET_USE_FIXED_SEED_HASH = 2586408642L
-        private val setUseFixedSeedBind by lazy {
+        @JvmField
+        val setUseFixedSeedBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_use_fixed_seed", SET_USE_FIXED_SEED_HASH)
-        }
 
         private const val GET_USE_FIXED_SEED_HASH = 36873697L
-        private val getUseFixedSeedBind by lazy {
+        @JvmField
+        val getUseFixedSeedBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_use_fixed_seed", GET_USE_FIXED_SEED_HASH)
-        }
 
         private const val SET_SEED_HASH = 1286410249L
-        private val setSeedBind by lazy {
+        @JvmField
+        val setSeedBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_seed", SET_SEED_HASH)
-        }
 
         private const val GET_SEED_HASH = 3905245786L
-        private val getSeedBind by lazy {
+        @JvmField
+        val getSeedBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_seed", GET_SEED_HASH)
-        }
 
         private const val SET_DRAW_ORDER_HASH = 1208074815L
-        private val setDrawOrderBind by lazy {
+        @JvmField
+        val setDrawOrderBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_draw_order", SET_DRAW_ORDER_HASH)
-        }
 
         private const val GET_DRAW_ORDER_HASH = 3770381780L
-        private val getDrawOrderBind by lazy {
+        @JvmField
+        val getDrawOrderBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_draw_order", GET_DRAW_ORDER_HASH)
-        }
 
         private const val SET_DRAW_PASSES_HASH = 1286410249L
-        private val setDrawPassesBind by lazy {
+        @JvmField
+        val setDrawPassesBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_draw_passes", SET_DRAW_PASSES_HASH)
-        }
 
         private const val SET_DRAW_PASS_MESH_HASH = 969122797L
-        private val setDrawPassMeshBind by lazy {
+        @JvmField
+        val setDrawPassMeshBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_draw_pass_mesh", SET_DRAW_PASS_MESH_HASH)
-        }
 
         private const val GET_DRAW_PASSES_HASH = 3905245786L
-        private val getDrawPassesBind by lazy {
+        @JvmField
+        val getDrawPassesBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_draw_passes", GET_DRAW_PASSES_HASH)
-        }
 
         private const val GET_DRAW_PASS_MESH_HASH = 1576363275L
-        private val getDrawPassMeshBind by lazy {
+        @JvmField
+        val getDrawPassMeshBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_draw_pass_mesh", GET_DRAW_PASS_MESH_HASH)
-        }
 
         private const val SET_SKIN_HASH = 3971435618L
-        private val setSkinBind by lazy {
+        @JvmField
+        val setSkinBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_skin", SET_SKIN_HASH)
-        }
 
         private const val GET_SKIN_HASH = 2074563878L
-        private val getSkinBind by lazy {
+        @JvmField
+        val getSkinBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_skin", GET_SKIN_HASH)
-        }
 
         private const val RESTART_HASH = 107499316L
-        private val restartBind by lazy {
+        @JvmField
+        val restartBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "restart", RESTART_HASH)
-        }
 
         private const val CAPTURE_AABB_HASH = 1068685055L
-        private val captureAabbBind by lazy {
+        @JvmField
+        val captureAabbBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "capture_aabb", CAPTURE_AABB_HASH)
-        }
 
         private const val SET_SUB_EMITTER_HASH = 1348162250L
-        private val setSubEmitterBind by lazy {
+        @JvmField
+        val setSubEmitterBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_sub_emitter", SET_SUB_EMITTER_HASH)
-        }
 
         private const val GET_SUB_EMITTER_HASH = 4075236667L
-        private val getSubEmitterBind by lazy {
+        @JvmField
+        val getSubEmitterBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_sub_emitter", GET_SUB_EMITTER_HASH)
-        }
 
         private const val EMIT_PARTICLE_HASH = 992173727L
-        private val emitParticleBind by lazy {
+        @JvmField
+        val emitParticleBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "emit_particle", EMIT_PARTICLE_HASH)
-        }
 
         private const val SET_TRAIL_ENABLED_HASH = 2586408642L
-        private val setTrailEnabledBind by lazy {
+        @JvmField
+        val setTrailEnabledBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_trail_enabled", SET_TRAIL_ENABLED_HASH)
-        }
 
         private const val SET_TRAIL_LIFETIME_HASH = 373806689L
-        private val setTrailLifetimeBind by lazy {
+        @JvmField
+        val setTrailLifetimeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_trail_lifetime", SET_TRAIL_LIFETIME_HASH)
-        }
 
         private const val IS_TRAIL_ENABLED_HASH = 36873697L
-        private val isTrailEnabledBind by lazy {
+        @JvmField
+        val isTrailEnabledBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "is_trail_enabled", IS_TRAIL_ENABLED_HASH)
-        }
 
         private const val GET_TRAIL_LIFETIME_HASH = 1740695150L
-        private val getTrailLifetimeBind by lazy {
+        @JvmField
+        val getTrailLifetimeBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_trail_lifetime", GET_TRAIL_LIFETIME_HASH)
-        }
 
         private const val SET_TRANSFORM_ALIGN_HASH = 3892425954L
-        private val setTransformAlignBind by lazy {
+        @JvmField
+        val setTransformAlignBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_transform_align", SET_TRANSFORM_ALIGN_HASH)
-        }
 
         private const val GET_TRANSFORM_ALIGN_HASH = 2100992166L
-        private val getTransformAlignBind by lazy {
+        @JvmField
+        val getTransformAlignBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_transform_align", GET_TRANSFORM_ALIGN_HASH)
-        }
 
         private const val SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH = 540833286L
-        private val setTransformAlignChannelFilterBind by lazy {
+        @JvmField
+        val setTransformAlignChannelFilterBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_transform_align_channel_filter", SET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH)
-        }
 
         private const val GET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH = 1664431231L
-        private val getTransformAlignChannelFilterBind by lazy {
+        @JvmField
+        val getTransformAlignChannelFilterBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_transform_align_channel_filter", GET_TRANSFORM_ALIGN_CHANNEL_FILTER_HASH)
-        }
 
         private const val SET_TRANSFORM_ALIGN_AXIS_HASH = 3781785913L
-        private val setTransformAlignAxisBind by lazy {
+        @JvmField
+        val setTransformAlignAxisBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_transform_align_axis", SET_TRANSFORM_ALIGN_AXIS_HASH)
-        }
 
         private const val GET_TRANSFORM_ALIGN_AXIS_HASH = 2427180841L
-        private val getTransformAlignAxisBind by lazy {
+        @JvmField
+        val getTransformAlignAxisBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_transform_align_axis", GET_TRANSFORM_ALIGN_AXIS_HASH)
-        }
 
         private const val CONVERT_FROM_PARTICLES_HASH = 1078189570L
-        private val convertFromParticlesBind by lazy {
+        @JvmField
+        val convertFromParticlesBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "convert_from_particles", CONVERT_FROM_PARTICLES_HASH)
-        }
 
         private const val SET_AMOUNT_RATIO_HASH = 373806689L
-        private val setAmountRatioBind by lazy {
+        @JvmField
+        val setAmountRatioBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "set_amount_ratio", SET_AMOUNT_RATIO_HASH)
-        }
 
         private const val GET_AMOUNT_RATIO_HASH = 1740695150L
-        private val getAmountRatioBind by lazy {
+        @JvmField
+        val getAmountRatioBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "get_amount_ratio", GET_AMOUNT_RATIO_HASH)
-        }
 
         private const val REQUEST_PARTICLES_PROCESS_HASH = 66938510L
-        private val requestParticlesProcessBind by lazy {
+        @JvmField
+        val requestParticlesProcessBind =
             ObjectCalls.getMethodBind("GPUParticles3D", "request_particles_process", REQUEST_PARTICLES_PROCESS_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -50,7 +51,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setMode(mode: AudioEffectDistortion.Mode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
     }
 
     /**
@@ -60,7 +61,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getMode(): AudioEffectDistortion.Mode {
         checkOpen()
-        return AudioEffectDistortion.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
+        return AudioEffectDistortion.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
     }
 
     /**
@@ -70,7 +71,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPreGain(preGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPreGainBind, segment, preGain)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPreGainBind, segment, preGain)
     }
 
     /**
@@ -80,7 +81,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPreGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreGainBind, segment)
     }
 
     /**
@@ -91,7 +92,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setKeepHfHz(keepHfHz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setKeepHfHzBind, segment, keepHfHz)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setKeepHfHzBind, segment, keepHfHz)
     }
 
     /**
@@ -102,7 +103,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getKeepHfHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getKeepHfHzBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getKeepHfHzBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDrive(drive: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDriveBind, segment, drive)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDriveBind, segment, drive)
     }
 
     /**
@@ -124,7 +125,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDrive(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDriveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDriveBind, segment)
     }
 
     /**
@@ -134,7 +135,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPostGain(postGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPostGainBind, segment, postGain)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPostGainBind, segment, postGain)
     }
 
     /**
@@ -144,7 +145,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPostGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPostGainBind, segment)
     }
 
     /**
@@ -205,55 +206,57 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectDistortion? =
             if (handle.address() == 0L) null else AudioEffectDistortion(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MODE_HASH = 1314744793L
-        private val setModeBind by lazy {
+        @JvmField
+        val setModeBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "set_mode", SET_MODE_HASH)
-        }
 
         private const val GET_MODE_HASH = 809118343L
-        private val getModeBind by lazy {
+        @JvmField
+        val getModeBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "get_mode", GET_MODE_HASH)
-        }
 
         private const val SET_PRE_GAIN_HASH = 373806689L
-        private val setPreGainBind by lazy {
+        @JvmField
+        val setPreGainBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "set_pre_gain", SET_PRE_GAIN_HASH)
-        }
 
         private const val GET_PRE_GAIN_HASH = 1740695150L
-        private val getPreGainBind by lazy {
+        @JvmField
+        val getPreGainBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "get_pre_gain", GET_PRE_GAIN_HASH)
-        }
 
         private const val SET_KEEP_HF_HZ_HASH = 373806689L
-        private val setKeepHfHzBind by lazy {
+        @JvmField
+        val setKeepHfHzBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "set_keep_hf_hz", SET_KEEP_HF_HZ_HASH)
-        }
 
         private const val GET_KEEP_HF_HZ_HASH = 1740695150L
-        private val getKeepHfHzBind by lazy {
+        @JvmField
+        val getKeepHfHzBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "get_keep_hf_hz", GET_KEEP_HF_HZ_HASH)
-        }
 
         private const val SET_DRIVE_HASH = 373806689L
-        private val setDriveBind by lazy {
+        @JvmField
+        val setDriveBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "set_drive", SET_DRIVE_HASH)
-        }
 
         private const val GET_DRIVE_HASH = 1740695150L
-        private val getDriveBind by lazy {
+        @JvmField
+        val getDriveBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "get_drive", GET_DRIVE_HASH)
-        }
 
         private const val SET_POST_GAIN_HASH = 373806689L
-        private val setPostGainBind by lazy {
+        @JvmField
+        val setPostGainBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "set_post_gain", SET_POST_GAIN_HASH)
-        }
 
         private const val GET_POST_GAIN_HASH = 1740695150L
-        private val getPostGainBind by lazy {
+        @JvmField
+        val getPostGainBind =
             ObjectCalls.getMethodBind("AudioEffectDistortion", "get_post_gain", GET_POST_GAIN_HASH)
-        }
     }
 }

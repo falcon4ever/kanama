@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -85,7 +86,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_root
      */
     fun getRoot(): Window {
-        return requireGodotReturn(Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment)), "SceneTree.get_root")
+        return requireGodotReturn(Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRootBind, segment)), "SceneTree.get_root")
     }
 
     /**
@@ -94,7 +95,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.has_group
      */
     fun hasGroup(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasGroupBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasGroupBind, segment, name)
     }
 
     /**
@@ -104,7 +105,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_accessibility_enabled
      */
     fun isAccessibilityEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilityEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAccessibilityEnabledBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_accessibility_supported
      */
     fun isAccessibilitySupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilitySupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAccessibilitySupportedBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_auto_accept_quit
      */
     fun isAutoAcceptQuit(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoAcceptQuitBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoAcceptQuitBind, segment)
     }
 
     /**
@@ -134,7 +135,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_auto_accept_quit
      */
     fun setAutoAcceptQuit(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoAcceptQuitBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoAcceptQuitBind, segment, enabled)
     }
 
     /**
@@ -145,7 +146,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_quit_on_go_back
      */
     fun isQuitOnGoBack(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isQuitOnGoBackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isQuitOnGoBackBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_quit_on_go_back
      */
     fun setQuitOnGoBack(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setQuitOnGoBackBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setQuitOnGoBackBind, segment, enabled)
     }
 
     /**
@@ -167,7 +168,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_debug_collisions_hint
      */
     fun setDebugCollisionsHint(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugCollisionsHintBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugCollisionsHintBind, segment, enable)
     }
 
     /**
@@ -178,7 +179,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_debugging_collisions_hint
      */
     fun isDebuggingCollisionsHint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDebuggingCollisionsHintBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebuggingCollisionsHintBind, segment)
     }
 
     /**
@@ -190,7 +191,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_debug_paths_hint
      */
     fun setDebugPathsHint(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugPathsHintBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugPathsHintBind, segment, enable)
     }
 
     /**
@@ -202,7 +203,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_debugging_paths_hint
      */
     fun isDebuggingPathsHint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDebuggingPathsHintBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebuggingPathsHintBind, segment)
     }
 
     /**
@@ -213,7 +214,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_debug_navigation_hint
      */
     fun setDebugNavigationHint(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugNavigationHintBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugNavigationHintBind, segment, enable)
     }
 
     /**
@@ -224,7 +225,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_debugging_navigation_hint
      */
     fun isDebuggingNavigationHint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDebuggingNavigationHintBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebuggingNavigationHintBind, segment)
     }
 
     /**
@@ -234,7 +235,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_edited_scene_root
      */
     fun setEditedSceneRoot(scene: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setEditedSceneRootBind, segment, listOf(scene.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEditedSceneRootBind, segment, listOf(scene.segment))
     }
 
     /**
@@ -244,7 +245,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_edited_scene_root
      */
     fun getEditedSceneRoot(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedSceneRootBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditedSceneRootBind, segment))
     }
 
     /**
@@ -256,7 +257,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_pause
      */
     fun setPause(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPauseBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPauseBind, segment, enable)
     }
 
     /**
@@ -268,7 +269,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_paused
      */
     fun isPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPausedBind, segment)
     }
 
     /**
@@ -282,7 +283,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.create_timer
      */
     fun createTimer(timeSec: Double, processAlways: Boolean = true, processInPhysics: Boolean = false, ignoreTimeScale: Boolean = false): SceneTreeTimer {
-        return requireGodotReturn(SceneTreeTimer.wrapOwned(ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale)), "SceneTree.create_timer")
+        return requireGodotReturn(SceneTreeTimer.wrapOwned(ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(Binds.createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale)), "SceneTree.create_timer")
     }
 
     /**
@@ -295,7 +296,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.create_tween
      */
     fun createTween(): Tween {
-        return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "SceneTree.create_tween")
+        return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTweenBind, segment)), "SceneTree.create_tween")
     }
 
     /**
@@ -304,7 +305,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_processed_tweens
      */
     fun getProcessedTweens(): List<Tween> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getProcessedTweensBind, segment, Tween::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getProcessedTweensBind, segment, Tween::wrapBorrowed)
     }
 
     /**
@@ -313,7 +314,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_node_count
      */
     fun getNodeCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNodeCountBind, segment)
     }
 
     /**
@@ -324,7 +325,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_frame
      */
     fun getFrame(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrameBind, segment)
     }
 
     /**
@@ -338,7 +339,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.quit
      */
     fun quit(exitCode: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(quitBind, segment, exitCode)
+        ObjectCalls.ptrcallWithIntArg(Binds.quitBind, segment, exitCode)
     }
 
     /**
@@ -352,7 +353,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_physics_interpolation_enabled
      */
     fun setPhysicsInterpolationEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsInterpolationEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPhysicsInterpolationEnabledBind, segment, enabled)
     }
 
     /**
@@ -366,7 +367,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_physics_interpolation_enabled
      */
     fun isPhysicsInterpolationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPhysicsInterpolationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPhysicsInterpolationEnabledBind, segment)
     }
 
     /**
@@ -376,7 +377,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.queue_delete
      */
     fun queueDelete(obj: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(queueDeleteBind, segment, listOf(obj.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.queueDeleteBind, segment, listOf(obj.segment))
     }
 
     /**
@@ -388,7 +389,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.call_group_flags
      */
     fun callGroupFlags(flags: Long, group: String, method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(callGroupFlagsBind, segment, listOf(flags, group, method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(Binds.callGroupFlagsBind, segment, listOf(flags, group, method, *extraArgs))
     }
 
     /**
@@ -398,7 +399,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.notify_group_flags
      */
     fun notifyGroupFlags(callFlags: Long, group: String, notification: Int) {
-        ObjectCalls.ptrcallWithUInt32StringNameAndIntArgs(notifyGroupFlagsBind, segment, callFlags, group, notification)
+        ObjectCalls.ptrcallWithUInt32StringNameAndIntArgs(Binds.notifyGroupFlagsBind, segment, callFlags, group, notification)
     }
 
     /**
@@ -411,7 +412,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_group_flags
      */
     fun setGroupFlags(callFlags: Long, group: String, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithUInt32StringNameStringVariantArgs(setGroupFlagsBind, segment, callFlags, group, property, value)
+        ObjectCalls.ptrcallWithUInt32StringNameStringVariantArgs(Binds.setGroupFlagsBind, segment, callFlags, group, property, value)
     }
 
     /**
@@ -426,7 +427,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.call_group
      */
     fun callGroup(group: String, method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(callGroupBind, segment, listOf(group, method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(Binds.callGroupBind, segment, listOf(group, method, *extraArgs))
     }
 
     /**
@@ -439,7 +440,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.notify_group
      */
     fun notifyGroup(group: String, notification: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(notifyGroupBind, segment, group, notification)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.notifyGroupBind, segment, group, notification)
     }
 
     /**
@@ -453,7 +454,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_group
      */
     fun setGroup(group: String, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameStringAndVariantArg(setGroupBind, segment, group, property, value)
+        ObjectCalls.ptrcallWithStringNameStringAndVariantArg(Binds.setGroupBind, segment, group, property, value)
     }
 
     /**
@@ -463,7 +464,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_nodes_in_group
      */
     fun getNodesInGroup(group: String): List<Node> {
-        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(getNodesInGroupBind, segment, group, Node::wrap)
+        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(Binds.getNodesInGroupBind, segment, group, Node::wrap)
     }
 
     /**
@@ -473,7 +474,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_first_node_in_group
      */
     fun getFirstNodeInGroup(group: String): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getFirstNodeInGroupBind, segment, group))
+        return Node.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getFirstNodeInGroupBind, segment, group))
     }
 
     /**
@@ -482,7 +483,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_node_count_in_group
      */
     fun getNodeCountInGroup(group: String): Int {
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(getNodeCountInGroupBind, segment, group)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.getNodeCountInGroupBind, segment, group)
     }
 
     /**
@@ -494,7 +495,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_current_scene
      */
     fun setCurrentScene(childNode: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurrentSceneBind, segment, listOf(childNode.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurrentSceneBind, segment, listOf(childNode.segment))
     }
 
     /**
@@ -506,7 +507,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_current_scene
      */
     fun getCurrentScene(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentSceneBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentSceneBind, segment))
     }
 
     /**
@@ -518,7 +519,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.change_scene_to_file
      */
     fun changeSceneToFile(path: String): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(changeSceneToFileBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.changeSceneToFileBind, segment, path))
     }
 
     /**
@@ -530,7 +531,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.change_scene_to_packed
      */
     fun changeSceneToPacked(packedScene: PackedScene): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(changeSceneToPackedBind, segment, packedScene.requireOpenHandle()))
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.changeSceneToPackedBind, segment, packedScene.requireOpenHandle()))
     }
 
     /**
@@ -552,7 +553,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.change_scene_to_node
      */
     fun changeSceneToNode(node: Node): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(changeSceneToNodeBind, segment, node.segment))
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.changeSceneToNodeBind, segment, node.segment))
     }
 
     /**
@@ -564,7 +565,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.reload_current_scene
      */
     fun reloadCurrentScene(): GodotError {
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.reloadCurrentSceneBind, segment))
     }
 
     /**
@@ -573,7 +574,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.unload_current_scene
      */
     fun unloadCurrentScene() {
-        ObjectCalls.ptrcallNoArgs(unloadCurrentSceneBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.unloadCurrentSceneBind, segment)
     }
 
     /**
@@ -588,7 +589,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_multiplayer
      */
     fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath) {
-        ObjectCalls.ptrcallWithObjectAndNodePathArg(setMultiplayerBind, segment, multiplayer?.requireOpenHandle() ?: NULL_SEGMENT, rootPath)
+        ObjectCalls.ptrcallWithObjectAndNodePathArg(Binds.setMultiplayerBind, segment, multiplayer?.requireOpenHandle() ?: NULL_SEGMENT, rootPath)
     }
 
     /**
@@ -599,7 +600,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_multiplayer
      */
     fun getMultiplayer(forPath: NodePath): MultiplayerAPI {
-        return requireGodotReturn(MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, segment, forPath)), "SceneTree.get_multiplayer")
+        return requireGodotReturn(MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallWithNodePathArgRetObject(Binds.getMultiplayerBind, segment, forPath)), "SceneTree.get_multiplayer")
     }
 
     /**
@@ -612,7 +613,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.set_multiplayer_poll_enabled
      */
     fun setMultiplayerPollEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMultiplayerPollEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMultiplayerPollEnabledBind, segment, enabled)
     }
 
     /**
@@ -625,7 +626,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.is_multiplayer_poll_enabled
      */
     fun isMultiplayerPollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultiplayerPollEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultiplayerPollEnabledBind, segment)
     }
 
     // ── Kanama SceneTree ergonomics (generator custom-section, not from Godot docs) ───────────
@@ -1155,7 +1156,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
             ignoreTimeScale: Boolean = false,
         ): GodotHandle = GodotHandle(
             ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
-                createTimerBind,
+                Binds.createTimerBind,
                 active().segment,
                 timeSec,
                 processAlways,
@@ -1189,7 +1190,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         // Node.create_tween: the tree is a MainLoop, not a Node.
         @JvmStatic
         fun createTweenHandle(): GodotHandle =
-            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, active().segment))
+            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTweenBind, active().segment))
 
         suspend fun delaySeconds(
             timeSec: Double,
@@ -1327,240 +1328,242 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          * Generated from Godot docs: SceneTree.is_physics_interpolation_enabled
          */
         fun isPhysicsInterpolationEnabled(): Boolean = active().isPhysicsInterpolationEnabled()
+    }
 
+    private object Binds {
         private const val GET_ROOT_HASH = 1757182445L
-        private val getRootBind by lazy {
+        @JvmField
+        val getRootBind =
             ObjectCalls.getMethodBind("SceneTree", "get_root", GET_ROOT_HASH)
-        }
 
         private const val HAS_GROUP_HASH = 2619796661L
-        private val hasGroupBind by lazy {
+        @JvmField
+        val hasGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "has_group", HAS_GROUP_HASH)
-        }
 
         private const val IS_ACCESSIBILITY_ENABLED_HASH = 36873697L
-        private val isAccessibilityEnabledBind by lazy {
+        @JvmField
+        val isAccessibilityEnabledBind =
             ObjectCalls.getMethodBind("SceneTree", "is_accessibility_enabled", IS_ACCESSIBILITY_ENABLED_HASH)
-        }
 
         private const val IS_ACCESSIBILITY_SUPPORTED_HASH = 36873697L
-        private val isAccessibilitySupportedBind by lazy {
+        @JvmField
+        val isAccessibilitySupportedBind =
             ObjectCalls.getMethodBind("SceneTree", "is_accessibility_supported", IS_ACCESSIBILITY_SUPPORTED_HASH)
-        }
 
         private const val IS_AUTO_ACCEPT_QUIT_HASH = 36873697L
-        private val isAutoAcceptQuitBind by lazy {
+        @JvmField
+        val isAutoAcceptQuitBind =
             ObjectCalls.getMethodBind("SceneTree", "is_auto_accept_quit", IS_AUTO_ACCEPT_QUIT_HASH)
-        }
 
         private const val SET_AUTO_ACCEPT_QUIT_HASH = 2586408642L
-        private val setAutoAcceptQuitBind by lazy {
+        @JvmField
+        val setAutoAcceptQuitBind =
             ObjectCalls.getMethodBind("SceneTree", "set_auto_accept_quit", SET_AUTO_ACCEPT_QUIT_HASH)
-        }
 
         private const val IS_QUIT_ON_GO_BACK_HASH = 36873697L
-        private val isQuitOnGoBackBind by lazy {
+        @JvmField
+        val isQuitOnGoBackBind =
             ObjectCalls.getMethodBind("SceneTree", "is_quit_on_go_back", IS_QUIT_ON_GO_BACK_HASH)
-        }
 
         private const val SET_QUIT_ON_GO_BACK_HASH = 2586408642L
-        private val setQuitOnGoBackBind by lazy {
+        @JvmField
+        val setQuitOnGoBackBind =
             ObjectCalls.getMethodBind("SceneTree", "set_quit_on_go_back", SET_QUIT_ON_GO_BACK_HASH)
-        }
 
         private const val SET_DEBUG_COLLISIONS_HINT_HASH = 2586408642L
-        private val setDebugCollisionsHintBind by lazy {
+        @JvmField
+        val setDebugCollisionsHintBind =
             ObjectCalls.getMethodBind("SceneTree", "set_debug_collisions_hint", SET_DEBUG_COLLISIONS_HINT_HASH)
-        }
 
         private const val IS_DEBUGGING_COLLISIONS_HINT_HASH = 36873697L
-        private val isDebuggingCollisionsHintBind by lazy {
+        @JvmField
+        val isDebuggingCollisionsHintBind =
             ObjectCalls.getMethodBind("SceneTree", "is_debugging_collisions_hint", IS_DEBUGGING_COLLISIONS_HINT_HASH)
-        }
 
         private const val SET_DEBUG_PATHS_HINT_HASH = 2586408642L
-        private val setDebugPathsHintBind by lazy {
+        @JvmField
+        val setDebugPathsHintBind =
             ObjectCalls.getMethodBind("SceneTree", "set_debug_paths_hint", SET_DEBUG_PATHS_HINT_HASH)
-        }
 
         private const val IS_DEBUGGING_PATHS_HINT_HASH = 36873697L
-        private val isDebuggingPathsHintBind by lazy {
+        @JvmField
+        val isDebuggingPathsHintBind =
             ObjectCalls.getMethodBind("SceneTree", "is_debugging_paths_hint", IS_DEBUGGING_PATHS_HINT_HASH)
-        }
 
         private const val SET_DEBUG_NAVIGATION_HINT_HASH = 2586408642L
-        private val setDebugNavigationHintBind by lazy {
+        @JvmField
+        val setDebugNavigationHintBind =
             ObjectCalls.getMethodBind("SceneTree", "set_debug_navigation_hint", SET_DEBUG_NAVIGATION_HINT_HASH)
-        }
 
         private const val IS_DEBUGGING_NAVIGATION_HINT_HASH = 36873697L
-        private val isDebuggingNavigationHintBind by lazy {
+        @JvmField
+        val isDebuggingNavigationHintBind =
             ObjectCalls.getMethodBind("SceneTree", "is_debugging_navigation_hint", IS_DEBUGGING_NAVIGATION_HINT_HASH)
-        }
 
         private const val SET_EDITED_SCENE_ROOT_HASH = 1078189570L
-        private val setEditedSceneRootBind by lazy {
+        @JvmField
+        val setEditedSceneRootBind =
             ObjectCalls.getMethodBind("SceneTree", "set_edited_scene_root", SET_EDITED_SCENE_ROOT_HASH)
-        }
 
         private const val GET_EDITED_SCENE_ROOT_HASH = 3160264692L
-        private val getEditedSceneRootBind by lazy {
+        @JvmField
+        val getEditedSceneRootBind =
             ObjectCalls.getMethodBind("SceneTree", "get_edited_scene_root", GET_EDITED_SCENE_ROOT_HASH)
-        }
 
         private const val SET_PAUSE_HASH = 2586408642L
-        private val setPauseBind by lazy {
+        @JvmField
+        val setPauseBind =
             ObjectCalls.getMethodBind("SceneTree", "set_pause", SET_PAUSE_HASH)
-        }
 
         private const val IS_PAUSED_HASH = 36873697L
-        private val isPausedBind by lazy {
+        @JvmField
+        val isPausedBind =
             ObjectCalls.getMethodBind("SceneTree", "is_paused", IS_PAUSED_HASH)
-        }
 
         private const val CREATE_TIMER_HASH = 2709170273L
-        private val createTimerBind by lazy {
+        @JvmField
+        val createTimerBind =
             ObjectCalls.getMethodBind("SceneTree", "create_timer", CREATE_TIMER_HASH)
-        }
 
         private const val CREATE_TWEEN_HASH = 3426978995L
-        private val createTweenBind by lazy {
+        @JvmField
+        val createTweenBind =
             ObjectCalls.getMethodBind("SceneTree", "create_tween", CREATE_TWEEN_HASH)
-        }
 
         private const val GET_PROCESSED_TWEENS_HASH = 2915620761L
-        private val getProcessedTweensBind by lazy {
+        @JvmField
+        val getProcessedTweensBind =
             ObjectCalls.getMethodBind("SceneTree", "get_processed_tweens", GET_PROCESSED_TWEENS_HASH)
-        }
 
         private const val GET_NODE_COUNT_HASH = 3905245786L
-        private val getNodeCountBind by lazy {
+        @JvmField
+        val getNodeCountBind =
             ObjectCalls.getMethodBind("SceneTree", "get_node_count", GET_NODE_COUNT_HASH)
-        }
 
         private const val GET_FRAME_HASH = 3905245786L
-        private val getFrameBind by lazy {
+        @JvmField
+        val getFrameBind =
             ObjectCalls.getMethodBind("SceneTree", "get_frame", GET_FRAME_HASH)
-        }
 
         private const val QUIT_HASH = 1995695955L
-        private val quitBind by lazy {
+        @JvmField
+        val quitBind =
             ObjectCalls.getMethodBind("SceneTree", "quit", QUIT_HASH)
-        }
 
         private const val SET_PHYSICS_INTERPOLATION_ENABLED_HASH = 2586408642L
-        private val setPhysicsInterpolationEnabledBind by lazy {
+        @JvmField
+        val setPhysicsInterpolationEnabledBind =
             ObjectCalls.getMethodBind("SceneTree", "set_physics_interpolation_enabled", SET_PHYSICS_INTERPOLATION_ENABLED_HASH)
-        }
 
         private const val IS_PHYSICS_INTERPOLATION_ENABLED_HASH = 36873697L
-        private val isPhysicsInterpolationEnabledBind by lazy {
+        @JvmField
+        val isPhysicsInterpolationEnabledBind =
             ObjectCalls.getMethodBind("SceneTree", "is_physics_interpolation_enabled", IS_PHYSICS_INTERPOLATION_ENABLED_HASH)
-        }
 
         private const val QUEUE_DELETE_HASH = 3975164845L
-        private val queueDeleteBind by lazy {
+        @JvmField
+        val queueDeleteBind =
             ObjectCalls.getMethodBind("SceneTree", "queue_delete", QUEUE_DELETE_HASH)
-        }
 
         private const val CALL_GROUP_FLAGS_HASH = 1527739229L
-        private val callGroupFlagsBind by lazy {
+        @JvmField
+        val callGroupFlagsBind =
             ObjectCalls.getMethodBind("SceneTree", "call_group_flags", CALL_GROUP_FLAGS_HASH)
-        }
 
         private const val NOTIFY_GROUP_FLAGS_HASH = 1245489420L
-        private val notifyGroupFlagsBind by lazy {
+        @JvmField
+        val notifyGroupFlagsBind =
             ObjectCalls.getMethodBind("SceneTree", "notify_group_flags", NOTIFY_GROUP_FLAGS_HASH)
-        }
 
         private const val SET_GROUP_FLAGS_HASH = 3497599527L
-        private val setGroupFlagsBind by lazy {
+        @JvmField
+        val setGroupFlagsBind =
             ObjectCalls.getMethodBind("SceneTree", "set_group_flags", SET_GROUP_FLAGS_HASH)
-        }
 
         private const val CALL_GROUP_HASH = 1257962832L
-        private val callGroupBind by lazy {
+        @JvmField
+        val callGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "call_group", CALL_GROUP_HASH)
-        }
 
         private const val NOTIFY_GROUP_HASH = 2415702435L
-        private val notifyGroupBind by lazy {
+        @JvmField
+        val notifyGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "notify_group", NOTIFY_GROUP_HASH)
-        }
 
         private const val SET_GROUP_HASH = 1279312029L
-        private val setGroupBind by lazy {
+        @JvmField
+        val setGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "set_group", SET_GROUP_HASH)
-        }
 
         private const val GET_NODES_IN_GROUP_HASH = 689397652L
-        private val getNodesInGroupBind by lazy {
+        @JvmField
+        val getNodesInGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "get_nodes_in_group", GET_NODES_IN_GROUP_HASH)
-        }
 
         private const val GET_FIRST_NODE_IN_GROUP_HASH = 4071044623L
-        private val getFirstNodeInGroupBind by lazy {
+        @JvmField
+        val getFirstNodeInGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "get_first_node_in_group", GET_FIRST_NODE_IN_GROUP_HASH)
-        }
 
         private const val GET_NODE_COUNT_IN_GROUP_HASH = 2458036349L
-        private val getNodeCountInGroupBind by lazy {
+        @JvmField
+        val getNodeCountInGroupBind =
             ObjectCalls.getMethodBind("SceneTree", "get_node_count_in_group", GET_NODE_COUNT_IN_GROUP_HASH)
-        }
 
         private const val SET_CURRENT_SCENE_HASH = 1078189570L
-        private val setCurrentSceneBind by lazy {
+        @JvmField
+        val setCurrentSceneBind =
             ObjectCalls.getMethodBind("SceneTree", "set_current_scene", SET_CURRENT_SCENE_HASH)
-        }
 
         private const val GET_CURRENT_SCENE_HASH = 3160264692L
-        private val getCurrentSceneBind by lazy {
+        @JvmField
+        val getCurrentSceneBind =
             ObjectCalls.getMethodBind("SceneTree", "get_current_scene", GET_CURRENT_SCENE_HASH)
-        }
 
         private const val CHANGE_SCENE_TO_FILE_HASH = 166001499L
-        private val changeSceneToFileBind by lazy {
+        @JvmField
+        val changeSceneToFileBind =
             ObjectCalls.getMethodBind("SceneTree", "change_scene_to_file", CHANGE_SCENE_TO_FILE_HASH)
-        }
 
         private const val CHANGE_SCENE_TO_PACKED_HASH = 107349098L
-        private val changeSceneToPackedBind by lazy {
+        @JvmField
+        val changeSceneToPackedBind =
             ObjectCalls.getMethodBind("SceneTree", "change_scene_to_packed", CHANGE_SCENE_TO_PACKED_HASH)
-        }
 
         private const val CHANGE_SCENE_TO_NODE_HASH = 2584678054L
-        private val changeSceneToNodeBind by lazy {
+        @JvmField
+        val changeSceneToNodeBind =
             ObjectCalls.getMethodBind("SceneTree", "change_scene_to_node", CHANGE_SCENE_TO_NODE_HASH)
-        }
 
         private const val RELOAD_CURRENT_SCENE_HASH = 166280745L
-        private val reloadCurrentSceneBind by lazy {
+        @JvmField
+        val reloadCurrentSceneBind =
             ObjectCalls.getMethodBind("SceneTree", "reload_current_scene", RELOAD_CURRENT_SCENE_HASH)
-        }
 
         private const val UNLOAD_CURRENT_SCENE_HASH = 3218959716L
-        private val unloadCurrentSceneBind by lazy {
+        @JvmField
+        val unloadCurrentSceneBind =
             ObjectCalls.getMethodBind("SceneTree", "unload_current_scene", UNLOAD_CURRENT_SCENE_HASH)
-        }
 
         private const val SET_MULTIPLAYER_HASH = 2385607013L
-        private val setMultiplayerBind by lazy {
+        @JvmField
+        val setMultiplayerBind =
             ObjectCalls.getMethodBind("SceneTree", "set_multiplayer", SET_MULTIPLAYER_HASH)
-        }
 
         private const val GET_MULTIPLAYER_HASH = 3453401404L
-        private val getMultiplayerBind by lazy {
+        @JvmField
+        val getMultiplayerBind =
             ObjectCalls.getMethodBind("SceneTree", "get_multiplayer", GET_MULTIPLAYER_HASH)
-        }
 
         private const val SET_MULTIPLAYER_POLL_ENABLED_HASH = 2586408642L
-        private val setMultiplayerPollEnabledBind by lazy {
+        @JvmField
+        val setMultiplayerPollEnabledBind =
             ObjectCalls.getMethodBind("SceneTree", "set_multiplayer_poll_enabled", SET_MULTIPLAYER_POLL_ENABLED_HASH)
-        }
 
         private const val IS_MULTIPLAYER_POLL_ENABLED_HASH = 36873697L
-        private val isMultiplayerPollEnabledBind by lazy {
+        @JvmField
+        val isMultiplayerPollEnabledBind =
             ObjectCalls.getMethodBind("SceneTree", "is_multiplayer_poll_enabled", IS_MULTIPLAYER_POLL_ENABLED_HASH)
-        }
     }
 }

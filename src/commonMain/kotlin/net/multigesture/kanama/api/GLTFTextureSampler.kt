@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -35,42 +36,42 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
 
     fun getMagFilter(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMagFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMagFilterBind, segment)
     }
 
     fun setMagFilter(filterMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMagFilterBind, segment, filterMode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMagFilterBind, segment, filterMode)
     }
 
     fun getMinFilter(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinFilterBind, segment)
     }
 
     fun setMinFilter(filterMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMinFilterBind, segment, filterMode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMinFilterBind, segment, filterMode)
     }
 
     fun getWrapS(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWrapSBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapSBind, segment)
     }
 
     fun setWrapS(wrapMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWrapSBind, segment, wrapMode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWrapSBind, segment, wrapMode)
     }
 
     fun getWrapT(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWrapTBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapTBind, segment)
     }
 
     fun setWrapT(wrapMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWrapTBind, segment, wrapMode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWrapTBind, segment, wrapMode)
     }
 
     companion object {
@@ -83,45 +84,47 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFTextureSampler? =
             if (handle.address() == 0L) null else GLTFTextureSampler(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_MAG_FILTER_HASH = 3905245786L
-        private val getMagFilterBind by lazy {
+        @JvmField
+        val getMagFilterBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "get_mag_filter", GET_MAG_FILTER_HASH)
-        }
 
         private const val SET_MAG_FILTER_HASH = 1286410249L
-        private val setMagFilterBind by lazy {
+        @JvmField
+        val setMagFilterBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "set_mag_filter", SET_MAG_FILTER_HASH)
-        }
 
         private const val GET_MIN_FILTER_HASH = 3905245786L
-        private val getMinFilterBind by lazy {
+        @JvmField
+        val getMinFilterBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "get_min_filter", GET_MIN_FILTER_HASH)
-        }
 
         private const val SET_MIN_FILTER_HASH = 1286410249L
-        private val setMinFilterBind by lazy {
+        @JvmField
+        val setMinFilterBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "set_min_filter", SET_MIN_FILTER_HASH)
-        }
 
         private const val GET_WRAP_S_HASH = 3905245786L
-        private val getWrapSBind by lazy {
+        @JvmField
+        val getWrapSBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "get_wrap_s", GET_WRAP_S_HASH)
-        }
 
         private const val SET_WRAP_S_HASH = 1286410249L
-        private val setWrapSBind by lazy {
+        @JvmField
+        val setWrapSBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "set_wrap_s", SET_WRAP_S_HASH)
-        }
 
         private const val GET_WRAP_T_HASH = 3905245786L
-        private val getWrapTBind by lazy {
+        @JvmField
+        val getWrapTBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "get_wrap_t", GET_WRAP_T_HASH)
-        }
 
         private const val SET_WRAP_T_HASH = 1286410249L
-        private val setWrapTBind by lazy {
+        @JvmField
+        val setWrapTBind =
             ObjectCalls.getMethodBind("GLTFTextureSampler", "set_wrap_t", SET_WRAP_T_HASH)
-        }
     }
 }

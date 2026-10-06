@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -45,7 +46,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setAtlas(atlas: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, segment, listOf(atlas?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setAtlasBind, segment, listOf(atlas?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -56,7 +57,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getAtlas(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getAtlasBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getAtlasBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -73,7 +74,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setRegion(region: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setRegionBind, segment, region)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setRegionBind, segment, region)
     }
 
     /**
@@ -85,7 +86,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getRegion(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionBind, segment)
     }
 
     /**
@@ -97,7 +98,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setMargin(margin: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setMarginBind, segment, margin)
     }
 
     /**
@@ -109,7 +110,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getMargin(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getMarginBind, segment)
     }
 
     /**
@@ -120,7 +121,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFilterClip(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilterClipBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFilterClipBind, segment, enable)
     }
 
     /**
@@ -131,7 +132,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun hasFilterClip(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasFilterClipBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasFilterClipBind, segment)
     }
 
     companion object {
@@ -144,45 +145,47 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AtlasTexture? =
             if (handle.address() == 0L) null else AtlasTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ATLAS_HASH = 4051416890L
-        private val setAtlasBind by lazy {
+        @JvmField
+        val setAtlasBind =
             ObjectCalls.getMethodBind("AtlasTexture", "set_atlas", SET_ATLAS_HASH)
-        }
 
         private const val GET_ATLAS_HASH = 3635182373L
-        private val getAtlasBind by lazy {
+        @JvmField
+        val getAtlasBind =
             ObjectCalls.getMethodBind("AtlasTexture", "get_atlas", GET_ATLAS_HASH)
-        }
 
         private const val SET_REGION_HASH = 2046264180L
-        private val setRegionBind by lazy {
+        @JvmField
+        val setRegionBind =
             ObjectCalls.getMethodBind("AtlasTexture", "set_region", SET_REGION_HASH)
-        }
 
         private const val GET_REGION_HASH = 1639390495L
-        private val getRegionBind by lazy {
+        @JvmField
+        val getRegionBind =
             ObjectCalls.getMethodBind("AtlasTexture", "get_region", GET_REGION_HASH)
-        }
 
         private const val SET_MARGIN_HASH = 2046264180L
-        private val setMarginBind by lazy {
+        @JvmField
+        val setMarginBind =
             ObjectCalls.getMethodBind("AtlasTexture", "set_margin", SET_MARGIN_HASH)
-        }
 
         private const val GET_MARGIN_HASH = 1639390495L
-        private val getMarginBind by lazy {
+        @JvmField
+        val getMarginBind =
             ObjectCalls.getMethodBind("AtlasTexture", "get_margin", GET_MARGIN_HASH)
-        }
 
         private const val SET_FILTER_CLIP_HASH = 2586408642L
-        private val setFilterClipBind by lazy {
+        @JvmField
+        val setFilterClipBind =
             ObjectCalls.getMethodBind("AtlasTexture", "set_filter_clip", SET_FILTER_CLIP_HASH)
-        }
 
         private const val HAS_FILTER_CLIP_HASH = 36873697L
-        private val hasFilterClipBind by lazy {
+        @JvmField
+        val hasFilterClipBind =
             ObjectCalls.getMethodBind("AtlasTexture", "has_filter_clip", HAS_FILTER_CLIP_HASH)
-        }
     }
 }

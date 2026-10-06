@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -73,7 +74,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_texture_normal
      */
     fun setTextureNormal(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -82,7 +83,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_texture_normal
      */
     fun getTextureNormal(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureNormalBind, segment))
     }
 
     /**
@@ -91,7 +92,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_texture_pressed
      */
     fun setTexturePressed(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -100,7 +101,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_texture_pressed
      */
     fun getTexturePressed(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTexturePressedBind, segment))
     }
 
     /**
@@ -109,7 +110,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_bitmask
      */
     fun setBitmask(bitmask: BitMap?) {
-        ObjectCalls.ptrcallWithObjectArgs(setBitmaskBind, segment, listOf(bitmask?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setBitmaskBind, segment, listOf(bitmask?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -118,7 +119,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_bitmask
      */
     fun getBitmask(): BitMap? {
-        return BitMap.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getBitmaskBind, segment))
+        return BitMap.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getBitmaskBind, segment))
     }
 
     /**
@@ -127,7 +128,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape
      */
     fun setShape(shape: Shape2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -136,7 +137,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_shape
      */
     fun getShape(): Shape2D? {
-        return Shape2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Shape2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShapeBind, segment))
     }
 
     /**
@@ -146,7 +147,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape_centered
      */
     fun setShapeCentered(bool: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShapeCenteredBind, segment, bool)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShapeCenteredBind, segment, bool)
     }
 
     /**
@@ -156,7 +157,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_shape_centered
      */
     fun isShapeCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShapeCenteredBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShapeCenteredBind, segment)
     }
 
     /**
@@ -165,7 +166,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_shape_visible
      */
     fun setShapeVisible(bool: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShapeVisibleBind, segment, bool)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShapeVisibleBind, segment, bool)
     }
 
     /**
@@ -174,7 +175,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_shape_visible
      */
     fun isShapeVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShapeVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShapeVisibleBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_action
      */
     fun setAction(action: String) {
-        ObjectCalls.ptrcallWithStringArg(setActionBind, segment, action)
+        ObjectCalls.ptrcallWithStringArg(Binds.setActionBind, segment, action)
     }
 
     /**
@@ -192,7 +193,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_action
      */
     fun getAction(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getActionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getActionBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_visibility_mode
      */
     fun setVisibilityMode(mode: TouchScreenButton.VisibilityMode) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityModeBind, segment, mode.value)
     }
 
     /**
@@ -210,7 +211,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_visibility_mode
      */
     fun getVisibilityMode(): TouchScreenButton.VisibilityMode {
-        return TouchScreenButton.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
+        return TouchScreenButton.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityModeBind, segment))
     }
 
     /**
@@ -221,7 +222,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.set_passby_press
      */
     fun setPassbyPress(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPassbyPressBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPassbyPressBind, segment, enabled)
     }
 
     /**
@@ -232,7 +233,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_passby_press_enabled
      */
     fun isPassbyPressEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPassbyPressEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPassbyPressEnabledBind, segment)
     }
 
     /**
@@ -241,7 +242,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.is_pressed
      */
     fun isPressed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
     }
 
     /** Signal `pressed()`; see [TypedSignal]. */
@@ -291,100 +292,102 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): TouchScreenButton? =
             if (handle.address() == 0L) null else TouchScreenButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_NORMAL_HASH = 4051416890L
-        private val setTextureNormalBind by lazy {
+        @JvmField
+        val setTextureNormalBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_texture_normal", SET_TEXTURE_NORMAL_HASH)
-        }
 
         private const val GET_TEXTURE_NORMAL_HASH = 3635182373L
-        private val getTextureNormalBind by lazy {
+        @JvmField
+        val getTextureNormalBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "get_texture_normal", GET_TEXTURE_NORMAL_HASH)
-        }
 
         private const val SET_TEXTURE_PRESSED_HASH = 4051416890L
-        private val setTexturePressedBind by lazy {
+        @JvmField
+        val setTexturePressedBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_texture_pressed", SET_TEXTURE_PRESSED_HASH)
-        }
 
         private const val GET_TEXTURE_PRESSED_HASH = 3635182373L
-        private val getTexturePressedBind by lazy {
+        @JvmField
+        val getTexturePressedBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "get_texture_pressed", GET_TEXTURE_PRESSED_HASH)
-        }
 
         private const val SET_BITMASK_HASH = 698588216L
-        private val setBitmaskBind by lazy {
+        @JvmField
+        val setBitmaskBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_bitmask", SET_BITMASK_HASH)
-        }
 
         private const val GET_BITMASK_HASH = 2459671998L
-        private val getBitmaskBind by lazy {
+        @JvmField
+        val getBitmaskBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "get_bitmask", GET_BITMASK_HASH)
-        }
 
         private const val SET_SHAPE_HASH = 771364740L
-        private val setShapeBind by lazy {
+        @JvmField
+        val setShapeBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_shape", SET_SHAPE_HASH)
-        }
 
         private const val GET_SHAPE_HASH = 522005891L
-        private val getShapeBind by lazy {
+        @JvmField
+        val getShapeBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "get_shape", GET_SHAPE_HASH)
-        }
 
         private const val SET_SHAPE_CENTERED_HASH = 2586408642L
-        private val setShapeCenteredBind by lazy {
+        @JvmField
+        val setShapeCenteredBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_shape_centered", SET_SHAPE_CENTERED_HASH)
-        }
 
         private const val IS_SHAPE_CENTERED_HASH = 36873697L
-        private val isShapeCenteredBind by lazy {
+        @JvmField
+        val isShapeCenteredBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "is_shape_centered", IS_SHAPE_CENTERED_HASH)
-        }
 
         private const val SET_SHAPE_VISIBLE_HASH = 2586408642L
-        private val setShapeVisibleBind by lazy {
+        @JvmField
+        val setShapeVisibleBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_shape_visible", SET_SHAPE_VISIBLE_HASH)
-        }
 
         private const val IS_SHAPE_VISIBLE_HASH = 36873697L
-        private val isShapeVisibleBind by lazy {
+        @JvmField
+        val isShapeVisibleBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "is_shape_visible", IS_SHAPE_VISIBLE_HASH)
-        }
 
         private const val SET_ACTION_HASH = 83702148L
-        private val setActionBind by lazy {
+        @JvmField
+        val setActionBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_action", SET_ACTION_HASH)
-        }
 
         private const val GET_ACTION_HASH = 201670096L
-        private val getActionBind by lazy {
+        @JvmField
+        val getActionBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "get_action", GET_ACTION_HASH)
-        }
 
         private const val SET_VISIBILITY_MODE_HASH = 3031128463L
-        private val setVisibilityModeBind by lazy {
+        @JvmField
+        val setVisibilityModeBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_visibility_mode", SET_VISIBILITY_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_MODE_HASH = 2558996468L
-        private val getVisibilityModeBind by lazy {
+        @JvmField
+        val getVisibilityModeBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "get_visibility_mode", GET_VISIBILITY_MODE_HASH)
-        }
 
         private const val SET_PASSBY_PRESS_HASH = 2586408642L
-        private val setPassbyPressBind by lazy {
+        @JvmField
+        val setPassbyPressBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "set_passby_press", SET_PASSBY_PRESS_HASH)
-        }
 
         private const val IS_PASSBY_PRESS_ENABLED_HASH = 36873697L
-        private val isPassbyPressEnabledBind by lazy {
+        @JvmField
+        val isPassbyPressEnabledBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "is_passby_press_enabled", IS_PASSBY_PRESS_ENABLED_HASH)
-        }
 
         private const val IS_PRESSED_HASH = 36873697L
-        private val isPressedBind by lazy {
+        @JvmField
+        val isPressedBind =
             ObjectCalls.getMethodBind("TouchScreenButton", "is_pressed", IS_PRESSED_HASH)
-        }
     }
 }

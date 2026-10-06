@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -49,7 +50,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPathBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPathBind, segment, path)
     }
 
     /**
@@ -60,7 +61,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeOverPath(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(takeOverPathBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.takeOverPathBind, segment, path)
     }
 
     /**
@@ -74,7 +75,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
     }
 
     /**
@@ -86,7 +87,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPathCache(path: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPathCacheBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPathCacheBind, segment, path)
     }
 
     /**
@@ -101,7 +102,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setNameBind, segment, name)
     }
 
     /**
@@ -116,7 +117,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
     }
 
     /**
@@ -128,7 +129,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLocalToScene(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setLocalToSceneBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLocalToSceneBind, segment, enable)
     }
 
     /**
@@ -154,7 +155,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isLocalToScene(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalToSceneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLocalToSceneBind, segment)
     }
 
     /**
@@ -166,7 +167,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalSceneBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLocalSceneBind, segment))
     }
 
     /**
@@ -178,7 +179,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setupLocalToScene() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setupLocalToSceneBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setupLocalToSceneBind, segment)
     }
 
     /**
@@ -190,7 +191,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun resetState() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetStateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetStateBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIdForPath(path: String, id: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, segment, path, id)
+        ObjectCalls.ptrcallWithTwoStringArgs(Binds.setIdForPathBind, segment, path, id)
     }
 
     /**
@@ -218,7 +219,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIdForPath(path: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, segment, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getIdForPathBind, segment, path)
     }
 
     /**
@@ -228,7 +229,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBuiltIn(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBuiltInBind, segment)
     }
 
     /**
@@ -245,7 +246,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSceneUniqueId(id: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, segment, id)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSceneUniqueIdBind, segment, id)
     }
 
     /**
@@ -262,7 +263,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSceneUniqueId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneUniqueIdBind, segment)
     }
 
     /**
@@ -275,7 +276,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun emitChanged() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(emitChangedBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.emitChangedBind, segment)
     }
 
     /**
@@ -299,7 +300,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun duplicate(deep: Boolean = false): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, segment, deep)
+        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(Binds.duplicateBind, segment, deep)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -315,7 +316,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun duplicateDeep(deepSubresourcesMode: Resource.DeepDuplicateMode = Resource.DeepDuplicateMode.INTERNAL): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode.value)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(Binds.duplicateDeepBind, segment, deepSubresourcesMode.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -330,7 +331,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun copyFromResource(resource: Resource?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /** Signal `changed()`; see [TypedSignal]. */
@@ -389,7 +390,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: Resource.generate_scene_unique_id
          */
         fun generateSceneUniqueId(): String {
-            return ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetString(Binds.generateSceneUniqueIdBind, NULL_SEGMENT)
         }
 
         @JvmStatic
@@ -411,115 +412,117 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         @JvmStatic
         fun fromObject(value: GodotObject): Resource? =
             if (value.isClass("Resource")) RefCounted.retained(Resource(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_PATH_HASH = 83702148L
-        private val setPathBind by lazy {
+        @JvmField
+        val setPathBind =
             ObjectCalls.getMethodBind("Resource", "set_path", SET_PATH_HASH)
-        }
 
         private const val TAKE_OVER_PATH_HASH = 83702148L
-        private val takeOverPathBind by lazy {
+        @JvmField
+        val takeOverPathBind =
             ObjectCalls.getMethodBind("Resource", "take_over_path", TAKE_OVER_PATH_HASH)
-        }
 
         private const val GET_PATH_HASH = 201670096L
-        private val getPathBind by lazy {
+        @JvmField
+        val getPathBind =
             ObjectCalls.getMethodBind("Resource", "get_path", GET_PATH_HASH)
-        }
 
         private const val SET_PATH_CACHE_HASH = 83702148L
-        private val setPathCacheBind by lazy {
+        @JvmField
+        val setPathCacheBind =
             ObjectCalls.getMethodBind("Resource", "set_path_cache", SET_PATH_CACHE_HASH)
-        }
 
         private const val SET_NAME_HASH = 83702148L
-        private val setNameBind by lazy {
+        @JvmField
+        val setNameBind =
             ObjectCalls.getMethodBind("Resource", "set_name", SET_NAME_HASH)
-        }
 
         private const val GET_NAME_HASH = 201670096L
-        private val getNameBind by lazy {
+        @JvmField
+        val getNameBind =
             ObjectCalls.getMethodBind("Resource", "get_name", GET_NAME_HASH)
-        }
 
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("Resource", "get_rid", GET_RID_HASH)
-        }
 
         private const val SET_LOCAL_TO_SCENE_HASH = 2586408642L
-        private val setLocalToSceneBind by lazy {
+        @JvmField
+        val setLocalToSceneBind =
             ObjectCalls.getMethodBind("Resource", "set_local_to_scene", SET_LOCAL_TO_SCENE_HASH)
-        }
 
         private const val IS_LOCAL_TO_SCENE_HASH = 36873697L
-        private val isLocalToSceneBind by lazy {
+        @JvmField
+        val isLocalToSceneBind =
             ObjectCalls.getMethodBind("Resource", "is_local_to_scene", IS_LOCAL_TO_SCENE_HASH)
-        }
 
         private const val GET_LOCAL_SCENE_HASH = 3160264692L
-        private val getLocalSceneBind by lazy {
+        @JvmField
+        val getLocalSceneBind =
             ObjectCalls.getMethodBind("Resource", "get_local_scene", GET_LOCAL_SCENE_HASH)
-        }
 
         private const val SETUP_LOCAL_TO_SCENE_HASH = 3218959716L
-        private val setupLocalToSceneBind by lazy {
+        @JvmField
+        val setupLocalToSceneBind =
             ObjectCalls.getMethodBind("Resource", "setup_local_to_scene", SETUP_LOCAL_TO_SCENE_HASH)
-        }
 
         private const val RESET_STATE_HASH = 3218959716L
-        private val resetStateBind by lazy {
+        @JvmField
+        val resetStateBind =
             ObjectCalls.getMethodBind("Resource", "reset_state", RESET_STATE_HASH)
-        }
 
         private const val SET_ID_FOR_PATH_HASH = 3186203200L
-        private val setIdForPathBind by lazy {
+        @JvmField
+        val setIdForPathBind =
             ObjectCalls.getMethodBind("Resource", "set_id_for_path", SET_ID_FOR_PATH_HASH)
-        }
 
         private const val GET_ID_FOR_PATH_HASH = 3135753539L
-        private val getIdForPathBind by lazy {
+        @JvmField
+        val getIdForPathBind =
             ObjectCalls.getMethodBind("Resource", "get_id_for_path", GET_ID_FOR_PATH_HASH)
-        }
 
         private const val IS_BUILT_IN_HASH = 36873697L
-        private val isBuiltInBind by lazy {
+        @JvmField
+        val isBuiltInBind =
             ObjectCalls.getMethodBind("Resource", "is_built_in", IS_BUILT_IN_HASH)
-        }
 
         private const val GENERATE_SCENE_UNIQUE_ID_HASH = 2841200299L
-        private val generateSceneUniqueIdBind by lazy {
+        @JvmField
+        val generateSceneUniqueIdBind =
             ObjectCalls.getMethodBind("Resource", "generate_scene_unique_id", GENERATE_SCENE_UNIQUE_ID_HASH)
-        }
 
         private const val SET_SCENE_UNIQUE_ID_HASH = 83702148L
-        private val setSceneUniqueIdBind by lazy {
+        @JvmField
+        val setSceneUniqueIdBind =
             ObjectCalls.getMethodBind("Resource", "set_scene_unique_id", SET_SCENE_UNIQUE_ID_HASH)
-        }
 
         private const val GET_SCENE_UNIQUE_ID_HASH = 201670096L
-        private val getSceneUniqueIdBind by lazy {
+        @JvmField
+        val getSceneUniqueIdBind =
             ObjectCalls.getMethodBind("Resource", "get_scene_unique_id", GET_SCENE_UNIQUE_ID_HASH)
-        }
 
         private const val EMIT_CHANGED_HASH = 3218959716L
-        private val emitChangedBind by lazy {
+        @JvmField
+        val emitChangedBind =
             ObjectCalls.getMethodBind("Resource", "emit_changed", EMIT_CHANGED_HASH)
-        }
 
         private const val DUPLICATE_HASH = 482882304L
-        private val duplicateBind by lazy {
+        @JvmField
+        val duplicateBind =
             ObjectCalls.getMethodBind("Resource", "duplicate", DUPLICATE_HASH)
-        }
 
         private const val DUPLICATE_DEEP_HASH = 905779109L
-        private val duplicateDeepBind by lazy {
+        @JvmField
+        val duplicateDeepBind =
             ObjectCalls.getMethodBind("Resource", "duplicate_deep", DUPLICATE_DEEP_HASH)
-        }
 
         private const val COPY_FROM_RESOURCE_HASH = 3338311164L
-        private val copyFromResourceBind by lazy {
+        @JvmField
+        val copyFromResourceBind =
             ObjectCalls.getMethodBind("Resource", "copy_from_resource", COPY_FROM_RESOURCE_HASH)
-        }
     }
 }

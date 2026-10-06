@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -76,7 +77,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_layer
      */
     fun setLayer(layer: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLayerBind, segment, layer)
     }
 
     /**
@@ -89,7 +90,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_layer
      */
     fun getLayer(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLayerBind, segment)
     }
 
     /**
@@ -99,7 +100,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, visible)
     }
 
     /**
@@ -109,7 +110,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.showBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.hideBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_transform
      */
     fun setTransform(transform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setTransformBind, segment, transform)
     }
 
     /**
@@ -147,7 +148,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_transform
      */
     fun getTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_final_transform
      */
     fun getFinalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getFinalTransformBind, segment)
     }
 
     /**
@@ -166,7 +167,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -175,7 +176,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -184,7 +185,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_rotation
      */
     fun setRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRotationBind, segment, radians)
     }
 
     /**
@@ -193,7 +194,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_rotation
      */
     fun getRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRotationBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_scale
      */
     fun setScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScaleBind, segment, scale)
     }
 
     /**
@@ -211,7 +212,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_scale
      */
     fun getScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScaleBind, segment)
     }
 
     /**
@@ -222,7 +223,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_follow_viewport
      */
     fun setFollowViewport(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowViewportBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFollowViewportBind, segment, enable)
     }
 
     /**
@@ -233,7 +234,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.is_following_viewport
      */
     fun isFollowingViewport(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFollowingViewportBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFollowingViewportBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_follow_viewport_scale
      */
     fun setFollowViewportScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFollowViewportScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFollowViewportScaleBind, segment, scale)
     }
 
     /**
@@ -253,7 +254,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_follow_viewport_scale
      */
     fun getFollowViewportScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFollowViewportScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFollowViewportScaleBind, segment)
     }
 
     /**
@@ -263,7 +264,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.set_custom_viewport
      */
     fun setCustomViewport(viewport: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, segment, listOf(viewport.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCustomViewportBind, segment, listOf(viewport.segment))
     }
 
     /**
@@ -273,7 +274,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_custom_viewport
      */
     fun getCustomViewport(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCustomViewportBind, segment))
     }
 
     /**
@@ -282,7 +283,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasLayer.get_canvas
      */
     fun getCanvas(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCanvasBind, segment)
     }
 
     /** Signal `visibility_changed()`; see [TypedSignal]. */
@@ -301,115 +302,117 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasLayer? =
             if (handle.address() == 0L) null else CanvasLayer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LAYER_HASH = 1286410249L
-        private val setLayerBind by lazy {
+        @JvmField
+        val setLayerBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_layer", SET_LAYER_HASH)
-        }
 
         private const val GET_LAYER_HASH = 3905245786L
-        private val getLayerBind by lazy {
+        @JvmField
+        val getLayerBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_layer", GET_LAYER_HASH)
-        }
 
         private const val SET_VISIBLE_HASH = 2586408642L
-        private val setVisibleBind by lazy {
+        @JvmField
+        val setVisibleBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_visible", SET_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 36873697L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("CanvasLayer", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val SHOW_HASH = 3218959716L
-        private val showBind by lazy {
+        @JvmField
+        val showBind =
             ObjectCalls.getMethodBind("CanvasLayer", "show", SHOW_HASH)
-        }
 
         private const val HIDE_HASH = 3218959716L
-        private val hideBind by lazy {
+        @JvmField
+        val hideBind =
             ObjectCalls.getMethodBind("CanvasLayer", "hide", HIDE_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 2761652528L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3814499831L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val GET_FINAL_TRANSFORM_HASH = 3814499831L
-        private val getFinalTransformBind by lazy {
+        @JvmField
+        val getFinalTransformBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_final_transform", GET_FINAL_TRANSFORM_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_ROTATION_HASH = 373806689L
-        private val setRotationBind by lazy {
+        @JvmField
+        val setRotationBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_rotation", SET_ROTATION_HASH)
-        }
 
         private const val GET_ROTATION_HASH = 1740695150L
-        private val getRotationBind by lazy {
+        @JvmField
+        val getRotationBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_rotation", GET_ROTATION_HASH)
-        }
 
         private const val SET_SCALE_HASH = 743155724L
-        private val setScaleBind by lazy {
+        @JvmField
+        val setScaleBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_scale", SET_SCALE_HASH)
-        }
 
         private const val GET_SCALE_HASH = 3341600327L
-        private val getScaleBind by lazy {
+        @JvmField
+        val getScaleBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_scale", GET_SCALE_HASH)
-        }
 
         private const val SET_FOLLOW_VIEWPORT_HASH = 2586408642L
-        private val setFollowViewportBind by lazy {
+        @JvmField
+        val setFollowViewportBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_follow_viewport", SET_FOLLOW_VIEWPORT_HASH)
-        }
 
         private const val IS_FOLLOWING_VIEWPORT_HASH = 36873697L
-        private val isFollowingViewportBind by lazy {
+        @JvmField
+        val isFollowingViewportBind =
             ObjectCalls.getMethodBind("CanvasLayer", "is_following_viewport", IS_FOLLOWING_VIEWPORT_HASH)
-        }
 
         private const val SET_FOLLOW_VIEWPORT_SCALE_HASH = 373806689L
-        private val setFollowViewportScaleBind by lazy {
+        @JvmField
+        val setFollowViewportScaleBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_follow_viewport_scale", SET_FOLLOW_VIEWPORT_SCALE_HASH)
-        }
 
         private const val GET_FOLLOW_VIEWPORT_SCALE_HASH = 1740695150L
-        private val getFollowViewportScaleBind by lazy {
+        @JvmField
+        val getFollowViewportScaleBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_follow_viewport_scale", GET_FOLLOW_VIEWPORT_SCALE_HASH)
-        }
 
         private const val SET_CUSTOM_VIEWPORT_HASH = 1078189570L
-        private val setCustomViewportBind by lazy {
+        @JvmField
+        val setCustomViewportBind =
             ObjectCalls.getMethodBind("CanvasLayer", "set_custom_viewport", SET_CUSTOM_VIEWPORT_HASH)
-        }
 
         private const val GET_CUSTOM_VIEWPORT_HASH = 3160264692L
-        private val getCustomViewportBind by lazy {
+        @JvmField
+        val getCustomViewportBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_custom_viewport", GET_CUSTOM_VIEWPORT_HASH)
-        }
 
         private const val GET_CANVAS_HASH = 2944877500L
-        private val getCanvasBind by lazy {
+        @JvmField
+        val getCanvasBind =
             ObjectCalls.getMethodBind("CanvasLayer", "get_canvas", GET_CANVAS_HASH)
-        }
     }
 }

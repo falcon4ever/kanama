@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -32,7 +33,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_setting_count
      */
     fun setSettingCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSettingCountBind, segment, count)
     }
 
     /**
@@ -41,7 +42,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_setting_count
      */
     fun getSettingCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSettingCountBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.clear_settings
      */
     fun clearSettings() {
-        ObjectCalls.ptrcallNoArgs(clearSettingsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearSettingsBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_mutable_bone_axes
      */
     fun setMutableBoneAxes(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMutableBoneAxesBind, segment, enabled)
     }
 
     /**
@@ -70,7 +71,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.are_bone_axes_mutable
      */
     fun areBoneAxesMutable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areBoneAxesMutableBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, segment, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setRootBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -88,7 +89,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_root_bone_name
      */
     fun getRootBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getRootBoneNameBind, segment, index)
     }
 
     /**
@@ -97,7 +98,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_root_bone
      */
     fun setRootBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, segment, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setRootBoneBind, segment, index, bone)
     }
 
     /**
@@ -106,7 +107,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_root_bone
      */
     fun getRootBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getRootBoneBind, segment, index)
     }
 
     /**
@@ -115,7 +116,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone_name
      */
     fun setEndBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, segment, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setEndBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -124,7 +125,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone_name
      */
     fun getEndBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getEndBoneNameBind, segment, index)
     }
 
     /**
@@ -133,7 +134,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone
      */
     fun setEndBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, segment, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setEndBoneBind, segment, index, bone)
     }
 
     /**
@@ -142,7 +143,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone
      */
     fun getEndBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getEndBoneBind, segment, index)
     }
 
     /**
@@ -152,7 +153,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_reference_bone_name
      */
     fun getReferenceBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getReferenceBoneNameBind, segment, index)
     }
 
     /**
@@ -162,7 +163,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_reference_bone
      */
     fun getReferenceBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getReferenceBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getReferenceBoneBind, segment, index)
     }
 
     /**
@@ -173,7 +174,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_extend_end_bone
      */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setExtendEndBoneBind, segment, index, enabled)
     }
 
     /**
@@ -182,7 +183,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.is_end_bone_extended
      */
     fun isEndBoneExtended(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isEndBoneExtendedBind, segment, index)
     }
 
     /**
@@ -191,7 +192,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone_direction
      */
     fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -201,7 +202,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone_direction
      */
     fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
-        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getEndBoneDirectionBind, segment, index))
     }
 
     /**
@@ -212,7 +213,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_twist_from_rest
      */
     fun setTwistFromRest(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTwistFromRestBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setTwistFromRestBind, segment, index, enabled)
     }
 
     /**
@@ -222,7 +223,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.is_twist_from_rest
      */
     fun isTwistFromRest(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTwistFromRestBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isTwistFromRestBind, segment, index)
     }
 
     /**
@@ -235,7 +236,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_twist_from
      */
     fun setTwistFrom(index: Int, from: Quaternion) {
-        ObjectCalls.ptrcallWithIntAndQuaternionArg(setTwistFromBind, segment, index, from)
+        ObjectCalls.ptrcallWithIntAndQuaternionArg(Binds.setTwistFromBind, segment, index, from)
     }
 
     /**
@@ -245,7 +246,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_twist_from
      */
     fun getTwistFrom(index: Int): Quaternion {
-        return ObjectCalls.ptrcallWithIntArgRetQuaternion(getTwistFromBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetQuaternion(Binds.getTwistFromBind, segment, index)
     }
 
     /**
@@ -254,7 +255,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_disperse_mode
      */
     fun setDisperseMode(index: Int, disperseMode: BoneTwistDisperser3D.DisperseMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setDisperseModeBind, segment, index, disperseMode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setDisperseModeBind, segment, index, disperseMode.value)
     }
 
     /**
@@ -263,7 +264,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_disperse_mode
      */
     fun getDisperseMode(index: Int): BoneTwistDisperser3D.DisperseMode {
-        return BoneTwistDisperser3D.DisperseMode(ObjectCalls.ptrcallWithIntArgRetLong(getDisperseModeBind, segment, index))
+        return BoneTwistDisperser3D.DisperseMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getDisperseModeBind, segment, index))
     }
 
     /**
@@ -276,7 +277,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_weight_position
      */
     fun setWeightPosition(index: Int, weightPosition: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setWeightPositionBind, segment, index, weightPosition)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setWeightPositionBind, segment, index, weightPosition)
     }
 
     /**
@@ -286,7 +287,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_weight_position
      */
     fun getWeightPosition(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getWeightPositionBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getWeightPositionBind, segment, index)
     }
 
     /**
@@ -295,7 +296,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_damping_curve
      */
     fun setDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -304,7 +305,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_damping_curve
      */
     fun getDampingCurve(index: Int): Curve? {
-        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDampingCurveBind, segment, index))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getDampingCurveBind, segment, index))
     }
 
     /**
@@ -313,7 +314,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_joint_bone_name
      */
     fun getJointBoneName(index: Int, joint: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getJointBoneNameBind, segment, index, joint)
     }
 
     /**
@@ -322,7 +323,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_joint_bone
      */
     fun getJointBone(index: Int, joint: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getJointBoneBind, segment, index, joint)
     }
 
     /**
@@ -332,7 +333,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_joint_twist_amount
      */
     fun getJointTwistAmount(index: Int, joint: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getJointTwistAmountBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getJointTwistAmountBind, segment, index, joint)
     }
 
     /**
@@ -342,7 +343,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_joint_twist_amount
      */
     fun setJointTwistAmount(index: Int, joint: Int, twistAmount: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setJointTwistAmountBind, segment, index, joint, twistAmount)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setJointTwistAmountBind, segment, index, joint, twistAmount)
     }
 
     /**
@@ -351,7 +352,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_joint_count
      */
     fun getJointCount(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getJointCountBind, segment, index)
     }
 
     /**
@@ -397,175 +398,177 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): BoneTwistDisperser3D? =
             if (handle.address() == 0L) null else BoneTwistDisperser3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SETTING_COUNT_HASH = 1286410249L
-        private val setSettingCountBind by lazy {
+        @JvmField
+        val setSettingCountBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_setting_count", SET_SETTING_COUNT_HASH)
-        }
 
         private const val GET_SETTING_COUNT_HASH = 3905245786L
-        private val getSettingCountBind by lazy {
+        @JvmField
+        val getSettingCountBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_setting_count", GET_SETTING_COUNT_HASH)
-        }
 
         private const val CLEAR_SETTINGS_HASH = 3218959716L
-        private val clearSettingsBind by lazy {
+        @JvmField
+        val clearSettingsBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "clear_settings", CLEAR_SETTINGS_HASH)
-        }
 
         private const val SET_MUTABLE_BONE_AXES_HASH = 2586408642L
-        private val setMutableBoneAxesBind by lazy {
+        @JvmField
+        val setMutableBoneAxesBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_mutable_bone_axes", SET_MUTABLE_BONE_AXES_HASH)
-        }
 
         private const val ARE_BONE_AXES_MUTABLE_HASH = 36873697L
-        private val areBoneAxesMutableBind by lazy {
+        @JvmField
+        val areBoneAxesMutableBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "are_bone_axes_mutable", ARE_BONE_AXES_MUTABLE_HASH)
-        }
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L
-        private val setRootBoneNameBind by lazy {
+        @JvmField
+        val setRootBoneNameBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
-        }
 
         private const val GET_ROOT_BONE_NAME_HASH = 844755477L
-        private val getRootBoneNameBind by lazy {
+        @JvmField
+        val getRootBoneNameBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
-        }
 
         private const val SET_ROOT_BONE_HASH = 3937882851L
-        private val setRootBoneBind by lazy {
+        @JvmField
+        val setRootBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_root_bone", SET_ROOT_BONE_HASH)
-        }
 
         private const val GET_ROOT_BONE_HASH = 923996154L
-        private val getRootBoneBind by lazy {
+        @JvmField
+        val getRootBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_root_bone", GET_ROOT_BONE_HASH)
-        }
 
         private const val SET_END_BONE_NAME_HASH = 501894301L
-        private val setEndBoneNameBind by lazy {
+        @JvmField
+        val setEndBoneNameBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
-        }
 
         private const val GET_END_BONE_NAME_HASH = 844755477L
-        private val getEndBoneNameBind by lazy {
+        @JvmField
+        val getEndBoneNameBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
-        }
 
         private const val SET_END_BONE_HASH = 3937882851L
-        private val setEndBoneBind by lazy {
+        @JvmField
+        val setEndBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_end_bone", SET_END_BONE_HASH)
-        }
 
         private const val GET_END_BONE_HASH = 923996154L
-        private val getEndBoneBind by lazy {
+        @JvmField
+        val getEndBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_end_bone", GET_END_BONE_HASH)
-        }
 
         private const val GET_REFERENCE_BONE_NAME_HASH = 844755477L
-        private val getReferenceBoneNameBind by lazy {
+        @JvmField
+        val getReferenceBoneNameBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_reference_bone_name", GET_REFERENCE_BONE_NAME_HASH)
-        }
 
         private const val GET_REFERENCE_BONE_HASH = 923996154L
-        private val getReferenceBoneBind by lazy {
+        @JvmField
+        val getReferenceBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_reference_bone", GET_REFERENCE_BONE_HASH)
-        }
 
         private const val SET_EXTEND_END_BONE_HASH = 300928843L
-        private val setExtendEndBoneBind by lazy {
+        @JvmField
+        val setExtendEndBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_extend_end_bone", SET_EXTEND_END_BONE_HASH)
-        }
 
         private const val IS_END_BONE_EXTENDED_HASH = 1116898809L
-        private val isEndBoneExtendedBind by lazy {
+        @JvmField
+        val isEndBoneExtendedBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "is_end_bone_extended", IS_END_BONE_EXTENDED_HASH)
-        }
 
         private const val SET_END_BONE_DIRECTION_HASH = 2838484201L
-        private val setEndBoneDirectionBind by lazy {
+        @JvmField
+        val setEndBoneDirectionBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_end_bone_direction", SET_END_BONE_DIRECTION_HASH)
-        }
 
         private const val GET_END_BONE_DIRECTION_HASH = 1843036459L
-        private val getEndBoneDirectionBind by lazy {
+        @JvmField
+        val getEndBoneDirectionBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_end_bone_direction", GET_END_BONE_DIRECTION_HASH)
-        }
 
         private const val SET_TWIST_FROM_REST_HASH = 300928843L
-        private val setTwistFromRestBind by lazy {
+        @JvmField
+        val setTwistFromRestBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_twist_from_rest", SET_TWIST_FROM_REST_HASH)
-        }
 
         private const val IS_TWIST_FROM_REST_HASH = 1116898809L
-        private val isTwistFromRestBind by lazy {
+        @JvmField
+        val isTwistFromRestBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "is_twist_from_rest", IS_TWIST_FROM_REST_HASH)
-        }
 
         private const val SET_TWIST_FROM_HASH = 2823819782L
-        private val setTwistFromBind by lazy {
+        @JvmField
+        val setTwistFromBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_twist_from", SET_TWIST_FROM_HASH)
-        }
 
         private const val GET_TWIST_FROM_HASH = 476865136L
-        private val getTwistFromBind by lazy {
+        @JvmField
+        val getTwistFromBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_twist_from", GET_TWIST_FROM_HASH)
-        }
 
         private const val SET_DISPERSE_MODE_HASH = 2954194337L
-        private val setDisperseModeBind by lazy {
+        @JvmField
+        val setDisperseModeBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_disperse_mode", SET_DISPERSE_MODE_HASH)
-        }
 
         private const val GET_DISPERSE_MODE_HASH = 1326397005L
-        private val getDisperseModeBind by lazy {
+        @JvmField
+        val getDisperseModeBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_disperse_mode", GET_DISPERSE_MODE_HASH)
-        }
 
         private const val SET_WEIGHT_POSITION_HASH = 1602489585L
-        private val setWeightPositionBind by lazy {
+        @JvmField
+        val setWeightPositionBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_weight_position", SET_WEIGHT_POSITION_HASH)
-        }
 
         private const val GET_WEIGHT_POSITION_HASH = 2339986948L
-        private val getWeightPositionBind by lazy {
+        @JvmField
+        val getWeightPositionBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_weight_position", GET_WEIGHT_POSITION_HASH)
-        }
 
         private const val SET_DAMPING_CURVE_HASH = 1447180063L
-        private val setDampingCurveBind by lazy {
+        @JvmField
+        val setDampingCurveBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_damping_curve", SET_DAMPING_CURVE_HASH)
-        }
 
         private const val GET_DAMPING_CURVE_HASH = 747537754L
-        private val getDampingCurveBind by lazy {
+        @JvmField
+        val getDampingCurveBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_damping_curve", GET_DAMPING_CURVE_HASH)
-        }
 
         private const val GET_JOINT_BONE_NAME_HASH = 1391810591L
-        private val getJointBoneNameBind by lazy {
+        @JvmField
+        val getJointBoneNameBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_joint_bone_name", GET_JOINT_BONE_NAME_HASH)
-        }
 
         private const val GET_JOINT_BONE_HASH = 3175239445L
-        private val getJointBoneBind by lazy {
+        @JvmField
+        val getJointBoneBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_joint_bone", GET_JOINT_BONE_HASH)
-        }
 
         private const val GET_JOINT_TWIST_AMOUNT_HASH = 3085491603L
-        private val getJointTwistAmountBind by lazy {
+        @JvmField
+        val getJointTwistAmountBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_joint_twist_amount", GET_JOINT_TWIST_AMOUNT_HASH)
-        }
 
         private const val SET_JOINT_TWIST_AMOUNT_HASH = 3506521499L
-        private val setJointTwistAmountBind by lazy {
+        @JvmField
+        val setJointTwistAmountBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "set_joint_twist_amount", SET_JOINT_TWIST_AMOUNT_HASH)
-        }
 
         private const val GET_JOINT_COUNT_HASH = 923996154L
-        private val getJointCountBind by lazy {
+        @JvmField
+        val getJointCountBind =
             ObjectCalls.getMethodBind("BoneTwistDisperser3D", "get_joint_count", GET_JOINT_COUNT_HASH)
-        }
     }
 }

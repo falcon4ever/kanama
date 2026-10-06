@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(mode: AESContext.Mode, key: ByteArray, iv: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, segment, mode.value, key, iv))
+        return GodotError(ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(Binds.startBind, segment, mode.value, key, iv))
     }
 
     /**
@@ -32,7 +33,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update(src: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(updateBind, segment, src)
+        return ObjectCalls.ptrcallWithByteArrayArgRetByteArray(Binds.updateBind, segment, src)
     }
 
     /**
@@ -44,7 +45,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIvState(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getIvStateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getIvStateBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun finish() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(finishBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.finishBind, segment)
     }
 
     /**
@@ -109,25 +110,27 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AESContext? =
             if (handle.address() == 0L) null else AESContext(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val START_HASH = 3122411423L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("AESContext", "start", START_HASH)
-        }
 
         private const val UPDATE_HASH = 527836100L
-        private val updateBind by lazy {
+        @JvmField
+        val updateBind =
             ObjectCalls.getMethodBind("AESContext", "update", UPDATE_HASH)
-        }
 
         private const val GET_IV_STATE_HASH = 2115431945L
-        private val getIvStateBind by lazy {
+        @JvmField
+        val getIvStateBind =
             ObjectCalls.getMethodBind("AESContext", "get_iv_state", GET_IV_STATE_HASH)
-        }
 
         private const val FINISH_HASH = 3218959716L
-        private val finishBind by lazy {
+        @JvmField
+        val finishBind =
             ObjectCalls.getMethodBind("AESContext", "finish", FINISH_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,12 +18,12 @@ class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handl
 
     fun setParameterName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setParameterNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setParameterNameBind, segment, name)
     }
 
     fun getParameterName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
     }
 
     companion object {
@@ -35,15 +36,17 @@ class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParameterRef? =
             if (handle.address() == 0L) null else VisualShaderNodeParameterRef(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PARAMETER_NAME_HASH = 83702148L
-        private val setParameterNameBind by lazy {
+        @JvmField
+        val setParameterNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameterRef", "set_parameter_name", SET_PARAMETER_NAME_HASH)
-        }
 
         private const val GET_PARAMETER_NAME_HASH = 201670096L
-        private val getParameterNameBind by lazy {
+        @JvmField
+        val getParameterNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameterRef", "get_parameter_name", GET_PARAMETER_NAME_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -26,7 +27,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getProfile(): SkeletonProfile? {
         checkOpen()
-        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
+        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProfileBind, segment))
     }
 
     /**
@@ -36,7 +37,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun setProfile(profile: SkeletonProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -47,7 +48,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkeletonBoneName(profileBoneName: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(getSkeletonBoneNameBind, segment, profileBoneName)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.getSkeletonBoneNameBind, segment, profileBoneName)
     }
 
     /**
@@ -58,7 +59,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun setSkeletonBoneName(profileBoneName: String, skeletonBoneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(setSkeletonBoneNameBind, segment, profileBoneName, skeletonBoneName)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.setSkeletonBoneNameBind, segment, profileBoneName, skeletonBoneName)
     }
 
     /**
@@ -70,7 +71,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun findProfileBoneName(skeletonBoneName: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(findProfileBoneNameBind, segment, skeletonBoneName)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.findProfileBoneNameBind, segment, skeletonBoneName)
     }
 
     /** Signal `bone_map_updated()`; see [TypedSignal]. */
@@ -98,30 +99,32 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BoneMap? =
             if (handle.address() == 0L) null else BoneMap(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PROFILE_HASH = 4291782652L
-        private val getProfileBind by lazy {
+        @JvmField
+        val getProfileBind =
             ObjectCalls.getMethodBind("BoneMap", "get_profile", GET_PROFILE_HASH)
-        }
 
         private const val SET_PROFILE_HASH = 3870374136L
-        private val setProfileBind by lazy {
+        @JvmField
+        val setProfileBind =
             ObjectCalls.getMethodBind("BoneMap", "set_profile", SET_PROFILE_HASH)
-        }
 
         private const val GET_SKELETON_BONE_NAME_HASH = 1965194235L
-        private val getSkeletonBoneNameBind by lazy {
+        @JvmField
+        val getSkeletonBoneNameBind =
             ObjectCalls.getMethodBind("BoneMap", "get_skeleton_bone_name", GET_SKELETON_BONE_NAME_HASH)
-        }
 
         private const val SET_SKELETON_BONE_NAME_HASH = 3740211285L
-        private val setSkeletonBoneNameBind by lazy {
+        @JvmField
+        val setSkeletonBoneNameBind =
             ObjectCalls.getMethodBind("BoneMap", "set_skeleton_bone_name", SET_SKELETON_BONE_NAME_HASH)
-        }
 
         private const val FIND_PROFILE_BONE_NAME_HASH = 1965194235L
-        private val findProfileBoneNameBind by lazy {
+        @JvmField
+        val findProfileBoneNameBind =
             ObjectCalls.getMethodBind("BoneMap", "find_profile_bone_name", FIND_PROFILE_BONE_NAME_HASH)
-        }
     }
 }

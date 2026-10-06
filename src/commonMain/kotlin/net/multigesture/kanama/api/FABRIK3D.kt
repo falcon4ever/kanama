@@ -19,7 +19,5 @@ class FABRIK3D(handle: GodotHandle) : IterateIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): FABRIK3D? =
             if (handle.address() == 0L) null else FABRIK3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

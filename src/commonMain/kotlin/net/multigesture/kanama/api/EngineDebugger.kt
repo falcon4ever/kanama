@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,9 +12,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: EngineDebugger
  */
 object EngineDebugger {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("EngineDebugger")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Returns `true` if the debugger is active otherwise `false`.
@@ -22,7 +22,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, singleton)
     }
 
     /**
@@ -32,7 +32,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun registerProfiler(name: String, profiler: EngineProfiler?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(registerProfilerBind, singleton, name, profiler?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.registerProfilerBind, singleton, name, profiler?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -42,7 +42,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun unregisterProfiler(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(unregisterProfilerBind, singleton, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.unregisterProfilerBind, singleton, name)
     }
 
     /**
@@ -52,7 +52,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun isProfiling(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isProfilingBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isProfilingBind, singleton, name)
     }
 
     /**
@@ -62,7 +62,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun hasProfiler(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasProfilerBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasProfilerBind, singleton, name)
     }
 
     /**
@@ -72,7 +72,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun profilerAddFrameData(name: String, data: List<Any?>) {
-        ObjectCalls.ptrcallWithStringNameArrayArgs(profilerAddFrameDataBind, singleton, name, data)
+        ObjectCalls.ptrcallWithStringNameArrayArgs(Binds.profilerAddFrameDataBind, singleton, name, data)
     }
 
     /**
@@ -83,7 +83,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun profilerEnable(name: String, enable: Boolean, arguments: List<Any?> = emptyList()) {
-        ObjectCalls.ptrcallWithStringNameBoolArrayArgs(profilerEnableBind, singleton, name, enable, arguments)
+        ObjectCalls.ptrcallWithStringNameBoolArrayArgs(Binds.profilerEnableBind, singleton, name, enable, arguments)
     }
 
     /**
@@ -97,7 +97,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun registerMessageCapture(name: String, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithStringNameAndCallableArgs(registerMessageCaptureBind, singleton, name, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithStringNameAndCallableArgs(Binds.registerMessageCaptureBind, singleton, name, callable.target.segment, callable.method)
     }
 
     /**
@@ -107,7 +107,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun unregisterMessageCapture(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(unregisterMessageCaptureBind, singleton, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.unregisterMessageCaptureBind, singleton, name)
     }
 
     /**
@@ -117,7 +117,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun hasCapture(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasCaptureBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasCaptureBind, singleton, name)
     }
 
     /**
@@ -129,7 +129,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun linePoll() {
-        ObjectCalls.ptrcallNoArgs(linePollBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.linePollBind, singleton)
     }
 
     /**
@@ -139,7 +139,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun sendMessage(message: String, data: List<Any?>) {
-        ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, singleton, message, data)
+        ObjectCalls.ptrcallWithStringAndArrayArg(Binds.sendMessageBind, singleton, message, data)
     }
 
     /**
@@ -150,7 +150,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun debug(canContinue: Boolean = true, isErrorBreakpoint: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoBoolArgs(debugBind, singleton, canContinue, isErrorBreakpoint)
+        ObjectCalls.ptrcallWithTwoBoolArgs(Binds.debugBind, singleton, canContinue, isErrorBreakpoint)
     }
 
     /**
@@ -161,7 +161,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun scriptDebug(language: ScriptLanguage, canContinue: Boolean = true, isErrorBreakpoint: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(scriptDebugBind, singleton, language.segment, canContinue, isErrorBreakpoint)
+        ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(Binds.scriptDebugBind, singleton, language.segment, canContinue, isErrorBreakpoint)
     }
 
     /**
@@ -171,7 +171,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun setLinesLeft(lines: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLinesLeftBind, singleton, lines)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLinesLeftBind, singleton, lines)
     }
 
     /**
@@ -181,7 +181,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun getLinesLeft(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLinesLeftBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLinesLeftBind, singleton)
     }
 
     /**
@@ -191,7 +191,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun setDepth(depth: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDepthBind, singleton, depth)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDepthBind, singleton, depth)
     }
 
     /**
@@ -201,7 +201,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun getDepth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDepthBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthBind, singleton)
     }
 
     /**
@@ -211,7 +211,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun isBreakpoint(line: Int, source: String): Boolean {
-        return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(isBreakpointBind, singleton, line, source)
+        return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(Binds.isBreakpointBind, singleton, line, source)
     }
 
     /**
@@ -221,7 +221,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun isSkippingBreakpoints(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSkippingBreakpointsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSkippingBreakpointsBind, singleton)
     }
 
     /**
@@ -231,7 +231,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun insertBreakpoint(line: Int, source: String) {
-        ObjectCalls.ptrcallWithIntAndStringNameArg(insertBreakpointBind, singleton, line, source)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.insertBreakpointBind, singleton, line, source)
     }
 
     /**
@@ -241,7 +241,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun removeBreakpoint(line: Int, source: String) {
-        ObjectCalls.ptrcallWithIntAndStringNameArg(removeBreakpointBind, singleton, line, source)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.removeBreakpointBind, singleton, line, source)
     }
 
     /**
@@ -251,7 +251,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun clearBreakpoints() {
-        ObjectCalls.ptrcallNoArgs(clearBreakpointsBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBreakpointsBind, singleton)
     }
 
     @JvmStatic
@@ -261,118 +261,123 @@ object EngineDebugger {
     internal fun wrap(handle: RawSegment): EngineDebugger? =
         if (handle.address() == 0L) null else this
 
-    private const val IS_ACTIVE_HASH = 2240911060L
-    private val isActiveBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "is_active", IS_ACTIVE_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("EngineDebugger")
 
-    private const val REGISTER_PROFILER_HASH = 3651669560L
-    private val registerProfilerBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "register_profiler", REGISTER_PROFILER_HASH)
-    }
+        private const val IS_ACTIVE_HASH = 2240911060L
+        @JvmField
+        val isActiveBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "is_active", IS_ACTIVE_HASH)
 
-    private const val UNREGISTER_PROFILER_HASH = 3304788590L
-    private val unregisterProfilerBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "unregister_profiler", UNREGISTER_PROFILER_HASH)
-    }
+        private const val REGISTER_PROFILER_HASH = 3651669560L
+        @JvmField
+        val registerProfilerBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "register_profiler", REGISTER_PROFILER_HASH)
 
-    private const val IS_PROFILING_HASH = 2041966384L
-    private val isProfilingBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "is_profiling", IS_PROFILING_HASH)
-    }
+        private const val UNREGISTER_PROFILER_HASH = 3304788590L
+        @JvmField
+        val unregisterProfilerBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "unregister_profiler", UNREGISTER_PROFILER_HASH)
 
-    private const val HAS_PROFILER_HASH = 2041966384L
-    private val hasProfilerBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "has_profiler", HAS_PROFILER_HASH)
-    }
+        private const val IS_PROFILING_HASH = 2041966384L
+        @JvmField
+        val isProfilingBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "is_profiling", IS_PROFILING_HASH)
 
-    private const val PROFILER_ADD_FRAME_DATA_HASH = 1895267858L
-    private val profilerAddFrameDataBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "profiler_add_frame_data", PROFILER_ADD_FRAME_DATA_HASH)
-    }
+        private const val HAS_PROFILER_HASH = 2041966384L
+        @JvmField
+        val hasProfilerBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "has_profiler", HAS_PROFILER_HASH)
 
-    private const val PROFILER_ENABLE_HASH = 3192561009L
-    private val profilerEnableBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "profiler_enable", PROFILER_ENABLE_HASH)
-    }
+        private const val PROFILER_ADD_FRAME_DATA_HASH = 1895267858L
+        @JvmField
+        val profilerAddFrameDataBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "profiler_add_frame_data", PROFILER_ADD_FRAME_DATA_HASH)
 
-    private const val REGISTER_MESSAGE_CAPTURE_HASH = 1874754934L
-    private val registerMessageCaptureBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "register_message_capture", REGISTER_MESSAGE_CAPTURE_HASH)
-    }
+        private const val PROFILER_ENABLE_HASH = 3192561009L
+        @JvmField
+        val profilerEnableBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "profiler_enable", PROFILER_ENABLE_HASH)
 
-    private const val UNREGISTER_MESSAGE_CAPTURE_HASH = 3304788590L
-    private val unregisterMessageCaptureBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "unregister_message_capture", UNREGISTER_MESSAGE_CAPTURE_HASH)
-    }
+        private const val REGISTER_MESSAGE_CAPTURE_HASH = 1874754934L
+        @JvmField
+        val registerMessageCaptureBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "register_message_capture", REGISTER_MESSAGE_CAPTURE_HASH)
 
-    private const val HAS_CAPTURE_HASH = 2041966384L
-    private val hasCaptureBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "has_capture", HAS_CAPTURE_HASH)
-    }
+        private const val UNREGISTER_MESSAGE_CAPTURE_HASH = 3304788590L
+        @JvmField
+        val unregisterMessageCaptureBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "unregister_message_capture", UNREGISTER_MESSAGE_CAPTURE_HASH)
 
-    private const val LINE_POLL_HASH = 3218959716L
-    private val linePollBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "line_poll", LINE_POLL_HASH)
-    }
+        private const val HAS_CAPTURE_HASH = 2041966384L
+        @JvmField
+        val hasCaptureBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "has_capture", HAS_CAPTURE_HASH)
 
-    private const val SEND_MESSAGE_HASH = 1209351045L
-    private val sendMessageBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "send_message", SEND_MESSAGE_HASH)
-    }
+        private const val LINE_POLL_HASH = 3218959716L
+        @JvmField
+        val linePollBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "line_poll", LINE_POLL_HASH)
 
-    private const val DEBUG_HASH = 2751962654L
-    private val debugBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "debug", DEBUG_HASH)
-    }
+        private const val SEND_MESSAGE_HASH = 1209351045L
+        @JvmField
+        val sendMessageBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "send_message", SEND_MESSAGE_HASH)
 
-    private const val SCRIPT_DEBUG_HASH = 2442343672L
-    private val scriptDebugBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "script_debug", SCRIPT_DEBUG_HASH)
-    }
+        private const val DEBUG_HASH = 2751962654L
+        @JvmField
+        val debugBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "debug", DEBUG_HASH)
 
-    private const val SET_LINES_LEFT_HASH = 1286410249L
-    private val setLinesLeftBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "set_lines_left", SET_LINES_LEFT_HASH)
-    }
+        private const val SCRIPT_DEBUG_HASH = 2442343672L
+        @JvmField
+        val scriptDebugBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "script_debug", SCRIPT_DEBUG_HASH)
 
-    private const val GET_LINES_LEFT_HASH = 3905245786L
-    private val getLinesLeftBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "get_lines_left", GET_LINES_LEFT_HASH)
-    }
+        private const val SET_LINES_LEFT_HASH = 1286410249L
+        @JvmField
+        val setLinesLeftBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "set_lines_left", SET_LINES_LEFT_HASH)
 
-    private const val SET_DEPTH_HASH = 1286410249L
-    private val setDepthBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "set_depth", SET_DEPTH_HASH)
-    }
+        private const val GET_LINES_LEFT_HASH = 3905245786L
+        @JvmField
+        val getLinesLeftBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "get_lines_left", GET_LINES_LEFT_HASH)
 
-    private const val GET_DEPTH_HASH = 3905245786L
-    private val getDepthBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "get_depth", GET_DEPTH_HASH)
-    }
+        private const val SET_DEPTH_HASH = 1286410249L
+        @JvmField
+        val setDepthBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "set_depth", SET_DEPTH_HASH)
 
-    private const val IS_BREAKPOINT_HASH = 921227809L
-    private val isBreakpointBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "is_breakpoint", IS_BREAKPOINT_HASH)
-    }
+        private const val GET_DEPTH_HASH = 3905245786L
+        @JvmField
+        val getDepthBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "get_depth", GET_DEPTH_HASH)
 
-    private const val IS_SKIPPING_BREAKPOINTS_HASH = 36873697L
-    private val isSkippingBreakpointsBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "is_skipping_breakpoints", IS_SKIPPING_BREAKPOINTS_HASH)
-    }
+        private const val IS_BREAKPOINT_HASH = 921227809L
+        @JvmField
+        val isBreakpointBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "is_breakpoint", IS_BREAKPOINT_HASH)
 
-    private const val INSERT_BREAKPOINT_HASH = 3780747571L
-    private val insertBreakpointBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "insert_breakpoint", INSERT_BREAKPOINT_HASH)
-    }
+        private const val IS_SKIPPING_BREAKPOINTS_HASH = 36873697L
+        @JvmField
+        val isSkippingBreakpointsBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "is_skipping_breakpoints", IS_SKIPPING_BREAKPOINTS_HASH)
 
-    private const val REMOVE_BREAKPOINT_HASH = 3780747571L
-    private val removeBreakpointBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "remove_breakpoint", REMOVE_BREAKPOINT_HASH)
-    }
+        private const val INSERT_BREAKPOINT_HASH = 3780747571L
+        @JvmField
+        val insertBreakpointBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "insert_breakpoint", INSERT_BREAKPOINT_HASH)
 
-    private const val CLEAR_BREAKPOINTS_HASH = 3218959716L
-    private val clearBreakpointsBind by lazy {
-        ObjectCalls.getMethodBind("EngineDebugger", "clear_breakpoints", CLEAR_BREAKPOINTS_HASH)
+        private const val REMOVE_BREAKPOINT_HASH = 3780747571L
+        @JvmField
+        val removeBreakpointBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "remove_breakpoint", REMOVE_BREAKPOINT_HASH)
+
+        private const val CLEAR_BREAKPOINTS_HASH = 3218959716L
+        @JvmField
+        val clearBreakpointsBind =
+            ObjectCalls.getMethodBind("EngineDebugger", "clear_breakpoints", CLEAR_BREAKPOINTS_HASH)
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -153,7 +154,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_space_override_mode
      */
     fun setGravitySpaceOverrideMode(spaceOverrideMode: Area3D.SpaceOverride) {
-        ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, segment, spaceOverrideMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGravitySpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -162,7 +163,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_space_override_mode
      */
     fun getGravitySpaceOverrideMode(): Area3D.SpaceOverride {
-        return Area3D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, segment))
+        return Area3D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGravitySpaceOverrideModeBind, segment))
     }
 
     /**
@@ -172,7 +173,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_is_point
      */
     fun setGravityIsPoint(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setGravityIsPointBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGravityIsPointBind, segment, enable)
     }
 
     /**
@@ -182,7 +183,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_gravity_a_point
      */
     fun isGravityAPoint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGravityAPointBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGravityAPointBind, segment)
     }
 
     /**
@@ -197,7 +198,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_point_unit_distance
      */
     fun setGravityPointUnitDistance(distanceScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityPointUnitDistanceBind, segment, distanceScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGravityPointUnitDistanceBind, segment, distanceScale)
     }
 
     /**
@@ -212,7 +213,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_point_unit_distance
      */
     fun getGravityPointUnitDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityPointUnitDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGravityPointUnitDistanceBind, segment)
     }
 
     /**
@@ -221,7 +222,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_point_center
      */
     fun setGravityPointCenter(center: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityPointCenterBind, segment, center)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGravityPointCenterBind, segment, center)
     }
 
     /**
@@ -230,7 +231,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_point_center
      */
     fun getGravityPointCenter(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityPointCenterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityPointCenterBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity_direction
      */
     fun setGravityDirection(direction: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGravityDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGravityDirectionBind, segment, direction)
     }
 
     /**
@@ -248,7 +249,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity_direction
      */
     fun getGravityDirection(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityDirectionBind, segment)
     }
 
     /**
@@ -258,7 +259,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_gravity
      */
     fun setGravity(gravity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGravityBind, segment, gravity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGravityBind, segment, gravity)
     }
 
     /**
@@ -268,7 +269,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_gravity
      */
     fun getGravity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGravityBind, segment)
     }
 
     /**
@@ -277,7 +278,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_linear_damp_space_override_mode
      */
     fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Area3D.SpaceOverride) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -286,7 +287,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_linear_damp_space_override_mode
      */
     fun getLinearDampSpaceOverrideMode(): Area3D.SpaceOverride {
-        return Area3D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, segment))
+        return Area3D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLinearDampSpaceOverrideModeBind, segment))
     }
 
     /**
@@ -295,7 +296,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_angular_damp_space_override_mode
      */
     fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Area3D.SpaceOverride) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -304,7 +305,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_angular_damp_space_override_mode
      */
     fun getAngularDampSpaceOverrideMode(): Area3D.SpaceOverride {
-        return Area3D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, segment))
+        return Area3D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAngularDampSpaceOverrideModeBind, segment))
     }
 
     /**
@@ -314,7 +315,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_angular_damp
      */
     fun setAngularDamp(angularDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDampBind, segment, angularDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularDampBind, segment, angularDamp)
     }
 
     /**
@@ -324,7 +325,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_angular_damp
      */
     fun getAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularDampBind, segment)
     }
 
     /**
@@ -334,7 +335,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_linear_damp
      */
     fun setLinearDamp(linearDamp: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLinearDampBind, segment, linearDamp)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLinearDampBind, segment, linearDamp)
     }
 
     /**
@@ -344,7 +345,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_linear_damp
      */
     fun getLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLinearDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLinearDampBind, segment)
     }
 
     /**
@@ -354,7 +355,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_priority
      */
     fun setPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
     }
 
     /**
@@ -364,7 +365,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_priority
      */
     fun getPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
     }
 
     /**
@@ -374,7 +375,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_wind_force_magnitude
      */
     fun setWindForceMagnitude(windForceMagnitude: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWindForceMagnitudeBind, segment, windForceMagnitude)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWindForceMagnitudeBind, segment, windForceMagnitude)
     }
 
     /**
@@ -384,7 +385,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_wind_force_magnitude
      */
     fun getWindForceMagnitude(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWindForceMagnitudeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWindForceMagnitudeBind, segment)
     }
 
     /**
@@ -395,7 +396,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_wind_attenuation_factor
      */
     fun setWindAttenuationFactor(windAttenuationFactor: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWindAttenuationFactorBind, segment, windAttenuationFactor)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWindAttenuationFactorBind, segment, windAttenuationFactor)
     }
 
     /**
@@ -406,7 +407,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_wind_attenuation_factor
      */
     fun getWindAttenuationFactor(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWindAttenuationFactorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWindAttenuationFactorBind, segment)
     }
 
     /**
@@ -418,7 +419,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_wind_source_path
      */
     fun setWindSourcePath(windSourcePath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setWindSourcePathBind, segment, windSourcePath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setWindSourcePathBind, segment, windSourcePath)
     }
 
     /**
@@ -430,7 +431,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_wind_source_path
      */
     fun getWindSourcePath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getWindSourcePathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getWindSourcePathBind, segment)
     }
 
     /**
@@ -439,7 +440,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_monitorable
      */
     fun setMonitorable(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitorableBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMonitorableBind, segment, enable)
     }
 
     /**
@@ -448,7 +449,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_monitorable
      */
     fun isMonitorable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitorableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonitorableBind, segment)
     }
 
     /**
@@ -457,7 +458,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_monitoring
      */
     fun setMonitoring(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitoringBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMonitoringBind, segment, enable)
     }
 
     /**
@@ -466,7 +467,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_monitoring
      */
     fun isMonitoring(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonitoringBind, segment)
     }
 
     /**
@@ -480,7 +481,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_overlapping_bodies
      */
     fun getOverlappingBodies(): List<Node3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingBodiesBind, segment, Node3D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOverlappingBodiesBind, segment, Node3D::wrap)
     }
 
     /**
@@ -493,7 +494,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_overlapping_areas
      */
     fun getOverlappingAreas(): List<Area3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOverlappingAreasBind, segment, Area3D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOverlappingAreasBind, segment, Area3D::wrap)
     }
 
     /**
@@ -508,7 +509,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.has_overlapping_bodies
      */
     fun hasOverlappingBodies(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingBodiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasOverlappingBodiesBind, segment)
     }
 
     /**
@@ -521,7 +522,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.has_overlapping_areas
      */
     fun hasOverlappingAreas(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasOverlappingAreasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasOverlappingAreasBind, segment)
     }
 
     /**
@@ -536,7 +537,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.overlaps_body
      */
     fun overlapsBody(body: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsBodyBind, segment, body.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsBodyBind, segment, body.segment)
     }
 
     /**
@@ -547,7 +548,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.overlaps_area
      */
     fun overlapsArea(area: Node): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(overlapsAreaBind, segment, area.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.overlapsAreaBind, segment, area.segment)
     }
 
     /**
@@ -556,7 +557,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_audio_bus_override
      */
     fun setAudioBusOverride(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAudioBusOverrideBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAudioBusOverrideBind, segment, enable)
     }
 
     /**
@@ -565,7 +566,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_overriding_audio_bus
      */
     fun isOverridingAudioBus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOverridingAudioBusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOverridingAudioBusBind, segment)
     }
 
     /**
@@ -574,7 +575,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_audio_bus_name
      */
     fun setAudioBusName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAudioBusNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAudioBusNameBind, segment, name)
     }
 
     /**
@@ -583,7 +584,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_audio_bus_name
      */
     fun getAudioBusName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAudioBusNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAudioBusNameBind, segment)
     }
 
     /**
@@ -592,7 +593,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_use_reverb_bus
      */
     fun setUseReverbBus(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseReverbBusBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseReverbBusBind, segment, enable)
     }
 
     /**
@@ -601,7 +602,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.is_using_reverb_bus
      */
     fun isUsingReverbBus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingReverbBusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingReverbBusBind, segment)
     }
 
     /**
@@ -610,7 +611,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_reverb_bus_name
      */
     fun setReverbBusName(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setReverbBusNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setReverbBusNameBind, segment, name)
     }
 
     /**
@@ -619,7 +620,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_reverb_bus_name
      */
     fun getReverbBusName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getReverbBusNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getReverbBusNameBind, segment)
     }
 
     /**
@@ -629,7 +630,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_reverb_amount
      */
     fun setReverbAmount(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setReverbAmountBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setReverbAmountBind, segment, amount)
     }
 
     /**
@@ -639,7 +640,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_reverb_amount
      */
     fun getReverbAmount(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReverbAmountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReverbAmountBind, segment)
     }
 
     /**
@@ -649,7 +650,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.set_reverb_uniformity
      */
     fun setReverbUniformity(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setReverbUniformityBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setReverbUniformityBind, segment, amount)
     }
 
     /**
@@ -659,7 +660,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: Area3D.get_reverb_uniformity
      */
     fun getReverbUniformity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReverbUniformityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReverbUniformityBind, segment)
     }
 
     /** Signal `body_shape_entered(body_rid: RID, body: Node3D, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
@@ -765,255 +766,257 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
 
         internal fun wrap(handle: RawSegment): Area3D? =
             if (handle.address() == 0L) null else Area3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 2311433571L
-        private val setGravitySpaceOverrideModeBind by lazy {
+        @JvmField
+        val setGravitySpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area3D", "set_gravity_space_override_mode", SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val GET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 958191869L
-        private val getGravitySpaceOverrideModeBind by lazy {
+        @JvmField
+        val getGravitySpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area3D", "get_gravity_space_override_mode", GET_GRAVITY_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val SET_GRAVITY_IS_POINT_HASH = 2586408642L
-        private val setGravityIsPointBind by lazy {
+        @JvmField
+        val setGravityIsPointBind =
             ObjectCalls.getMethodBind("Area3D", "set_gravity_is_point", SET_GRAVITY_IS_POINT_HASH)
-        }
 
         private const val IS_GRAVITY_A_POINT_HASH = 36873697L
-        private val isGravityAPointBind by lazy {
+        @JvmField
+        val isGravityAPointBind =
             ObjectCalls.getMethodBind("Area3D", "is_gravity_a_point", IS_GRAVITY_A_POINT_HASH)
-        }
 
         private const val SET_GRAVITY_POINT_UNIT_DISTANCE_HASH = 373806689L
-        private val setGravityPointUnitDistanceBind by lazy {
+        @JvmField
+        val setGravityPointUnitDistanceBind =
             ObjectCalls.getMethodBind("Area3D", "set_gravity_point_unit_distance", SET_GRAVITY_POINT_UNIT_DISTANCE_HASH)
-        }
 
         private const val GET_GRAVITY_POINT_UNIT_DISTANCE_HASH = 1740695150L
-        private val getGravityPointUnitDistanceBind by lazy {
+        @JvmField
+        val getGravityPointUnitDistanceBind =
             ObjectCalls.getMethodBind("Area3D", "get_gravity_point_unit_distance", GET_GRAVITY_POINT_UNIT_DISTANCE_HASH)
-        }
 
         private const val SET_GRAVITY_POINT_CENTER_HASH = 3460891852L
-        private val setGravityPointCenterBind by lazy {
+        @JvmField
+        val setGravityPointCenterBind =
             ObjectCalls.getMethodBind("Area3D", "set_gravity_point_center", SET_GRAVITY_POINT_CENTER_HASH)
-        }
 
         private const val GET_GRAVITY_POINT_CENTER_HASH = 3360562783L
-        private val getGravityPointCenterBind by lazy {
+        @JvmField
+        val getGravityPointCenterBind =
             ObjectCalls.getMethodBind("Area3D", "get_gravity_point_center", GET_GRAVITY_POINT_CENTER_HASH)
-        }
 
         private const val SET_GRAVITY_DIRECTION_HASH = 3460891852L
-        private val setGravityDirectionBind by lazy {
+        @JvmField
+        val setGravityDirectionBind =
             ObjectCalls.getMethodBind("Area3D", "set_gravity_direction", SET_GRAVITY_DIRECTION_HASH)
-        }
 
         private const val GET_GRAVITY_DIRECTION_HASH = 3360562783L
-        private val getGravityDirectionBind by lazy {
+        @JvmField
+        val getGravityDirectionBind =
             ObjectCalls.getMethodBind("Area3D", "get_gravity_direction", GET_GRAVITY_DIRECTION_HASH)
-        }
 
         private const val SET_GRAVITY_HASH = 373806689L
-        private val setGravityBind by lazy {
+        @JvmField
+        val setGravityBind =
             ObjectCalls.getMethodBind("Area3D", "set_gravity", SET_GRAVITY_HASH)
-        }
 
         private const val GET_GRAVITY_HASH = 1740695150L
-        private val getGravityBind by lazy {
+        @JvmField
+        val getGravityBind =
             ObjectCalls.getMethodBind("Area3D", "get_gravity", GET_GRAVITY_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 2311433571L
-        private val setLinearDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val setLinearDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area3D", "set_linear_damp_space_override_mode", SET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 958191869L
-        private val getLinearDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val getLinearDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area3D", "get_linear_damp_space_override_mode", GET_LINEAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 2311433571L
-        private val setAngularDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val setAngularDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area3D", "set_angular_damp_space_override_mode", SET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH = 958191869L
-        private val getAngularDampSpaceOverrideModeBind by lazy {
+        @JvmField
+        val getAngularDampSpaceOverrideModeBind =
             ObjectCalls.getMethodBind("Area3D", "get_angular_damp_space_override_mode", GET_ANGULAR_DAMP_SPACE_OVERRIDE_MODE_HASH)
-        }
 
         private const val SET_ANGULAR_DAMP_HASH = 373806689L
-        private val setAngularDampBind by lazy {
+        @JvmField
+        val setAngularDampBind =
             ObjectCalls.getMethodBind("Area3D", "set_angular_damp", SET_ANGULAR_DAMP_HASH)
-        }
 
         private const val GET_ANGULAR_DAMP_HASH = 1740695150L
-        private val getAngularDampBind by lazy {
+        @JvmField
+        val getAngularDampBind =
             ObjectCalls.getMethodBind("Area3D", "get_angular_damp", GET_ANGULAR_DAMP_HASH)
-        }
 
         private const val SET_LINEAR_DAMP_HASH = 373806689L
-        private val setLinearDampBind by lazy {
+        @JvmField
+        val setLinearDampBind =
             ObjectCalls.getMethodBind("Area3D", "set_linear_damp", SET_LINEAR_DAMP_HASH)
-        }
 
         private const val GET_LINEAR_DAMP_HASH = 1740695150L
-        private val getLinearDampBind by lazy {
+        @JvmField
+        val getLinearDampBind =
             ObjectCalls.getMethodBind("Area3D", "get_linear_damp", GET_LINEAR_DAMP_HASH)
-        }
 
         private const val SET_PRIORITY_HASH = 1286410249L
-        private val setPriorityBind by lazy {
+        @JvmField
+        val setPriorityBind =
             ObjectCalls.getMethodBind("Area3D", "set_priority", SET_PRIORITY_HASH)
-        }
 
         private const val GET_PRIORITY_HASH = 3905245786L
-        private val getPriorityBind by lazy {
+        @JvmField
+        val getPriorityBind =
             ObjectCalls.getMethodBind("Area3D", "get_priority", GET_PRIORITY_HASH)
-        }
 
         private const val SET_WIND_FORCE_MAGNITUDE_HASH = 373806689L
-        private val setWindForceMagnitudeBind by lazy {
+        @JvmField
+        val setWindForceMagnitudeBind =
             ObjectCalls.getMethodBind("Area3D", "set_wind_force_magnitude", SET_WIND_FORCE_MAGNITUDE_HASH)
-        }
 
         private const val GET_WIND_FORCE_MAGNITUDE_HASH = 1740695150L
-        private val getWindForceMagnitudeBind by lazy {
+        @JvmField
+        val getWindForceMagnitudeBind =
             ObjectCalls.getMethodBind("Area3D", "get_wind_force_magnitude", GET_WIND_FORCE_MAGNITUDE_HASH)
-        }
 
         private const val SET_WIND_ATTENUATION_FACTOR_HASH = 373806689L
-        private val setWindAttenuationFactorBind by lazy {
+        @JvmField
+        val setWindAttenuationFactorBind =
             ObjectCalls.getMethodBind("Area3D", "set_wind_attenuation_factor", SET_WIND_ATTENUATION_FACTOR_HASH)
-        }
 
         private const val GET_WIND_ATTENUATION_FACTOR_HASH = 1740695150L
-        private val getWindAttenuationFactorBind by lazy {
+        @JvmField
+        val getWindAttenuationFactorBind =
             ObjectCalls.getMethodBind("Area3D", "get_wind_attenuation_factor", GET_WIND_ATTENUATION_FACTOR_HASH)
-        }
 
         private const val SET_WIND_SOURCE_PATH_HASH = 1348162250L
-        private val setWindSourcePathBind by lazy {
+        @JvmField
+        val setWindSourcePathBind =
             ObjectCalls.getMethodBind("Area3D", "set_wind_source_path", SET_WIND_SOURCE_PATH_HASH)
-        }
 
         private const val GET_WIND_SOURCE_PATH_HASH = 4075236667L
-        private val getWindSourcePathBind by lazy {
+        @JvmField
+        val getWindSourcePathBind =
             ObjectCalls.getMethodBind("Area3D", "get_wind_source_path", GET_WIND_SOURCE_PATH_HASH)
-        }
 
         private const val SET_MONITORABLE_HASH = 2586408642L
-        private val setMonitorableBind by lazy {
+        @JvmField
+        val setMonitorableBind =
             ObjectCalls.getMethodBind("Area3D", "set_monitorable", SET_MONITORABLE_HASH)
-        }
 
         private const val IS_MONITORABLE_HASH = 36873697L
-        private val isMonitorableBind by lazy {
+        @JvmField
+        val isMonitorableBind =
             ObjectCalls.getMethodBind("Area3D", "is_monitorable", IS_MONITORABLE_HASH)
-        }
 
         private const val SET_MONITORING_HASH = 2586408642L
-        private val setMonitoringBind by lazy {
+        @JvmField
+        val setMonitoringBind =
             ObjectCalls.getMethodBind("Area3D", "set_monitoring", SET_MONITORING_HASH)
-        }
 
         private const val IS_MONITORING_HASH = 36873697L
-        private val isMonitoringBind by lazy {
+        @JvmField
+        val isMonitoringBind =
             ObjectCalls.getMethodBind("Area3D", "is_monitoring", IS_MONITORING_HASH)
-        }
 
         private const val GET_OVERLAPPING_BODIES_HASH = 3995934104L
-        private val getOverlappingBodiesBind by lazy {
+        @JvmField
+        val getOverlappingBodiesBind =
             ObjectCalls.getMethodBind("Area3D", "get_overlapping_bodies", GET_OVERLAPPING_BODIES_HASH)
-        }
 
         private const val GET_OVERLAPPING_AREAS_HASH = 3995934104L
-        private val getOverlappingAreasBind by lazy {
+        @JvmField
+        val getOverlappingAreasBind =
             ObjectCalls.getMethodBind("Area3D", "get_overlapping_areas", GET_OVERLAPPING_AREAS_HASH)
-        }
 
         private const val HAS_OVERLAPPING_BODIES_HASH = 36873697L
-        private val hasOverlappingBodiesBind by lazy {
+        @JvmField
+        val hasOverlappingBodiesBind =
             ObjectCalls.getMethodBind("Area3D", "has_overlapping_bodies", HAS_OVERLAPPING_BODIES_HASH)
-        }
 
         private const val HAS_OVERLAPPING_AREAS_HASH = 36873697L
-        private val hasOverlappingAreasBind by lazy {
+        @JvmField
+        val hasOverlappingAreasBind =
             ObjectCalls.getMethodBind("Area3D", "has_overlapping_areas", HAS_OVERLAPPING_AREAS_HASH)
-        }
 
         private const val OVERLAPS_BODY_HASH = 3093956946L
-        private val overlapsBodyBind by lazy {
+        @JvmField
+        val overlapsBodyBind =
             ObjectCalls.getMethodBind("Area3D", "overlaps_body", OVERLAPS_BODY_HASH)
-        }
 
         private const val OVERLAPS_AREA_HASH = 3093956946L
-        private val overlapsAreaBind by lazy {
+        @JvmField
+        val overlapsAreaBind =
             ObjectCalls.getMethodBind("Area3D", "overlaps_area", OVERLAPS_AREA_HASH)
-        }
 
         private const val SET_AUDIO_BUS_OVERRIDE_HASH = 2586408642L
-        private val setAudioBusOverrideBind by lazy {
+        @JvmField
+        val setAudioBusOverrideBind =
             ObjectCalls.getMethodBind("Area3D", "set_audio_bus_override", SET_AUDIO_BUS_OVERRIDE_HASH)
-        }
 
         private const val IS_OVERRIDING_AUDIO_BUS_HASH = 36873697L
-        private val isOverridingAudioBusBind by lazy {
+        @JvmField
+        val isOverridingAudioBusBind =
             ObjectCalls.getMethodBind("Area3D", "is_overriding_audio_bus", IS_OVERRIDING_AUDIO_BUS_HASH)
-        }
 
         private const val SET_AUDIO_BUS_NAME_HASH = 3304788590L
-        private val setAudioBusNameBind by lazy {
+        @JvmField
+        val setAudioBusNameBind =
             ObjectCalls.getMethodBind("Area3D", "set_audio_bus_name", SET_AUDIO_BUS_NAME_HASH)
-        }
 
         private const val GET_AUDIO_BUS_NAME_HASH = 2002593661L
-        private val getAudioBusNameBind by lazy {
+        @JvmField
+        val getAudioBusNameBind =
             ObjectCalls.getMethodBind("Area3D", "get_audio_bus_name", GET_AUDIO_BUS_NAME_HASH)
-        }
 
         private const val SET_USE_REVERB_BUS_HASH = 2586408642L
-        private val setUseReverbBusBind by lazy {
+        @JvmField
+        val setUseReverbBusBind =
             ObjectCalls.getMethodBind("Area3D", "set_use_reverb_bus", SET_USE_REVERB_BUS_HASH)
-        }
 
         private const val IS_USING_REVERB_BUS_HASH = 36873697L
-        private val isUsingReverbBusBind by lazy {
+        @JvmField
+        val isUsingReverbBusBind =
             ObjectCalls.getMethodBind("Area3D", "is_using_reverb_bus", IS_USING_REVERB_BUS_HASH)
-        }
 
         private const val SET_REVERB_BUS_NAME_HASH = 3304788590L
-        private val setReverbBusNameBind by lazy {
+        @JvmField
+        val setReverbBusNameBind =
             ObjectCalls.getMethodBind("Area3D", "set_reverb_bus_name", SET_REVERB_BUS_NAME_HASH)
-        }
 
         private const val GET_REVERB_BUS_NAME_HASH = 2002593661L
-        private val getReverbBusNameBind by lazy {
+        @JvmField
+        val getReverbBusNameBind =
             ObjectCalls.getMethodBind("Area3D", "get_reverb_bus_name", GET_REVERB_BUS_NAME_HASH)
-        }
 
         private const val SET_REVERB_AMOUNT_HASH = 373806689L
-        private val setReverbAmountBind by lazy {
+        @JvmField
+        val setReverbAmountBind =
             ObjectCalls.getMethodBind("Area3D", "set_reverb_amount", SET_REVERB_AMOUNT_HASH)
-        }
 
         private const val GET_REVERB_AMOUNT_HASH = 1740695150L
-        private val getReverbAmountBind by lazy {
+        @JvmField
+        val getReverbAmountBind =
             ObjectCalls.getMethodBind("Area3D", "get_reverb_amount", GET_REVERB_AMOUNT_HASH)
-        }
 
         private const val SET_REVERB_UNIFORMITY_HASH = 373806689L
-        private val setReverbUniformityBind by lazy {
+        @JvmField
+        val setReverbUniformityBind =
             ObjectCalls.getMethodBind("Area3D", "set_reverb_uniformity", SET_REVERB_UNIFORMITY_HASH)
-        }
 
         private const val GET_REVERB_UNIFORMITY_HASH = 1740695150L
-        private val getReverbUniformityBind by lazy {
+        @JvmField
+        val getReverbUniformityBind =
             ObjectCalls.getMethodBind("Area3D", "get_reverb_uniformity", GET_REVERB_UNIFORMITY_HASH)
-        }
     }
 }

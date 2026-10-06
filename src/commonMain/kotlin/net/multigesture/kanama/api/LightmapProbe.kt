@@ -19,7 +19,5 @@ class LightmapProbe(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): LightmapProbe? =
             if (handle.address() == 0L) null else LightmapProbe(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

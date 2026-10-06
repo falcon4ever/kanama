@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun createItem(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(createItemBind, segment, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.createItemBind, segment, id)
     }
 
     /**
@@ -31,7 +32,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemName(id: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, segment, id, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemNameBind, segment, id, name)
     }
 
     /**
@@ -41,7 +42,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemMesh(id: Int, mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -51,7 +52,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, segment, id, meshTransform)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setItemMeshTransformBind, segment, id, meshTransform)
     }
 
     /**
@@ -61,7 +62,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: RenderingServer.ShadowCastingSetting) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, segment, id, shadowCastingSetting.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemMeshCastShadowBind, segment, id, shadowCastingSetting.value)
     }
 
     /**
@@ -71,7 +72,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -81,7 +82,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, segment, id, navigationMesh)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setItemNavigationMeshTransformBind, segment, id, navigationMesh)
     }
 
     /**
@@ -91,7 +92,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, segment, id, navigationLayers)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setItemNavigationLayersBind, segment, id, navigationLayers)
     }
 
     /**
@@ -103,7 +104,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemShapes(id: Int, shapes: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, segment, id, shapes)
+        ObjectCalls.ptrcallWithIntAndArrayArg(Binds.setItemShapesBind, segment, id, shapes)
     }
 
     /**
@@ -113,7 +114,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -123,7 +124,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemName(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemNameBind, segment, id)
     }
 
     /**
@@ -133,7 +134,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, segment, id))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemMeshBind, segment, id))
     }
 
     /**
@@ -143,7 +144,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getItemMeshTransformBind, segment, id)
     }
 
     /**
@@ -153,7 +154,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMeshCastShadow(id: Int): RenderingServer.ShadowCastingSetting {
         checkOpen()
-        return RenderingServer.ShadowCastingSetting(ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, segment, id))
+        return RenderingServer.ShadowCastingSetting(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemMeshCastShadowBind, segment, id))
     }
 
     /**
@@ -163,7 +164,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, segment, id))
+        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemNavigationMeshBind, segment, id))
     }
 
     /**
@@ -173,7 +174,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getItemNavigationMeshTransformBind, segment, id)
     }
 
     /**
@@ -183,7 +184,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationLayers(id: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getItemNavigationLayersBind, segment, id)
     }
 
     /**
@@ -194,7 +195,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemShapes(id: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getItemShapesBind, segment, id)
     }
 
     /**
@@ -207,7 +208,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, segment, id))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemPreviewBind, segment, id))
     }
 
     /**
@@ -217,7 +218,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun removeItem(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeItemBind, segment, id)
     }
 
     /**
@@ -227,7 +228,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun findItemByName(name: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findItemByNameBind, segment, name)
     }
 
     /**
@@ -237,7 +238,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -247,7 +248,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getItemListBind, segment)
     }
 
     /**
@@ -257,7 +258,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
     }
 
     /**
@@ -267,7 +268,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getLastUnusedItemId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLastUnusedItemIdBind, segment)
     }
 
     companion object {
@@ -285,130 +286,132 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         @JvmStatic
         fun create(): MeshLibrary =
             RefCounted.owned(MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary"))))
+    }
 
+    private object Binds {
         private const val CREATE_ITEM_HASH = 1286410249L
-        private val createItemBind by lazy {
+        @JvmField
+        val createItemBind =
             ObjectCalls.getMethodBind("MeshLibrary", "create_item", CREATE_ITEM_HASH)
-        }
 
         private const val SET_ITEM_NAME_HASH = 501894301L
-        private val setItemNameBind by lazy {
+        @JvmField
+        val setItemNameBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_name", SET_ITEM_NAME_HASH)
-        }
 
         private const val SET_ITEM_MESH_HASH = 969122797L
-        private val setItemMeshBind by lazy {
+        @JvmField
+        val setItemMeshBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_mesh", SET_ITEM_MESH_HASH)
-        }
 
         private const val SET_ITEM_MESH_TRANSFORM_HASH = 3616898986L
-        private val setItemMeshTransformBind by lazy {
+        @JvmField
+        val setItemMeshTransformBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_mesh_transform", SET_ITEM_MESH_TRANSFORM_HASH)
-        }
 
         private const val SET_ITEM_MESH_CAST_SHADOW_HASH = 3923400443L
-        private val setItemMeshCastShadowBind by lazy {
+        @JvmField
+        val setItemMeshCastShadowBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_mesh_cast_shadow", SET_ITEM_MESH_CAST_SHADOW_HASH)
-        }
 
         private const val SET_ITEM_NAVIGATION_MESH_HASH = 3483353960L
-        private val setItemNavigationMeshBind by lazy {
+        @JvmField
+        val setItemNavigationMeshBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_navigation_mesh", SET_ITEM_NAVIGATION_MESH_HASH)
-        }
 
         private const val SET_ITEM_NAVIGATION_MESH_TRANSFORM_HASH = 3616898986L
-        private val setItemNavigationMeshTransformBind by lazy {
+        @JvmField
+        val setItemNavigationMeshTransformBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_navigation_mesh_transform", SET_ITEM_NAVIGATION_MESH_TRANSFORM_HASH)
-        }
 
         private const val SET_ITEM_NAVIGATION_LAYERS_HASH = 3937882851L
-        private val setItemNavigationLayersBind by lazy {
+        @JvmField
+        val setItemNavigationLayersBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_navigation_layers", SET_ITEM_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val SET_ITEM_SHAPES_HASH = 537221740L
-        private val setItemShapesBind by lazy {
+        @JvmField
+        val setItemShapesBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_shapes", SET_ITEM_SHAPES_HASH)
-        }
 
         private const val SET_ITEM_PREVIEW_HASH = 666127730L
-        private val setItemPreviewBind by lazy {
+        @JvmField
+        val setItemPreviewBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_preview", SET_ITEM_PREVIEW_HASH)
-        }
 
         private const val GET_ITEM_NAME_HASH = 844755477L
-        private val getItemNameBind by lazy {
+        @JvmField
+        val getItemNameBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_name", GET_ITEM_NAME_HASH)
-        }
 
         private const val GET_ITEM_MESH_HASH = 1576363275L
-        private val getItemMeshBind by lazy {
+        @JvmField
+        val getItemMeshBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_mesh", GET_ITEM_MESH_HASH)
-        }
 
         private const val GET_ITEM_MESH_TRANSFORM_HASH = 1965739696L
-        private val getItemMeshTransformBind by lazy {
+        @JvmField
+        val getItemMeshTransformBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_mesh_transform", GET_ITEM_MESH_TRANSFORM_HASH)
-        }
 
         private const val GET_ITEM_MESH_CAST_SHADOW_HASH = 1841766007L
-        private val getItemMeshCastShadowBind by lazy {
+        @JvmField
+        val getItemMeshCastShadowBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_mesh_cast_shadow", GET_ITEM_MESH_CAST_SHADOW_HASH)
-        }
 
         private const val GET_ITEM_NAVIGATION_MESH_HASH = 2729647406L
-        private val getItemNavigationMeshBind by lazy {
+        @JvmField
+        val getItemNavigationMeshBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_navigation_mesh", GET_ITEM_NAVIGATION_MESH_HASH)
-        }
 
         private const val GET_ITEM_NAVIGATION_MESH_TRANSFORM_HASH = 1965739696L
-        private val getItemNavigationMeshTransformBind by lazy {
+        @JvmField
+        val getItemNavigationMeshTransformBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_navigation_mesh_transform", GET_ITEM_NAVIGATION_MESH_TRANSFORM_HASH)
-        }
 
         private const val GET_ITEM_NAVIGATION_LAYERS_HASH = 923996154L
-        private val getItemNavigationLayersBind by lazy {
+        @JvmField
+        val getItemNavigationLayersBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_navigation_layers", GET_ITEM_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val GET_ITEM_SHAPES_HASH = 663333327L
-        private val getItemShapesBind by lazy {
+        @JvmField
+        val getItemShapesBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_shapes", GET_ITEM_SHAPES_HASH)
-        }
 
         private const val GET_ITEM_PREVIEW_HASH = 3536238170L
-        private val getItemPreviewBind by lazy {
+        @JvmField
+        val getItemPreviewBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_preview", GET_ITEM_PREVIEW_HASH)
-        }
 
         private const val REMOVE_ITEM_HASH = 1286410249L
-        private val removeItemBind by lazy {
+        @JvmField
+        val removeItemBind =
             ObjectCalls.getMethodBind("MeshLibrary", "remove_item", REMOVE_ITEM_HASH)
-        }
 
         private const val FIND_ITEM_BY_NAME_HASH = 1321353865L
-        private val findItemByNameBind by lazy {
+        @JvmField
+        val findItemByNameBind =
             ObjectCalls.getMethodBind("MeshLibrary", "find_item_by_name", FIND_ITEM_BY_NAME_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("MeshLibrary", "clear", CLEAR_HASH)
-        }
 
         private const val GET_ITEM_LIST_HASH = 1930428628L
-        private val getItemListBind by lazy {
+        @JvmField
+        val getItemListBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_list", GET_ITEM_LIST_HASH)
-        }
 
         private const val GET_ITEM_COUNT_HASH = 3905245786L
-        private val getItemCountBind by lazy {
+        @JvmField
+        val getItemCountBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_count", GET_ITEM_COUNT_HASH)
-        }
 
         private const val GET_LAST_UNUSED_ITEM_ID_HASH = 3905245786L
-        private val getLastUnusedItemIdBind by lazy {
+        @JvmField
+        val getLastUnusedItemIdBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_last_unused_item_id", GET_LAST_UNUSED_ITEM_ID_HASH)
-        }
     }
 }

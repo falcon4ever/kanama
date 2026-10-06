@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -35,7 +36,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSeed(seed: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSeedBind, segment, seed)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSeedBind, segment, seed)
     }
 
     /**
@@ -50,7 +51,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSeed(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSeedBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setState(state: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStateBind, segment, state)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStateBind, segment, state)
     }
 
     /**
@@ -70,7 +71,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getState(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randi(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(randiBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.randiBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(randfBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.randfBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randfn(mean: Double = 0.0, deviation: Double = 1.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfnBind, segment, mean, deviation)
+        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.randfnBind, segment, mean, deviation)
     }
 
     /**
@@ -113,7 +114,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randfRange(from: Double, to: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(randfRangeBind, segment, from, to)
+        return ObjectCalls.ptrcallWithTwoDoubleArgsRetDouble(Binds.randfRangeBind, segment, from, to)
     }
 
     /**
@@ -123,7 +124,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randiRange(from: Int, to: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(randiRangeBind, segment, from, to)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.randiRangeBind, segment, from, to)
     }
 
     /**
@@ -140,7 +141,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randWeighted(weights: List<Float>): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(randWeightedBind, segment, weights)
+        return ObjectCalls.ptrcallWithPackedFloat32ListArgRetLong(Binds.randWeightedBind, segment, weights)
     }
 
     /**
@@ -152,7 +153,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun randomize() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(randomizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.randomizeBind, segment)
     }
 
     companion object {
@@ -165,60 +166,62 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RandomNumberGenerator? =
             if (handle.address() == 0L) null else RandomNumberGenerator(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SEED_HASH = 1286410249L
-        private val setSeedBind by lazy {
+        @JvmField
+        val setSeedBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "set_seed", SET_SEED_HASH)
-        }
 
         private const val GET_SEED_HASH = 2455072627L
-        private val getSeedBind by lazy {
+        @JvmField
+        val getSeedBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "get_seed", GET_SEED_HASH)
-        }
 
         private const val SET_STATE_HASH = 1286410249L
-        private val setStateBind by lazy {
+        @JvmField
+        val setStateBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "set_state", SET_STATE_HASH)
-        }
 
         private const val GET_STATE_HASH = 3905245786L
-        private val getStateBind by lazy {
+        @JvmField
+        val getStateBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "get_state", GET_STATE_HASH)
-        }
 
         private const val RANDI_HASH = 2455072627L
-        private val randiBind by lazy {
+        @JvmField
+        val randiBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "randi", RANDI_HASH)
-        }
 
         private const val RANDF_HASH = 191475506L
-        private val randfBind by lazy {
+        @JvmField
+        val randfBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "randf", RANDF_HASH)
-        }
 
         private const val RANDFN_HASH = 837325100L
-        private val randfnBind by lazy {
+        @JvmField
+        val randfnBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "randfn", RANDFN_HASH)
-        }
 
         private const val RANDF_RANGE_HASH = 4269894367L
-        private val randfRangeBind by lazy {
+        @JvmField
+        val randfRangeBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "randf_range", RANDF_RANGE_HASH)
-        }
 
         private const val RANDI_RANGE_HASH = 50157827L
-        private val randiRangeBind by lazy {
+        @JvmField
+        val randiRangeBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "randi_range", RANDI_RANGE_HASH)
-        }
 
         private const val RAND_WEIGHTED_HASH = 4189642986L
-        private val randWeightedBind by lazy {
+        @JvmField
+        val randWeightedBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "rand_weighted", RAND_WEIGHTED_HASH)
-        }
 
         private const val RANDOMIZE_HASH = 3218959716L
-        private val randomizeBind by lazy {
+        @JvmField
+        val randomizeBind =
             ObjectCalls.getMethodBind("RandomNumberGenerator", "randomize", RANDOMIZE_HASH)
-        }
     }
 }

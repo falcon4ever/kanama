@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSkeleton(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSkeletonBind, segment)
     }
 
     /**
@@ -31,7 +32,7 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSkin(): Skin? {
         checkOpen()
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
     }
 
     companion object {
@@ -44,15 +45,17 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkinReference? =
             if (handle.address() == 0L) null else SkinReference(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SKELETON_HASH = 2944877500L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("SkinReference", "get_skeleton", GET_SKELETON_HASH)
-        }
 
         private const val GET_SKIN_HASH = 2074563878L
-        private val getSkinBind by lazy {
+        @JvmField
+        val getSkinBind =
             ObjectCalls.getMethodBind("SkinReference", "get_skin", GET_SKIN_HASH)
-        }
     }
 }

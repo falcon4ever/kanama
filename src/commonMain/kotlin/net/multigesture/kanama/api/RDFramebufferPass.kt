@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setColorAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setColorAttachmentsBind, segment, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setColorAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -60,7 +61,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColorAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getColorAttachmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getColorAttachmentsBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setInputAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setInputAttachmentsBind, segment, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setInputAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -82,7 +83,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInputAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getInputAttachmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getInputAttachmentsBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setResolveAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setResolveAttachmentsBind, segment, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setResolveAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -102,7 +103,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResolveAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getResolveAttachmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getResolveAttachmentsBind, segment)
     }
 
     /**
@@ -112,7 +113,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPreserveAttachments(pMember: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setPreserveAttachmentsBind, segment, pMember)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setPreserveAttachmentsBind, segment, pMember)
     }
 
     /**
@@ -122,7 +123,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveAttachments(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPreserveAttachmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPreserveAttachmentsBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDepthAttachment(pMember: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDepthAttachmentBind, segment, pMember)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDepthAttachmentBind, segment, pMember)
     }
 
     /**
@@ -142,7 +143,7 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthAttachment(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDepthAttachmentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDepthAttachmentBind, segment)
     }
 
     companion object {
@@ -157,55 +158,57 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDFramebufferPass? =
             if (handle.address() == 0L) null else RDFramebufferPass(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COLOR_ATTACHMENTS_HASH = 3614634198L
-        private val setColorAttachmentsBind by lazy {
+        @JvmField
+        val setColorAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "set_color_attachments", SET_COLOR_ATTACHMENTS_HASH)
-        }
 
         private const val GET_COLOR_ATTACHMENTS_HASH = 1930428628L
-        private val getColorAttachmentsBind by lazy {
+        @JvmField
+        val getColorAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_color_attachments", GET_COLOR_ATTACHMENTS_HASH)
-        }
 
         private const val SET_INPUT_ATTACHMENTS_HASH = 3614634198L
-        private val setInputAttachmentsBind by lazy {
+        @JvmField
+        val setInputAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "set_input_attachments", SET_INPUT_ATTACHMENTS_HASH)
-        }
 
         private const val GET_INPUT_ATTACHMENTS_HASH = 1930428628L
-        private val getInputAttachmentsBind by lazy {
+        @JvmField
+        val getInputAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_input_attachments", GET_INPUT_ATTACHMENTS_HASH)
-        }
 
         private const val SET_RESOLVE_ATTACHMENTS_HASH = 3614634198L
-        private val setResolveAttachmentsBind by lazy {
+        @JvmField
+        val setResolveAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "set_resolve_attachments", SET_RESOLVE_ATTACHMENTS_HASH)
-        }
 
         private const val GET_RESOLVE_ATTACHMENTS_HASH = 1930428628L
-        private val getResolveAttachmentsBind by lazy {
+        @JvmField
+        val getResolveAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_resolve_attachments", GET_RESOLVE_ATTACHMENTS_HASH)
-        }
 
         private const val SET_PRESERVE_ATTACHMENTS_HASH = 3614634198L
-        private val setPreserveAttachmentsBind by lazy {
+        @JvmField
+        val setPreserveAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "set_preserve_attachments", SET_PRESERVE_ATTACHMENTS_HASH)
-        }
 
         private const val GET_PRESERVE_ATTACHMENTS_HASH = 1930428628L
-        private val getPreserveAttachmentsBind by lazy {
+        @JvmField
+        val getPreserveAttachmentsBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_preserve_attachments", GET_PRESERVE_ATTACHMENTS_HASH)
-        }
 
         private const val SET_DEPTH_ATTACHMENT_HASH = 1286410249L
-        private val setDepthAttachmentBind by lazy {
+        @JvmField
+        val setDepthAttachmentBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "set_depth_attachment", SET_DEPTH_ATTACHMENT_HASH)
-        }
 
         private const val GET_DEPTH_ATTACHMENT_HASH = 3905245786L
-        private val getDepthAttachmentBind by lazy {
+        @JvmField
+        val getDepthAttachmentBind =
             ObjectCalls.getMethodBind("RDFramebufferPass", "get_depth_attachment", GET_DEPTH_ATTACHMENT_HASH)
-        }
     }
 }

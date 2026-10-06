@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -68,7 +69,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -79,7 +80,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadialSteps(radialSteps: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialStepsBind, segment, radialSteps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRadialStepsBind, segment, radialSteps)
     }
 
     /**
@@ -101,7 +102,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSteps(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialStepsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialStepsBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSections(sections: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionsBind, segment, sections)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSectionsBind, segment, sections)
     }
 
     /**
@@ -121,7 +122,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionsBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSectionLength(sectionLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, segment, sectionLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSectionLengthBind, segment, sectionLength)
     }
 
     /**
@@ -141,7 +142,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionLengthBind, segment)
     }
 
     /**
@@ -152,7 +153,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSectionRings(sectionRings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionRingsBind, segment, sectionRings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSectionRingsBind, segment, sectionRings)
     }
 
     /**
@@ -163,7 +164,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionRingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionRingsBind, segment)
     }
 
     /**
@@ -174,7 +175,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCapTop(capTop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCapTopBind, segment, capTop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCapTopBind, segment, capTop)
     }
 
     /**
@@ -185,7 +186,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapTop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapTopBind, segment)
     }
 
     /**
@@ -196,7 +197,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCapBottom(capBottom: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, segment, capBottom)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCapBottomBind, segment, capBottom)
     }
 
     /**
@@ -207,7 +208,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapBottom(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapBottomBind, segment)
     }
 
     /**
@@ -219,7 +220,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -231,7 +232,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
     }
 
     companion object {
@@ -244,85 +245,87 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TubeTrailMesh? =
             if (handle.address() == 0L) null else TubeTrailMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_RADIAL_STEPS_HASH = 1286410249L
-        private val setRadialStepsBind by lazy {
+        @JvmField
+        val setRadialStepsBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_radial_steps", SET_RADIAL_STEPS_HASH)
-        }
 
         private const val GET_RADIAL_STEPS_HASH = 3905245786L
-        private val getRadialStepsBind by lazy {
+        @JvmField
+        val getRadialStepsBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "get_radial_steps", GET_RADIAL_STEPS_HASH)
-        }
 
         private const val SET_SECTIONS_HASH = 1286410249L
-        private val setSectionsBind by lazy {
+        @JvmField
+        val setSectionsBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_sections", SET_SECTIONS_HASH)
-        }
 
         private const val GET_SECTIONS_HASH = 3905245786L
-        private val getSectionsBind by lazy {
+        @JvmField
+        val getSectionsBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "get_sections", GET_SECTIONS_HASH)
-        }
 
         private const val SET_SECTION_LENGTH_HASH = 373806689L
-        private val setSectionLengthBind by lazy {
+        @JvmField
+        val setSectionLengthBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_section_length", SET_SECTION_LENGTH_HASH)
-        }
 
         private const val GET_SECTION_LENGTH_HASH = 1740695150L
-        private val getSectionLengthBind by lazy {
+        @JvmField
+        val getSectionLengthBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "get_section_length", GET_SECTION_LENGTH_HASH)
-        }
 
         private const val SET_SECTION_RINGS_HASH = 1286410249L
-        private val setSectionRingsBind by lazy {
+        @JvmField
+        val setSectionRingsBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_section_rings", SET_SECTION_RINGS_HASH)
-        }
 
         private const val GET_SECTION_RINGS_HASH = 3905245786L
-        private val getSectionRingsBind by lazy {
+        @JvmField
+        val getSectionRingsBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "get_section_rings", GET_SECTION_RINGS_HASH)
-        }
 
         private const val SET_CAP_TOP_HASH = 2586408642L
-        private val setCapTopBind by lazy {
+        @JvmField
+        val setCapTopBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_cap_top", SET_CAP_TOP_HASH)
-        }
 
         private const val IS_CAP_TOP_HASH = 36873697L
-        private val isCapTopBind by lazy {
+        @JvmField
+        val isCapTopBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "is_cap_top", IS_CAP_TOP_HASH)
-        }
 
         private const val SET_CAP_BOTTOM_HASH = 2586408642L
-        private val setCapBottomBind by lazy {
+        @JvmField
+        val setCapBottomBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_cap_bottom", SET_CAP_BOTTOM_HASH)
-        }
 
         private const val IS_CAP_BOTTOM_HASH = 36873697L
-        private val isCapBottomBind by lazy {
+        @JvmField
+        val isCapBottomBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "is_cap_bottom", IS_CAP_BOTTOM_HASH)
-        }
 
         private const val SET_CURVE_HASH = 270443179L
-        private val setCurveBind by lazy {
+        @JvmField
+        val setCurveBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "set_curve", SET_CURVE_HASH)
-        }
 
         private const val GET_CURVE_HASH = 2460114913L
-        private val getCurveBind by lazy {
+        @JvmField
+        val getCurveBind =
             ObjectCalls.getMethodBind("TubeTrailMesh", "get_curve", GET_CURVE_HASH)
-        }
     }
 }

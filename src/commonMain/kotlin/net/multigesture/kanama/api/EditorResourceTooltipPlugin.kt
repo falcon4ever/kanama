@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun requestThumbnail(path: String, control: TextureRect) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectArg(requestThumbnailBind, segment, path, control.segment)
+        ObjectCalls.ptrcallWithStringAndObjectArg(Binds.requestThumbnailBind, segment, path, control.segment)
     }
 
     companion object {
@@ -31,10 +32,12 @@ class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourceTooltipPlugin? =
             if (handle.address() == 0L) null else EditorResourceTooltipPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val REQUEST_THUMBNAIL_HASH = 3245519720L
-        private val requestThumbnailBind by lazy {
+        @JvmField
+        val requestThumbnailBind =
             ObjectCalls.getMethodBind("EditorResourceTooltipPlugin", "request_thumbnail", REQUEST_THUMBNAIL_HASH)
-        }
     }
 }

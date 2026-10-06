@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -57,7 +58,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBinding(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setBindingBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setBindingBind, segment, pMember)
     }
 
     /**
@@ -70,7 +71,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBinding(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBindingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBindingBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLocation(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setLocationBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setLocationBind, segment, pMember)
     }
 
     /**
@@ -90,7 +91,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocation(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getLocationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getLocationBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setOffset(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setOffsetBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setOffsetBind, segment, pMember)
     }
 
     /**
@@ -112,7 +113,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -122,7 +123,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, pMember.value)
     }
 
     /**
@@ -132,7 +133,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -142,7 +143,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setStride(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setStrideBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setStrideBind, segment, pMember)
     }
 
     /**
@@ -152,7 +153,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getStrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getStrideBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFrequency(pMember: RenderingDevice.VertexFrequency) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrequencyBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFrequencyBind, segment, pMember.value)
     }
 
     /**
@@ -172,7 +173,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrequency(): RenderingDevice.VertexFrequency {
         checkOpen()
-        return RenderingDevice.VertexFrequency(ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, segment))
+        return RenderingDevice.VertexFrequency(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrequencyBind, segment))
     }
 
     companion object {
@@ -185,65 +186,67 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDVertexAttribute? =
             if (handle.address() == 0L) null else RDVertexAttribute(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BINDING_HASH = 1286410249L
-        private val setBindingBind by lazy {
+        @JvmField
+        val setBindingBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "set_binding", SET_BINDING_HASH)
-        }
 
         private const val GET_BINDING_HASH = 3905245786L
-        private val getBindingBind by lazy {
+        @JvmField
+        val getBindingBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "get_binding", GET_BINDING_HASH)
-        }
 
         private const val SET_LOCATION_HASH = 1286410249L
-        private val setLocationBind by lazy {
+        @JvmField
+        val setLocationBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "set_location", SET_LOCATION_HASH)
-        }
 
         private const val GET_LOCATION_HASH = 3905245786L
-        private val getLocationBind by lazy {
+        @JvmField
+        val getLocationBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "get_location", GET_LOCATION_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 1286410249L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3905245786L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_FORMAT_HASH = 565531219L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "set_format", SET_FORMAT_HASH)
-        }
 
         private const val GET_FORMAT_HASH = 2235804183L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val SET_STRIDE_HASH = 1286410249L
-        private val setStrideBind by lazy {
+        @JvmField
+        val setStrideBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "set_stride", SET_STRIDE_HASH)
-        }
 
         private const val GET_STRIDE_HASH = 3905245786L
-        private val getStrideBind by lazy {
+        @JvmField
+        val getStrideBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "get_stride", GET_STRIDE_HASH)
-        }
 
         private const val SET_FREQUENCY_HASH = 522141836L
-        private val setFrequencyBind by lazy {
+        @JvmField
+        val setFrequencyBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "set_frequency", SET_FREQUENCY_HASH)
-        }
 
         private const val GET_FREQUENCY_HASH = 4154106413L
-        private val getFrequencyBind by lazy {
+        @JvmField
+        val getFrequencyBind =
             ObjectCalls.getMethodBind("RDVertexAttribute", "get_frequency", GET_FREQUENCY_HASH)
-        }
     }
 }

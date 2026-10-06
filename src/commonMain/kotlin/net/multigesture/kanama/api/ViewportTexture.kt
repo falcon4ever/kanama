@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -28,7 +29,7 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setViewportPathInScene(path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setViewportPathInSceneBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setViewportPathInSceneBind, segment, path)
     }
 
     /**
@@ -41,7 +42,7 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getViewportPathInScene(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getViewportPathInSceneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getViewportPathInSceneBind, segment)
     }
 
     companion object {
@@ -54,15 +55,17 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ViewportTexture? =
             if (handle.address() == 0L) null else ViewportTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VIEWPORT_PATH_IN_SCENE_HASH = 1348162250L
-        private val setViewportPathInSceneBind by lazy {
+        @JvmField
+        val setViewportPathInSceneBind =
             ObjectCalls.getMethodBind("ViewportTexture", "set_viewport_path_in_scene", SET_VIEWPORT_PATH_IN_SCENE_HASH)
-        }
 
         private const val GET_VIEWPORT_PATH_IN_SCENE_HASH = 4075236667L
-        private val getViewportPathInSceneBind by lazy {
+        @JvmField
+        val getViewportPathInSceneBind =
             ObjectCalls.getMethodBind("ViewportTexture", "get_viewport_path_in_scene", GET_VIEWPORT_PATH_IN_SCENE_HASH)
-        }
     }
 }

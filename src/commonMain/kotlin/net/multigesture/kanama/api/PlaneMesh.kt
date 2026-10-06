@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -51,7 +52,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -61,7 +62,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSubdivideWidth(subdivide: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, segment, subdivide)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideWidthBind, segment, subdivide)
     }
 
     /**
@@ -81,7 +82,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideWidthBind, segment)
     }
 
     /**
@@ -91,7 +92,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSubdivideDepth(subdivide: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, segment, subdivide)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideDepthBind, segment, subdivide)
     }
 
     /**
@@ -101,7 +102,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideDepthBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCenterOffset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setCenterOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setCenterOffsetBind, segment, offset)
     }
 
     /**
@@ -121,7 +122,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCenterOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOffsetBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setOrientation(orientation: PlaneMesh.Orientation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOrientationBind, segment, orientation.value)
     }
 
     /**
@@ -141,7 +142,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getOrientation(): PlaneMesh.Orientation {
         checkOpen()
-        return PlaneMesh.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
+        return PlaneMesh.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
     }
 
     /**
@@ -191,55 +192,57 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmStatic
         fun fromResource(value: Resource): PlaneMesh? =
             if (value.isClass("PlaneMesh")) RefCounted.retained(PlaneMesh(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 743155724L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("PlaneMesh", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("PlaneMesh", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SUBDIVIDE_WIDTH_HASH = 1286410249L
-        private val setSubdivideWidthBind by lazy {
+        @JvmField
+        val setSubdivideWidthBind =
             ObjectCalls.getMethodBind("PlaneMesh", "set_subdivide_width", SET_SUBDIVIDE_WIDTH_HASH)
-        }
 
         private const val GET_SUBDIVIDE_WIDTH_HASH = 3905245786L
-        private val getSubdivideWidthBind by lazy {
+        @JvmField
+        val getSubdivideWidthBind =
             ObjectCalls.getMethodBind("PlaneMesh", "get_subdivide_width", GET_SUBDIVIDE_WIDTH_HASH)
-        }
 
         private const val SET_SUBDIVIDE_DEPTH_HASH = 1286410249L
-        private val setSubdivideDepthBind by lazy {
+        @JvmField
+        val setSubdivideDepthBind =
             ObjectCalls.getMethodBind("PlaneMesh", "set_subdivide_depth", SET_SUBDIVIDE_DEPTH_HASH)
-        }
 
         private const val GET_SUBDIVIDE_DEPTH_HASH = 3905245786L
-        private val getSubdivideDepthBind by lazy {
+        @JvmField
+        val getSubdivideDepthBind =
             ObjectCalls.getMethodBind("PlaneMesh", "get_subdivide_depth", GET_SUBDIVIDE_DEPTH_HASH)
-        }
 
         private const val SET_CENTER_OFFSET_HASH = 3460891852L
-        private val setCenterOffsetBind by lazy {
+        @JvmField
+        val setCenterOffsetBind =
             ObjectCalls.getMethodBind("PlaneMesh", "set_center_offset", SET_CENTER_OFFSET_HASH)
-        }
 
         private const val GET_CENTER_OFFSET_HASH = 3360562783L
-        private val getCenterOffsetBind by lazy {
+        @JvmField
+        val getCenterOffsetBind =
             ObjectCalls.getMethodBind("PlaneMesh", "get_center_offset", GET_CENTER_OFFSET_HASH)
-        }
 
         private const val SET_ORIENTATION_HASH = 2751399687L
-        private val setOrientationBind by lazy {
+        @JvmField
+        val setOrientationBind =
             ObjectCalls.getMethodBind("PlaneMesh", "set_orientation", SET_ORIENTATION_HASH)
-        }
 
         private const val GET_ORIENTATION_HASH = 3227599250L
-        private val getOrientationBind by lazy {
+        @JvmField
+        val getOrientationBind =
             ObjectCalls.getMethodBind("PlaneMesh", "get_orientation", GET_ORIENTATION_HASH)
-        }
     }
 }

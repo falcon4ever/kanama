@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -81,7 +82,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_scroll_scale
      */
     fun setScrollScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScrollScaleBind, segment, scale)
     }
 
     /**
@@ -93,7 +94,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_scroll_scale
      */
     fun getScrollScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScrollScaleBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_repeat_size
      */
     fun setRepeatSize(repeatSize: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setRepeatSizeBind, segment, repeatSize)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setRepeatSizeBind, segment, repeatSize)
     }
 
     /**
@@ -117,7 +118,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_repeat_size
      */
     fun getRepeatSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRepeatSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRepeatSizeBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_repeat_times
      */
     fun setRepeatTimes(repeatTimes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRepeatTimesBind, segment, repeatTimes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRepeatTimesBind, segment, repeatTimes)
     }
 
     /**
@@ -137,7 +138,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_repeat_times
      */
     fun getRepeatTimes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRepeatTimesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRepeatTimesBind, segment)
     }
 
     /**
@@ -146,7 +147,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_autoscroll
      */
     fun setAutoscroll(autoscroll: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setAutoscrollBind, segment, autoscroll)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setAutoscrollBind, segment, autoscroll)
     }
 
     /**
@@ -155,7 +156,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_autoscroll
      */
     fun getAutoscroll(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getAutoscrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getAutoscrollBind, segment)
     }
 
     /**
@@ -165,7 +166,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_scroll_offset
      */
     fun setScrollOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScrollOffsetBind, segment, offset)
     }
 
     /**
@@ -175,7 +176,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_scroll_offset
      */
     fun getScrollOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScrollOffsetBind, segment)
     }
 
     /**
@@ -185,7 +186,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_screen_offset
      */
     fun setScreenOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScreenOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenOffsetBind, segment, offset)
     }
 
     /**
@@ -195,7 +196,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_screen_offset
      */
     fun getScreenOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenOffsetBind, segment)
     }
 
     /**
@@ -205,7 +206,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_limit_begin
      */
     fun setLimitBegin(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setLimitBeginBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setLimitBeginBind, segment, offset)
     }
 
     /**
@@ -215,7 +216,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_limit_begin
      */
     fun getLimitBegin(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLimitBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLimitBeginBind, segment)
     }
 
     /**
@@ -226,7 +227,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_limit_end
      */
     fun setLimitEnd(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setLimitEndBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setLimitEndBind, segment, offset)
     }
 
     /**
@@ -237,7 +238,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_limit_end
      */
     fun getLimitEnd(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLimitEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLimitEndBind, segment)
     }
 
     /**
@@ -248,7 +249,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_follow_viewport
      */
     fun setFollowViewport(follow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowViewportBind, segment, follow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFollowViewportBind, segment, follow)
     }
 
     /**
@@ -259,7 +260,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.get_follow_viewport
      */
     fun getFollowViewport(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFollowViewportBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFollowViewportBind, segment)
     }
 
     /**
@@ -268,7 +269,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.set_ignore_camera_scroll
      */
     fun setIgnoreCameraScroll(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreCameraScrollBind, segment, ignore)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreCameraScrollBind, segment, ignore)
     }
 
     /**
@@ -277,7 +278,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Parallax2D.is_ignore_camera_scroll
      */
     fun isIgnoreCameraScroll(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoreCameraScrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIgnoreCameraScrollBind, segment)
     }
 
     companion object {
@@ -287,105 +288,107 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Parallax2D? =
             if (handle.address() == 0L) null else Parallax2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SCROLL_SCALE_HASH = 743155724L
-        private val setScrollScaleBind by lazy {
+        @JvmField
+        val setScrollScaleBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_scroll_scale", SET_SCROLL_SCALE_HASH)
-        }
 
         private const val GET_SCROLL_SCALE_HASH = 3341600327L
-        private val getScrollScaleBind by lazy {
+        @JvmField
+        val getScrollScaleBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_scroll_scale", GET_SCROLL_SCALE_HASH)
-        }
 
         private const val SET_REPEAT_SIZE_HASH = 743155724L
-        private val setRepeatSizeBind by lazy {
+        @JvmField
+        val setRepeatSizeBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_repeat_size", SET_REPEAT_SIZE_HASH)
-        }
 
         private const val GET_REPEAT_SIZE_HASH = 3341600327L
-        private val getRepeatSizeBind by lazy {
+        @JvmField
+        val getRepeatSizeBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_repeat_size", GET_REPEAT_SIZE_HASH)
-        }
 
         private const val SET_REPEAT_TIMES_HASH = 1286410249L
-        private val setRepeatTimesBind by lazy {
+        @JvmField
+        val setRepeatTimesBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_repeat_times", SET_REPEAT_TIMES_HASH)
-        }
 
         private const val GET_REPEAT_TIMES_HASH = 3905245786L
-        private val getRepeatTimesBind by lazy {
+        @JvmField
+        val getRepeatTimesBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_repeat_times", GET_REPEAT_TIMES_HASH)
-        }
 
         private const val SET_AUTOSCROLL_HASH = 743155724L
-        private val setAutoscrollBind by lazy {
+        @JvmField
+        val setAutoscrollBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_autoscroll", SET_AUTOSCROLL_HASH)
-        }
 
         private const val GET_AUTOSCROLL_HASH = 3341600327L
-        private val getAutoscrollBind by lazy {
+        @JvmField
+        val getAutoscrollBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_autoscroll", GET_AUTOSCROLL_HASH)
-        }
 
         private const val SET_SCROLL_OFFSET_HASH = 743155724L
-        private val setScrollOffsetBind by lazy {
+        @JvmField
+        val setScrollOffsetBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_scroll_offset", SET_SCROLL_OFFSET_HASH)
-        }
 
         private const val GET_SCROLL_OFFSET_HASH = 3341600327L
-        private val getScrollOffsetBind by lazy {
+        @JvmField
+        val getScrollOffsetBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_scroll_offset", GET_SCROLL_OFFSET_HASH)
-        }
 
         private const val SET_SCREEN_OFFSET_HASH = 743155724L
-        private val setScreenOffsetBind by lazy {
+        @JvmField
+        val setScreenOffsetBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_screen_offset", SET_SCREEN_OFFSET_HASH)
-        }
 
         private const val GET_SCREEN_OFFSET_HASH = 3341600327L
-        private val getScreenOffsetBind by lazy {
+        @JvmField
+        val getScreenOffsetBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_screen_offset", GET_SCREEN_OFFSET_HASH)
-        }
 
         private const val SET_LIMIT_BEGIN_HASH = 743155724L
-        private val setLimitBeginBind by lazy {
+        @JvmField
+        val setLimitBeginBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_limit_begin", SET_LIMIT_BEGIN_HASH)
-        }
 
         private const val GET_LIMIT_BEGIN_HASH = 3341600327L
-        private val getLimitBeginBind by lazy {
+        @JvmField
+        val getLimitBeginBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_limit_begin", GET_LIMIT_BEGIN_HASH)
-        }
 
         private const val SET_LIMIT_END_HASH = 743155724L
-        private val setLimitEndBind by lazy {
+        @JvmField
+        val setLimitEndBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_limit_end", SET_LIMIT_END_HASH)
-        }
 
         private const val GET_LIMIT_END_HASH = 3341600327L
-        private val getLimitEndBind by lazy {
+        @JvmField
+        val getLimitEndBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_limit_end", GET_LIMIT_END_HASH)
-        }
 
         private const val SET_FOLLOW_VIEWPORT_HASH = 2586408642L
-        private val setFollowViewportBind by lazy {
+        @JvmField
+        val setFollowViewportBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_follow_viewport", SET_FOLLOW_VIEWPORT_HASH)
-        }
 
         private const val GET_FOLLOW_VIEWPORT_HASH = 2240911060L
-        private val getFollowViewportBind by lazy {
+        @JvmField
+        val getFollowViewportBind =
             ObjectCalls.getMethodBind("Parallax2D", "get_follow_viewport", GET_FOLLOW_VIEWPORT_HASH)
-        }
 
         private const val SET_IGNORE_CAMERA_SCROLL_HASH = 2586408642L
-        private val setIgnoreCameraScrollBind by lazy {
+        @JvmField
+        val setIgnoreCameraScrollBind =
             ObjectCalls.getMethodBind("Parallax2D", "set_ignore_camera_scroll", SET_IGNORE_CAMERA_SCROLL_HASH)
-        }
 
         private const val IS_IGNORE_CAMERA_SCROLL_HASH = 2240911060L
-        private val isIgnoreCameraScrollBind by lazy {
+        @JvmField
+        val isIgnoreCameraScrollBind =
             ObjectCalls.getMethodBind("Parallax2D", "is_ignore_camera_scroll", IS_IGNORE_CAMERA_SCROLL_HASH)
-        }
     }
 }

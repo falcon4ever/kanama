@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDisableClass(className: String, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassBind, segment, className, disable)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.setDisableClassBind, segment, className, disable)
     }
 
     /**
@@ -30,7 +31,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isClassDisabled(className: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassDisabledBind, segment, className)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassDisabledBind, segment, className)
     }
 
     /**
@@ -42,7 +43,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDisableClassEditor(className: String, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(setDisableClassEditorBind, segment, className, disable)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.setDisableClassEditorBind, segment, className, disable)
     }
 
     /**
@@ -54,7 +55,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isClassEditorDisabled(className: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEditorDisabledBind, segment, className)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassEditorDisabledBind, segment, className)
     }
 
     /**
@@ -66,7 +67,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDisableClassProperty(className: String, property: String, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(setDisableClassPropertyBind, segment, className, property, disable)
+        ObjectCalls.ptrcallWithTwoStringNameAndBoolArgs(Binds.setDisableClassPropertyBind, segment, className, property, disable)
     }
 
     /**
@@ -78,7 +79,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isClassPropertyDisabled(className: String, property: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isClassPropertyDisabledBind, segment, className, property)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.isClassPropertyDisabledBind, segment, className, property)
     }
 
     /**
@@ -89,7 +90,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDisableFeature(feature: EditorFeatureProfile.Feature, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, segment, feature.value, disable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setDisableFeatureBind, segment, feature.value, disable)
     }
 
     /**
@@ -100,7 +101,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isFeatureDisabled(feature: EditorFeatureProfile.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, segment, feature.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isFeatureDisabledBind, segment, feature.value)
     }
 
     /**
@@ -110,7 +111,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFeatureName(feature: EditorFeatureProfile.Feature): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, segment, feature.value)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getFeatureNameBind, segment, feature.value)
     }
 
     /**
@@ -124,7 +125,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveToFile(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveToFileBind, segment, path))
     }
 
     /**
@@ -138,7 +139,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadFromFile(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadFromFileBind, segment, path))
     }
 
     /**
@@ -242,60 +243,62 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorFeatureProfile? =
             if (handle.address() == 0L) null else EditorFeatureProfile(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DISABLE_CLASS_HASH = 2524380260L
-        private val setDisableClassBind by lazy {
+        @JvmField
+        val setDisableClassBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "set_disable_class", SET_DISABLE_CLASS_HASH)
-        }
 
         private const val IS_CLASS_DISABLED_HASH = 2619796661L
-        private val isClassDisabledBind by lazy {
+        @JvmField
+        val isClassDisabledBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "is_class_disabled", IS_CLASS_DISABLED_HASH)
-        }
 
         private const val SET_DISABLE_CLASS_EDITOR_HASH = 2524380260L
-        private val setDisableClassEditorBind by lazy {
+        @JvmField
+        val setDisableClassEditorBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "set_disable_class_editor", SET_DISABLE_CLASS_EDITOR_HASH)
-        }
 
         private const val IS_CLASS_EDITOR_DISABLED_HASH = 2619796661L
-        private val isClassEditorDisabledBind by lazy {
+        @JvmField
+        val isClassEditorDisabledBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "is_class_editor_disabled", IS_CLASS_EDITOR_DISABLED_HASH)
-        }
 
         private const val SET_DISABLE_CLASS_PROPERTY_HASH = 865197084L
-        private val setDisableClassPropertyBind by lazy {
+        @JvmField
+        val setDisableClassPropertyBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "set_disable_class_property", SET_DISABLE_CLASS_PROPERTY_HASH)
-        }
 
         private const val IS_CLASS_PROPERTY_DISABLED_HASH = 471820014L
-        private val isClassPropertyDisabledBind by lazy {
+        @JvmField
+        val isClassPropertyDisabledBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "is_class_property_disabled", IS_CLASS_PROPERTY_DISABLED_HASH)
-        }
 
         private const val SET_DISABLE_FEATURE_HASH = 1884871044L
-        private val setDisableFeatureBind by lazy {
+        @JvmField
+        val setDisableFeatureBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "set_disable_feature", SET_DISABLE_FEATURE_HASH)
-        }
 
         private const val IS_FEATURE_DISABLED_HASH = 2974403161L
-        private val isFeatureDisabledBind by lazy {
+        @JvmField
+        val isFeatureDisabledBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "is_feature_disabled", IS_FEATURE_DISABLED_HASH)
-        }
 
         private const val GET_FEATURE_NAME_HASH = 3401335809L
-        private val getFeatureNameBind by lazy {
+        @JvmField
+        val getFeatureNameBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "get_feature_name", GET_FEATURE_NAME_HASH)
-        }
 
         private const val SAVE_TO_FILE_HASH = 166001499L
-        private val saveToFileBind by lazy {
+        @JvmField
+        val saveToFileBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "save_to_file", SAVE_TO_FILE_HASH)
-        }
 
         private const val LOAD_FROM_FILE_HASH = 166001499L
-        private val loadFromFileBind by lazy {
+        @JvmField
+        val loadFromFileBind =
             ObjectCalls.getMethodBind("EditorFeatureProfile", "load_from_file", LOAD_FROM_FILE_HASH)
-        }
     }
 }

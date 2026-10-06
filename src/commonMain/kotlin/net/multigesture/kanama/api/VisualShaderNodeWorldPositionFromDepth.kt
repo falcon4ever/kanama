@@ -20,7 +20,5 @@ class VisualShaderNodeWorldPositionFromDepth(handle: GodotHandle) : VisualShader
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeWorldPositionFromDepth? =
             if (handle.address() == 0L) null else VisualShaderNodeWorldPositionFromDepth(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

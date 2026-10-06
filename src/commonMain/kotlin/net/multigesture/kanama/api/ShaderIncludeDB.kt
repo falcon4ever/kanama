@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: ShaderIncludeDB.list_built_in_include_files
          */
         fun listBuiltInIncludeFiles(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(listBuiltInIncludeFilesBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.listBuiltInIncludeFilesBind, NULL_SEGMENT)
         }
 
         /**
@@ -29,7 +30,7 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: ShaderIncludeDB.has_built_in_include_file
          */
         fun hasBuiltInIncludeFile(filename: String): Boolean {
-            return ObjectCalls.ptrcallWithStringArgRetBool(hasBuiltInIncludeFileBind, NULL_SEGMENT, filename)
+            return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasBuiltInIncludeFileBind, NULL_SEGMENT, filename)
         }
 
         /**
@@ -39,7 +40,7 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: ShaderIncludeDB.get_built_in_include_file
          */
         fun getBuiltInIncludeFile(filename: String): String {
-            return ObjectCalls.ptrcallWithStringArgRetString(getBuiltInIncludeFileBind, NULL_SEGMENT, filename)
+            return ObjectCalls.ptrcallWithStringArgRetString(Binds.getBuiltInIncludeFileBind, NULL_SEGMENT, filename)
         }
 
         @JvmStatic
@@ -48,20 +49,22 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): ShaderIncludeDB? =
             if (handle.address() == 0L) null else ShaderIncludeDB(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LIST_BUILT_IN_INCLUDE_FILES_HASH = 2981934095L
-        private val listBuiltInIncludeFilesBind by lazy {
+        @JvmField
+        val listBuiltInIncludeFilesBind =
             ObjectCalls.getMethodBind("ShaderIncludeDB", "list_built_in_include_files", LIST_BUILT_IN_INCLUDE_FILES_HASH)
-        }
 
         private const val HAS_BUILT_IN_INCLUDE_FILE_HASH = 2323990056L
-        private val hasBuiltInIncludeFileBind by lazy {
+        @JvmField
+        val hasBuiltInIncludeFileBind =
             ObjectCalls.getMethodBind("ShaderIncludeDB", "has_built_in_include_file", HAS_BUILT_IN_INCLUDE_FILE_HASH)
-        }
 
         private const val GET_BUILT_IN_INCLUDE_FILE_HASH = 1703090593L
-        private val getBuiltInIncludeFileBind by lazy {
+        @JvmField
+        val getBuiltInIncludeFileBind =
             ObjectCalls.getMethodBind("ShaderIncludeDB", "get_built_in_include_file", GET_BUILT_IN_INCLUDE_FILE_HASH)
-        }
     }
 }

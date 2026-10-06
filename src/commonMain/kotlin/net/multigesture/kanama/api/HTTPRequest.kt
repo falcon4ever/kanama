@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -73,7 +74,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.request
      */
     fun request(url: String, customHeaders: List<String>, method: HTTPClient.Method = HTTPClient.Method.GET, requestData: String = ""): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringPackedStringListLongStringArgsRetLong(requestBind, segment, url, customHeaders, method.value, requestData))
+        return GodotError(ObjectCalls.ptrcallWithStringPackedStringListLongStringArgsRetLong(Binds.requestBind, segment, url, customHeaders, method.value, requestData))
     }
 
     /**
@@ -88,7 +89,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.request_raw
      */
     fun requestRaw(url: String, customHeaders: List<String>, method: HTTPClient.Method = HTTPClient.Method.GET, requestDataRaw: ByteArray): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(requestRawBind, segment, url, customHeaders, method.value, requestDataRaw))
+        return GodotError(ObjectCalls.ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(Binds.requestRawBind, segment, url, customHeaders, method.value, requestDataRaw))
     }
 
     /**
@@ -97,7 +98,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.cancel_request
      */
     fun cancelRequest() {
-        ObjectCalls.ptrcallNoArgs(cancelRequestBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.cancelRequestBind, segment)
     }
 
     /**
@@ -106,7 +107,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_tls_options
      */
     fun setTlsOptions(clientOptions: TLSOptions?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTlsOptionsBind, segment, listOf(clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTlsOptionsBind, segment, listOf(clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -115,7 +116,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_http_client_status
      */
     fun getHttpClientStatus(): HTTPClient.Status {
-        return HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(getHttpClientStatusBind, segment))
+        return HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHttpClientStatusBind, segment))
     }
 
     /**
@@ -124,7 +125,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_use_threads
      */
     fun setUseThreads(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseThreadsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseThreadsBind, segment, enable)
     }
 
     /**
@@ -133,7 +134,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.is_using_threads
      */
     fun isUsingThreads(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingThreadsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingThreadsBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_accept_gzip
      */
     fun setAcceptGzip(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAcceptGzipBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAcceptGzipBind, segment, enable)
     }
 
     /**
@@ -163,7 +164,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.is_accepting_gzip
      */
     fun isAcceptingGzip(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAcceptingGzipBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAcceptingGzipBind, segment)
     }
 
     /**
@@ -173,7 +174,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_body_size_limit
      */
     fun setBodySizeLimit(bytes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBodySizeLimitBind, segment, bytes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBodySizeLimitBind, segment, bytes)
     }
 
     /**
@@ -183,7 +184,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_body_size_limit
      */
     fun getBodySizeLimit(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBodySizeLimitBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBodySizeLimitBind, segment)
     }
 
     /**
@@ -192,7 +193,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_max_redirects
      */
     fun setMaxRedirects(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxRedirectsBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxRedirectsBind, segment, amount)
     }
 
     /**
@@ -201,7 +202,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_max_redirects
      */
     fun getMaxRedirects(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxRedirectsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxRedirectsBind, segment)
     }
 
     /**
@@ -210,7 +211,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_download_file
      */
     fun setDownloadFile(path: String) {
-        ObjectCalls.ptrcallWithStringArg(setDownloadFileBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.setDownloadFileBind, segment, path)
     }
 
     /**
@@ -219,7 +220,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_download_file
      */
     fun getDownloadFile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDownloadFileBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDownloadFileBind, segment)
     }
 
     /**
@@ -228,7 +229,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_downloaded_bytes
      */
     fun getDownloadedBytes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDownloadedBytesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDownloadedBytesBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_body_size
      */
     fun getBodySize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBodySizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBodySizeBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_timeout
      */
     fun setTimeout(timeout: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeoutBind, segment, timeout)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimeoutBind, segment, timeout)
     }
 
     /**
@@ -271,7 +272,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_timeout
      */
     fun getTimeout(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeoutBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeoutBind, segment)
     }
 
     /**
@@ -282,7 +283,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_download_chunk_size
      */
     fun setDownloadChunkSize(chunkSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDownloadChunkSizeBind, segment, chunkSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDownloadChunkSizeBind, segment, chunkSize)
     }
 
     /**
@@ -293,7 +294,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.get_download_chunk_size
      */
     fun getDownloadChunkSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDownloadChunkSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDownloadChunkSizeBind, segment)
     }
 
     /**
@@ -303,7 +304,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_http_proxy
      */
     fun setHttpProxy(host: String, port: Int) {
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, segment, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.setHttpProxyBind, segment, host, port)
     }
 
     /**
@@ -313,7 +314,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: HTTPRequest.set_https_proxy
      */
     fun setHttpsProxy(host: String, port: Int) {
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, segment, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.setHttpsProxyBind, segment, host, port)
     }
 
     /** Signal `request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray)`; see [TypedSignal]. On iOS a PackedByteArray/PackedStringArray argument is not delivered yet: a connection reports a script error. */
@@ -432,120 +433,122 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): HTTPRequest? =
             if (handle.address() == 0L) null else HTTPRequest(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val REQUEST_HASH = 3215244323L
-        private val requestBind by lazy {
+        @JvmField
+        val requestBind =
             ObjectCalls.getMethodBind("HTTPRequest", "request", REQUEST_HASH)
-        }
 
         private const val REQUEST_RAW_HASH = 2714829993L
-        private val requestRawBind by lazy {
+        @JvmField
+        val requestRawBind =
             ObjectCalls.getMethodBind("HTTPRequest", "request_raw", REQUEST_RAW_HASH)
-        }
 
         private const val CANCEL_REQUEST_HASH = 3218959716L
-        private val cancelRequestBind by lazy {
+        @JvmField
+        val cancelRequestBind =
             ObjectCalls.getMethodBind("HTTPRequest", "cancel_request", CANCEL_REQUEST_HASH)
-        }
 
         private const val SET_TLS_OPTIONS_HASH = 2210231844L
-        private val setTlsOptionsBind by lazy {
+        @JvmField
+        val setTlsOptionsBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_tls_options", SET_TLS_OPTIONS_HASH)
-        }
 
         private const val GET_HTTP_CLIENT_STATUS_HASH = 1426656811L
-        private val getHttpClientStatusBind by lazy {
+        @JvmField
+        val getHttpClientStatusBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_http_client_status", GET_HTTP_CLIENT_STATUS_HASH)
-        }
 
         private const val SET_USE_THREADS_HASH = 2586408642L
-        private val setUseThreadsBind by lazy {
+        @JvmField
+        val setUseThreadsBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_use_threads", SET_USE_THREADS_HASH)
-        }
 
         private const val IS_USING_THREADS_HASH = 36873697L
-        private val isUsingThreadsBind by lazy {
+        @JvmField
+        val isUsingThreadsBind =
             ObjectCalls.getMethodBind("HTTPRequest", "is_using_threads", IS_USING_THREADS_HASH)
-        }
 
         private const val SET_ACCEPT_GZIP_HASH = 2586408642L
-        private val setAcceptGzipBind by lazy {
+        @JvmField
+        val setAcceptGzipBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_accept_gzip", SET_ACCEPT_GZIP_HASH)
-        }
 
         private const val IS_ACCEPTING_GZIP_HASH = 36873697L
-        private val isAcceptingGzipBind by lazy {
+        @JvmField
+        val isAcceptingGzipBind =
             ObjectCalls.getMethodBind("HTTPRequest", "is_accepting_gzip", IS_ACCEPTING_GZIP_HASH)
-        }
 
         private const val SET_BODY_SIZE_LIMIT_HASH = 1286410249L
-        private val setBodySizeLimitBind by lazy {
+        @JvmField
+        val setBodySizeLimitBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_body_size_limit", SET_BODY_SIZE_LIMIT_HASH)
-        }
 
         private const val GET_BODY_SIZE_LIMIT_HASH = 3905245786L
-        private val getBodySizeLimitBind by lazy {
+        @JvmField
+        val getBodySizeLimitBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_body_size_limit", GET_BODY_SIZE_LIMIT_HASH)
-        }
 
         private const val SET_MAX_REDIRECTS_HASH = 1286410249L
-        private val setMaxRedirectsBind by lazy {
+        @JvmField
+        val setMaxRedirectsBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_max_redirects", SET_MAX_REDIRECTS_HASH)
-        }
 
         private const val GET_MAX_REDIRECTS_HASH = 3905245786L
-        private val getMaxRedirectsBind by lazy {
+        @JvmField
+        val getMaxRedirectsBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_max_redirects", GET_MAX_REDIRECTS_HASH)
-        }
 
         private const val SET_DOWNLOAD_FILE_HASH = 83702148L
-        private val setDownloadFileBind by lazy {
+        @JvmField
+        val setDownloadFileBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_download_file", SET_DOWNLOAD_FILE_HASH)
-        }
 
         private const val GET_DOWNLOAD_FILE_HASH = 201670096L
-        private val getDownloadFileBind by lazy {
+        @JvmField
+        val getDownloadFileBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_download_file", GET_DOWNLOAD_FILE_HASH)
-        }
 
         private const val GET_DOWNLOADED_BYTES_HASH = 3905245786L
-        private val getDownloadedBytesBind by lazy {
+        @JvmField
+        val getDownloadedBytesBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_downloaded_bytes", GET_DOWNLOADED_BYTES_HASH)
-        }
 
         private const val GET_BODY_SIZE_HASH = 3905245786L
-        private val getBodySizeBind by lazy {
+        @JvmField
+        val getBodySizeBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_body_size", GET_BODY_SIZE_HASH)
-        }
 
         private const val SET_TIMEOUT_HASH = 373806689L
-        private val setTimeoutBind by lazy {
+        @JvmField
+        val setTimeoutBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_timeout", SET_TIMEOUT_HASH)
-        }
 
         private const val GET_TIMEOUT_HASH = 191475506L
-        private val getTimeoutBind by lazy {
+        @JvmField
+        val getTimeoutBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_timeout", GET_TIMEOUT_HASH)
-        }
 
         private const val SET_DOWNLOAD_CHUNK_SIZE_HASH = 1286410249L
-        private val setDownloadChunkSizeBind by lazy {
+        @JvmField
+        val setDownloadChunkSizeBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_download_chunk_size", SET_DOWNLOAD_CHUNK_SIZE_HASH)
-        }
 
         private const val GET_DOWNLOAD_CHUNK_SIZE_HASH = 3905245786L
-        private val getDownloadChunkSizeBind by lazy {
+        @JvmField
+        val getDownloadChunkSizeBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_download_chunk_size", GET_DOWNLOAD_CHUNK_SIZE_HASH)
-        }
 
         private const val SET_HTTP_PROXY_HASH = 2956805083L
-        private val setHttpProxyBind by lazy {
+        @JvmField
+        val setHttpProxyBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_http_proxy", SET_HTTP_PROXY_HASH)
-        }
 
         private const val SET_HTTPS_PROXY_HASH = 2956805083L
-        private val setHttpsProxyBind by lazy {
+        @JvmField
+        val setHttpsProxyBind =
             ObjectCalls.getMethodBind("HTTPRequest", "set_https_proxy", SET_HTTPS_PROXY_HASH)
-        }
     }
 }

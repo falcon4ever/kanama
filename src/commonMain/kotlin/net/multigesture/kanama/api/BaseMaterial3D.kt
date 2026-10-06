@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -811,7 +812,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAlbedo(albedo: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setAlbedoBind, segment, albedo)
+        ObjectCalls.ptrcallWithColorArg(Binds.setAlbedoBind, segment, albedo)
     }
 
     /**
@@ -824,7 +825,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlbedo(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getAlbedoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getAlbedoBind, segment)
     }
 
     /**
@@ -836,7 +837,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTransparency(transparency: BaseMaterial3D.Transparency) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransparencyBind, segment, transparency.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransparencyBind, segment, transparency.value)
     }
 
     /**
@@ -848,7 +849,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransparency(): BaseMaterial3D.Transparency {
         checkOpen()
-        return BaseMaterial3D.Transparency(ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, segment))
+        return BaseMaterial3D.Transparency(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransparencyBind, segment))
     }
 
     /**
@@ -858,7 +859,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaAntialiasingBind, segment, alphaAa.value)
     }
 
     /**
@@ -868,7 +869,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
         checkOpen()
-        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment))
+        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaAntialiasingBind, segment))
     }
 
     /**
@@ -878,7 +879,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, segment, edge)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaAntialiasingEdgeBind, segment, edge)
     }
 
     /**
@@ -888,7 +889,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaAntialiasingEdge(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaAntialiasingEdgeBind, segment)
     }
 
     /**
@@ -900,7 +901,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setShadingMode(shadingMode: BaseMaterial3D.ShadingMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setShadingModeBind, segment, shadingMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setShadingModeBind, segment, shadingMode.value)
     }
 
     /**
@@ -912,7 +913,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getShadingMode(): BaseMaterial3D.ShadingMode {
         checkOpen()
-        return BaseMaterial3D.ShadingMode(ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, segment))
+        return BaseMaterial3D.ShadingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShadingModeBind, segment))
     }
 
     /**
@@ -927,7 +928,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setSpecular(specular: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpecularBind, segment, specular)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpecularBind, segment, specular)
     }
 
     /**
@@ -942,7 +943,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getSpecular(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularBind, segment)
     }
 
     /**
@@ -958,7 +959,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setMetallic(metallic: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMetallicBind, segment, metallic)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMetallicBind, segment, metallic)
     }
 
     /**
@@ -974,7 +975,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMetallic(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMetallicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMetallicBind, segment)
     }
 
     /**
@@ -985,7 +986,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setRoughness(roughness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRoughnessBind, segment, roughness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRoughnessBind, segment, roughness)
     }
 
     /**
@@ -996,7 +997,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRoughness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRoughnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRoughnessBind, segment)
     }
 
     /**
@@ -1006,7 +1007,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setEmission(emission: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setEmissionBind, segment, emission)
+        ObjectCalls.ptrcallWithColorArg(Binds.setEmissionBind, segment, emission)
     }
 
     /**
@@ -1016,7 +1017,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmission(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getEmissionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getEmissionBind, segment)
     }
 
     /**
@@ -1026,7 +1027,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionEnergyMultiplier(emissionEnergyMultiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionEnergyMultiplierBind, segment, emissionEnergyMultiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionEnergyMultiplierBind, segment, emissionEnergyMultiplier)
     }
 
     /**
@@ -1036,7 +1037,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionEnergyMultiplierBind, segment)
     }
 
     /**
@@ -1048,7 +1049,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionIntensity(emissionEnergyMultiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEmissionIntensityBind, segment, emissionEnergyMultiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEmissionIntensityBind, segment, emissionEnergyMultiplier)
     }
 
     /**
@@ -1060,7 +1061,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionIntensity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEmissionIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEmissionIntensityBind, segment)
     }
 
     /**
@@ -1070,7 +1071,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setNormalScale(normalScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setNormalScaleBind, segment, normalScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNormalScaleBind, segment, normalScale)
     }
 
     /**
@@ -1080,7 +1081,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getNormalScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalScaleBind, segment)
     }
 
     /**
@@ -1090,7 +1091,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setRim(rim: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRimBind, segment, rim)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRimBind, segment, rim)
     }
 
     /**
@@ -1100,7 +1101,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRim(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRimBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRimBind, segment)
     }
 
     /**
@@ -1111,7 +1112,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setRimTint(rimTint: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRimTintBind, segment, rimTint)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRimTintBind, segment, rimTint)
     }
 
     /**
@@ -1122,7 +1123,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRimTint(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRimTintBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRimTintBind, segment)
     }
 
     /**
@@ -1133,7 +1134,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setClearcoat(clearcoat: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setClearcoatBind, segment, clearcoat)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setClearcoatBind, segment, clearcoat)
     }
 
     /**
@@ -1144,7 +1145,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getClearcoat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearcoatBind, segment)
     }
 
     /**
@@ -1155,7 +1156,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setClearcoatRoughness(clearcoatRoughness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setClearcoatRoughnessBind, segment, clearcoatRoughness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setClearcoatRoughnessBind, segment, clearcoatRoughness)
     }
 
     /**
@@ -1166,7 +1167,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getClearcoatRoughness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClearcoatRoughnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearcoatRoughnessBind, segment)
     }
 
     /**
@@ -1177,7 +1178,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAnisotropy(anisotropy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAnisotropyBind, segment, anisotropy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAnisotropyBind, segment, anisotropy)
     }
 
     /**
@@ -1188,7 +1189,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAnisotropy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAnisotropyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAnisotropyBind, segment)
     }
 
     /**
@@ -1208,7 +1209,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setHeightmapScale(heightmapScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightmapScaleBind, segment, heightmapScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightmapScaleBind, segment, heightmapScale)
     }
 
     /**
@@ -1228,7 +1229,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightmapScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightmapScaleBind, segment)
     }
 
     /**
@@ -1240,7 +1241,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setSubsurfaceScatteringStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSubsurfaceScatteringStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSubsurfaceScatteringStrengthBind, segment, strength)
     }
 
     /**
@@ -1252,7 +1253,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getSubsurfaceScatteringStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSubsurfaceScatteringStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubsurfaceScatteringStrengthBind, segment)
     }
 
     /**
@@ -1263,7 +1264,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTransmittanceColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setTransmittanceColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setTransmittanceColorBind, segment, color)
     }
 
     /**
@@ -1274,7 +1275,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransmittanceColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getTransmittanceColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTransmittanceColorBind, segment)
     }
 
     /**
@@ -1284,7 +1285,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTransmittanceDepth(depth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTransmittanceDepthBind, segment, depth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTransmittanceDepthBind, segment, depth)
     }
 
     /**
@@ -1294,7 +1295,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransmittanceDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransmittanceDepthBind, segment)
     }
 
     /**
@@ -1304,7 +1305,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTransmittanceBoost(boost: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTransmittanceBoostBind, segment, boost)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTransmittanceBoostBind, segment, boost)
     }
 
     /**
@@ -1314,7 +1315,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTransmittanceBoost(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTransmittanceBoostBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransmittanceBoostBind, segment)
     }
 
     /**
@@ -1324,7 +1325,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setBacklight(backlight: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setBacklightBind, segment, backlight)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBacklightBind, segment, backlight)
     }
 
     /**
@@ -1334,7 +1335,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getBacklight(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getBacklightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBacklightBind, segment)
     }
 
     /**
@@ -1344,7 +1345,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setRefraction(refraction: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRefractionBind, segment, refraction)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRefractionBind, segment, refraction)
     }
 
     /**
@@ -1354,7 +1355,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRefraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRefractionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRefractionBind, segment)
     }
 
     /**
@@ -1364,7 +1365,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setPointSize(pointSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPointSizeBind, segment, pointSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPointSizeBind, segment, pointSize)
     }
 
     /**
@@ -1374,7 +1375,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getPointSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPointSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPointSizeBind, segment)
     }
 
     /**
@@ -1384,7 +1385,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDetailUv(detailUv: BaseMaterial3D.DetailUV) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDetailUvBind, segment, detailUv.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDetailUvBind, segment, detailUv.value)
     }
 
     /**
@@ -1394,7 +1395,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDetailUv(): BaseMaterial3D.DetailUV {
         checkOpen()
-        return BaseMaterial3D.DetailUV(ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, segment))
+        return BaseMaterial3D.DetailUV(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDetailUvBind, segment))
     }
 
     /**
@@ -1405,7 +1406,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setBlendMode(blendMode: BaseMaterial3D.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, blendMode.value)
     }
 
     /**
@@ -1416,7 +1417,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getBlendMode(): BaseMaterial3D.BlendMode {
         checkOpen()
-        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
+        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
     }
 
     /**
@@ -1426,7 +1427,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDepthDrawMode(depthDrawMode: BaseMaterial3D.DepthDrawMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, segment, depthDrawMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDepthDrawModeBind, segment, depthDrawMode.value)
     }
 
     /**
@@ -1436,7 +1437,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDepthDrawMode(): BaseMaterial3D.DepthDrawMode {
         checkOpen()
-        return BaseMaterial3D.DepthDrawMode(ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, segment))
+        return BaseMaterial3D.DepthDrawMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthDrawModeBind, segment))
     }
 
     /**
@@ -1448,7 +1449,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDepthTest(depthTest: BaseMaterial3D.DepthTest) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthTestBind, segment, depthTest.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDepthTestBind, segment, depthTest.value)
     }
 
     /**
@@ -1460,7 +1461,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDepthTest(): BaseMaterial3D.DepthTest {
         checkOpen()
-        return BaseMaterial3D.DepthTest(ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, segment))
+        return BaseMaterial3D.DepthTest(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDepthTestBind, segment))
     }
 
     /**
@@ -1471,7 +1472,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setCullMode(cullMode: BaseMaterial3D.CullMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCullModeBind, segment, cullMode.value)
     }
 
     /**
@@ -1482,7 +1483,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getCullMode(): BaseMaterial3D.CullMode {
         checkOpen()
-        return BaseMaterial3D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment))
+        return BaseMaterial3D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
     }
 
     /**
@@ -1492,7 +1493,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDiffuseMode(diffuseMode: BaseMaterial3D.DiffuseMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, segment, diffuseMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDiffuseModeBind, segment, diffuseMode.value)
     }
 
     /**
@@ -1502,7 +1503,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDiffuseMode(): BaseMaterial3D.DiffuseMode {
         checkOpen()
-        return BaseMaterial3D.DiffuseMode(ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, segment))
+        return BaseMaterial3D.DiffuseMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiffuseModeBind, segment))
     }
 
     /**
@@ -1515,7 +1516,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setSpecularMode(specularMode: BaseMaterial3D.SpecularMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, segment, specularMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSpecularModeBind, segment, specularMode.value)
     }
 
     /**
@@ -1528,7 +1529,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getSpecularMode(): BaseMaterial3D.SpecularMode {
         checkOpen()
-        return BaseMaterial3D.SpecularMode(ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, segment))
+        return BaseMaterial3D.SpecularMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpecularModeBind, segment))
     }
 
     /**
@@ -1538,7 +1539,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setFlag(flag: BaseMaterial3D.Flags, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag.value, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagBind, segment, flag.value, enable)
     }
 
     /**
@@ -1548,7 +1549,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getFlag(flag: BaseMaterial3D.Flags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagBind, segment, flag.value)
     }
 
     /**
@@ -1561,7 +1562,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -1574,7 +1575,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTextureFilter(): BaseMaterial3D.TextureFilter {
         checkOpen()
-        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
+        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
     }
 
     /**
@@ -1585,7 +1586,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setFeature(feature: BaseMaterial3D.Feature, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, segment, feature.value, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFeatureBind, segment, feature.value, enable)
     }
 
     /**
@@ -1596,7 +1597,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getFeature(feature: BaseMaterial3D.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, segment, feature.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFeatureBind, segment, feature.value)
     }
 
     /**
@@ -1607,7 +1608,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTexture(param: BaseMaterial3D.TextureParam, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, param.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setTextureBind, segment, param.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1618,7 +1619,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTexture(param: BaseMaterial3D.TextureParam): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, param.value))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getTextureBind, segment, param.value))
     }
 
     /**
@@ -1628,7 +1629,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDetailBlendMode(detailBlendMode: BaseMaterial3D.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, segment, detailBlendMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDetailBlendModeBind, segment, detailBlendMode.value)
     }
 
     /**
@@ -1638,7 +1639,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDetailBlendMode(): BaseMaterial3D.BlendMode {
         checkOpen()
-        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, segment))
+        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDetailBlendModeBind, segment))
     }
 
     /**
@@ -1649,7 +1650,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setUv1Scale(scale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv1ScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setUv1ScaleBind, segment, scale)
     }
 
     /**
@@ -1660,7 +1661,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv1Scale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv1ScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv1ScaleBind, segment)
     }
 
     /**
@@ -1672,7 +1673,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setUv1Offset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv1OffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setUv1OffsetBind, segment, offset)
     }
 
     /**
@@ -1684,7 +1685,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv1Offset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv1OffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv1OffsetBind, segment)
     }
 
     /**
@@ -1696,7 +1697,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setUv1TriplanarBlendSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setUv1TriplanarBlendSharpnessBind, segment, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setUv1TriplanarBlendSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1708,7 +1709,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv1TriplanarBlendSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUv1TriplanarBlendSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv1TriplanarBlendSharpnessBind, segment)
     }
 
     /**
@@ -1719,7 +1720,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setUv2Scale(scale: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv2ScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setUv2ScaleBind, segment, scale)
     }
 
     /**
@@ -1730,7 +1731,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv2Scale(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv2ScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv2ScaleBind, segment)
     }
 
     /**
@@ -1742,7 +1743,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setUv2Offset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setUv2OffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setUv2OffsetBind, segment, offset)
     }
 
     /**
@@ -1754,7 +1755,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv2Offset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getUv2OffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getUv2OffsetBind, segment)
     }
 
     /**
@@ -1766,7 +1767,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setUv2TriplanarBlendSharpness(sharpness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setUv2TriplanarBlendSharpnessBind, segment, sharpness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setUv2TriplanarBlendSharpnessBind, segment, sharpness)
     }
 
     /**
@@ -1778,7 +1779,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getUv2TriplanarBlendSharpness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUv2TriplanarBlendSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv2TriplanarBlendSharpnessBind, segment)
     }
 
     /**
@@ -1791,7 +1792,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBillboardModeBind, segment, mode.value)
     }
 
     /**
@@ -1804,7 +1805,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getBillboardMode(): BaseMaterial3D.BillboardMode {
         checkOpen()
-        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment))
+        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardModeBind, segment))
     }
 
     /**
@@ -1815,7 +1816,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimHFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, segment, frames)
+        ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimHFramesBind, segment, frames)
     }
 
     /**
@@ -1826,7 +1827,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimHFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimHFramesBind, segment)
     }
 
     /**
@@ -1837,7 +1838,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimVFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, segment, frames)
+        ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimVFramesBind, segment, frames)
     }
 
     /**
@@ -1848,7 +1849,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimVFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimVFramesBind, segment)
     }
 
     /**
@@ -1859,7 +1860,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, segment, loop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setParticlesAnimLoopBind, segment, loop)
     }
 
     /**
@@ -1870,7 +1871,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimLoopBind, segment)
     }
 
     /**
@@ -1883,7 +1884,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setHeightmapDeepParallax(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHeightmapDeepParallaxBind, segment, enable)
     }
 
     /**
@@ -1896,7 +1897,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun isHeightmapDeepParallaxEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHeightmapDeepParallaxEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHeightmapDeepParallaxEnabledBind, segment)
     }
 
     /**
@@ -1910,7 +1911,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setHeightmapDeepParallaxMinLayers(layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMinLayersBind, segment, layer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHeightmapDeepParallaxMinLayersBind, segment, layer)
     }
 
     /**
@@ -1924,7 +1925,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxMinLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMinLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightmapDeepParallaxMinLayersBind, segment)
     }
 
     /**
@@ -1938,7 +1939,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setHeightmapDeepParallaxMaxLayers(layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightmapDeepParallaxMaxLayersBind, segment, layer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHeightmapDeepParallaxMaxLayersBind, segment, layer)
     }
 
     /**
@@ -1952,7 +1953,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxMaxLayers(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightmapDeepParallaxMaxLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightmapDeepParallaxMaxLayersBind, segment)
     }
 
     /**
@@ -1964,7 +1965,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setHeightmapDeepParallaxFlipTangent(flip: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipTangentBind, segment, flip)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHeightmapDeepParallaxFlipTangentBind, segment, flip)
     }
 
     /**
@@ -1976,7 +1977,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxFlipTangent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipTangentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHeightmapDeepParallaxFlipTangentBind, segment)
     }
 
     /**
@@ -1988,7 +1989,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setHeightmapDeepParallaxFlipBinormal(flip: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHeightmapDeepParallaxFlipBinormalBind, segment, flip)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHeightmapDeepParallaxFlipBinormalBind, segment, flip)
     }
 
     /**
@@ -2000,7 +2001,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getHeightmapDeepParallaxFlipBinormal(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHeightmapDeepParallaxFlipBinormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHeightmapDeepParallaxFlipBinormalBind, segment)
     }
 
     /**
@@ -2010,7 +2011,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setGrow(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGrowBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGrowBind, segment, amount)
     }
 
     /**
@@ -2020,7 +2021,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getGrow(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowBind, segment)
     }
 
     /**
@@ -2030,7 +2031,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionOperator(operator: BaseMaterial3D.EmissionOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, segment, operator.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEmissionOperatorBind, segment, operator.value)
     }
 
     /**
@@ -2040,7 +2041,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getEmissionOperator(): BaseMaterial3D.EmissionOperator {
         checkOpen()
-        return BaseMaterial3D.EmissionOperator(ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, segment))
+        return BaseMaterial3D.EmissionOperator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEmissionOperatorBind, segment))
     }
 
     /**
@@ -2053,7 +2054,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAoLightAffect(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAoLightAffectBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAoLightAffectBind, segment, amount)
     }
 
     /**
@@ -2066,7 +2067,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAoLightAffect(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAoLightAffectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAoLightAffectBind, segment)
     }
 
     /**
@@ -2079,7 +2080,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAlphaScissorThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaScissorThresholdBind, segment, threshold)
     }
 
     /**
@@ -2092,7 +2093,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaScissorThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaScissorThresholdBind, segment)
     }
 
     /**
@@ -2102,7 +2103,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAlphaHashScale(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaHashScaleBind, segment, threshold)
     }
 
     /**
@@ -2112,7 +2113,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAlphaHashScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaHashScaleBind, segment)
     }
 
     /**
@@ -2128,7 +2129,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setGrowEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGrowEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGrowEnabledBind, segment, enable)
     }
 
     /**
@@ -2144,7 +2145,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun isGrowEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGrowEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGrowEnabledBind, segment)
     }
 
     /**
@@ -2157,7 +2158,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setMetallicTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, segment, channel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMetallicTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2170,7 +2171,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMetallicTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, segment))
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMetallicTextureChannelBind, segment))
     }
 
     /**
@@ -2183,7 +2184,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setRoughnessTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, segment, channel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRoughnessTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2196,7 +2197,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRoughnessTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, segment))
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRoughnessTextureChannelBind, segment))
     }
 
     /**
@@ -2209,7 +2210,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setAoTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, segment, channel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAoTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2222,7 +2223,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getAoTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, segment))
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAoTextureChannelBind, segment))
     }
 
     /**
@@ -2235,7 +2236,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setRefractionTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, segment, channel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRefractionTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2248,7 +2249,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getRefractionTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, segment))
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRefractionTextureChannelBind, segment))
     }
 
     /**
@@ -2259,7 +2260,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setProximityFadeEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setProximityFadeEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProximityFadeEnabledBind, segment, enabled)
     }
 
     /**
@@ -2270,7 +2271,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun isProximityFadeEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isProximityFadeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProximityFadeEnabledBind, segment)
     }
 
     /**
@@ -2281,7 +2282,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setProximityFadeDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setProximityFadeDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setProximityFadeDistanceBind, segment, distance)
     }
 
     /**
@@ -2292,7 +2293,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getProximityFadeDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProximityFadeDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProximityFadeDistanceBind, segment)
     }
 
     /**
@@ -2303,7 +2304,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setMsdfPixelRange(range: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMsdfPixelRangeBind, segment, range)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMsdfPixelRangeBind, segment, range)
     }
 
     /**
@@ -2314,7 +2315,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMsdfPixelRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfPixelRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMsdfPixelRangeBind, segment)
     }
 
     /**
@@ -2324,7 +2325,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setMsdfOutlineSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMsdfOutlineSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMsdfOutlineSizeBind, segment, size)
     }
 
     /**
@@ -2334,7 +2335,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getMsdfOutlineSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMsdfOutlineSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMsdfOutlineSizeBind, segment)
     }
 
     /**
@@ -2344,7 +2345,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDistanceFade(mode: BaseMaterial3D.DistanceFadeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDistanceFadeBind, segment, mode.value)
     }
 
     /**
@@ -2354,7 +2355,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDistanceFade(): BaseMaterial3D.DistanceFadeMode {
         checkOpen()
-        return BaseMaterial3D.DistanceFadeMode(ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, segment))
+        return BaseMaterial3D.DistanceFadeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDistanceFadeBind, segment))
     }
 
     /**
@@ -2367,7 +2368,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDistanceFadeMaxDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMaxDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -2380,7 +2381,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDistanceFadeMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeMaxDistanceBind, segment)
     }
 
     /**
@@ -2394,7 +2395,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setDistanceFadeMinDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeMinDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeMinDistanceBind, segment, distance)
     }
 
     /**
@@ -2408,7 +2409,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getDistanceFadeMinDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeMinDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeMinDistanceBind, segment)
     }
 
     /**
@@ -2422,7 +2423,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setZClipScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setZClipScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setZClipScaleBind, segment, scale)
     }
 
     /**
@@ -2436,7 +2437,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getZClipScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZClipScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZClipScaleBind, segment)
     }
 
     /**
@@ -2449,7 +2450,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setFovOverride(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFovOverrideBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFovOverrideBind, segment, scale)
     }
 
     /**
@@ -2462,7 +2463,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getFovOverride(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovOverrideBind, segment)
     }
 
     /**
@@ -2472,7 +2473,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setStencilMode(stencilMode: BaseMaterial3D.StencilMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStencilModeBind, segment, stencilMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStencilModeBind, segment, stencilMode.value)
     }
 
     /**
@@ -2482,7 +2483,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilMode(): BaseMaterial3D.StencilMode {
         checkOpen()
-        return BaseMaterial3D.StencilMode(ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, segment))
+        return BaseMaterial3D.StencilMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStencilModeBind, segment))
     }
 
     /**
@@ -2492,7 +2493,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setStencilFlags(stencilFlags: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStencilFlagsBind, segment, stencilFlags)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStencilFlagsBind, segment, stencilFlags)
     }
 
     /**
@@ -2502,7 +2503,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStencilFlagsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStencilFlagsBind, segment)
     }
 
     /**
@@ -2512,7 +2513,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setStencilCompare(stencilCompare: BaseMaterial3D.StencilCompare) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, segment, stencilCompare.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStencilCompareBind, segment, stencilCompare.value)
     }
 
     /**
@@ -2522,7 +2523,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilCompare(): BaseMaterial3D.StencilCompare {
         checkOpen()
-        return BaseMaterial3D.StencilCompare(ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, segment))
+        return BaseMaterial3D.StencilCompare(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStencilCompareBind, segment))
     }
 
     /**
@@ -2532,7 +2533,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setStencilReference(stencilReference: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStencilReferenceBind, segment, stencilReference)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStencilReferenceBind, segment, stencilReference)
     }
 
     /**
@@ -2542,7 +2543,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilReference(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStencilReferenceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStencilReferenceBind, segment)
     }
 
     /**
@@ -2552,7 +2553,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setStencilEffectColor(stencilColor: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setStencilEffectColorBind, segment, stencilColor)
+        ObjectCalls.ptrcallWithColorArg(Binds.setStencilEffectColorBind, segment, stencilColor)
     }
 
     /**
@@ -2562,7 +2563,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilEffectColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getStencilEffectColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getStencilEffectColorBind, segment)
     }
 
     /**
@@ -2572,7 +2573,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setStencilEffectOutlineThickness(stencilOutlineThickness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStencilEffectOutlineThicknessBind, segment, stencilOutlineThickness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStencilEffectOutlineThicknessBind, segment, stencilOutlineThickness)
     }
 
     /**
@@ -2582,7 +2583,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getStencilEffectOutlineThickness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStencilEffectOutlineThicknessBind, segment)
     }
 
     /**
@@ -3722,775 +3723,777 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmStatic
         fun fromMaterial(value: Material): BaseMaterial3D? =
             if (value.isClass("BaseMaterial3D")) RefCounted.retained(BaseMaterial3D(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_ALBEDO_HASH = 2920490490L
-        private val setAlbedoBind by lazy {
+        @JvmField
+        val setAlbedoBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_albedo", SET_ALBEDO_HASH)
-        }
 
         private const val GET_ALBEDO_HASH = 3444240500L
-        private val getAlbedoBind by lazy {
+        @JvmField
+        val getAlbedoBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_albedo", GET_ALBEDO_HASH)
-        }
 
         private const val SET_TRANSPARENCY_HASH = 3435651667L
-        private val setTransparencyBind by lazy {
+        @JvmField
+        val setTransparencyBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_transparency", SET_TRANSPARENCY_HASH)
-        }
 
         private const val GET_TRANSPARENCY_HASH = 990903061L
-        private val getTransparencyBind by lazy {
+        @JvmField
+        val getTransparencyBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_transparency", GET_TRANSPARENCY_HASH)
-        }
 
         private const val SET_ALPHA_ANTIALIASING_HASH = 3212649852L
-        private val setAlphaAntialiasingBind by lazy {
+        @JvmField
+        val setAlphaAntialiasingBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_alpha_antialiasing", SET_ALPHA_ANTIALIASING_HASH)
-        }
 
         private const val GET_ALPHA_ANTIALIASING_HASH = 2889939400L
-        private val getAlphaAntialiasingBind by lazy {
+        @JvmField
+        val getAlphaAntialiasingBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_alpha_antialiasing", GET_ALPHA_ANTIALIASING_HASH)
-        }
 
         private const val SET_ALPHA_ANTIALIASING_EDGE_HASH = 373806689L
-        private val setAlphaAntialiasingEdgeBind by lazy {
+        @JvmField
+        val setAlphaAntialiasingEdgeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_alpha_antialiasing_edge", SET_ALPHA_ANTIALIASING_EDGE_HASH)
-        }
 
         private const val GET_ALPHA_ANTIALIASING_EDGE_HASH = 1740695150L
-        private val getAlphaAntialiasingEdgeBind by lazy {
+        @JvmField
+        val getAlphaAntialiasingEdgeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_alpha_antialiasing_edge", GET_ALPHA_ANTIALIASING_EDGE_HASH)
-        }
 
         private const val SET_SHADING_MODE_HASH = 3368750322L
-        private val setShadingModeBind by lazy {
+        @JvmField
+        val setShadingModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_shading_mode", SET_SHADING_MODE_HASH)
-        }
 
         private const val GET_SHADING_MODE_HASH = 2132070559L
-        private val getShadingModeBind by lazy {
+        @JvmField
+        val getShadingModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_shading_mode", GET_SHADING_MODE_HASH)
-        }
 
         private const val SET_SPECULAR_HASH = 373806689L
-        private val setSpecularBind by lazy {
+        @JvmField
+        val setSpecularBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_specular", SET_SPECULAR_HASH)
-        }
 
         private const val GET_SPECULAR_HASH = 1740695150L
-        private val getSpecularBind by lazy {
+        @JvmField
+        val getSpecularBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_specular", GET_SPECULAR_HASH)
-        }
 
         private const val SET_METALLIC_HASH = 373806689L
-        private val setMetallicBind by lazy {
+        @JvmField
+        val setMetallicBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_metallic", SET_METALLIC_HASH)
-        }
 
         private const val GET_METALLIC_HASH = 1740695150L
-        private val getMetallicBind by lazy {
+        @JvmField
+        val getMetallicBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_metallic", GET_METALLIC_HASH)
-        }
 
         private const val SET_ROUGHNESS_HASH = 373806689L
-        private val setRoughnessBind by lazy {
+        @JvmField
+        val setRoughnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_roughness", SET_ROUGHNESS_HASH)
-        }
 
         private const val GET_ROUGHNESS_HASH = 1740695150L
-        private val getRoughnessBind by lazy {
+        @JvmField
+        val getRoughnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_roughness", GET_ROUGHNESS_HASH)
-        }
 
         private const val SET_EMISSION_HASH = 2920490490L
-        private val setEmissionBind by lazy {
+        @JvmField
+        val setEmissionBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_emission", SET_EMISSION_HASH)
-        }
 
         private const val GET_EMISSION_HASH = 3444240500L
-        private val getEmissionBind by lazy {
+        @JvmField
+        val getEmissionBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_emission", GET_EMISSION_HASH)
-        }
 
         private const val SET_EMISSION_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setEmissionEnergyMultiplierBind by lazy {
+        @JvmField
+        val setEmissionEnergyMultiplierBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_emission_energy_multiplier", SET_EMISSION_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_EMISSION_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getEmissionEnergyMultiplierBind by lazy {
+        @JvmField
+        val getEmissionEnergyMultiplierBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_emission_energy_multiplier", GET_EMISSION_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val SET_EMISSION_INTENSITY_HASH = 373806689L
-        private val setEmissionIntensityBind by lazy {
+        @JvmField
+        val setEmissionIntensityBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_emission_intensity", SET_EMISSION_INTENSITY_HASH)
-        }
 
         private const val GET_EMISSION_INTENSITY_HASH = 1740695150L
-        private val getEmissionIntensityBind by lazy {
+        @JvmField
+        val getEmissionIntensityBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_emission_intensity", GET_EMISSION_INTENSITY_HASH)
-        }
 
         private const val SET_NORMAL_SCALE_HASH = 373806689L
-        private val setNormalScaleBind by lazy {
+        @JvmField
+        val setNormalScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_normal_scale", SET_NORMAL_SCALE_HASH)
-        }
 
         private const val GET_NORMAL_SCALE_HASH = 1740695150L
-        private val getNormalScaleBind by lazy {
+        @JvmField
+        val getNormalScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_normal_scale", GET_NORMAL_SCALE_HASH)
-        }
 
         private const val SET_RIM_HASH = 373806689L
-        private val setRimBind by lazy {
+        @JvmField
+        val setRimBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_rim", SET_RIM_HASH)
-        }
 
         private const val GET_RIM_HASH = 1740695150L
-        private val getRimBind by lazy {
+        @JvmField
+        val getRimBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_rim", GET_RIM_HASH)
-        }
 
         private const val SET_RIM_TINT_HASH = 373806689L
-        private val setRimTintBind by lazy {
+        @JvmField
+        val setRimTintBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_rim_tint", SET_RIM_TINT_HASH)
-        }
 
         private const val GET_RIM_TINT_HASH = 1740695150L
-        private val getRimTintBind by lazy {
+        @JvmField
+        val getRimTintBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_rim_tint", GET_RIM_TINT_HASH)
-        }
 
         private const val SET_CLEARCOAT_HASH = 373806689L
-        private val setClearcoatBind by lazy {
+        @JvmField
+        val setClearcoatBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_clearcoat", SET_CLEARCOAT_HASH)
-        }
 
         private const val GET_CLEARCOAT_HASH = 1740695150L
-        private val getClearcoatBind by lazy {
+        @JvmField
+        val getClearcoatBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_clearcoat", GET_CLEARCOAT_HASH)
-        }
 
         private const val SET_CLEARCOAT_ROUGHNESS_HASH = 373806689L
-        private val setClearcoatRoughnessBind by lazy {
+        @JvmField
+        val setClearcoatRoughnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_clearcoat_roughness", SET_CLEARCOAT_ROUGHNESS_HASH)
-        }
 
         private const val GET_CLEARCOAT_ROUGHNESS_HASH = 1740695150L
-        private val getClearcoatRoughnessBind by lazy {
+        @JvmField
+        val getClearcoatRoughnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_clearcoat_roughness", GET_CLEARCOAT_ROUGHNESS_HASH)
-        }
 
         private const val SET_ANISOTROPY_HASH = 373806689L
-        private val setAnisotropyBind by lazy {
+        @JvmField
+        val setAnisotropyBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_anisotropy", SET_ANISOTROPY_HASH)
-        }
 
         private const val GET_ANISOTROPY_HASH = 1740695150L
-        private val getAnisotropyBind by lazy {
+        @JvmField
+        val getAnisotropyBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_anisotropy", GET_ANISOTROPY_HASH)
-        }
 
         private const val SET_HEIGHTMAP_SCALE_HASH = 373806689L
-        private val setHeightmapScaleBind by lazy {
+        @JvmField
+        val setHeightmapScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_heightmap_scale", SET_HEIGHTMAP_SCALE_HASH)
-        }
 
         private const val GET_HEIGHTMAP_SCALE_HASH = 1740695150L
-        private val getHeightmapScaleBind by lazy {
+        @JvmField
+        val getHeightmapScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_heightmap_scale", GET_HEIGHTMAP_SCALE_HASH)
-        }
 
         private const val SET_SUBSURFACE_SCATTERING_STRENGTH_HASH = 373806689L
-        private val setSubsurfaceScatteringStrengthBind by lazy {
+        @JvmField
+        val setSubsurfaceScatteringStrengthBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_subsurface_scattering_strength", SET_SUBSURFACE_SCATTERING_STRENGTH_HASH)
-        }
 
         private const val GET_SUBSURFACE_SCATTERING_STRENGTH_HASH = 1740695150L
-        private val getSubsurfaceScatteringStrengthBind by lazy {
+        @JvmField
+        val getSubsurfaceScatteringStrengthBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_subsurface_scattering_strength", GET_SUBSURFACE_SCATTERING_STRENGTH_HASH)
-        }
 
         private const val SET_TRANSMITTANCE_COLOR_HASH = 2920490490L
-        private val setTransmittanceColorBind by lazy {
+        @JvmField
+        val setTransmittanceColorBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_transmittance_color", SET_TRANSMITTANCE_COLOR_HASH)
-        }
 
         private const val GET_TRANSMITTANCE_COLOR_HASH = 3444240500L
-        private val getTransmittanceColorBind by lazy {
+        @JvmField
+        val getTransmittanceColorBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_transmittance_color", GET_TRANSMITTANCE_COLOR_HASH)
-        }
 
         private const val SET_TRANSMITTANCE_DEPTH_HASH = 373806689L
-        private val setTransmittanceDepthBind by lazy {
+        @JvmField
+        val setTransmittanceDepthBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_transmittance_depth", SET_TRANSMITTANCE_DEPTH_HASH)
-        }
 
         private const val GET_TRANSMITTANCE_DEPTH_HASH = 1740695150L
-        private val getTransmittanceDepthBind by lazy {
+        @JvmField
+        val getTransmittanceDepthBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_transmittance_depth", GET_TRANSMITTANCE_DEPTH_HASH)
-        }
 
         private const val SET_TRANSMITTANCE_BOOST_HASH = 373806689L
-        private val setTransmittanceBoostBind by lazy {
+        @JvmField
+        val setTransmittanceBoostBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_transmittance_boost", SET_TRANSMITTANCE_BOOST_HASH)
-        }
 
         private const val GET_TRANSMITTANCE_BOOST_HASH = 1740695150L
-        private val getTransmittanceBoostBind by lazy {
+        @JvmField
+        val getTransmittanceBoostBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_transmittance_boost", GET_TRANSMITTANCE_BOOST_HASH)
-        }
 
         private const val SET_BACKLIGHT_HASH = 2920490490L
-        private val setBacklightBind by lazy {
+        @JvmField
+        val setBacklightBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_backlight", SET_BACKLIGHT_HASH)
-        }
 
         private const val GET_BACKLIGHT_HASH = 3444240500L
-        private val getBacklightBind by lazy {
+        @JvmField
+        val getBacklightBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_backlight", GET_BACKLIGHT_HASH)
-        }
 
         private const val SET_REFRACTION_HASH = 373806689L
-        private val setRefractionBind by lazy {
+        @JvmField
+        val setRefractionBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_refraction", SET_REFRACTION_HASH)
-        }
 
         private const val GET_REFRACTION_HASH = 1740695150L
-        private val getRefractionBind by lazy {
+        @JvmField
+        val getRefractionBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_refraction", GET_REFRACTION_HASH)
-        }
 
         private const val SET_POINT_SIZE_HASH = 373806689L
-        private val setPointSizeBind by lazy {
+        @JvmField
+        val setPointSizeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_point_size", SET_POINT_SIZE_HASH)
-        }
 
         private const val GET_POINT_SIZE_HASH = 1740695150L
-        private val getPointSizeBind by lazy {
+        @JvmField
+        val getPointSizeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_point_size", GET_POINT_SIZE_HASH)
-        }
 
         private const val SET_DETAIL_UV_HASH = 456801921L
-        private val setDetailUvBind by lazy {
+        @JvmField
+        val setDetailUvBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_detail_uv", SET_DETAIL_UV_HASH)
-        }
 
         private const val GET_DETAIL_UV_HASH = 2306920512L
-        private val getDetailUvBind by lazy {
+        @JvmField
+        val getDetailUvBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_detail_uv", GET_DETAIL_UV_HASH)
-        }
 
         private const val SET_BLEND_MODE_HASH = 2830186259L
-        private val setBlendModeBind by lazy {
+        @JvmField
+        val setBlendModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_blend_mode", SET_BLEND_MODE_HASH)
-        }
 
         private const val GET_BLEND_MODE_HASH = 4022690962L
-        private val getBlendModeBind by lazy {
+        @JvmField
+        val getBlendModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_blend_mode", GET_BLEND_MODE_HASH)
-        }
 
         private const val SET_DEPTH_DRAW_MODE_HASH = 1456584748L
-        private val setDepthDrawModeBind by lazy {
+        @JvmField
+        val setDepthDrawModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_depth_draw_mode", SET_DEPTH_DRAW_MODE_HASH)
-        }
 
         private const val GET_DEPTH_DRAW_MODE_HASH = 2578197639L
-        private val getDepthDrawModeBind by lazy {
+        @JvmField
+        val getDepthDrawModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_depth_draw_mode", GET_DEPTH_DRAW_MODE_HASH)
-        }
 
         private const val SET_DEPTH_TEST_HASH = 3918692338L
-        private val setDepthTestBind by lazy {
+        @JvmField
+        val setDepthTestBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_depth_test", SET_DEPTH_TEST_HASH)
-        }
 
         private const val GET_DEPTH_TEST_HASH = 3434785811L
-        private val getDepthTestBind by lazy {
+        @JvmField
+        val getDepthTestBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_depth_test", GET_DEPTH_TEST_HASH)
-        }
 
         private const val SET_CULL_MODE_HASH = 2338909218L
-        private val setCullModeBind by lazy {
+        @JvmField
+        val setCullModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_cull_mode", SET_CULL_MODE_HASH)
-        }
 
         private const val GET_CULL_MODE_HASH = 1941499586L
-        private val getCullModeBind by lazy {
+        @JvmField
+        val getCullModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_cull_mode", GET_CULL_MODE_HASH)
-        }
 
         private const val SET_DIFFUSE_MODE_HASH = 1045299638L
-        private val setDiffuseModeBind by lazy {
+        @JvmField
+        val setDiffuseModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_diffuse_mode", SET_DIFFUSE_MODE_HASH)
-        }
 
         private const val GET_DIFFUSE_MODE_HASH = 3973617136L
-        private val getDiffuseModeBind by lazy {
+        @JvmField
+        val getDiffuseModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_diffuse_mode", GET_DIFFUSE_MODE_HASH)
-        }
 
         private const val SET_SPECULAR_MODE_HASH = 584737147L
-        private val setSpecularModeBind by lazy {
+        @JvmField
+        val setSpecularModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_specular_mode", SET_SPECULAR_MODE_HASH)
-        }
 
         private const val GET_SPECULAR_MODE_HASH = 2569953298L
-        private val getSpecularModeBind by lazy {
+        @JvmField
+        val getSpecularModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_specular_mode", GET_SPECULAR_MODE_HASH)
-        }
 
         private const val SET_FLAG_HASH = 3070159527L
-        private val setFlagBind by lazy {
+        @JvmField
+        val setFlagBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_flag", SET_FLAG_HASH)
-        }
 
         private const val GET_FLAG_HASH = 1286410065L
-        private val getFlagBind by lazy {
+        @JvmField
+        val getFlagBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_flag", GET_FLAG_HASH)
-        }
 
         private const val SET_TEXTURE_FILTER_HASH = 22904437L
-        private val setTextureFilterBind by lazy {
+        @JvmField
+        val setTextureFilterBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_texture_filter", SET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_TEXTURE_FILTER_HASH = 3289213076L
-        private val getTextureFilterBind by lazy {
+        @JvmField
+        val getTextureFilterBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_texture_filter", GET_TEXTURE_FILTER_HASH)
-        }
 
         private const val SET_FEATURE_HASH = 2819288693L
-        private val setFeatureBind by lazy {
+        @JvmField
+        val setFeatureBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_feature", SET_FEATURE_HASH)
-        }
 
         private const val GET_FEATURE_HASH = 1965241794L
-        private val getFeatureBind by lazy {
+        @JvmField
+        val getFeatureBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_feature", GET_FEATURE_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 464208135L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 329605813L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_DETAIL_BLEND_MODE_HASH = 2830186259L
-        private val setDetailBlendModeBind by lazy {
+        @JvmField
+        val setDetailBlendModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_detail_blend_mode", SET_DETAIL_BLEND_MODE_HASH)
-        }
 
         private const val GET_DETAIL_BLEND_MODE_HASH = 4022690962L
-        private val getDetailBlendModeBind by lazy {
+        @JvmField
+        val getDetailBlendModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_detail_blend_mode", GET_DETAIL_BLEND_MODE_HASH)
-        }
 
         private const val SET_UV1_SCALE_HASH = 3460891852L
-        private val setUv1ScaleBind by lazy {
+        @JvmField
+        val setUv1ScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_uv1_scale", SET_UV1_SCALE_HASH)
-        }
 
         private const val GET_UV1_SCALE_HASH = 3360562783L
-        private val getUv1ScaleBind by lazy {
+        @JvmField
+        val getUv1ScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_uv1_scale", GET_UV1_SCALE_HASH)
-        }
 
         private const val SET_UV1_OFFSET_HASH = 3460891852L
-        private val setUv1OffsetBind by lazy {
+        @JvmField
+        val setUv1OffsetBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_uv1_offset", SET_UV1_OFFSET_HASH)
-        }
 
         private const val GET_UV1_OFFSET_HASH = 3360562783L
-        private val getUv1OffsetBind by lazy {
+        @JvmField
+        val getUv1OffsetBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_uv1_offset", GET_UV1_OFFSET_HASH)
-        }
 
         private const val SET_UV1_TRIPLANAR_BLEND_SHARPNESS_HASH = 373806689L
-        private val setUv1TriplanarBlendSharpnessBind by lazy {
+        @JvmField
+        val setUv1TriplanarBlendSharpnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_uv1_triplanar_blend_sharpness", SET_UV1_TRIPLANAR_BLEND_SHARPNESS_HASH)
-        }
 
         private const val GET_UV1_TRIPLANAR_BLEND_SHARPNESS_HASH = 1740695150L
-        private val getUv1TriplanarBlendSharpnessBind by lazy {
+        @JvmField
+        val getUv1TriplanarBlendSharpnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_uv1_triplanar_blend_sharpness", GET_UV1_TRIPLANAR_BLEND_SHARPNESS_HASH)
-        }
 
         private const val SET_UV2_SCALE_HASH = 3460891852L
-        private val setUv2ScaleBind by lazy {
+        @JvmField
+        val setUv2ScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_uv2_scale", SET_UV2_SCALE_HASH)
-        }
 
         private const val GET_UV2_SCALE_HASH = 3360562783L
-        private val getUv2ScaleBind by lazy {
+        @JvmField
+        val getUv2ScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_uv2_scale", GET_UV2_SCALE_HASH)
-        }
 
         private const val SET_UV2_OFFSET_HASH = 3460891852L
-        private val setUv2OffsetBind by lazy {
+        @JvmField
+        val setUv2OffsetBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_uv2_offset", SET_UV2_OFFSET_HASH)
-        }
 
         private const val GET_UV2_OFFSET_HASH = 3360562783L
-        private val getUv2OffsetBind by lazy {
+        @JvmField
+        val getUv2OffsetBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_uv2_offset", GET_UV2_OFFSET_HASH)
-        }
 
         private const val SET_UV2_TRIPLANAR_BLEND_SHARPNESS_HASH = 373806689L
-        private val setUv2TriplanarBlendSharpnessBind by lazy {
+        @JvmField
+        val setUv2TriplanarBlendSharpnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_uv2_triplanar_blend_sharpness", SET_UV2_TRIPLANAR_BLEND_SHARPNESS_HASH)
-        }
 
         private const val GET_UV2_TRIPLANAR_BLEND_SHARPNESS_HASH = 1740695150L
-        private val getUv2TriplanarBlendSharpnessBind by lazy {
+        @JvmField
+        val getUv2TriplanarBlendSharpnessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_uv2_triplanar_blend_sharpness", GET_UV2_TRIPLANAR_BLEND_SHARPNESS_HASH)
-        }
 
         private const val SET_BILLBOARD_MODE_HASH = 4202036497L
-        private val setBillboardModeBind by lazy {
+        @JvmField
+        val setBillboardModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_billboard_mode", SET_BILLBOARD_MODE_HASH)
-        }
 
         private const val GET_BILLBOARD_MODE_HASH = 1283840139L
-        private val getBillboardModeBind by lazy {
+        @JvmField
+        val getBillboardModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_billboard_mode", GET_BILLBOARD_MODE_HASH)
-        }
 
         private const val SET_PARTICLES_ANIM_H_FRAMES_HASH = 1286410249L
-        private val setParticlesAnimHFramesBind by lazy {
+        @JvmField
+        val setParticlesAnimHFramesBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_particles_anim_h_frames", SET_PARTICLES_ANIM_H_FRAMES_HASH)
-        }
 
         private const val GET_PARTICLES_ANIM_H_FRAMES_HASH = 3905245786L
-        private val getParticlesAnimHFramesBind by lazy {
+        @JvmField
+        val getParticlesAnimHFramesBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_particles_anim_h_frames", GET_PARTICLES_ANIM_H_FRAMES_HASH)
-        }
 
         private const val SET_PARTICLES_ANIM_V_FRAMES_HASH = 1286410249L
-        private val setParticlesAnimVFramesBind by lazy {
+        @JvmField
+        val setParticlesAnimVFramesBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_particles_anim_v_frames", SET_PARTICLES_ANIM_V_FRAMES_HASH)
-        }
 
         private const val GET_PARTICLES_ANIM_V_FRAMES_HASH = 3905245786L
-        private val getParticlesAnimVFramesBind by lazy {
+        @JvmField
+        val getParticlesAnimVFramesBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_particles_anim_v_frames", GET_PARTICLES_ANIM_V_FRAMES_HASH)
-        }
 
         private const val SET_PARTICLES_ANIM_LOOP_HASH = 2586408642L
-        private val setParticlesAnimLoopBind by lazy {
+        @JvmField
+        val setParticlesAnimLoopBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_particles_anim_loop", SET_PARTICLES_ANIM_LOOP_HASH)
-        }
 
         private const val GET_PARTICLES_ANIM_LOOP_HASH = 36873697L
-        private val getParticlesAnimLoopBind by lazy {
+        @JvmField
+        val getParticlesAnimLoopBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_particles_anim_loop", GET_PARTICLES_ANIM_LOOP_HASH)
-        }
 
         private const val SET_HEIGHTMAP_DEEP_PARALLAX_HASH = 2586408642L
-        private val setHeightmapDeepParallaxBind by lazy {
+        @JvmField
+        val setHeightmapDeepParallaxBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_heightmap_deep_parallax", SET_HEIGHTMAP_DEEP_PARALLAX_HASH)
-        }
 
         private const val IS_HEIGHTMAP_DEEP_PARALLAX_ENABLED_HASH = 36873697L
-        private val isHeightmapDeepParallaxEnabledBind by lazy {
+        @JvmField
+        val isHeightmapDeepParallaxEnabledBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "is_heightmap_deep_parallax_enabled", IS_HEIGHTMAP_DEEP_PARALLAX_ENABLED_HASH)
-        }
 
         private const val SET_HEIGHTMAP_DEEP_PARALLAX_MIN_LAYERS_HASH = 1286410249L
-        private val setHeightmapDeepParallaxMinLayersBind by lazy {
+        @JvmField
+        val setHeightmapDeepParallaxMinLayersBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_heightmap_deep_parallax_min_layers", SET_HEIGHTMAP_DEEP_PARALLAX_MIN_LAYERS_HASH)
-        }
 
         private const val GET_HEIGHTMAP_DEEP_PARALLAX_MIN_LAYERS_HASH = 3905245786L
-        private val getHeightmapDeepParallaxMinLayersBind by lazy {
+        @JvmField
+        val getHeightmapDeepParallaxMinLayersBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_heightmap_deep_parallax_min_layers", GET_HEIGHTMAP_DEEP_PARALLAX_MIN_LAYERS_HASH)
-        }
 
         private const val SET_HEIGHTMAP_DEEP_PARALLAX_MAX_LAYERS_HASH = 1286410249L
-        private val setHeightmapDeepParallaxMaxLayersBind by lazy {
+        @JvmField
+        val setHeightmapDeepParallaxMaxLayersBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_heightmap_deep_parallax_max_layers", SET_HEIGHTMAP_DEEP_PARALLAX_MAX_LAYERS_HASH)
-        }
 
         private const val GET_HEIGHTMAP_DEEP_PARALLAX_MAX_LAYERS_HASH = 3905245786L
-        private val getHeightmapDeepParallaxMaxLayersBind by lazy {
+        @JvmField
+        val getHeightmapDeepParallaxMaxLayersBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_heightmap_deep_parallax_max_layers", GET_HEIGHTMAP_DEEP_PARALLAX_MAX_LAYERS_HASH)
-        }
 
         private const val SET_HEIGHTMAP_DEEP_PARALLAX_FLIP_TANGENT_HASH = 2586408642L
-        private val setHeightmapDeepParallaxFlipTangentBind by lazy {
+        @JvmField
+        val setHeightmapDeepParallaxFlipTangentBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_heightmap_deep_parallax_flip_tangent", SET_HEIGHTMAP_DEEP_PARALLAX_FLIP_TANGENT_HASH)
-        }
 
         private const val GET_HEIGHTMAP_DEEP_PARALLAX_FLIP_TANGENT_HASH = 36873697L
-        private val getHeightmapDeepParallaxFlipTangentBind by lazy {
+        @JvmField
+        val getHeightmapDeepParallaxFlipTangentBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_heightmap_deep_parallax_flip_tangent", GET_HEIGHTMAP_DEEP_PARALLAX_FLIP_TANGENT_HASH)
-        }
 
         private const val SET_HEIGHTMAP_DEEP_PARALLAX_FLIP_BINORMAL_HASH = 2586408642L
-        private val setHeightmapDeepParallaxFlipBinormalBind by lazy {
+        @JvmField
+        val setHeightmapDeepParallaxFlipBinormalBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_heightmap_deep_parallax_flip_binormal", SET_HEIGHTMAP_DEEP_PARALLAX_FLIP_BINORMAL_HASH)
-        }
 
         private const val GET_HEIGHTMAP_DEEP_PARALLAX_FLIP_BINORMAL_HASH = 36873697L
-        private val getHeightmapDeepParallaxFlipBinormalBind by lazy {
+        @JvmField
+        val getHeightmapDeepParallaxFlipBinormalBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_heightmap_deep_parallax_flip_binormal", GET_HEIGHTMAP_DEEP_PARALLAX_FLIP_BINORMAL_HASH)
-        }
 
         private const val SET_GROW_HASH = 373806689L
-        private val setGrowBind by lazy {
+        @JvmField
+        val setGrowBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_grow", SET_GROW_HASH)
-        }
 
         private const val GET_GROW_HASH = 1740695150L
-        private val getGrowBind by lazy {
+        @JvmField
+        val getGrowBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_grow", GET_GROW_HASH)
-        }
 
         private const val SET_EMISSION_OPERATOR_HASH = 3825128922L
-        private val setEmissionOperatorBind by lazy {
+        @JvmField
+        val setEmissionOperatorBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_emission_operator", SET_EMISSION_OPERATOR_HASH)
-        }
 
         private const val GET_EMISSION_OPERATOR_HASH = 974205018L
-        private val getEmissionOperatorBind by lazy {
+        @JvmField
+        val getEmissionOperatorBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_emission_operator", GET_EMISSION_OPERATOR_HASH)
-        }
 
         private const val SET_AO_LIGHT_AFFECT_HASH = 373806689L
-        private val setAoLightAffectBind by lazy {
+        @JvmField
+        val setAoLightAffectBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_ao_light_affect", SET_AO_LIGHT_AFFECT_HASH)
-        }
 
         private const val GET_AO_LIGHT_AFFECT_HASH = 1740695150L
-        private val getAoLightAffectBind by lazy {
+        @JvmField
+        val getAoLightAffectBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_ao_light_affect", GET_AO_LIGHT_AFFECT_HASH)
-        }
 
         private const val SET_ALPHA_SCISSOR_THRESHOLD_HASH = 373806689L
-        private val setAlphaScissorThresholdBind by lazy {
+        @JvmField
+        val setAlphaScissorThresholdBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_alpha_scissor_threshold", SET_ALPHA_SCISSOR_THRESHOLD_HASH)
-        }
 
         private const val GET_ALPHA_SCISSOR_THRESHOLD_HASH = 1740695150L
-        private val getAlphaScissorThresholdBind by lazy {
+        @JvmField
+        val getAlphaScissorThresholdBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_alpha_scissor_threshold", GET_ALPHA_SCISSOR_THRESHOLD_HASH)
-        }
 
         private const val SET_ALPHA_HASH_SCALE_HASH = 373806689L
-        private val setAlphaHashScaleBind by lazy {
+        @JvmField
+        val setAlphaHashScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_alpha_hash_scale", SET_ALPHA_HASH_SCALE_HASH)
-        }
 
         private const val GET_ALPHA_HASH_SCALE_HASH = 1740695150L
-        private val getAlphaHashScaleBind by lazy {
+        @JvmField
+        val getAlphaHashScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_alpha_hash_scale", GET_ALPHA_HASH_SCALE_HASH)
-        }
 
         private const val SET_GROW_ENABLED_HASH = 2586408642L
-        private val setGrowEnabledBind by lazy {
+        @JvmField
+        val setGrowEnabledBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_grow_enabled", SET_GROW_ENABLED_HASH)
-        }
 
         private const val IS_GROW_ENABLED_HASH = 36873697L
-        private val isGrowEnabledBind by lazy {
+        @JvmField
+        val isGrowEnabledBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "is_grow_enabled", IS_GROW_ENABLED_HASH)
-        }
 
         private const val SET_METALLIC_TEXTURE_CHANNEL_HASH = 744167988L
-        private val setMetallicTextureChannelBind by lazy {
+        @JvmField
+        val setMetallicTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_metallic_texture_channel", SET_METALLIC_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val GET_METALLIC_TEXTURE_CHANNEL_HASH = 568133867L
-        private val getMetallicTextureChannelBind by lazy {
+        @JvmField
+        val getMetallicTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_metallic_texture_channel", GET_METALLIC_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val SET_ROUGHNESS_TEXTURE_CHANNEL_HASH = 744167988L
-        private val setRoughnessTextureChannelBind by lazy {
+        @JvmField
+        val setRoughnessTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_roughness_texture_channel", SET_ROUGHNESS_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val GET_ROUGHNESS_TEXTURE_CHANNEL_HASH = 568133867L
-        private val getRoughnessTextureChannelBind by lazy {
+        @JvmField
+        val getRoughnessTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_roughness_texture_channel", GET_ROUGHNESS_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val SET_AO_TEXTURE_CHANNEL_HASH = 744167988L
-        private val setAoTextureChannelBind by lazy {
+        @JvmField
+        val setAoTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_ao_texture_channel", SET_AO_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val GET_AO_TEXTURE_CHANNEL_HASH = 568133867L
-        private val getAoTextureChannelBind by lazy {
+        @JvmField
+        val getAoTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_ao_texture_channel", GET_AO_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val SET_REFRACTION_TEXTURE_CHANNEL_HASH = 744167988L
-        private val setRefractionTextureChannelBind by lazy {
+        @JvmField
+        val setRefractionTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_refraction_texture_channel", SET_REFRACTION_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val GET_REFRACTION_TEXTURE_CHANNEL_HASH = 568133867L
-        private val getRefractionTextureChannelBind by lazy {
+        @JvmField
+        val getRefractionTextureChannelBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_refraction_texture_channel", GET_REFRACTION_TEXTURE_CHANNEL_HASH)
-        }
 
         private const val SET_PROXIMITY_FADE_ENABLED_HASH = 2586408642L
-        private val setProximityFadeEnabledBind by lazy {
+        @JvmField
+        val setProximityFadeEnabledBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_proximity_fade_enabled", SET_PROXIMITY_FADE_ENABLED_HASH)
-        }
 
         private const val IS_PROXIMITY_FADE_ENABLED_HASH = 36873697L
-        private val isProximityFadeEnabledBind by lazy {
+        @JvmField
+        val isProximityFadeEnabledBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "is_proximity_fade_enabled", IS_PROXIMITY_FADE_ENABLED_HASH)
-        }
 
         private const val SET_PROXIMITY_FADE_DISTANCE_HASH = 373806689L
-        private val setProximityFadeDistanceBind by lazy {
+        @JvmField
+        val setProximityFadeDistanceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_proximity_fade_distance", SET_PROXIMITY_FADE_DISTANCE_HASH)
-        }
 
         private const val GET_PROXIMITY_FADE_DISTANCE_HASH = 1740695150L
-        private val getProximityFadeDistanceBind by lazy {
+        @JvmField
+        val getProximityFadeDistanceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_proximity_fade_distance", GET_PROXIMITY_FADE_DISTANCE_HASH)
-        }
 
         private const val SET_MSDF_PIXEL_RANGE_HASH = 373806689L
-        private val setMsdfPixelRangeBind by lazy {
+        @JvmField
+        val setMsdfPixelRangeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_msdf_pixel_range", SET_MSDF_PIXEL_RANGE_HASH)
-        }
 
         private const val GET_MSDF_PIXEL_RANGE_HASH = 1740695150L
-        private val getMsdfPixelRangeBind by lazy {
+        @JvmField
+        val getMsdfPixelRangeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_msdf_pixel_range", GET_MSDF_PIXEL_RANGE_HASH)
-        }
 
         private const val SET_MSDF_OUTLINE_SIZE_HASH = 373806689L
-        private val setMsdfOutlineSizeBind by lazy {
+        @JvmField
+        val setMsdfOutlineSizeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_msdf_outline_size", SET_MSDF_OUTLINE_SIZE_HASH)
-        }
 
         private const val GET_MSDF_OUTLINE_SIZE_HASH = 1740695150L
-        private val getMsdfOutlineSizeBind by lazy {
+        @JvmField
+        val getMsdfOutlineSizeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_msdf_outline_size", GET_MSDF_OUTLINE_SIZE_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_HASH = 1379478617L
-        private val setDistanceFadeBind by lazy {
+        @JvmField
+        val setDistanceFadeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_distance_fade", SET_DISTANCE_FADE_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_HASH = 2694575734L
-        private val getDistanceFadeBind by lazy {
+        @JvmField
+        val getDistanceFadeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_distance_fade", GET_DISTANCE_FADE_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_MAX_DISTANCE_HASH = 373806689L
-        private val setDistanceFadeMaxDistanceBind by lazy {
+        @JvmField
+        val setDistanceFadeMaxDistanceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_distance_fade_max_distance", SET_DISTANCE_FADE_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_MAX_DISTANCE_HASH = 1740695150L
-        private val getDistanceFadeMaxDistanceBind by lazy {
+        @JvmField
+        val getDistanceFadeMaxDistanceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_distance_fade_max_distance", GET_DISTANCE_FADE_MAX_DISTANCE_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_MIN_DISTANCE_HASH = 373806689L
-        private val setDistanceFadeMinDistanceBind by lazy {
+        @JvmField
+        val setDistanceFadeMinDistanceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_distance_fade_min_distance", SET_DISTANCE_FADE_MIN_DISTANCE_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_MIN_DISTANCE_HASH = 1740695150L
-        private val getDistanceFadeMinDistanceBind by lazy {
+        @JvmField
+        val getDistanceFadeMinDistanceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_distance_fade_min_distance", GET_DISTANCE_FADE_MIN_DISTANCE_HASH)
-        }
 
         private const val SET_Z_CLIP_SCALE_HASH = 373806689L
-        private val setZClipScaleBind by lazy {
+        @JvmField
+        val setZClipScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_z_clip_scale", SET_Z_CLIP_SCALE_HASH)
-        }
 
         private const val GET_Z_CLIP_SCALE_HASH = 1740695150L
-        private val getZClipScaleBind by lazy {
+        @JvmField
+        val getZClipScaleBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_z_clip_scale", GET_Z_CLIP_SCALE_HASH)
-        }
 
         private const val SET_FOV_OVERRIDE_HASH = 373806689L
-        private val setFovOverrideBind by lazy {
+        @JvmField
+        val setFovOverrideBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_fov_override", SET_FOV_OVERRIDE_HASH)
-        }
 
         private const val GET_FOV_OVERRIDE_HASH = 1740695150L
-        private val getFovOverrideBind by lazy {
+        @JvmField
+        val getFovOverrideBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_fov_override", GET_FOV_OVERRIDE_HASH)
-        }
 
         private const val SET_STENCIL_MODE_HASH = 2272367200L
-        private val setStencilModeBind by lazy {
+        @JvmField
+        val setStencilModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_stencil_mode", SET_STENCIL_MODE_HASH)
-        }
 
         private const val GET_STENCIL_MODE_HASH = 2908443456L
-        private val getStencilModeBind by lazy {
+        @JvmField
+        val getStencilModeBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_stencil_mode", GET_STENCIL_MODE_HASH)
-        }
 
         private const val SET_STENCIL_FLAGS_HASH = 1286410249L
-        private val setStencilFlagsBind by lazy {
+        @JvmField
+        val setStencilFlagsBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_stencil_flags", SET_STENCIL_FLAGS_HASH)
-        }
 
         private const val GET_STENCIL_FLAGS_HASH = 3905245786L
-        private val getStencilFlagsBind by lazy {
+        @JvmField
+        val getStencilFlagsBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_stencil_flags", GET_STENCIL_FLAGS_HASH)
-        }
 
         private const val SET_STENCIL_COMPARE_HASH = 3741726481L
-        private val setStencilCompareBind by lazy {
+        @JvmField
+        val setStencilCompareBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_stencil_compare", SET_STENCIL_COMPARE_HASH)
-        }
 
         private const val GET_STENCIL_COMPARE_HASH = 2824600492L
-        private val getStencilCompareBind by lazy {
+        @JvmField
+        val getStencilCompareBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_stencil_compare", GET_STENCIL_COMPARE_HASH)
-        }
 
         private const val SET_STENCIL_REFERENCE_HASH = 1286410249L
-        private val setStencilReferenceBind by lazy {
+        @JvmField
+        val setStencilReferenceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_stencil_reference", SET_STENCIL_REFERENCE_HASH)
-        }
 
         private const val GET_STENCIL_REFERENCE_HASH = 3905245786L
-        private val getStencilReferenceBind by lazy {
+        @JvmField
+        val getStencilReferenceBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_stencil_reference", GET_STENCIL_REFERENCE_HASH)
-        }
 
         private const val SET_STENCIL_EFFECT_COLOR_HASH = 2920490490L
-        private val setStencilEffectColorBind by lazy {
+        @JvmField
+        val setStencilEffectColorBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_stencil_effect_color", SET_STENCIL_EFFECT_COLOR_HASH)
-        }
 
         private const val GET_STENCIL_EFFECT_COLOR_HASH = 3444240500L
-        private val getStencilEffectColorBind by lazy {
+        @JvmField
+        val getStencilEffectColorBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_stencil_effect_color", GET_STENCIL_EFFECT_COLOR_HASH)
-        }
 
         private const val SET_STENCIL_EFFECT_OUTLINE_THICKNESS_HASH = 373806689L
-        private val setStencilEffectOutlineThicknessBind by lazy {
+        @JvmField
+        val setStencilEffectOutlineThicknessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "set_stencil_effect_outline_thickness", SET_STENCIL_EFFECT_OUTLINE_THICKNESS_HASH)
-        }
 
         private const val GET_STENCIL_EFFECT_OUTLINE_THICKNESS_HASH = 1740695150L
-        private val getStencilEffectOutlineThicknessBind by lazy {
+        @JvmField
+        val getStencilEffectOutlineThicknessBind =
             ObjectCalls.getMethodBind("BaseMaterial3D", "get_stencil_effect_outline_thickness", GET_STENCIL_EFFECT_OUTLINE_THICKNESS_HASH)
-        }
     }
 }

@@ -23,7 +23,5 @@ class AudioEffectEQ21(handle: GodotHandle) : AudioEffectEQ(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ21? =
             if (handle.address() == 0L) null else AudioEffectEQ21(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

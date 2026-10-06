@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -34,7 +35,7 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     companion object {
@@ -47,15 +48,17 @@ class SphereOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SphereOccluder3D? =
             if (handle.address() == 0L) null else SphereOccluder3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("SphereOccluder3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("SphereOccluder3D", "get_radius", GET_RADIUS_HASH)
-        }
     }
 }

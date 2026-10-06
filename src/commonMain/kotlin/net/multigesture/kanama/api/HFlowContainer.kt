@@ -19,7 +19,5 @@ class HFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
 
         internal fun wrap(handle: RawSegment): HFlowContainer? =
             if (handle.address() == 0L) null else HFlowContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

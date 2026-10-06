@@ -867,8 +867,18 @@ static int read_setting_from_project(const char *jar_path, const char *key, char
     }
 
     int in_kanama_section = 0;
-    char line[1024];
+    char line[4096];
     while (fgets(line, sizeof line, f)) {
+        if (strchr(line, '\n') == NULL && !feof(f)) {
+            /* A line longer than the buffer: skip the rest of it rather than
+             * reading its tail as a line of its own. */
+            fprintf(stderr, "[kanama] warning: a project.godot line over %d bytes is ignored\n",
+                    (int)sizeof line - 1);
+            int c;
+            while ((c = fgetc(f)) != EOF && c != '\n') {
+            }
+            continue;
+        }
         char *s = trim_ascii(line);
         if (*s == '\0' || *s == ';' || *s == '#') {
             continue;
@@ -1009,6 +1019,176 @@ static void JNICALL kanama_jvm_exit_hook(jint code) {
 }
 #endif
 
+/* ------------------------------------------------------------------ */
+/* Embedded JVM options (task 131 item 18)                            */
+/* ------------------------------------------------------------------ */
+
+/* Kanama adds no heap or GC options of its own: HotSpot's ergonomics apply.
+ * The user's options come from three places, applied in this order (a later
+ * option wins, as on a java command line):
+ *   1. kanama-jvm-options.txt next to kanama.jar -- how an exported game ships
+ *      them (scripts/export_game_assemble.sh writes it from the project setting);
+ *   2. the project setting kanama/jvm/options in project.godot (editor and
+ *      source-tree runs);
+ *   3. the KANAMA_JVM_OPTIONS environment variable.
+ * They are passed as JNI options, which HotSpot treats as command-line ones --
+ * unlike JAVA_TOOL_OPTIONS, whose -XX:MaxNewSize/NewSize G1 discards. Games
+ * that spawn many objects at once can cap the young generation there
+ * (-XX:MaxNewSize=128m): see docs/exporting/desktop.md "JVM Options". */
+#define KANAMA_MAX_USER_JVM_OPTIONS 64
+#define KANAMA_JVM_OPTIONS_FILE "kanama-jvm-options.txt"
+
+typedef struct {
+    char *buffers[3];   /* one heap copy per source, freed after JNI_CreateJavaVM */
+    int buffer_count;
+    char *options[KANAMA_MAX_USER_JVM_OPTIONS];
+    int count;
+} KanamaUserJvmOptions;
+
+/* Splits [text] like HotSpot splits JAVA_TOOL_OPTIONS: whitespace separates
+ * options, and '...' or "..." quote a part of one (the quotes are removed), so
+ * -Dgame.title="My Game" and paths with spaces work. Every option must start
+ * with '-': anything else (a stray word, or a JNI pseudo-option such as
+ * exit/abort/vfprintf, which would replace the bootstrap's own hooks) is
+ * reported and skipped. [text] is copied; the options point into the copy. */
+static void add_user_jvm_options(KanamaUserJvmOptions *out, const char *source, const char *text) {
+    if (!text || !*text || out->buffer_count >= 3) {
+        return;
+    }
+    size_t len = strlen(text);
+    char *buf = (char *)malloc(len + 1);
+    if (!buf) {
+        fprintf(stderr, "[kanama] warning: out of memory reading JVM options from %s\n", source);
+        return;
+    }
+    memcpy(buf, text, len + 1);
+    out->buffers[out->buffer_count++] = buf;
+    fprintf(stderr, "[kanama] JVM options from %s: %s\n", source, text);
+
+    char *p = buf;   /* read cursor */
+    char *w = buf;   /* write cursor; never ahead of p, since unquoting only drops characters */
+    for (;;) {
+        while (*p && isspace((unsigned char)*p)) {
+            p++;
+        }
+        if (!*p) {
+            break;
+        }
+        char *start = w;
+        char quote = 0;
+        while (*p && (quote || !isspace((unsigned char)*p))) {
+            if (!quote && (*p == '"' || *p == '\'')) {
+                quote = *p++;
+                continue;
+            }
+            if (quote && *p == quote) {
+                quote = 0;
+                p++;
+                continue;
+            }
+            *w++ = *p++;
+        }
+        if (quote) {
+            fprintf(stderr, "[kanama] warning: unterminated %c quote in the JVM options from %s\n",
+                    quote, source);
+        }
+        if (*p) {
+            p++; /* the separator; consumed before the terminator below can overwrite it */
+        }
+        *w++ = '\0';
+        if (start[0] != '-') {
+            fprintf(stderr, "[kanama] warning: ignoring '%s' in the JVM options from %s "
+                            "(a JVM option starts with '-')\n", start, source);
+            continue;
+        }
+        if (out->count >= KANAMA_MAX_USER_JVM_OPTIONS) {
+            fprintf(stderr, "[kanama] warning: more than %d JVM options; '%s' and the rest from %s "
+                            "are ignored\n", KANAMA_MAX_USER_JVM_OPTIONS, start, source);
+            break;
+        }
+        out->options[out->count++] = start;
+    }
+}
+
+static void free_user_jvm_options(KanamaUserJvmOptions *options) {
+    for (int i = 0; i < options->buffer_count; i++) {
+        free(options->buffers[i]);
+    }
+    options->buffer_count = 0;
+    options->count = 0;
+}
+
+/* A project.godot string value ("..." with \" and \\ escapes) in place. */
+static char *godot_string_value(char *value) {
+    size_t len = strlen(value);
+    if (len < 2 || value[0] != '"' || value[len - 1] != '"') {
+        return value;
+    }
+    value[len - 1] = '\0';
+    char *r = value + 1;
+    char *w = value;
+    while (*r) {
+        if (*r == '\\' && r[1]) {
+            r++;
+            switch (*r) {
+                case 'n': *w++ = '\n'; break;
+                case 't': *w++ = '\t'; break;
+                default: *w++ = *r; break;
+            }
+            r++;
+            continue;
+        }
+        *w++ = *r++;
+    }
+    *w = '\0';
+    return value;
+}
+
+/* The whole of <directory of kanama.jar>/kanama-jvm-options.txt (lines starting
+ * with '#' left out), or NULL. The caller frees it. */
+static char *read_jvm_options_file(const char *jar_path, char *path_out, size_t path_size) {
+    char dir[2048];
+    snprintf(dir, sizeof dir, "%s", jar_path);
+    path_parent_in_place(dir);
+    snprintf(path_out, path_size, "%s%s%s", dir, PATH_SEP, KANAMA_JVM_OPTIONS_FILE);
+    FILE *f = fopen(path_out, "r");
+    if (!f) {
+        return NULL;
+    }
+    size_t cap = 4096, used = 0;
+    char *text = (char *)malloc(cap);
+    char line[4096];
+    while (text && fgets(line, sizeof line, f)) {
+        char *s = trim_ascii(line);
+        if (*s == '#') {
+            continue;
+        }
+        size_t n = strlen(s);
+        if (used + n + 2 > cap) {
+            while (used + n + 2 > cap) {
+                cap *= 2;
+            }
+            char *grown = (char *)realloc(text, cap);
+            if (!grown) {
+                free(text);
+                text = NULL;
+                break;
+            }
+            text = grown;
+        }
+        memcpy(text + used, s, n);
+        used += n;
+        text[used++] = ' ';
+        text[used] = '\0';
+    }
+    fclose(f);
+    if (text && used == 0) {
+        free(text);
+        return NULL;
+    }
+    return text;
+}
+
 static int start_jvm(const char *jar_path) {
 #ifdef __ANDROID__
     (void)jar_path;
@@ -1066,7 +1246,7 @@ static int start_jvm(const char *jar_path) {
 
     char jdwp_opt[256] = {0};
     char jdwp_address[128] = {0};
-    int n_opts = 3;
+    int jdwp_enabled = 0;
     const char *jdwp_port = getenv("KANAMA_JDWP_PORT");
     if (jdwp_port && *jdwp_port) {
         if (is_numeric_port_string(jdwp_port)) {
@@ -1095,28 +1275,52 @@ static int start_jvm(const char *jar_path) {
     if (jdwp_address[0] != '\0') {
         snprintf(jdwp_opt, sizeof jdwp_opt,
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%s", jdwp_address);
-        n_opts = 4;
+        jdwp_enabled = 1;
         fprintf(stderr, "[kanama] JDWP debug agent enabled at %s\n", jdwp_address);
     }
 
-    JavaVMOption options[4];
-    options[0].optionString = classpath_opt;
-    options[0].extraInfo = NULL;
-    options[1].optionString = (char *)"--enable-native-access=ALL-UNNAMED";
-    options[1].extraInfo = NULL;
+    /* HotSpot applies JNI options after JAVA_TOOL_OPTIONS, and a later option
+     * wins, so the user's options override JAVA_TOOL_OPTIONS. */
+    KanamaUserJvmOptions user = {0};
+    char options_file[2200];
+    char *file_options = read_jvm_options_file(jar_path, options_file, sizeof options_file);
+    add_user_jvm_options(&user, options_file, file_options);
+    free(file_options);
+    char project_options[4096];
+    if (read_setting_from_project(jar_path, "jvm/options", project_options, sizeof project_options)) {
+        add_user_jvm_options(&user, "project setting kanama/jvm/options",
+                             godot_string_value(project_options));
+    }
+    add_user_jvm_options(&user, "KANAMA_JVM_OPTIONS", getenv("KANAMA_JVM_OPTIONS"));
+
+    /* Kanama's fixed options (classpath, native access, the exit hook, JDWP),
+     * then the user's. Each is appended once; the array holds all of them. */
+    JavaVMOption options[4 + KANAMA_MAX_USER_JVM_OPTIONS];
+    int n = 0;
+    options[n].optionString = classpath_opt;
+    options[n++].extraInfo = NULL;
+    options[n].optionString = (char *)"--enable-native-access=ALL-UNNAMED";
+    options[n++].extraInfo = NULL;
     /* The JNI invocation API's "exit" hook; see kanama_jvm_exit_hook. */
-    options[2].optionString = (char *)"exit";
-    options[2].extraInfo = (void *)kanama_jvm_exit_hook;
-    options[3].optionString = jdwp_opt;
-    options[3].extraInfo = NULL;
+    options[n].optionString = (char *)"exit";
+    options[n++].extraInfo = (void *)kanama_jvm_exit_hook;
+    if (jdwp_enabled) {
+        options[n].optionString = jdwp_opt;
+        options[n++].extraInfo = NULL;
+    }
+    for (int i = 0; i < user.count; i++) {
+        options[n].optionString = user.options[i];
+        options[n++].extraInfo = NULL;
+    }
 
     JavaVMInitArgs vm_args;
     vm_args.version = JNI_VERSION_21;
-    vm_args.nOptions = n_opts;
+    vm_args.nOptions = n;
     vm_args.options = options;
     vm_args.ignoreUnrecognized = JNI_FALSE;
 
     jint rc = create_vm(&g_jvm, (void **)&g_env, &vm_args);
+    free_user_jvm_options(&user);
     if (rc != JNI_OK) {
         fprintf(stderr, "[kanama] error: JNI_CreateJavaVM returned %d\n", (int)rc);
         return -1;

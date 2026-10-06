@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -39,7 +40,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setCeilingDb(ceiling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, segment, ceiling)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCeilingDbBind, segment, ceiling)
     }
 
     /**
@@ -51,7 +52,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getCeilingDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCeilingDbBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPreGainDb(preGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPreGainDbBind, segment, preGain)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPreGainDbBind, segment, preGain)
     }
 
     /**
@@ -71,7 +72,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPreGainDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPreGainDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPreGainDbBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRelease(release: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setReleaseBind, segment, release)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setReleaseBind, segment, release)
     }
 
     /**
@@ -93,7 +94,7 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRelease(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReleaseBind, segment)
     }
 
     companion object {
@@ -106,35 +107,37 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHardLimiter? =
             if (handle.address() == 0L) null else AudioEffectHardLimiter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CEILING_DB_HASH = 373806689L
-        private val setCeilingDbBind by lazy {
+        @JvmField
+        val setCeilingDbBind =
             ObjectCalls.getMethodBind("AudioEffectHardLimiter", "set_ceiling_db", SET_CEILING_DB_HASH)
-        }
 
         private const val GET_CEILING_DB_HASH = 1740695150L
-        private val getCeilingDbBind by lazy {
+        @JvmField
+        val getCeilingDbBind =
             ObjectCalls.getMethodBind("AudioEffectHardLimiter", "get_ceiling_db", GET_CEILING_DB_HASH)
-        }
 
         private const val SET_PRE_GAIN_DB_HASH = 373806689L
-        private val setPreGainDbBind by lazy {
+        @JvmField
+        val setPreGainDbBind =
             ObjectCalls.getMethodBind("AudioEffectHardLimiter", "set_pre_gain_db", SET_PRE_GAIN_DB_HASH)
-        }
 
         private const val GET_PRE_GAIN_DB_HASH = 1740695150L
-        private val getPreGainDbBind by lazy {
+        @JvmField
+        val getPreGainDbBind =
             ObjectCalls.getMethodBind("AudioEffectHardLimiter", "get_pre_gain_db", GET_PRE_GAIN_DB_HASH)
-        }
 
         private const val SET_RELEASE_HASH = 373806689L
-        private val setReleaseBind by lazy {
+        @JvmField
+        val setReleaseBind =
             ObjectCalls.getMethodBind("AudioEffectHardLimiter", "set_release", SET_RELEASE_HASH)
-        }
 
         private const val GET_RELEASE_HASH = 1740695150L
-        private val getReleaseBind by lazy {
+        @JvmField
+        val getReleaseBind =
             ObjectCalls.getMethodBind("AudioEffectHardLimiter", "get_release", GET_RELEASE_HASH)
-        }
     }
 }

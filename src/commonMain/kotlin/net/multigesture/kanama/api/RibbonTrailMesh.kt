@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -57,7 +58,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSize(size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -68,7 +69,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeBind, segment)
     }
 
     /**
@@ -78,7 +79,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSections(sections: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionsBind, segment, sections)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSectionsBind, segment, sections)
     }
 
     /**
@@ -88,7 +89,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionsBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSectionLength(sectionLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSectionLengthBind, segment, sectionLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSectionLengthBind, segment, sectionLength)
     }
 
     /**
@@ -108,7 +109,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionLengthBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setSectionSegments(sectionSegments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSectionSegmentsBind, segment, sectionSegments)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSectionSegmentsBind, segment, sectionSegments)
     }
 
     /**
@@ -130,7 +131,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getSectionSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSectionSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSectionSegmentsBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -154,7 +155,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
     }
 
     /**
@@ -164,7 +165,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setShape(shape: RibbonTrailMesh.Shape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setShapeBind, segment, shape.value)
     }
 
     /**
@@ -174,7 +175,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getShape(): RibbonTrailMesh.Shape {
         checkOpen()
-        return RibbonTrailMesh.Shape(ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment))
+        return RibbonTrailMesh.Shape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShapeBind, segment))
     }
 
     /**
@@ -211,65 +212,67 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RibbonTrailMesh? =
             if (handle.address() == 0L) null else RibbonTrailMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 373806689L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 1740695150L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SECTIONS_HASH = 1286410249L
-        private val setSectionsBind by lazy {
+        @JvmField
+        val setSectionsBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "set_sections", SET_SECTIONS_HASH)
-        }
 
         private const val GET_SECTIONS_HASH = 3905245786L
-        private val getSectionsBind by lazy {
+        @JvmField
+        val getSectionsBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "get_sections", GET_SECTIONS_HASH)
-        }
 
         private const val SET_SECTION_LENGTH_HASH = 373806689L
-        private val setSectionLengthBind by lazy {
+        @JvmField
+        val setSectionLengthBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "set_section_length", SET_SECTION_LENGTH_HASH)
-        }
 
         private const val GET_SECTION_LENGTH_HASH = 1740695150L
-        private val getSectionLengthBind by lazy {
+        @JvmField
+        val getSectionLengthBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "get_section_length", GET_SECTION_LENGTH_HASH)
-        }
 
         private const val SET_SECTION_SEGMENTS_HASH = 1286410249L
-        private val setSectionSegmentsBind by lazy {
+        @JvmField
+        val setSectionSegmentsBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "set_section_segments", SET_SECTION_SEGMENTS_HASH)
-        }
 
         private const val GET_SECTION_SEGMENTS_HASH = 3905245786L
-        private val getSectionSegmentsBind by lazy {
+        @JvmField
+        val getSectionSegmentsBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "get_section_segments", GET_SECTION_SEGMENTS_HASH)
-        }
 
         private const val SET_CURVE_HASH = 270443179L
-        private val setCurveBind by lazy {
+        @JvmField
+        val setCurveBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "set_curve", SET_CURVE_HASH)
-        }
 
         private const val GET_CURVE_HASH = 2460114913L
-        private val getCurveBind by lazy {
+        @JvmField
+        val getCurveBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "get_curve", GET_CURVE_HASH)
-        }
 
         private const val SET_SHAPE_HASH = 1684440262L
-        private val setShapeBind by lazy {
+        @JvmField
+        val setShapeBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "set_shape", SET_SHAPE_HASH)
-        }
 
         private const val GET_SHAPE_HASH = 1317484155L
-        private val getShapeBind by lazy {
+        @JvmField
+        val getShapeBind =
             ObjectCalls.getMethodBind("RibbonTrailMesh", "get_shape", GET_SHAPE_HASH)
-        }
     }
 }

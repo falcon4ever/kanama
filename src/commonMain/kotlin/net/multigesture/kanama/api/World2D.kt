@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -35,7 +36,7 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCanvas(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCanvasBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpace(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpaceBind, segment)
     }
 
     /**
@@ -68,7 +69,7 @@ class World2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState2D? {
         checkOpen()
-        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, segment))
+        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDirectSpaceStateBind, segment))
     }
 
     companion object {
@@ -81,25 +82,27 @@ class World2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): World2D? =
             if (handle.address() == 0L) null else World2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CANVAS_HASH = 2944877500L
-        private val getCanvasBind by lazy {
+        @JvmField
+        val getCanvasBind =
             ObjectCalls.getMethodBind("World2D", "get_canvas", GET_CANVAS_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("World2D", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_SPACE_HASH = 2944877500L
-        private val getSpaceBind by lazy {
+        @JvmField
+        val getSpaceBind =
             ObjectCalls.getMethodBind("World2D", "get_space", GET_SPACE_HASH)
-        }
 
         private const val GET_DIRECT_SPACE_STATE_HASH = 2506717822L
-        private val getDirectSpaceStateBind by lazy {
+        @JvmField
+        val getDirectSpaceStateBind =
             ObjectCalls.getMethodBind("World2D", "get_direct_space_state", GET_DIRECT_SPACE_STATE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,17 +12,17 @@ import net.multigesture.kanama.types.RID
 class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructureBase(handle) {
     fun addPersistenceContext(persistenceContext: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(addPersistenceContextBind, segment, persistenceContext)
+        ObjectCalls.ptrcallWithRIDArg(Binds.addPersistenceContextBind, segment, persistenceContext)
     }
 
     fun removePersistenceContext(persistenceContext: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(removePersistenceContextBind, segment, persistenceContext)
+        ObjectCalls.ptrcallWithRIDArg(Binds.removePersistenceContextBind, segment, persistenceContext)
     }
 
     fun getPersistenceContexts(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getPersistenceContextsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getPersistenceContextsBind, segment)
     }
 
     companion object {
@@ -34,20 +35,22 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
             if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_PERSISTENCE_CONTEXT_HASH = 2722037293L
-        private val addPersistenceContextBind by lazy {
+        @JvmField
+        val addPersistenceContextBind =
             ObjectCalls.getMethodBind("OpenXRSpatialContextPersistenceConfig", "add_persistence_context", ADD_PERSISTENCE_CONTEXT_HASH)
-        }
 
         private const val REMOVE_PERSISTENCE_CONTEXT_HASH = 2722037293L
-        private val removePersistenceContextBind by lazy {
+        @JvmField
+        val removePersistenceContextBind =
             ObjectCalls.getMethodBind("OpenXRSpatialContextPersistenceConfig", "remove_persistence_context", REMOVE_PERSISTENCE_CONTEXT_HASH)
-        }
 
         private const val GET_PERSISTENCE_CONTEXTS_HASH = 3995934104L
-        private val getPersistenceContextsBind by lazy {
+        @JvmField
+        val getPersistenceContextsBind =
             ObjectCalls.getMethodBind("OpenXRSpatialContextPersistenceConfig", "get_persistence_contexts", GET_PERSISTENCE_CONTEXTS_HASH)
-        }
     }
 }

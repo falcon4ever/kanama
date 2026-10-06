@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     /**
@@ -29,7 +30,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNormal(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getNormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNormalBind, segment)
     }
 
     /**
@@ -39,7 +40,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTravel(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTravelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTravelBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemainder(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRemainderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRemainderBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAngle(upDirection: Vector2): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleBind, segment, upDirection)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getAngleBind, segment, upDirection)
     }
 
     /**
@@ -70,7 +71,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalShape(): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLocalShapeBind, segment))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLocalShapeBind, segment))
     }
 
     /**
@@ -90,7 +91,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollider(): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, segment))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColliderBind, segment))
     }
 
     /**
@@ -101,7 +102,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getColliderIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getColliderIdBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getColliderRidBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShape(): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderShapeBind, segment))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColliderShapeBind, segment))
     }
 
     /**
@@ -131,7 +132,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShapeIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getColliderShapeIndexBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getColliderVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getColliderVelocityBind, segment)
     }
 
     companion object {
@@ -154,70 +155,72 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): KinematicCollision2D? =
             if (handle.address() == 0L) null else KinematicCollision2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_position", GET_POSITION_HASH)
-        }
 
         private const val GET_NORMAL_HASH = 3341600327L
-        private val getNormalBind by lazy {
+        @JvmField
+        val getNormalBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_normal", GET_NORMAL_HASH)
-        }
 
         private const val GET_TRAVEL_HASH = 3341600327L
-        private val getTravelBind by lazy {
+        @JvmField
+        val getTravelBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_travel", GET_TRAVEL_HASH)
-        }
 
         private const val GET_REMAINDER_HASH = 3341600327L
-        private val getRemainderBind by lazy {
+        @JvmField
+        val getRemainderBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_remainder", GET_REMAINDER_HASH)
-        }
 
         private const val GET_ANGLE_HASH = 2841063350L
-        private val getAngleBind by lazy {
+        @JvmField
+        val getAngleBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_angle", GET_ANGLE_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 1740695150L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val GET_LOCAL_SHAPE_HASH = 1981248198L
-        private val getLocalShapeBind by lazy {
+        @JvmField
+        val getLocalShapeBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_local_shape", GET_LOCAL_SHAPE_HASH)
-        }
 
         private const val GET_COLLIDER_HASH = 1981248198L
-        private val getColliderBind by lazy {
+        @JvmField
+        val getColliderBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_collider", GET_COLLIDER_HASH)
-        }
 
         private const val GET_COLLIDER_ID_HASH = 3905245786L
-        private val getColliderIdBind by lazy {
+        @JvmField
+        val getColliderIdBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_collider_id", GET_COLLIDER_ID_HASH)
-        }
 
         private const val GET_COLLIDER_RID_HASH = 2944877500L
-        private val getColliderRidBind by lazy {
+        @JvmField
+        val getColliderRidBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_collider_rid", GET_COLLIDER_RID_HASH)
-        }
 
         private const val GET_COLLIDER_SHAPE_HASH = 1981248198L
-        private val getColliderShapeBind by lazy {
+        @JvmField
+        val getColliderShapeBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_collider_shape", GET_COLLIDER_SHAPE_HASH)
-        }
 
         private const val GET_COLLIDER_SHAPE_INDEX_HASH = 3905245786L
-        private val getColliderShapeIndexBind by lazy {
+        @JvmField
+        val getColliderShapeIndexBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_collider_shape_index", GET_COLLIDER_SHAPE_INDEX_HASH)
-        }
 
         private const val GET_COLLIDER_VELOCITY_HASH = 3341600327L
-        private val getColliderVelocityBind by lazy {
+        @JvmField
+        val getColliderVelocityBind =
             ObjectCalls.getMethodBind("KinematicCollision2D", "get_collider_velocity", GET_COLLIDER_VELOCITY_HASH)
-        }
     }
 }

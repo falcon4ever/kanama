@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parse(expression: String, inputNames: List<String>): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, segment, expression, inputNames))
+        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(Binds.parseBind, segment, expression, inputNames))
     }
 
     /**
@@ -32,7 +33,7 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun execute(inputs: List<Any?> = emptyList(), baseInstance: GodotObject, showError: Boolean = true, constCallsOnly: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(executeBind, segment, inputs, baseInstance.segment, showError, constCallsOnly)
+        return ObjectCalls.ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(Binds.executeBind, segment, inputs, baseInstance.segment, showError, constCallsOnly)
     }
 
     /**
@@ -42,7 +43,7 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasExecuteFailed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasExecuteFailedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasExecuteFailedBind, segment)
     }
 
     /**
@@ -52,7 +53,7 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getErrorText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getErrorTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getErrorTextBind, segment)
     }
 
     companion object {
@@ -65,25 +66,27 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Expression? =
             if (handle.address() == 0L) null else Expression(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PARSE_HASH = 3069722906L
-        private val parseBind by lazy {
+        @JvmField
+        val parseBind =
             ObjectCalls.getMethodBind("Expression", "parse", PARSE_HASH)
-        }
 
         private const val EXECUTE_HASH = 3712471238L
-        private val executeBind by lazy {
+        @JvmField
+        val executeBind =
             ObjectCalls.getMethodBind("Expression", "execute", EXECUTE_HASH)
-        }
 
         private const val HAS_EXECUTE_FAILED_HASH = 36873697L
-        private val hasExecuteFailedBind by lazy {
+        @JvmField
+        val hasExecuteFailedBind =
             ObjectCalls.getMethodBind("Expression", "has_execute_failed", HAS_EXECUTE_FAILED_HASH)
-        }
 
         private const val GET_ERROR_TEXT_HASH = 201670096L
-        private val getErrorTextBind by lazy {
+        @JvmField
+        val getErrorTextBind =
             ObjectCalls.getMethodBind("Expression", "get_error_text", GET_ERROR_TEXT_HASH)
-        }
     }
 }

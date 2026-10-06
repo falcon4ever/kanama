@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -30,47 +31,47 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
 
     fun setLocalizedName(localizedName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocalizedNameBind, segment, localizedName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLocalizedNameBind, segment, localizedName)
     }
 
     fun getLocalizedName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
     }
 
     fun setPriority(priority: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
     }
 
     fun getPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
     }
 
     fun getActionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getActionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getActionCountBind, segment)
     }
 
     fun setActions(actions: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setActionsBind, segment, actions)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setActionsBind, segment, actions)
     }
 
     fun getActions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getActionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionsBind, segment)
     }
 
     fun addAction(action: OpenXRAction?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun removeAction(action: OpenXRAction?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -83,50 +84,52 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRActionSet? =
             if (handle.address() == 0L) null else OpenXRActionSet(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LOCALIZED_NAME_HASH = 83702148L
-        private val setLocalizedNameBind by lazy {
+        @JvmField
+        val setLocalizedNameBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "set_localized_name", SET_LOCALIZED_NAME_HASH)
-        }
 
         private const val GET_LOCALIZED_NAME_HASH = 201670096L
-        private val getLocalizedNameBind by lazy {
+        @JvmField
+        val getLocalizedNameBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "get_localized_name", GET_LOCALIZED_NAME_HASH)
-        }
 
         private const val SET_PRIORITY_HASH = 1286410249L
-        private val setPriorityBind by lazy {
+        @JvmField
+        val setPriorityBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "set_priority", SET_PRIORITY_HASH)
-        }
 
         private const val GET_PRIORITY_HASH = 3905245786L
-        private val getPriorityBind by lazy {
+        @JvmField
+        val getPriorityBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "get_priority", GET_PRIORITY_HASH)
-        }
 
         private const val GET_ACTION_COUNT_HASH = 3905245786L
-        private val getActionCountBind by lazy {
+        @JvmField
+        val getActionCountBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "get_action_count", GET_ACTION_COUNT_HASH)
-        }
 
         private const val SET_ACTIONS_HASH = 381264803L
-        private val setActionsBind by lazy {
+        @JvmField
+        val setActionsBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "set_actions", SET_ACTIONS_HASH)
-        }
 
         private const val GET_ACTIONS_HASH = 3995934104L
-        private val getActionsBind by lazy {
+        @JvmField
+        val getActionsBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "get_actions", GET_ACTIONS_HASH)
-        }
 
         private const val ADD_ACTION_HASH = 349361333L
-        private val addActionBind by lazy {
+        @JvmField
+        val addActionBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "add_action", ADD_ACTION_HASH)
-        }
 
         private const val REMOVE_ACTION_HASH = 349361333L
-        private val removeActionBind by lazy {
+        @JvmField
+        val removeActionBind =
             ObjectCalls.getMethodBind("OpenXRActionSet", "remove_action", REMOVE_ACTION_HASH)
-        }
     }
 }

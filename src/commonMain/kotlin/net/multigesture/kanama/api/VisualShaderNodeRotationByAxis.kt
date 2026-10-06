@@ -20,7 +20,5 @@ class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(han
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRotationByAxis? =
             if (handle.address() == 0L) null else VisualShaderNodeRotationByAxis(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

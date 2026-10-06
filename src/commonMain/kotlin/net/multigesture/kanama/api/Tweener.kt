@@ -32,7 +32,5 @@ open class Tweener(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Tweener? =
             if (handle.address() == 0L) null else Tweener(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

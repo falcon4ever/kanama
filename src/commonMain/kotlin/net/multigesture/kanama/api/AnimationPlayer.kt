@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -87,7 +88,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.animation_set_next
      */
     fun animationSetNext(animationFrom: String, animationTo: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(animationSetNextBind, segment, animationFrom, animationTo)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.animationSetNextBind, segment, animationFrom, animationTo)
     }
 
     /**
@@ -96,7 +97,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.animation_get_next
      */
     fun animationGetNext(animationFrom: String): String {
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(animationGetNextBind, segment, animationFrom)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.animationGetNextBind, segment, animationFrom)
     }
 
     /**
@@ -105,7 +106,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_blend_time
      */
     fun setBlendTime(animationFrom: String, animationTo: String, sec: Double) {
-        ObjectCalls.ptrcallWithTwoStringNameAndDoubleArg(setBlendTimeBind, segment, animationFrom, animationTo, sec)
+        ObjectCalls.ptrcallWithTwoStringNameAndDoubleArg(Binds.setBlendTimeBind, segment, animationFrom, animationTo, sec)
     }
 
     /**
@@ -114,7 +115,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_blend_time
      */
     fun getBlendTime(animationFrom: String, animationTo: String): Double {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(getBlendTimeBind, segment, animationFrom, animationTo)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(Binds.getBlendTimeBind, segment, animationFrom, animationTo)
     }
 
     /**
@@ -123,7 +124,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_default_blend_time
      */
     fun setDefaultBlendTime(sec: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultBlendTimeBind, segment, sec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDefaultBlendTimeBind, segment, sec)
     }
 
     /**
@@ -132,7 +133,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_default_blend_time
      */
     fun getDefaultBlendTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBlendTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultBlendTimeBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture
      */
     fun setAutoCapture(autoCapture: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoCaptureBind, segment, autoCapture)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoCaptureBind, segment, autoCapture)
     }
 
     /**
@@ -156,7 +157,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_auto_capture
      */
     fun isAutoCapture(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoCaptureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoCaptureBind, segment)
     }
 
     /**
@@ -167,7 +168,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_duration
      */
     fun setAutoCaptureDuration(autoCaptureDuration: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAutoCaptureDurationBind, segment, autoCaptureDuration)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoCaptureDurationBind, segment, autoCaptureDuration)
     }
 
     /**
@@ -178,7 +179,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_duration
      */
     fun getAutoCaptureDuration(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoCaptureDurationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoCaptureDurationBind, segment)
     }
 
     /**
@@ -187,7 +188,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_transition_type
      */
     fun setAutoCaptureTransitionType(autoCaptureTransitionType: Tween.TransitionType) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, segment, autoCaptureTransitionType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutoCaptureTransitionTypeBind, segment, autoCaptureTransitionType.value)
     }
 
     /**
@@ -196,7 +197,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_transition_type
      */
     fun getAutoCaptureTransitionType(): Tween.TransitionType {
-        return Tween.TransitionType(ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, segment))
+        return Tween.TransitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutoCaptureTransitionTypeBind, segment))
     }
 
     /**
@@ -205,7 +206,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_ease_type
      */
     fun setAutoCaptureEaseType(autoCaptureEaseType: Tween.EaseType) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, segment, autoCaptureEaseType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutoCaptureEaseTypeBind, segment, autoCaptureEaseType.value)
     }
 
     /**
@@ -214,7 +215,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_ease_type
      */
     fun getAutoCaptureEaseType(): Tween.EaseType {
-        return Tween.EaseType(ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, segment))
+        return Tween.EaseType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutoCaptureEaseTypeBind, segment))
     }
 
     /**
@@ -232,7 +233,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play
      */
     fun play(name: String = "", customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(playBind, segment, name, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameDoubleDoubleBoolArgs(Binds.playBind, segment, name, customBlend, customSpeed, fromEnd)
     }
 
     /**
@@ -244,7 +245,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section_with_markers
      */
     fun playSectionWithMarkers(name: String = "", startMarker: String = "", endMarker: String = "", customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(playSectionWithMarkersBind, segment, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(Binds.playSectionWithMarkersBind, segment, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
     }
 
     /**
@@ -257,7 +258,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section
      */
     fun playSection(name: String = "", startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(playSectionBind, segment, name, startTime, endTime, customBlend, customSpeed, fromEnd)
+        ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(Binds.playSectionBind, segment, name, startTime, endTime, customBlend, customSpeed, fromEnd)
     }
 
     /**
@@ -267,7 +268,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_backwards
      */
     fun playBackwards(name: String = "", customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(playBackwardsBind, segment, name, customBlend)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(Binds.playBackwardsBind, segment, name, customBlend)
     }
 
     /**
@@ -278,7 +279,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section_with_markers_backwards
      */
     fun playSectionWithMarkersBackwards(name: String = "", startMarker: String = "", endMarker: String = "", customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(playSectionWithMarkersBackwardsBind, segment, name, startMarker, endMarker, customBlend)
+        ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(Binds.playSectionWithMarkersBackwardsBind, segment, name, startMarker, endMarker, customBlend)
     }
 
     /**
@@ -289,7 +290,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_section_backwards
      */
     fun playSectionBackwards(name: String = "", startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0) {
-        ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(playSectionBackwardsBind, segment, name, startTime, endTime, customBlend)
+        ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(Binds.playSectionBackwardsBind, segment, name, startTime, endTime, customBlend)
     }
 
     /**
@@ -299,7 +300,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.play_with_capture
      */
     fun playWithCapture(name: String = "", duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Tween.TransitionType = Tween.TransitionType.LINEAR, easeType: Tween.EaseType = Tween.EaseType.IN) {
-        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType.value, easeType.value)
+        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(Binds.playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType.value, easeType.value)
     }
 
     /**
@@ -310,7 +311,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pauseBind, segment)
     }
 
     /**
@@ -322,7 +323,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.stop
      */
     fun stop(keepState: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(stopBind, segment, keepState)
+        ObjectCalls.ptrcallWithBoolArg(Binds.stopBind, segment, keepState)
     }
 
     /**
@@ -332,7 +333,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
     }
 
     /**
@@ -343,7 +344,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_animation_active
      */
     fun isAnimationActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAnimationActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAnimationActiveBind, segment)
     }
 
     /**
@@ -357,7 +358,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_current_animation
      */
     fun setCurrentAnimation(animation: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setCurrentAnimationBind, segment, animation)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setCurrentAnimationBind, segment, animation)
     }
 
     /**
@@ -371,7 +372,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_current_animation
      */
     fun getCurrentAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentAnimationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getCurrentAnimationBind, segment)
     }
 
     /**
@@ -382,7 +383,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_assigned_animation
      */
     fun setAssignedAnimation(animation: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAssignedAnimationBind, segment, animation)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAssignedAnimationBind, segment, animation)
     }
 
     /**
@@ -393,7 +394,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_assigned_animation
      */
     fun getAssignedAnimation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAssignedAnimationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAssignedAnimationBind, segment)
     }
 
     /**
@@ -404,7 +405,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.queue
      */
     fun queue(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(queueBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.queueBind, segment, name)
     }
 
     /**
@@ -413,7 +414,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_queue
      */
     fun getQueue(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getQueueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getQueueBind, segment)
     }
 
     /**
@@ -422,7 +423,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.clear_queue
      */
     fun clearQueue() {
-        ObjectCalls.ptrcallNoArgs(clearQueueBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearQueueBind, segment)
     }
 
     /**
@@ -434,7 +435,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_speed_scale
      */
     fun setSpeedScale(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, speed)
     }
 
     /**
@@ -446,7 +447,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -457,7 +458,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_playing_speed
      */
     fun getPlayingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPlayingSpeedBind, segment)
     }
 
     /**
@@ -466,7 +467,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_autoplay
      */
     fun setAutoplay(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setAutoplayBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAutoplayBind, segment, name)
     }
 
     /**
@@ -475,7 +476,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_autoplay
      */
     fun getAutoplay(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAutoplayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAutoplayBind, segment)
     }
 
     /**
@@ -488,7 +489,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_movie_quit_on_finish_enabled
      */
     fun setMovieQuitOnFinishEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMovieQuitOnFinishEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMovieQuitOnFinishEnabledBind, segment, enabled)
     }
 
     /**
@@ -501,7 +502,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.is_movie_quit_on_finish_enabled
      */
     fun isMovieQuitOnFinishEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMovieQuitOnFinishEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMovieQuitOnFinishEnabledBind, segment)
     }
 
     /**
@@ -510,7 +511,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_current_animation_position
      */
     fun getCurrentAnimationPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentAnimationPositionBind, segment)
     }
 
     /**
@@ -519,7 +520,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_current_animation_length
      */
     fun getCurrentAnimationLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentAnimationLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentAnimationLengthBind, segment)
     }
 
     /**
@@ -531,7 +532,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_section_with_markers
      */
     fun setSectionWithMarkers(startMarker: String = "", endMarker: String = "") {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(setSectionWithMarkersBind, segment, startMarker, endMarker)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.setSectionWithMarkersBind, segment, startMarker, endMarker)
     }
 
     /**
@@ -541,7 +542,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_section
      */
     fun setSection(startTime: Double = -1.0, endTime: Double = -1.0) {
-        ObjectCalls.ptrcallWithTwoDoubleArgs(setSectionBind, segment, startTime, endTime)
+        ObjectCalls.ptrcallWithTwoDoubleArgs(Binds.setSectionBind, segment, startTime, endTime)
     }
 
     /**
@@ -550,7 +551,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.reset_section
      */
     fun resetSection() {
-        ObjectCalls.ptrcallNoArgs(resetSectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetSectionBind, segment)
     }
 
     /**
@@ -559,7 +560,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_section_start_time
      */
     fun getSectionStartTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionStartTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionStartTimeBind, segment)
     }
 
     /**
@@ -568,7 +569,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_section_end_time
      */
     fun getSectionEndTime(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSectionEndTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSectionEndTimeBind, segment)
     }
 
     /**
@@ -577,7 +578,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.has_section
      */
     fun hasSection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasSectionBind, segment)
     }
 
     /**
@@ -591,7 +592,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.seek
      */
     fun seek(seconds: Double, update: Boolean = false, updateOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndTwoBoolArgs(seekBind, segment, seconds, update, updateOnly)
+        ObjectCalls.ptrcallWithDoubleAndTwoBoolArgs(Binds.seekBind, segment, seconds, update, updateOnly)
     }
 
     /**
@@ -600,7 +601,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_process_callback
      */
     fun setProcessCallback(mode: AnimationPlayer.AnimationProcessCallback) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessCallbackBind, segment, mode.value)
     }
 
     /**
@@ -609,7 +610,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_process_callback
      */
     fun getProcessCallback(): AnimationPlayer.AnimationProcessCallback {
-        return AnimationPlayer.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
+        return AnimationPlayer.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessCallbackBind, segment))
     }
 
     /**
@@ -618,7 +619,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_method_call_mode
      */
     fun setMethodCallMode(mode: AnimationPlayer.AnimationMethodCallMode) {
-        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMethodCallModeBind, segment, mode.value)
     }
 
     /**
@@ -627,7 +628,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_method_call_mode
      */
     fun getMethodCallMode(): AnimationPlayer.AnimationMethodCallMode {
-        return AnimationPlayer.AnimationMethodCallMode(ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, segment))
+        return AnimationPlayer.AnimationMethodCallMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMethodCallModeBind, segment))
     }
 
     /**
@@ -636,7 +637,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.set_root
      */
     fun setRoot(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setRootBind, segment, path)
     }
 
     /**
@@ -645,7 +646,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationPlayer.get_root
      */
     fun getRoot(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootBind, segment)
     }
 
     /** Signal `current_animation_changed(anim_name: StringName)`; see [TypedSignal]. */
@@ -701,275 +702,277 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
 
         internal fun wrap(handle: RawSegment): AnimationPlayer? =
             if (handle.address() == 0L) null else AnimationPlayer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ANIMATION_SET_NEXT_HASH = 3740211285L
-        private val animationSetNextBind by lazy {
+        @JvmField
+        val animationSetNextBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "animation_set_next", ANIMATION_SET_NEXT_HASH)
-        }
 
         private const val ANIMATION_GET_NEXT_HASH = 1965194235L
-        private val animationGetNextBind by lazy {
+        @JvmField
+        val animationGetNextBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "animation_get_next", ANIMATION_GET_NEXT_HASH)
-        }
 
         private const val SET_BLEND_TIME_HASH = 3231131886L
-        private val setBlendTimeBind by lazy {
+        @JvmField
+        val setBlendTimeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_blend_time", SET_BLEND_TIME_HASH)
-        }
 
         private const val GET_BLEND_TIME_HASH = 1958752504L
-        private val getBlendTimeBind by lazy {
+        @JvmField
+        val getBlendTimeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_blend_time", GET_BLEND_TIME_HASH)
-        }
 
         private const val SET_DEFAULT_BLEND_TIME_HASH = 373806689L
-        private val setDefaultBlendTimeBind by lazy {
+        @JvmField
+        val setDefaultBlendTimeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_default_blend_time", SET_DEFAULT_BLEND_TIME_HASH)
-        }
 
         private const val GET_DEFAULT_BLEND_TIME_HASH = 1740695150L
-        private val getDefaultBlendTimeBind by lazy {
+        @JvmField
+        val getDefaultBlendTimeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_default_blend_time", GET_DEFAULT_BLEND_TIME_HASH)
-        }
 
         private const val SET_AUTO_CAPTURE_HASH = 2586408642L
-        private val setAutoCaptureBind by lazy {
+        @JvmField
+        val setAutoCaptureBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_auto_capture", SET_AUTO_CAPTURE_HASH)
-        }
 
         private const val IS_AUTO_CAPTURE_HASH = 36873697L
-        private val isAutoCaptureBind by lazy {
+        @JvmField
+        val isAutoCaptureBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "is_auto_capture", IS_AUTO_CAPTURE_HASH)
-        }
 
         private const val SET_AUTO_CAPTURE_DURATION_HASH = 373806689L
-        private val setAutoCaptureDurationBind by lazy {
+        @JvmField
+        val setAutoCaptureDurationBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_auto_capture_duration", SET_AUTO_CAPTURE_DURATION_HASH)
-        }
 
         private const val GET_AUTO_CAPTURE_DURATION_HASH = 1740695150L
-        private val getAutoCaptureDurationBind by lazy {
+        @JvmField
+        val getAutoCaptureDurationBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_auto_capture_duration", GET_AUTO_CAPTURE_DURATION_HASH)
-        }
 
         private const val SET_AUTO_CAPTURE_TRANSITION_TYPE_HASH = 1058637742L
-        private val setAutoCaptureTransitionTypeBind by lazy {
+        @JvmField
+        val setAutoCaptureTransitionTypeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_auto_capture_transition_type", SET_AUTO_CAPTURE_TRANSITION_TYPE_HASH)
-        }
 
         private const val GET_AUTO_CAPTURE_TRANSITION_TYPE_HASH = 3842314528L
-        private val getAutoCaptureTransitionTypeBind by lazy {
+        @JvmField
+        val getAutoCaptureTransitionTypeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_auto_capture_transition_type", GET_AUTO_CAPTURE_TRANSITION_TYPE_HASH)
-        }
 
         private const val SET_AUTO_CAPTURE_EASE_TYPE_HASH = 1208105857L
-        private val setAutoCaptureEaseTypeBind by lazy {
+        @JvmField
+        val setAutoCaptureEaseTypeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_auto_capture_ease_type", SET_AUTO_CAPTURE_EASE_TYPE_HASH)
-        }
 
         private const val GET_AUTO_CAPTURE_EASE_TYPE_HASH = 631880200L
-        private val getAutoCaptureEaseTypeBind by lazy {
+        @JvmField
+        val getAutoCaptureEaseTypeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_auto_capture_ease_type", GET_AUTO_CAPTURE_EASE_TYPE_HASH)
-        }
 
         private const val PLAY_HASH = 3118260607L
-        private val playBind by lazy {
+        @JvmField
+        val playBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play", PLAY_HASH)
-        }
 
         private const val PLAY_SECTION_WITH_MARKERS_HASH = 1421431412L
-        private val playSectionWithMarkersBind by lazy {
+        @JvmField
+        val playSectionWithMarkersBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play_section_with_markers", PLAY_SECTION_WITH_MARKERS_HASH)
-        }
 
         private const val PLAY_SECTION_HASH = 284774635L
-        private val playSectionBind by lazy {
+        @JvmField
+        val playSectionBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play_section", PLAY_SECTION_HASH)
-        }
 
         private const val PLAY_BACKWARDS_HASH = 2787282401L
-        private val playBackwardsBind by lazy {
+        @JvmField
+        val playBackwardsBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play_backwards", PLAY_BACKWARDS_HASH)
-        }
 
         private const val PLAY_SECTION_WITH_MARKERS_BACKWARDS_HASH = 910195100L
-        private val playSectionWithMarkersBackwardsBind by lazy {
+        @JvmField
+        val playSectionWithMarkersBackwardsBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play_section_with_markers_backwards", PLAY_SECTION_WITH_MARKERS_BACKWARDS_HASH)
-        }
 
         private const val PLAY_SECTION_BACKWARDS_HASH = 831955981L
-        private val playSectionBackwardsBind by lazy {
+        @JvmField
+        val playSectionBackwardsBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play_section_backwards", PLAY_SECTION_BACKWARDS_HASH)
-        }
 
         private const val PLAY_WITH_CAPTURE_HASH = 1572969103L
-        private val playWithCaptureBind by lazy {
+        @JvmField
+        val playWithCaptureBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "play_with_capture", PLAY_WITH_CAPTURE_HASH)
-        }
 
         private const val PAUSE_HASH = 3218959716L
-        private val pauseBind by lazy {
+        @JvmField
+        val pauseBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "pause", PAUSE_HASH)
-        }
 
         private const val STOP_HASH = 107499316L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "stop", STOP_HASH)
-        }
 
         private const val IS_PLAYING_HASH = 36873697L
-        private val isPlayingBind by lazy {
+        @JvmField
+        val isPlayingBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "is_playing", IS_PLAYING_HASH)
-        }
 
         private const val IS_ANIMATION_ACTIVE_HASH = 36873697L
-        private val isAnimationActiveBind by lazy {
+        @JvmField
+        val isAnimationActiveBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "is_animation_active", IS_ANIMATION_ACTIVE_HASH)
-        }
 
         private const val SET_CURRENT_ANIMATION_HASH = 3304788590L
-        private val setCurrentAnimationBind by lazy {
+        @JvmField
+        val setCurrentAnimationBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_current_animation", SET_CURRENT_ANIMATION_HASH)
-        }
 
         private const val GET_CURRENT_ANIMATION_HASH = 2002593661L
-        private val getCurrentAnimationBind by lazy {
+        @JvmField
+        val getCurrentAnimationBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_current_animation", GET_CURRENT_ANIMATION_HASH)
-        }
 
         private const val SET_ASSIGNED_ANIMATION_HASH = 3304788590L
-        private val setAssignedAnimationBind by lazy {
+        @JvmField
+        val setAssignedAnimationBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_assigned_animation", SET_ASSIGNED_ANIMATION_HASH)
-        }
 
         private const val GET_ASSIGNED_ANIMATION_HASH = 2002593661L
-        private val getAssignedAnimationBind by lazy {
+        @JvmField
+        val getAssignedAnimationBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_assigned_animation", GET_ASSIGNED_ANIMATION_HASH)
-        }
 
         private const val QUEUE_HASH = 3304788590L
-        private val queueBind by lazy {
+        @JvmField
+        val queueBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "queue", QUEUE_HASH)
-        }
 
         private const val GET_QUEUE_HASH = 2915620761L
-        private val getQueueBind by lazy {
+        @JvmField
+        val getQueueBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_queue", GET_QUEUE_HASH)
-        }
 
         private const val CLEAR_QUEUE_HASH = 3218959716L
-        private val clearQueueBind by lazy {
+        @JvmField
+        val clearQueueBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "clear_queue", CLEAR_QUEUE_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_PLAYING_SPEED_HASH = 1740695150L
-        private val getPlayingSpeedBind by lazy {
+        @JvmField
+        val getPlayingSpeedBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_playing_speed", GET_PLAYING_SPEED_HASH)
-        }
 
         private const val SET_AUTOPLAY_HASH = 3304788590L
-        private val setAutoplayBind by lazy {
+        @JvmField
+        val setAutoplayBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_autoplay", SET_AUTOPLAY_HASH)
-        }
 
         private const val GET_AUTOPLAY_HASH = 2002593661L
-        private val getAutoplayBind by lazy {
+        @JvmField
+        val getAutoplayBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_autoplay", GET_AUTOPLAY_HASH)
-        }
 
         private const val SET_MOVIE_QUIT_ON_FINISH_ENABLED_HASH = 2586408642L
-        private val setMovieQuitOnFinishEnabledBind by lazy {
+        @JvmField
+        val setMovieQuitOnFinishEnabledBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_movie_quit_on_finish_enabled", SET_MOVIE_QUIT_ON_FINISH_ENABLED_HASH)
-        }
 
         private const val IS_MOVIE_QUIT_ON_FINISH_ENABLED_HASH = 36873697L
-        private val isMovieQuitOnFinishEnabledBind by lazy {
+        @JvmField
+        val isMovieQuitOnFinishEnabledBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "is_movie_quit_on_finish_enabled", IS_MOVIE_QUIT_ON_FINISH_ENABLED_HASH)
-        }
 
         private const val GET_CURRENT_ANIMATION_POSITION_HASH = 1740695150L
-        private val getCurrentAnimationPositionBind by lazy {
+        @JvmField
+        val getCurrentAnimationPositionBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_current_animation_position", GET_CURRENT_ANIMATION_POSITION_HASH)
-        }
 
         private const val GET_CURRENT_ANIMATION_LENGTH_HASH = 1740695150L
-        private val getCurrentAnimationLengthBind by lazy {
+        @JvmField
+        val getCurrentAnimationLengthBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_current_animation_length", GET_CURRENT_ANIMATION_LENGTH_HASH)
-        }
 
         private const val SET_SECTION_WITH_MARKERS_HASH = 794792241L
-        private val setSectionWithMarkersBind by lazy {
+        @JvmField
+        val setSectionWithMarkersBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_section_with_markers", SET_SECTION_WITH_MARKERS_HASH)
-        }
 
         private const val SET_SECTION_HASH = 3749779719L
-        private val setSectionBind by lazy {
+        @JvmField
+        val setSectionBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_section", SET_SECTION_HASH)
-        }
 
         private const val RESET_SECTION_HASH = 3218959716L
-        private val resetSectionBind by lazy {
+        @JvmField
+        val resetSectionBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "reset_section", RESET_SECTION_HASH)
-        }
 
         private const val GET_SECTION_START_TIME_HASH = 1740695150L
-        private val getSectionStartTimeBind by lazy {
+        @JvmField
+        val getSectionStartTimeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_section_start_time", GET_SECTION_START_TIME_HASH)
-        }
 
         private const val GET_SECTION_END_TIME_HASH = 1740695150L
-        private val getSectionEndTimeBind by lazy {
+        @JvmField
+        val getSectionEndTimeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_section_end_time", GET_SECTION_END_TIME_HASH)
-        }
 
         private const val HAS_SECTION_HASH = 36873697L
-        private val hasSectionBind by lazy {
+        @JvmField
+        val hasSectionBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "has_section", HAS_SECTION_HASH)
-        }
 
         private const val SEEK_HASH = 1807872683L
-        private val seekBind by lazy {
+        @JvmField
+        val seekBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "seek", SEEK_HASH)
-        }
 
         private const val SET_PROCESS_CALLBACK_HASH = 1663839457L
-        private val setProcessCallbackBind by lazy {
+        @JvmField
+        val setProcessCallbackBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_process_callback", SET_PROCESS_CALLBACK_HASH)
-        }
 
         private const val GET_PROCESS_CALLBACK_HASH = 4207496604L
-        private val getProcessCallbackBind by lazy {
+        @JvmField
+        val getProcessCallbackBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_process_callback", GET_PROCESS_CALLBACK_HASH)
-        }
 
         private const val SET_METHOD_CALL_MODE_HASH = 3413514846L
-        private val setMethodCallModeBind by lazy {
+        @JvmField
+        val setMethodCallModeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_method_call_mode", SET_METHOD_CALL_MODE_HASH)
-        }
 
         private const val GET_METHOD_CALL_MODE_HASH = 3583380054L
-        private val getMethodCallModeBind by lazy {
+        @JvmField
+        val getMethodCallModeBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_method_call_mode", GET_METHOD_CALL_MODE_HASH)
-        }
 
         private const val SET_ROOT_HASH = 1348162250L
-        private val setRootBind by lazy {
+        @JvmField
+        val setRootBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "set_root", SET_ROOT_HASH)
-        }
 
         private const val GET_ROOT_HASH = 4075236667L
-        private val getRootBind by lazy {
+        @JvmField
+        val getRootBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "get_root", GET_ROOT_HASH)
-        }
     }
 }

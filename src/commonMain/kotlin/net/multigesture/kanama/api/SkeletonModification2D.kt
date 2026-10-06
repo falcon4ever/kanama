@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -42,7 +43,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, segment))
+        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getModificationStackBind, segment))
     }
 
     /**
@@ -65,7 +66,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setIsSetup(isSetup: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsSetupBind, segment, isSetup)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIsSetupBind, segment, isSetup)
     }
 
     /**
@@ -75,7 +76,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getIsSetup(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsSetupBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setExecutionMode(executionMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setExecutionModeBind, segment, executionMode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setExecutionModeBind, segment, executionMode)
     }
 
     /**
@@ -99,7 +100,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getExecutionMode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getExecutionModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getExecutionModeBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun clampAngle(angle: Double, min: Double, max: Double, invert: Boolean): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(clampAngleBind, segment, angle, min, max, invert)
+        return ObjectCalls.ptrcallWithThreeDoubleBoolArgsRetDouble(Binds.clampAngleBind, segment, angle, min, max, invert)
     }
 
     /**
@@ -121,7 +122,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setEditorDrawGizmo(drawGizmo: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEditorDrawGizmoBind, segment, drawGizmo)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditorDrawGizmoBind, segment, drawGizmo)
     }
 
     /**
@@ -132,7 +133,7 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEditorDrawGizmo(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEditorDrawGizmoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEditorDrawGizmoBind, segment)
     }
 
     companion object {
@@ -145,55 +146,57 @@ open class SkeletonModification2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2D? =
             if (handle.address() == 0L) null else SkeletonModification2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val GET_ENABLED_HASH = 2240911060L
-        private val getEnabledBind by lazy {
+        @JvmField
+        val getEnabledBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "get_enabled", GET_ENABLED_HASH)
-        }
 
         private const val GET_MODIFICATION_STACK_HASH = 2137761694L
-        private val getModificationStackBind by lazy {
+        @JvmField
+        val getModificationStackBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "get_modification_stack", GET_MODIFICATION_STACK_HASH)
-        }
 
         private const val SET_IS_SETUP_HASH = 2586408642L
-        private val setIsSetupBind by lazy {
+        @JvmField
+        val setIsSetupBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "set_is_setup", SET_IS_SETUP_HASH)
-        }
 
         private const val GET_IS_SETUP_HASH = 36873697L
-        private val getIsSetupBind by lazy {
+        @JvmField
+        val getIsSetupBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "get_is_setup", GET_IS_SETUP_HASH)
-        }
 
         private const val SET_EXECUTION_MODE_HASH = 1286410249L
-        private val setExecutionModeBind by lazy {
+        @JvmField
+        val setExecutionModeBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "set_execution_mode", SET_EXECUTION_MODE_HASH)
-        }
 
         private const val GET_EXECUTION_MODE_HASH = 3905245786L
-        private val getExecutionModeBind by lazy {
+        @JvmField
+        val getExecutionModeBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "get_execution_mode", GET_EXECUTION_MODE_HASH)
-        }
 
         private const val CLAMP_ANGLE_HASH = 1229502682L
-        private val clampAngleBind by lazy {
+        @JvmField
+        val clampAngleBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "clamp_angle", CLAMP_ANGLE_HASH)
-        }
 
         private const val SET_EDITOR_DRAW_GIZMO_HASH = 2586408642L
-        private val setEditorDrawGizmoBind by lazy {
+        @JvmField
+        val setEditorDrawGizmoBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "set_editor_draw_gizmo", SET_EDITOR_DRAW_GIZMO_HASH)
-        }
 
         private const val GET_EDITOR_DRAW_GIZMO_HASH = 36873697L
-        private val getEditorDrawGizmoBind by lazy {
+        @JvmField
+        val getEditorDrawGizmoBind =
             ObjectCalls.getMethodBind("SkeletonModification2D", "get_editor_draw_gizmo", GET_EDITOR_DRAW_GIZMO_HASH)
-        }
     }
 }

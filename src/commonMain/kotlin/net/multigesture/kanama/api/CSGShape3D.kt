@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -65,107 +66,107 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         set(value) = setCollisionPriority(value)
 
     fun isRootShape(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRootShapeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRootShapeBind, segment)
     }
 
     fun setOperation(operation: CSGShape3D.Operation) {
-        ObjectCalls.ptrcallWithLongArg(setOperationBind, segment, operation.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOperationBind, segment, operation.value)
     }
 
     fun getOperation(): CSGShape3D.Operation {
-        return CSGShape3D.Operation(ObjectCalls.ptrcallNoArgsRetLong(getOperationBind, segment))
+        return CSGShape3D.Operation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperationBind, segment))
     }
 
     fun setSnap(snap: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSnapBind, segment, snap)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSnapBind, segment, snap)
     }
 
     fun getSnap(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSnapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSnapBind, segment)
     }
 
     fun setUseCollision(operation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCollisionBind, segment, operation)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCollisionBind, segment, operation)
     }
 
     fun isUsingCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCollisionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCollisionBind, segment)
     }
 
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionLayerBind, segment, layer)
     }
 
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionLayerBind, segment)
     }
 
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
     }
 
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
     }
 
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionLayerValueBind, segment, layerNumber)
     }
 
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionPriorityBind, segment, priority)
     }
 
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionPriorityBind, segment)
     }
 
     fun bakeCollisionShape(): ConcavePolygonShape3D? {
-        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(bakeCollisionShapeBind, segment))
+        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.bakeCollisionShapeBind, segment))
     }
 
     fun setCalculateTangents(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCalculateTangentsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCalculateTangentsBind, segment, enabled)
     }
 
     fun isCalculatingTangents(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCalculatingTangentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCalculatingTangentsBind, segment)
     }
 
     fun getMeshes(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getMeshesBind, segment)
     }
 
     fun bakeStaticMesh(): ArrayMesh? {
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(bakeStaticMeshBind, segment))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.bakeStaticMeshBind, segment))
     }
 
     fun setAutosmooth(autosmooth: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutosmoothBind, segment, autosmooth)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutosmoothBind, segment, autosmooth)
     }
 
     fun isAutosmooth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutosmoothBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutosmoothBind, segment)
     }
 
     fun setSmoothingAngle(smoothingAngle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSmoothingAngleBind, segment, smoothingAngle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSmoothingAngleBind, segment, smoothingAngle)
     }
 
     fun getSmoothingAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSmoothingAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSmoothingAngleBind, segment)
     }
 
     @JvmInline
@@ -184,135 +185,137 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGShape3D? =
             if (handle.address() == 0L) null else CSGShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_ROOT_SHAPE_HASH = 36873697L
-        private val isRootShapeBind by lazy {
+        @JvmField
+        val isRootShapeBind =
             ObjectCalls.getMethodBind("CSGShape3D", "is_root_shape", IS_ROOT_SHAPE_HASH)
-        }
 
         private const val SET_OPERATION_HASH = 811425055L
-        private val setOperationBind by lazy {
+        @JvmField
+        val setOperationBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_operation", SET_OPERATION_HASH)
-        }
 
         private const val GET_OPERATION_HASH = 2662425879L
-        private val getOperationBind by lazy {
+        @JvmField
+        val getOperationBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_operation", GET_OPERATION_HASH)
-        }
 
         private const val SET_SNAP_HASH = 373806689L
-        private val setSnapBind by lazy {
+        @JvmField
+        val setSnapBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_snap", SET_SNAP_HASH)
-        }
 
         private const val GET_SNAP_HASH = 1740695150L
-        private val getSnapBind by lazy {
+        @JvmField
+        val getSnapBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_snap", GET_SNAP_HASH)
-        }
 
         private const val SET_USE_COLLISION_HASH = 2586408642L
-        private val setUseCollisionBind by lazy {
+        @JvmField
+        val setUseCollisionBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_use_collision", SET_USE_COLLISION_HASH)
-        }
 
         private const val IS_USING_COLLISION_HASH = 36873697L
-        private val isUsingCollisionBind by lazy {
+        @JvmField
+        val isUsingCollisionBind =
             ObjectCalls.getMethodBind("CSGShape3D", "is_using_collision", IS_USING_COLLISION_HASH)
-        }
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L
-        private val setCollisionLayerBind by lazy {
+        @JvmField
+        val setCollisionLayerBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_collision_layer", SET_COLLISION_LAYER_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_HASH = 3905245786L
-        private val getCollisionLayerBind by lazy {
+        @JvmField
+        val getCollisionLayerBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_collision_layer", GET_COLLISION_LAYER_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val SET_COLLISION_MASK_VALUE_HASH = 300928843L
-        private val setCollisionMaskValueBind by lazy {
+        @JvmField
+        val setCollisionMaskValueBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_collision_mask_value", SET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_MASK_VALUE_HASH = 1116898809L
-        private val getCollisionMaskValueBind by lazy {
+        @JvmField
+        val getCollisionMaskValueBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_collision_mask_value", GET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val SET_COLLISION_LAYER_VALUE_HASH = 300928843L
-        private val setCollisionLayerValueBind by lazy {
+        @JvmField
+        val setCollisionLayerValueBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_collision_layer_value", SET_COLLISION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_VALUE_HASH = 1116898809L
-        private val getCollisionLayerValueBind by lazy {
+        @JvmField
+        val getCollisionLayerValueBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_collision_layer_value", GET_COLLISION_LAYER_VALUE_HASH)
-        }
 
         private const val SET_COLLISION_PRIORITY_HASH = 373806689L
-        private val setCollisionPriorityBind by lazy {
+        @JvmField
+        val setCollisionPriorityBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_collision_priority", SET_COLLISION_PRIORITY_HASH)
-        }
 
         private const val GET_COLLISION_PRIORITY_HASH = 1740695150L
-        private val getCollisionPriorityBind by lazy {
+        @JvmField
+        val getCollisionPriorityBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_collision_priority", GET_COLLISION_PRIORITY_HASH)
-        }
 
         private const val BAKE_COLLISION_SHAPE_HASH = 36102322L
-        private val bakeCollisionShapeBind by lazy {
+        @JvmField
+        val bakeCollisionShapeBind =
             ObjectCalls.getMethodBind("CSGShape3D", "bake_collision_shape", BAKE_COLLISION_SHAPE_HASH)
-        }
 
         private const val SET_CALCULATE_TANGENTS_HASH = 2586408642L
-        private val setCalculateTangentsBind by lazy {
+        @JvmField
+        val setCalculateTangentsBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_calculate_tangents", SET_CALCULATE_TANGENTS_HASH)
-        }
 
         private const val IS_CALCULATING_TANGENTS_HASH = 36873697L
-        private val isCalculatingTangentsBind by lazy {
+        @JvmField
+        val isCalculatingTangentsBind =
             ObjectCalls.getMethodBind("CSGShape3D", "is_calculating_tangents", IS_CALCULATING_TANGENTS_HASH)
-        }
 
         private const val GET_MESHES_HASH = 3995934104L
-        private val getMeshesBind by lazy {
+        @JvmField
+        val getMeshesBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_meshes", GET_MESHES_HASH)
-        }
 
         private const val BAKE_STATIC_MESH_HASH = 1605880883L
-        private val bakeStaticMeshBind by lazy {
+        @JvmField
+        val bakeStaticMeshBind =
             ObjectCalls.getMethodBind("CSGShape3D", "bake_static_mesh", BAKE_STATIC_MESH_HASH)
-        }
 
         private const val SET_AUTOSMOOTH_HASH = 2586408642L
-        private val setAutosmoothBind by lazy {
+        @JvmField
+        val setAutosmoothBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_autosmooth", SET_AUTOSMOOTH_HASH)
-        }
 
         private const val IS_AUTOSMOOTH_HASH = 36873697L
-        private val isAutosmoothBind by lazy {
+        @JvmField
+        val isAutosmoothBind =
             ObjectCalls.getMethodBind("CSGShape3D", "is_autosmooth", IS_AUTOSMOOTH_HASH)
-        }
 
         private const val SET_SMOOTHING_ANGLE_HASH = 373806689L
-        private val setSmoothingAngleBind by lazy {
+        @JvmField
+        val setSmoothingAngleBind =
             ObjectCalls.getMethodBind("CSGShape3D", "set_smoothing_angle", SET_SMOOTHING_ANGLE_HASH)
-        }
 
         private const val GET_SMOOTHING_ANGLE_HASH = 1740695150L
-        private val getSmoothingAngleBind by lazy {
+        @JvmField
+        val getSmoothingAngleBind =
             ObjectCalls.getMethodBind("CSGShape3D", "get_smoothing_angle", GET_SMOOTHING_ANGLE_HASH)
-        }
     }
 }

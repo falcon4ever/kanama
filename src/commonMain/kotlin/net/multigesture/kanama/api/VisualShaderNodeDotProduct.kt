@@ -20,7 +20,5 @@ class VisualShaderNodeDotProduct(handle: GodotHandle) : VisualShaderNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDotProduct? =
             if (handle.address() == 0L) null else VisualShaderNodeDotProduct(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

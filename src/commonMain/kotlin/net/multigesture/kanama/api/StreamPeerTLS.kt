@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -20,7 +21,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun poll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pollBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
     }
 
     /**
@@ -30,7 +31,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithTwoObjectArgsRetLong(Binds.acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -43,7 +44,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -53,7 +54,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getStatus(): StreamPeerTLS.Status {
         checkOpen()
-        return StreamPeerTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
+        return StreamPeerTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
     }
 
     /**
@@ -63,7 +64,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getStream(): StreamPeer? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -78,7 +79,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun disconnectFromStream() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.disconnectFromStreamBind, segment)
     }
 
     /**
@@ -134,35 +135,37 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerTLS? =
             if (handle.address() == 0L) null else StreamPeerTLS(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val POLL_HASH = 3218959716L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("StreamPeerTLS", "poll", POLL_HASH)
-        }
 
         private const val ACCEPT_STREAM_HASH = 4292689651L
-        private val acceptStreamBind by lazy {
+        @JvmField
+        val acceptStreamBind =
             ObjectCalls.getMethodBind("StreamPeerTLS", "accept_stream", ACCEPT_STREAM_HASH)
-        }
 
         private const val CONNECT_TO_STREAM_HASH = 57169517L
-        private val connectToStreamBind by lazy {
+        @JvmField
+        val connectToStreamBind =
             ObjectCalls.getMethodBind("StreamPeerTLS", "connect_to_stream", CONNECT_TO_STREAM_HASH)
-        }
 
         private const val GET_STATUS_HASH = 1128380576L
-        private val getStatusBind by lazy {
+        @JvmField
+        val getStatusBind =
             ObjectCalls.getMethodBind("StreamPeerTLS", "get_status", GET_STATUS_HASH)
-        }
 
         private const val GET_STREAM_HASH = 2741655269L
-        private val getStreamBind by lazy {
+        @JvmField
+        val getStreamBind =
             ObjectCalls.getMethodBind("StreamPeerTLS", "get_stream", GET_STREAM_HASH)
-        }
 
         private const val DISCONNECT_FROM_STREAM_HASH = 3218959716L
-        private val disconnectFromStreamBind by lazy {
+        @JvmField
+        val disconnectFromStreamBind =
             ObjectCalls.getMethodBind("StreamPeerTLS", "disconnect_from_stream", DISCONNECT_FROM_STREAM_HASH)
-        }
     }
 }

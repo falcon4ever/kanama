@@ -25,7 +25,5 @@ class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
             RefCounted.owned(OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer"))))
-
-        // No MethodBinds emitted yet.
     }
 }

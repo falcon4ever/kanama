@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -103,7 +104,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTransform(transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setTransformBind, segment, transform)
     }
 
     /**
@@ -126,7 +127,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRange(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getRangeBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRange(range: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setRangeBind, segment, range)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setRangeBind, segment, range)
     }
 
     /**
@@ -149,7 +150,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getElapsedTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getElapsedTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getElapsedTimeBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setElapsedTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setElapsedTimeBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setElapsedTimeBind, segment, time)
     }
 
     /**
@@ -173,7 +174,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isVisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -185,7 +186,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setVisibility(visibility: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVisibilityBind, segment, visibility)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibilityBind, segment, visibility)
     }
 
     /**
@@ -196,7 +197,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isOutline(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isOutlineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOutlineBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setOutline(outline: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setOutlineBind, segment, outline)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOutlineBind, segment, outline)
     }
 
     /**
@@ -217,7 +218,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -227,7 +228,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -237,7 +238,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -247,7 +248,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -261,7 +262,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnvironment(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getEnvironmentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getEnvironmentBind, segment)
     }
 
     /**
@@ -275,7 +276,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnvironment(environment: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setEnvironmentBind, segment, environment)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setEnvironmentBind, segment, environment)
     }
 
     /**
@@ -286,7 +287,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlyphIndex(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getGlyphIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getGlyphIndexBind, segment)
     }
 
     /**
@@ -297,7 +298,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setGlyphIndex(glyphIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setGlyphIndexBind, segment, glyphIndex)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setGlyphIndexBind, segment, glyphIndex)
     }
 
     /**
@@ -308,7 +309,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRelativeIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRelativeIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRelativeIndexBind, segment)
     }
 
     /**
@@ -319,7 +320,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRelativeIndex(relativeIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRelativeIndexBind, segment, relativeIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRelativeIndexBind, segment, relativeIndex)
     }
 
     /**
@@ -330,7 +331,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlyphCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGlyphCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlyphCountBind, segment)
     }
 
     /**
@@ -341,7 +342,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setGlyphCount(glyphCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setGlyphCountBind, segment, glyphCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setGlyphCountBind, segment, glyphCount)
     }
 
     /**
@@ -352,7 +353,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlyphFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGlyphFlagsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlyphFlagsBind, segment)
     }
 
     /**
@@ -363,7 +364,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setGlyphFlags(glyphFlags: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setGlyphFlagsBind, segment, glyphFlags)
+        ObjectCalls.ptrcallWithIntArg(Binds.setGlyphFlagsBind, segment, glyphFlags)
     }
 
     /**
@@ -375,7 +376,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFont(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getFontBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getFontBind, segment)
     }
 
     /**
@@ -387,7 +388,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFont(font: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setFontBind, segment, font)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setFontBind, segment, font)
     }
 
     companion object {
@@ -400,135 +401,137 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CharFXTransform? =
             if (handle.address() == 0L) null else CharFXTransform(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRANSFORM_HASH = 3761352769L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 2761652528L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_RANGE_HASH = 2741790807L
-        private val getRangeBind by lazy {
+        @JvmField
+        val getRangeBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_range", GET_RANGE_HASH)
-        }
 
         private const val SET_RANGE_HASH = 1130785943L
-        private val setRangeBind by lazy {
+        @JvmField
+        val setRangeBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_range", SET_RANGE_HASH)
-        }
 
         private const val GET_ELAPSED_TIME_HASH = 191475506L
-        private val getElapsedTimeBind by lazy {
+        @JvmField
+        val getElapsedTimeBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_elapsed_time", GET_ELAPSED_TIME_HASH)
-        }
 
         private const val SET_ELAPSED_TIME_HASH = 373806689L
-        private val setElapsedTimeBind by lazy {
+        @JvmField
+        val setElapsedTimeBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_elapsed_time", SET_ELAPSED_TIME_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 2240911060L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("CharFXTransform", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val SET_VISIBILITY_HASH = 2586408642L
-        private val setVisibilityBind by lazy {
+        @JvmField
+        val setVisibilityBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_visibility", SET_VISIBILITY_HASH)
-        }
 
         private const val IS_OUTLINE_HASH = 2240911060L
-        private val isOutlineBind by lazy {
+        @JvmField
+        val isOutlineBind =
             ObjectCalls.getMethodBind("CharFXTransform", "is_outline", IS_OUTLINE_HASH)
-        }
 
         private const val SET_OUTLINE_HASH = 2586408642L
-        private val setOutlineBind by lazy {
+        @JvmField
+        val setOutlineBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_outline", SET_OUTLINE_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 1497962370L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3200896285L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_ENVIRONMENT_HASH = 2382534195L
-        private val getEnvironmentBind by lazy {
+        @JvmField
+        val getEnvironmentBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_environment", GET_ENVIRONMENT_HASH)
-        }
 
         private const val SET_ENVIRONMENT_HASH = 4155329257L
-        private val setEnvironmentBind by lazy {
+        @JvmField
+        val setEnvironmentBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_environment", SET_ENVIRONMENT_HASH)
-        }
 
         private const val GET_GLYPH_INDEX_HASH = 3905245786L
-        private val getGlyphIndexBind by lazy {
+        @JvmField
+        val getGlyphIndexBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_glyph_index", GET_GLYPH_INDEX_HASH)
-        }
 
         private const val SET_GLYPH_INDEX_HASH = 1286410249L
-        private val setGlyphIndexBind by lazy {
+        @JvmField
+        val setGlyphIndexBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_glyph_index", SET_GLYPH_INDEX_HASH)
-        }
 
         private const val GET_RELATIVE_INDEX_HASH = 3905245786L
-        private val getRelativeIndexBind by lazy {
+        @JvmField
+        val getRelativeIndexBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_relative_index", GET_RELATIVE_INDEX_HASH)
-        }
 
         private const val SET_RELATIVE_INDEX_HASH = 1286410249L
-        private val setRelativeIndexBind by lazy {
+        @JvmField
+        val setRelativeIndexBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_relative_index", SET_RELATIVE_INDEX_HASH)
-        }
 
         private const val GET_GLYPH_COUNT_HASH = 3905245786L
-        private val getGlyphCountBind by lazy {
+        @JvmField
+        val getGlyphCountBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_glyph_count", GET_GLYPH_COUNT_HASH)
-        }
 
         private const val SET_GLYPH_COUNT_HASH = 1286410249L
-        private val setGlyphCountBind by lazy {
+        @JvmField
+        val setGlyphCountBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_glyph_count", SET_GLYPH_COUNT_HASH)
-        }
 
         private const val GET_GLYPH_FLAGS_HASH = 3905245786L
-        private val getGlyphFlagsBind by lazy {
+        @JvmField
+        val getGlyphFlagsBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_glyph_flags", GET_GLYPH_FLAGS_HASH)
-        }
 
         private const val SET_GLYPH_FLAGS_HASH = 1286410249L
-        private val setGlyphFlagsBind by lazy {
+        @JvmField
+        val setGlyphFlagsBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_glyph_flags", SET_GLYPH_FLAGS_HASH)
-        }
 
         private const val GET_FONT_HASH = 2944877500L
-        private val getFontBind by lazy {
+        @JvmField
+        val getFontBind =
             ObjectCalls.getMethodBind("CharFXTransform", "get_font", GET_FONT_HASH)
-        }
 
         private const val SET_FONT_HASH = 2722037293L
-        private val setFontBind by lazy {
+        @JvmField
+        val setFontBind =
             ObjectCalls.getMethodBind("CharFXTransform", "set_font", SET_FONT_HASH)
-        }
     }
 }

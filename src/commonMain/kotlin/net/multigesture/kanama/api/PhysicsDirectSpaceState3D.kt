@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -22,7 +23,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_point
      */
     fun intersectPoint(parameters: PhysicsPointQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -39,7 +40,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_ray
      */
     fun intersectRay(parameters: PhysicsRayQueryParameters3D): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(intersectRayBind, segment, parameters.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.intersectRayBind, segment, parameters.requireOpenHandle())
     }
 
     /**
@@ -54,7 +55,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_shape
      */
     fun intersectShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(intersectShapeBind, segment, parameters.requireOpenHandle(), maxResults)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectShapeBind, segment, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -70,7 +71,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.cast_motion
      */
     fun castMotion(parameters: PhysicsShapeQueryParameters3D): List<Float> {
-        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(castMotionBind, segment, parameters.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetPackedFloat32List(Binds.castMotionBind, segment, parameters.requireOpenHandle())
     }
 
     /**
@@ -85,7 +86,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.collide_shape
      */
     fun collideShape(parameters: PhysicsShapeQueryParameters3D, maxResults: Int = 32): List<Vector3> {
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(collideShapeBind, segment, parameters.requireOpenHandle(), maxResults)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetVector3List(Binds.collideShapeBind, segment, parameters.requireOpenHandle(), maxResults)
     }
 
     /**
@@ -102,7 +103,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      * Generated from Godot docs: PhysicsDirectSpaceState3D.get_rest_info
      */
     fun getRestInfo(parameters: PhysicsShapeQueryParameters3D): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithObjectArgRetDictionary(getRestInfoBind, segment, parameters.requireOpenHandle())
+        return ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.getRestInfoBind, segment, parameters.requireOpenHandle())
     }
 
     companion object {
@@ -112,35 +113,37 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
 
         internal fun wrap(handle: RawSegment): PhysicsDirectSpaceState3D? =
             if (handle.address() == 0L) null else PhysicsDirectSpaceState3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val INTERSECT_POINT_HASH = 975173756L
-        private val intersectPointBind by lazy {
+        @JvmField
+        val intersectPointBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_point", INTERSECT_POINT_HASH)
-        }
 
         private const val INTERSECT_RAY_HASH = 3957970750L
-        private val intersectRayBind by lazy {
+        @JvmField
+        val intersectRayBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_ray", INTERSECT_RAY_HASH)
-        }
 
         private const val INTERSECT_SHAPE_HASH = 3762137681L
-        private val intersectShapeBind by lazy {
+        @JvmField
+        val intersectShapeBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_shape", INTERSECT_SHAPE_HASH)
-        }
 
         private const val CAST_MOTION_HASH = 1778757334L
-        private val castMotionBind by lazy {
+        @JvmField
+        val castMotionBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "cast_motion", CAST_MOTION_HASH)
-        }
 
         private const val COLLIDE_SHAPE_HASH = 3762137681L
-        private val collideShapeBind by lazy {
+        @JvmField
+        val collideShapeBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "collide_shape", COLLIDE_SHAPE_HASH)
-        }
 
         private const val GET_REST_INFO_HASH = 1376751592L
-        private val getRestInfoBind by lazy {
+        @JvmField
+        val getRestInfoBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "get_rest_info", GET_REST_INFO_HASH)
-        }
     }
 }

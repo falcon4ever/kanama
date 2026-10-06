@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -56,7 +57,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
     }
 
     /**
@@ -66,7 +67,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPointCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPointCountBind, segment, count)
     }
 
     /**
@@ -78,7 +79,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Curve.TangentMode = Curve.TangentMode.FREE, rightMode: Curve.TangentMode = Curve.TangentMode.FREE): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, segment, position, leftTangent, rightTangent, leftMode.value, rightMode.value)
+        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(Binds.addPointBind, segment, position, leftTangent, rightTangent, leftMode.value, rightMode.value)
     }
 
     /**
@@ -88,7 +89,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun removePoint(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, index)
     }
 
     /**
@@ -98,7 +99,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun clearPoints() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPointsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointPosition(index: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, index)
     }
 
     /**
@@ -118,7 +119,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointValue(index: Int, y: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointValueBind, segment, index, y)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointValueBind, segment, index, y)
     }
 
     /**
@@ -128,7 +129,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointOffset(index: Int, offset: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(setPointOffsetBind, segment, index, offset)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetInt(Binds.setPointOffsetBind, segment, index, offset)
     }
 
     /**
@@ -138,7 +139,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(offset: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBind, segment, offset)
+        return ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.sampleBind, segment, offset)
     }
 
     /**
@@ -149,7 +150,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun sampleBaked(offset: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetFloat(sampleBakedBind, segment, offset)
+        return ObjectCalls.ptrcallWithFloatArgRetFloat(Binds.sampleBakedBind, segment, offset)
     }
 
     /**
@@ -159,7 +160,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointLeftTangent(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointLeftTangentBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointLeftTangentBind, segment, index)
     }
 
     /**
@@ -169,7 +170,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointRightTangent(index: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPointRightTangentBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPointRightTangentBind, segment, index)
     }
 
     /**
@@ -179,7 +180,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointLeftMode(index: Int): Curve.TangentMode {
         checkOpen()
-        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, segment, index))
+        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPointLeftModeBind, segment, index))
     }
 
     /**
@@ -189,7 +190,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointRightMode(index: Int): Curve.TangentMode {
         checkOpen()
-        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, segment, index))
+        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPointRightModeBind, segment, index))
     }
 
     /**
@@ -199,7 +200,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointLeftTangent(index: Int, tangent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointLeftTangentBind, segment, index, tangent)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointLeftTangentBind, segment, index, tangent)
     }
 
     /**
@@ -209,7 +210,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointRightTangent(index: Int, tangent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPointRightTangentBind, segment, index, tangent)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPointRightTangentBind, segment, index, tangent)
     }
 
     /**
@@ -219,7 +220,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointLeftMode(index: Int, mode: Curve.TangentMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, segment, index, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setPointLeftModeBind, segment, index, mode.value)
     }
 
     /**
@@ -229,7 +230,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setPointRightMode(index: Int, mode: Curve.TangentMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, segment, index, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setPointRightModeBind, segment, index, mode.value)
     }
 
     /**
@@ -240,7 +241,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinValueBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setMinValue(min: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinValueBind, segment, min)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinValueBind, segment, min)
     }
 
     /**
@@ -262,7 +263,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaxValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxValueBind, segment)
     }
 
     /**
@@ -273,7 +274,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setMaxValue(max: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxValueBind, segment, max)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxValueBind, segment, max)
     }
 
     /**
@@ -283,7 +284,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getValueRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getValueRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getValueRangeBind, segment)
     }
 
     /**
@@ -293,7 +294,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinDomain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDomainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinDomainBind, segment)
     }
 
     /**
@@ -303,7 +304,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setMinDomain(min: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinDomainBind, segment, min)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinDomainBind, segment, min)
     }
 
     /**
@@ -313,7 +314,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaxDomain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxDomainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxDomainBind, segment)
     }
 
     /**
@@ -323,7 +324,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setMaxDomain(max: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxDomainBind, segment, max)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxDomainBind, segment, max)
     }
 
     /**
@@ -333,7 +334,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getDomainRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainRangeBind, segment)
     }
 
     /**
@@ -344,7 +345,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun cleanDupes() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(cleanDupesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.cleanDupesBind, segment)
     }
 
     /**
@@ -354,7 +355,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun bake() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(bakeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.bakeBind, segment)
     }
 
     /**
@@ -364,7 +365,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakeResolution(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBakeResolutionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBakeResolutionBind, segment)
     }
 
     /**
@@ -374,7 +375,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      */
     fun setBakeResolution(resolution: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, segment, resolution)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBakeResolutionBind, segment, resolution)
     }
 
     /** Signal `range_changed()`; see [TypedSignal]. */
@@ -433,165 +434,167 @@ class Curve(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Curve? =
             if (handle.address() == 0L) null else Curve(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_POINT_COUNT_HASH = 3905245786L
-        private val getPointCountBind by lazy {
+        @JvmField
+        val getPointCountBind =
             ObjectCalls.getMethodBind("Curve", "get_point_count", GET_POINT_COUNT_HASH)
-        }
 
         private const val SET_POINT_COUNT_HASH = 1286410249L
-        private val setPointCountBind by lazy {
+        @JvmField
+        val setPointCountBind =
             ObjectCalls.getMethodBind("Curve", "set_point_count", SET_POINT_COUNT_HASH)
-        }
 
         private const val ADD_POINT_HASH = 434072736L
-        private val addPointBind by lazy {
+        @JvmField
+        val addPointBind =
             ObjectCalls.getMethodBind("Curve", "add_point", ADD_POINT_HASH)
-        }
 
         private const val REMOVE_POINT_HASH = 1286410249L
-        private val removePointBind by lazy {
+        @JvmField
+        val removePointBind =
             ObjectCalls.getMethodBind("Curve", "remove_point", REMOVE_POINT_HASH)
-        }
 
         private const val CLEAR_POINTS_HASH = 3218959716L
-        private val clearPointsBind by lazy {
+        @JvmField
+        val clearPointsBind =
             ObjectCalls.getMethodBind("Curve", "clear_points", CLEAR_POINTS_HASH)
-        }
 
         private const val GET_POINT_POSITION_HASH = 2299179447L
-        private val getPointPositionBind by lazy {
+        @JvmField
+        val getPointPositionBind =
             ObjectCalls.getMethodBind("Curve", "get_point_position", GET_POINT_POSITION_HASH)
-        }
 
         private const val SET_POINT_VALUE_HASH = 1602489585L
-        private val setPointValueBind by lazy {
+        @JvmField
+        val setPointValueBind =
             ObjectCalls.getMethodBind("Curve", "set_point_value", SET_POINT_VALUE_HASH)
-        }
 
         private const val SET_POINT_OFFSET_HASH = 3780573764L
-        private val setPointOffsetBind by lazy {
+        @JvmField
+        val setPointOffsetBind =
             ObjectCalls.getMethodBind("Curve", "set_point_offset", SET_POINT_OFFSET_HASH)
-        }
 
         private const val SAMPLE_HASH = 3919130443L
-        private val sampleBind by lazy {
+        @JvmField
+        val sampleBind =
             ObjectCalls.getMethodBind("Curve", "sample", SAMPLE_HASH)
-        }
 
         private const val SAMPLE_BAKED_HASH = 3919130443L
-        private val sampleBakedBind by lazy {
+        @JvmField
+        val sampleBakedBind =
             ObjectCalls.getMethodBind("Curve", "sample_baked", SAMPLE_BAKED_HASH)
-        }
 
         private const val GET_POINT_LEFT_TANGENT_HASH = 2339986948L
-        private val getPointLeftTangentBind by lazy {
+        @JvmField
+        val getPointLeftTangentBind =
             ObjectCalls.getMethodBind("Curve", "get_point_left_tangent", GET_POINT_LEFT_TANGENT_HASH)
-        }
 
         private const val GET_POINT_RIGHT_TANGENT_HASH = 2339986948L
-        private val getPointRightTangentBind by lazy {
+        @JvmField
+        val getPointRightTangentBind =
             ObjectCalls.getMethodBind("Curve", "get_point_right_tangent", GET_POINT_RIGHT_TANGENT_HASH)
-        }
 
         private const val GET_POINT_LEFT_MODE_HASH = 426950354L
-        private val getPointLeftModeBind by lazy {
+        @JvmField
+        val getPointLeftModeBind =
             ObjectCalls.getMethodBind("Curve", "get_point_left_mode", GET_POINT_LEFT_MODE_HASH)
-        }
 
         private const val GET_POINT_RIGHT_MODE_HASH = 426950354L
-        private val getPointRightModeBind by lazy {
+        @JvmField
+        val getPointRightModeBind =
             ObjectCalls.getMethodBind("Curve", "get_point_right_mode", GET_POINT_RIGHT_MODE_HASH)
-        }
 
         private const val SET_POINT_LEFT_TANGENT_HASH = 1602489585L
-        private val setPointLeftTangentBind by lazy {
+        @JvmField
+        val setPointLeftTangentBind =
             ObjectCalls.getMethodBind("Curve", "set_point_left_tangent", SET_POINT_LEFT_TANGENT_HASH)
-        }
 
         private const val SET_POINT_RIGHT_TANGENT_HASH = 1602489585L
-        private val setPointRightTangentBind by lazy {
+        @JvmField
+        val setPointRightTangentBind =
             ObjectCalls.getMethodBind("Curve", "set_point_right_tangent", SET_POINT_RIGHT_TANGENT_HASH)
-        }
 
         private const val SET_POINT_LEFT_MODE_HASH = 1217242874L
-        private val setPointLeftModeBind by lazy {
+        @JvmField
+        val setPointLeftModeBind =
             ObjectCalls.getMethodBind("Curve", "set_point_left_mode", SET_POINT_LEFT_MODE_HASH)
-        }
 
         private const val SET_POINT_RIGHT_MODE_HASH = 1217242874L
-        private val setPointRightModeBind by lazy {
+        @JvmField
+        val setPointRightModeBind =
             ObjectCalls.getMethodBind("Curve", "set_point_right_mode", SET_POINT_RIGHT_MODE_HASH)
-        }
 
         private const val GET_MIN_VALUE_HASH = 1740695150L
-        private val getMinValueBind by lazy {
+        @JvmField
+        val getMinValueBind =
             ObjectCalls.getMethodBind("Curve", "get_min_value", GET_MIN_VALUE_HASH)
-        }
 
         private const val SET_MIN_VALUE_HASH = 373806689L
-        private val setMinValueBind by lazy {
+        @JvmField
+        val setMinValueBind =
             ObjectCalls.getMethodBind("Curve", "set_min_value", SET_MIN_VALUE_HASH)
-        }
 
         private const val GET_MAX_VALUE_HASH = 1740695150L
-        private val getMaxValueBind by lazy {
+        @JvmField
+        val getMaxValueBind =
             ObjectCalls.getMethodBind("Curve", "get_max_value", GET_MAX_VALUE_HASH)
-        }
 
         private const val SET_MAX_VALUE_HASH = 373806689L
-        private val setMaxValueBind by lazy {
+        @JvmField
+        val setMaxValueBind =
             ObjectCalls.getMethodBind("Curve", "set_max_value", SET_MAX_VALUE_HASH)
-        }
 
         private const val GET_VALUE_RANGE_HASH = 1740695150L
-        private val getValueRangeBind by lazy {
+        @JvmField
+        val getValueRangeBind =
             ObjectCalls.getMethodBind("Curve", "get_value_range", GET_VALUE_RANGE_HASH)
-        }
 
         private const val GET_MIN_DOMAIN_HASH = 1740695150L
-        private val getMinDomainBind by lazy {
+        @JvmField
+        val getMinDomainBind =
             ObjectCalls.getMethodBind("Curve", "get_min_domain", GET_MIN_DOMAIN_HASH)
-        }
 
         private const val SET_MIN_DOMAIN_HASH = 373806689L
-        private val setMinDomainBind by lazy {
+        @JvmField
+        val setMinDomainBind =
             ObjectCalls.getMethodBind("Curve", "set_min_domain", SET_MIN_DOMAIN_HASH)
-        }
 
         private const val GET_MAX_DOMAIN_HASH = 1740695150L
-        private val getMaxDomainBind by lazy {
+        @JvmField
+        val getMaxDomainBind =
             ObjectCalls.getMethodBind("Curve", "get_max_domain", GET_MAX_DOMAIN_HASH)
-        }
 
         private const val SET_MAX_DOMAIN_HASH = 373806689L
-        private val setMaxDomainBind by lazy {
+        @JvmField
+        val setMaxDomainBind =
             ObjectCalls.getMethodBind("Curve", "set_max_domain", SET_MAX_DOMAIN_HASH)
-        }
 
         private const val GET_DOMAIN_RANGE_HASH = 1740695150L
-        private val getDomainRangeBind by lazy {
+        @JvmField
+        val getDomainRangeBind =
             ObjectCalls.getMethodBind("Curve", "get_domain_range", GET_DOMAIN_RANGE_HASH)
-        }
 
         private const val CLEAN_DUPES_HASH = 3218959716L
-        private val cleanDupesBind by lazy {
+        @JvmField
+        val cleanDupesBind =
             ObjectCalls.getMethodBind("Curve", "clean_dupes", CLEAN_DUPES_HASH)
-        }
 
         private const val BAKE_HASH = 3218959716L
-        private val bakeBind by lazy {
+        @JvmField
+        val bakeBind =
             ObjectCalls.getMethodBind("Curve", "bake", BAKE_HASH)
-        }
 
         private const val GET_BAKE_RESOLUTION_HASH = 3905245786L
-        private val getBakeResolutionBind by lazy {
+        @JvmField
+        val getBakeResolutionBind =
             ObjectCalls.getMethodBind("Curve", "get_bake_resolution", GET_BAKE_RESOLUTION_HASH)
-        }
 
         private const val SET_BAKE_RESOLUTION_HASH = 1286410249L
-        private val setBakeResolutionBind by lazy {
+        @JvmField
+        val setBakeResolutionBind =
             ObjectCalls.getMethodBind("Curve", "set_bake_resolution", SET_BAKE_RESOLUTION_HASH)
-        }
     }
 }

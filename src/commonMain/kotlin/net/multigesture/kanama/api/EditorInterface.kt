@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -14,9 +15,8 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: EditorInterface
  */
 object EditorInterface {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("EditorInterface")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var distractionFreeMode: Boolean
         @JvmName("distractionFreeModeProperty")
@@ -38,7 +38,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun restartEditor(save: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(restartEditorBind, singleton, save)
+        ObjectCalls.ptrcallWithBoolArg(Binds.restartEditorBind, singleton, save)
     }
 
     /**
@@ -49,7 +49,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getCommandPalette(): EditorCommandPalette? {
-        return EditorCommandPalette.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCommandPaletteBind, singleton))
+        return EditorCommandPalette.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCommandPaletteBind, singleton))
     }
 
     /**
@@ -59,7 +59,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getResourceFilesystem(): EditorFileSystem? {
-        return EditorFileSystem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getResourceFilesystemBind, singleton))
+        return EditorFileSystem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getResourceFilesystemBind, singleton))
     }
 
     /**
@@ -69,7 +69,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorPaths(): EditorPaths? {
-        return EditorPaths.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorPathsBind, singleton))
+        return EditorPaths.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorPathsBind, singleton))
     }
 
     /**
@@ -79,7 +79,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getResourcePreviewer(): EditorResourcePreview? {
-        return EditorResourcePreview.wrap(ObjectCalls.ptrcallNoArgsRetObject(getResourcePreviewerBind, singleton))
+        return EditorResourcePreview.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getResourcePreviewerBind, singleton))
     }
 
     /**
@@ -89,7 +89,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getSelection(): EditorSelection? {
-        return EditorSelection.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSelectionBind, singleton))
+        return EditorSelection.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSelectionBind, singleton))
     }
 
     /**
@@ -99,7 +99,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorSettings(): EditorSettings? {
-        return EditorSettings.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEditorSettingsBind, singleton))
+        return EditorSettings.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorSettingsBind, singleton))
     }
 
     /**
@@ -109,7 +109,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorToaster(): EditorToaster? {
-        return EditorToaster.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorToasterBind, singleton))
+        return EditorToaster.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorToasterBind, singleton))
     }
 
     /**
@@ -119,7 +119,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorUndoRedo(): EditorUndoRedoManager? {
-        return EditorUndoRedoManager.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorUndoRedoBind, singleton))
+        return EditorUndoRedoManager.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorUndoRedoBind, singleton))
     }
 
     /**
@@ -129,7 +129,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun makeMeshPreviews(meshes: List<Mesh>, previewSize: Int): List<Texture2D> {
-        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::wrapBorrowed)
+        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(Binds.makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::wrapBorrowed)
     }
 
     /**
@@ -139,7 +139,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setPluginEnabled(plugin: String, enabled: Boolean) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(setPluginEnabledBind, singleton, plugin, enabled)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setPluginEnabledBind, singleton, plugin, enabled)
     }
 
     /**
@@ -150,7 +150,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isPluginEnabled(plugin: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(isPluginEnabledBind, singleton, plugin)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isPluginEnabledBind, singleton, plugin)
     }
 
     /**
@@ -161,7 +161,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorTheme(): Theme? {
-        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEditorThemeBind, singleton))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorThemeBind, singleton))
     }
 
     /**
@@ -173,7 +173,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getBaseControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBaseControlBind, singleton))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseControlBind, singleton))
     }
 
     /**
@@ -188,7 +188,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorMainScreen(): VBoxContainer? {
-        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorMainScreenBind, singleton))
+        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorMainScreenBind, singleton))
     }
 
     /**
@@ -199,7 +199,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getScriptEditor(): ScriptEditor? {
-        return ScriptEditor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScriptEditorBind, singleton))
+        return ScriptEditor.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScriptEditorBind, singleton))
     }
 
     /**
@@ -210,7 +210,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorViewport2d(): SubViewport? {
-        return SubViewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorViewport2dBind, singleton))
+        return SubViewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorViewport2dBind, singleton))
     }
 
     /**
@@ -221,7 +221,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorViewport3d(idx: Int = 0): SubViewport? {
-        return SubViewport.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getEditorViewport3dBind, singleton, idx))
+        return SubViewport.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getEditorViewport3dBind, singleton, idx))
     }
 
     /**
@@ -233,7 +233,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setMainScreenEditor(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setMainScreenEditorBind, singleton, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setMainScreenEditorBind, singleton, name)
     }
 
     /**
@@ -244,7 +244,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setDistractionFreeMode(enter: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDistractionFreeModeBind, singleton, enter)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDistractionFreeModeBind, singleton, enter)
     }
 
     /**
@@ -255,7 +255,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isDistractionFreeModeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDistractionFreeModeEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDistractionFreeModeEnabledBind, singleton)
     }
 
     /**
@@ -270,7 +270,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isMultiWindowEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultiWindowEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultiWindowEnabledBind, singleton)
     }
 
     /**
@@ -284,7 +284,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEditorScaleBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEditorScaleBind, singleton)
     }
 
     /**
@@ -294,7 +294,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getEditorLanguageBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEditorLanguageBind, singleton)
     }
 
     /**
@@ -304,7 +304,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isNode3dSnapEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNode3dSnapEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNode3dSnapEnabledBind, singleton)
     }
 
     /**
@@ -314,7 +314,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getNode3dTranslateSnap(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNode3dTranslateSnapBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNode3dTranslateSnapBind, singleton)
     }
 
     /**
@@ -324,7 +324,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getNode3dRotateSnap(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNode3dRotateSnapBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNode3dRotateSnapBind, singleton)
     }
 
     /**
@@ -334,7 +334,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getNode3dScaleSnap(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNode3dScaleSnapBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNode3dScaleSnapBind, singleton)
     }
 
     /**
@@ -345,7 +345,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialog(dialog: Window, rect: Rect2i) {
-        ObjectCalls.ptrcallWithObjectAndRect2iArg(popupDialogBind, singleton, dialog.segment, rect)
+        ObjectCalls.ptrcallWithObjectAndRect2iArg(Binds.popupDialogBind, singleton, dialog.segment, rect)
     }
 
     /**
@@ -357,7 +357,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialogCentered(dialog: Window, minsize: Vector2i) {
-        ObjectCalls.ptrcallWithObjectAndVector2iArg(popupDialogCenteredBind, singleton, dialog.segment, minsize)
+        ObjectCalls.ptrcallWithObjectAndVector2iArg(Binds.popupDialogCenteredBind, singleton, dialog.segment, minsize)
     }
 
     /**
@@ -369,7 +369,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialogCenteredRatio(dialog: Window, ratio: Double = 0.8) {
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(popupDialogCenteredRatioBind, singleton, dialog.segment, ratio)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(Binds.popupDialogCenteredRatioBind, singleton, dialog.segment, ratio)
     }
 
     /**
@@ -381,7 +381,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupDialogCenteredClamped(dialog: Window, minsize: Vector2i, fallbackRatio: Double = 0.75) {
-        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupDialogCenteredClampedBind, singleton, dialog.segment, minsize, fallbackRatio)
+        ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(Binds.popupDialogCenteredClampedBind, singleton, dialog.segment, minsize, fallbackRatio)
     }
 
     /**
@@ -396,7 +396,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getCurrentFeatureProfile(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentFeatureProfileBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentFeatureProfileBind, singleton)
     }
 
     /**
@@ -411,7 +411,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setCurrentFeatureProfile(profileName: String) {
-        ObjectCalls.ptrcallWithStringArg(setCurrentFeatureProfileBind, singleton, profileName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCurrentFeatureProfileBind, singleton, profileName)
     }
 
     /**
@@ -425,7 +425,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupNodeSelector(callback: GodotCallable, validTypes: List<String>, currentValue: Node) {
-        ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(popupNodeSelectorBind, singleton, callback.target.segment, callback.method, validTypes, currentValue.segment)
+        ObjectCalls.ptrcallWithCallableStringNameListObjectArgs(Binds.popupNodeSelectorBind, singleton, callback.target.segment, callback.method, validTypes, currentValue.segment)
     }
 
     /**
@@ -440,7 +440,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupPropertySelector(objectValue: GodotObject, callback: GodotCallable, typeFilter: List<Int>, currentValue: String = "") {
-        ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(popupPropertySelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, typeFilter, currentValue)
+        ObjectCalls.ptrcallWithObjectCallablePackedInt32ListStringArgs(Binds.popupPropertySelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, typeFilter, currentValue)
     }
 
     /**
@@ -453,7 +453,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupMethodSelector(objectValue: GodotObject, callback: GodotCallable, currentValue: String = "") {
-        ObjectCalls.ptrcallWithObjectCallableStringArgs(popupMethodSelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, currentValue)
+        ObjectCalls.ptrcallWithObjectCallableStringArgs(Binds.popupMethodSelectorBind, singleton, objectValue.segment, callback.target.segment, callback.method, currentValue)
     }
 
     /**
@@ -466,7 +466,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupQuickOpen(callback: GodotCallable, baseTypes: List<String>) {
-        ObjectCalls.ptrcallWithCallableStringNameListArgs(popupQuickOpenBind, singleton, callback.target.segment, callback.method, baseTypes)
+        ObjectCalls.ptrcallWithCallableStringNameListArgs(Binds.popupQuickOpenBind, singleton, callback.target.segment, callback.method, baseTypes)
     }
 
     /**
@@ -488,7 +488,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun popupCreateDialog(callback: GodotCallable, baseType: String = "", currentType: String = "", dialogTitle: String = "", typeBlocklist: List<String>) {
-        ObjectCalls.ptrcallWithCallableStringNameTwoStringStringNameListArgs(popupCreateDialogBind, singleton, callback.target.segment, callback.method, baseType, currentType, dialogTitle, typeBlocklist)
+        ObjectCalls.ptrcallWithCallableStringNameTwoStringStringNameListArgs(Binds.popupCreateDialogBind, singleton, callback.target.segment, callback.method, baseType, currentType, dialogTitle, typeBlocklist)
     }
 
     /**
@@ -499,7 +499,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getFileSystemDock(): FileSystemDock? {
-        return FileSystemDock.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFileSystemDockBind, singleton))
+        return FileSystemDock.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFileSystemDockBind, singleton))
     }
 
     /**
@@ -509,7 +509,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun selectFile(file: String) {
-        ObjectCalls.ptrcallWithStringArg(selectFileBind, singleton, file)
+        ObjectCalls.ptrcallWithStringArg(Binds.selectFileBind, singleton, file)
     }
 
     /**
@@ -520,7 +520,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getSelectedPaths(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSelectedPathsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSelectedPathsBind, singleton)
     }
 
     /**
@@ -530,7 +530,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getCurrentPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentPathBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentPathBind, singleton)
     }
 
     /**
@@ -541,7 +541,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getCurrentDirectory(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentDirectoryBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentDirectoryBind, singleton)
     }
 
     /**
@@ -552,7 +552,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getInspector(): EditorInspector? {
-        return EditorInspector.wrap(ObjectCalls.ptrcallNoArgsRetObject(getInspectorBind, singleton))
+        return EditorInspector.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getInspectorBind, singleton))
     }
 
     /**
@@ -563,7 +563,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun inspectObject(objectValue: GodotObject, forProperty: String = "", inspectorOnly: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectStringBoolArgs(inspectObjectBind, singleton, objectValue.segment, forProperty, inspectorOnly)
+        ObjectCalls.ptrcallWithObjectStringBoolArgs(Binds.inspectObjectBind, singleton, objectValue.segment, forProperty, inspectorOnly)
     }
 
     /**
@@ -574,7 +574,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun editResource(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(editResourceBind, singleton, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.editResourceBind, singleton, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -584,7 +584,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun editNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(editNodeBind, singleton, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.editNodeBind, singleton, listOf(node.segment))
     }
 
     /**
@@ -596,7 +596,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun editScript(script: Script?, line: Int = -1, column: Int = 0, grabFocus: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectTwoIntBoolArgs(editScriptBind, singleton, script?.requireOpenHandle() ?: NULL_SEGMENT, line, column, grabFocus)
+        ObjectCalls.ptrcallWithObjectTwoIntBoolArgs(Binds.editScriptBind, singleton, script?.requireOpenHandle() ?: NULL_SEGMENT, line, column, grabFocus)
     }
 
     /**
@@ -606,7 +606,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun openSceneFromPath(sceneFilepath: String, setInherited: Boolean = false) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(openSceneFromPathBind, singleton, sceneFilepath, setInherited)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.openSceneFromPathBind, singleton, sceneFilepath, setInherited)
     }
 
     /**
@@ -616,7 +616,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun reloadSceneFromPath(sceneFilepath: String) {
-        ObjectCalls.ptrcallWithStringArg(reloadSceneFromPathBind, singleton, sceneFilepath)
+        ObjectCalls.ptrcallWithStringArg(Binds.reloadSceneFromPathBind, singleton, sceneFilepath)
     }
 
     /**
@@ -632,7 +632,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setObjectEdited(objectValue: GodotObject, edited: Boolean) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(setObjectEditedBind, singleton, objectValue.segment, edited)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.setObjectEditedBind, singleton, objectValue.segment, edited)
     }
 
     /**
@@ -642,7 +642,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isObjectEdited(objectValue: GodotObject): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isObjectEditedBind, singleton, objectValue.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isObjectEditedBind, singleton, objectValue.segment)
     }
 
     /**
@@ -652,7 +652,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getOpenScenes(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getOpenScenesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getOpenScenesBind, singleton)
     }
 
     /**
@@ -662,7 +662,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getUnsavedScenes(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getUnsavedScenesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getUnsavedScenesBind, singleton)
     }
 
     /**
@@ -672,7 +672,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getOpenSceneRoots(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenSceneRootsBind, singleton, Node::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getOpenSceneRootsBind, singleton, Node::wrap)
     }
 
     /**
@@ -682,7 +682,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditedSceneRoot(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedSceneRootBind, singleton))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditedSceneRootBind, singleton))
     }
 
     /**
@@ -693,7 +693,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun addRootNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, singleton, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addRootNodeBind, singleton, listOf(node.segment))
     }
 
     /**
@@ -704,7 +704,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun saveScene(): GodotError {
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(saveSceneBind, singleton))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.saveSceneBind, singleton))
     }
 
     /**
@@ -714,7 +714,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun saveSceneAs(path: String, withPreview: Boolean = true) {
-        ObjectCalls.ptrcallWithStringAndBoolArg(saveSceneAsBind, singleton, path, withPreview)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.saveSceneAsBind, singleton, path, withPreview)
     }
 
     /**
@@ -724,7 +724,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun saveAllScenes() {
-        ObjectCalls.ptrcallNoArgs(saveAllScenesBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.saveAllScenesBind, singleton)
     }
 
     /**
@@ -735,7 +735,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun closeScene(): GodotError {
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeSceneBind, singleton))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeSceneBind, singleton))
     }
 
     /**
@@ -745,7 +745,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun markSceneAsUnsaved() {
-        ObjectCalls.ptrcallNoArgs(markSceneAsUnsavedBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.markSceneAsUnsavedBind, singleton)
     }
 
     /**
@@ -755,7 +755,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun playMainScene() {
-        ObjectCalls.ptrcallNoArgs(playMainSceneBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.playMainSceneBind, singleton)
     }
 
     /**
@@ -765,7 +765,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun playCurrentScene() {
-        ObjectCalls.ptrcallNoArgs(playCurrentSceneBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.playCurrentSceneBind, singleton)
     }
 
     /**
@@ -775,7 +775,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun playCustomScene(sceneFilepath: String) {
-        ObjectCalls.ptrcallWithStringArg(playCustomSceneBind, singleton, sceneFilepath)
+        ObjectCalls.ptrcallWithStringArg(Binds.playCustomSceneBind, singleton, sceneFilepath)
     }
 
     /**
@@ -785,7 +785,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun stopPlayingScene() {
-        ObjectCalls.ptrcallNoArgs(stopPlayingSceneBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.stopPlayingSceneBind, singleton)
     }
 
     /**
@@ -796,7 +796,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isPlayingScene(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingSceneBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingSceneBind, singleton)
     }
 
     /**
@@ -807,7 +807,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getPlayingScene(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPlayingSceneBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPlayingSceneBind, singleton)
     }
 
     /**
@@ -818,7 +818,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun setMovieMakerEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMovieMakerEnabledBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMovieMakerEnabledBind, singleton, enabled)
     }
 
     /**
@@ -829,7 +829,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun isMovieMakerEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMovieMakerEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMovieMakerEnabledBind, singleton)
     }
 
     @JvmStatic
@@ -839,358 +839,363 @@ object EditorInterface {
     internal fun wrap(handle: RawSegment): EditorInterface? =
         if (handle.address() == 0L) null else this
 
-    private const val RESTART_EDITOR_HASH = 3216645846L
-    private val restartEditorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "restart_editor", RESTART_EDITOR_HASH)
-    }
-
-    private const val GET_COMMAND_PALETTE_HASH = 2471163807L
-    private val getCommandPaletteBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_command_palette", GET_COMMAND_PALETTE_HASH)
-    }
-
-    private const val GET_RESOURCE_FILESYSTEM_HASH = 780151678L
-    private val getResourceFilesystemBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_resource_filesystem", GET_RESOURCE_FILESYSTEM_HASH)
-    }
-
-    private const val GET_EDITOR_PATHS_HASH = 1595760068L
-    private val getEditorPathsBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_paths", GET_EDITOR_PATHS_HASH)
-    }
-
-    private const val GET_RESOURCE_PREVIEWER_HASH = 943486957L
-    private val getResourcePreviewerBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_resource_previewer", GET_RESOURCE_PREVIEWER_HASH)
-    }
-
-    private const val GET_SELECTION_HASH = 2690272531L
-    private val getSelectionBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_selection", GET_SELECTION_HASH)
-    }
-
-    private const val GET_EDITOR_SETTINGS_HASH = 4086932459L
-    private val getEditorSettingsBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_settings", GET_EDITOR_SETTINGS_HASH)
-    }
-
-    private const val GET_EDITOR_TOASTER_HASH = 3612675797L
-    private val getEditorToasterBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_toaster", GET_EDITOR_TOASTER_HASH)
-    }
-
-    private const val GET_EDITOR_UNDO_REDO_HASH = 3819628421L
-    private val getEditorUndoRedoBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_undo_redo", GET_EDITOR_UNDO_REDO_HASH)
-    }
-
-    private const val MAKE_MESH_PREVIEWS_HASH = 878078554L
-    private val makeMeshPreviewsBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "make_mesh_previews", MAKE_MESH_PREVIEWS_HASH)
-    }
-
-    private const val SET_PLUGIN_ENABLED_HASH = 2678287736L
-    private val setPluginEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "set_plugin_enabled", SET_PLUGIN_ENABLED_HASH)
-    }
-
-    private const val IS_PLUGIN_ENABLED_HASH = 3927539163L
-    private val isPluginEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_plugin_enabled", IS_PLUGIN_ENABLED_HASH)
-    }
-
-    private const val GET_EDITOR_THEME_HASH = 3846893731L
-    private val getEditorThemeBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_theme", GET_EDITOR_THEME_HASH)
-    }
-
-    private const val GET_BASE_CONTROL_HASH = 2783021301L
-    private val getBaseControlBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_base_control", GET_BASE_CONTROL_HASH)
-    }
-
-    private const val GET_EDITOR_MAIN_SCREEN_HASH = 1706218421L
-    private val getEditorMainScreenBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_main_screen", GET_EDITOR_MAIN_SCREEN_HASH)
-    }
-
-    private const val GET_SCRIPT_EDITOR_HASH = 90868003L
-    private val getScriptEditorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_script_editor", GET_SCRIPT_EDITOR_HASH)
-    }
-
-    private const val GET_EDITOR_VIEWPORT_2D_HASH = 3750751911L
-    private val getEditorViewport2dBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_viewport_2d", GET_EDITOR_VIEWPORT_2D_HASH)
-    }
-
-    private const val GET_EDITOR_VIEWPORT_3D_HASH = 1970834490L
-    private val getEditorViewport3dBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_viewport_3d", GET_EDITOR_VIEWPORT_3D_HASH)
-    }
-
-    private const val SET_MAIN_SCREEN_EDITOR_HASH = 83702148L
-    private val setMainScreenEditorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "set_main_screen_editor", SET_MAIN_SCREEN_EDITOR_HASH)
-    }
-
-    private const val SET_DISTRACTION_FREE_MODE_HASH = 2586408642L
-    private val setDistractionFreeModeBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "set_distraction_free_mode", SET_DISTRACTION_FREE_MODE_HASH)
-    }
-
-    private const val IS_DISTRACTION_FREE_MODE_ENABLED_HASH = 36873697L
-    private val isDistractionFreeModeEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_distraction_free_mode_enabled", IS_DISTRACTION_FREE_MODE_ENABLED_HASH)
-    }
-
-    private const val IS_MULTI_WINDOW_ENABLED_HASH = 36873697L
-    private val isMultiWindowEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_multi_window_enabled", IS_MULTI_WINDOW_ENABLED_HASH)
-    }
-
-    private const val GET_EDITOR_SCALE_HASH = 1740695150L
-    private val getEditorScaleBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_scale", GET_EDITOR_SCALE_HASH)
-    }
-
-    private const val GET_EDITOR_LANGUAGE_HASH = 201670096L
-    private val getEditorLanguageBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_editor_language", GET_EDITOR_LANGUAGE_HASH)
-    }
-
-    private const val IS_NODE_3D_SNAP_ENABLED_HASH = 36873697L
-    private val isNode3dSnapEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_node_3d_snap_enabled", IS_NODE_3D_SNAP_ENABLED_HASH)
-    }
-
-    private const val GET_NODE_3D_TRANSLATE_SNAP_HASH = 1740695150L
-    private val getNode3dTranslateSnapBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_node_3d_translate_snap", GET_NODE_3D_TRANSLATE_SNAP_HASH)
-    }
-
-    private const val GET_NODE_3D_ROTATE_SNAP_HASH = 1740695150L
-    private val getNode3dRotateSnapBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_node_3d_rotate_snap", GET_NODE_3D_ROTATE_SNAP_HASH)
-    }
-
-    private const val GET_NODE_3D_SCALE_SNAP_HASH = 1740695150L
-    private val getNode3dScaleSnapBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_node_3d_scale_snap", GET_NODE_3D_SCALE_SNAP_HASH)
-    }
-
-    private const val POPUP_DIALOG_HASH = 2015770942L
-    private val popupDialogBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_dialog", POPUP_DIALOG_HASH)
-    }
-
-    private const val POPUP_DIALOG_CENTERED_HASH = 346557367L
-    private val popupDialogCenteredBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_dialog_centered", POPUP_DIALOG_CENTERED_HASH)
-    }
-
-    private const val POPUP_DIALOG_CENTERED_RATIO_HASH = 2093669136L
-    private val popupDialogCenteredRatioBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_dialog_centered_ratio", POPUP_DIALOG_CENTERED_RATIO_HASH)
-    }
-
-    private const val POPUP_DIALOG_CENTERED_CLAMPED_HASH = 3763385571L
-    private val popupDialogCenteredClampedBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_dialog_centered_clamped", POPUP_DIALOG_CENTERED_CLAMPED_HASH)
-    }
-
-    private const val GET_CURRENT_FEATURE_PROFILE_HASH = 201670096L
-    private val getCurrentFeatureProfileBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_current_feature_profile", GET_CURRENT_FEATURE_PROFILE_HASH)
-    }
-
-    private const val SET_CURRENT_FEATURE_PROFILE_HASH = 83702148L
-    private val setCurrentFeatureProfileBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "set_current_feature_profile", SET_CURRENT_FEATURE_PROFILE_HASH)
-    }
-
-    private const val POPUP_NODE_SELECTOR_HASH = 2444591477L
-    private val popupNodeSelectorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_node_selector", POPUP_NODE_SELECTOR_HASH)
-    }
-
-    private const val POPUP_PROPERTY_SELECTOR_HASH = 2955609011L
-    private val popupPropertySelectorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_property_selector", POPUP_PROPERTY_SELECTOR_HASH)
-    }
-
-    private const val POPUP_METHOD_SELECTOR_HASH = 3585505226L
-    private val popupMethodSelectorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_method_selector", POPUP_METHOD_SELECTOR_HASH)
-    }
-
-    private const val POPUP_QUICK_OPEN_HASH = 2271411043L
-    private val popupQuickOpenBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_quick_open", POPUP_QUICK_OPEN_HASH)
-    }
-
-    private const val POPUP_CREATE_DIALOG_HASH = 495277124L
-    private val popupCreateDialogBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "popup_create_dialog", POPUP_CREATE_DIALOG_HASH)
-    }
-
-    private const val GET_FILE_SYSTEM_DOCK_HASH = 3751012327L
-    private val getFileSystemDockBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_file_system_dock", GET_FILE_SYSTEM_DOCK_HASH)
-    }
-
-    private const val SELECT_FILE_HASH = 83702148L
-    private val selectFileBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "select_file", SELECT_FILE_HASH)
-    }
-
-    private const val GET_SELECTED_PATHS_HASH = 1139954409L
-    private val getSelectedPathsBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_selected_paths", GET_SELECTED_PATHS_HASH)
-    }
-
-    private const val GET_CURRENT_PATH_HASH = 201670096L
-    private val getCurrentPathBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_current_path", GET_CURRENT_PATH_HASH)
-    }
-
-    private const val GET_CURRENT_DIRECTORY_HASH = 201670096L
-    private val getCurrentDirectoryBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_current_directory", GET_CURRENT_DIRECTORY_HASH)
-    }
-
-    private const val GET_INSPECTOR_HASH = 3517113938L
-    private val getInspectorBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_inspector", GET_INSPECTOR_HASH)
-    }
-
-    private const val INSPECT_OBJECT_HASH = 127962172L
-    private val inspectObjectBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "inspect_object", INSPECT_OBJECT_HASH)
-    }
-
-    private const val EDIT_RESOURCE_HASH = 968641751L
-    private val editResourceBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "edit_resource", EDIT_RESOURCE_HASH)
-    }
-
-    private const val EDIT_NODE_HASH = 1078189570L
-    private val editNodeBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "edit_node", EDIT_NODE_HASH)
-    }
-
-    private const val EDIT_SCRIPT_HASH = 219829402L
-    private val editScriptBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "edit_script", EDIT_SCRIPT_HASH)
-    }
-
-    private const val OPEN_SCENE_FROM_PATH_HASH = 1168363258L
-    private val openSceneFromPathBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "open_scene_from_path", OPEN_SCENE_FROM_PATH_HASH)
-    }
-
-    private const val RELOAD_SCENE_FROM_PATH_HASH = 83702148L
-    private val reloadSceneFromPathBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "reload_scene_from_path", RELOAD_SCENE_FROM_PATH_HASH)
-    }
-
-    private const val SET_OBJECT_EDITED_HASH = 1462101905L
-    private val setObjectEditedBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "set_object_edited", SET_OBJECT_EDITED_HASH)
-    }
-
-    private const val IS_OBJECT_EDITED_HASH = 397768994L
-    private val isObjectEditedBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_object_edited", IS_OBJECT_EDITED_HASH)
-    }
-
-    private const val GET_OPEN_SCENES_HASH = 1139954409L
-    private val getOpenScenesBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_open_scenes", GET_OPEN_SCENES_HASH)
-    }
-
-    private const val GET_UNSAVED_SCENES_HASH = 1139954409L
-    private val getUnsavedScenesBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_unsaved_scenes", GET_UNSAVED_SCENES_HASH)
-    }
-
-    private const val GET_OPEN_SCENE_ROOTS_HASH = 3995934104L
-    private val getOpenSceneRootsBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_open_scene_roots", GET_OPEN_SCENE_ROOTS_HASH)
-    }
-
-    private const val GET_EDITED_SCENE_ROOT_HASH = 3160264692L
-    private val getEditedSceneRootBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_edited_scene_root", GET_EDITED_SCENE_ROOT_HASH)
-    }
-
-    private const val ADD_ROOT_NODE_HASH = 1078189570L
-    private val addRootNodeBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "add_root_node", ADD_ROOT_NODE_HASH)
-    }
-
-    private const val SAVE_SCENE_HASH = 166280745L
-    private val saveSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "save_scene", SAVE_SCENE_HASH)
-    }
-
-    private const val SAVE_SCENE_AS_HASH = 3647332257L
-    private val saveSceneAsBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "save_scene_as", SAVE_SCENE_AS_HASH)
-    }
-
-    private const val SAVE_ALL_SCENES_HASH = 3218959716L
-    private val saveAllScenesBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "save_all_scenes", SAVE_ALL_SCENES_HASH)
-    }
-
-    private const val CLOSE_SCENE_HASH = 166280745L
-    private val closeSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "close_scene", CLOSE_SCENE_HASH)
-    }
-
-    private const val MARK_SCENE_AS_UNSAVED_HASH = 3218959716L
-    private val markSceneAsUnsavedBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "mark_scene_as_unsaved", MARK_SCENE_AS_UNSAVED_HASH)
-    }
-
-    private const val PLAY_MAIN_SCENE_HASH = 3218959716L
-    private val playMainSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "play_main_scene", PLAY_MAIN_SCENE_HASH)
-    }
-
-    private const val PLAY_CURRENT_SCENE_HASH = 3218959716L
-    private val playCurrentSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "play_current_scene", PLAY_CURRENT_SCENE_HASH)
-    }
-
-    private const val PLAY_CUSTOM_SCENE_HASH = 83702148L
-    private val playCustomSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "play_custom_scene", PLAY_CUSTOM_SCENE_HASH)
-    }
-
-    private const val STOP_PLAYING_SCENE_HASH = 3218959716L
-    private val stopPlayingSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "stop_playing_scene", STOP_PLAYING_SCENE_HASH)
-    }
-
-    private const val IS_PLAYING_SCENE_HASH = 36873697L
-    private val isPlayingSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_playing_scene", IS_PLAYING_SCENE_HASH)
-    }
-
-    private const val GET_PLAYING_SCENE_HASH = 201670096L
-    private val getPlayingSceneBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "get_playing_scene", GET_PLAYING_SCENE_HASH)
-    }
-
-    private const val SET_MOVIE_MAKER_ENABLED_HASH = 2586408642L
-    private val setMovieMakerEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "set_movie_maker_enabled", SET_MOVIE_MAKER_ENABLED_HASH)
-    }
-
-    private const val IS_MOVIE_MAKER_ENABLED_HASH = 36873697L
-    private val isMovieMakerEnabledBind by lazy {
-        ObjectCalls.getMethodBind("EditorInterface", "is_movie_maker_enabled", IS_MOVIE_MAKER_ENABLED_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("EditorInterface")
+
+        private const val RESTART_EDITOR_HASH = 3216645846L
+        @JvmField
+        val restartEditorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "restart_editor", RESTART_EDITOR_HASH)
+
+        private const val GET_COMMAND_PALETTE_HASH = 2471163807L
+        @JvmField
+        val getCommandPaletteBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_command_palette", GET_COMMAND_PALETTE_HASH)
+
+        private const val GET_RESOURCE_FILESYSTEM_HASH = 780151678L
+        @JvmField
+        val getResourceFilesystemBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_resource_filesystem", GET_RESOURCE_FILESYSTEM_HASH)
+
+        private const val GET_EDITOR_PATHS_HASH = 1595760068L
+        @JvmField
+        val getEditorPathsBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_paths", GET_EDITOR_PATHS_HASH)
+
+        private const val GET_RESOURCE_PREVIEWER_HASH = 943486957L
+        @JvmField
+        val getResourcePreviewerBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_resource_previewer", GET_RESOURCE_PREVIEWER_HASH)
+
+        private const val GET_SELECTION_HASH = 2690272531L
+        @JvmField
+        val getSelectionBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_selection", GET_SELECTION_HASH)
+
+        private const val GET_EDITOR_SETTINGS_HASH = 4086932459L
+        @JvmField
+        val getEditorSettingsBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_settings", GET_EDITOR_SETTINGS_HASH)
+
+        private const val GET_EDITOR_TOASTER_HASH = 3612675797L
+        @JvmField
+        val getEditorToasterBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_toaster", GET_EDITOR_TOASTER_HASH)
+
+        private const val GET_EDITOR_UNDO_REDO_HASH = 3819628421L
+        @JvmField
+        val getEditorUndoRedoBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_undo_redo", GET_EDITOR_UNDO_REDO_HASH)
+
+        private const val MAKE_MESH_PREVIEWS_HASH = 878078554L
+        @JvmField
+        val makeMeshPreviewsBind =
+            ObjectCalls.getMethodBind("EditorInterface", "make_mesh_previews", MAKE_MESH_PREVIEWS_HASH)
+
+        private const val SET_PLUGIN_ENABLED_HASH = 2678287736L
+        @JvmField
+        val setPluginEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "set_plugin_enabled", SET_PLUGIN_ENABLED_HASH)
+
+        private const val IS_PLUGIN_ENABLED_HASH = 3927539163L
+        @JvmField
+        val isPluginEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_plugin_enabled", IS_PLUGIN_ENABLED_HASH)
+
+        private const val GET_EDITOR_THEME_HASH = 3846893731L
+        @JvmField
+        val getEditorThemeBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_theme", GET_EDITOR_THEME_HASH)
+
+        private const val GET_BASE_CONTROL_HASH = 2783021301L
+        @JvmField
+        val getBaseControlBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_base_control", GET_BASE_CONTROL_HASH)
+
+        private const val GET_EDITOR_MAIN_SCREEN_HASH = 1706218421L
+        @JvmField
+        val getEditorMainScreenBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_main_screen", GET_EDITOR_MAIN_SCREEN_HASH)
+
+        private const val GET_SCRIPT_EDITOR_HASH = 90868003L
+        @JvmField
+        val getScriptEditorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_script_editor", GET_SCRIPT_EDITOR_HASH)
+
+        private const val GET_EDITOR_VIEWPORT_2D_HASH = 3750751911L
+        @JvmField
+        val getEditorViewport2dBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_viewport_2d", GET_EDITOR_VIEWPORT_2D_HASH)
+
+        private const val GET_EDITOR_VIEWPORT_3D_HASH = 1970834490L
+        @JvmField
+        val getEditorViewport3dBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_viewport_3d", GET_EDITOR_VIEWPORT_3D_HASH)
+
+        private const val SET_MAIN_SCREEN_EDITOR_HASH = 83702148L
+        @JvmField
+        val setMainScreenEditorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "set_main_screen_editor", SET_MAIN_SCREEN_EDITOR_HASH)
+
+        private const val SET_DISTRACTION_FREE_MODE_HASH = 2586408642L
+        @JvmField
+        val setDistractionFreeModeBind =
+            ObjectCalls.getMethodBind("EditorInterface", "set_distraction_free_mode", SET_DISTRACTION_FREE_MODE_HASH)
+
+        private const val IS_DISTRACTION_FREE_MODE_ENABLED_HASH = 36873697L
+        @JvmField
+        val isDistractionFreeModeEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_distraction_free_mode_enabled", IS_DISTRACTION_FREE_MODE_ENABLED_HASH)
+
+        private const val IS_MULTI_WINDOW_ENABLED_HASH = 36873697L
+        @JvmField
+        val isMultiWindowEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_multi_window_enabled", IS_MULTI_WINDOW_ENABLED_HASH)
+
+        private const val GET_EDITOR_SCALE_HASH = 1740695150L
+        @JvmField
+        val getEditorScaleBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_scale", GET_EDITOR_SCALE_HASH)
+
+        private const val GET_EDITOR_LANGUAGE_HASH = 201670096L
+        @JvmField
+        val getEditorLanguageBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_language", GET_EDITOR_LANGUAGE_HASH)
+
+        private const val IS_NODE_3D_SNAP_ENABLED_HASH = 36873697L
+        @JvmField
+        val isNode3dSnapEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_node_3d_snap_enabled", IS_NODE_3D_SNAP_ENABLED_HASH)
+
+        private const val GET_NODE_3D_TRANSLATE_SNAP_HASH = 1740695150L
+        @JvmField
+        val getNode3dTranslateSnapBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_node_3d_translate_snap", GET_NODE_3D_TRANSLATE_SNAP_HASH)
+
+        private const val GET_NODE_3D_ROTATE_SNAP_HASH = 1740695150L
+        @JvmField
+        val getNode3dRotateSnapBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_node_3d_rotate_snap", GET_NODE_3D_ROTATE_SNAP_HASH)
+
+        private const val GET_NODE_3D_SCALE_SNAP_HASH = 1740695150L
+        @JvmField
+        val getNode3dScaleSnapBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_node_3d_scale_snap", GET_NODE_3D_SCALE_SNAP_HASH)
+
+        private const val POPUP_DIALOG_HASH = 2015770942L
+        @JvmField
+        val popupDialogBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_dialog", POPUP_DIALOG_HASH)
+
+        private const val POPUP_DIALOG_CENTERED_HASH = 346557367L
+        @JvmField
+        val popupDialogCenteredBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_dialog_centered", POPUP_DIALOG_CENTERED_HASH)
+
+        private const val POPUP_DIALOG_CENTERED_RATIO_HASH = 2093669136L
+        @JvmField
+        val popupDialogCenteredRatioBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_dialog_centered_ratio", POPUP_DIALOG_CENTERED_RATIO_HASH)
+
+        private const val POPUP_DIALOG_CENTERED_CLAMPED_HASH = 3763385571L
+        @JvmField
+        val popupDialogCenteredClampedBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_dialog_centered_clamped", POPUP_DIALOG_CENTERED_CLAMPED_HASH)
+
+        private const val GET_CURRENT_FEATURE_PROFILE_HASH = 201670096L
+        @JvmField
+        val getCurrentFeatureProfileBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_current_feature_profile", GET_CURRENT_FEATURE_PROFILE_HASH)
+
+        private const val SET_CURRENT_FEATURE_PROFILE_HASH = 83702148L
+        @JvmField
+        val setCurrentFeatureProfileBind =
+            ObjectCalls.getMethodBind("EditorInterface", "set_current_feature_profile", SET_CURRENT_FEATURE_PROFILE_HASH)
+
+        private const val POPUP_NODE_SELECTOR_HASH = 2444591477L
+        @JvmField
+        val popupNodeSelectorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_node_selector", POPUP_NODE_SELECTOR_HASH)
+
+        private const val POPUP_PROPERTY_SELECTOR_HASH = 2955609011L
+        @JvmField
+        val popupPropertySelectorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_property_selector", POPUP_PROPERTY_SELECTOR_HASH)
+
+        private const val POPUP_METHOD_SELECTOR_HASH = 3585505226L
+        @JvmField
+        val popupMethodSelectorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_method_selector", POPUP_METHOD_SELECTOR_HASH)
+
+        private const val POPUP_QUICK_OPEN_HASH = 2271411043L
+        @JvmField
+        val popupQuickOpenBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_quick_open", POPUP_QUICK_OPEN_HASH)
+
+        private const val POPUP_CREATE_DIALOG_HASH = 495277124L
+        @JvmField
+        val popupCreateDialogBind =
+            ObjectCalls.getMethodBind("EditorInterface", "popup_create_dialog", POPUP_CREATE_DIALOG_HASH)
+
+        private const val GET_FILE_SYSTEM_DOCK_HASH = 3751012327L
+        @JvmField
+        val getFileSystemDockBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_file_system_dock", GET_FILE_SYSTEM_DOCK_HASH)
+
+        private const val SELECT_FILE_HASH = 83702148L
+        @JvmField
+        val selectFileBind =
+            ObjectCalls.getMethodBind("EditorInterface", "select_file", SELECT_FILE_HASH)
+
+        private const val GET_SELECTED_PATHS_HASH = 1139954409L
+        @JvmField
+        val getSelectedPathsBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_selected_paths", GET_SELECTED_PATHS_HASH)
+
+        private const val GET_CURRENT_PATH_HASH = 201670096L
+        @JvmField
+        val getCurrentPathBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_current_path", GET_CURRENT_PATH_HASH)
+
+        private const val GET_CURRENT_DIRECTORY_HASH = 201670096L
+        @JvmField
+        val getCurrentDirectoryBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_current_directory", GET_CURRENT_DIRECTORY_HASH)
+
+        private const val GET_INSPECTOR_HASH = 3517113938L
+        @JvmField
+        val getInspectorBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_inspector", GET_INSPECTOR_HASH)
+
+        private const val INSPECT_OBJECT_HASH = 127962172L
+        @JvmField
+        val inspectObjectBind =
+            ObjectCalls.getMethodBind("EditorInterface", "inspect_object", INSPECT_OBJECT_HASH)
+
+        private const val EDIT_RESOURCE_HASH = 968641751L
+        @JvmField
+        val editResourceBind =
+            ObjectCalls.getMethodBind("EditorInterface", "edit_resource", EDIT_RESOURCE_HASH)
+
+        private const val EDIT_NODE_HASH = 1078189570L
+        @JvmField
+        val editNodeBind =
+            ObjectCalls.getMethodBind("EditorInterface", "edit_node", EDIT_NODE_HASH)
+
+        private const val EDIT_SCRIPT_HASH = 219829402L
+        @JvmField
+        val editScriptBind =
+            ObjectCalls.getMethodBind("EditorInterface", "edit_script", EDIT_SCRIPT_HASH)
+
+        private const val OPEN_SCENE_FROM_PATH_HASH = 1168363258L
+        @JvmField
+        val openSceneFromPathBind =
+            ObjectCalls.getMethodBind("EditorInterface", "open_scene_from_path", OPEN_SCENE_FROM_PATH_HASH)
+
+        private const val RELOAD_SCENE_FROM_PATH_HASH = 83702148L
+        @JvmField
+        val reloadSceneFromPathBind =
+            ObjectCalls.getMethodBind("EditorInterface", "reload_scene_from_path", RELOAD_SCENE_FROM_PATH_HASH)
+
+        private const val SET_OBJECT_EDITED_HASH = 1462101905L
+        @JvmField
+        val setObjectEditedBind =
+            ObjectCalls.getMethodBind("EditorInterface", "set_object_edited", SET_OBJECT_EDITED_HASH)
+
+        private const val IS_OBJECT_EDITED_HASH = 397768994L
+        @JvmField
+        val isObjectEditedBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_object_edited", IS_OBJECT_EDITED_HASH)
+
+        private const val GET_OPEN_SCENES_HASH = 1139954409L
+        @JvmField
+        val getOpenScenesBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_open_scenes", GET_OPEN_SCENES_HASH)
+
+        private const val GET_UNSAVED_SCENES_HASH = 1139954409L
+        @JvmField
+        val getUnsavedScenesBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_unsaved_scenes", GET_UNSAVED_SCENES_HASH)
+
+        private const val GET_OPEN_SCENE_ROOTS_HASH = 3995934104L
+        @JvmField
+        val getOpenSceneRootsBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_open_scene_roots", GET_OPEN_SCENE_ROOTS_HASH)
+
+        private const val GET_EDITED_SCENE_ROOT_HASH = 3160264692L
+        @JvmField
+        val getEditedSceneRootBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_edited_scene_root", GET_EDITED_SCENE_ROOT_HASH)
+
+        private const val ADD_ROOT_NODE_HASH = 1078189570L
+        @JvmField
+        val addRootNodeBind =
+            ObjectCalls.getMethodBind("EditorInterface", "add_root_node", ADD_ROOT_NODE_HASH)
+
+        private const val SAVE_SCENE_HASH = 166280745L
+        @JvmField
+        val saveSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "save_scene", SAVE_SCENE_HASH)
+
+        private const val SAVE_SCENE_AS_HASH = 3647332257L
+        @JvmField
+        val saveSceneAsBind =
+            ObjectCalls.getMethodBind("EditorInterface", "save_scene_as", SAVE_SCENE_AS_HASH)
+
+        private const val SAVE_ALL_SCENES_HASH = 3218959716L
+        @JvmField
+        val saveAllScenesBind =
+            ObjectCalls.getMethodBind("EditorInterface", "save_all_scenes", SAVE_ALL_SCENES_HASH)
+
+        private const val CLOSE_SCENE_HASH = 166280745L
+        @JvmField
+        val closeSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "close_scene", CLOSE_SCENE_HASH)
+
+        private const val MARK_SCENE_AS_UNSAVED_HASH = 3218959716L
+        @JvmField
+        val markSceneAsUnsavedBind =
+            ObjectCalls.getMethodBind("EditorInterface", "mark_scene_as_unsaved", MARK_SCENE_AS_UNSAVED_HASH)
+
+        private const val PLAY_MAIN_SCENE_HASH = 3218959716L
+        @JvmField
+        val playMainSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "play_main_scene", PLAY_MAIN_SCENE_HASH)
+
+        private const val PLAY_CURRENT_SCENE_HASH = 3218959716L
+        @JvmField
+        val playCurrentSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "play_current_scene", PLAY_CURRENT_SCENE_HASH)
+
+        private const val PLAY_CUSTOM_SCENE_HASH = 83702148L
+        @JvmField
+        val playCustomSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "play_custom_scene", PLAY_CUSTOM_SCENE_HASH)
+
+        private const val STOP_PLAYING_SCENE_HASH = 3218959716L
+        @JvmField
+        val stopPlayingSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "stop_playing_scene", STOP_PLAYING_SCENE_HASH)
+
+        private const val IS_PLAYING_SCENE_HASH = 36873697L
+        @JvmField
+        val isPlayingSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_playing_scene", IS_PLAYING_SCENE_HASH)
+
+        private const val GET_PLAYING_SCENE_HASH = 201670096L
+        @JvmField
+        val getPlayingSceneBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_playing_scene", GET_PLAYING_SCENE_HASH)
+
+        private const val SET_MOVIE_MAKER_ENABLED_HASH = 2586408642L
+        @JvmField
+        val setMovieMakerEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "set_movie_maker_enabled", SET_MOVIE_MAKER_ENABLED_HASH)
+
+        private const val IS_MOVIE_MAKER_ENABLED_HASH = 36873697L
+        @JvmField
+        val isMovieMakerEnabledBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_movie_maker_enabled", IS_MOVIE_MAKER_ENABLED_HASH)
     }
 }

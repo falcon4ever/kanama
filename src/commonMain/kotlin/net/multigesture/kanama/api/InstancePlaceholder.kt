@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.get_stored_values
      */
     fun getStoredValues(withOrder: Boolean = false): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithBoolArgRetDictionary(getStoredValuesBind, segment, withOrder)
+        return ObjectCalls.ptrcallWithBoolArgRetDictionary(Binds.getStoredValuesBind, segment, withOrder)
     }
 
     /**
@@ -32,7 +33,7 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.create_instance
      */
     fun createInstance(replace: Boolean = false, customScene: PackedScene?): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(createInstanceBind, segment, replace, customScene?.requireOpenHandle() ?: NULL_SEGMENT))
+        return Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(Binds.createInstanceBind, segment, replace, customScene?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -42,7 +43,7 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.get_instance_path
      */
     fun getInstancePath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getInstancePathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInstancePathBind, segment)
     }
 
     companion object {
@@ -52,20 +53,22 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): InstancePlaceholder? =
             if (handle.address() == 0L) null else InstancePlaceholder(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_STORED_VALUES_HASH = 2230153369L
-        private val getStoredValuesBind by lazy {
+        @JvmField
+        val getStoredValuesBind =
             ObjectCalls.getMethodBind("InstancePlaceholder", "get_stored_values", GET_STORED_VALUES_HASH)
-        }
 
         private const val CREATE_INSTANCE_HASH = 3794612210L
-        private val createInstanceBind by lazy {
+        @JvmField
+        val createInstanceBind =
             ObjectCalls.getMethodBind("InstancePlaceholder", "create_instance", CREATE_INSTANCE_HASH)
-        }
 
         private const val GET_INSTANCE_PATH_HASH = 201670096L
-        private val getInstancePathBind by lazy {
+        @JvmField
+        val getInstancePathBind =
             ObjectCalls.getMethodBind("InstancePlaceholder", "get_instance_path", GET_INSTANCE_PATH_HASH)
-        }
     }
 }

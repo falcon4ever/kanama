@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -46,7 +47,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_cell_mode
      */
     fun setCellMode(column: Int, mode: TreeItem.TreeCellMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCellModeBind, segment, column, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setCellModeBind, segment, column, mode.value)
     }
 
     /**
@@ -55,7 +56,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_cell_mode
      */
     fun getCellMode(column: Int): TreeItem.TreeCellMode {
-        return TreeItem.TreeCellMode(ObjectCalls.ptrcallWithIntArgRetLong(getCellModeBind, segment, column))
+        return TreeItem.TreeCellMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCellModeBind, segment, column))
     }
 
     /**
@@ -66,7 +67,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_auto_translate_mode
      */
     fun setAutoTranslateMode(column: Int, mode: Node.AutoTranslateMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setAutoTranslateModeBind, segment, column, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setAutoTranslateModeBind, segment, column, mode.value)
     }
 
     /**
@@ -75,7 +76,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_auto_translate_mode
      */
     fun getAutoTranslateMode(column: Int): Node.AutoTranslateMode {
-        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getAutoTranslateModeBind, segment, column))
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getAutoTranslateModeBind, segment, column))
     }
 
     /**
@@ -86,7 +87,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_edit_multiline
      */
     fun setEditMultiline(column: Int, multiline: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setEditMultilineBind, segment, column, multiline)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setEditMultilineBind, segment, column, multiline)
     }
 
     /**
@@ -95,7 +96,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_edit_multiline
      */
     fun isEditMultiline(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEditMultilineBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isEditMultilineBind, segment, column)
     }
 
     /**
@@ -104,7 +105,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_checked
      */
     fun setChecked(column: Int, checked: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCheckedBind, segment, column, checked)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCheckedBind, segment, column, checked)
     }
 
     /**
@@ -114,7 +115,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_indeterminate
      */
     fun setIndeterminate(column: Int, indeterminate: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setIndeterminateBind, segment, column, indeterminate)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setIndeterminateBind, segment, column, indeterminate)
     }
 
     /**
@@ -123,7 +124,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_checked
      */
     fun isChecked(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isCheckedBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isCheckedBind, segment, column)
     }
 
     /**
@@ -132,7 +133,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_indeterminate
      */
     fun isIndeterminate(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isIndeterminateBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isIndeterminateBind, segment, column)
     }
 
     /**
@@ -145,7 +146,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.propagate_check
      */
     fun propagateCheck(column: Int, emitSignal: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(propagateCheckBind, segment, column, emitSignal)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.propagateCheckBind, segment, column, emitSignal)
     }
 
     /**
@@ -154,7 +155,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_text
      */
     fun setText(column: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTextBind, segment, column, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setTextBind, segment, column, text)
     }
 
     /**
@@ -163,7 +164,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_text
      */
     fun getText(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTextBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getTextBind, segment, column)
     }
 
     /**
@@ -172,7 +173,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_description
      */
     fun setDescription(column: Int, description: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setDescriptionBind, segment, column, description)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setDescriptionBind, segment, column, description)
     }
 
     /**
@@ -181,7 +182,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_description
      */
     fun getDescription(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getDescriptionBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getDescriptionBind, segment, column)
     }
 
     /**
@@ -190,7 +191,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_text_direction
      */
     fun setTextDirection(column: Int, direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTextDirectionBind, segment, column, direction.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTextDirectionBind, segment, column, direction.value)
     }
 
     /**
@@ -199,7 +200,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_text_direction
      */
     fun getTextDirection(column: Int): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getTextDirectionBind, segment, column))
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTextDirectionBind, segment, column))
     }
 
     /**
@@ -209,7 +210,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_autowrap_mode
      */
     fun setAutowrapMode(column: Int, autowrapMode: TextServer.AutowrapMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setAutowrapModeBind, segment, column, autowrapMode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setAutowrapModeBind, segment, column, autowrapMode.value)
     }
 
     /**
@@ -219,7 +220,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_autowrap_mode
      */
     fun getAutowrapMode(column: Int): TextServer.AutowrapMode {
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallWithIntArgRetLong(getAutowrapModeBind, segment, column))
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getAutowrapModeBind, segment, column))
     }
 
     /**
@@ -229,7 +230,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(column: Int, flags: TextServer.LineBreakFlag) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setAutowrapTrimFlagsBind, segment, column, flags.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setAutowrapTrimFlagsBind, segment, column, flags.value)
     }
 
     /**
@@ -240,7 +241,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(column: Int): TextServer.LineBreakFlag {
-        return TextServer.LineBreakFlag(ObjectCalls.ptrcallWithIntArgRetLong(getAutowrapTrimFlagsBind, segment, column))
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getAutowrapTrimFlagsBind, segment, column))
     }
 
     /**
@@ -250,7 +251,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(column: Int, overrunBehavior: TextServer.OverrunBehavior) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTextOverrunBehaviorBind, segment, column, overrunBehavior.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTextOverrunBehaviorBind, segment, column, overrunBehavior.value)
     }
 
     /**
@@ -260,7 +261,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(column: Int): TextServer.OverrunBehavior {
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallWithIntArgRetLong(getTextOverrunBehaviorBind, segment, column))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTextOverrunBehaviorBind, segment, column))
     }
 
     /**
@@ -269,7 +270,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(column: Int, parser: TextServer.StructuredTextParser) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setStructuredTextBidiOverrideBind, segment, column, parser.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setStructuredTextBidiOverrideBind, segment, column, parser.value)
     }
 
     /**
@@ -278,7 +279,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(column: Int): TextServer.StructuredTextParser {
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallWithIntArgRetLong(getStructuredTextBidiOverrideBind, segment, column))
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getStructuredTextBidiOverrideBind, segment, column))
     }
 
     /**
@@ -287,7 +288,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(column: Int, args: List<Any?>) {
-        ObjectCalls.ptrcallWithIntAndArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, column, args)
+        ObjectCalls.ptrcallWithIntAndArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, column, args)
     }
 
     /**
@@ -296,7 +297,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(column: Int): List<Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetArray(getStructuredTextBidiOverrideOptionsBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment, column)
     }
 
     /**
@@ -306,7 +307,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_language
      */
     fun setLanguage(column: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setLanguageBind, segment, column, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setLanguageBind, segment, column, language)
     }
 
     /**
@@ -315,7 +316,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_language
      */
     fun getLanguage(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getLanguageBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getLanguageBind, segment, column)
     }
 
     /**
@@ -324,7 +325,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_suffix
      */
     fun setSuffix(column: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setSuffixBind, segment, column, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setSuffixBind, segment, column, text)
     }
 
     /**
@@ -333,7 +334,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_suffix
      */
     fun getSuffix(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getSuffixBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getSuffixBind, segment, column)
     }
 
     /**
@@ -344,7 +345,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon
      */
     fun setIcon(column: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setIconBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setIconBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -353,7 +354,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon
      */
     fun getIcon(column: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getIconBind, segment, column))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getIconBind, segment, column))
     }
 
     /**
@@ -363,7 +364,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon_overlay
      */
     fun setIconOverlay(column: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setIconOverlayBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setIconOverlayBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -372,7 +373,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon_overlay
      */
     fun getIconOverlay(column: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getIconOverlayBind, segment, column))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getIconOverlayBind, segment, column))
     }
 
     /**
@@ -381,7 +382,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon_region
      */
     fun setIconRegion(column: Int, region: Rect2) {
-        ObjectCalls.ptrcallWithIntAndRect2Arg(setIconRegionBind, segment, column, region)
+        ObjectCalls.ptrcallWithIntAndRect2Arg(Binds.setIconRegionBind, segment, column, region)
     }
 
     /**
@@ -390,7 +391,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon_region
      */
     fun getIconRegion(column: Int): Rect2 {
-        return ObjectCalls.ptrcallWithIntArgRetRect2(getIconRegionBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetRect2(Binds.getIconRegionBind, segment, column)
     }
 
     /**
@@ -401,7 +402,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon_max_width
      */
     fun setIconMaxWidth(column: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setIconMaxWidthBind, segment, column, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setIconMaxWidthBind, segment, column, width)
     }
 
     /**
@@ -410,7 +411,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon_max_width
      */
     fun getIconMaxWidth(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getIconMaxWidthBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getIconMaxWidthBind, segment, column)
     }
 
     /**
@@ -419,7 +420,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon_modulate
      */
     fun setIconModulate(column: Int, modulate: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setIconModulateBind, segment, column, modulate)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setIconModulateBind, segment, column, modulate)
     }
 
     /**
@@ -428,7 +429,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon_modulate
      */
     fun getIconModulate(column: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getIconModulateBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getIconModulateBind, segment, column)
     }
 
     /**
@@ -437,7 +438,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_range
      */
     fun setRange(column: Int, value: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setRangeBind, segment, column, value)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setRangeBind, segment, column, value)
     }
 
     /**
@@ -446,7 +447,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_range
      */
     fun getRange(column: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getRangeBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getRangeBind, segment, column)
     }
 
     /**
@@ -457,7 +458,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_range_config
      */
     fun setRangeConfig(column: Int, min: Double, max: Double, step: Double, expr: Boolean = false) {
-        ObjectCalls.ptrcallWithIntThreeDoubleBoolArgs(setRangeConfigBind, segment, column, min, max, step, expr)
+        ObjectCalls.ptrcallWithIntThreeDoubleBoolArgs(Binds.setRangeConfigBind, segment, column, min, max, step, expr)
     }
 
     /**
@@ -467,7 +468,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_range_config
      */
     fun getRangeConfig(column: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getRangeConfigBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getRangeConfigBind, segment, column)
     }
 
     /**
@@ -477,7 +478,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_metadata
      */
     fun setMetadata(column: Int, meta: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setMetadataBind, segment, column, meta)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setMetadataBind, segment, column, meta)
     }
 
     /**
@@ -486,7 +487,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_metadata
      */
     fun getMetadata(column: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getMetadataBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getMetadataBind, segment, column)
     }
 
     /**
@@ -497,7 +498,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_draw
      */
     fun setCustomDraw(column: Int, objectValue: GodotObject, callback: String) {
-        ObjectCalls.ptrcallWithIntObjectStringNameArgs(setCustomDrawBind, segment, column, objectValue.segment, callback)
+        ObjectCalls.ptrcallWithIntObjectStringNameArgs(Binds.setCustomDrawBind, segment, column, objectValue.segment, callback)
     }
 
     /**
@@ -510,7 +511,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_draw_callback
      */
     fun setCustomDrawCallback(column: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithIntCallableArgs(setCustomDrawCallbackBind, segment, column, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithIntCallableArgs(Binds.setCustomDrawCallbackBind, segment, column, callback.target.segment, callback.method)
     }
 
     /**
@@ -519,7 +520,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_draw_callback
      */
     fun getCustomDrawCallback(column: Int): GodotCallable? {
-        return ObjectCalls.ptrcallWithIntArgRetCallable(getCustomDrawCallbackBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetCallable(Binds.getCustomDrawCallbackBind, segment, column)
     }
 
     /**
@@ -529,7 +530,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_stylebox
      */
     fun setCustomStylebox(column: Int, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setCustomStyleboxBind, segment, column, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setCustomStyleboxBind, segment, column, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -538,7 +539,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_stylebox
      */
     fun getCustomStylebox(column: Int): StyleBox? {
-        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getCustomStyleboxBind, segment, column))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getCustomStyleboxBind, segment, column))
     }
 
     /**
@@ -547,7 +548,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_collapsed
      */
     fun setCollapsed(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollapsedBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollapsedBind, segment, enable)
     }
 
     /**
@@ -556,7 +557,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_collapsed
      */
     fun isCollapsed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollapsedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollapsedBind, segment)
     }
 
     /**
@@ -565,7 +566,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_collapsed_recursive
      */
     fun setCollapsedRecursive(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollapsedRecursiveBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollapsedRecursiveBind, segment, enable)
     }
 
     /**
@@ -575,7 +576,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_any_collapsed
      */
     fun isAnyCollapsed(onlyVisible: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithBoolArgRetBool(isAnyCollapsedBind, segment, onlyVisible)
+        return ObjectCalls.ptrcallWithBoolArgRetBool(Binds.isAnyCollapsedBind, segment, onlyVisible)
     }
 
     /**
@@ -585,7 +586,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_visible
      */
     fun setVisible(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, enable)
     }
 
     /**
@@ -595,7 +596,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -604,7 +605,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_visible_in_tree
      */
     fun isVisibleInTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleInTreeBind, segment)
     }
 
     /**
@@ -613,7 +614,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.uncollapse_tree
      */
     fun uncollapseTree() {
-        ObjectCalls.ptrcallNoArgs(uncollapseTreeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.uncollapseTreeBind, segment)
     }
 
     /**
@@ -622,7 +623,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_minimum_height
      */
     fun setCustomMinimumHeight(height: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCustomMinimumHeightBind, segment, height)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCustomMinimumHeightBind, segment, height)
     }
 
     /**
@@ -631,7 +632,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_minimum_height
      */
     fun getCustomMinimumHeight(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCustomMinimumHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomMinimumHeightBind, segment)
     }
 
     /**
@@ -640,7 +641,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_selectable
      */
     fun setSelectable(column: Int, selectable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSelectableBind, segment, column, selectable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setSelectableBind, segment, column, selectable)
     }
 
     /**
@@ -649,7 +650,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_selectable
      */
     fun isSelectable(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSelectableBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSelectableBind, segment, column)
     }
 
     /**
@@ -658,7 +659,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_selected
      */
     fun isSelected(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSelectedBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSelectedBind, segment, column)
     }
 
     /**
@@ -668,7 +669,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.select
      */
     fun select(column: Int, setAsCursor: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(selectBind, segment, column, setAsCursor)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.selectBind, segment, column, setAsCursor)
     }
 
     /**
@@ -677,7 +678,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.deselect
      */
     fun deselect(column: Int) {
-        ObjectCalls.ptrcallWithIntArg(deselectBind, segment, column)
+        ObjectCalls.ptrcallWithIntArg(Binds.deselectBind, segment, column)
     }
 
     /**
@@ -686,7 +687,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_editable
      */
     fun setEditable(column: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setEditableBind, segment, column, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setEditableBind, segment, column, enabled)
     }
 
     /**
@@ -695,7 +696,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_editable
      */
     fun isEditable(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEditableBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isEditableBind, segment, column)
     }
 
     /**
@@ -704,7 +705,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_color
      */
     fun setCustomColor(column: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setCustomColorBind, segment, column, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setCustomColorBind, segment, column, color)
     }
 
     /**
@@ -713,7 +714,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_color
      */
     fun getCustomColor(column: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getCustomColorBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getCustomColorBind, segment, column)
     }
 
     /**
@@ -722,7 +723,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.clear_custom_color
      */
     fun clearCustomColor(column: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearCustomColorBind, segment, column)
+        ObjectCalls.ptrcallWithIntArg(Binds.clearCustomColorBind, segment, column)
     }
 
     /**
@@ -731,7 +732,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_font
      */
     fun setCustomFont(column: Int, font: Font?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setCustomFontBind, segment, column, font?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setCustomFontBind, segment, column, font?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -740,7 +741,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_font
      */
     fun getCustomFont(column: Int): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getCustomFontBind, segment, column))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getCustomFontBind, segment, column))
     }
 
     /**
@@ -749,7 +750,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_font_size
      */
     fun setCustomFontSize(column: Int, fontSize: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setCustomFontSizeBind, segment, column, fontSize)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setCustomFontSizeBind, segment, column, fontSize)
     }
 
     /**
@@ -758,7 +759,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_font_size
      */
     fun getCustomFontSize(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCustomFontSizeBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCustomFontSizeBind, segment, column)
     }
 
     /**
@@ -768,7 +769,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_bg_color
      */
     fun setCustomBgColor(column: Int, color: Color, justOutline: Boolean = false) {
-        ObjectCalls.ptrcallWithIntColorBoolArgs(setCustomBgColorBind, segment, column, color, justOutline)
+        ObjectCalls.ptrcallWithIntColorBoolArgs(Binds.setCustomBgColorBind, segment, column, color, justOutline)
     }
 
     /**
@@ -777,7 +778,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.clear_custom_bg_color
      */
     fun clearCustomBgColor(column: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearCustomBgColorBind, segment, column)
+        ObjectCalls.ptrcallWithIntArg(Binds.clearCustomBgColorBind, segment, column)
     }
 
     /**
@@ -786,7 +787,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_bg_color
      */
     fun getCustomBgColor(column: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getCustomBgColorBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getCustomBgColorBind, segment, column)
     }
 
     /**
@@ -795,7 +796,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_as_button
      */
     fun setCustomAsButton(column: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCustomAsButtonBind, segment, column, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCustomAsButtonBind, segment, column, enable)
     }
 
     /**
@@ -804,7 +805,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_custom_set_as_button
      */
     fun isCustomSetAsButton(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isCustomSetAsButtonBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isCustomSetAsButtonBind, segment, column)
     }
 
     /**
@@ -813,7 +814,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.clear_buttons
      */
     fun clearButtons() {
-        ObjectCalls.ptrcallNoArgs(clearButtonsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearButtonsBind, segment)
     }
 
     /**
@@ -827,7 +828,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.add_button
      */
     fun addButton(column: Int, button: Texture2D?, id: Int = -1, disabled: Boolean = false, tooltipText: String = "", description: String = "") {
-        ObjectCalls.ptrcallWithIntObjectIntBoolTwoStringArgs(addButtonBind, segment, column, button?.requireOpenHandle() ?: NULL_SEGMENT, id, disabled, tooltipText, description)
+        ObjectCalls.ptrcallWithIntObjectIntBoolTwoStringArgs(Binds.addButtonBind, segment, column, button?.requireOpenHandle() ?: NULL_SEGMENT, id, disabled, tooltipText, description)
     }
 
     /**
@@ -836,7 +837,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button_count
      */
     fun getButtonCount(column: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getButtonCountBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getButtonCountBind, segment, column)
     }
 
     /**
@@ -845,7 +846,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button_tooltip_text
      */
     fun getButtonTooltipText(column: Int, buttonIndex: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getButtonTooltipTextBind, segment, column, buttonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getButtonTooltipTextBind, segment, column, buttonIndex)
     }
 
     /**
@@ -854,7 +855,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button_id
      */
     fun getButtonId(column: Int, buttonIndex: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getButtonIdBind, segment, column, buttonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getButtonIdBind, segment, column, buttonIndex)
     }
 
     /**
@@ -864,7 +865,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button_by_id
      */
     fun getButtonById(column: Int, id: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getButtonByIdBind, segment, column, id)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getButtonByIdBind, segment, column, id)
     }
 
     /**
@@ -874,7 +875,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button_color
      */
     fun getButtonColor(column: Int, id: Int): Color {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getButtonColorBind, segment, column, id)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getButtonColorBind, segment, column, id)
     }
 
     /**
@@ -883,7 +884,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button
      */
     fun getButton(column: Int, buttonIndex: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getButtonBind, segment, column, buttonIndex))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(Binds.getButtonBind, segment, column, buttonIndex))
     }
 
     /**
@@ -892,7 +893,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_button_tooltip_text
      */
     fun setButtonTooltipText(column: Int, buttonIndex: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setButtonTooltipTextBind, segment, column, buttonIndex, tooltip)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.setButtonTooltipTextBind, segment, column, buttonIndex, tooltip)
     }
 
     /**
@@ -901,7 +902,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_button
      */
     fun setButton(column: Int, buttonIndex: Int, button: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setButtonBind, segment, column, buttonIndex, button?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setButtonBind, segment, column, buttonIndex, button?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -910,7 +911,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.erase_button
      */
     fun eraseButton(column: Int, buttonIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(eraseButtonBind, segment, column, buttonIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.eraseButtonBind, segment, column, buttonIndex)
     }
 
     /**
@@ -919,7 +920,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_button_description
      */
     fun setButtonDescription(column: Int, buttonIndex: Int, description: String) {
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setButtonDescriptionBind, segment, column, buttonIndex, description)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.setButtonDescriptionBind, segment, column, buttonIndex, description)
     }
 
     /**
@@ -928,7 +929,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_button_disabled
      */
     fun setButtonDisabled(column: Int, buttonIndex: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setButtonDisabledBind, segment, column, buttonIndex, disabled)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setButtonDisabledBind, segment, column, buttonIndex, disabled)
     }
 
     /**
@@ -937,7 +938,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_button_color
      */
     fun setButtonColor(column: Int, buttonIndex: Int, color: Color) {
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setButtonColorBind, segment, column, buttonIndex, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(Binds.setButtonColorBind, segment, column, buttonIndex, color)
     }
 
     /**
@@ -946,7 +947,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_button_disabled
      */
     fun isButtonDisabled(column: Int, buttonIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isButtonDisabledBind, segment, column, buttonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isButtonDisabledBind, segment, column, buttonIndex)
     }
 
     /**
@@ -955,7 +956,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_tooltip_text
      */
     fun setTooltipText(column: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTooltipTextBind, segment, column, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setTooltipTextBind, segment, column, tooltip)
     }
 
     /**
@@ -964,7 +965,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_tooltip_text
      */
     fun getTooltipText(column: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTooltipTextBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getTooltipTextBind, segment, column)
     }
 
     /**
@@ -973,7 +974,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_text_alignment
      */
     fun setTextAlignment(column: Int, textAlignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTextAlignmentBind, segment, column, textAlignment.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTextAlignmentBind, segment, column, textAlignment.value)
     }
 
     /**
@@ -982,7 +983,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_text_alignment
      */
     fun getTextAlignment(column: Int): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallWithIntArgRetLong(getTextAlignmentBind, segment, column))
+        return HorizontalAlignment(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTextAlignmentBind, segment, column))
     }
 
     /**
@@ -991,7 +992,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_expand_right
      */
     fun setExpandRight(column: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setExpandRightBind, segment, column, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setExpandRightBind, segment, column, enable)
     }
 
     /**
@@ -1000,7 +1001,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_expand_right
      */
     fun getExpandRight(column: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getExpandRightBind, segment, column)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getExpandRightBind, segment, column)
     }
 
     /**
@@ -1009,7 +1010,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_disable_folding
      */
     fun setDisableFolding(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableFoldingBind, segment, disable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableFoldingBind, segment, disable)
     }
 
     /**
@@ -1018,7 +1019,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_folding_disabled
      */
     fun isFoldingDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoldingDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFoldingDisabledBind, segment)
     }
 
     /**
@@ -1027,7 +1028,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_accept_children
      */
     fun setAcceptChildren(allowed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAcceptChildrenBind, segment, allowed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAcceptChildrenBind, segment, allowed)
     }
 
     /**
@@ -1036,7 +1037,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.is_accepting_children
      */
     fun isAcceptingChildren(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAcceptingChildrenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAcceptingChildrenBind, segment)
     }
 
     /**
@@ -1047,7 +1048,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.create_child
      */
     fun createChild(index: Int = -1): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithIntArgRetObject(createChildBind, segment, index))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.createChildBind, segment, index))
     }
 
     /**
@@ -1057,7 +1058,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.add_child
      */
     fun addChild(child: TreeItem) {
-        ObjectCalls.ptrcallWithObjectArgs(addChildBind, segment, listOf(child.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addChildBind, segment, listOf(child.segment))
     }
 
     /**
@@ -1069,7 +1070,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.remove_child
      */
     fun removeChild(child: TreeItem) {
-        ObjectCalls.ptrcallWithObjectArgs(removeChildBind, segment, listOf(child.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeChildBind, segment, listOf(child.segment))
     }
 
     /**
@@ -1078,7 +1079,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_tree
      */
     fun getTree(): Tree? {
-        return Tree.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, segment))
+        return Tree.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTreeBind, segment))
     }
 
     /**
@@ -1087,7 +1088,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_next
      */
     fun getNext(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextBind, segment))
     }
 
     /**
@@ -1096,7 +1097,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_prev
      */
     fun getPrev(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrevBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPrevBind, segment))
     }
 
     /**
@@ -1105,7 +1106,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_parent
      */
     fun getParent(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentBind, segment))
     }
 
     /**
@@ -1114,7 +1115,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_first_child
      */
     fun getFirstChild(): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFirstChildBind, segment))
+        return TreeItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFirstChildBind, segment))
     }
 
     /**
@@ -1125,7 +1126,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_next_in_tree
      */
     fun getNextInTree(wrap: Boolean = false): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(getNextInTreeBind, segment, wrap))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.getNextInTreeBind, segment, wrap))
     }
 
     /**
@@ -1136,7 +1137,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_prev_in_tree
      */
     fun getPrevInTree(wrap: Boolean = false): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(getPrevInTreeBind, segment, wrap))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.getPrevInTreeBind, segment, wrap))
     }
 
     /**
@@ -1148,7 +1149,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_next_visible
      */
     fun getNextVisible(wrap: Boolean = false): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(getNextVisibleBind, segment, wrap))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.getNextVisibleBind, segment, wrap))
     }
 
     /**
@@ -1160,7 +1161,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_prev_visible
      */
     fun getPrevVisible(wrap: Boolean = false): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(getPrevVisibleBind, segment, wrap))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.getPrevVisibleBind, segment, wrap))
     }
 
     /**
@@ -1170,7 +1171,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_child
      */
     fun getChild(index: Int): TreeItem? {
-        return TreeItem.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getChildBind, segment, index))
+        return TreeItem.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getChildBind, segment, index))
     }
 
     /**
@@ -1179,7 +1180,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_child_count
      */
     fun getChildCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getChildCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getChildCountBind, segment)
     }
 
     /**
@@ -1188,7 +1189,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_children
      */
     fun getChildren(): List<TreeItem> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getChildrenBind, segment, TreeItem::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getChildrenBind, segment, TreeItem::wrap)
     }
 
     /**
@@ -1198,7 +1199,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_index
      */
     fun getIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIndexBind, segment)
     }
 
     /**
@@ -1208,7 +1209,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.move_before
      */
     fun moveBefore(item: TreeItem) {
-        ObjectCalls.ptrcallWithObjectArgs(moveBeforeBind, segment, listOf(item.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.moveBeforeBind, segment, listOf(item.segment))
     }
 
     /**
@@ -1218,7 +1219,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.move_after
      */
     fun moveAfter(item: TreeItem) {
-        ObjectCalls.ptrcallWithObjectArgs(moveAfterBind, segment, listOf(item.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.moveAfterBind, segment, listOf(item.segment))
     }
 
     /**
@@ -1228,7 +1229,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.call_recursive
      */
     fun callRecursive(method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(callRecursiveBind, segment, listOf(method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(Binds.callRecursiveBind, segment, listOf(method, *extraArgs))
     }
 
     /**
@@ -1291,630 +1292,632 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): TreeItem? =
             if (handle.address() == 0L) null else TreeItem(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CELL_MODE_HASH = 289920701L
-        private val setCellModeBind by lazy {
+        @JvmField
+        val setCellModeBind =
             ObjectCalls.getMethodBind("TreeItem", "set_cell_mode", SET_CELL_MODE_HASH)
-        }
 
         private const val GET_CELL_MODE_HASH = 3406114978L
-        private val getCellModeBind by lazy {
+        @JvmField
+        val getCellModeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_cell_mode", GET_CELL_MODE_HASH)
-        }
 
         private const val SET_AUTO_TRANSLATE_MODE_HASH = 287402019L
-        private val setAutoTranslateModeBind by lazy {
+        @JvmField
+        val setAutoTranslateModeBind =
             ObjectCalls.getMethodBind("TreeItem", "set_auto_translate_mode", SET_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val GET_AUTO_TRANSLATE_MODE_HASH = 906302372L
-        private val getAutoTranslateModeBind by lazy {
+        @JvmField
+        val getAutoTranslateModeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_auto_translate_mode", GET_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val SET_EDIT_MULTILINE_HASH = 300928843L
-        private val setEditMultilineBind by lazy {
+        @JvmField
+        val setEditMultilineBind =
             ObjectCalls.getMethodBind("TreeItem", "set_edit_multiline", SET_EDIT_MULTILINE_HASH)
-        }
 
         private const val IS_EDIT_MULTILINE_HASH = 1116898809L
-        private val isEditMultilineBind by lazy {
+        @JvmField
+        val isEditMultilineBind =
             ObjectCalls.getMethodBind("TreeItem", "is_edit_multiline", IS_EDIT_MULTILINE_HASH)
-        }
 
         private const val SET_CHECKED_HASH = 300928843L
-        private val setCheckedBind by lazy {
+        @JvmField
+        val setCheckedBind =
             ObjectCalls.getMethodBind("TreeItem", "set_checked", SET_CHECKED_HASH)
-        }
 
         private const val SET_INDETERMINATE_HASH = 300928843L
-        private val setIndeterminateBind by lazy {
+        @JvmField
+        val setIndeterminateBind =
             ObjectCalls.getMethodBind("TreeItem", "set_indeterminate", SET_INDETERMINATE_HASH)
-        }
 
         private const val IS_CHECKED_HASH = 1116898809L
-        private val isCheckedBind by lazy {
+        @JvmField
+        val isCheckedBind =
             ObjectCalls.getMethodBind("TreeItem", "is_checked", IS_CHECKED_HASH)
-        }
 
         private const val IS_INDETERMINATE_HASH = 1116898809L
-        private val isIndeterminateBind by lazy {
+        @JvmField
+        val isIndeterminateBind =
             ObjectCalls.getMethodBind("TreeItem", "is_indeterminate", IS_INDETERMINATE_HASH)
-        }
 
         private const val PROPAGATE_CHECK_HASH = 972357352L
-        private val propagateCheckBind by lazy {
+        @JvmField
+        val propagateCheckBind =
             ObjectCalls.getMethodBind("TreeItem", "propagate_check", PROPAGATE_CHECK_HASH)
-        }
 
         private const val SET_TEXT_HASH = 501894301L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("TreeItem", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 844755477L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("TreeItem", "get_text", GET_TEXT_HASH)
-        }
 
         private const val SET_DESCRIPTION_HASH = 501894301L
-        private val setDescriptionBind by lazy {
+        @JvmField
+        val setDescriptionBind =
             ObjectCalls.getMethodBind("TreeItem", "set_description", SET_DESCRIPTION_HASH)
-        }
 
         private const val GET_DESCRIPTION_HASH = 844755477L
-        private val getDescriptionBind by lazy {
+        @JvmField
+        val getDescriptionBind =
             ObjectCalls.getMethodBind("TreeItem", "get_description", GET_DESCRIPTION_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 1707680378L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("TreeItem", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 4235602388L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("TreeItem", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_AUTOWRAP_MODE_HASH = 3633006561L
-        private val setAutowrapModeBind by lazy {
+        @JvmField
+        val setAutowrapModeBind =
             ObjectCalls.getMethodBind("TreeItem", "set_autowrap_mode", SET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val GET_AUTOWRAP_MODE_HASH = 2902757236L
-        private val getAutowrapModeBind by lazy {
+        @JvmField
+        val getAutowrapModeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_autowrap_mode", GET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val SET_AUTOWRAP_TRIM_FLAGS_HASH = 2186029660L
-        private val setAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val setAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("TreeItem", "set_autowrap_trim_flags", SET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val GET_AUTOWRAP_TRIM_FLAGS_HASH = 3513056523L
-        private val getAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val getAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("TreeItem", "get_autowrap_trim_flags", GET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val SET_TEXT_OVERRUN_BEHAVIOR_HASH = 1940772195L
-        private val setTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("TreeItem", "set_text_overrun_behavior", SET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TEXT_OVERRUN_BEHAVIOR_HASH = 3782727860L
-        private val getTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("TreeItem", "get_text_overrun_behavior", GET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 868756907L
-        private val setStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("TreeItem", "set_structured_text_bidi_override", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3377823772L
-        private val getStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("TreeItem", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 537221740L
-        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("TreeItem", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 663333327L
-        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("TreeItem", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 501894301L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("TreeItem", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 844755477L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("TreeItem", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_SUFFIX_HASH = 501894301L
-        private val setSuffixBind by lazy {
+        @JvmField
+        val setSuffixBind =
             ObjectCalls.getMethodBind("TreeItem", "set_suffix", SET_SUFFIX_HASH)
-        }
 
         private const val GET_SUFFIX_HASH = 844755477L
-        private val getSuffixBind by lazy {
+        @JvmField
+        val getSuffixBind =
             ObjectCalls.getMethodBind("TreeItem", "get_suffix", GET_SUFFIX_HASH)
-        }
 
         private const val SET_ICON_HASH = 666127730L
-        private val setIconBind by lazy {
+        @JvmField
+        val setIconBind =
             ObjectCalls.getMethodBind("TreeItem", "set_icon", SET_ICON_HASH)
-        }
 
         private const val GET_ICON_HASH = 3536238170L
-        private val getIconBind by lazy {
+        @JvmField
+        val getIconBind =
             ObjectCalls.getMethodBind("TreeItem", "get_icon", GET_ICON_HASH)
-        }
 
         private const val SET_ICON_OVERLAY_HASH = 666127730L
-        private val setIconOverlayBind by lazy {
+        @JvmField
+        val setIconOverlayBind =
             ObjectCalls.getMethodBind("TreeItem", "set_icon_overlay", SET_ICON_OVERLAY_HASH)
-        }
 
         private const val GET_ICON_OVERLAY_HASH = 3536238170L
-        private val getIconOverlayBind by lazy {
+        @JvmField
+        val getIconOverlayBind =
             ObjectCalls.getMethodBind("TreeItem", "get_icon_overlay", GET_ICON_OVERLAY_HASH)
-        }
 
         private const val SET_ICON_REGION_HASH = 1356297692L
-        private val setIconRegionBind by lazy {
+        @JvmField
+        val setIconRegionBind =
             ObjectCalls.getMethodBind("TreeItem", "set_icon_region", SET_ICON_REGION_HASH)
-        }
 
         private const val GET_ICON_REGION_HASH = 3327874267L
-        private val getIconRegionBind by lazy {
+        @JvmField
+        val getIconRegionBind =
             ObjectCalls.getMethodBind("TreeItem", "get_icon_region", GET_ICON_REGION_HASH)
-        }
 
         private const val SET_ICON_MAX_WIDTH_HASH = 3937882851L
-        private val setIconMaxWidthBind by lazy {
+        @JvmField
+        val setIconMaxWidthBind =
             ObjectCalls.getMethodBind("TreeItem", "set_icon_max_width", SET_ICON_MAX_WIDTH_HASH)
-        }
 
         private const val GET_ICON_MAX_WIDTH_HASH = 923996154L
-        private val getIconMaxWidthBind by lazy {
+        @JvmField
+        val getIconMaxWidthBind =
             ObjectCalls.getMethodBind("TreeItem", "get_icon_max_width", GET_ICON_MAX_WIDTH_HASH)
-        }
 
         private const val SET_ICON_MODULATE_HASH = 2878471219L
-        private val setIconModulateBind by lazy {
+        @JvmField
+        val setIconModulateBind =
             ObjectCalls.getMethodBind("TreeItem", "set_icon_modulate", SET_ICON_MODULATE_HASH)
-        }
 
         private const val GET_ICON_MODULATE_HASH = 3457211756L
-        private val getIconModulateBind by lazy {
+        @JvmField
+        val getIconModulateBind =
             ObjectCalls.getMethodBind("TreeItem", "get_icon_modulate", GET_ICON_MODULATE_HASH)
-        }
 
         private const val SET_RANGE_HASH = 1602489585L
-        private val setRangeBind by lazy {
+        @JvmField
+        val setRangeBind =
             ObjectCalls.getMethodBind("TreeItem", "set_range", SET_RANGE_HASH)
-        }
 
         private const val GET_RANGE_HASH = 2339986948L
-        private val getRangeBind by lazy {
+        @JvmField
+        val getRangeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_range", GET_RANGE_HASH)
-        }
 
         private const val SET_RANGE_CONFIG_HASH = 1547181014L
-        private val setRangeConfigBind by lazy {
+        @JvmField
+        val setRangeConfigBind =
             ObjectCalls.getMethodBind("TreeItem", "set_range_config", SET_RANGE_CONFIG_HASH)
-        }
 
         private const val GET_RANGE_CONFIG_HASH = 3554694381L
-        private val getRangeConfigBind by lazy {
+        @JvmField
+        val getRangeConfigBind =
             ObjectCalls.getMethodBind("TreeItem", "get_range_config", GET_RANGE_CONFIG_HASH)
-        }
 
         private const val SET_METADATA_HASH = 2152698145L
-        private val setMetadataBind by lazy {
+        @JvmField
+        val setMetadataBind =
             ObjectCalls.getMethodBind("TreeItem", "set_metadata", SET_METADATA_HASH)
-        }
 
         private const val GET_METADATA_HASH = 4227898402L
-        private val getMetadataBind by lazy {
+        @JvmField
+        val getMetadataBind =
             ObjectCalls.getMethodBind("TreeItem", "get_metadata", GET_METADATA_HASH)
-        }
 
         private const val SET_CUSTOM_DRAW_HASH = 272420368L
-        private val setCustomDrawBind by lazy {
+        @JvmField
+        val setCustomDrawBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_draw", SET_CUSTOM_DRAW_HASH)
-        }
 
         private const val SET_CUSTOM_DRAW_CALLBACK_HASH = 957362965L
-        private val setCustomDrawCallbackBind by lazy {
+        @JvmField
+        val setCustomDrawCallbackBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_draw_callback", SET_CUSTOM_DRAW_CALLBACK_HASH)
-        }
 
         private const val GET_CUSTOM_DRAW_CALLBACK_HASH = 1317077508L
-        private val getCustomDrawCallbackBind by lazy {
+        @JvmField
+        val getCustomDrawCallbackBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_draw_callback", GET_CUSTOM_DRAW_CALLBACK_HASH)
-        }
 
         private const val SET_CUSTOM_STYLEBOX_HASH = 1433009359L
-        private val setCustomStyleboxBind by lazy {
+        @JvmField
+        val setCustomStyleboxBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_stylebox", SET_CUSTOM_STYLEBOX_HASH)
-        }
 
         private const val GET_CUSTOM_STYLEBOX_HASH = 3362509644L
-        private val getCustomStyleboxBind by lazy {
+        @JvmField
+        val getCustomStyleboxBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_stylebox", GET_CUSTOM_STYLEBOX_HASH)
-        }
 
         private const val SET_COLLAPSED_HASH = 2586408642L
-        private val setCollapsedBind by lazy {
+        @JvmField
+        val setCollapsedBind =
             ObjectCalls.getMethodBind("TreeItem", "set_collapsed", SET_COLLAPSED_HASH)
-        }
 
         private const val IS_COLLAPSED_HASH = 2240911060L
-        private val isCollapsedBind by lazy {
+        @JvmField
+        val isCollapsedBind =
             ObjectCalls.getMethodBind("TreeItem", "is_collapsed", IS_COLLAPSED_HASH)
-        }
 
         private const val SET_COLLAPSED_RECURSIVE_HASH = 2586408642L
-        private val setCollapsedRecursiveBind by lazy {
+        @JvmField
+        val setCollapsedRecursiveBind =
             ObjectCalls.getMethodBind("TreeItem", "set_collapsed_recursive", SET_COLLAPSED_RECURSIVE_HASH)
-        }
 
         private const val IS_ANY_COLLAPSED_HASH = 2595650253L
-        private val isAnyCollapsedBind by lazy {
+        @JvmField
+        val isAnyCollapsedBind =
             ObjectCalls.getMethodBind("TreeItem", "is_any_collapsed", IS_ANY_COLLAPSED_HASH)
-        }
 
         private const val SET_VISIBLE_HASH = 2586408642L
-        private val setVisibleBind by lazy {
+        @JvmField
+        val setVisibleBind =
             ObjectCalls.getMethodBind("TreeItem", "set_visible", SET_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 2240911060L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("TreeItem", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_IN_TREE_HASH = 36873697L
-        private val isVisibleInTreeBind by lazy {
+        @JvmField
+        val isVisibleInTreeBind =
             ObjectCalls.getMethodBind("TreeItem", "is_visible_in_tree", IS_VISIBLE_IN_TREE_HASH)
-        }
 
         private const val UNCOLLAPSE_TREE_HASH = 3218959716L
-        private val uncollapseTreeBind by lazy {
+        @JvmField
+        val uncollapseTreeBind =
             ObjectCalls.getMethodBind("TreeItem", "uncollapse_tree", UNCOLLAPSE_TREE_HASH)
-        }
 
         private const val SET_CUSTOM_MINIMUM_HEIGHT_HASH = 1286410249L
-        private val setCustomMinimumHeightBind by lazy {
+        @JvmField
+        val setCustomMinimumHeightBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_minimum_height", SET_CUSTOM_MINIMUM_HEIGHT_HASH)
-        }
 
         private const val GET_CUSTOM_MINIMUM_HEIGHT_HASH = 3905245786L
-        private val getCustomMinimumHeightBind by lazy {
+        @JvmField
+        val getCustomMinimumHeightBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_minimum_height", GET_CUSTOM_MINIMUM_HEIGHT_HASH)
-        }
 
         private const val SET_SELECTABLE_HASH = 300928843L
-        private val setSelectableBind by lazy {
+        @JvmField
+        val setSelectableBind =
             ObjectCalls.getMethodBind("TreeItem", "set_selectable", SET_SELECTABLE_HASH)
-        }
 
         private const val IS_SELECTABLE_HASH = 1116898809L
-        private val isSelectableBind by lazy {
+        @JvmField
+        val isSelectableBind =
             ObjectCalls.getMethodBind("TreeItem", "is_selectable", IS_SELECTABLE_HASH)
-        }
 
         private const val IS_SELECTED_HASH = 3067735520L
-        private val isSelectedBind by lazy {
+        @JvmField
+        val isSelectedBind =
             ObjectCalls.getMethodBind("TreeItem", "is_selected", IS_SELECTED_HASH)
-        }
 
         private const val SELECT_HASH = 972357352L
-        private val selectBind by lazy {
+        @JvmField
+        val selectBind =
             ObjectCalls.getMethodBind("TreeItem", "select", SELECT_HASH)
-        }
 
         private const val DESELECT_HASH = 1286410249L
-        private val deselectBind by lazy {
+        @JvmField
+        val deselectBind =
             ObjectCalls.getMethodBind("TreeItem", "deselect", DESELECT_HASH)
-        }
 
         private const val SET_EDITABLE_HASH = 300928843L
-        private val setEditableBind by lazy {
+        @JvmField
+        val setEditableBind =
             ObjectCalls.getMethodBind("TreeItem", "set_editable", SET_EDITABLE_HASH)
-        }
 
         private const val IS_EDITABLE_HASH = 3067735520L
-        private val isEditableBind by lazy {
+        @JvmField
+        val isEditableBind =
             ObjectCalls.getMethodBind("TreeItem", "is_editable", IS_EDITABLE_HASH)
-        }
 
         private const val SET_CUSTOM_COLOR_HASH = 2878471219L
-        private val setCustomColorBind by lazy {
+        @JvmField
+        val setCustomColorBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_color", SET_CUSTOM_COLOR_HASH)
-        }
 
         private const val GET_CUSTOM_COLOR_HASH = 3457211756L
-        private val getCustomColorBind by lazy {
+        @JvmField
+        val getCustomColorBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_color", GET_CUSTOM_COLOR_HASH)
-        }
 
         private const val CLEAR_CUSTOM_COLOR_HASH = 1286410249L
-        private val clearCustomColorBind by lazy {
+        @JvmField
+        val clearCustomColorBind =
             ObjectCalls.getMethodBind("TreeItem", "clear_custom_color", CLEAR_CUSTOM_COLOR_HASH)
-        }
 
         private const val SET_CUSTOM_FONT_HASH = 2637609184L
-        private val setCustomFontBind by lazy {
+        @JvmField
+        val setCustomFontBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_font", SET_CUSTOM_FONT_HASH)
-        }
 
         private const val GET_CUSTOM_FONT_HASH = 4244553094L
-        private val getCustomFontBind by lazy {
+        @JvmField
+        val getCustomFontBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_font", GET_CUSTOM_FONT_HASH)
-        }
 
         private const val SET_CUSTOM_FONT_SIZE_HASH = 3937882851L
-        private val setCustomFontSizeBind by lazy {
+        @JvmField
+        val setCustomFontSizeBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_font_size", SET_CUSTOM_FONT_SIZE_HASH)
-        }
 
         private const val GET_CUSTOM_FONT_SIZE_HASH = 923996154L
-        private val getCustomFontSizeBind by lazy {
+        @JvmField
+        val getCustomFontSizeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_font_size", GET_CUSTOM_FONT_SIZE_HASH)
-        }
 
         private const val SET_CUSTOM_BG_COLOR_HASH = 894174518L
-        private val setCustomBgColorBind by lazy {
+        @JvmField
+        val setCustomBgColorBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_bg_color", SET_CUSTOM_BG_COLOR_HASH)
-        }
 
         private const val CLEAR_CUSTOM_BG_COLOR_HASH = 1286410249L
-        private val clearCustomBgColorBind by lazy {
+        @JvmField
+        val clearCustomBgColorBind =
             ObjectCalls.getMethodBind("TreeItem", "clear_custom_bg_color", CLEAR_CUSTOM_BG_COLOR_HASH)
-        }
 
         private const val GET_CUSTOM_BG_COLOR_HASH = 3457211756L
-        private val getCustomBgColorBind by lazy {
+        @JvmField
+        val getCustomBgColorBind =
             ObjectCalls.getMethodBind("TreeItem", "get_custom_bg_color", GET_CUSTOM_BG_COLOR_HASH)
-        }
 
         private const val SET_CUSTOM_AS_BUTTON_HASH = 300928843L
-        private val setCustomAsButtonBind by lazy {
+        @JvmField
+        val setCustomAsButtonBind =
             ObjectCalls.getMethodBind("TreeItem", "set_custom_as_button", SET_CUSTOM_AS_BUTTON_HASH)
-        }
 
         private const val IS_CUSTOM_SET_AS_BUTTON_HASH = 1116898809L
-        private val isCustomSetAsButtonBind by lazy {
+        @JvmField
+        val isCustomSetAsButtonBind =
             ObjectCalls.getMethodBind("TreeItem", "is_custom_set_as_button", IS_CUSTOM_SET_AS_BUTTON_HASH)
-        }
 
         private const val CLEAR_BUTTONS_HASH = 3218959716L
-        private val clearButtonsBind by lazy {
+        @JvmField
+        val clearButtonsBind =
             ObjectCalls.getMethodBind("TreeItem", "clear_buttons", CLEAR_BUTTONS_HASH)
-        }
 
         private const val ADD_BUTTON_HASH = 973481897L
-        private val addButtonBind by lazy {
+        @JvmField
+        val addButtonBind =
             ObjectCalls.getMethodBind("TreeItem", "add_button", ADD_BUTTON_HASH)
-        }
 
         private const val GET_BUTTON_COUNT_HASH = 923996154L
-        private val getButtonCountBind by lazy {
+        @JvmField
+        val getButtonCountBind =
             ObjectCalls.getMethodBind("TreeItem", "get_button_count", GET_BUTTON_COUNT_HASH)
-        }
 
         private const val GET_BUTTON_TOOLTIP_TEXT_HASH = 1391810591L
-        private val getButtonTooltipTextBind by lazy {
+        @JvmField
+        val getButtonTooltipTextBind =
             ObjectCalls.getMethodBind("TreeItem", "get_button_tooltip_text", GET_BUTTON_TOOLTIP_TEXT_HASH)
-        }
 
         private const val GET_BUTTON_ID_HASH = 3175239445L
-        private val getButtonIdBind by lazy {
+        @JvmField
+        val getButtonIdBind =
             ObjectCalls.getMethodBind("TreeItem", "get_button_id", GET_BUTTON_ID_HASH)
-        }
 
         private const val GET_BUTTON_BY_ID_HASH = 3175239445L
-        private val getButtonByIdBind by lazy {
+        @JvmField
+        val getButtonByIdBind =
             ObjectCalls.getMethodBind("TreeItem", "get_button_by_id", GET_BUTTON_BY_ID_HASH)
-        }
 
         private const val GET_BUTTON_COLOR_HASH = 2165839948L
-        private val getButtonColorBind by lazy {
+        @JvmField
+        val getButtonColorBind =
             ObjectCalls.getMethodBind("TreeItem", "get_button_color", GET_BUTTON_COLOR_HASH)
-        }
 
         private const val GET_BUTTON_HASH = 2584904275L
-        private val getButtonBind by lazy {
+        @JvmField
+        val getButtonBind =
             ObjectCalls.getMethodBind("TreeItem", "get_button", GET_BUTTON_HASH)
-        }
 
         private const val SET_BUTTON_TOOLTIP_TEXT_HASH = 2285447957L
-        private val setButtonTooltipTextBind by lazy {
+        @JvmField
+        val setButtonTooltipTextBind =
             ObjectCalls.getMethodBind("TreeItem", "set_button_tooltip_text", SET_BUTTON_TOOLTIP_TEXT_HASH)
-        }
 
         private const val SET_BUTTON_HASH = 176101966L
-        private val setButtonBind by lazy {
+        @JvmField
+        val setButtonBind =
             ObjectCalls.getMethodBind("TreeItem", "set_button", SET_BUTTON_HASH)
-        }
 
         private const val ERASE_BUTTON_HASH = 3937882851L
-        private val eraseButtonBind by lazy {
+        @JvmField
+        val eraseButtonBind =
             ObjectCalls.getMethodBind("TreeItem", "erase_button", ERASE_BUTTON_HASH)
-        }
 
         private const val SET_BUTTON_DESCRIPTION_HASH = 2285447957L
-        private val setButtonDescriptionBind by lazy {
+        @JvmField
+        val setButtonDescriptionBind =
             ObjectCalls.getMethodBind("TreeItem", "set_button_description", SET_BUTTON_DESCRIPTION_HASH)
-        }
 
         private const val SET_BUTTON_DISABLED_HASH = 1383440665L
-        private val setButtonDisabledBind by lazy {
+        @JvmField
+        val setButtonDisabledBind =
             ObjectCalls.getMethodBind("TreeItem", "set_button_disabled", SET_BUTTON_DISABLED_HASH)
-        }
 
         private const val SET_BUTTON_COLOR_HASH = 3733378741L
-        private val setButtonColorBind by lazy {
+        @JvmField
+        val setButtonColorBind =
             ObjectCalls.getMethodBind("TreeItem", "set_button_color", SET_BUTTON_COLOR_HASH)
-        }
 
         private const val IS_BUTTON_DISABLED_HASH = 2522259332L
-        private val isButtonDisabledBind by lazy {
+        @JvmField
+        val isButtonDisabledBind =
             ObjectCalls.getMethodBind("TreeItem", "is_button_disabled", IS_BUTTON_DISABLED_HASH)
-        }
 
         private const val SET_TOOLTIP_TEXT_HASH = 501894301L
-        private val setTooltipTextBind by lazy {
+        @JvmField
+        val setTooltipTextBind =
             ObjectCalls.getMethodBind("TreeItem", "set_tooltip_text", SET_TOOLTIP_TEXT_HASH)
-        }
 
         private const val GET_TOOLTIP_TEXT_HASH = 844755477L
-        private val getTooltipTextBind by lazy {
+        @JvmField
+        val getTooltipTextBind =
             ObjectCalls.getMethodBind("TreeItem", "get_tooltip_text", GET_TOOLTIP_TEXT_HASH)
-        }
 
         private const val SET_TEXT_ALIGNMENT_HASH = 3276431499L
-        private val setTextAlignmentBind by lazy {
+        @JvmField
+        val setTextAlignmentBind =
             ObjectCalls.getMethodBind("TreeItem", "set_text_alignment", SET_TEXT_ALIGNMENT_HASH)
-        }
 
         private const val GET_TEXT_ALIGNMENT_HASH = 4171562184L
-        private val getTextAlignmentBind by lazy {
+        @JvmField
+        val getTextAlignmentBind =
             ObjectCalls.getMethodBind("TreeItem", "get_text_alignment", GET_TEXT_ALIGNMENT_HASH)
-        }
 
         private const val SET_EXPAND_RIGHT_HASH = 300928843L
-        private val setExpandRightBind by lazy {
+        @JvmField
+        val setExpandRightBind =
             ObjectCalls.getMethodBind("TreeItem", "set_expand_right", SET_EXPAND_RIGHT_HASH)
-        }
 
         private const val GET_EXPAND_RIGHT_HASH = 1116898809L
-        private val getExpandRightBind by lazy {
+        @JvmField
+        val getExpandRightBind =
             ObjectCalls.getMethodBind("TreeItem", "get_expand_right", GET_EXPAND_RIGHT_HASH)
-        }
 
         private const val SET_DISABLE_FOLDING_HASH = 2586408642L
-        private val setDisableFoldingBind by lazy {
+        @JvmField
+        val setDisableFoldingBind =
             ObjectCalls.getMethodBind("TreeItem", "set_disable_folding", SET_DISABLE_FOLDING_HASH)
-        }
 
         private const val IS_FOLDING_DISABLED_HASH = 36873697L
-        private val isFoldingDisabledBind by lazy {
+        @JvmField
+        val isFoldingDisabledBind =
             ObjectCalls.getMethodBind("TreeItem", "is_folding_disabled", IS_FOLDING_DISABLED_HASH)
-        }
 
         private const val SET_ACCEPT_CHILDREN_HASH = 2586408642L
-        private val setAcceptChildrenBind by lazy {
+        @JvmField
+        val setAcceptChildrenBind =
             ObjectCalls.getMethodBind("TreeItem", "set_accept_children", SET_ACCEPT_CHILDREN_HASH)
-        }
 
         private const val IS_ACCEPTING_CHILDREN_HASH = 36873697L
-        private val isAcceptingChildrenBind by lazy {
+        @JvmField
+        val isAcceptingChildrenBind =
             ObjectCalls.getMethodBind("TreeItem", "is_accepting_children", IS_ACCEPTING_CHILDREN_HASH)
-        }
 
         private const val CREATE_CHILD_HASH = 954243986L
-        private val createChildBind by lazy {
+        @JvmField
+        val createChildBind =
             ObjectCalls.getMethodBind("TreeItem", "create_child", CREATE_CHILD_HASH)
-        }
 
         private const val ADD_CHILD_HASH = 1819951137L
-        private val addChildBind by lazy {
+        @JvmField
+        val addChildBind =
             ObjectCalls.getMethodBind("TreeItem", "add_child", ADD_CHILD_HASH)
-        }
 
         private const val REMOVE_CHILD_HASH = 1819951137L
-        private val removeChildBind by lazy {
+        @JvmField
+        val removeChildBind =
             ObjectCalls.getMethodBind("TreeItem", "remove_child", REMOVE_CHILD_HASH)
-        }
 
         private const val GET_TREE_HASH = 2243340556L
-        private val getTreeBind by lazy {
+        @JvmField
+        val getTreeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_tree", GET_TREE_HASH)
-        }
 
         private const val GET_NEXT_HASH = 1514277247L
-        private val getNextBind by lazy {
+        @JvmField
+        val getNextBind =
             ObjectCalls.getMethodBind("TreeItem", "get_next", GET_NEXT_HASH)
-        }
 
         private const val GET_PREV_HASH = 2768121250L
-        private val getPrevBind by lazy {
+        @JvmField
+        val getPrevBind =
             ObjectCalls.getMethodBind("TreeItem", "get_prev", GET_PREV_HASH)
-        }
 
         private const val GET_PARENT_HASH = 1514277247L
-        private val getParentBind by lazy {
+        @JvmField
+        val getParentBind =
             ObjectCalls.getMethodBind("TreeItem", "get_parent", GET_PARENT_HASH)
-        }
 
         private const val GET_FIRST_CHILD_HASH = 1514277247L
-        private val getFirstChildBind by lazy {
+        @JvmField
+        val getFirstChildBind =
             ObjectCalls.getMethodBind("TreeItem", "get_first_child", GET_FIRST_CHILD_HASH)
-        }
 
         private const val GET_NEXT_IN_TREE_HASH = 1666920593L
-        private val getNextInTreeBind by lazy {
+        @JvmField
+        val getNextInTreeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_next_in_tree", GET_NEXT_IN_TREE_HASH)
-        }
 
         private const val GET_PREV_IN_TREE_HASH = 1666920593L
-        private val getPrevInTreeBind by lazy {
+        @JvmField
+        val getPrevInTreeBind =
             ObjectCalls.getMethodBind("TreeItem", "get_prev_in_tree", GET_PREV_IN_TREE_HASH)
-        }
 
         private const val GET_NEXT_VISIBLE_HASH = 1666920593L
-        private val getNextVisibleBind by lazy {
+        @JvmField
+        val getNextVisibleBind =
             ObjectCalls.getMethodBind("TreeItem", "get_next_visible", GET_NEXT_VISIBLE_HASH)
-        }
 
         private const val GET_PREV_VISIBLE_HASH = 1666920593L
-        private val getPrevVisibleBind by lazy {
+        @JvmField
+        val getPrevVisibleBind =
             ObjectCalls.getMethodBind("TreeItem", "get_prev_visible", GET_PREV_VISIBLE_HASH)
-        }
 
         private const val GET_CHILD_HASH = 306700752L
-        private val getChildBind by lazy {
+        @JvmField
+        val getChildBind =
             ObjectCalls.getMethodBind("TreeItem", "get_child", GET_CHILD_HASH)
-        }
 
         private const val GET_CHILD_COUNT_HASH = 2455072627L
-        private val getChildCountBind by lazy {
+        @JvmField
+        val getChildCountBind =
             ObjectCalls.getMethodBind("TreeItem", "get_child_count", GET_CHILD_COUNT_HASH)
-        }
 
         private const val GET_CHILDREN_HASH = 2915620761L
-        private val getChildrenBind by lazy {
+        @JvmField
+        val getChildrenBind =
             ObjectCalls.getMethodBind("TreeItem", "get_children", GET_CHILDREN_HASH)
-        }
 
         private const val GET_INDEX_HASH = 2455072627L
-        private val getIndexBind by lazy {
+        @JvmField
+        val getIndexBind =
             ObjectCalls.getMethodBind("TreeItem", "get_index", GET_INDEX_HASH)
-        }
 
         private const val MOVE_BEFORE_HASH = 1819951137L
-        private val moveBeforeBind by lazy {
+        @JvmField
+        val moveBeforeBind =
             ObjectCalls.getMethodBind("TreeItem", "move_before", MOVE_BEFORE_HASH)
-        }
 
         private const val MOVE_AFTER_HASH = 1819951137L
-        private val moveAfterBind by lazy {
+        @JvmField
+        val moveAfterBind =
             ObjectCalls.getMethodBind("TreeItem", "move_after", MOVE_AFTER_HASH)
-        }
 
         private const val CALL_RECURSIVE_HASH = 2866548813L
-        private val callRecursiveBind by lazy {
+        @JvmField
+        val callRecursiveBind =
             ObjectCalls.getMethodBind("TreeItem", "call_recursive", CALL_RECURSIVE_HASH)
-        }
     }
 }

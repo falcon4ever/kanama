@@ -17,7 +17,5 @@ class OpenXRVisibilityMask(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRVisibilityMask? =
             if (handle.address() == 0L) null else OpenXRVisibilityMask(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

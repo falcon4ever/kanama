@@ -20,7 +20,5 @@ class VisualShaderNodeSDFRaymarch(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSDFRaymarch? =
             if (handle.address() == 0L) null else VisualShaderNodeSDFRaymarch(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

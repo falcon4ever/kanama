@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -46,7 +47,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setTransferChannel(channel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setTransferChannelBind, segment, channel)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTransferChannelBind, segment, channel)
     }
 
     /**
@@ -65,7 +66,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getTransferChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTransferChannelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTransferChannelBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setTransferMode(mode: MultiplayerPeer.TransferMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransferModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransferModeBind, segment, mode.value)
     }
 
     /**
@@ -85,7 +86,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getTransferMode(): MultiplayerPeer.TransferMode {
         checkOpen()
-        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, segment))
+        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransferModeBind, segment))
     }
 
     /**
@@ -98,7 +99,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setTargetPeer(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setTargetPeerBind, segment, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTargetPeerBind, segment, id)
     }
 
     /**
@@ -109,7 +110,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketPeer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketPeerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketPeerBind, segment)
     }
 
     /**
@@ -120,7 +121,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketChannelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketChannelBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketMode(): MultiplayerPeer.TransferMode {
         checkOpen()
-        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, segment))
+        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPacketModeBind, segment))
     }
 
     /**
@@ -141,12 +142,12 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun poll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pollBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun disconnectPeer(peer: Int, force: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(disconnectPeerBind, segment, peer, force)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.disconnectPeerBind, segment, peer, force)
     }
 
     /**
@@ -167,7 +168,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getConnectionStatus(): MultiplayerPeer.ConnectionStatus {
         checkOpen()
-        return MultiplayerPeer.ConnectionStatus(ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, segment))
+        return MultiplayerPeer.ConnectionStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConnectionStatusBind, segment))
     }
 
     /**
@@ -177,7 +178,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getUniqueId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUniqueIdBind, segment)
     }
 
     /**
@@ -187,7 +188,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun generateUniqueId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(generateUniqueIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.generateUniqueIdBind, segment)
     }
 
     /**
@@ -197,7 +198,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setRefuseNewConnections(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRefuseNewConnectionsBind, segment, enable)
     }
 
     /**
@@ -207,7 +208,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
     }
 
     /**
@@ -219,7 +220,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isServerRelaySupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelaySupportedBind, segment)
     }
 
     /** Signal `peer_connected(id: int)`; see [TypedSignal]. */
@@ -320,90 +321,92 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerPeer? =
             if (handle.address() == 0L) null else MultiplayerPeer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TRANSFER_CHANNEL_HASH = 1286410249L
-        private val setTransferChannelBind by lazy {
+        @JvmField
+        val setTransferChannelBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "set_transfer_channel", SET_TRANSFER_CHANNEL_HASH)
-        }
 
         private const val GET_TRANSFER_CHANNEL_HASH = 3905245786L
-        private val getTransferChannelBind by lazy {
+        @JvmField
+        val getTransferChannelBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_transfer_channel", GET_TRANSFER_CHANNEL_HASH)
-        }
 
         private const val SET_TRANSFER_MODE_HASH = 950411049L
-        private val setTransferModeBind by lazy {
+        @JvmField
+        val setTransferModeBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "set_transfer_mode", SET_TRANSFER_MODE_HASH)
-        }
 
         private const val GET_TRANSFER_MODE_HASH = 3369852622L
-        private val getTransferModeBind by lazy {
+        @JvmField
+        val getTransferModeBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_transfer_mode", GET_TRANSFER_MODE_HASH)
-        }
 
         private const val SET_TARGET_PEER_HASH = 1286410249L
-        private val setTargetPeerBind by lazy {
+        @JvmField
+        val setTargetPeerBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "set_target_peer", SET_TARGET_PEER_HASH)
-        }
 
         private const val GET_PACKET_PEER_HASH = 3905245786L
-        private val getPacketPeerBind by lazy {
+        @JvmField
+        val getPacketPeerBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_packet_peer", GET_PACKET_PEER_HASH)
-        }
 
         private const val GET_PACKET_CHANNEL_HASH = 3905245786L
-        private val getPacketChannelBind by lazy {
+        @JvmField
+        val getPacketChannelBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_packet_channel", GET_PACKET_CHANNEL_HASH)
-        }
 
         private const val GET_PACKET_MODE_HASH = 3369852622L
-        private val getPacketModeBind by lazy {
+        @JvmField
+        val getPacketModeBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_packet_mode", GET_PACKET_MODE_HASH)
-        }
 
         private const val POLL_HASH = 3218959716L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "poll", POLL_HASH)
-        }
 
         private const val CLOSE_HASH = 3218959716L
-        private val closeConnectionBind by lazy {
+        @JvmField
+        val closeConnectionBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "close", CLOSE_HASH)
-        }
 
         private const val DISCONNECT_PEER_HASH = 4023243586L
-        private val disconnectPeerBind by lazy {
+        @JvmField
+        val disconnectPeerBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "disconnect_peer", DISCONNECT_PEER_HASH)
-        }
 
         private const val GET_CONNECTION_STATUS_HASH = 2147374275L
-        private val getConnectionStatusBind by lazy {
+        @JvmField
+        val getConnectionStatusBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_connection_status", GET_CONNECTION_STATUS_HASH)
-        }
 
         private const val GET_UNIQUE_ID_HASH = 3905245786L
-        private val getUniqueIdBind by lazy {
+        @JvmField
+        val getUniqueIdBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "get_unique_id", GET_UNIQUE_ID_HASH)
-        }
 
         private const val GENERATE_UNIQUE_ID_HASH = 3905245786L
-        private val generateUniqueIdBind by lazy {
+        @JvmField
+        val generateUniqueIdBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "generate_unique_id", GENERATE_UNIQUE_ID_HASH)
-        }
 
         private const val SET_REFUSE_NEW_CONNECTIONS_HASH = 2586408642L
-        private val setRefuseNewConnectionsBind by lazy {
+        @JvmField
+        val setRefuseNewConnectionsBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "set_refuse_new_connections", SET_REFUSE_NEW_CONNECTIONS_HASH)
-        }
 
         private const val IS_REFUSING_NEW_CONNECTIONS_HASH = 36873697L
-        private val isRefusingNewConnectionsBind by lazy {
+        @JvmField
+        val isRefusingNewConnectionsBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "is_refusing_new_connections", IS_REFUSING_NEW_CONNECTIONS_HASH)
-        }
 
         private const val IS_SERVER_RELAY_SUPPORTED_HASH = 36873697L
-        private val isServerRelaySupportedBind by lazy {
+        @JvmField
+        val isServerRelaySupportedBind =
             ObjectCalls.getMethodBind("MultiplayerPeer", "is_server_relay_supported", IS_SERVER_RELAY_SUPPORTED_HASH)
-        }
     }
 }

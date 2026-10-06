@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -26,7 +27,7 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setShortcut(shortcut: Shortcut?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -37,7 +38,7 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getShortcut(): Shortcut? {
         checkOpen()
-        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShortcutBind, segment))
     }
 
     companion object {
@@ -50,15 +51,17 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventShortcut? =
             if (handle.address() == 0L) null else InputEventShortcut(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SHORTCUT_HASH = 857163497L
-        private val setShortcutBind by lazy {
+        @JvmField
+        val setShortcutBind =
             ObjectCalls.getMethodBind("InputEventShortcut", "set_shortcut", SET_SHORTCUT_HASH)
-        }
 
         private const val GET_SHORTCUT_HASH = 3766804753L
-        private val getShortcutBind by lazy {
+        @JvmField
+        val getShortcutBind =
             ObjectCalls.getMethodBind("InputEventShortcut", "get_shortcut", GET_SHORTCUT_HASH)
-        }
     }
 }

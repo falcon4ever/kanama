@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -40,7 +41,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPitchScale(rate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPitchScaleBind, segment, rate)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPitchScaleBind, segment, rate)
     }
 
     /**
@@ -52,7 +53,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPitchScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPitchScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPitchScaleBind, segment)
     }
 
     /**
@@ -63,7 +64,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setOversampling(amount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOversamplingBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOversamplingBind, segment, amount)
     }
 
     /**
@@ -74,7 +75,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getOversampling(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOversamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOversamplingBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFftSize(size: AudioEffectPitchShift.FFTSize) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, segment, size.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFftSizeBind, segment, size.value)
     }
 
     /**
@@ -100,7 +101,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFftSize(): AudioEffectPitchShift.FFTSize {
         checkOpen()
-        return AudioEffectPitchShift.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment))
+        return AudioEffectPitchShift.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFftSizeBind, segment))
     }
 
     /**
@@ -165,35 +166,37 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPitchShift? =
             if (handle.address() == 0L) null else AudioEffectPitchShift(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PITCH_SCALE_HASH = 373806689L
-        private val setPitchScaleBind by lazy {
+        @JvmField
+        val setPitchScaleBind =
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "set_pitch_scale", SET_PITCH_SCALE_HASH)
-        }
 
         private const val GET_PITCH_SCALE_HASH = 1740695150L
-        private val getPitchScaleBind by lazy {
+        @JvmField
+        val getPitchScaleBind =
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "get_pitch_scale", GET_PITCH_SCALE_HASH)
-        }
 
         private const val SET_OVERSAMPLING_HASH = 1286410249L
-        private val setOversamplingBind by lazy {
+        @JvmField
+        val setOversamplingBind =
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "set_oversampling", SET_OVERSAMPLING_HASH)
-        }
 
         private const val GET_OVERSAMPLING_HASH = 3905245786L
-        private val getOversamplingBind by lazy {
+        @JvmField
+        val getOversamplingBind =
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "get_oversampling", GET_OVERSAMPLING_HASH)
-        }
 
         private const val SET_FFT_SIZE_HASH = 2323518741L
-        private val setFftSizeBind by lazy {
+        @JvmField
+        val setFftSizeBind =
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "set_fft_size", SET_FFT_SIZE_HASH)
-        }
 
         private const val GET_FFT_SIZE_HASH = 2361246789L
-        private val getFftSizeBind by lazy {
+        @JvmField
+        val getFftSizeBind =
             ObjectCalls.getMethodBind("AudioEffectPitchShift", "get_fft_size", GET_FFT_SIZE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
      */
     fun getMagnitudeForFrequencyRange(fromHz: Double, toHz: Double, mode: AudioEffectSpectrumAnalyzerInstance.MagnitudeMode = AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.MAX): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, segment, fromHz, toHz, mode.value)
+        return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(Binds.getMagnitudeForFrequencyRangeBind, segment, fromHz, toHz, mode.value)
     }
 
     /**
@@ -59,10 +60,12 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectSpectrumAnalyzerInstance? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzerInstance(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_MAGNITUDE_FOR_FREQUENCY_RANGE_HASH = 797993915L
-        private val getMagnitudeForFrequencyRangeBind by lazy {
+        @JvmField
+        val getMagnitudeForFrequencyRangeBind =
             ObjectCalls.getMethodBind("AudioEffectSpectrumAnalyzerInstance", "get_magnitude_for_frequency_range", GET_MAGNITUDE_FOR_FREQUENCY_RANGE_HASH)
-        }
     }
 }

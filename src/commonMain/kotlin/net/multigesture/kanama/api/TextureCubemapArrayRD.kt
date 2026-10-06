@@ -22,7 +22,5 @@ class TextureCubemapArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextureCubemapArrayRD? =
             if (handle.address() == 0L) null else TextureCubemapArrayRD(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

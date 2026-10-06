@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -127,7 +128,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_transform
      */
     fun setTransform(local: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, local)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, local)
     }
 
     /**
@@ -137,7 +138,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_transform
      */
     fun getTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_position
      */
     fun setPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -157,7 +158,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_position
      */
     fun getPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getPositionBind, segment)
     }
 
     /**
@@ -173,7 +174,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation
      */
     fun setRotation(eulerRadians: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setRotationBind, segment, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setRotationBind, segment, eulerRadians)
     }
 
     /**
@@ -189,7 +190,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation
      */
     fun getRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationBind, segment)
     }
 
     /**
@@ -199,7 +200,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation_degrees
      */
     fun setRotationDegrees(eulerDegrees: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setRotationDegreesBind, segment, eulerDegrees)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setRotationDegreesBind, segment, eulerDegrees)
     }
 
     /**
@@ -209,7 +210,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation_degrees
      */
     fun getRotationDegrees(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRotationDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRotationDegreesBind, segment)
     }
 
     /**
@@ -220,7 +221,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation_order
      */
     fun setRotationOrder(order: EulerOrder) {
-        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRotationOrderBind, segment, order.value)
     }
 
     /**
@@ -231,7 +232,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation_order
      */
     fun getRotationOrder(): EulerOrder {
-        return EulerOrder(ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment))
+        return EulerOrder(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRotationOrderBind, segment))
     }
 
     /**
@@ -240,7 +241,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_rotation_edit_mode
      */
     fun setRotationEditMode(editMode: Node3D.RotationEditMode) {
-        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRotationEditModeBind, segment, editMode.value)
     }
 
     /**
@@ -249,7 +250,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_rotation_edit_mode
      */
     fun getRotationEditMode(): Node3D.RotationEditMode {
-        return Node3D.RotationEditMode(ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment))
+        return Node3D.RotationEditMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRotationEditModeBind, segment))
     }
 
     /**
@@ -263,7 +264,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_scale
      */
     fun setScale(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setScaleBind, segment, scale)
     }
 
     /**
@@ -277,7 +278,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_scale
      */
     fun getScale(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScaleBind, segment)
     }
 
     /**
@@ -289,7 +290,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_quaternion
      */
     fun setQuaternion(quaternion: Quaternion) {
-        ObjectCalls.ptrcallWithQuaternionArg(setQuaternionBind, segment, quaternion)
+        ObjectCalls.ptrcallWithQuaternionArg(Binds.setQuaternionBind, segment, quaternion)
     }
 
     /**
@@ -301,7 +302,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_quaternion
      */
     fun getQuaternion(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getQuaternionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getQuaternionBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_basis
      */
     fun setBasis(basis: Basis) {
-        ObjectCalls.ptrcallWithBasisArg(setBasisBind, segment, basis)
+        ObjectCalls.ptrcallWithBasisArg(Binds.setBasisBind, segment, basis)
     }
 
     /**
@@ -321,7 +322,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_basis
      */
     fun getBasis(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getBasisBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getBasisBind, segment)
     }
 
     /**
@@ -332,7 +333,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_transform
      */
     fun setGlobalTransform(global: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setGlobalTransformBind, segment, global)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setGlobalTransformBind, segment, global)
     }
 
     /**
@@ -343,7 +344,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_transform
      */
     fun getGlobalTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getGlobalTransformBind, segment)
     }
 
     /**
@@ -361,7 +362,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_transform_interpolated
      */
     fun getGlobalTransformInterpolated(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getGlobalTransformInterpolatedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getGlobalTransformInterpolatedBind, segment)
     }
 
     /**
@@ -372,7 +373,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_position
      */
     fun setGlobalPosition(position: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGlobalPositionBind, segment, position)
     }
 
     /**
@@ -383,7 +384,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_position
      */
     fun getGlobalPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGlobalPositionBind, segment)
     }
 
     /**
@@ -394,7 +395,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_basis
      */
     fun setGlobalBasis(basis: Basis) {
-        ObjectCalls.ptrcallWithBasisArg(setGlobalBasisBind, segment, basis)
+        ObjectCalls.ptrcallWithBasisArg(Binds.setGlobalBasisBind, segment, basis)
     }
 
     /**
@@ -405,7 +406,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_basis
      */
     fun getGlobalBasis(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getGlobalBasisBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getGlobalBasisBind, segment)
     }
 
     /**
@@ -420,7 +421,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_rotation
      */
     fun setGlobalRotation(eulerRadians: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationBind, segment, eulerRadians)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGlobalRotationBind, segment, eulerRadians)
     }
 
     /**
@@ -435,7 +436,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_rotation
      */
     fun getGlobalRotation(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGlobalRotationBind, segment)
     }
 
     /**
@@ -445,7 +446,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_global_rotation_degrees
      */
     fun setGlobalRotationDegrees(eulerDegrees: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setGlobalRotationDegreesBind, segment, eulerDegrees)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setGlobalRotationDegreesBind, segment, eulerDegrees)
     }
 
     /**
@@ -455,7 +456,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_global_rotation_degrees
      */
     fun getGlobalRotationDegrees(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGlobalRotationDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGlobalRotationDegreesBind, segment)
     }
 
     /**
@@ -466,7 +467,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_parent_node_3d
      */
     fun getParentNode3d(): Node3D? {
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentNode3dBind, segment))
+        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentNode3dBind, segment))
     }
 
     /**
@@ -477,7 +478,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_ignore_transform_notification
      */
     fun setIgnoreTransformNotification(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreTransformNotificationBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreTransformNotificationBind, segment, enabled)
     }
 
     /**
@@ -488,7 +489,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_as_top_level
      */
     fun setAsTopLevel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsTopLevelBind, segment, enable)
     }
 
     /**
@@ -499,7 +500,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.is_set_as_top_level
      */
     fun isSetAsTopLevel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSetAsTopLevelBind, segment)
     }
 
     /**
@@ -511,7 +512,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_disable_scale
      */
     fun setDisableScale(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableScaleBind, segment, disable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableScaleBind, segment, disable)
     }
 
     /**
@@ -523,7 +524,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.is_scale_disabled
      */
     fun isScaleDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScaleDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScaleDisabledBind, segment)
     }
 
     /**
@@ -533,7 +534,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_world_3d
      */
     fun getWorld3d(): World3D? {
-        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
+        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getWorld3dBind, segment))
     }
 
     /**
@@ -546,7 +547,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.force_update_transform
      */
     fun forceUpdateTransform() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceUpdateTransformBind, segment)
     }
 
     /**
@@ -560,7 +561,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_visibility_parent
      */
     fun setVisibilityParent(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setVisibilityParentBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setVisibilityParentBind, segment, path)
     }
 
     /**
@@ -574,7 +575,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_visibility_parent
      */
     fun getVisibilityParent(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getVisibilityParentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getVisibilityParentBind, segment)
     }
 
     /**
@@ -583,7 +584,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.update_gizmos
      */
     fun updateGizmos() {
-        ObjectCalls.ptrcallNoArgs(updateGizmosBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateGizmosBind, segment)
     }
 
     /**
@@ -594,7 +595,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.add_gizmo
      */
     fun addGizmo(gizmo: Node3DGizmo?) {
-        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -603,7 +604,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_gizmos
      */
     fun getGizmos(): List<Node3DGizmo> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, segment, Node3DGizmo::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getGizmosBind, segment, Node3DGizmo::wrapBorrowed)
     }
 
     /**
@@ -612,7 +613,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.clear_gizmos
      */
     fun clearGizmos() {
-        ObjectCalls.ptrcallNoArgs(clearGizmosBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearGizmosBind, segment)
     }
 
     /**
@@ -623,7 +624,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_subgizmo_selection
      */
     fun setSubgizmoSelection(gizmo: Node3DGizmo?, id: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: NULL_SEGMENT, id, transform)
+        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(Binds.setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: NULL_SEGMENT, id, transform)
     }
 
     /**
@@ -633,7 +634,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.clear_subgizmo_selection
      */
     fun clearSubgizmoSelection() {
-        ObjectCalls.ptrcallNoArgs(clearSubgizmoSelectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearSubgizmoSelectionBind, segment)
     }
 
     /**
@@ -643,7 +644,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, visible)
     }
 
     /**
@@ -653,7 +654,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -666,7 +667,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.is_visible_in_tree
      */
     fun isVisibleInTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleInTreeBind, segment)
     }
 
     /**
@@ -676,7 +677,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.showBind, segment)
     }
 
     /**
@@ -686,7 +687,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.hideBind, segment)
     }
 
     /**
@@ -697,7 +698,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_notify_local_transform
      */
     fun setNotifyLocalTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNotifyLocalTransformBind, segment, enable)
     }
 
     /**
@@ -707,7 +708,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.is_local_transform_notification_enabled
      */
     fun isLocalTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLocalTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -719,7 +720,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_notify_transform
      */
     fun setNotifyTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNotifyTransformBind, segment, enable)
     }
 
     /**
@@ -729,7 +730,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.is_transform_notification_enabled
      */
     fun isTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -739,7 +740,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate
      */
     fun rotate(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateBind, segment, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(Binds.rotateBind, segment, axis, angle)
     }
 
     /**
@@ -750,7 +751,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.global_rotate
      */
     fun globalRotate(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(globalRotateBind, segment, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(Binds.globalRotateBind, segment, axis, angle)
     }
 
     /**
@@ -761,7 +762,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.global_scale
      */
     fun globalScale(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(globalScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.globalScaleBind, segment, scale)
     }
 
     /**
@@ -771,7 +772,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.global_translate
      */
     fun globalTranslate(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(globalTranslateBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.globalTranslateBind, segment, offset)
     }
 
     /**
@@ -781,7 +782,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_object_local
      */
     fun rotateObjectLocal(axis: Vector3, angle: Double) {
-        ObjectCalls.ptrcallWithVector3AndDoubleArg(rotateObjectLocalBind, segment, axis, angle)
+        ObjectCalls.ptrcallWithVector3AndDoubleArg(Binds.rotateObjectLocalBind, segment, axis, angle)
     }
 
     /**
@@ -791,7 +792,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.scale_object_local
      */
     fun scaleObjectLocal(scale: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(scaleObjectLocalBind, segment, scale)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.scaleObjectLocalBind, segment, scale)
     }
 
     /**
@@ -801,7 +802,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.translate_object_local
      */
     fun translateObjectLocal(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(translateObjectLocalBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.translateObjectLocalBind, segment, offset)
     }
 
     /**
@@ -811,7 +812,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_x
      */
     fun rotateX(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateXBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.rotateXBind, segment, angle)
     }
 
     /**
@@ -821,7 +822,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_y
      */
     fun rotateY(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateYBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.rotateYBind, segment, angle)
     }
 
     /**
@@ -831,7 +832,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.rotate_z
      */
     fun rotateZ(angle: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateZBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.rotateZBind, segment, angle)
     }
 
     /**
@@ -844,7 +845,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.translate
      */
     fun translate(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(translateBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.translateBind, segment, offset)
     }
 
     /**
@@ -855,7 +856,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.orthonormalize
      */
     fun orthonormalize() {
-        ObjectCalls.ptrcallNoArgs(orthonormalizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.orthonormalizeBind, segment)
     }
 
     /**
@@ -865,7 +866,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_identity
      */
     fun setIdentity() {
-        ObjectCalls.ptrcallNoArgs(setIdentityBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setIdentityBind, segment)
     }
 
     /**
@@ -885,7 +886,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.look_at
      */
     fun lookAt(target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(lookAtBind, segment, target, up, useModelFront)
+        ObjectCalls.ptrcallWithTwoVector3AndBoolArgs(Binds.lookAtBind, segment, target, up, useModelFront)
     }
 
     /**
@@ -896,7 +897,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.look_at_from_position
      */
     fun lookAtFromPosition(position: Vector3, target: Vector3, up: Vector3 = Vector3.UP, useModelFront: Boolean = false) {
-        ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(lookAtFromPositionBind, segment, position, target, up, useModelFront)
+        ObjectCalls.ptrcallWithThreeVector3AndBoolArgs(Binds.lookAtFromPositionBind, segment, position, target, up, useModelFront)
     }
 
     /**
@@ -906,7 +907,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.to_local
      */
     fun toLocal(globalPoint: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toLocalBind, segment, globalPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.toLocalBind, segment, globalPoint)
     }
 
     /**
@@ -916,7 +917,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.to_global
      */
     fun toGlobal(localPoint: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(toGlobalBind, segment, localPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.toGlobalBind, segment, localPoint)
     }
 
     /** Signal `visibility_changed()`; see [TypedSignal]. */
@@ -977,360 +978,362 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): Node3D? =
             if (handle.address() == 0L) null else Node3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TRANSFORM_HASH = 2952846383L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("Node3D", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3229777777L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("Node3D", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val SET_POSITION_HASH = 3460891852L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("Node3D", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3360562783L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("Node3D", "get_position", GET_POSITION_HASH)
-        }
 
         private const val SET_ROTATION_HASH = 3460891852L
-        private val setRotationBind by lazy {
+        @JvmField
+        val setRotationBind =
             ObjectCalls.getMethodBind("Node3D", "set_rotation", SET_ROTATION_HASH)
-        }
 
         private const val GET_ROTATION_HASH = 3360562783L
-        private val getRotationBind by lazy {
+        @JvmField
+        val getRotationBind =
             ObjectCalls.getMethodBind("Node3D", "get_rotation", GET_ROTATION_HASH)
-        }
 
         private const val SET_ROTATION_DEGREES_HASH = 3460891852L
-        private val setRotationDegreesBind by lazy {
+        @JvmField
+        val setRotationDegreesBind =
             ObjectCalls.getMethodBind("Node3D", "set_rotation_degrees", SET_ROTATION_DEGREES_HASH)
-        }
 
         private const val GET_ROTATION_DEGREES_HASH = 3360562783L
-        private val getRotationDegreesBind by lazy {
+        @JvmField
+        val getRotationDegreesBind =
             ObjectCalls.getMethodBind("Node3D", "get_rotation_degrees", GET_ROTATION_DEGREES_HASH)
-        }
 
         private const val SET_ROTATION_ORDER_HASH = 1820889989L
-        private val setRotationOrderBind by lazy {
+        @JvmField
+        val setRotationOrderBind =
             ObjectCalls.getMethodBind("Node3D", "set_rotation_order", SET_ROTATION_ORDER_HASH)
-        }
 
         private const val GET_ROTATION_ORDER_HASH = 916939469L
-        private val getRotationOrderBind by lazy {
+        @JvmField
+        val getRotationOrderBind =
             ObjectCalls.getMethodBind("Node3D", "get_rotation_order", GET_ROTATION_ORDER_HASH)
-        }
 
         private const val SET_ROTATION_EDIT_MODE_HASH = 141483330L
-        private val setRotationEditModeBind by lazy {
+        @JvmField
+        val setRotationEditModeBind =
             ObjectCalls.getMethodBind("Node3D", "set_rotation_edit_mode", SET_ROTATION_EDIT_MODE_HASH)
-        }
 
         private const val GET_ROTATION_EDIT_MODE_HASH = 1572188370L
-        private val getRotationEditModeBind by lazy {
+        @JvmField
+        val getRotationEditModeBind =
             ObjectCalls.getMethodBind("Node3D", "get_rotation_edit_mode", GET_ROTATION_EDIT_MODE_HASH)
-        }
 
         private const val SET_SCALE_HASH = 3460891852L
-        private val setScaleBind by lazy {
+        @JvmField
+        val setScaleBind =
             ObjectCalls.getMethodBind("Node3D", "set_scale", SET_SCALE_HASH)
-        }
 
         private const val GET_SCALE_HASH = 3360562783L
-        private val getScaleBind by lazy {
+        @JvmField
+        val getScaleBind =
             ObjectCalls.getMethodBind("Node3D", "get_scale", GET_SCALE_HASH)
-        }
 
         private const val SET_QUATERNION_HASH = 1727505552L
-        private val setQuaternionBind by lazy {
+        @JvmField
+        val setQuaternionBind =
             ObjectCalls.getMethodBind("Node3D", "set_quaternion", SET_QUATERNION_HASH)
-        }
 
         private const val GET_QUATERNION_HASH = 1222331677L
-        private val getQuaternionBind by lazy {
+        @JvmField
+        val getQuaternionBind =
             ObjectCalls.getMethodBind("Node3D", "get_quaternion", GET_QUATERNION_HASH)
-        }
 
         private const val SET_BASIS_HASH = 1055510324L
-        private val setBasisBind by lazy {
+        @JvmField
+        val setBasisBind =
             ObjectCalls.getMethodBind("Node3D", "set_basis", SET_BASIS_HASH)
-        }
 
         private const val GET_BASIS_HASH = 2716978435L
-        private val getBasisBind by lazy {
+        @JvmField
+        val getBasisBind =
             ObjectCalls.getMethodBind("Node3D", "get_basis", GET_BASIS_HASH)
-        }
 
         private const val SET_GLOBAL_TRANSFORM_HASH = 2952846383L
-        private val setGlobalTransformBind by lazy {
+        @JvmField
+        val setGlobalTransformBind =
             ObjectCalls.getMethodBind("Node3D", "set_global_transform", SET_GLOBAL_TRANSFORM_HASH)
-        }
 
         private const val GET_GLOBAL_TRANSFORM_HASH = 3229777777L
-        private val getGlobalTransformBind by lazy {
+        @JvmField
+        val getGlobalTransformBind =
             ObjectCalls.getMethodBind("Node3D", "get_global_transform", GET_GLOBAL_TRANSFORM_HASH)
-        }
 
         private const val GET_GLOBAL_TRANSFORM_INTERPOLATED_HASH = 4183770049L
-        private val getGlobalTransformInterpolatedBind by lazy {
+        @JvmField
+        val getGlobalTransformInterpolatedBind =
             ObjectCalls.getMethodBind("Node3D", "get_global_transform_interpolated", GET_GLOBAL_TRANSFORM_INTERPOLATED_HASH)
-        }
 
         private const val SET_GLOBAL_POSITION_HASH = 3460891852L
-        private val setGlobalPositionBind by lazy {
+        @JvmField
+        val setGlobalPositionBind =
             ObjectCalls.getMethodBind("Node3D", "set_global_position", SET_GLOBAL_POSITION_HASH)
-        }
 
         private const val GET_GLOBAL_POSITION_HASH = 3360562783L
-        private val getGlobalPositionBind by lazy {
+        @JvmField
+        val getGlobalPositionBind =
             ObjectCalls.getMethodBind("Node3D", "get_global_position", GET_GLOBAL_POSITION_HASH)
-        }
 
         private const val SET_GLOBAL_BASIS_HASH = 1055510324L
-        private val setGlobalBasisBind by lazy {
+        @JvmField
+        val setGlobalBasisBind =
             ObjectCalls.getMethodBind("Node3D", "set_global_basis", SET_GLOBAL_BASIS_HASH)
-        }
 
         private const val GET_GLOBAL_BASIS_HASH = 2716978435L
-        private val getGlobalBasisBind by lazy {
+        @JvmField
+        val getGlobalBasisBind =
             ObjectCalls.getMethodBind("Node3D", "get_global_basis", GET_GLOBAL_BASIS_HASH)
-        }
 
         private const val SET_GLOBAL_ROTATION_HASH = 3460891852L
-        private val setGlobalRotationBind by lazy {
+        @JvmField
+        val setGlobalRotationBind =
             ObjectCalls.getMethodBind("Node3D", "set_global_rotation", SET_GLOBAL_ROTATION_HASH)
-        }
 
         private const val GET_GLOBAL_ROTATION_HASH = 3360562783L
-        private val getGlobalRotationBind by lazy {
+        @JvmField
+        val getGlobalRotationBind =
             ObjectCalls.getMethodBind("Node3D", "get_global_rotation", GET_GLOBAL_ROTATION_HASH)
-        }
 
         private const val SET_GLOBAL_ROTATION_DEGREES_HASH = 3460891852L
-        private val setGlobalRotationDegreesBind by lazy {
+        @JvmField
+        val setGlobalRotationDegreesBind =
             ObjectCalls.getMethodBind("Node3D", "set_global_rotation_degrees", SET_GLOBAL_ROTATION_DEGREES_HASH)
-        }
 
         private const val GET_GLOBAL_ROTATION_DEGREES_HASH = 3360562783L
-        private val getGlobalRotationDegreesBind by lazy {
+        @JvmField
+        val getGlobalRotationDegreesBind =
             ObjectCalls.getMethodBind("Node3D", "get_global_rotation_degrees", GET_GLOBAL_ROTATION_DEGREES_HASH)
-        }
 
         private const val GET_PARENT_NODE_3D_HASH = 151077316L
-        private val getParentNode3dBind by lazy {
+        @JvmField
+        val getParentNode3dBind =
             ObjectCalls.getMethodBind("Node3D", "get_parent_node_3d", GET_PARENT_NODE_3D_HASH)
-        }
 
         private const val SET_IGNORE_TRANSFORM_NOTIFICATION_HASH = 2586408642L
-        private val setIgnoreTransformNotificationBind by lazy {
+        @JvmField
+        val setIgnoreTransformNotificationBind =
             ObjectCalls.getMethodBind("Node3D", "set_ignore_transform_notification", SET_IGNORE_TRANSFORM_NOTIFICATION_HASH)
-        }
 
         private const val SET_AS_TOP_LEVEL_HASH = 2586408642L
-        private val setAsTopLevelBind by lazy {
+        @JvmField
+        val setAsTopLevelBind =
             ObjectCalls.getMethodBind("Node3D", "set_as_top_level", SET_AS_TOP_LEVEL_HASH)
-        }
 
         private const val IS_SET_AS_TOP_LEVEL_HASH = 36873697L
-        private val isSetAsTopLevelBind by lazy {
+        @JvmField
+        val isSetAsTopLevelBind =
             ObjectCalls.getMethodBind("Node3D", "is_set_as_top_level", IS_SET_AS_TOP_LEVEL_HASH)
-        }
 
         private const val SET_DISABLE_SCALE_HASH = 2586408642L
-        private val setDisableScaleBind by lazy {
+        @JvmField
+        val setDisableScaleBind =
             ObjectCalls.getMethodBind("Node3D", "set_disable_scale", SET_DISABLE_SCALE_HASH)
-        }
 
         private const val IS_SCALE_DISABLED_HASH = 36873697L
-        private val isScaleDisabledBind by lazy {
+        @JvmField
+        val isScaleDisabledBind =
             ObjectCalls.getMethodBind("Node3D", "is_scale_disabled", IS_SCALE_DISABLED_HASH)
-        }
 
         private const val GET_WORLD_3D_HASH = 317588385L
-        private val getWorld3dBind by lazy {
+        @JvmField
+        val getWorld3dBind =
             ObjectCalls.getMethodBind("Node3D", "get_world_3d", GET_WORLD_3D_HASH)
-        }
 
         private const val FORCE_UPDATE_TRANSFORM_HASH = 3218959716L
-        private val forceUpdateTransformBind by lazy {
+        @JvmField
+        val forceUpdateTransformBind =
             ObjectCalls.getMethodBind("Node3D", "force_update_transform", FORCE_UPDATE_TRANSFORM_HASH)
-        }
 
         private const val SET_VISIBILITY_PARENT_HASH = 1348162250L
-        private val setVisibilityParentBind by lazy {
+        @JvmField
+        val setVisibilityParentBind =
             ObjectCalls.getMethodBind("Node3D", "set_visibility_parent", SET_VISIBILITY_PARENT_HASH)
-        }
 
         private const val GET_VISIBILITY_PARENT_HASH = 4075236667L
-        private val getVisibilityParentBind by lazy {
+        @JvmField
+        val getVisibilityParentBind =
             ObjectCalls.getMethodBind("Node3D", "get_visibility_parent", GET_VISIBILITY_PARENT_HASH)
-        }
 
         private const val UPDATE_GIZMOS_HASH = 3218959716L
-        private val updateGizmosBind by lazy {
+        @JvmField
+        val updateGizmosBind =
             ObjectCalls.getMethodBind("Node3D", "update_gizmos", UPDATE_GIZMOS_HASH)
-        }
 
         private const val ADD_GIZMO_HASH = 1544533845L
-        private val addGizmoBind by lazy {
+        @JvmField
+        val addGizmoBind =
             ObjectCalls.getMethodBind("Node3D", "add_gizmo", ADD_GIZMO_HASH)
-        }
 
         private const val GET_GIZMOS_HASH = 3995934104L
-        private val getGizmosBind by lazy {
+        @JvmField
+        val getGizmosBind =
             ObjectCalls.getMethodBind("Node3D", "get_gizmos", GET_GIZMOS_HASH)
-        }
 
         private const val CLEAR_GIZMOS_HASH = 3218959716L
-        private val clearGizmosBind by lazy {
+        @JvmField
+        val clearGizmosBind =
             ObjectCalls.getMethodBind("Node3D", "clear_gizmos", CLEAR_GIZMOS_HASH)
-        }
 
         private const val SET_SUBGIZMO_SELECTION_HASH = 3317607635L
-        private val setSubgizmoSelectionBind by lazy {
+        @JvmField
+        val setSubgizmoSelectionBind =
             ObjectCalls.getMethodBind("Node3D", "set_subgizmo_selection", SET_SUBGIZMO_SELECTION_HASH)
-        }
 
         private const val CLEAR_SUBGIZMO_SELECTION_HASH = 3218959716L
-        private val clearSubgizmoSelectionBind by lazy {
+        @JvmField
+        val clearSubgizmoSelectionBind =
             ObjectCalls.getMethodBind("Node3D", "clear_subgizmo_selection", CLEAR_SUBGIZMO_SELECTION_HASH)
-        }
 
         private const val SET_VISIBLE_HASH = 2586408642L
-        private val setVisibleBind by lazy {
+        @JvmField
+        val setVisibleBind =
             ObjectCalls.getMethodBind("Node3D", "set_visible", SET_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 36873697L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("Node3D", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_IN_TREE_HASH = 36873697L
-        private val isVisibleInTreeBind by lazy {
+        @JvmField
+        val isVisibleInTreeBind =
             ObjectCalls.getMethodBind("Node3D", "is_visible_in_tree", IS_VISIBLE_IN_TREE_HASH)
-        }
 
         private const val SHOW_HASH = 3218959716L
-        private val showBind by lazy {
+        @JvmField
+        val showBind =
             ObjectCalls.getMethodBind("Node3D", "show", SHOW_HASH)
-        }
 
         private const val HIDE_HASH = 3218959716L
-        private val hideBind by lazy {
+        @JvmField
+        val hideBind =
             ObjectCalls.getMethodBind("Node3D", "hide", HIDE_HASH)
-        }
 
         private const val SET_NOTIFY_LOCAL_TRANSFORM_HASH = 2586408642L
-        private val setNotifyLocalTransformBind by lazy {
+        @JvmField
+        val setNotifyLocalTransformBind =
             ObjectCalls.getMethodBind("Node3D", "set_notify_local_transform", SET_NOTIFY_LOCAL_TRANSFORM_HASH)
-        }
 
         private const val IS_LOCAL_TRANSFORM_NOTIFICATION_ENABLED_HASH = 36873697L
-        private val isLocalTransformNotificationEnabledBind by lazy {
+        @JvmField
+        val isLocalTransformNotificationEnabledBind =
             ObjectCalls.getMethodBind("Node3D", "is_local_transform_notification_enabled", IS_LOCAL_TRANSFORM_NOTIFICATION_ENABLED_HASH)
-        }
 
         private const val SET_NOTIFY_TRANSFORM_HASH = 2586408642L
-        private val setNotifyTransformBind by lazy {
+        @JvmField
+        val setNotifyTransformBind =
             ObjectCalls.getMethodBind("Node3D", "set_notify_transform", SET_NOTIFY_TRANSFORM_HASH)
-        }
 
         private const val IS_TRANSFORM_NOTIFICATION_ENABLED_HASH = 36873697L
-        private val isTransformNotificationEnabledBind by lazy {
+        @JvmField
+        val isTransformNotificationEnabledBind =
             ObjectCalls.getMethodBind("Node3D", "is_transform_notification_enabled", IS_TRANSFORM_NOTIFICATION_ENABLED_HASH)
-        }
 
         private const val ROTATE_HASH = 3436291937L
-        private val rotateBind by lazy {
+        @JvmField
+        val rotateBind =
             ObjectCalls.getMethodBind("Node3D", "rotate", ROTATE_HASH)
-        }
 
         private const val GLOBAL_ROTATE_HASH = 3436291937L
-        private val globalRotateBind by lazy {
+        @JvmField
+        val globalRotateBind =
             ObjectCalls.getMethodBind("Node3D", "global_rotate", GLOBAL_ROTATE_HASH)
-        }
 
         private const val GLOBAL_SCALE_HASH = 3460891852L
-        private val globalScaleBind by lazy {
+        @JvmField
+        val globalScaleBind =
             ObjectCalls.getMethodBind("Node3D", "global_scale", GLOBAL_SCALE_HASH)
-        }
 
         private const val GLOBAL_TRANSLATE_HASH = 3460891852L
-        private val globalTranslateBind by lazy {
+        @JvmField
+        val globalTranslateBind =
             ObjectCalls.getMethodBind("Node3D", "global_translate", GLOBAL_TRANSLATE_HASH)
-        }
 
         private const val ROTATE_OBJECT_LOCAL_HASH = 3436291937L
-        private val rotateObjectLocalBind by lazy {
+        @JvmField
+        val rotateObjectLocalBind =
             ObjectCalls.getMethodBind("Node3D", "rotate_object_local", ROTATE_OBJECT_LOCAL_HASH)
-        }
 
         private const val SCALE_OBJECT_LOCAL_HASH = 3460891852L
-        private val scaleObjectLocalBind by lazy {
+        @JvmField
+        val scaleObjectLocalBind =
             ObjectCalls.getMethodBind("Node3D", "scale_object_local", SCALE_OBJECT_LOCAL_HASH)
-        }
 
         private const val TRANSLATE_OBJECT_LOCAL_HASH = 3460891852L
-        private val translateObjectLocalBind by lazy {
+        @JvmField
+        val translateObjectLocalBind =
             ObjectCalls.getMethodBind("Node3D", "translate_object_local", TRANSLATE_OBJECT_LOCAL_HASH)
-        }
 
         private const val ROTATE_X_HASH = 373806689L
-        private val rotateXBind by lazy {
+        @JvmField
+        val rotateXBind =
             ObjectCalls.getMethodBind("Node3D", "rotate_x", ROTATE_X_HASH)
-        }
 
         private const val ROTATE_Y_HASH = 373806689L
-        private val rotateYBind by lazy {
+        @JvmField
+        val rotateYBind =
             ObjectCalls.getMethodBind("Node3D", "rotate_y", ROTATE_Y_HASH)
-        }
 
         private const val ROTATE_Z_HASH = 373806689L
-        private val rotateZBind by lazy {
+        @JvmField
+        val rotateZBind =
             ObjectCalls.getMethodBind("Node3D", "rotate_z", ROTATE_Z_HASH)
-        }
 
         private const val TRANSLATE_HASH = 3460891852L
-        private val translateBind by lazy {
+        @JvmField
+        val translateBind =
             ObjectCalls.getMethodBind("Node3D", "translate", TRANSLATE_HASH)
-        }
 
         private const val ORTHONORMALIZE_HASH = 3218959716L
-        private val orthonormalizeBind by lazy {
+        @JvmField
+        val orthonormalizeBind =
             ObjectCalls.getMethodBind("Node3D", "orthonormalize", ORTHONORMALIZE_HASH)
-        }
 
         private const val SET_IDENTITY_HASH = 3218959716L
-        private val setIdentityBind by lazy {
+        @JvmField
+        val setIdentityBind =
             ObjectCalls.getMethodBind("Node3D", "set_identity", SET_IDENTITY_HASH)
-        }
 
         private const val LOOK_AT_HASH = 2882425029L
-        private val lookAtBind by lazy {
+        @JvmField
+        val lookAtBind =
             ObjectCalls.getMethodBind("Node3D", "look_at", LOOK_AT_HASH)
-        }
 
         private const val LOOK_AT_FROM_POSITION_HASH = 2086826090L
-        private val lookAtFromPositionBind by lazy {
+        @JvmField
+        val lookAtFromPositionBind =
             ObjectCalls.getMethodBind("Node3D", "look_at_from_position", LOOK_AT_FROM_POSITION_HASH)
-        }
 
         private const val TO_LOCAL_HASH = 192990374L
-        private val toLocalBind by lazy {
+        @JvmField
+        val toLocalBind =
             ObjectCalls.getMethodBind("Node3D", "to_local", TO_LOCAL_HASH)
-        }
 
         private const val TO_GLOBAL_HASH = 192990374L
-        private val toGlobalBind by lazy {
+        @JvmField
+        val toGlobalBind =
             ObjectCalls.getMethodBind("Node3D", "to_global", TO_GLOBAL_HASH)
-        }
     }
 }

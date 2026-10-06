@@ -20,7 +20,5 @@ class EditorExportPlatformVisionOS(handle: GodotHandle) : EditorExportPlatformAp
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformVisionOS? =
             if (handle.address() == 0L) null else EditorExportPlatformVisionOS(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

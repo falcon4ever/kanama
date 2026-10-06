@@ -20,7 +20,5 @@ class PacketPeerExtension(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerExtension? =
             if (handle.address() == 0L) null else PacketPeerExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -39,7 +40,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0.0, 0.0)) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
+        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(Binds.addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
     }
 
     /**
@@ -49,7 +50,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun replaceNode(name: String, node: AnimationNode?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.replaceNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -59,7 +60,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNode(name: String): AnimationNode? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(getNodeBind, segment, name)
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getNodeBind, segment, name)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -74,7 +75,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun removeNode(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeNodeBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeNodeBind, segment, name)
     }
 
     /**
@@ -84,7 +85,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun renameNode(name: String, newName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameNodeBind, segment, name, newName)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameNodeBind, segment, name, newName)
     }
 
     /**
@@ -94,7 +95,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun hasNode(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasNodeBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasNodeBind, segment, name)
     }
 
     /**
@@ -104,7 +105,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodeName(node: AnimationNode?): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.getNodeNameBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -114,7 +115,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getNodeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getNodeListBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setNodePosition(name: String, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVector2Arg(setNodePositionBind, segment, name, position)
+        ObjectCalls.ptrcallWithStringNameAndVector2Arg(Binds.setNodePositionBind, segment, name, position)
     }
 
     /**
@@ -134,7 +135,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodePosition(name: String): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVector2(getNodePositionBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVector2(Binds.getNodePositionBind, segment, name)
     }
 
     /**
@@ -144,7 +145,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun hasTransition(from: String, to: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasTransitionBind, segment, from, to)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasTransitionBind, segment, from, to)
     }
 
     /**
@@ -154,7 +155,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun addTransition(from: String, to: String, transition: AnimationNodeStateMachineTransition?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, segment, from, to, transition?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.addTransitionBind, segment, from, to, transition?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -164,7 +165,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
         checkOpen()
-        return AnimationNodeStateMachineTransition.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, segment, idx))
+        return AnimationNodeStateMachineTransition.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTransitionBind, segment, idx))
     }
 
     /**
@@ -174,7 +175,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransitionFrom(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionFromBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getTransitionFromBind, segment, idx)
     }
 
     /**
@@ -184,7 +185,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransitionTo(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getTransitionToBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getTransitionToBind, segment, idx)
     }
 
     /**
@@ -194,7 +195,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransitionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTransitionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTransitionCountBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun removeTransitionByIndex(idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeTransitionByIndexBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeTransitionByIndexBind, segment, idx)
     }
 
     /**
@@ -214,7 +215,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun removeTransition(from: String, to: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(removeTransitionBind, segment, from, to)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.removeTransitionBind, segment, from, to)
     }
 
     /**
@@ -224,7 +225,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGraphOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGraphOffsetBind, segment, offset)
     }
 
     /**
@@ -234,7 +235,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getGraphOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
     }
 
     /**
@@ -245,7 +246,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setStateMachineType(stateMachineType: AnimationNodeStateMachine.StateMachineType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, segment, stateMachineType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStateMachineTypeBind, segment, stateMachineType.value)
     }
 
     /**
@@ -256,7 +257,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getStateMachineType(): AnimationNodeStateMachine.StateMachineType {
         checkOpen()
-        return AnimationNodeStateMachine.StateMachineType(ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, segment))
+        return AnimationNodeStateMachine.StateMachineType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateMachineTypeBind, segment))
     }
 
     /**
@@ -268,7 +269,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setAllowTransitionToSelf(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowTransitionToSelfBind, segment, enable)
     }
 
     /**
@@ -280,7 +281,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun isAllowTransitionToSelf(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowTransitionToSelfBind, segment)
     }
 
     /**
@@ -293,7 +294,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setResetEnds(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setResetEndsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setResetEndsBind, segment, enable)
     }
 
     /**
@@ -306,7 +307,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun areEndsReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areEndsResetBind, segment)
     }
 
     /**
@@ -355,135 +356,137 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachine? =
             if (handle.address() == 0L) null else AnimationNodeStateMachine(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_NODE_HASH = 1980270704L
-        private val addNodeBind by lazy {
+        @JvmField
+        val addNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "add_node", ADD_NODE_HASH)
-        }
 
         private const val REPLACE_NODE_HASH = 2559412862L
-        private val replaceNodeBind by lazy {
+        @JvmField
+        val replaceNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "replace_node", REPLACE_NODE_HASH)
-        }
 
         private const val GET_NODE_HASH = 625644256L
-        private val getNodeBind by lazy {
+        @JvmField
+        val getNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_node", GET_NODE_HASH)
-        }
 
         private const val REMOVE_NODE_HASH = 3304788590L
-        private val removeNodeBind by lazy {
+        @JvmField
+        val removeNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "remove_node", REMOVE_NODE_HASH)
-        }
 
         private const val RENAME_NODE_HASH = 3740211285L
-        private val renameNodeBind by lazy {
+        @JvmField
+        val renameNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "rename_node", RENAME_NODE_HASH)
-        }
 
         private const val HAS_NODE_HASH = 2619796661L
-        private val hasNodeBind by lazy {
+        @JvmField
+        val hasNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "has_node", HAS_NODE_HASH)
-        }
 
         private const val GET_NODE_NAME_HASH = 739213945L
-        private val getNodeNameBind by lazy {
+        @JvmField
+        val getNodeNameBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_node_name", GET_NODE_NAME_HASH)
-        }
 
         private const val GET_NODE_LIST_HASH = 3995934104L
-        private val getNodeListBind by lazy {
+        @JvmField
+        val getNodeListBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_node_list", GET_NODE_LIST_HASH)
-        }
 
         private const val SET_NODE_POSITION_HASH = 1999414630L
-        private val setNodePositionBind by lazy {
+        @JvmField
+        val setNodePositionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "set_node_position", SET_NODE_POSITION_HASH)
-        }
 
         private const val GET_NODE_POSITION_HASH = 3100822709L
-        private val getNodePositionBind by lazy {
+        @JvmField
+        val getNodePositionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_node_position", GET_NODE_POSITION_HASH)
-        }
 
         private const val HAS_TRANSITION_HASH = 471820014L
-        private val hasTransitionBind by lazy {
+        @JvmField
+        val hasTransitionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "has_transition", HAS_TRANSITION_HASH)
-        }
 
         private const val ADD_TRANSITION_HASH = 795486887L
-        private val addTransitionBind by lazy {
+        @JvmField
+        val addTransitionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "add_transition", ADD_TRANSITION_HASH)
-        }
 
         private const val GET_TRANSITION_HASH = 4192381260L
-        private val getTransitionBind by lazy {
+        @JvmField
+        val getTransitionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition", GET_TRANSITION_HASH)
-        }
 
         private const val GET_TRANSITION_FROM_HASH = 659327637L
-        private val getTransitionFromBind by lazy {
+        @JvmField
+        val getTransitionFromBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition_from", GET_TRANSITION_FROM_HASH)
-        }
 
         private const val GET_TRANSITION_TO_HASH = 659327637L
-        private val getTransitionToBind by lazy {
+        @JvmField
+        val getTransitionToBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition_to", GET_TRANSITION_TO_HASH)
-        }
 
         private const val GET_TRANSITION_COUNT_HASH = 3905245786L
-        private val getTransitionCountBind by lazy {
+        @JvmField
+        val getTransitionCountBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_transition_count", GET_TRANSITION_COUNT_HASH)
-        }
 
         private const val REMOVE_TRANSITION_BY_INDEX_HASH = 1286410249L
-        private val removeTransitionByIndexBind by lazy {
+        @JvmField
+        val removeTransitionByIndexBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "remove_transition_by_index", REMOVE_TRANSITION_BY_INDEX_HASH)
-        }
 
         private const val REMOVE_TRANSITION_HASH = 3740211285L
-        private val removeTransitionBind by lazy {
+        @JvmField
+        val removeTransitionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "remove_transition", REMOVE_TRANSITION_HASH)
-        }
 
         private const val SET_GRAPH_OFFSET_HASH = 743155724L
-        private val setGraphOffsetBind by lazy {
+        @JvmField
+        val setGraphOffsetBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "set_graph_offset", SET_GRAPH_OFFSET_HASH)
-        }
 
         private const val GET_GRAPH_OFFSET_HASH = 3341600327L
-        private val getGraphOffsetBind by lazy {
+        @JvmField
+        val getGraphOffsetBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_graph_offset", GET_GRAPH_OFFSET_HASH)
-        }
 
         private const val SET_STATE_MACHINE_TYPE_HASH = 2584759088L
-        private val setStateMachineTypeBind by lazy {
+        @JvmField
+        val setStateMachineTypeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "set_state_machine_type", SET_STATE_MACHINE_TYPE_HASH)
-        }
 
         private const val GET_STATE_MACHINE_TYPE_HASH = 1140726469L
-        private val getStateMachineTypeBind by lazy {
+        @JvmField
+        val getStateMachineTypeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "get_state_machine_type", GET_STATE_MACHINE_TYPE_HASH)
-        }
 
         private const val SET_ALLOW_TRANSITION_TO_SELF_HASH = 2586408642L
-        private val setAllowTransitionToSelfBind by lazy {
+        @JvmField
+        val setAllowTransitionToSelfBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "set_allow_transition_to_self", SET_ALLOW_TRANSITION_TO_SELF_HASH)
-        }
 
         private const val IS_ALLOW_TRANSITION_TO_SELF_HASH = 36873697L
-        private val isAllowTransitionToSelfBind by lazy {
+        @JvmField
+        val isAllowTransitionToSelfBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "is_allow_transition_to_self", IS_ALLOW_TRANSITION_TO_SELF_HASH)
-        }
 
         private const val SET_RESET_ENDS_HASH = 2586408642L
-        private val setResetEndsBind by lazy {
+        @JvmField
+        val setResetEndsBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "set_reset_ends", SET_RESET_ENDS_HASH)
-        }
 
         private const val ARE_ENDS_RESET_HASH = 36873697L
-        private val areEndsResetBind by lazy {
+        @JvmField
+        val areEndsResetBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachine", "are_ends_reset", ARE_ENDS_RESET_HASH)
-        }
     }
 }

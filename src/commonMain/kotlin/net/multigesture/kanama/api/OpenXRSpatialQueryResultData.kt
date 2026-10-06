@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,17 +11,17 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getCapacity(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCapacityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCapacityBind, segment)
     }
 
     fun getEntityId(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getEntityIdBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityIdBind, segment, index)
     }
 
     fun getEntityState(index: Long): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
-        return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallWithLongArgRetLong(getEntityStateBind, segment, index))
+        return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityStateBind, segment, index))
     }
 
     companion object {
@@ -33,20 +34,22 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialQueryResultData? =
             if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CAPACITY_HASH = 3905245786L
-        private val getCapacityBind by lazy {
+        @JvmField
+        val getCapacityBind =
             ObjectCalls.getMethodBind("OpenXRSpatialQueryResultData", "get_capacity", GET_CAPACITY_HASH)
-        }
 
         private const val GET_ENTITY_ID_HASH = 923996154L
-        private val getEntityIdBind by lazy {
+        @JvmField
+        val getEntityIdBind =
             ObjectCalls.getMethodBind("OpenXRSpatialQueryResultData", "get_entity_id", GET_ENTITY_ID_HASH)
-        }
 
         private const val GET_ENTITY_STATE_HASH = 1411962015L
-        private val getEntityStateBind by lazy {
+        @JvmField
+        val getEntityStateBind =
             ObjectCalls.getMethodBind("OpenXRSpatialQueryResultData", "get_entity_state", GET_ENTITY_STATE_HASH)
-        }
     }
 }

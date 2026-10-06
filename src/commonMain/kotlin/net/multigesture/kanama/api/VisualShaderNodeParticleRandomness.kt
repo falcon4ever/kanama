@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,12 +19,12 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
 
     fun setOpType(type: VisualShaderNodeParticleRandomness.OpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
     }
 
     fun getOpType(): VisualShaderNodeParticleRandomness.OpType {
         checkOpen()
-        return VisualShaderNodeParticleRandomness.OpType(ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment))
+        return VisualShaderNodeParticleRandomness.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
     }
 
     @JvmInline
@@ -47,15 +48,17 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleRandomness? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRandomness(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OP_TYPE_HASH = 2060089061L
-        private val setOpTypeBind by lazy {
+        @JvmField
+        val setOpTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleRandomness", "set_op_type", SET_OP_TYPE_HASH)
-        }
 
         private const val GET_OP_TYPE_HASH = 3597061078L
-        private val getOpTypeBind by lazy {
+        @JvmField
+        val getOpTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleRandomness", "get_op_type", GET_OP_TYPE_HASH)
-        }
     }
 }

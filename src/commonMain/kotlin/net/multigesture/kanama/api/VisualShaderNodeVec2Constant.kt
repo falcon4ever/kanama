@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,12 +19,12 @@ class VisualShaderNodeVec2Constant(handle: GodotHandle) : VisualShaderNodeConsta
 
     fun setConstant(constant: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setConstantBind, segment, constant)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setConstantBind, segment, constant)
     }
 
     fun getConstant(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getConstantBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getConstantBind, segment)
     }
 
     companion object {
@@ -36,15 +37,17 @@ class VisualShaderNodeVec2Constant(handle: GodotHandle) : VisualShaderNodeConsta
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVec2Constant? =
             if (handle.address() == 0L) null else VisualShaderNodeVec2Constant(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CONSTANT_HASH = 743155724L
-        private val setConstantBind by lazy {
+        @JvmField
+        val setConstantBind =
             ObjectCalls.getMethodBind("VisualShaderNodeVec2Constant", "set_constant", SET_CONSTANT_HASH)
-        }
 
         private const val GET_CONSTANT_HASH = 3341600327L
-        private val getConstantBind by lazy {
+        @JvmField
+        val getConstantBind =
             ObjectCalls.getMethodBind("VisualShaderNodeVec2Constant", "get_constant", GET_CONSTANT_HASH)
-        }
     }
 }

@@ -17,7 +17,5 @@ class CSGCombiner3D(handle: GodotHandle) : CSGShape3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGCombiner3D? =
             if (handle.address() == 0L) null else CSGCombiner3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

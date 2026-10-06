@@ -19,7 +19,5 @@ class JacobianIK3D(handle: GodotHandle) : IterateIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): JacobianIK3D? =
             if (handle.address() == 0L) null else JacobianIK3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

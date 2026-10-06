@@ -20,7 +20,5 @@ class HSplitContainer(handle: GodotHandle) : SplitContainer(handle) {
 
         internal fun wrap(handle: RawSegment): HSplitContainer? =
             if (handle.address() == 0L) null else HSplitContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

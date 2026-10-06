@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun createMaterial(name: String, color: Color, billboard: Boolean = false, onTop: Boolean = false, useVertexColor: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringColorThreeBoolArgs(createMaterialBind, segment, name, color, billboard, onTop, useVertexColor)
+        ObjectCalls.ptrcallWithStringColorThreeBoolArgs(Binds.createMaterialBind, segment, name, color, billboard, onTop, useVertexColor)
     }
 
     /**
@@ -33,7 +34,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = false, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringObjectBoolColorArgs(createIconMaterialBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, onTop, color)
+        ObjectCalls.ptrcallWithStringObjectBoolColorArgs(Binds.createIconMaterialBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, onTop, color)
     }
 
     /**
@@ -46,7 +47,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringBoolObjectArgs(createHandleMaterialBind, segment, name, billboard, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringBoolObjectArgs(Binds.createHandleMaterialBind, segment, name, billboard, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -57,7 +58,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun addMaterial(name: String, material: StandardMaterial3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectArg(addMaterialBind, segment, name, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addMaterialBind, segment, name, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -68,7 +69,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
         checkOpen()
-        return StandardMaterial3D.wrapOwned(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
+        return StandardMaterial3D.wrapOwned(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(Binds.getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -81,30 +82,32 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorNode3DGizmoPlugin? =
             if (handle.address() == 0L) null else EditorNode3DGizmoPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_MATERIAL_HASH = 3486012546L
-        private val createMaterialBind by lazy {
+        @JvmField
+        val createMaterialBind =
             ObjectCalls.getMethodBind("EditorNode3DGizmoPlugin", "create_material", CREATE_MATERIAL_HASH)
-        }
 
         private const val CREATE_ICON_MATERIAL_HASH = 3804976916L
-        private val createIconMaterialBind by lazy {
+        @JvmField
+        val createIconMaterialBind =
             ObjectCalls.getMethodBind("EditorNode3DGizmoPlugin", "create_icon_material", CREATE_ICON_MATERIAL_HASH)
-        }
 
         private const val CREATE_HANDLE_MATERIAL_HASH = 2486475223L
-        private val createHandleMaterialBind by lazy {
+        @JvmField
+        val createHandleMaterialBind =
             ObjectCalls.getMethodBind("EditorNode3DGizmoPlugin", "create_handle_material", CREATE_HANDLE_MATERIAL_HASH)
-        }
 
         private const val ADD_MATERIAL_HASH = 1374068695L
-        private val addMaterialBind by lazy {
+        @JvmField
+        val addMaterialBind =
             ObjectCalls.getMethodBind("EditorNode3DGizmoPlugin", "add_material", ADD_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 974464017L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("EditorNode3DGizmoPlugin", "get_material", GET_MATERIAL_HASH)
-        }
     }
 }

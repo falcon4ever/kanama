@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -31,87 +32,87 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
 
     fun getDeviceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDeviceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeviceCountBind, segment)
     }
 
     fun getDevice(index: Int): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDeviceBind, segment, index))
+        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getDeviceBind, segment, index))
     }
 
     fun addDevice(device: UPNPDevice?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addDeviceBind, segment, listOf(device?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addDeviceBind, segment, listOf(device?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun setDevice(index: Int, device: UPNPDevice?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDeviceBind, segment, index, device?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setDeviceBind, segment, index, device?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun removeDevice(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeDeviceBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeDeviceBind, segment, index)
     }
 
     fun clearDevices() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearDevicesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearDevicesBind, segment)
     }
 
     fun getGateway(): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGatewayBind, segment))
+        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGatewayBind, segment))
     }
 
     fun discover(timeout: Int = 2000, ttl: Int = 2, deviceFilter: String = "InternetGatewayDevice"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(discoverBind, segment, timeout, ttl, deviceFilter)
+        return ObjectCalls.ptrcallWithTwoIntStringArgsRetInt(Binds.discoverBind, segment, timeout, ttl, deviceFilter)
     }
 
     fun queryExternalAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
     }
 
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, segment, port, portInternal, desc, proto, duration)
+        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
     }
 
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, segment, port, proto)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
     }
 
     fun setDiscoverMulticastIf(mIf: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setDiscoverMulticastIfBind, segment, mIf)
+        ObjectCalls.ptrcallWithStringArg(Binds.setDiscoverMulticastIfBind, segment, mIf)
     }
 
     fun getDiscoverMulticastIf(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getDiscoverMulticastIfBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDiscoverMulticastIfBind, segment)
     }
 
     fun setDiscoverLocalPort(port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDiscoverLocalPortBind, segment, port)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDiscoverLocalPortBind, segment, port)
     }
 
     fun getDiscoverLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDiscoverLocalPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDiscoverLocalPortBind, segment)
     }
 
     fun setDiscoverIpv6(ipv6: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDiscoverIpv6Bind, segment, ipv6)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDiscoverIpv6Bind, segment, ipv6)
     }
 
     fun isDiscoverIpv6(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDiscoverIpv6Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDiscoverIpv6Bind, segment)
     }
 
     @JvmInline
@@ -159,90 +160,92 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UPNP? =
             if (handle.address() == 0L) null else UPNP(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_DEVICE_COUNT_HASH = 3905245786L
-        private val getDeviceCountBind by lazy {
+        @JvmField
+        val getDeviceCountBind =
             ObjectCalls.getMethodBind("UPNP", "get_device_count", GET_DEVICE_COUNT_HASH)
-        }
 
         private const val GET_DEVICE_HASH = 2193290270L
-        private val getDeviceBind by lazy {
+        @JvmField
+        val getDeviceBind =
             ObjectCalls.getMethodBind("UPNP", "get_device", GET_DEVICE_HASH)
-        }
 
         private const val ADD_DEVICE_HASH = 986715920L
-        private val addDeviceBind by lazy {
+        @JvmField
+        val addDeviceBind =
             ObjectCalls.getMethodBind("UPNP", "add_device", ADD_DEVICE_HASH)
-        }
 
         private const val SET_DEVICE_HASH = 3015133723L
-        private val setDeviceBind by lazy {
+        @JvmField
+        val setDeviceBind =
             ObjectCalls.getMethodBind("UPNP", "set_device", SET_DEVICE_HASH)
-        }
 
         private const val REMOVE_DEVICE_HASH = 1286410249L
-        private val removeDeviceBind by lazy {
+        @JvmField
+        val removeDeviceBind =
             ObjectCalls.getMethodBind("UPNP", "remove_device", REMOVE_DEVICE_HASH)
-        }
 
         private const val CLEAR_DEVICES_HASH = 3218959716L
-        private val clearDevicesBind by lazy {
+        @JvmField
+        val clearDevicesBind =
             ObjectCalls.getMethodBind("UPNP", "clear_devices", CLEAR_DEVICES_HASH)
-        }
 
         private const val GET_GATEWAY_HASH = 2276800779L
-        private val getGatewayBind by lazy {
+        @JvmField
+        val getGatewayBind =
             ObjectCalls.getMethodBind("UPNP", "get_gateway", GET_GATEWAY_HASH)
-        }
 
         private const val DISCOVER_HASH = 1575334765L
-        private val discoverBind by lazy {
+        @JvmField
+        val discoverBind =
             ObjectCalls.getMethodBind("UPNP", "discover", DISCOVER_HASH)
-        }
 
         private const val QUERY_EXTERNAL_ADDRESS_HASH = 201670096L
-        private val queryExternalAddressBind by lazy {
+        @JvmField
+        val queryExternalAddressBind =
             ObjectCalls.getMethodBind("UPNP", "query_external_address", QUERY_EXTERNAL_ADDRESS_HASH)
-        }
 
         private const val ADD_PORT_MAPPING_HASH = 818314583L
-        private val addPortMappingBind by lazy {
+        @JvmField
+        val addPortMappingBind =
             ObjectCalls.getMethodBind("UPNP", "add_port_mapping", ADD_PORT_MAPPING_HASH)
-        }
 
         private const val DELETE_PORT_MAPPING_HASH = 3444187325L
-        private val deletePortMappingBind by lazy {
+        @JvmField
+        val deletePortMappingBind =
             ObjectCalls.getMethodBind("UPNP", "delete_port_mapping", DELETE_PORT_MAPPING_HASH)
-        }
 
         private const val SET_DISCOVER_MULTICAST_IF_HASH = 83702148L
-        private val setDiscoverMulticastIfBind by lazy {
+        @JvmField
+        val setDiscoverMulticastIfBind =
             ObjectCalls.getMethodBind("UPNP", "set_discover_multicast_if", SET_DISCOVER_MULTICAST_IF_HASH)
-        }
 
         private const val GET_DISCOVER_MULTICAST_IF_HASH = 201670096L
-        private val getDiscoverMulticastIfBind by lazy {
+        @JvmField
+        val getDiscoverMulticastIfBind =
             ObjectCalls.getMethodBind("UPNP", "get_discover_multicast_if", GET_DISCOVER_MULTICAST_IF_HASH)
-        }
 
         private const val SET_DISCOVER_LOCAL_PORT_HASH = 1286410249L
-        private val setDiscoverLocalPortBind by lazy {
+        @JvmField
+        val setDiscoverLocalPortBind =
             ObjectCalls.getMethodBind("UPNP", "set_discover_local_port", SET_DISCOVER_LOCAL_PORT_HASH)
-        }
 
         private const val GET_DISCOVER_LOCAL_PORT_HASH = 3905245786L
-        private val getDiscoverLocalPortBind by lazy {
+        @JvmField
+        val getDiscoverLocalPortBind =
             ObjectCalls.getMethodBind("UPNP", "get_discover_local_port", GET_DISCOVER_LOCAL_PORT_HASH)
-        }
 
         private const val SET_DISCOVER_IPV6_HASH = 2586408642L
-        private val setDiscoverIpv6Bind by lazy {
+        @JvmField
+        val setDiscoverIpv6Bind =
             ObjectCalls.getMethodBind("UPNP", "set_discover_ipv6", SET_DISCOVER_IPV6_HASH)
-        }
 
         private const val IS_DISCOVER_IPV6_HASH = 36873697L
-        private val isDiscoverIpv6Bind by lazy {
+        @JvmField
+        val isDiscoverIpv6Bind =
             ObjectCalls.getMethodBind("UPNP", "is_discover_ipv6", IS_DISCOVER_IPV6_HASH)
-        }
     }
 }

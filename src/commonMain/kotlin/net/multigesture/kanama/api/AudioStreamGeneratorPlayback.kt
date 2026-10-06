@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -20,7 +21,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun pushFrame(frame: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetBool(pushFrameBind, segment, frame)
+        return ObjectCalls.ptrcallWithVector2ArgRetBool(Binds.pushFrameBind, segment, frame)
     }
 
     /**
@@ -31,7 +32,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun canPushBuffer(amount: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(canPushBufferBind, segment, amount)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.canPushBufferBind, segment, amount)
     }
 
     /**
@@ -43,7 +44,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun pushBuffer(frames: List<Vector2>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(pushBufferBind, segment, frames)
+        return ObjectCalls.ptrcallWithPackedVector2ListArgRetBool(Binds.pushBufferBind, segment, frames)
     }
 
     /**
@@ -54,7 +55,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun getFramesAvailable(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesAvailableBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun getSkips(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSkipsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkipsBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
      */
     fun clearBuffer() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBufferBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBufferBind, segment)
     }
 
     companion object {
@@ -88,35 +89,37 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamGeneratorPlayback? =
             if (handle.address() == 0L) null else AudioStreamGeneratorPlayback(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PUSH_FRAME_HASH = 3975407249L
-        private val pushFrameBind by lazy {
+        @JvmField
+        val pushFrameBind =
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "push_frame", PUSH_FRAME_HASH)
-        }
 
         private const val CAN_PUSH_BUFFER_HASH = 1116898809L
-        private val canPushBufferBind by lazy {
+        @JvmField
+        val canPushBufferBind =
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "can_push_buffer", CAN_PUSH_BUFFER_HASH)
-        }
 
         private const val PUSH_BUFFER_HASH = 1361156557L
-        private val pushBufferBind by lazy {
+        @JvmField
+        val pushBufferBind =
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "push_buffer", PUSH_BUFFER_HASH)
-        }
 
         private const val GET_FRAMES_AVAILABLE_HASH = 3905245786L
-        private val getFramesAvailableBind by lazy {
+        @JvmField
+        val getFramesAvailableBind =
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "get_frames_available", GET_FRAMES_AVAILABLE_HASH)
-        }
 
         private const val GET_SKIPS_HASH = 3905245786L
-        private val getSkipsBind by lazy {
+        @JvmField
+        val getSkipsBind =
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "get_skips", GET_SKIPS_HASH)
-        }
 
         private const val CLEAR_BUFFER_HASH = 3218959716L
-        private val clearBufferBind by lazy {
+        @JvmField
+        val clearBufferBind =
             ObjectCalls.getMethodBind("AudioStreamGeneratorPlayback", "clear_buffer", CLEAR_BUFFER_HASH)
-        }
     }
 }

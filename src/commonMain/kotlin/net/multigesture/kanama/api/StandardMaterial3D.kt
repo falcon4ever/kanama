@@ -27,7 +27,5 @@ class StandardMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
         @JvmStatic
         fun create(): StandardMaterial3D =
             RefCounted.owned(StandardMaterial3D(GodotHandle(ObjectCalls.constructObject("StandardMaterial3D"))))
-
-        // No MethodBinds emitted yet.
     }
 }

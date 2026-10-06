@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_transform_mode
      */
     fun setApplyTransformMode(index: Int, transformMode: ConvertTransformModifier3D.TransformMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyTransformModeBind, segment, index, transformMode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setApplyTransformModeBind, segment, index, transformMode.value)
     }
 
     /**
@@ -27,7 +28,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_transform_mode
      */
     fun getApplyTransformMode(index: Int): ConvertTransformModifier3D.TransformMode {
-        return ConvertTransformModifier3D.TransformMode(ObjectCalls.ptrcallWithIntArgRetLong(getApplyTransformModeBind, segment, index))
+        return ConvertTransformModifier3D.TransformMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getApplyTransformModeBind, segment, index))
     }
 
     /**
@@ -36,7 +37,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_axis
      */
     fun setApplyAxis(index: Int, axis: Vector3.Axis) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyAxisBind, segment, index, axis.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setApplyAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -45,7 +46,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_axis
      */
     fun getApplyAxis(index: Int): Vector3.Axis {
-        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(getApplyAxisBind, segment, index))
+        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getApplyAxisBind, segment, index))
     }
 
     /**
@@ -54,7 +55,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_range_min
      */
     fun setApplyRangeMin(index: Int, rangeMin: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMinBind, segment, index, rangeMin)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setApplyRangeMinBind, segment, index, rangeMin)
     }
 
     /**
@@ -63,7 +64,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_range_min
      */
     fun getApplyRangeMin(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMinBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getApplyRangeMinBind, segment, index)
     }
 
     /**
@@ -72,7 +73,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_range_max
      */
     fun setApplyRangeMax(index: Int, rangeMax: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setApplyRangeMaxBind, segment, index, rangeMax)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setApplyRangeMaxBind, segment, index, rangeMax)
     }
 
     /**
@@ -81,7 +82,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_range_max
      */
     fun getApplyRangeMax(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getApplyRangeMaxBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getApplyRangeMaxBind, segment, index)
     }
 
     /**
@@ -90,7 +91,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_transform_mode
      */
     fun setReferenceTransformMode(index: Int, transformMode: ConvertTransformModifier3D.TransformMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTransformModeBind, segment, index, transformMode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setReferenceTransformModeBind, segment, index, transformMode.value)
     }
 
     /**
@@ -99,7 +100,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_transform_mode
      */
     fun getReferenceTransformMode(index: Int): ConvertTransformModifier3D.TransformMode {
-        return ConvertTransformModifier3D.TransformMode(ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTransformModeBind, segment, index))
+        return ConvertTransformModifier3D.TransformMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getReferenceTransformModeBind, segment, index))
     }
 
     /**
@@ -108,7 +109,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_axis
      */
     fun setReferenceAxis(index: Int, axis: Vector3.Axis) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceAxisBind, segment, index, axis.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setReferenceAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -117,7 +118,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_axis
      */
     fun getReferenceAxis(index: Int): Vector3.Axis {
-        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(getReferenceAxisBind, segment, index))
+        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getReferenceAxisBind, segment, index))
     }
 
     /**
@@ -126,7 +127,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_range_min
      */
     fun setReferenceRangeMin(index: Int, rangeMin: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMinBind, segment, index, rangeMin)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setReferenceRangeMinBind, segment, index, rangeMin)
     }
 
     /**
@@ -135,7 +136,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_range_min
      */
     fun getReferenceRangeMin(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMinBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getReferenceRangeMinBind, segment, index)
     }
 
     /**
@@ -144,7 +145,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_range_max
      */
     fun setReferenceRangeMax(index: Int, rangeMax: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setReferenceRangeMaxBind, segment, index, rangeMax)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setReferenceRangeMaxBind, segment, index, rangeMax)
     }
 
     /**
@@ -153,7 +154,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_range_max
      */
     fun getReferenceRangeMax(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getReferenceRangeMaxBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getReferenceRangeMaxBind, segment, index)
     }
 
     /**
@@ -164,7 +165,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_relative
      */
     fun setRelative(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setRelativeBind, segment, index, enabled)
     }
 
     /**
@@ -173,7 +174,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.is_relative
      */
     fun isRelative(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRelativeBind, segment, index)
     }
 
     /**
@@ -186,7 +187,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.set_additive
      */
     fun setAdditive(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAdditiveBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAdditiveBind, segment, index, enabled)
     }
 
     /**
@@ -195,7 +196,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      * Generated from Godot docs: ConvertTransformModifier3D.is_additive
      */
     fun isAdditive(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isAdditiveBind, segment, index)
     }
 
     /**
@@ -236,105 +237,107 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
 
         internal fun wrap(handle: RawSegment): ConvertTransformModifier3D? =
             if (handle.address() == 0L) null else ConvertTransformModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_APPLY_TRANSFORM_MODE_HASH = 1386463405L
-        private val setApplyTransformModeBind by lazy {
+        @JvmField
+        val setApplyTransformModeBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_apply_transform_mode", SET_APPLY_TRANSFORM_MODE_HASH)
-        }
 
         private const val GET_APPLY_TRANSFORM_MODE_HASH = 3234663511L
-        private val getApplyTransformModeBind by lazy {
+        @JvmField
+        val getApplyTransformModeBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_apply_transform_mode", GET_APPLY_TRANSFORM_MODE_HASH)
-        }
 
         private const val SET_APPLY_AXIS_HASH = 776736805L
-        private val setApplyAxisBind by lazy {
+        @JvmField
+        val setApplyAxisBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_apply_axis", SET_APPLY_AXIS_HASH)
-        }
 
         private const val GET_APPLY_AXIS_HASH = 4131134770L
-        private val getApplyAxisBind by lazy {
+        @JvmField
+        val getApplyAxisBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_apply_axis", GET_APPLY_AXIS_HASH)
-        }
 
         private const val SET_APPLY_RANGE_MIN_HASH = 1602489585L
-        private val setApplyRangeMinBind by lazy {
+        @JvmField
+        val setApplyRangeMinBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_apply_range_min", SET_APPLY_RANGE_MIN_HASH)
-        }
 
         private const val GET_APPLY_RANGE_MIN_HASH = 2339986948L
-        private val getApplyRangeMinBind by lazy {
+        @JvmField
+        val getApplyRangeMinBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_apply_range_min", GET_APPLY_RANGE_MIN_HASH)
-        }
 
         private const val SET_APPLY_RANGE_MAX_HASH = 1602489585L
-        private val setApplyRangeMaxBind by lazy {
+        @JvmField
+        val setApplyRangeMaxBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_apply_range_max", SET_APPLY_RANGE_MAX_HASH)
-        }
 
         private const val GET_APPLY_RANGE_MAX_HASH = 2339986948L
-        private val getApplyRangeMaxBind by lazy {
+        @JvmField
+        val getApplyRangeMaxBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_apply_range_max", GET_APPLY_RANGE_MAX_HASH)
-        }
 
         private const val SET_REFERENCE_TRANSFORM_MODE_HASH = 1386463405L
-        private val setReferenceTransformModeBind by lazy {
+        @JvmField
+        val setReferenceTransformModeBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_reference_transform_mode", SET_REFERENCE_TRANSFORM_MODE_HASH)
-        }
 
         private const val GET_REFERENCE_TRANSFORM_MODE_HASH = 3234663511L
-        private val getReferenceTransformModeBind by lazy {
+        @JvmField
+        val getReferenceTransformModeBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_reference_transform_mode", GET_REFERENCE_TRANSFORM_MODE_HASH)
-        }
 
         private const val SET_REFERENCE_AXIS_HASH = 776736805L
-        private val setReferenceAxisBind by lazy {
+        @JvmField
+        val setReferenceAxisBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_reference_axis", SET_REFERENCE_AXIS_HASH)
-        }
 
         private const val GET_REFERENCE_AXIS_HASH = 4131134770L
-        private val getReferenceAxisBind by lazy {
+        @JvmField
+        val getReferenceAxisBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_reference_axis", GET_REFERENCE_AXIS_HASH)
-        }
 
         private const val SET_REFERENCE_RANGE_MIN_HASH = 1602489585L
-        private val setReferenceRangeMinBind by lazy {
+        @JvmField
+        val setReferenceRangeMinBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_reference_range_min", SET_REFERENCE_RANGE_MIN_HASH)
-        }
 
         private const val GET_REFERENCE_RANGE_MIN_HASH = 2339986948L
-        private val getReferenceRangeMinBind by lazy {
+        @JvmField
+        val getReferenceRangeMinBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_reference_range_min", GET_REFERENCE_RANGE_MIN_HASH)
-        }
 
         private const val SET_REFERENCE_RANGE_MAX_HASH = 1602489585L
-        private val setReferenceRangeMaxBind by lazy {
+        @JvmField
+        val setReferenceRangeMaxBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_reference_range_max", SET_REFERENCE_RANGE_MAX_HASH)
-        }
 
         private const val GET_REFERENCE_RANGE_MAX_HASH = 2339986948L
-        private val getReferenceRangeMaxBind by lazy {
+        @JvmField
+        val getReferenceRangeMaxBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_reference_range_max", GET_REFERENCE_RANGE_MAX_HASH)
-        }
 
         private const val SET_RELATIVE_HASH = 300928843L
-        private val setRelativeBind by lazy {
+        @JvmField
+        val setRelativeBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_relative", SET_RELATIVE_HASH)
-        }
 
         private const val IS_RELATIVE_HASH = 1116898809L
-        private val isRelativeBind by lazy {
+        @JvmField
+        val isRelativeBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "is_relative", IS_RELATIVE_HASH)
-        }
 
         private const val SET_ADDITIVE_HASH = 300928843L
-        private val setAdditiveBind by lazy {
+        @JvmField
+        val setAdditiveBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_additive", SET_ADDITIVE_HASH)
-        }
 
         private const val IS_ADDITIVE_HASH = 1116898809L
-        private val isAdditiveBind by lazy {
+        @JvmField
+        val isAdditiveBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "is_additive", IS_ADDITIVE_HASH)
-        }
     }
 }

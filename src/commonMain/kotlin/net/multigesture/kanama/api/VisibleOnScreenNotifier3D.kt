@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(han
      * Generated from Godot docs: VisibleOnScreenNotifier3D.set_aabb
      */
     fun setAabb(rect: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setAabbBind, segment, rect)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setAabbBind, segment, rect)
     }
 
     /**
@@ -29,7 +30,7 @@ open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(han
      * Generated from Godot docs: VisibleOnScreenNotifier3D.is_on_screen
      */
     fun isOnScreen(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOnScreenBind, segment)
     }
 
     /** Signal `screen_entered()`; see [TypedSignal]. */
@@ -54,15 +55,17 @@ open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(han
 
         internal fun wrap(handle: RawSegment): VisibleOnScreenNotifier3D? =
             if (handle.address() == 0L) null else VisibleOnScreenNotifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_AABB_HASH = 259215842L
-        private val setAabbBind by lazy {
+        @JvmField
+        val setAabbBind =
             ObjectCalls.getMethodBind("VisibleOnScreenNotifier3D", "set_aabb", SET_AABB_HASH)
-        }
 
         private const val IS_ON_SCREEN_HASH = 36873697L
-        private val isOnScreenBind by lazy {
+        @JvmField
+        val isOnScreenBind =
             ObjectCalls.getMethodBind("VisibleOnScreenNotifier3D", "is_on_screen", IS_ON_SCREEN_HASH)
-        }
     }
 }

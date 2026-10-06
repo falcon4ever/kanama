@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -50,7 +51,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRangeMinHz(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRangeMinHzBind, segment, hz)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeMinHzBind, segment, hz)
     }
 
     /**
@@ -61,7 +62,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRangeMinHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMinHzBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeMinHzBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRangeMaxHz(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRangeMaxHzBind, segment, hz)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeMaxHzBind, segment, hz)
     }
 
     /**
@@ -83,7 +84,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRangeMaxHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRangeMaxHzBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeMaxHzBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRateHz(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRateHzBind, segment, hz)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRateHzBind, segment, hz)
     }
 
     /**
@@ -105,7 +106,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRateHz(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRateHzBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRateHzBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFeedback(fbk: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFeedbackBind, segment, fbk)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFeedbackBind, segment, fbk)
     }
 
     /**
@@ -129,7 +130,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFeedback(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFeedbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFeedbackBind, segment)
     }
 
     /**
@@ -139,7 +140,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDepth(depth: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBind, segment, depth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBind, segment, depth)
     }
 
     /**
@@ -149,7 +150,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
     }
 
     companion object {
@@ -162,55 +163,57 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectPhaser? =
             if (handle.address() == 0L) null else AudioEffectPhaser(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RANGE_MIN_HZ_HASH = 373806689L
-        private val setRangeMinHzBind by lazy {
+        @JvmField
+        val setRangeMinHzBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "set_range_min_hz", SET_RANGE_MIN_HZ_HASH)
-        }
 
         private const val GET_RANGE_MIN_HZ_HASH = 1740695150L
-        private val getRangeMinHzBind by lazy {
+        @JvmField
+        val getRangeMinHzBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "get_range_min_hz", GET_RANGE_MIN_HZ_HASH)
-        }
 
         private const val SET_RANGE_MAX_HZ_HASH = 373806689L
-        private val setRangeMaxHzBind by lazy {
+        @JvmField
+        val setRangeMaxHzBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "set_range_max_hz", SET_RANGE_MAX_HZ_HASH)
-        }
 
         private const val GET_RANGE_MAX_HZ_HASH = 1740695150L
-        private val getRangeMaxHzBind by lazy {
+        @JvmField
+        val getRangeMaxHzBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "get_range_max_hz", GET_RANGE_MAX_HZ_HASH)
-        }
 
         private const val SET_RATE_HZ_HASH = 373806689L
-        private val setRateHzBind by lazy {
+        @JvmField
+        val setRateHzBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "set_rate_hz", SET_RATE_HZ_HASH)
-        }
 
         private const val GET_RATE_HZ_HASH = 1740695150L
-        private val getRateHzBind by lazy {
+        @JvmField
+        val getRateHzBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "get_rate_hz", GET_RATE_HZ_HASH)
-        }
 
         private const val SET_FEEDBACK_HASH = 373806689L
-        private val setFeedbackBind by lazy {
+        @JvmField
+        val setFeedbackBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "set_feedback", SET_FEEDBACK_HASH)
-        }
 
         private const val GET_FEEDBACK_HASH = 1740695150L
-        private val getFeedbackBind by lazy {
+        @JvmField
+        val getFeedbackBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "get_feedback", GET_FEEDBACK_HASH)
-        }
 
         private const val SET_DEPTH_HASH = 373806689L
-        private val setDepthBind by lazy {
+        @JvmField
+        val setDepthBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "set_depth", SET_DEPTH_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 1740695150L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("AudioEffectPhaser", "get_depth", GET_DEPTH_HASH)
-        }
     }
 }

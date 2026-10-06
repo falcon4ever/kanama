@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -48,77 +49,77 @@ class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
     }
 
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHeightBind, segment, height)
     }
 
     fun setDepth(depth: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDepthBind, segment, depth)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDepthBind, segment, depth)
     }
 
     fun setNoise(noise: Noise?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNoise(): Noise? {
         checkOpen()
-        return Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, segment))
+        return Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNoiseBind, segment))
     }
 
     fun setColorRamp(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getColorRamp(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
     }
 
     fun setSeamless(seamless: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, segment, seamless)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSeamlessBind, segment, seamless)
     }
 
     fun getSeamless(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSeamlessBind, segment)
     }
 
     fun setInvert(invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setInvertBind, segment, invert)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setInvertBind, segment, invert)
     }
 
     fun getInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getInvertBind, segment)
     }
 
     fun setNormalize(normalize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, segment, normalize)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizeBind, segment, normalize)
     }
 
     fun isNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalizedBind, segment)
     }
 
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
     }
 
     fun getSeamlessBlendSkirt(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSeamlessBlendSkirtBind, segment)
     }
 
     companion object {
@@ -131,80 +132,82 @@ class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NoiseTexture3D? =
             if (handle.address() == 0L) null else NoiseTexture3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 1286410249L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val SET_DEPTH_HASH = 1286410249L
-        private val setDepthBind by lazy {
+        @JvmField
+        val setDepthBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_depth", SET_DEPTH_HASH)
-        }
 
         private const val SET_NOISE_HASH = 4135492439L
-        private val setNoiseBind by lazy {
+        @JvmField
+        val setNoiseBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_noise", SET_NOISE_HASH)
-        }
 
         private const val GET_NOISE_HASH = 185851837L
-        private val getNoiseBind by lazy {
+        @JvmField
+        val getNoiseBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "get_noise", GET_NOISE_HASH)
-        }
 
         private const val SET_COLOR_RAMP_HASH = 2756054477L
-        private val setColorRampBind by lazy {
+        @JvmField
+        val setColorRampBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_color_ramp", SET_COLOR_RAMP_HASH)
-        }
 
         private const val GET_COLOR_RAMP_HASH = 132272999L
-        private val getColorRampBind by lazy {
+        @JvmField
+        val getColorRampBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "get_color_ramp", GET_COLOR_RAMP_HASH)
-        }
 
         private const val SET_SEAMLESS_HASH = 2586408642L
-        private val setSeamlessBind by lazy {
+        @JvmField
+        val setSeamlessBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_seamless", SET_SEAMLESS_HASH)
-        }
 
         private const val GET_SEAMLESS_HASH = 2240911060L
-        private val getSeamlessBind by lazy {
+        @JvmField
+        val getSeamlessBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "get_seamless", GET_SEAMLESS_HASH)
-        }
 
         private const val SET_INVERT_HASH = 2586408642L
-        private val setInvertBind by lazy {
+        @JvmField
+        val setInvertBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_invert", SET_INVERT_HASH)
-        }
 
         private const val GET_INVERT_HASH = 36873697L
-        private val getInvertBind by lazy {
+        @JvmField
+        val getInvertBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "get_invert", GET_INVERT_HASH)
-        }
 
         private const val SET_NORMALIZE_HASH = 2586408642L
-        private val setNormalizeBind by lazy {
+        @JvmField
+        val setNormalizeBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_normalize", SET_NORMALIZE_HASH)
-        }
 
         private const val IS_NORMALIZED_HASH = 36873697L
-        private val isNormalizedBind by lazy {
+        @JvmField
+        val isNormalizedBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "is_normalized", IS_NORMALIZED_HASH)
-        }
 
         private const val SET_SEAMLESS_BLEND_SKIRT_HASH = 373806689L
-        private val setSeamlessBlendSkirtBind by lazy {
+        @JvmField
+        val setSeamlessBlendSkirtBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "set_seamless_blend_skirt", SET_SEAMLESS_BLEND_SKIRT_HASH)
-        }
 
         private const val GET_SEAMLESS_BLEND_SKIRT_HASH = 191475506L
-        private val getSeamlessBlendSkirtBind by lazy {
+        @JvmField
+        val getSeamlessBlendSkirtBind =
             ObjectCalls.getMethodBind("NoiseTexture3D", "get_seamless_blend_skirt", GET_SEAMLESS_BLEND_SKIRT_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
      * Generated from Godot docs: EditorScriptPicker.set_script_owner
      */
     fun setScriptOwner(ownerNode: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setScriptOwnerBind, segment, listOf(ownerNode.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setScriptOwnerBind, segment, listOf(ownerNode.segment))
     }
 
     /**
@@ -30,7 +31,7 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
      * Generated from Godot docs: EditorScriptPicker.get_script_owner
      */
     fun getScriptOwner(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScriptOwnerBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScriptOwnerBind, segment))
     }
 
     companion object {
@@ -40,15 +41,17 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
 
         internal fun wrap(handle: RawSegment): EditorScriptPicker? =
             if (handle.address() == 0L) null else EditorScriptPicker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SCRIPT_OWNER_HASH = 1078189570L
-        private val setScriptOwnerBind by lazy {
+        @JvmField
+        val setScriptOwnerBind =
             ObjectCalls.getMethodBind("EditorScriptPicker", "set_script_owner", SET_SCRIPT_OWNER_HASH)
-        }
 
         private const val GET_SCRIPT_OWNER_HASH = 3160264692L
-        private val getScriptOwnerBind by lazy {
+        @JvmField
+        val getScriptOwnerBind =
             ObjectCalls.getMethodBind("EditorScriptPicker", "get_script_owner", GET_SCRIPT_OWNER_HASH)
-        }
     }
 }

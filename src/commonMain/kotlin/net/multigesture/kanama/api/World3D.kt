@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -55,7 +56,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpace(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getSpaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpaceBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getScenario(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getScenarioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getScenarioBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setEnvironment(env: Environment?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -95,7 +96,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEnvironmentBind, segment))
     }
 
     /**
@@ -105,7 +106,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setFallbackEnvironment(env: Environment?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -115,7 +116,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbackEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackEnvironmentBind, segment))
     }
 
     /**
@@ -125,7 +126,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setCameraAttributes(attributes: CameraAttributes?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(attributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(attributes?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -135,7 +136,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCameraAttributes(): CameraAttributes? {
         checkOpen()
-        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCameraAttributesBind, segment))
     }
 
     /**
@@ -147,7 +148,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDirectSpaceState(): PhysicsDirectSpaceState3D? {
         checkOpen()
-        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDirectSpaceStateBind, segment))
+        return PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDirectSpaceStateBind, segment))
     }
 
     companion object {
@@ -160,55 +161,57 @@ class World3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): World3D? =
             if (handle.address() == 0L) null else World3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SPACE_HASH = 2944877500L
-        private val getSpaceBind by lazy {
+        @JvmField
+        val getSpaceBind =
             ObjectCalls.getMethodBind("World3D", "get_space", GET_SPACE_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("World3D", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_SCENARIO_HASH = 2944877500L
-        private val getScenarioBind by lazy {
+        @JvmField
+        val getScenarioBind =
             ObjectCalls.getMethodBind("World3D", "get_scenario", GET_SCENARIO_HASH)
-        }
 
         private const val SET_ENVIRONMENT_HASH = 4143518816L
-        private val setEnvironmentBind by lazy {
+        @JvmField
+        val setEnvironmentBind =
             ObjectCalls.getMethodBind("World3D", "set_environment", SET_ENVIRONMENT_HASH)
-        }
 
         private const val GET_ENVIRONMENT_HASH = 3082064660L
-        private val getEnvironmentBind by lazy {
+        @JvmField
+        val getEnvironmentBind =
             ObjectCalls.getMethodBind("World3D", "get_environment", GET_ENVIRONMENT_HASH)
-        }
 
         private const val SET_FALLBACK_ENVIRONMENT_HASH = 4143518816L
-        private val setFallbackEnvironmentBind by lazy {
+        @JvmField
+        val setFallbackEnvironmentBind =
             ObjectCalls.getMethodBind("World3D", "set_fallback_environment", SET_FALLBACK_ENVIRONMENT_HASH)
-        }
 
         private const val GET_FALLBACK_ENVIRONMENT_HASH = 3082064660L
-        private val getFallbackEnvironmentBind by lazy {
+        @JvmField
+        val getFallbackEnvironmentBind =
             ObjectCalls.getMethodBind("World3D", "get_fallback_environment", GET_FALLBACK_ENVIRONMENT_HASH)
-        }
 
         private const val SET_CAMERA_ATTRIBUTES_HASH = 2817810567L
-        private val setCameraAttributesBind by lazy {
+        @JvmField
+        val setCameraAttributesBind =
             ObjectCalls.getMethodBind("World3D", "set_camera_attributes", SET_CAMERA_ATTRIBUTES_HASH)
-        }
 
         private const val GET_CAMERA_ATTRIBUTES_HASH = 3921283215L
-        private val getCameraAttributesBind by lazy {
+        @JvmField
+        val getCameraAttributesBind =
             ObjectCalls.getMethodBind("World3D", "get_camera_attributes", GET_CAMERA_ATTRIBUTES_HASH)
-        }
 
         private const val GET_DIRECT_SPACE_STATE_HASH = 2069328350L
-        private val getDirectSpaceStateBind by lazy {
+        @JvmField
+        val getDirectSpaceStateBind =
             ObjectCalls.getMethodBind("World3D", "get_direct_space_state", GET_DIRECT_SPACE_STATE_HASH)
-        }
     }
 }

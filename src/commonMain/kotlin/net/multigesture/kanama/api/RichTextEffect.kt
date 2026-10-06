@@ -22,7 +22,5 @@ class RichTextEffect(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RichTextEffect? =
             if (handle.address() == 0L) null else RichTextEffect(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

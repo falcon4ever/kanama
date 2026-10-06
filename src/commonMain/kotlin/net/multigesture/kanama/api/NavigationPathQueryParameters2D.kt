@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -111,7 +112,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPathfindingAlgorithm(pathfindingAlgorithm: NavigationPathQueryParameters2D.PathfindingAlgorithm) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
     }
 
     /**
@@ -121,7 +122,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathfindingAlgorithm(): NavigationPathQueryParameters2D.PathfindingAlgorithm {
         checkOpen()
-        return NavigationPathQueryParameters2D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment))
+        return NavigationPathQueryParameters2D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathfindingAlgorithmBind, segment))
     }
 
     /**
@@ -131,7 +132,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPathPostprocessing(pathPostprocessing: NavigationPathQueryParameters2D.PathPostProcessing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathPostprocessingBind, segment, pathPostprocessing.value)
     }
 
     /**
@@ -141,7 +142,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathPostprocessing(): NavigationPathQueryParameters2D.PathPostProcessing {
         checkOpen()
-        return NavigationPathQueryParameters2D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment))
+        return NavigationPathQueryParameters2D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathPostprocessingBind, segment))
     }
 
     /**
@@ -151,7 +152,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMap(map: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setMapBind, segment, map)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setMapBind, segment, map)
     }
 
     /**
@@ -161,7 +162,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMap(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getMapBind, segment)
     }
 
     /**
@@ -171,7 +172,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setStartPosition(startPosition: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setStartPositionBind, segment, startPosition)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setStartPositionBind, segment, startPosition)
     }
 
     /**
@@ -181,7 +182,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getStartPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getStartPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getStartPositionBind, segment)
     }
 
     /**
@@ -191,7 +192,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setTargetPosition(targetPosition: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, segment, targetPosition)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setTargetPositionBind, segment, targetPosition)
     }
 
     /**
@@ -201,7 +202,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTargetPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTargetPositionBind, segment)
     }
 
     /**
@@ -211,7 +212,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setNavigationLayers(navigationLayers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -221,7 +222,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getNavigationLayers(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getNavigationLayersBind, segment)
     }
 
     /**
@@ -231,7 +232,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMetadataFlags(flags: NavigationPathQueryParameters2D.PathMetadataFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMetadataFlagsBind, segment, flags.value)
     }
 
     /**
@@ -241,7 +242,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMetadataFlags(): NavigationPathQueryParameters2D.PathMetadataFlags {
         checkOpen()
-        return NavigationPathQueryParameters2D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, segment))
+        return NavigationPathQueryParameters2D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMetadataFlagsBind, segment))
     }
 
     /**
@@ -255,7 +256,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setSimplifyPath(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSimplifyPathBind, segment, enabled)
     }
 
     /**
@@ -269,7 +270,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getSimplifyPath(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSimplifyPathBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setSimplifyEpsilon(epsilon: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, segment, epsilon)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSimplifyEpsilonBind, segment, epsilon)
     }
 
     /**
@@ -289,7 +290,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getSimplifyEpsilon(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSimplifyEpsilonBind, segment)
     }
 
     /**
@@ -304,7 +305,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setIncludedRegions(regions: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setIncludedRegionsBind, segment, regions)
+        ObjectCalls.ptrcallWithRIDListArg(Binds.setIncludedRegionsBind, segment, regions)
     }
 
     /**
@@ -319,7 +320,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIncludedRegions(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getIncludedRegionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getIncludedRegionsBind, segment)
     }
 
     /**
@@ -333,7 +334,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setExcludedRegions(regions: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludedRegionsBind, segment, regions)
+        ObjectCalls.ptrcallWithRIDListArg(Binds.setExcludedRegionsBind, segment, regions)
     }
 
     /**
@@ -347,7 +348,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getExcludedRegions(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludedRegionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludedRegionsBind, segment)
     }
 
     /**
@@ -358,7 +359,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPathReturnMaxLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathReturnMaxLengthBind, segment, length)
     }
 
     /**
@@ -369,7 +370,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathReturnMaxLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxLengthBind, segment)
     }
 
     /**
@@ -382,7 +383,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPathReturnMaxRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathReturnMaxRadiusBind, segment, radius)
     }
 
     /**
@@ -395,7 +396,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathReturnMaxRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxRadiusBind, segment)
     }
 
     /**
@@ -410,7 +411,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, segment, maxPolygons)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPathSearchMaxPolygonsBind, segment, maxPolygons)
     }
 
     /**
@@ -425,7 +426,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathSearchMaxPolygons(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathSearchMaxPolygonsBind, segment)
     }
 
     /**
@@ -441,7 +442,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPathSearchMaxDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathSearchMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -457,7 +458,7 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPathSearchMaxDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathSearchMaxDistanceBind, segment)
     }
 
     /**
@@ -582,155 +583,157 @@ class NavigationPathQueryParameters2D(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationPathQueryParameters2D? =
             if (handle.address() == 0L) null else NavigationPathQueryParameters2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PATHFINDING_ALGORITHM_HASH = 2783519915L
-        private val setPathfindingAlgorithmBind by lazy {
+        @JvmField
+        val setPathfindingAlgorithmBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_pathfinding_algorithm", SET_PATHFINDING_ALGORITHM_HASH)
-        }
 
         private const val GET_PATHFINDING_ALGORITHM_HASH = 3000421146L
-        private val getPathfindingAlgorithmBind by lazy {
+        @JvmField
+        val getPathfindingAlgorithmBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_pathfinding_algorithm", GET_PATHFINDING_ALGORITHM_HASH)
-        }
 
         private const val SET_PATH_POSTPROCESSING_HASH = 2864409082L
-        private val setPathPostprocessingBind by lazy {
+        @JvmField
+        val setPathPostprocessingBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_path_postprocessing", SET_PATH_POSTPROCESSING_HASH)
-        }
 
         private const val GET_PATH_POSTPROCESSING_HASH = 3798118993L
-        private val getPathPostprocessingBind by lazy {
+        @JvmField
+        val getPathPostprocessingBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_path_postprocessing", GET_PATH_POSTPROCESSING_HASH)
-        }
 
         private const val SET_MAP_HASH = 2722037293L
-        private val setMapBind by lazy {
+        @JvmField
+        val setMapBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_map", SET_MAP_HASH)
-        }
 
         private const val GET_MAP_HASH = 2944877500L
-        private val getMapBind by lazy {
+        @JvmField
+        val getMapBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_map", GET_MAP_HASH)
-        }
 
         private const val SET_START_POSITION_HASH = 743155724L
-        private val setStartPositionBind by lazy {
+        @JvmField
+        val setStartPositionBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_start_position", SET_START_POSITION_HASH)
-        }
 
         private const val GET_START_POSITION_HASH = 3341600327L
-        private val getStartPositionBind by lazy {
+        @JvmField
+        val getStartPositionBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_start_position", GET_START_POSITION_HASH)
-        }
 
         private const val SET_TARGET_POSITION_HASH = 743155724L
-        private val setTargetPositionBind by lazy {
+        @JvmField
+        val setTargetPositionBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_target_position", SET_TARGET_POSITION_HASH)
-        }
 
         private const val GET_TARGET_POSITION_HASH = 3341600327L
-        private val getTargetPositionBind by lazy {
+        @JvmField
+        val getTargetPositionBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_target_position", GET_TARGET_POSITION_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYERS_HASH = 1286410249L
-        private val setNavigationLayersBind by lazy {
+        @JvmField
+        val setNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_navigation_layers", SET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYERS_HASH = 3905245786L
-        private val getNavigationLayersBind by lazy {
+        @JvmField
+        val getNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_navigation_layers", GET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val SET_METADATA_FLAGS_HASH = 24274129L
-        private val setMetadataFlagsBind by lazy {
+        @JvmField
+        val setMetadataFlagsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_metadata_flags", SET_METADATA_FLAGS_HASH)
-        }
 
         private const val GET_METADATA_FLAGS_HASH = 488152976L
-        private val getMetadataFlagsBind by lazy {
+        @JvmField
+        val getMetadataFlagsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_metadata_flags", GET_METADATA_FLAGS_HASH)
-        }
 
         private const val SET_SIMPLIFY_PATH_HASH = 2586408642L
-        private val setSimplifyPathBind by lazy {
+        @JvmField
+        val setSimplifyPathBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_simplify_path", SET_SIMPLIFY_PATH_HASH)
-        }
 
         private const val GET_SIMPLIFY_PATH_HASH = 36873697L
-        private val getSimplifyPathBind by lazy {
+        @JvmField
+        val getSimplifyPathBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_simplify_path", GET_SIMPLIFY_PATH_HASH)
-        }
 
         private const val SET_SIMPLIFY_EPSILON_HASH = 373806689L
-        private val setSimplifyEpsilonBind by lazy {
+        @JvmField
+        val setSimplifyEpsilonBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_simplify_epsilon", SET_SIMPLIFY_EPSILON_HASH)
-        }
 
         private const val GET_SIMPLIFY_EPSILON_HASH = 1740695150L
-        private val getSimplifyEpsilonBind by lazy {
+        @JvmField
+        val getSimplifyEpsilonBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_simplify_epsilon", GET_SIMPLIFY_EPSILON_HASH)
-        }
 
         private const val SET_INCLUDED_REGIONS_HASH = 381264803L
-        private val setIncludedRegionsBind by lazy {
+        @JvmField
+        val setIncludedRegionsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_included_regions", SET_INCLUDED_REGIONS_HASH)
-        }
 
         private const val GET_INCLUDED_REGIONS_HASH = 3995934104L
-        private val getIncludedRegionsBind by lazy {
+        @JvmField
+        val getIncludedRegionsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_included_regions", GET_INCLUDED_REGIONS_HASH)
-        }
 
         private const val SET_EXCLUDED_REGIONS_HASH = 381264803L
-        private val setExcludedRegionsBind by lazy {
+        @JvmField
+        val setExcludedRegionsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_excluded_regions", SET_EXCLUDED_REGIONS_HASH)
-        }
 
         private const val GET_EXCLUDED_REGIONS_HASH = 3995934104L
-        private val getExcludedRegionsBind by lazy {
+        @JvmField
+        val getExcludedRegionsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_excluded_regions", GET_EXCLUDED_REGIONS_HASH)
-        }
 
         private const val SET_PATH_RETURN_MAX_LENGTH_HASH = 373806689L
-        private val setPathReturnMaxLengthBind by lazy {
+        @JvmField
+        val setPathReturnMaxLengthBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_path_return_max_length", SET_PATH_RETURN_MAX_LENGTH_HASH)
-        }
 
         private const val GET_PATH_RETURN_MAX_LENGTH_HASH = 1740695150L
-        private val getPathReturnMaxLengthBind by lazy {
+        @JvmField
+        val getPathReturnMaxLengthBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_path_return_max_length", GET_PATH_RETURN_MAX_LENGTH_HASH)
-        }
 
         private const val SET_PATH_RETURN_MAX_RADIUS_HASH = 373806689L
-        private val setPathReturnMaxRadiusBind by lazy {
+        @JvmField
+        val setPathReturnMaxRadiusBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_path_return_max_radius", SET_PATH_RETURN_MAX_RADIUS_HASH)
-        }
 
         private const val GET_PATH_RETURN_MAX_RADIUS_HASH = 1740695150L
-        private val getPathReturnMaxRadiusBind by lazy {
+        @JvmField
+        val getPathReturnMaxRadiusBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_path_return_max_radius", GET_PATH_RETURN_MAX_RADIUS_HASH)
-        }
 
         private const val SET_PATH_SEARCH_MAX_POLYGONS_HASH = 1286410249L
-        private val setPathSearchMaxPolygonsBind by lazy {
+        @JvmField
+        val setPathSearchMaxPolygonsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_path_search_max_polygons", SET_PATH_SEARCH_MAX_POLYGONS_HASH)
-        }
 
         private const val GET_PATH_SEARCH_MAX_POLYGONS_HASH = 3905245786L
-        private val getPathSearchMaxPolygonsBind by lazy {
+        @JvmField
+        val getPathSearchMaxPolygonsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_path_search_max_polygons", GET_PATH_SEARCH_MAX_POLYGONS_HASH)
-        }
 
         private const val SET_PATH_SEARCH_MAX_DISTANCE_HASH = 373806689L
-        private val setPathSearchMaxDistanceBind by lazy {
+        @JvmField
+        val setPathSearchMaxDistanceBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "set_path_search_max_distance", SET_PATH_SEARCH_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_PATH_SEARCH_MAX_DISTANCE_HASH = 1740695150L
-        private val getPathSearchMaxDistanceBind by lazy {
+        @JvmField
+        val getPathSearchMaxDistanceBind =
             ObjectCalls.getMethodBind("NavigationPathQueryParameters2D", "get_path_search_max_distance", GET_PATH_SEARCH_MAX_DISTANCE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
     }
 
     /**
@@ -28,7 +29,7 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getStatus(): StreamPeerSocket.Status {
         checkOpen()
-        return StreamPeerSocket.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
+        return StreamPeerSocket.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
     }
 
     /**
@@ -38,7 +39,7 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun disconnectFromHost() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.disconnectFromHostBind, segment)
     }
 
     /**
@@ -87,20 +88,22 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerSocket? =
             if (handle.address() == 0L) null else StreamPeerSocket(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val POLL_HASH = 166280745L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("StreamPeerSocket", "poll", POLL_HASH)
-        }
 
         private const val GET_STATUS_HASH = 1156122502L
-        private val getStatusBind by lazy {
+        @JvmField
+        val getStatusBind =
             ObjectCalls.getMethodBind("StreamPeerSocket", "get_status", GET_STATUS_HASH)
-        }
 
         private const val DISCONNECT_FROM_HOST_HASH = 3218959716L
-        private val disconnectFromHostBind by lazy {
+        @JvmField
+        val disconnectFromHostBind =
             ObjectCalls.getMethodBind("StreamPeerSocket", "disconnect_from_host", DISCONNECT_FROM_HOST_HASH)
-        }
     }
 }

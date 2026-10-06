@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -24,22 +25,22 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
 
     fun setBillboardType(billboardType: VisualShaderNodeBillboard.BillboardType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBillboardTypeBind, segment, billboardType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBillboardTypeBind, segment, billboardType.value)
     }
 
     fun getBillboardType(): VisualShaderNodeBillboard.BillboardType {
         checkOpen()
-        return VisualShaderNodeBillboard.BillboardType(ObjectCalls.ptrcallNoArgsRetLong(getBillboardTypeBind, segment))
+        return VisualShaderNodeBillboard.BillboardType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardTypeBind, segment))
     }
 
     fun setKeepScaleEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepScaleEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepScaleEnabledBind, segment, enabled)
     }
 
     fun isKeepScaleEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeepScaleEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepScaleEnabledBind, segment)
     }
 
     @JvmInline
@@ -63,25 +64,27 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeBillboard? =
             if (handle.address() == 0L) null else VisualShaderNodeBillboard(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BILLBOARD_TYPE_HASH = 1227463289L
-        private val setBillboardTypeBind by lazy {
+        @JvmField
+        val setBillboardTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeBillboard", "set_billboard_type", SET_BILLBOARD_TYPE_HASH)
-        }
 
         private const val GET_BILLBOARD_TYPE_HASH = 3724188517L
-        private val getBillboardTypeBind by lazy {
+        @JvmField
+        val getBillboardTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeBillboard", "get_billboard_type", GET_BILLBOARD_TYPE_HASH)
-        }
 
         private const val SET_KEEP_SCALE_ENABLED_HASH = 2586408642L
-        private val setKeepScaleEnabledBind by lazy {
+        @JvmField
+        val setKeepScaleEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeBillboard", "set_keep_scale_enabled", SET_KEEP_SCALE_ENABLED_HASH)
-        }
 
         private const val IS_KEEP_SCALE_ENABLED_HASH = 36873697L
-        private val isKeepScaleEnabledBind by lazy {
+        @JvmField
+        val isKeepScaleEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeBillboard", "is_keep_scale_enabled", IS_KEEP_SCALE_ENABLED_HASH)
-        }
     }
 }

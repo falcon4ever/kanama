@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, segment, pckPath, alignment, key, encryptDirectory))
+        return GodotError(ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(Binds.pckStartBind, segment, pckPath, alignment, key, encryptDirectory))
     }
 
     /**
@@ -30,7 +31,7 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, segment, targetPath, sourcePath, encrypt))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(Binds.addFileBind, segment, targetPath, sourcePath, encrypt))
     }
 
     /**
@@ -42,7 +43,7 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, segment, targetPath, data, encrypt))
+        return GodotError(ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(Binds.addFileFromBufferBind, segment, targetPath, data, encrypt))
     }
 
     /**
@@ -54,7 +55,7 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addFileRemoval(targetPath: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, segment, targetPath))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.addFileRemovalBind, segment, targetPath))
     }
 
     /**
@@ -68,7 +69,7 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun flush(verbose: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, segment, verbose))
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.flushBind, segment, verbose))
     }
 
     companion object {
@@ -81,30 +82,32 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PCKPacker? =
             if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PCK_START_HASH = 508410629L
-        private val pckStartBind by lazy {
+        @JvmField
+        val pckStartBind =
             ObjectCalls.getMethodBind("PCKPacker", "pck_start", PCK_START_HASH)
-        }
 
         private const val ADD_FILE_HASH = 2215643711L
-        private val addFileBind by lazy {
+        @JvmField
+        val addFileBind =
             ObjectCalls.getMethodBind("PCKPacker", "add_file", ADD_FILE_HASH)
-        }
 
         private const val ADD_FILE_FROM_BUFFER_HASH = 1131482346L
-        private val addFileFromBufferBind by lazy {
+        @JvmField
+        val addFileFromBufferBind =
             ObjectCalls.getMethodBind("PCKPacker", "add_file_from_buffer", ADD_FILE_FROM_BUFFER_HASH)
-        }
 
         private const val ADD_FILE_REMOVAL_HASH = 166001499L
-        private val addFileRemovalBind by lazy {
+        @JvmField
+        val addFileRemovalBind =
             ObjectCalls.getMethodBind("PCKPacker", "add_file_removal", ADD_FILE_REMOVAL_HASH)
-        }
 
         private const val FLUSH_HASH = 1633102583L
-        private val flushBind by lazy {
+        @JvmField
+        val flushBind =
             ObjectCalls.getMethodBind("PCKPacker", "flush", FLUSH_HASH)
-        }
     }
 }

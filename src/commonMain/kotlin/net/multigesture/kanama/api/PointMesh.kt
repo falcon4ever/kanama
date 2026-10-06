@@ -22,7 +22,5 @@ class PointMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PointMesh? =
             if (handle.address() == 0L) null else PointMesh(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

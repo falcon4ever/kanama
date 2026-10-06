@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -43,7 +44,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineCountBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_alignment
      */
     fun setAlignment(alignment: FlowContainer.AlignmentMode) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -63,7 +64,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.get_alignment
      */
     fun getAlignment(): FlowContainer.AlignmentMode {
-        return FlowContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment))
+        return FlowContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentBind, segment))
     }
 
     /**
@@ -74,7 +75,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_last_wrap_alignment
      */
     fun setLastWrapAlignment(lastWrapAlignment: FlowContainer.LastWrapAlignmentMode) {
-        ObjectCalls.ptrcallWithLongArg(setLastWrapAlignmentBind, segment, lastWrapAlignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLastWrapAlignmentBind, segment, lastWrapAlignment.value)
     }
 
     /**
@@ -85,7 +86,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.get_last_wrap_alignment
      */
     fun getLastWrapAlignment(): FlowContainer.LastWrapAlignmentMode {
-        return FlowContainer.LastWrapAlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getLastWrapAlignmentBind, segment))
+        return FlowContainer.LastWrapAlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLastWrapAlignmentBind, segment))
     }
 
     /**
@@ -95,7 +96,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_vertical
      */
     fun setVertical(vertical: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVerticalBind, segment, vertical)
     }
 
     /**
@@ -105,7 +106,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.is_vertical
      */
     fun isVertical(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.set_reverse_fill
      */
     fun setReverseFill(reverseFill: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setReverseFillBind, segment, reverseFill)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setReverseFillBind, segment, reverseFill)
     }
 
     /**
@@ -127,7 +128,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FlowContainer.is_reverse_fill
      */
     fun isReverseFill(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReverseFillBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReverseFillBind, segment)
     }
 
     /**
@@ -210,50 +211,52 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): FlowContainer? =
             if (handle.address() == 0L) null else FlowContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_LINE_COUNT_HASH = 3905245786L
-        private val getLineCountBind by lazy {
+        @JvmField
+        val getLineCountBind =
             ObjectCalls.getMethodBind("FlowContainer", "get_line_count", GET_LINE_COUNT_HASH)
-        }
 
         private const val SET_ALIGNMENT_HASH = 575250951L
-        private val setAlignmentBind by lazy {
+        @JvmField
+        val setAlignmentBind =
             ObjectCalls.getMethodBind("FlowContainer", "set_alignment", SET_ALIGNMENT_HASH)
-        }
 
         private const val GET_ALIGNMENT_HASH = 3749743559L
-        private val getAlignmentBind by lazy {
+        @JvmField
+        val getAlignmentBind =
             ObjectCalls.getMethodBind("FlowContainer", "get_alignment", GET_ALIGNMENT_HASH)
-        }
 
         private const val SET_LAST_WRAP_ALIGNMENT_HASH = 2899697495L
-        private val setLastWrapAlignmentBind by lazy {
+        @JvmField
+        val setLastWrapAlignmentBind =
             ObjectCalls.getMethodBind("FlowContainer", "set_last_wrap_alignment", SET_LAST_WRAP_ALIGNMENT_HASH)
-        }
 
         private const val GET_LAST_WRAP_ALIGNMENT_HASH = 3743456014L
-        private val getLastWrapAlignmentBind by lazy {
+        @JvmField
+        val getLastWrapAlignmentBind =
             ObjectCalls.getMethodBind("FlowContainer", "get_last_wrap_alignment", GET_LAST_WRAP_ALIGNMENT_HASH)
-        }
 
         private const val SET_VERTICAL_HASH = 2586408642L
-        private val setVerticalBind by lazy {
+        @JvmField
+        val setVerticalBind =
             ObjectCalls.getMethodBind("FlowContainer", "set_vertical", SET_VERTICAL_HASH)
-        }
 
         private const val IS_VERTICAL_HASH = 36873697L
-        private val isVerticalBind by lazy {
+        @JvmField
+        val isVerticalBind =
             ObjectCalls.getMethodBind("FlowContainer", "is_vertical", IS_VERTICAL_HASH)
-        }
 
         private const val SET_REVERSE_FILL_HASH = 2586408642L
-        private val setReverseFillBind by lazy {
+        @JvmField
+        val setReverseFillBind =
             ObjectCalls.getMethodBind("FlowContainer", "set_reverse_fill", SET_REVERSE_FILL_HASH)
-        }
 
         private const val IS_REVERSE_FILL_HASH = 36873697L
-        private val isReverseFillBind by lazy {
+        @JvmField
+        val isReverseFillBind =
             ObjectCalls.getMethodBind("FlowContainer", "is_reverse_fill", IS_REVERSE_FILL_HASH)
-        }
     }
 }

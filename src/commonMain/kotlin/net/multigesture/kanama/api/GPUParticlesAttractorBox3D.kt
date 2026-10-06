@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(
      * Generated from Godot docs: GPUParticlesAttractorBox3D.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -33,7 +34,7 @@ class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(
      * Generated from Godot docs: GPUParticlesAttractorBox3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     companion object {
@@ -43,15 +44,17 @@ class GPUParticlesAttractorBox3D(handle: GodotHandle) : GPUParticlesAttractor3D(
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractorBox3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorBox3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorBox3D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorBox3D", "get_size", GET_SIZE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,12 +19,12 @@ class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setOpType(opType: VisualShaderNodeMix.OpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, opType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, opType.value)
     }
 
     fun getOpType(): VisualShaderNodeMix.OpType {
         checkOpen()
-        return VisualShaderNodeMix.OpType(ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment))
+        return VisualShaderNodeMix.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
     }
 
     @JvmInline
@@ -50,15 +51,17 @@ class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeMix? =
             if (handle.address() == 0L) null else VisualShaderNodeMix(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OP_TYPE_HASH = 3397501671L
-        private val setOpTypeBind by lazy {
+        @JvmField
+        val setOpTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeMix", "set_op_type", SET_OP_TYPE_HASH)
-        }
 
         private const val GET_OP_TYPE_HASH = 4013957297L
-        private val getOpTypeBind by lazy {
+        @JvmField
+        val getOpTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeMix", "get_op_type", GET_OP_TYPE_HASH)
-        }
     }
 }

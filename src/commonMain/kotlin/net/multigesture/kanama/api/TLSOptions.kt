@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isUnsafeClient(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUnsafeClientBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUnsafeClientBind, segment)
     }
 
     /**
@@ -38,7 +39,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCommonNameOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCommonNameOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCommonNameOverrideBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrustedCaChain(): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, segment))
+        return X509Certificate.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTrustedCaChainBind, segment))
     }
 
     /**
@@ -59,7 +60,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPrivateKey(): CryptoKey? {
         checkOpen()
-        return CryptoKey.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, segment))
+        return CryptoKey.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPrivateKeyBind, segment))
     }
 
     /**
@@ -69,7 +70,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOwnCertificate(): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, segment))
+        return X509Certificate.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOwnCertificateBind, segment))
     }
 
     companion object {
@@ -84,7 +85,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.client
          */
         fun client(trustedChain: X509Certificate?, commonNameOverride: String = ""): TLSOptions? {
-            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(clientBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT, commonNameOverride))
+            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(Binds.clientBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT, commonNameOverride))
         }
 
         /**
@@ -97,7 +98,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.client_unsafe
          */
         fun clientUnsafe(trustedChain: X509Certificate?): TLSOptions? {
-            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(clientUnsafeBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT))
+            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.clientUnsafeBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         /**
@@ -108,7 +109,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.server
          */
         fun server(key: CryptoKey?, certificate: X509Certificate?): TLSOptions? {
-            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithTwoObjectArgsRetObject(serverBind, NULL_SEGMENT, key?.requireOpenHandle() ?: NULL_SEGMENT, certificate?.requireOpenHandle() ?: NULL_SEGMENT))
+            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithTwoObjectArgsRetObject(Binds.serverBind, NULL_SEGMENT, key?.requireOpenHandle() ?: NULL_SEGMENT, certificate?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
@@ -120,50 +121,52 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TLSOptions? =
             if (handle.address() == 0L) null else TLSOptions(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLIENT_HASH = 3565000357L
-        private val clientBind by lazy {
+        @JvmField
+        val clientBind =
             ObjectCalls.getMethodBind("TLSOptions", "client", CLIENT_HASH)
-        }
 
         private const val CLIENT_UNSAFE_HASH = 2090251749L
-        private val clientUnsafeBind by lazy {
+        @JvmField
+        val clientUnsafeBind =
             ObjectCalls.getMethodBind("TLSOptions", "client_unsafe", CLIENT_UNSAFE_HASH)
-        }
 
         private const val SERVER_HASH = 36969539L
-        private val serverBind by lazy {
+        @JvmField
+        val serverBind =
             ObjectCalls.getMethodBind("TLSOptions", "server", SERVER_HASH)
-        }
 
         private const val IS_SERVER_HASH = 36873697L
-        private val isServerBind by lazy {
+        @JvmField
+        val isServerBind =
             ObjectCalls.getMethodBind("TLSOptions", "is_server", IS_SERVER_HASH)
-        }
 
         private const val IS_UNSAFE_CLIENT_HASH = 36873697L
-        private val isUnsafeClientBind by lazy {
+        @JvmField
+        val isUnsafeClientBind =
             ObjectCalls.getMethodBind("TLSOptions", "is_unsafe_client", IS_UNSAFE_CLIENT_HASH)
-        }
 
         private const val GET_COMMON_NAME_OVERRIDE_HASH = 201670096L
-        private val getCommonNameOverrideBind by lazy {
+        @JvmField
+        val getCommonNameOverrideBind =
             ObjectCalls.getMethodBind("TLSOptions", "get_common_name_override", GET_COMMON_NAME_OVERRIDE_HASH)
-        }
 
         private const val GET_TRUSTED_CA_CHAIN_HASH = 1120709175L
-        private val getTrustedCaChainBind by lazy {
+        @JvmField
+        val getTrustedCaChainBind =
             ObjectCalls.getMethodBind("TLSOptions", "get_trusted_ca_chain", GET_TRUSTED_CA_CHAIN_HASH)
-        }
 
         private const val GET_PRIVATE_KEY_HASH = 2119971811L
-        private val getPrivateKeyBind by lazy {
+        @JvmField
+        val getPrivateKeyBind =
             ObjectCalls.getMethodBind("TLSOptions", "get_private_key", GET_PRIVATE_KEY_HASH)
-        }
 
         private const val GET_OWN_CERTIFICATE_HASH = 1120709175L
-        private val getOwnCertificateBind by lazy {
+        @JvmField
+        val getOwnCertificateBind =
             ObjectCalls.getMethodBind("TLSOptions", "get_own_certificate", GET_OWN_CERTIFICATE_HASH)
-        }
     }
 }

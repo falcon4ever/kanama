@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateRandomBytes(size: Int): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetByteArray(generateRandomBytesBind, segment, size)
+        return ObjectCalls.ptrcallWithIntArgRetByteArray(Binds.generateRandomBytesBind, segment, size)
     }
 
     /**
@@ -29,7 +30,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateRsa(size: Int): CryptoKey? {
         checkOpen()
-        return CryptoKey.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(generateRsaBind, segment, size))
+        return CryptoKey.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.generateRsaBind, segment, size))
     }
 
     /**
@@ -44,7 +45,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateSelfSignedCertificate(key: CryptoKey?, issuerName: String = "CN=myserver,O=myorganisation,C=IT", notBefore: String = "20140101000000", notAfter: String = "20340101000000"): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrapOwned(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
+        return X509Certificate.wrapOwned(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(Binds.generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
     }
 
     /**
@@ -54,7 +55,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sign(hashType: HashingContext.HashType, hash: ByteArray, key: CryptoKey?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(signBind, segment, hashType.value, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(Binds.signBind, segment, hashType.value, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -65,7 +66,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun verify(hashType: HashingContext.HashType, hash: ByteArray, signature: ByteArray, key: CryptoKey?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(verifyBind, segment, hashType.value, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(Binds.verifyBind, segment, hashType.value, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -76,7 +77,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun encrypt(key: CryptoKey?, plaintext: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(encryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, plaintext)
+        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(Binds.encryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, plaintext)
     }
 
     /**
@@ -87,7 +88,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun decrypt(key: CryptoKey?, ciphertext: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(decryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, ciphertext)
+        return ObjectCalls.ptrcallWithObjectAndByteArrayArgRetByteArray(Binds.decryptBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, ciphertext)
     }
 
     /**
@@ -100,7 +101,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hmacDigest(hashType: HashingContext.HashType, key: ByteArray, msg: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(hmacDigestBind, segment, hashType.value, key, msg)
+        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(Binds.hmacDigestBind, segment, hashType.value, key, msg)
     }
 
     /**
@@ -113,7 +114,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun constantTimeCompare(trusted: ByteArray, received: ByteArray): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoByteArrayArgsRetBool(constantTimeCompareBind, segment, trusted, received)
+        return ObjectCalls.ptrcallWithTwoByteArrayArgsRetBool(Binds.constantTimeCompareBind, segment, trusted, received)
     }
 
     companion object {
@@ -126,50 +127,52 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Crypto? =
             if (handle.address() == 0L) null else Crypto(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GENERATE_RANDOM_BYTES_HASH = 47165747L
-        private val generateRandomBytesBind by lazy {
+        @JvmField
+        val generateRandomBytesBind =
             ObjectCalls.getMethodBind("Crypto", "generate_random_bytes", GENERATE_RANDOM_BYTES_HASH)
-        }
 
         private const val GENERATE_RSA_HASH = 1237515462L
-        private val generateRsaBind by lazy {
+        @JvmField
+        val generateRsaBind =
             ObjectCalls.getMethodBind("Crypto", "generate_rsa", GENERATE_RSA_HASH)
-        }
 
         private const val GENERATE_SELF_SIGNED_CERTIFICATE_HASH = 492266173L
-        private val generateSelfSignedCertificateBind by lazy {
+        @JvmField
+        val generateSelfSignedCertificateBind =
             ObjectCalls.getMethodBind("Crypto", "generate_self_signed_certificate", GENERATE_SELF_SIGNED_CERTIFICATE_HASH)
-        }
 
         private const val SIGN_HASH = 1673662703L
-        private val signBind by lazy {
+        @JvmField
+        val signBind =
             ObjectCalls.getMethodBind("Crypto", "sign", SIGN_HASH)
-        }
 
         private const val VERIFY_HASH = 2805902225L
-        private val verifyBind by lazy {
+        @JvmField
+        val verifyBind =
             ObjectCalls.getMethodBind("Crypto", "verify", VERIFY_HASH)
-        }
 
         private const val ENCRYPT_HASH = 2361793670L
-        private val encryptBind by lazy {
+        @JvmField
+        val encryptBind =
             ObjectCalls.getMethodBind("Crypto", "encrypt", ENCRYPT_HASH)
-        }
 
         private const val DECRYPT_HASH = 2361793670L
-        private val decryptBind by lazy {
+        @JvmField
+        val decryptBind =
             ObjectCalls.getMethodBind("Crypto", "decrypt", DECRYPT_HASH)
-        }
 
         private const val HMAC_DIGEST_HASH = 2368951203L
-        private val hmacDigestBind by lazy {
+        @JvmField
+        val hmacDigestBind =
             ObjectCalls.getMethodBind("Crypto", "hmac_digest", HMAC_DIGEST_HASH)
-        }
 
         private const val CONSTANT_TIME_COMPARE_HASH = 1024142237L
-        private val constantTimeCompareBind by lazy {
+        @JvmField
+        val constantTimeCompareBind =
             ObjectCalls.getMethodBind("Crypto", "constant_time_compare", CONSTANT_TIME_COMPARE_HASH)
-        }
     }
 }

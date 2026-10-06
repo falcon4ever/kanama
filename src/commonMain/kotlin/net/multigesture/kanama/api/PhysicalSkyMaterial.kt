@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -88,7 +89,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRayleighCoefficient(rayleigh: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRayleighCoefficientBind, segment, rayleigh)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRayleighCoefficientBind, segment, rayleigh)
     }
 
     /**
@@ -100,7 +101,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRayleighCoefficient(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRayleighCoefficientBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRayleighCoefficientBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRayleighColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setRayleighColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setRayleighColorBind, segment, color)
     }
 
     /**
@@ -126,7 +127,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getRayleighColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getRayleighColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getRayleighColorBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setMieCoefficient(mie: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMieCoefficientBind, segment, mie)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMieCoefficientBind, segment, mie)
     }
 
     /**
@@ -150,7 +151,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getMieCoefficient(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMieCoefficientBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMieCoefficientBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setMieEccentricity(eccentricity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMieEccentricityBind, segment, eccentricity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMieEccentricityBind, segment, eccentricity)
     }
 
     /**
@@ -174,7 +175,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getMieEccentricity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMieEccentricityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMieEccentricityBind, segment)
     }
 
     /**
@@ -185,7 +186,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setMieColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setMieColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setMieColorBind, segment, color)
     }
 
     /**
@@ -196,7 +197,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getMieColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getMieColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getMieColorBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setTurbidity(turbidity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTurbidityBind, segment, turbidity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTurbidityBind, segment, turbidity)
     }
 
     /**
@@ -218,7 +219,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getTurbidity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTurbidityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTurbidityBind, segment)
     }
 
     /**
@@ -228,7 +229,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSunDiskScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunDiskScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSunDiskScaleBind, segment, scale)
     }
 
     /**
@@ -238,7 +239,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSunDiskScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunDiskScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunDiskScaleBind, segment)
     }
 
     /**
@@ -248,7 +249,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setGroundColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setGroundColorBind, segment, color)
     }
 
     /**
@@ -258,7 +259,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundColorBind, segment)
     }
 
     /**
@@ -268,7 +269,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -278,7 +279,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
     }
 
     /**
@@ -289,7 +290,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setUseDebanding(useDebanding: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, useDebanding)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseDebandingBind, segment, useDebanding)
     }
 
     /**
@@ -300,7 +301,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setNightSky(nightSky: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNightSkyBind, segment, listOf(nightSky?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNightSkyBind, segment, listOf(nightSky?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -322,7 +323,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getNightSky(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNightSkyBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNightSkyBind, segment))
     }
 
     companion object {
@@ -335,115 +336,117 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicalSkyMaterial? =
             if (handle.address() == 0L) null else PhysicalSkyMaterial(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RAYLEIGH_COEFFICIENT_HASH = 373806689L
-        private val setRayleighCoefficientBind by lazy {
+        @JvmField
+        val setRayleighCoefficientBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_rayleigh_coefficient", SET_RAYLEIGH_COEFFICIENT_HASH)
-        }
 
         private const val GET_RAYLEIGH_COEFFICIENT_HASH = 1740695150L
-        private val getRayleighCoefficientBind by lazy {
+        @JvmField
+        val getRayleighCoefficientBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_rayleigh_coefficient", GET_RAYLEIGH_COEFFICIENT_HASH)
-        }
 
         private const val SET_RAYLEIGH_COLOR_HASH = 2920490490L
-        private val setRayleighColorBind by lazy {
+        @JvmField
+        val setRayleighColorBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_rayleigh_color", SET_RAYLEIGH_COLOR_HASH)
-        }
 
         private const val GET_RAYLEIGH_COLOR_HASH = 3444240500L
-        private val getRayleighColorBind by lazy {
+        @JvmField
+        val getRayleighColorBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_rayleigh_color", GET_RAYLEIGH_COLOR_HASH)
-        }
 
         private const val SET_MIE_COEFFICIENT_HASH = 373806689L
-        private val setMieCoefficientBind by lazy {
+        @JvmField
+        val setMieCoefficientBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_mie_coefficient", SET_MIE_COEFFICIENT_HASH)
-        }
 
         private const val GET_MIE_COEFFICIENT_HASH = 1740695150L
-        private val getMieCoefficientBind by lazy {
+        @JvmField
+        val getMieCoefficientBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_mie_coefficient", GET_MIE_COEFFICIENT_HASH)
-        }
 
         private const val SET_MIE_ECCENTRICITY_HASH = 373806689L
-        private val setMieEccentricityBind by lazy {
+        @JvmField
+        val setMieEccentricityBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_mie_eccentricity", SET_MIE_ECCENTRICITY_HASH)
-        }
 
         private const val GET_MIE_ECCENTRICITY_HASH = 1740695150L
-        private val getMieEccentricityBind by lazy {
+        @JvmField
+        val getMieEccentricityBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_mie_eccentricity", GET_MIE_ECCENTRICITY_HASH)
-        }
 
         private const val SET_MIE_COLOR_HASH = 2920490490L
-        private val setMieColorBind by lazy {
+        @JvmField
+        val setMieColorBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_mie_color", SET_MIE_COLOR_HASH)
-        }
 
         private const val GET_MIE_COLOR_HASH = 3444240500L
-        private val getMieColorBind by lazy {
+        @JvmField
+        val getMieColorBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_mie_color", GET_MIE_COLOR_HASH)
-        }
 
         private const val SET_TURBIDITY_HASH = 373806689L
-        private val setTurbidityBind by lazy {
+        @JvmField
+        val setTurbidityBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_turbidity", SET_TURBIDITY_HASH)
-        }
 
         private const val GET_TURBIDITY_HASH = 1740695150L
-        private val getTurbidityBind by lazy {
+        @JvmField
+        val getTurbidityBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_turbidity", GET_TURBIDITY_HASH)
-        }
 
         private const val SET_SUN_DISK_SCALE_HASH = 373806689L
-        private val setSunDiskScaleBind by lazy {
+        @JvmField
+        val setSunDiskScaleBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_sun_disk_scale", SET_SUN_DISK_SCALE_HASH)
-        }
 
         private const val GET_SUN_DISK_SCALE_HASH = 1740695150L
-        private val getSunDiskScaleBind by lazy {
+        @JvmField
+        val getSunDiskScaleBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_sun_disk_scale", GET_SUN_DISK_SCALE_HASH)
-        }
 
         private const val SET_GROUND_COLOR_HASH = 2920490490L
-        private val setGroundColorBind by lazy {
+        @JvmField
+        val setGroundColorBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_ground_color", SET_GROUND_COLOR_HASH)
-        }
 
         private const val GET_GROUND_COLOR_HASH = 3444240500L
-        private val getGroundColorBind by lazy {
+        @JvmField
+        val getGroundColorBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_ground_color", GET_GROUND_COLOR_HASH)
-        }
 
         private const val SET_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setEnergyMultiplierBind by lazy {
+        @JvmField
+        val setEnergyMultiplierBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_energy_multiplier", SET_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getEnergyMultiplierBind by lazy {
+        @JvmField
+        val getEnergyMultiplierBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_energy_multiplier", GET_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val SET_USE_DEBANDING_HASH = 2586408642L
-        private val setUseDebandingBind by lazy {
+        @JvmField
+        val setUseDebandingBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_use_debanding", SET_USE_DEBANDING_HASH)
-        }
 
         private const val GET_USE_DEBANDING_HASH = 36873697L
-        private val getUseDebandingBind by lazy {
+        @JvmField
+        val getUseDebandingBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_use_debanding", GET_USE_DEBANDING_HASH)
-        }
 
         private const val SET_NIGHT_SKY_HASH = 4051416890L
-        private val setNightSkyBind by lazy {
+        @JvmField
+        val setNightSkyBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "set_night_sky", SET_NIGHT_SKY_HASH)
-        }
 
         private const val GET_NIGHT_SKY_HASH = 3635182373L
-        private val getNightSkyBind by lazy {
+        @JvmField
+        val getNightSkyBind =
             ObjectCalls.getMethodBind("PhysicalSkyMaterial", "get_night_sky", GET_NIGHT_SKY_HASH)
-        }
     }
 }

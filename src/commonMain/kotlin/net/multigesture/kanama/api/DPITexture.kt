@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -51,7 +52,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSource(source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSourceBind, segment, source)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSourceBind, segment, source)
     }
 
     /**
@@ -61,7 +62,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSource(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSourceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceBind, segment)
     }
 
     /**
@@ -73,7 +74,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFixAlphaBorder(fixAlphaBorder: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFixAlphaBorderBind, segment, fixAlphaBorder)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFixAlphaBorderBind, segment, fixAlphaBorder)
     }
 
     /**
@@ -85,7 +86,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFixAlphaBorder(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFixAlphaBorderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFixAlphaBorderBind, segment)
     }
 
     /**
@@ -102,7 +103,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setPremultAlpha(premultAlpha: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPremultAlphaBind, segment, premultAlpha)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPremultAlphaBind, segment, premultAlpha)
     }
 
     /**
@@ -119,7 +120,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getPremultAlpha(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPremultAlphaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPremultAlphaBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setBaseScale(baseScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBaseScaleBind, segment, baseScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBaseScaleBind, segment, baseScale)
     }
 
     /**
@@ -139,7 +140,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getBaseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBaseScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBaseScaleBind, segment)
     }
 
     /**
@@ -149,7 +150,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSaturation(saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSaturationBind, segment, saturation)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSaturationBind, segment, saturation)
     }
 
     /**
@@ -159,7 +160,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSaturation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSaturationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSaturationBind, segment)
     }
 
     /**
@@ -169,7 +170,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setColorMap(colorMap: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setColorMapBind, segment, colorMap)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setColorMapBind, segment, colorMap)
     }
 
     /**
@@ -179,7 +180,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getColorMap(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getColorMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getColorMapBind, segment)
     }
 
     /**
@@ -189,7 +190,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSizeOverride(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeOverrideBind, segment, size)
     }
 
     /**
@@ -200,7 +201,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getScaledRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getScaledRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getScaledRidBind, segment)
     }
 
     companion object {
@@ -211,7 +212,7 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: DPITexture.create_from_string
          */
         fun createFromString(source: String, scale: Double = 1.0, saturation: Double = 1.0, colorMap: Map<String, Any?> = emptyMap()): DPITexture? {
-            return DPITexture.wrapOwned(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, NULL_SEGMENT, source, scale, saturation, colorMap))
+            return DPITexture.wrapOwned(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(Binds.createFromStringBind, NULL_SEGMENT, source, scale, saturation, colorMap))
         }
 
         @JvmStatic
@@ -223,80 +224,82 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): DPITexture? =
             if (handle.address() == 0L) null else DPITexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_FROM_STRING_HASH = 755140520L
-        private val createFromStringBind by lazy {
+        @JvmField
+        val createFromStringBind =
             ObjectCalls.getMethodBind("DPITexture", "create_from_string", CREATE_FROM_STRING_HASH)
-        }
 
         private const val SET_SOURCE_HASH = 83702148L
-        private val setSourceBind by lazy {
+        @JvmField
+        val setSourceBind =
             ObjectCalls.getMethodBind("DPITexture", "set_source", SET_SOURCE_HASH)
-        }
 
         private const val GET_SOURCE_HASH = 201670096L
-        private val getSourceBind by lazy {
+        @JvmField
+        val getSourceBind =
             ObjectCalls.getMethodBind("DPITexture", "get_source", GET_SOURCE_HASH)
-        }
 
         private const val SET_FIX_ALPHA_BORDER_HASH = 2586408642L
-        private val setFixAlphaBorderBind by lazy {
+        @JvmField
+        val setFixAlphaBorderBind =
             ObjectCalls.getMethodBind("DPITexture", "set_fix_alpha_border", SET_FIX_ALPHA_BORDER_HASH)
-        }
 
         private const val GET_FIX_ALPHA_BORDER_HASH = 36873697L
-        private val getFixAlphaBorderBind by lazy {
+        @JvmField
+        val getFixAlphaBorderBind =
             ObjectCalls.getMethodBind("DPITexture", "get_fix_alpha_border", GET_FIX_ALPHA_BORDER_HASH)
-        }
 
         private const val SET_PREMULT_ALPHA_HASH = 2586408642L
-        private val setPremultAlphaBind by lazy {
+        @JvmField
+        val setPremultAlphaBind =
             ObjectCalls.getMethodBind("DPITexture", "set_premult_alpha", SET_PREMULT_ALPHA_HASH)
-        }
 
         private const val GET_PREMULT_ALPHA_HASH = 36873697L
-        private val getPremultAlphaBind by lazy {
+        @JvmField
+        val getPremultAlphaBind =
             ObjectCalls.getMethodBind("DPITexture", "get_premult_alpha", GET_PREMULT_ALPHA_HASH)
-        }
 
         private const val SET_BASE_SCALE_HASH = 373806689L
-        private val setBaseScaleBind by lazy {
+        @JvmField
+        val setBaseScaleBind =
             ObjectCalls.getMethodBind("DPITexture", "set_base_scale", SET_BASE_SCALE_HASH)
-        }
 
         private const val GET_BASE_SCALE_HASH = 1740695150L
-        private val getBaseScaleBind by lazy {
+        @JvmField
+        val getBaseScaleBind =
             ObjectCalls.getMethodBind("DPITexture", "get_base_scale", GET_BASE_SCALE_HASH)
-        }
 
         private const val SET_SATURATION_HASH = 373806689L
-        private val setSaturationBind by lazy {
+        @JvmField
+        val setSaturationBind =
             ObjectCalls.getMethodBind("DPITexture", "set_saturation", SET_SATURATION_HASH)
-        }
 
         private const val GET_SATURATION_HASH = 1740695150L
-        private val getSaturationBind by lazy {
+        @JvmField
+        val getSaturationBind =
             ObjectCalls.getMethodBind("DPITexture", "get_saturation", GET_SATURATION_HASH)
-        }
 
         private const val SET_COLOR_MAP_HASH = 4155329257L
-        private val setColorMapBind by lazy {
+        @JvmField
+        val setColorMapBind =
             ObjectCalls.getMethodBind("DPITexture", "set_color_map", SET_COLOR_MAP_HASH)
-        }
 
         private const val GET_COLOR_MAP_HASH = 3102165223L
-        private val getColorMapBind by lazy {
+        @JvmField
+        val getColorMapBind =
             ObjectCalls.getMethodBind("DPITexture", "get_color_map", GET_COLOR_MAP_HASH)
-        }
 
         private const val SET_SIZE_OVERRIDE_HASH = 1130785943L
-        private val setSizeOverrideBind by lazy {
+        @JvmField
+        val setSizeOverrideBind =
             ObjectCalls.getMethodBind("DPITexture", "set_size_override", SET_SIZE_OVERRIDE_HASH)
-        }
 
         private const val GET_SCALED_RID_HASH = 2944877500L
-        private val getScaledRidBind by lazy {
+        @JvmField
+        val getScaledRidBind =
             ObjectCalls.getMethodBind("DPITexture", "get_scaled_rid", GET_SCALED_RID_HASH)
-        }
     }
 }

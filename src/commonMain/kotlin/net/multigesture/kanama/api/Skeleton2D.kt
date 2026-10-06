@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -20,7 +21,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_bone_count
      */
     fun getBoneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneCountBind, segment)
     }
 
     /**
@@ -31,7 +32,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_bone
      */
     fun getBone(idx: Int): Bone2D? {
-        return Bone2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBoneBind, segment, idx))
+        return Bone2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBoneBind, segment, idx))
     }
 
     /**
@@ -40,7 +41,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_skeleton
      */
     fun getSkeleton(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSkeletonBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.set_modification_stack
      */
     fun setModificationStack(modificationStack: SkeletonModificationStack2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setModificationStackBind, segment, listOf(modificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setModificationStackBind, segment, listOf(modificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -58,7 +59,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_modification_stack
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
-        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, segment))
+        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getModificationStackBind, segment))
     }
 
     /**
@@ -68,7 +69,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.execute_modifications
      */
     fun executeModifications(delta: Double, executionMode: Int) {
-        ObjectCalls.ptrcallWithDoubleAndIntArgs(executeModificationsBind, segment, delta, executionMode)
+        ObjectCalls.ptrcallWithDoubleAndIntArgs(Binds.executeModificationsBind, segment, delta, executionMode)
     }
 
     /**
@@ -80,7 +81,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.set_bone_local_pose_override
      */
     fun setBoneLocalPoseOverride(boneIdx: Int, overridePose: Transform2D, strength: Double, persistent: Boolean) {
-        ObjectCalls.ptrcallWithIntTransform2DDoubleBoolArgs(setBoneLocalPoseOverrideBind, segment, boneIdx, overridePose, strength, persistent)
+        ObjectCalls.ptrcallWithIntTransform2DDoubleBoolArgs(Binds.setBoneLocalPoseOverrideBind, segment, boneIdx, overridePose, strength, persistent)
     }
 
     /**
@@ -89,7 +90,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_bone_local_pose_override
      */
     fun getBoneLocalPoseOverride(boneIdx: Int): Transform2D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getBoneLocalPoseOverrideBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getBoneLocalPoseOverrideBind, segment, boneIdx)
     }
 
     /** Signal `bone_setup_changed()`; see [TypedSignal]. */
@@ -108,45 +109,47 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Skeleton2D? =
             if (handle.address() == 0L) null else Skeleton2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_BONE_COUNT_HASH = 3905245786L
-        private val getBoneCountBind by lazy {
+        @JvmField
+        val getBoneCountBind =
             ObjectCalls.getMethodBind("Skeleton2D", "get_bone_count", GET_BONE_COUNT_HASH)
-        }
 
         private const val GET_BONE_HASH = 2556267111L
-        private val getBoneBind by lazy {
+        @JvmField
+        val getBoneBind =
             ObjectCalls.getMethodBind("Skeleton2D", "get_bone", GET_BONE_HASH)
-        }
 
         private const val GET_SKELETON_HASH = 2944877500L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("Skeleton2D", "get_skeleton", GET_SKELETON_HASH)
-        }
 
         private const val SET_MODIFICATION_STACK_HASH = 3907307132L
-        private val setModificationStackBind by lazy {
+        @JvmField
+        val setModificationStackBind =
             ObjectCalls.getMethodBind("Skeleton2D", "set_modification_stack", SET_MODIFICATION_STACK_HASH)
-        }
 
         private const val GET_MODIFICATION_STACK_HASH = 2107508396L
-        private val getModificationStackBind by lazy {
+        @JvmField
+        val getModificationStackBind =
             ObjectCalls.getMethodBind("Skeleton2D", "get_modification_stack", GET_MODIFICATION_STACK_HASH)
-        }
 
         private const val EXECUTE_MODIFICATIONS_HASH = 1005356550L
-        private val executeModificationsBind by lazy {
+        @JvmField
+        val executeModificationsBind =
             ObjectCalls.getMethodBind("Skeleton2D", "execute_modifications", EXECUTE_MODIFICATIONS_HASH)
-        }
 
         private const val SET_BONE_LOCAL_POSE_OVERRIDE_HASH = 555457532L
-        private val setBoneLocalPoseOverrideBind by lazy {
+        @JvmField
+        val setBoneLocalPoseOverrideBind =
             ObjectCalls.getMethodBind("Skeleton2D", "set_bone_local_pose_override", SET_BONE_LOCAL_POSE_OVERRIDE_HASH)
-        }
 
         private const val GET_BONE_LOCAL_POSE_OVERRIDE_HASH = 2995540667L
-        private val getBoneLocalPoseOverrideBind by lazy {
+        @JvmField
+        val getBoneLocalPoseOverrideBind =
             ObjectCalls.getMethodBind("Skeleton2D", "get_bone_local_pose_override", GET_BONE_LOCAL_POSE_OVERRIDE_HASH)
-        }
     }
 }

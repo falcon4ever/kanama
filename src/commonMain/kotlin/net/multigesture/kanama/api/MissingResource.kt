@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
      */
     fun setOriginalClass(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOriginalClassBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOriginalClassBind, segment, name)
     }
 
     /**
@@ -40,7 +41,7 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
      */
     fun getOriginalClass(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalClassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalClassBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
      */
     fun setRecordingProperties(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRecordingPropertiesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRecordingPropertiesBind, segment, enable)
     }
 
     /**
@@ -62,7 +63,7 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
      */
     fun isRecordingProperties(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingPropertiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingPropertiesBind, segment)
     }
 
     companion object {
@@ -75,25 +76,27 @@ class MissingResource(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MissingResource? =
             if (handle.address() == 0L) null else MissingResource(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ORIGINAL_CLASS_HASH = 83702148L
-        private val setOriginalClassBind by lazy {
+        @JvmField
+        val setOriginalClassBind =
             ObjectCalls.getMethodBind("MissingResource", "set_original_class", SET_ORIGINAL_CLASS_HASH)
-        }
 
         private const val GET_ORIGINAL_CLASS_HASH = 201670096L
-        private val getOriginalClassBind by lazy {
+        @JvmField
+        val getOriginalClassBind =
             ObjectCalls.getMethodBind("MissingResource", "get_original_class", GET_ORIGINAL_CLASS_HASH)
-        }
 
         private const val SET_RECORDING_PROPERTIES_HASH = 2586408642L
-        private val setRecordingPropertiesBind by lazy {
+        @JvmField
+        val setRecordingPropertiesBind =
             ObjectCalls.getMethodBind("MissingResource", "set_recording_properties", SET_RECORDING_PROPERTIES_HASH)
-        }
 
         private const val IS_RECORDING_PROPERTIES_HASH = 36873697L
-        private val isRecordingPropertiesBind by lazy {
+        @JvmField
+        val isRecordingPropertiesBind =
             ObjectCalls.getMethodBind("MissingResource", "is_recording_properties", IS_RECORDING_PROPERTIES_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
     }
 
     companion object {
@@ -31,10 +32,12 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2D? =
             if (handle.address() == 0L) null else PlaceholderTexture2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 743155724L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("PlaceholderTexture2D", "set_size", SET_SIZE_HASH)
-        }
     }
 }

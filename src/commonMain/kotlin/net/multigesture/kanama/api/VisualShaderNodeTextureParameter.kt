@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -42,52 +43,52 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
 
     fun setTextureType(type: VisualShaderNodeTextureParameter.TextureType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, type.value)
     }
 
     fun getTextureType(): VisualShaderNodeTextureParameter.TextureType {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureType(ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment))
+        return VisualShaderNodeTextureParameter.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
     }
 
     fun setColorDefault(color: VisualShaderNodeTextureParameter.ColorDefault) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setColorDefaultBind, segment, color.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setColorDefaultBind, segment, color.value)
     }
 
     fun getColorDefault(): VisualShaderNodeTextureParameter.ColorDefault {
         checkOpen()
-        return VisualShaderNodeTextureParameter.ColorDefault(ObjectCalls.ptrcallNoArgsRetLong(getColorDefaultBind, segment))
+        return VisualShaderNodeTextureParameter.ColorDefault(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorDefaultBind, segment))
     }
 
     fun setTextureFilter(filter: VisualShaderNodeTextureParameter.TextureFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, filter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, filter.value)
     }
 
     fun getTextureFilter(): VisualShaderNodeTextureParameter.TextureFilter {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
+        return VisualShaderNodeTextureParameter.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
     }
 
     fun setTextureRepeat(repeat: VisualShaderNodeTextureParameter.TextureRepeat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, repeat.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureRepeatBind, segment, repeat.value)
     }
 
     fun getTextureRepeat(): VisualShaderNodeTextureParameter.TextureRepeat {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment))
+        return VisualShaderNodeTextureParameter.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
     }
 
     fun setTextureSource(source: VisualShaderNodeTextureParameter.TextureSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureSourceBind, segment, source.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureSourceBind, segment, source.value)
     }
 
     fun getTextureSource(): VisualShaderNodeTextureParameter.TextureSource {
         checkOpen()
-        return VisualShaderNodeTextureParameter.TextureSource(ObjectCalls.ptrcallNoArgsRetLong(getTextureSourceBind, segment))
+        return VisualShaderNodeTextureParameter.TextureSource(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureSourceBind, segment))
     }
 
     @JvmInline
@@ -156,55 +157,57 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureParameter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_TYPE_HASH = 2227296876L
-        private val setTextureTypeBind by lazy {
+        @JvmField
+        val setTextureTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "set_texture_type", SET_TEXTURE_TYPE_HASH)
-        }
 
         private const val GET_TEXTURE_TYPE_HASH = 367922070L
-        private val getTextureTypeBind by lazy {
+        @JvmField
+        val getTextureTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "get_texture_type", GET_TEXTURE_TYPE_HASH)
-        }
 
         private const val SET_COLOR_DEFAULT_HASH = 4217624432L
-        private val setColorDefaultBind by lazy {
+        @JvmField
+        val setColorDefaultBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "set_color_default", SET_COLOR_DEFAULT_HASH)
-        }
 
         private const val GET_COLOR_DEFAULT_HASH = 3837060134L
-        private val getColorDefaultBind by lazy {
+        @JvmField
+        val getColorDefaultBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "get_color_default", GET_COLOR_DEFAULT_HASH)
-        }
 
         private const val SET_TEXTURE_FILTER_HASH = 2147684752L
-        private val setTextureFilterBind by lazy {
+        @JvmField
+        val setTextureFilterBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "set_texture_filter", SET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_TEXTURE_FILTER_HASH = 4184490817L
-        private val getTextureFilterBind by lazy {
+        @JvmField
+        val getTextureFilterBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "get_texture_filter", GET_TEXTURE_FILTER_HASH)
-        }
 
         private const val SET_TEXTURE_REPEAT_HASH = 2036143070L
-        private val setTextureRepeatBind by lazy {
+        @JvmField
+        val setTextureRepeatBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "set_texture_repeat", SET_TEXTURE_REPEAT_HASH)
-        }
 
         private const val GET_TEXTURE_REPEAT_HASH = 1690132794L
-        private val getTextureRepeatBind by lazy {
+        @JvmField
+        val getTextureRepeatBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "get_texture_repeat", GET_TEXTURE_REPEAT_HASH)
-        }
 
         private const val SET_TEXTURE_SOURCE_HASH = 1212687372L
-        private val setTextureSourceBind by lazy {
+        @JvmField
+        val setTextureSourceBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "set_texture_source", SET_TEXTURE_SOURCE_HASH)
-        }
 
         private const val GET_TEXTURE_SOURCE_HASH = 2039092262L
-        private val getTextureSourceBind by lazy {
+        @JvmField
+        val getTextureSourceBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTextureParameter", "get_texture_source", GET_TEXTURE_SOURCE_HASH)
-        }
     }
 }

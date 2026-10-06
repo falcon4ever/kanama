@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -30,32 +31,32 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
 
     fun setParameterName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setParameterNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setParameterNameBind, segment, name)
     }
 
     fun getParameterName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
     }
 
     fun setQualifier(qualifier: VisualShaderNodeParameter.Qualifier) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setQualifierBind, segment, qualifier.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setQualifierBind, segment, qualifier.value)
     }
 
     fun getQualifier(): VisualShaderNodeParameter.Qualifier {
         checkOpen()
-        return VisualShaderNodeParameter.Qualifier(ObjectCalls.ptrcallNoArgsRetLong(getQualifierBind, segment))
+        return VisualShaderNodeParameter.Qualifier(ObjectCalls.ptrcallNoArgsRetLong(Binds.getQualifierBind, segment))
     }
 
     fun setInstanceIndex(instanceIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInstanceIndexBind, segment, instanceIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInstanceIndexBind, segment, instanceIndex)
     }
 
     fun getInstanceIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInstanceIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceIndexBind, segment)
     }
 
     @JvmInline
@@ -79,35 +80,37 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeParameter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PARAMETER_NAME_HASH = 83702148L
-        private val setParameterNameBind by lazy {
+        @JvmField
+        val setParameterNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameter", "set_parameter_name", SET_PARAMETER_NAME_HASH)
-        }
 
         private const val GET_PARAMETER_NAME_HASH = 201670096L
-        private val getParameterNameBind by lazy {
+        @JvmField
+        val getParameterNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameter", "get_parameter_name", GET_PARAMETER_NAME_HASH)
-        }
 
         private const val SET_QUALIFIER_HASH = 1276489447L
-        private val setQualifierBind by lazy {
+        @JvmField
+        val setQualifierBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameter", "set_qualifier", SET_QUALIFIER_HASH)
-        }
 
         private const val GET_QUALIFIER_HASH = 3558406205L
-        private val getQualifierBind by lazy {
+        @JvmField
+        val getQualifierBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameter", "get_qualifier", GET_QUALIFIER_HASH)
-        }
 
         private const val SET_INSTANCE_INDEX_HASH = 1286410249L
-        private val setInstanceIndexBind by lazy {
+        @JvmField
+        val setInstanceIndexBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameter", "set_instance_index", SET_INSTANCE_INDEX_HASH)
-        }
 
         private const val GET_INSTANCE_INDEX_HASH = 3905245786L
-        private val getInstanceIndexBind by lazy {
+        @JvmField
+        val getInstanceIndexBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParameter", "get_instance_index", GET_INSTANCE_INDEX_HASH)
-        }
     }
 }

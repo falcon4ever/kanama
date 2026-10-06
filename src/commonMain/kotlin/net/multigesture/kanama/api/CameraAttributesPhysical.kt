@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -73,7 +74,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setAperture(aperture: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setApertureBind, segment, aperture)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setApertureBind, segment, aperture)
     }
 
     /**
@@ -90,7 +91,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getAperture(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getApertureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getApertureBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setShutterSpeed(shutterSpeed: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setShutterSpeedBind, segment, shutterSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setShutterSpeedBind, segment, shutterSpeed)
     }
 
     /**
@@ -116,7 +117,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getShutterSpeed(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getShutterSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getShutterSpeedBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setFocalLength(focalLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFocalLengthBind, segment, focalLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFocalLengthBind, segment, focalLength)
     }
 
     /**
@@ -146,7 +147,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFocalLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFocalLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFocalLengthBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setFocusDistance(focusDistance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFocusDistanceBind, segment, focusDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFocusDistanceBind, segment, focusDistance)
     }
 
     /**
@@ -168,7 +169,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFocusDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFocusDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFocusDistanceBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setNear(near: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setNearBind, segment, near)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNearBind, segment, near)
     }
 
     /**
@@ -192,7 +193,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNearBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setFar(far: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFarBind, segment, far)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFarBind, segment, far)
     }
 
     /**
@@ -216,7 +217,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFarBind, segment)
     }
 
     /**
@@ -227,7 +228,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
     }
 
     /**
@@ -240,7 +241,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setAutoExposureMaxExposureValue(exposureValueMax: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxExposureValueBind, segment, exposureValueMax)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMaxExposureValueBind, segment, exposureValueMax)
     }
 
     /**
@@ -253,7 +254,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getAutoExposureMaxExposureValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxExposureValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMaxExposureValueBind, segment)
     }
 
     /**
@@ -266,7 +267,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun setAutoExposureMinExposureValue(exposureValueMin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinExposureValueBind, segment, exposureValueMin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMinExposureValueBind, segment, exposureValueMin)
     }
 
     /**
@@ -279,7 +280,7 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
      */
     fun getAutoExposureMinExposureValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinExposureValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMinExposureValueBind, segment)
     }
 
     companion object {
@@ -292,90 +293,92 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraAttributesPhysical? =
             if (handle.address() == 0L) null else CameraAttributesPhysical(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_APERTURE_HASH = 373806689L
-        private val setApertureBind by lazy {
+        @JvmField
+        val setApertureBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_aperture", SET_APERTURE_HASH)
-        }
 
         private const val GET_APERTURE_HASH = 1740695150L
-        private val getApertureBind by lazy {
+        @JvmField
+        val getApertureBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_aperture", GET_APERTURE_HASH)
-        }
 
         private const val SET_SHUTTER_SPEED_HASH = 373806689L
-        private val setShutterSpeedBind by lazy {
+        @JvmField
+        val setShutterSpeedBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_shutter_speed", SET_SHUTTER_SPEED_HASH)
-        }
 
         private const val GET_SHUTTER_SPEED_HASH = 1740695150L
-        private val getShutterSpeedBind by lazy {
+        @JvmField
+        val getShutterSpeedBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_shutter_speed", GET_SHUTTER_SPEED_HASH)
-        }
 
         private const val SET_FOCAL_LENGTH_HASH = 373806689L
-        private val setFocalLengthBind by lazy {
+        @JvmField
+        val setFocalLengthBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_focal_length", SET_FOCAL_LENGTH_HASH)
-        }
 
         private const val GET_FOCAL_LENGTH_HASH = 1740695150L
-        private val getFocalLengthBind by lazy {
+        @JvmField
+        val getFocalLengthBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_focal_length", GET_FOCAL_LENGTH_HASH)
-        }
 
         private const val SET_FOCUS_DISTANCE_HASH = 373806689L
-        private val setFocusDistanceBind by lazy {
+        @JvmField
+        val setFocusDistanceBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_focus_distance", SET_FOCUS_DISTANCE_HASH)
-        }
 
         private const val GET_FOCUS_DISTANCE_HASH = 1740695150L
-        private val getFocusDistanceBind by lazy {
+        @JvmField
+        val getFocusDistanceBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_focus_distance", GET_FOCUS_DISTANCE_HASH)
-        }
 
         private const val SET_NEAR_HASH = 373806689L
-        private val setNearBind by lazy {
+        @JvmField
+        val setNearBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_near", SET_NEAR_HASH)
-        }
 
         private const val GET_NEAR_HASH = 1740695150L
-        private val getNearBind by lazy {
+        @JvmField
+        val getNearBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_near", GET_NEAR_HASH)
-        }
 
         private const val SET_FAR_HASH = 373806689L
-        private val setFarBind by lazy {
+        @JvmField
+        val setFarBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_far", SET_FAR_HASH)
-        }
 
         private const val GET_FAR_HASH = 1740695150L
-        private val getFarBind by lazy {
+        @JvmField
+        val getFarBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_far", GET_FAR_HASH)
-        }
 
         private const val GET_FOV_HASH = 1740695150L
-        private val getFovBind by lazy {
+        @JvmField
+        val getFovBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_fov", GET_FOV_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_MAX_EXPOSURE_VALUE_HASH = 373806689L
-        private val setAutoExposureMaxExposureValueBind by lazy {
+        @JvmField
+        val setAutoExposureMaxExposureValueBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_auto_exposure_max_exposure_value", SET_AUTO_EXPOSURE_MAX_EXPOSURE_VALUE_HASH)
-        }
 
         private const val GET_AUTO_EXPOSURE_MAX_EXPOSURE_VALUE_HASH = 1740695150L
-        private val getAutoExposureMaxExposureValueBind by lazy {
+        @JvmField
+        val getAutoExposureMaxExposureValueBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_auto_exposure_max_exposure_value", GET_AUTO_EXPOSURE_MAX_EXPOSURE_VALUE_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_MIN_EXPOSURE_VALUE_HASH = 373806689L
-        private val setAutoExposureMinExposureValueBind by lazy {
+        @JvmField
+        val setAutoExposureMinExposureValueBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "set_auto_exposure_min_exposure_value", SET_AUTO_EXPOSURE_MIN_EXPOSURE_VALUE_HASH)
-        }
 
         private const val GET_AUTO_EXPOSURE_MIN_EXPOSURE_VALUE_HASH = 1740695150L
-        private val getAutoExposureMinExposureValueBind by lazy {
+        @JvmField
+        val getAutoExposureMinExposureValueBind =
             ObjectCalls.getMethodBind("CameraAttributesPhysical", "get_auto_exposure_min_exposure_value", GET_AUTO_EXPOSURE_MIN_EXPOSURE_VALUE_HASH)
-        }
     }
 }

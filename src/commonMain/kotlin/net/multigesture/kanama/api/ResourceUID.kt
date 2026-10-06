@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,9 +11,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: ResourceUID
  */
 object ResourceUID {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("ResourceUID")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     const val INVALID_ID: Long = -1L
 
@@ -23,7 +23,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun idToText(id: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(idToTextBind, singleton, id)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.idToTextBind, singleton, id)
     }
 
     /**
@@ -33,7 +33,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun textToId(textId: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(textToIdBind, singleton, textId)
+        return ObjectCalls.ptrcallWithStringArgRetLong(Binds.textToIdBind, singleton, textId)
     }
 
     /**
@@ -44,7 +44,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun createId(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(createIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.createIdBind, singleton)
     }
 
     /**
@@ -55,7 +55,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun createIdForPath(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(createIdForPathBind, singleton, path)
+        return ObjectCalls.ptrcallWithStringArgRetLong(Binds.createIdForPathBind, singleton, path)
     }
 
     /**
@@ -65,7 +65,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun hasId(id: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasIdBind, singleton, id)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasIdBind, singleton, id)
     }
 
     /**
@@ -76,7 +76,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun addId(id: Long, path: String) {
-        ObjectCalls.ptrcallWithLongAndStringArg(addIdBind, singleton, id, path)
+        ObjectCalls.ptrcallWithLongAndStringArg(Binds.addIdBind, singleton, id, path)
     }
 
     /**
@@ -87,7 +87,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun setId(id: Long, path: String) {
-        ObjectCalls.ptrcallWithLongAndStringArg(setIdBind, singleton, id, path)
+        ObjectCalls.ptrcallWithLongAndStringArg(Binds.setIdBind, singleton, id, path)
     }
 
     /**
@@ -98,7 +98,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun getIdPath(id: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getIdPathBind, singleton, id)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getIdPathBind, singleton, id)
     }
 
     /**
@@ -109,7 +109,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun removeId(id: Long) {
-        ObjectCalls.ptrcallWithLongArg(removeIdBind, singleton, id)
+        ObjectCalls.ptrcallWithLongArg(Binds.removeIdBind, singleton, id)
     }
 
     /**
@@ -119,7 +119,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun uidToPath(uid: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(uidToPathBind, singleton, uid)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.uidToPathBind, singleton, uid)
     }
 
     /**
@@ -130,7 +130,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun pathToUid(path: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(pathToUidBind, singleton, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.pathToUidBind, singleton, path)
     }
 
     /**
@@ -141,7 +141,7 @@ object ResourceUID {
      */
     @JvmStatic
     fun ensurePath(pathOrUid: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(ensurePathBind, singleton, pathOrUid)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.ensurePathBind, singleton, pathOrUid)
     }
 
     @JvmStatic
@@ -151,63 +151,68 @@ object ResourceUID {
     internal fun wrap(handle: RawSegment): ResourceUID? =
         if (handle.address() == 0L) null else this
 
-    private const val ID_TO_TEXT_HASH = 844755477L
-    private val idToTextBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "id_to_text", ID_TO_TEXT_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("ResourceUID")
 
-    private const val TEXT_TO_ID_HASH = 1321353865L
-    private val textToIdBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "text_to_id", TEXT_TO_ID_HASH)
-    }
+        private const val ID_TO_TEXT_HASH = 844755477L
+        @JvmField
+        val idToTextBind =
+            ObjectCalls.getMethodBind("ResourceUID", "id_to_text", ID_TO_TEXT_HASH)
 
-    private const val CREATE_ID_HASH = 2455072627L
-    private val createIdBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "create_id", CREATE_ID_HASH)
-    }
+        private const val TEXT_TO_ID_HASH = 1321353865L
+        @JvmField
+        val textToIdBind =
+            ObjectCalls.getMethodBind("ResourceUID", "text_to_id", TEXT_TO_ID_HASH)
 
-    private const val CREATE_ID_FOR_PATH_HASH = 1597066294L
-    private val createIdForPathBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "create_id_for_path", CREATE_ID_FOR_PATH_HASH)
-    }
+        private const val CREATE_ID_HASH = 2455072627L
+        @JvmField
+        val createIdBind =
+            ObjectCalls.getMethodBind("ResourceUID", "create_id", CREATE_ID_HASH)
 
-    private const val HAS_ID_HASH = 1116898809L
-    private val hasIdBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "has_id", HAS_ID_HASH)
-    }
+        private const val CREATE_ID_FOR_PATH_HASH = 1597066294L
+        @JvmField
+        val createIdForPathBind =
+            ObjectCalls.getMethodBind("ResourceUID", "create_id_for_path", CREATE_ID_FOR_PATH_HASH)
 
-    private const val ADD_ID_HASH = 501894301L
-    private val addIdBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "add_id", ADD_ID_HASH)
-    }
+        private const val HAS_ID_HASH = 1116898809L
+        @JvmField
+        val hasIdBind =
+            ObjectCalls.getMethodBind("ResourceUID", "has_id", HAS_ID_HASH)
 
-    private const val SET_ID_HASH = 501894301L
-    private val setIdBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "set_id", SET_ID_HASH)
-    }
+        private const val ADD_ID_HASH = 501894301L
+        @JvmField
+        val addIdBind =
+            ObjectCalls.getMethodBind("ResourceUID", "add_id", ADD_ID_HASH)
 
-    private const val GET_ID_PATH_HASH = 844755477L
-    private val getIdPathBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "get_id_path", GET_ID_PATH_HASH)
-    }
+        private const val SET_ID_HASH = 501894301L
+        @JvmField
+        val setIdBind =
+            ObjectCalls.getMethodBind("ResourceUID", "set_id", SET_ID_HASH)
 
-    private const val REMOVE_ID_HASH = 1286410249L
-    private val removeIdBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "remove_id", REMOVE_ID_HASH)
-    }
+        private const val GET_ID_PATH_HASH = 844755477L
+        @JvmField
+        val getIdPathBind =
+            ObjectCalls.getMethodBind("ResourceUID", "get_id_path", GET_ID_PATH_HASH)
 
-    private const val UID_TO_PATH_HASH = 1703090593L
-    private val uidToPathBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "uid_to_path", UID_TO_PATH_HASH)
-    }
+        private const val REMOVE_ID_HASH = 1286410249L
+        @JvmField
+        val removeIdBind =
+            ObjectCalls.getMethodBind("ResourceUID", "remove_id", REMOVE_ID_HASH)
 
-    private const val PATH_TO_UID_HASH = 1703090593L
-    private val pathToUidBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "path_to_uid", PATH_TO_UID_HASH)
-    }
+        private const val UID_TO_PATH_HASH = 1703090593L
+        @JvmField
+        val uidToPathBind =
+            ObjectCalls.getMethodBind("ResourceUID", "uid_to_path", UID_TO_PATH_HASH)
 
-    private const val ENSURE_PATH_HASH = 1703090593L
-    private val ensurePathBind by lazy {
-        ObjectCalls.getMethodBind("ResourceUID", "ensure_path", ENSURE_PATH_HASH)
+        private const val PATH_TO_UID_HASH = 1703090593L
+        @JvmField
+        val pathToUidBind =
+            ObjectCalls.getMethodBind("ResourceUID", "path_to_uid", PATH_TO_UID_HASH)
+
+        private const val ENSURE_PATH_HASH = 1703090593L
+        @JvmField
+        val ensurePathBind =
+            ObjectCalls.getMethodBind("ResourceUID", "ensure_path", ENSURE_PATH_HASH)
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -26,7 +27,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun setEvents(events: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setEventsBind, segment, events)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setEventsBind, segment, events)
     }
 
     /**
@@ -37,7 +38,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun getEvents(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getEventsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getEventsBind, segment)
     }
 
     /**
@@ -47,7 +48,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun hasValidEvent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasValidEventBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasValidEventBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun matchesEvent(event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.matchesEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -68,7 +69,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun getAsText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getAsTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAsTextBind, segment)
     }
 
     companion object {
@@ -81,30 +82,32 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shortcut? =
             if (handle.address() == 0L) null else Shortcut(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EVENTS_HASH = 381264803L
-        private val setEventsBind by lazy {
+        @JvmField
+        val setEventsBind =
             ObjectCalls.getMethodBind("Shortcut", "set_events", SET_EVENTS_HASH)
-        }
 
         private const val GET_EVENTS_HASH = 3995934104L
-        private val getEventsBind by lazy {
+        @JvmField
+        val getEventsBind =
             ObjectCalls.getMethodBind("Shortcut", "get_events", GET_EVENTS_HASH)
-        }
 
         private const val HAS_VALID_EVENT_HASH = 36873697L
-        private val hasValidEventBind by lazy {
+        @JvmField
+        val hasValidEventBind =
             ObjectCalls.getMethodBind("Shortcut", "has_valid_event", HAS_VALID_EVENT_HASH)
-        }
 
         private const val MATCHES_EVENT_HASH = 3738334489L
-        private val matchesEventBind by lazy {
+        @JvmField
+        val matchesEventBind =
             ObjectCalls.getMethodBind("Shortcut", "matches_event", MATCHES_EVENT_HASH)
-        }
 
         private const val GET_AS_TEXT_HASH = 201670096L
-        private val getAsTextBind by lazy {
+        @JvmField
+        val getAsTextBind =
             ObjectCalls.getMethodBind("Shortcut", "get_as_text", GET_AS_TEXT_HASH)
-        }
     }
 }

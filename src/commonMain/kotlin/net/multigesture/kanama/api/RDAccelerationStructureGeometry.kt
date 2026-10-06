@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -73,7 +74,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setFlags(pMember: RenderingDevice.AccelerationStructureGeometryFlagBits) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, pMember.value)
     }
 
     /**
@@ -83,7 +84,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getFlags(): RenderingDevice.AccelerationStructureGeometryFlagBits {
         checkOpen()
-        return RenderingDevice.AccelerationStructureGeometryFlagBits(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
+        return RenderingDevice.AccelerationStructureGeometryFlagBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
     }
 
     /**
@@ -93,7 +94,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setVertexBuffer(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setVertexBufferBind, segment, pMember)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setVertexBufferBind, segment, pMember)
     }
 
     /**
@@ -103,7 +104,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexBuffer(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getVertexBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getVertexBufferBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setVertexOffset(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setVertexOffsetBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setVertexOffsetBind, segment, pMember)
     }
 
     /**
@@ -123,7 +124,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexOffsetBind, segment)
     }
 
     /**
@@ -133,7 +134,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setVertexStride(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setVertexStrideBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setVertexStrideBind, segment, pMember)
     }
 
     /**
@@ -143,7 +144,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexStrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexStrideBind, segment)
     }
 
     /**
@@ -153,7 +154,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setVertexCount(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setVertexCountBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setVertexCountBind, segment, pMember)
     }
 
     /**
@@ -163,7 +164,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVertexCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVertexCountBind, segment)
     }
 
     /**
@@ -173,7 +174,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setVertexFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVertexFormatBind, segment, pMember.value)
     }
 
     /**
@@ -183,7 +184,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getVertexFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, segment))
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVertexFormatBind, segment))
     }
 
     /**
@@ -193,7 +194,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setIndexBuffer(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setIndexBufferBind, segment, pMember)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setIndexBufferBind, segment, pMember)
     }
 
     /**
@@ -203,7 +204,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIndexBuffer(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getIndexBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getIndexBufferBind, segment)
     }
 
     /**
@@ -213,7 +214,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setIndexOffset(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setIndexOffsetBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setIndexOffsetBind, segment, pMember)
     }
 
     /**
@@ -223,7 +224,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIndexOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIndexOffsetBind, segment)
     }
 
     /**
@@ -233,7 +234,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setIndexCount(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setIndexCountBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setIndexCountBind, segment, pMember)
     }
 
     /**
@@ -243,7 +244,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getIndexCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getIndexCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIndexCountBind, segment)
     }
 
     companion object {
@@ -256,95 +257,97 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): RDAccelerationStructureGeometry? =
             if (handle.address() == 0L) null else RDAccelerationStructureGeometry(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FLAGS_HASH = 1046628555L
-        private val setFlagsBind by lazy {
+        @JvmField
+        val setFlagsBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_flags", SET_FLAGS_HASH)
-        }
 
         private const val GET_FLAGS_HASH = 1694887119L
-        private val getFlagsBind by lazy {
+        @JvmField
+        val getFlagsBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_flags", GET_FLAGS_HASH)
-        }
 
         private const val SET_VERTEX_BUFFER_HASH = 2722037293L
-        private val setVertexBufferBind by lazy {
+        @JvmField
+        val setVertexBufferBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_vertex_buffer", SET_VERTEX_BUFFER_HASH)
-        }
 
         private const val GET_VERTEX_BUFFER_HASH = 2944877500L
-        private val getVertexBufferBind by lazy {
+        @JvmField
+        val getVertexBufferBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_vertex_buffer", GET_VERTEX_BUFFER_HASH)
-        }
 
         private const val SET_VERTEX_OFFSET_HASH = 1286410249L
-        private val setVertexOffsetBind by lazy {
+        @JvmField
+        val setVertexOffsetBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_vertex_offset", SET_VERTEX_OFFSET_HASH)
-        }
 
         private const val GET_VERTEX_OFFSET_HASH = 3905245786L
-        private val getVertexOffsetBind by lazy {
+        @JvmField
+        val getVertexOffsetBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_vertex_offset", GET_VERTEX_OFFSET_HASH)
-        }
 
         private const val SET_VERTEX_STRIDE_HASH = 1286410249L
-        private val setVertexStrideBind by lazy {
+        @JvmField
+        val setVertexStrideBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_vertex_stride", SET_VERTEX_STRIDE_HASH)
-        }
 
         private const val GET_VERTEX_STRIDE_HASH = 3905245786L
-        private val getVertexStrideBind by lazy {
+        @JvmField
+        val getVertexStrideBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_vertex_stride", GET_VERTEX_STRIDE_HASH)
-        }
 
         private const val SET_VERTEX_COUNT_HASH = 1286410249L
-        private val setVertexCountBind by lazy {
+        @JvmField
+        val setVertexCountBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_vertex_count", SET_VERTEX_COUNT_HASH)
-        }
 
         private const val GET_VERTEX_COUNT_HASH = 3905245786L
-        private val getVertexCountBind by lazy {
+        @JvmField
+        val getVertexCountBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_vertex_count", GET_VERTEX_COUNT_HASH)
-        }
 
         private const val SET_VERTEX_FORMAT_HASH = 565531219L
-        private val setVertexFormatBind by lazy {
+        @JvmField
+        val setVertexFormatBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_vertex_format", SET_VERTEX_FORMAT_HASH)
-        }
 
         private const val GET_VERTEX_FORMAT_HASH = 2235804183L
-        private val getVertexFormatBind by lazy {
+        @JvmField
+        val getVertexFormatBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_vertex_format", GET_VERTEX_FORMAT_HASH)
-        }
 
         private const val SET_INDEX_BUFFER_HASH = 2722037293L
-        private val setIndexBufferBind by lazy {
+        @JvmField
+        val setIndexBufferBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_index_buffer", SET_INDEX_BUFFER_HASH)
-        }
 
         private const val GET_INDEX_BUFFER_HASH = 2944877500L
-        private val getIndexBufferBind by lazy {
+        @JvmField
+        val getIndexBufferBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_index_buffer", GET_INDEX_BUFFER_HASH)
-        }
 
         private const val SET_INDEX_OFFSET_HASH = 1286410249L
-        private val setIndexOffsetBind by lazy {
+        @JvmField
+        val setIndexOffsetBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_index_offset", SET_INDEX_OFFSET_HASH)
-        }
 
         private const val GET_INDEX_OFFSET_HASH = 3905245786L
-        private val getIndexOffsetBind by lazy {
+        @JvmField
+        val getIndexOffsetBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_index_offset", GET_INDEX_OFFSET_HASH)
-        }
 
         private const val SET_INDEX_COUNT_HASH = 1286410249L
-        private val setIndexCountBind by lazy {
+        @JvmField
+        val setIndexCountBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "set_index_count", SET_INDEX_COUNT_HASH)
-        }
 
         private const val GET_INDEX_COUNT_HASH = 3905245786L
-        private val getIndexCountBind by lazy {
+        @JvmField
+        val getIndexCountBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureGeometry", "get_index_count", GET_INDEX_COUNT_HASH)
-        }
     }
 }

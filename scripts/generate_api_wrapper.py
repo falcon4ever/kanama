@@ -292,6 +292,7 @@ DEFAULT_IMPORTS = {
     "JvmName": "kotlin.jvm.JvmName",
     "JvmInline": "kotlin.jvm.JvmInline",
     "JvmStatic": "kotlin.jvm.JvmStatic",
+    "JvmField": "kotlin.jvm.JvmField",
     "Vector2": "net.multigesture.kanama.types.Vector2",
     "Vector2i": "net.multigesture.kanama.types.Vector2i",
     "Vector3": "net.multigesture.kanama.types.Vector3",
@@ -373,6 +374,70 @@ IOS_EMIT_CLASSES: set[str] | None = None
 # modes); "shared" renders a class into the shared tree, where iOS decides the METHOD SET (only
 # helper shapes audited on iOS) and desktop decides the SURFACE (@JvmStatic, factory helpers).
 RENDER_TARGET = "desktop"
+
+
+# Where a generated method finds its MethodBind (task 131 item 18). The shared and desktop trees
+# keep every bind of a class in ONE holder object, `private object Binds` nested in the class (or
+# the singleton object), whose fields are bound when the holder is first used: the JVM's own class
+# initialisation is the laziness, so it stays per class (a class nobody calls binds nothing; a
+# class absent from the running engine is never touched), and after it a bind is a `static final`
+# field the JIT folds into the call -- no `Lazy.getValue` (a volatile read and a cast) per call, as
+# the per-method `by lazy` it replaces had. The desktop-only companion files (`<Class>.jvm.kt`) use
+# a top-level `<Class>JvmBinds` the same way. The iOS per-platform files keep `by lazy`
+# (see `_holder`): Kotlin/Native has no static-final fold to gain.
+BIND_HOLDER: str | None = "Binds"
+
+
+@contextmanager
+def _bind_holder(name: str | None):
+    global BIND_HOLDER
+    previous = BIND_HOLDER
+    BIND_HOLDER = name
+    try:
+        yield
+    finally:
+        BIND_HOLDER = previous
+
+
+def _holder() -> str | None:
+    """The bind holder of the file being rendered; None (per-method `by lazy`) for the iOS files."""
+    return None if RENDER_TARGET == "ios" else BIND_HOLDER
+
+
+def _bind_ref(function_name: str) -> str:
+    """The expression a generated method passes as its MethodBind."""
+    holder = _holder()
+    return f"{holder}.{function_name}Bind" if holder else f"{function_name}Bind"
+
+
+def _bind_entry(class_name: str, method: "ApiMethod", indent: int) -> str:
+    """One bind: a holder field when [BIND_HOLDER] is set, else the legacy per-method `by lazy`."""
+    pad = " " * indent
+    name = f"{method_function_name(class_name, method.name)}Bind"
+    lookup = f'ObjectCalls.getMethodBind("{class_name}", "{method.name}", {const_name(method)})'
+    if _holder() is None:
+        return "\n".join(
+            [
+                f"{pad}private const val {const_name(method)} = {method.hash}L",
+                f"{pad}private val {name} by lazy {{",
+                f"{pad}    {lookup}",
+                f"{pad}}}",
+            ],
+        )
+    return "\n".join(
+        [
+            f"{pad}private const val {const_name(method)} = {method.hash}L",
+            f"{pad}@JvmField",
+            f"{pad}val {name} =",
+            f"{pad}    {lookup}",
+        ],
+    )
+
+
+def _bind_holder_block(entries: list[str], indent: int, declaration: str) -> str:
+    """The holder object around [entries] (each rendered by [_bind_entry] at indent + 4)."""
+    pad = " " * indent
+    return "\n".join([f"{pad}{declaration} {{", "\n\n".join(entries), f"{pad}}}"])
 
 
 def _jvm_static() -> bool:
@@ -1310,7 +1375,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
             ignoreTimeScale: Boolean = false,
         ): GodotHandle = GodotHandle(
             ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
-                createTimerBind,
+                Binds.createTimerBind,
                 active().segment,
                 timeSec,
                 processAlways,
@@ -1330,7 +1395,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
         // Node.create_tween: the tree is a MainLoop, not a Node.
         @JvmStatic
         fun createTweenHandle(): GodotHandle =
-            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, active().segment))
+            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTweenBind, active().segment))
 
         suspend fun delaySeconds(
             timeSec: Double,
@@ -2678,7 +2743,7 @@ def render_method(
     singleton_expr: str = "singleton",
 ) -> str:
     function_name = method_function_name(class_name, method.name)
-    bind_name = f"{function_name}Bind"
+    bind_name = _bind_ref(function_name)
     logical_args = method.logical_arg_kinds(object_types)
     param_names = [
         arg_name_for_method(class_name, method.name, name, index)
@@ -2778,7 +2843,7 @@ def render_vararg_method(
     singleton_expr: str = "singleton",
 ) -> str:
     function_name = method_function_name(class_name, method.name)
-    bind_name = f"{function_name}Bind"
+    bind_name = _bind_ref(function_name)
     logical_args = method.logical_arg_kinds(object_types)
     param_names = [
         arg_name_for_method(class_name, method.name, name, index)
@@ -3766,16 +3831,9 @@ def render_draft(
                 static_methods.append("\n".join(f"    {line}" if line else line for line in rendered_method.splitlines()))
             else:
                 methods.append(rendered_method)
-            binds.append(
-                "\n".join(
-                    [
-                        f"        private const val {const_name(method)} = {method.hash}L",
-                        f"        private val {method_function_name(cls.name, method.name)}Bind by lazy {{",
-                        f'            ObjectCalls.getMethodBind("{cls.name}", "{method.name}", {const_name(method)})',
-                        "        }",
-                    ],
-                ),
-            )
+            binds.append(_bind_entry(cls.name, method, 8))
+            if _holder() is not None:
+                imports.add("JvmField")
 
     singleton_parent = cls.inherits in (singleton_names or set())
     parent = "GodotObject" if cls.inherits in {"", "Object"} or singleton_parent else cls.inherits
@@ -3815,7 +3873,32 @@ def render_draft(
         if singleton_constants:
             body_sections.insert(0, outdent_companion_member(singleton_constants))
         body_sections.append(render_singleton_wrap_helpers(cls.name))
-        bind_sections = [outdent_companion_member(section) for section in binds]
+        if _holder() is None:
+            bind_sections = [outdent_companion_member(section) for section in binds]
+        elif binds:
+            # The engine singleton lives in the holder too, so a call reads two static finals.
+            singleton_entry = "\n".join(
+                [
+                    "        @JvmField",
+                    f'        val singleton = ObjectCalls.getSingleton("{cls.name}")',
+                ],
+            )
+            bind_sections = [
+                _bind_holder_block([singleton_entry, *binds], 4, f"private object {BIND_HOLDER}")
+            ]
+        else:
+            bind_sections = []
+        if _holder() is not None and binds:
+            singleton_decl = [
+                f"    private inline val singleton: {_segment_type()}",
+                f"        get() = {BIND_HOLDER}.singleton",
+            ]
+        else:
+            singleton_decl = [
+                f"    private val singleton: {_segment_type()} by lazy {{",
+                f'        ObjectCalls.getSingleton("{cls.name}")',
+                "    }",
+            ]
         content = "\n".join(
             [
                 "package net.multigesture.kanama.api",
@@ -3826,9 +3909,7 @@ def render_draft(
                 f" * Generated from Godot docs: {cls.name}",
                 " */",
                 f"{actual_prefix}object {cls.name} {{",
-                f"    private val singleton: {_segment_type()} by lazy {{",
-                f'        ObjectCalls.getSingleton("{cls.name}")',
-                "    }",
+                *singleton_decl,
                 "",
                 "\n\n".join(body_sections),
                 "",
@@ -3854,7 +3935,11 @@ def render_draft(
         factory_helpers = render_factory_helpers(cls.name, is_resource_like(cls.name, api_classes))
         if factory_helpers:
             companion_sections.append(factory_helpers)
-        companion_sections.append("\n\n".join(binds) if binds else "        // No MethodBinds emitted yet.")
+        if _holder() is None:
+            companion_sections.append("\n\n".join(binds) if binds else "        // No MethodBinds emitted yet.")
+        holder: list[str] = []
+        if _holder() is not None and binds:
+            holder = ["", _bind_holder_block(binds, 4, f"private object {BIND_HOLDER}")]
         content = "\n".join(
             [
                 "package net.multigesture.kanama.api",
@@ -3870,6 +3955,7 @@ def render_draft(
                 "    companion object {",
                 "\n\n".join(companion_sections),
                 "    }",
+                *holder,
                 "}",
                 "",
             ],
@@ -4416,18 +4502,6 @@ def _to_extension(member: str, receiver: str) -> str:
     return "\n".join(out)
 
 
-def _bind_section(class_name: str, method: ApiMethod, indent: int) -> str:
-    pad = " " * indent
-    return "\n".join(
-        [
-            f"{pad}private const val {const_name(method)} = {method.hash}L",
-            f"{pad}private val {method_function_name(class_name, method.name)}Bind by lazy {{",
-            f'{pad}    ObjectCalls.getMethodBind("{class_name}", "{method.name}", {const_name(method)})',
-            f"{pad}}}",
-        ],
-    )
-
-
 def _wrap_comment(prefix: str, items: list[str], width: int = 100) -> list[str]:
     lines: list[str] = []
     current = prefix
@@ -4536,7 +4610,10 @@ def render_shared_class(
         member_names: list[str] = []
         waits_on: set[str] = set()
         singleton_expr = f"{cls.name[0].lower()}{cls.name[1:]}Singleton"
-        with _mode(False):
+        # The companion's binds live in a file-level holder named per class: a top-level `private
+        # object` still compiles to a package-level JVM class, so one name per file would clash.
+        companion_holder = f"{cls.name}JvmBinds"
+        with _mode(False), _bind_holder(companion_holder):
             for method in companion_methods:
                 for kind in (*method.logical_arg_kinds(object_types), method.logical_return_kind(object_types)):
                     _add_kind_imports(kind, imports)
@@ -4578,6 +4655,8 @@ def render_shared_class(
 
         desktop_companion = None
         if members:
+            if companion_methods:
+                imports.add("JvmField")
             tokens = sorted(waits_on)
             header = [
                 "package net.multigesture.kanama.api",
@@ -4592,7 +4671,8 @@ def render_shared_class(
                 "// Index: docs/reference/generated/ios-shape-gap.md",
                 "",
             ]
-            binds = [_bind_section(cls.name, method, 0) for method in companion_methods]
+            with _bind_holder(companion_holder):
+                binds = [_bind_entry(cls.name, method, 4) for method in companion_methods]
             sections = ["\n\n".join(members)]
             if singleton:
                 sections.append(
@@ -4601,7 +4681,7 @@ def render_shared_class(
                     "}"
                 )
             if binds:
-                sections.append("\n\n".join(binds))
+                sections.append(_bind_holder_block(binds, 0, f"private object {companion_holder}"))
             desktop_companion = _add_required_import(
                 _add_null_segment_import("\n".join(header) + "\n" + "\n\n".join(sections) + "\n")
             )

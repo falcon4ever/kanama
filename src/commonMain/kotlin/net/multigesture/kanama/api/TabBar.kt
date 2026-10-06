@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -105,7 +106,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_count
      */
     fun setTabCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTabCountBind, segment, count)
     }
 
     /**
@@ -114,7 +115,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_count
      */
     fun getTabCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTabCountBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_current_tab
      */
     fun setCurrentTab(tabIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(setCurrentTabBind, segment, tabIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCurrentTabBind, segment, tabIdx)
     }
 
     /**
@@ -134,7 +135,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_current_tab
      */
     fun getCurrentTab(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentTabBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentTabBind, segment)
     }
 
     /**
@@ -143,7 +144,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_previous_tab
      */
     fun getPreviousTab(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPreviousTabBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPreviousTabBind, segment)
     }
 
     /**
@@ -153,7 +154,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.select_previous_available
      */
     fun selectPreviousAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(selectPreviousAvailableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.selectPreviousAvailableBind, segment)
     }
 
     /**
@@ -163,7 +164,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.select_next_available
      */
     fun selectNextAvailable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(selectNextAvailableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.selectNextAvailableBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_title
      */
     fun setTabTitle(tabIdx: Int, title: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTitleBind, segment, tabIdx, title)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setTabTitleBind, segment, tabIdx, title)
     }
 
     /**
@@ -181,7 +182,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_title
      */
     fun getTabTitle(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabTitleBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getTabTitleBind, segment, tabIdx)
     }
 
     /**
@@ -192,7 +193,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_tooltip
      */
     fun setTabTooltip(tabIdx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabTooltipBind, segment, tabIdx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setTabTooltipBind, segment, tabIdx, tooltip)
     }
 
     /**
@@ -201,7 +202,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_tooltip
      */
     fun getTabTooltip(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabTooltipBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getTabTooltipBind, segment, tabIdx)
     }
 
     /**
@@ -210,7 +211,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_text_direction
      */
     fun setTabTextDirection(tabIdx: Int, direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, segment, tabIdx, direction.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTabTextDirectionBind, segment, tabIdx, direction.value)
     }
 
     /**
@@ -219,7 +220,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_text_direction
      */
     fun getTabTextDirection(tabIdx: Int): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, segment, tabIdx))
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTabTextDirectionBind, segment, tabIdx))
     }
 
     /**
@@ -230,7 +231,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_language
      */
     fun setTabLanguage(tabIdx: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTabLanguageBind, segment, tabIdx, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setTabLanguageBind, segment, tabIdx, language)
     }
 
     /**
@@ -239,7 +240,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_language
      */
     fun getTabLanguage(tabIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getTabLanguageBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getTabLanguageBind, segment, tabIdx)
     }
 
     /**
@@ -248,7 +249,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_icon
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -257,7 +258,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_icon
      */
     fun getTabIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, segment, tabIdx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTabIconBind, segment, tabIdx))
     }
 
     /**
@@ -268,7 +269,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_icon_max_width
      */
     fun setTabIconMaxWidth(tabIdx: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTabIconMaxWidthBind, segment, tabIdx, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setTabIconMaxWidthBind, segment, tabIdx, width)
     }
 
     /**
@@ -277,7 +278,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_icon_max_width
      */
     fun getTabIconMaxWidth(tabIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTabIconMaxWidthBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getTabIconMaxWidthBind, segment, tabIdx)
     }
 
     /**
@@ -288,7 +289,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_button_icon
      */
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -298,7 +299,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_button_icon
      */
     fun getTabButtonIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, segment, tabIdx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTabButtonIconBind, segment, tabIdx))
     }
 
     /**
@@ -307,7 +308,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_disabled
      */
     fun setTabDisabled(tabIdx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabDisabledBind, segment, tabIdx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setTabDisabledBind, segment, tabIdx, disabled)
     }
 
     /**
@@ -316,7 +317,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.is_tab_disabled
      */
     fun isTabDisabled(tabIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTabDisabledBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isTabDisabledBind, segment, tabIdx)
     }
 
     /**
@@ -325,7 +326,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_hidden
      */
     fun setTabHidden(tabIdx: Int, hidden: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTabHiddenBind, segment, tabIdx, hidden)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setTabHiddenBind, segment, tabIdx, hidden)
     }
 
     /**
@@ -334,7 +335,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.is_tab_hidden
      */
     fun isTabHidden(tabIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTabHiddenBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isTabHiddenBind, segment, tabIdx)
     }
 
     /**
@@ -344,7 +345,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_metadata
      */
     fun setTabMetadata(tabIdx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setTabMetadataBind, segment, tabIdx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setTabMetadataBind, segment, tabIdx, metadata)
     }
 
     /**
@@ -354,7 +355,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_metadata
      */
     fun getTabMetadata(tabIdx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getTabMetadataBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getTabMetadataBind, segment, tabIdx)
     }
 
     /**
@@ -363,7 +364,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.remove_tab
      */
     fun removeTab(tabIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeTabBind, segment, tabIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeTabBind, segment, tabIdx)
     }
 
     /**
@@ -372,7 +373,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.add_tab
      */
     fun addTab(title: String = "", icon: Texture2D?) {
-        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, segment, title, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringAndObjectArg(Binds.addTabBind, segment, title, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -382,7 +383,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_idx_at_point
      */
     fun getTabIdxAtPoint(point: Vector2): Int {
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(getTabIdxAtPointBind, segment, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.getTabIdxAtPointBind, segment, point)
     }
 
     /**
@@ -391,7 +392,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_alignment
      */
     fun setTabAlignment(alignment: TabBar.AlignmentMode) {
-        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTabAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -400,7 +401,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_alignment
      */
     fun getTabAlignment(): TabBar.AlignmentMode {
-        return TabBar.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment))
+        return TabBar.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTabAlignmentBind, segment))
     }
 
     /**
@@ -410,7 +411,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_clip_tabs
      */
     fun setClipTabs(clipTabs: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipTabsBind, segment, clipTabs)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setClipTabsBind, segment, clipTabs)
     }
 
     /**
@@ -420,7 +421,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_clip_tabs
      */
     fun getClipTabs(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getClipTabsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getClipTabsBind, segment)
     }
 
     /**
@@ -429,7 +430,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_offset
      */
     fun getTabOffset(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTabOffsetBind, segment)
     }
 
     /**
@@ -439,7 +440,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_offset_buttons_visible
      */
     fun getOffsetButtonsVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOffsetButtonsVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getOffsetButtonsVisibleBind, segment)
     }
 
     /**
@@ -448,7 +449,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.ensure_tab_visible
      */
     fun ensureTabVisible(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(ensureTabVisibleBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.ensureTabVisibleBind, segment, idx)
     }
 
     /**
@@ -457,7 +458,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_rect
      */
     fun getTabRect(tabIdx: Int): Rect2 {
-        return ObjectCalls.ptrcallWithIntArgRetRect2(getTabRectBind, segment, tabIdx)
+        return ObjectCalls.ptrcallWithIntArgRetRect2(Binds.getTabRectBind, segment, tabIdx)
     }
 
     /**
@@ -466,7 +467,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.move_tab
      */
     fun moveTab(from: Int, to: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(moveTabBind, segment, from, to)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveTabBind, segment, from, to)
     }
 
     /**
@@ -475,7 +476,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_close_with_middle_mouse
      */
     fun setCloseWithMiddleMouse(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCloseWithMiddleMouseBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCloseWithMiddleMouseBind, segment, enabled)
     }
 
     /**
@@ -484,7 +485,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_close_with_middle_mouse
      */
     fun getCloseWithMiddleMouse(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCloseWithMiddleMouseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCloseWithMiddleMouseBind, segment)
     }
 
     /**
@@ -493,7 +494,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_close_display_policy
      */
     fun setTabCloseDisplayPolicy(policy: TabBar.CloseButtonDisplayPolicy) {
-        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, segment, policy.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTabCloseDisplayPolicyBind, segment, policy.value)
     }
 
     /**
@@ -502,7 +503,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tab_close_display_policy
      */
     fun getTabCloseDisplayPolicy(): TabBar.CloseButtonDisplayPolicy {
-        return TabBar.CloseButtonDisplayPolicy(ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, segment))
+        return TabBar.CloseButtonDisplayPolicy(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTabCloseDisplayPolicyBind, segment))
     }
 
     /**
@@ -511,7 +512,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_max_tab_width
      */
     fun setMaxTabWidth(width: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxTabWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxTabWidthBind, segment, width)
     }
 
     /**
@@ -520,7 +521,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_max_tab_width
      */
     fun getMaxTabWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxTabWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxTabWidthBind, segment)
     }
 
     /**
@@ -529,7 +530,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_scrolling_enabled
      */
     fun setScrollingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollingEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollingEnabledBind, segment, enabled)
     }
 
     /**
@@ -538,7 +539,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_scrolling_enabled
      */
     fun getScrollingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getScrollingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getScrollingEnabledBind, segment)
     }
 
     /**
@@ -547,7 +548,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_drag_to_rearrange_enabled
      */
     fun setDragToRearrangeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragToRearrangeEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragToRearrangeEnabledBind, segment, enabled)
     }
 
     /**
@@ -556,7 +557,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_drag_to_rearrange_enabled
      */
     fun getDragToRearrangeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDragToRearrangeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDragToRearrangeEnabledBind, segment)
     }
 
     /**
@@ -567,7 +568,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_switch_on_drag_hover
      */
     fun setSwitchOnDragHover(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnDragHoverBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSwitchOnDragHoverBind, segment, enabled)
     }
 
     /**
@@ -578,7 +579,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_switch_on_drag_hover
      */
     fun getSwitchOnDragHover(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSwitchOnDragHoverBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSwitchOnDragHoverBind, segment)
     }
 
     /**
@@ -589,7 +590,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tabs_rearrange_group
      */
     fun setTabsRearrangeGroup(groupId: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabsRearrangeGroupBind, segment, groupId)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTabsRearrangeGroupBind, segment, groupId)
     }
 
     /**
@@ -600,7 +601,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_tabs_rearrange_group
      */
     fun getTabsRearrangeGroup(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabsRearrangeGroupBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTabsRearrangeGroupBind, segment)
     }
 
     /**
@@ -609,7 +610,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_scroll_to_selected
      */
     fun setScrollToSelected(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollToSelectedBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollToSelectedBind, segment, enabled)
     }
 
     /**
@@ -618,7 +619,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_scroll_to_selected
      */
     fun getScrollToSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getScrollToSelectedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getScrollToSelectedBind, segment)
     }
 
     /**
@@ -627,7 +628,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_select_with_rmb
      */
     fun setSelectWithRmb(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectWithRmbBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectWithRmbBind, segment, enabled)
     }
 
     /**
@@ -636,7 +637,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_select_with_rmb
      */
     fun getSelectWithRmb(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSelectWithRmbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSelectWithRmbBind, segment)
     }
 
     /**
@@ -646,7 +647,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_deselect_enabled
      */
     fun setDeselectEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeselectEnabledBind, segment, enabled)
     }
 
     /**
@@ -656,7 +657,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.get_deselect_enabled
      */
     fun getDeselectEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDeselectEnabledBind, segment)
     }
 
     /**
@@ -665,7 +666,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.clear_tabs
      */
     fun clearTabs() {
-        ObjectCalls.ptrcallNoArgs(clearTabsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearTabsBind, segment)
     }
 
     /** Signal `tab_selected(tab: int)`; see [TypedSignal]. */
@@ -798,305 +799,307 @@ class TabBar(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TabBar? =
             if (handle.address() == 0L) null else TabBar(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TAB_COUNT_HASH = 1286410249L
-        private val setTabCountBind by lazy {
+        @JvmField
+        val setTabCountBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_count", SET_TAB_COUNT_HASH)
-        }
 
         private const val GET_TAB_COUNT_HASH = 3905245786L
-        private val getTabCountBind by lazy {
+        @JvmField
+        val getTabCountBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_count", GET_TAB_COUNT_HASH)
-        }
 
         private const val SET_CURRENT_TAB_HASH = 1286410249L
-        private val setCurrentTabBind by lazy {
+        @JvmField
+        val setCurrentTabBind =
             ObjectCalls.getMethodBind("TabBar", "set_current_tab", SET_CURRENT_TAB_HASH)
-        }
 
         private const val GET_CURRENT_TAB_HASH = 3905245786L
-        private val getCurrentTabBind by lazy {
+        @JvmField
+        val getCurrentTabBind =
             ObjectCalls.getMethodBind("TabBar", "get_current_tab", GET_CURRENT_TAB_HASH)
-        }
 
         private const val GET_PREVIOUS_TAB_HASH = 3905245786L
-        private val getPreviousTabBind by lazy {
+        @JvmField
+        val getPreviousTabBind =
             ObjectCalls.getMethodBind("TabBar", "get_previous_tab", GET_PREVIOUS_TAB_HASH)
-        }
 
         private const val SELECT_PREVIOUS_AVAILABLE_HASH = 2240911060L
-        private val selectPreviousAvailableBind by lazy {
+        @JvmField
+        val selectPreviousAvailableBind =
             ObjectCalls.getMethodBind("TabBar", "select_previous_available", SELECT_PREVIOUS_AVAILABLE_HASH)
-        }
 
         private const val SELECT_NEXT_AVAILABLE_HASH = 2240911060L
-        private val selectNextAvailableBind by lazy {
+        @JvmField
+        val selectNextAvailableBind =
             ObjectCalls.getMethodBind("TabBar", "select_next_available", SELECT_NEXT_AVAILABLE_HASH)
-        }
 
         private const val SET_TAB_TITLE_HASH = 501894301L
-        private val setTabTitleBind by lazy {
+        @JvmField
+        val setTabTitleBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_title", SET_TAB_TITLE_HASH)
-        }
 
         private const val GET_TAB_TITLE_HASH = 844755477L
-        private val getTabTitleBind by lazy {
+        @JvmField
+        val getTabTitleBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_title", GET_TAB_TITLE_HASH)
-        }
 
         private const val SET_TAB_TOOLTIP_HASH = 501894301L
-        private val setTabTooltipBind by lazy {
+        @JvmField
+        val setTabTooltipBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_tooltip", SET_TAB_TOOLTIP_HASH)
-        }
 
         private const val GET_TAB_TOOLTIP_HASH = 844755477L
-        private val getTabTooltipBind by lazy {
+        @JvmField
+        val getTabTooltipBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_tooltip", GET_TAB_TOOLTIP_HASH)
-        }
 
         private const val SET_TAB_TEXT_DIRECTION_HASH = 1707680378L
-        private val setTabTextDirectionBind by lazy {
+        @JvmField
+        val setTabTextDirectionBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_text_direction", SET_TAB_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TAB_TEXT_DIRECTION_HASH = 4235602388L
-        private val getTabTextDirectionBind by lazy {
+        @JvmField
+        val getTabTextDirectionBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_text_direction", GET_TAB_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_TAB_LANGUAGE_HASH = 501894301L
-        private val setTabLanguageBind by lazy {
+        @JvmField
+        val setTabLanguageBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_language", SET_TAB_LANGUAGE_HASH)
-        }
 
         private const val GET_TAB_LANGUAGE_HASH = 844755477L
-        private val getTabLanguageBind by lazy {
+        @JvmField
+        val getTabLanguageBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_language", GET_TAB_LANGUAGE_HASH)
-        }
 
         private const val SET_TAB_ICON_HASH = 666127730L
-        private val setTabIconBind by lazy {
+        @JvmField
+        val setTabIconBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_icon", SET_TAB_ICON_HASH)
-        }
 
         private const val GET_TAB_ICON_HASH = 3536238170L
-        private val getTabIconBind by lazy {
+        @JvmField
+        val getTabIconBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_icon", GET_TAB_ICON_HASH)
-        }
 
         private const val SET_TAB_ICON_MAX_WIDTH_HASH = 3937882851L
-        private val setTabIconMaxWidthBind by lazy {
+        @JvmField
+        val setTabIconMaxWidthBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_icon_max_width", SET_TAB_ICON_MAX_WIDTH_HASH)
-        }
 
         private const val GET_TAB_ICON_MAX_WIDTH_HASH = 923996154L
-        private val getTabIconMaxWidthBind by lazy {
+        @JvmField
+        val getTabIconMaxWidthBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_icon_max_width", GET_TAB_ICON_MAX_WIDTH_HASH)
-        }
 
         private const val SET_TAB_BUTTON_ICON_HASH = 666127730L
-        private val setTabButtonIconBind by lazy {
+        @JvmField
+        val setTabButtonIconBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_button_icon", SET_TAB_BUTTON_ICON_HASH)
-        }
 
         private const val GET_TAB_BUTTON_ICON_HASH = 3536238170L
-        private val getTabButtonIconBind by lazy {
+        @JvmField
+        val getTabButtonIconBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_button_icon", GET_TAB_BUTTON_ICON_HASH)
-        }
 
         private const val SET_TAB_DISABLED_HASH = 300928843L
-        private val setTabDisabledBind by lazy {
+        @JvmField
+        val setTabDisabledBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_disabled", SET_TAB_DISABLED_HASH)
-        }
 
         private const val IS_TAB_DISABLED_HASH = 1116898809L
-        private val isTabDisabledBind by lazy {
+        @JvmField
+        val isTabDisabledBind =
             ObjectCalls.getMethodBind("TabBar", "is_tab_disabled", IS_TAB_DISABLED_HASH)
-        }
 
         private const val SET_TAB_HIDDEN_HASH = 300928843L
-        private val setTabHiddenBind by lazy {
+        @JvmField
+        val setTabHiddenBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_hidden", SET_TAB_HIDDEN_HASH)
-        }
 
         private const val IS_TAB_HIDDEN_HASH = 1116898809L
-        private val isTabHiddenBind by lazy {
+        @JvmField
+        val isTabHiddenBind =
             ObjectCalls.getMethodBind("TabBar", "is_tab_hidden", IS_TAB_HIDDEN_HASH)
-        }
 
         private const val SET_TAB_METADATA_HASH = 2152698145L
-        private val setTabMetadataBind by lazy {
+        @JvmField
+        val setTabMetadataBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_metadata", SET_TAB_METADATA_HASH)
-        }
 
         private const val GET_TAB_METADATA_HASH = 4227898402L
-        private val getTabMetadataBind by lazy {
+        @JvmField
+        val getTabMetadataBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_metadata", GET_TAB_METADATA_HASH)
-        }
 
         private const val REMOVE_TAB_HASH = 1286410249L
-        private val removeTabBind by lazy {
+        @JvmField
+        val removeTabBind =
             ObjectCalls.getMethodBind("TabBar", "remove_tab", REMOVE_TAB_HASH)
-        }
 
         private const val ADD_TAB_HASH = 1465444425L
-        private val addTabBind by lazy {
+        @JvmField
+        val addTabBind =
             ObjectCalls.getMethodBind("TabBar", "add_tab", ADD_TAB_HASH)
-        }
 
         private const val GET_TAB_IDX_AT_POINT_HASH = 3820158470L
-        private val getTabIdxAtPointBind by lazy {
+        @JvmField
+        val getTabIdxAtPointBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_idx_at_point", GET_TAB_IDX_AT_POINT_HASH)
-        }
 
         private const val SET_TAB_ALIGNMENT_HASH = 2413632353L
-        private val setTabAlignmentBind by lazy {
+        @JvmField
+        val setTabAlignmentBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_alignment", SET_TAB_ALIGNMENT_HASH)
-        }
 
         private const val GET_TAB_ALIGNMENT_HASH = 2178122193L
-        private val getTabAlignmentBind by lazy {
+        @JvmField
+        val getTabAlignmentBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_alignment", GET_TAB_ALIGNMENT_HASH)
-        }
 
         private const val SET_CLIP_TABS_HASH = 2586408642L
-        private val setClipTabsBind by lazy {
+        @JvmField
+        val setClipTabsBind =
             ObjectCalls.getMethodBind("TabBar", "set_clip_tabs", SET_CLIP_TABS_HASH)
-        }
 
         private const val GET_CLIP_TABS_HASH = 36873697L
-        private val getClipTabsBind by lazy {
+        @JvmField
+        val getClipTabsBind =
             ObjectCalls.getMethodBind("TabBar", "get_clip_tabs", GET_CLIP_TABS_HASH)
-        }
 
         private const val GET_TAB_OFFSET_HASH = 3905245786L
-        private val getTabOffsetBind by lazy {
+        @JvmField
+        val getTabOffsetBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_offset", GET_TAB_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_BUTTONS_VISIBLE_HASH = 36873697L
-        private val getOffsetButtonsVisibleBind by lazy {
+        @JvmField
+        val getOffsetButtonsVisibleBind =
             ObjectCalls.getMethodBind("TabBar", "get_offset_buttons_visible", GET_OFFSET_BUTTONS_VISIBLE_HASH)
-        }
 
         private const val ENSURE_TAB_VISIBLE_HASH = 1286410249L
-        private val ensureTabVisibleBind by lazy {
+        @JvmField
+        val ensureTabVisibleBind =
             ObjectCalls.getMethodBind("TabBar", "ensure_tab_visible", ENSURE_TAB_VISIBLE_HASH)
-        }
 
         private const val GET_TAB_RECT_HASH = 3327874267L
-        private val getTabRectBind by lazy {
+        @JvmField
+        val getTabRectBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_rect", GET_TAB_RECT_HASH)
-        }
 
         private const val MOVE_TAB_HASH = 3937882851L
-        private val moveTabBind by lazy {
+        @JvmField
+        val moveTabBind =
             ObjectCalls.getMethodBind("TabBar", "move_tab", MOVE_TAB_HASH)
-        }
 
         private const val SET_CLOSE_WITH_MIDDLE_MOUSE_HASH = 2586408642L
-        private val setCloseWithMiddleMouseBind by lazy {
+        @JvmField
+        val setCloseWithMiddleMouseBind =
             ObjectCalls.getMethodBind("TabBar", "set_close_with_middle_mouse", SET_CLOSE_WITH_MIDDLE_MOUSE_HASH)
-        }
 
         private const val GET_CLOSE_WITH_MIDDLE_MOUSE_HASH = 36873697L
-        private val getCloseWithMiddleMouseBind by lazy {
+        @JvmField
+        val getCloseWithMiddleMouseBind =
             ObjectCalls.getMethodBind("TabBar", "get_close_with_middle_mouse", GET_CLOSE_WITH_MIDDLE_MOUSE_HASH)
-        }
 
         private const val SET_TAB_CLOSE_DISPLAY_POLICY_HASH = 2212906737L
-        private val setTabCloseDisplayPolicyBind by lazy {
+        @JvmField
+        val setTabCloseDisplayPolicyBind =
             ObjectCalls.getMethodBind("TabBar", "set_tab_close_display_policy", SET_TAB_CLOSE_DISPLAY_POLICY_HASH)
-        }
 
         private const val GET_TAB_CLOSE_DISPLAY_POLICY_HASH = 2956568028L
-        private val getTabCloseDisplayPolicyBind by lazy {
+        @JvmField
+        val getTabCloseDisplayPolicyBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_close_display_policy", GET_TAB_CLOSE_DISPLAY_POLICY_HASH)
-        }
 
         private const val SET_MAX_TAB_WIDTH_HASH = 1286410249L
-        private val setMaxTabWidthBind by lazy {
+        @JvmField
+        val setMaxTabWidthBind =
             ObjectCalls.getMethodBind("TabBar", "set_max_tab_width", SET_MAX_TAB_WIDTH_HASH)
-        }
 
         private const val GET_MAX_TAB_WIDTH_HASH = 3905245786L
-        private val getMaxTabWidthBind by lazy {
+        @JvmField
+        val getMaxTabWidthBind =
             ObjectCalls.getMethodBind("TabBar", "get_max_tab_width", GET_MAX_TAB_WIDTH_HASH)
-        }
 
         private const val SET_SCROLLING_ENABLED_HASH = 2586408642L
-        private val setScrollingEnabledBind by lazy {
+        @JvmField
+        val setScrollingEnabledBind =
             ObjectCalls.getMethodBind("TabBar", "set_scrolling_enabled", SET_SCROLLING_ENABLED_HASH)
-        }
 
         private const val GET_SCROLLING_ENABLED_HASH = 36873697L
-        private val getScrollingEnabledBind by lazy {
+        @JvmField
+        val getScrollingEnabledBind =
             ObjectCalls.getMethodBind("TabBar", "get_scrolling_enabled", GET_SCROLLING_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_TO_REARRANGE_ENABLED_HASH = 2586408642L
-        private val setDragToRearrangeEnabledBind by lazy {
+        @JvmField
+        val setDragToRearrangeEnabledBind =
             ObjectCalls.getMethodBind("TabBar", "set_drag_to_rearrange_enabled", SET_DRAG_TO_REARRANGE_ENABLED_HASH)
-        }
 
         private const val GET_DRAG_TO_REARRANGE_ENABLED_HASH = 36873697L
-        private val getDragToRearrangeEnabledBind by lazy {
+        @JvmField
+        val getDragToRearrangeEnabledBind =
             ObjectCalls.getMethodBind("TabBar", "get_drag_to_rearrange_enabled", GET_DRAG_TO_REARRANGE_ENABLED_HASH)
-        }
 
         private const val SET_SWITCH_ON_DRAG_HOVER_HASH = 2586408642L
-        private val setSwitchOnDragHoverBind by lazy {
+        @JvmField
+        val setSwitchOnDragHoverBind =
             ObjectCalls.getMethodBind("TabBar", "set_switch_on_drag_hover", SET_SWITCH_ON_DRAG_HOVER_HASH)
-        }
 
         private const val GET_SWITCH_ON_DRAG_HOVER_HASH = 36873697L
-        private val getSwitchOnDragHoverBind by lazy {
+        @JvmField
+        val getSwitchOnDragHoverBind =
             ObjectCalls.getMethodBind("TabBar", "get_switch_on_drag_hover", GET_SWITCH_ON_DRAG_HOVER_HASH)
-        }
 
         private const val SET_TABS_REARRANGE_GROUP_HASH = 1286410249L
-        private val setTabsRearrangeGroupBind by lazy {
+        @JvmField
+        val setTabsRearrangeGroupBind =
             ObjectCalls.getMethodBind("TabBar", "set_tabs_rearrange_group", SET_TABS_REARRANGE_GROUP_HASH)
-        }
 
         private const val GET_TABS_REARRANGE_GROUP_HASH = 3905245786L
-        private val getTabsRearrangeGroupBind by lazy {
+        @JvmField
+        val getTabsRearrangeGroupBind =
             ObjectCalls.getMethodBind("TabBar", "get_tabs_rearrange_group", GET_TABS_REARRANGE_GROUP_HASH)
-        }
 
         private const val SET_SCROLL_TO_SELECTED_HASH = 2586408642L
-        private val setScrollToSelectedBind by lazy {
+        @JvmField
+        val setScrollToSelectedBind =
             ObjectCalls.getMethodBind("TabBar", "set_scroll_to_selected", SET_SCROLL_TO_SELECTED_HASH)
-        }
 
         private const val GET_SCROLL_TO_SELECTED_HASH = 36873697L
-        private val getScrollToSelectedBind by lazy {
+        @JvmField
+        val getScrollToSelectedBind =
             ObjectCalls.getMethodBind("TabBar", "get_scroll_to_selected", GET_SCROLL_TO_SELECTED_HASH)
-        }
 
         private const val SET_SELECT_WITH_RMB_HASH = 2586408642L
-        private val setSelectWithRmbBind by lazy {
+        @JvmField
+        val setSelectWithRmbBind =
             ObjectCalls.getMethodBind("TabBar", "set_select_with_rmb", SET_SELECT_WITH_RMB_HASH)
-        }
 
         private const val GET_SELECT_WITH_RMB_HASH = 36873697L
-        private val getSelectWithRmbBind by lazy {
+        @JvmField
+        val getSelectWithRmbBind =
             ObjectCalls.getMethodBind("TabBar", "get_select_with_rmb", GET_SELECT_WITH_RMB_HASH)
-        }
 
         private const val SET_DESELECT_ENABLED_HASH = 2586408642L
-        private val setDeselectEnabledBind by lazy {
+        @JvmField
+        val setDeselectEnabledBind =
             ObjectCalls.getMethodBind("TabBar", "set_deselect_enabled", SET_DESELECT_ENABLED_HASH)
-        }
 
         private const val GET_DESELECT_ENABLED_HASH = 36873697L
-        private val getDeselectEnabledBind by lazy {
+        @JvmField
+        val getDeselectEnabledBind =
             ObjectCalls.getMethodBind("TabBar", "get_deselect_enabled", GET_DESELECT_ENABLED_HASH)
-        }
 
         private const val CLEAR_TABS_HASH = 3218959716L
-        private val clearTabsBind by lazy {
+        @JvmField
+        val clearTabsBind =
             ObjectCalls.getMethodBind("TabBar", "clear_tabs", CLEAR_TABS_HASH)
-        }
     }
 }

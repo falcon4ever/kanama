@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -15,9 +16,8 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: NativeMenu
  */
 object NativeMenu {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("NativeMenu")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Returns `true` if the specified `feature` is supported by the current `NativeMenu`, `false`
@@ -27,7 +27,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun hasFeature(feature: NativeMenu.Feature): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasFeatureBind, singleton, feature.value)
     }
 
     /**
@@ -38,7 +38,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun hasSystemMenu(menuId: NativeMenu.SystemMenus): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasSystemMenuBind, singleton, menuId.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasSystemMenuBind, singleton, menuId.value)
     }
 
     /**
@@ -48,7 +48,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getSystemMenu(menuId: NativeMenu.SystemMenus): RID {
-        return ObjectCalls.ptrcallWithLongArgRetRID(getSystemMenuBind, singleton, menuId.value)
+        return ObjectCalls.ptrcallWithLongArgRetRID(Binds.getSystemMenuBind, singleton, menuId.value)
     }
 
     /**
@@ -58,7 +58,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getSystemMenuName(menuId: NativeMenu.SystemMenus): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuNameBind, singleton, menuId.value)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getSystemMenuNameBind, singleton, menuId.value)
     }
 
     /**
@@ -68,7 +68,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getSystemMenuText(menuId: NativeMenu.SystemMenus): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuTextBind, singleton, menuId.value)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getSystemMenuTextBind, singleton, menuId.value)
     }
 
     /**
@@ -78,7 +78,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setSystemMenuText(menuId: NativeMenu.SystemMenus, name: String) {
-        ObjectCalls.ptrcallWithLongAndStringArg(setSystemMenuTextBind, singleton, menuId.value, name)
+        ObjectCalls.ptrcallWithLongAndStringArg(Binds.setSystemMenuTextBind, singleton, menuId.value, name)
     }
 
     /**
@@ -88,7 +88,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun createMenu(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(createMenuBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.createMenuBind, singleton)
     }
 
     /**
@@ -99,7 +99,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun hasMenu(rid: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(hasMenuBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.hasMenuBind, singleton, rid)
     }
 
     /**
@@ -110,7 +110,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun freeMenu(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeMenuBind, singleton, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeMenuBind, singleton, rid)
     }
 
     /**
@@ -120,7 +120,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getSize(rid: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(getSizeBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.getSizeBind, singleton, rid)
     }
 
     /**
@@ -131,7 +131,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun popup(rid: RID, position: Vector2i) {
-        ObjectCalls.ptrcallWithRIDAndVector2iArg(popupBind, singleton, rid, position)
+        ObjectCalls.ptrcallWithRIDAndVector2iArg(Binds.popupBind, singleton, rid, position)
     }
 
     /**
@@ -142,7 +142,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setInterfaceDirection(rid: RID, isRtl: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(setInterfaceDirectionBind, singleton, rid, isRtl)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.setInterfaceDirectionBind, singleton, rid, isRtl)
     }
 
     /**
@@ -153,7 +153,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setPopupOpenCallback(rid: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(setPopupOpenCallbackBind, singleton, rid, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.setPopupOpenCallbackBind, singleton, rid, callback.target.segment, callback.method)
     }
 
     /**
@@ -163,7 +163,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getPopupOpenCallback(rid: RID): GodotCallable? {
-        return ObjectCalls.ptrcallWithRIDArgRetCallable(getPopupOpenCallbackBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetCallable(Binds.getPopupOpenCallbackBind, singleton, rid)
     }
 
     /**
@@ -176,7 +176,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setPopupCloseCallback(rid: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(setPopupCloseCallbackBind, singleton, rid, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.setPopupCloseCallbackBind, singleton, rid, callback.target.segment, callback.method)
     }
 
     /**
@@ -186,7 +186,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getPopupCloseCallback(rid: RID): GodotCallable? {
-        return ObjectCalls.ptrcallWithRIDArgRetCallable(getPopupCloseCallbackBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetCallable(Binds.getPopupCloseCallbackBind, singleton, rid)
     }
 
     /**
@@ -196,7 +196,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setMinimumWidth(rid: RID, width: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(setMinimumWidthBind, singleton, rid, width)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.setMinimumWidthBind, singleton, rid, width)
     }
 
     /**
@@ -206,7 +206,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getMinimumWidth(rid: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(getMinimumWidthBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.getMinimumWidthBind, singleton, rid)
     }
 
     /**
@@ -216,7 +216,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isOpened(rid: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(isOpenedBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.isOpenedBind, singleton, rid)
     }
 
     /**
@@ -229,7 +229,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addSubmenuItem(rid: RID, label: String, submenuRid: RID, tag: Any? = null, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringRIDVariantIntArgsRetInt(addSubmenuItemBind, singleton, rid, label, submenuRid, tag, index)
+        return ObjectCalls.ptrcallWithRIDStringRIDVariantIntArgsRetInt(Binds.addSubmenuItemBind, singleton, rid, label, submenuRid, tag, index)
     }
 
     /**
@@ -246,7 +246,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(Binds.addItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -264,7 +264,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(Binds.addCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -282,7 +282,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -300,7 +300,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -320,7 +320,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addRadioCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addRadioCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(Binds.addRadioCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -340,7 +340,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconRadioCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(Binds.addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -361,7 +361,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addMultistateItem(rid: RID, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
+        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(Binds.addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -373,7 +373,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addSeparator(rid: RID, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(addSeparatorBind, singleton, rid, index)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(Binds.addSeparatorBind, singleton, rid, index)
     }
 
     /**
@@ -384,7 +384,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun findItemIndexWithText(rid: RID, text: String): Int {
-        return ObjectCalls.ptrcallWithRIDAndStringArgRetInt(findItemIndexWithTextBind, singleton, rid, text)
+        return ObjectCalls.ptrcallWithRIDAndStringArgRetInt(Binds.findItemIndexWithTextBind, singleton, rid, text)
     }
 
     /**
@@ -395,7 +395,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun findItemIndexWithTag(rid: RID, tag: Any?): Int {
-        return ObjectCalls.ptrcallWithRIDAndVariantArgRetInt(findItemIndexWithTagBind, singleton, rid, tag)
+        return ObjectCalls.ptrcallWithRIDAndVariantArgRetInt(Binds.findItemIndexWithTagBind, singleton, rid, tag)
     }
 
     /**
@@ -407,7 +407,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun findItemIndexWithSubmenu(rid: RID, submenuRid: RID): Int {
-        return ObjectCalls.ptrcallWithTwoRIDArgsRetInt(findItemIndexWithSubmenuBind, singleton, rid, submenuRid)
+        return ObjectCalls.ptrcallWithTwoRIDArgsRetInt(Binds.findItemIndexWithSubmenuBind, singleton, rid, submenuRid)
     }
 
     /**
@@ -418,7 +418,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isItemChecked(rid: RID, idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemCheckedBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.isItemCheckedBind, singleton, rid, idx)
     }
 
     /**
@@ -429,7 +429,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isItemCheckable(rid: RID, idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemCheckableBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.isItemCheckableBind, singleton, rid, idx)
     }
 
     /**
@@ -441,7 +441,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isItemRadioCheckable(rid: RID, idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemRadioCheckableBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.isItemRadioCheckableBind, singleton, rid, idx)
     }
 
     /**
@@ -452,7 +452,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemCallback(rid: RID, idx: Int): GodotCallable? {
-        return ObjectCalls.ptrcallWithRIDIntArgsRetCallable(getItemCallbackBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDIntArgsRetCallable(Binds.getItemCallbackBind, singleton, rid, idx)
     }
 
     /**
@@ -463,7 +463,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemKeyCallback(rid: RID, idx: Int): GodotCallable? {
-        return ObjectCalls.ptrcallWithRIDIntArgsRetCallable(getItemKeyCallbackBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDIntArgsRetCallable(Binds.getItemKeyCallbackBind, singleton, rid, idx)
     }
 
     /**
@@ -475,7 +475,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemTag(rid: RID, idx: Int): Any? {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetVariantScalar(getItemTagBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetVariantScalar(Binds.getItemTagBind, singleton, rid, idx)
     }
 
     /**
@@ -486,7 +486,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemText(rid: RID, idx: Int): String {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetString(getItemTextBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetString(Binds.getItemTextBind, singleton, rid, idx)
     }
 
     /**
@@ -497,7 +497,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemSubmenu(rid: RID, idx: Int): RID {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(getItemSubmenuBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.getItemSubmenuBind, singleton, rid, idx)
     }
 
     /**
@@ -509,7 +509,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemAccelerator(rid: RID, idx: Int): Key {
-        return Key(ObjectCalls.ptrcallWithRIDAndIntArgRetLong(getItemAcceleratorBind, singleton, rid, idx))
+        return Key(ObjectCalls.ptrcallWithRIDAndIntArgRetLong(Binds.getItemAcceleratorBind, singleton, rid, idx))
     }
 
     /**
@@ -521,7 +521,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isItemDisabled(rid: RID, idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemDisabledBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.isItemDisabledBind, singleton, rid, idx)
     }
 
     /**
@@ -532,7 +532,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isItemHidden(rid: RID, idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(isItemHiddenBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.isItemHiddenBind, singleton, rid, idx)
     }
 
     /**
@@ -543,7 +543,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemTooltip(rid: RID, idx: Int): String {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetString(getItemTooltipBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetString(Binds.getItemTooltipBind, singleton, rid, idx)
     }
 
     /**
@@ -554,7 +554,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemState(rid: RID, idx: Int): Int {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(getItemStateBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(Binds.getItemStateBind, singleton, rid, idx)
     }
 
     /**
@@ -565,7 +565,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemMaxStates(rid: RID, idx: Int): Int {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(getItemMaxStatesBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(Binds.getItemMaxStatesBind, singleton, rid, idx)
     }
 
     /**
@@ -576,7 +576,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemIcon(rid: RID, idx: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(getItemIconBind, singleton, rid, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(Binds.getItemIconBind, singleton, rid, idx))
     }
 
     /**
@@ -587,7 +587,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemIndentationLevel(rid: RID, idx: Int): Int {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(getItemIndentationLevelBind, singleton, rid, idx)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetInt(Binds.getItemIndentationLevelBind, singleton, rid, idx)
     }
 
     /**
@@ -598,7 +598,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemChecked(rid: RID, idx: Int, checked: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(setItemCheckedBind, singleton, rid, idx, checked)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemCheckedBind, singleton, rid, idx, checked)
     }
 
     /**
@@ -609,7 +609,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemCheckable(rid: RID, idx: Int, checkable: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(setItemCheckableBind, singleton, rid, idx, checkable)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemCheckableBind, singleton, rid, idx, checkable)
     }
 
     /**
@@ -622,7 +622,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemRadioCheckable(rid: RID, idx: Int, checkable: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(setItemRadioCheckableBind, singleton, rid, idx, checkable)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemRadioCheckableBind, singleton, rid, idx, checkable)
     }
 
     /**
@@ -635,7 +635,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemCallback(rid: RID, idx: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemCallbackBind, singleton, rid, idx, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDIntCallableArgs(Binds.setItemCallbackBind, singleton, rid, idx, callback.target.segment, callback.method)
     }
 
     /**
@@ -648,7 +648,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemHoverCallbacks(rid: RID, idx: Int, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemHoverCallbacksBind, singleton, rid, idx, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDIntCallableArgs(Binds.setItemHoverCallbacksBind, singleton, rid, idx, callback.target.segment, callback.method)
     }
 
     /**
@@ -661,7 +661,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemKeyCallback(rid: RID, idx: Int, keyCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDIntCallableArgs(setItemKeyCallbackBind, singleton, rid, idx, keyCallback.target.segment, keyCallback.method)
+        ObjectCalls.ptrcallWithRIDIntCallableArgs(Binds.setItemKeyCallbackBind, singleton, rid, idx, keyCallback.target.segment, keyCallback.method)
     }
 
     /**
@@ -673,7 +673,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemTag(rid: RID, idx: Int, tag: Any?) {
-        ObjectCalls.ptrcallWithRIDIntAndVariantArgs(setItemTagBind, singleton, rid, idx, tag)
+        ObjectCalls.ptrcallWithRIDIntAndVariantArgs(Binds.setItemTagBind, singleton, rid, idx, tag)
     }
 
     /**
@@ -683,7 +683,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemText(rid: RID, idx: Int, text: String) {
-        ObjectCalls.ptrcallWithRIDIntAndStringArgs(setItemTextBind, singleton, rid, idx, text)
+        ObjectCalls.ptrcallWithRIDIntAndStringArgs(Binds.setItemTextBind, singleton, rid, idx, text)
     }
 
     /**
@@ -694,7 +694,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemSubmenu(rid: RID, idx: Int, submenuRid: RID) {
-        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(setItemSubmenuBind, singleton, rid, idx, submenuRid)
+        ObjectCalls.ptrcallWithRIDIntAndRIDArgs(Binds.setItemSubmenuBind, singleton, rid, idx, submenuRid)
     }
 
     /**
@@ -706,7 +706,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemAccelerator(rid: RID, idx: Int, keycode: Key) {
-        ObjectCalls.ptrcallWithRIDIntLongArgs(setItemAcceleratorBind, singleton, rid, idx, keycode.value)
+        ObjectCalls.ptrcallWithRIDIntLongArgs(Binds.setItemAcceleratorBind, singleton, rid, idx, keycode.value)
     }
 
     /**
@@ -717,7 +717,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemDisabled(rid: RID, idx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(setItemDisabledBind, singleton, rid, idx, disabled)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemDisabledBind, singleton, rid, idx, disabled)
     }
 
     /**
@@ -728,7 +728,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemHidden(rid: RID, idx: Int, hidden: Boolean) {
-        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(setItemHiddenBind, singleton, rid, idx, hidden)
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemHiddenBind, singleton, rid, idx, hidden)
     }
 
     /**
@@ -739,7 +739,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemTooltip(rid: RID, idx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithRIDIntAndStringArgs(setItemTooltipBind, singleton, rid, idx, tooltip)
+        ObjectCalls.ptrcallWithRIDIntAndStringArgs(Binds.setItemTooltipBind, singleton, rid, idx, tooltip)
     }
 
     /**
@@ -750,7 +750,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemState(rid: RID, idx: Int, state: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(setItemStateBind, singleton, rid, idx, state)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.setItemStateBind, singleton, rid, idx, state)
     }
 
     /**
@@ -761,7 +761,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemMaxStates(rid: RID, idx: Int, maxStates: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(setItemMaxStatesBind, singleton, rid, idx, maxStates)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.setItemMaxStatesBind, singleton, rid, idx, maxStates)
     }
 
     /**
@@ -772,7 +772,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemIcon(rid: RID, idx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithRIDIntAndObjectArg(setItemIconBind, singleton, rid, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithRIDIntAndObjectArg(Binds.setItemIconBind, singleton, rid, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -783,7 +783,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemIndentationLevel(rid: RID, idx: Int, level: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(setItemIndentationLevelBind, singleton, rid, idx, level)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.setItemIndentationLevelBind, singleton, rid, idx, level)
     }
 
     /**
@@ -796,7 +796,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemIndex(rid: RID, idx: Int, targetIdx: Int): Int {
-        return ObjectCalls.ptrcallWithRIDAndTwoIntArgsRetInt(setItemIndexBind, singleton, rid, idx, targetIdx)
+        return ObjectCalls.ptrcallWithRIDAndTwoIntArgsRetInt(Binds.setItemIndexBind, singleton, rid, idx, targetIdx)
     }
 
     /**
@@ -807,7 +807,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemCount(rid: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(getItemCountBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.getItemCountBind, singleton, rid)
     }
 
     /**
@@ -818,7 +818,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun isSystemMenu(rid: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(isSystemMenuBind, singleton, rid)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.isSystemMenuBind, singleton, rid)
     }
 
     /**
@@ -829,7 +829,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun removeItem(rid: RID, idx: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(removeItemBind, singleton, rid, idx)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.removeItemBind, singleton, rid, idx)
     }
 
     /**
@@ -840,7 +840,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun clear(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(clearBind, singleton, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.clearBind, singleton, rid)
     }
 
     /**
@@ -942,348 +942,353 @@ object NativeMenu {
     internal fun wrap(handle: RawSegment): NativeMenu? =
         if (handle.address() == 0L) null else this
 
-    private const val HAS_FEATURE_HASH = 1708975490L
-    private val hasFeatureBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "has_feature", HAS_FEATURE_HASH)
-    }
-
-    private const val HAS_SYSTEM_MENU_HASH = 718213027L
-    private val hasSystemMenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "has_system_menu", HAS_SYSTEM_MENU_HASH)
-    }
-
-    private const val GET_SYSTEM_MENU_HASH = 469707506L
-    private val getSystemMenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_system_menu", GET_SYSTEM_MENU_HASH)
-    }
-
-    private const val GET_SYSTEM_MENU_NAME_HASH = 1281499290L
-    private val getSystemMenuNameBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_name", GET_SYSTEM_MENU_NAME_HASH)
-    }
-
-    private const val GET_SYSTEM_MENU_TEXT_HASH = 1281499290L
-    private val getSystemMenuTextBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_text", GET_SYSTEM_MENU_TEXT_HASH)
-    }
-
-    private const val SET_SYSTEM_MENU_TEXT_HASH = 3925225603L
-    private val setSystemMenuTextBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_system_menu_text", SET_SYSTEM_MENU_TEXT_HASH)
-    }
-
-    private const val CREATE_MENU_HASH = 529393457L
-    private val createMenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "create_menu", CREATE_MENU_HASH)
-    }
-
-    private const val HAS_MENU_HASH = 4155700596L
-    private val hasMenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "has_menu", HAS_MENU_HASH)
-    }
-
-    private const val FREE_MENU_HASH = 2722037293L
-    private val freeMenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "free_menu", FREE_MENU_HASH)
-    }
-
-    private const val GET_SIZE_HASH = 2440833711L
-    private val getSizeBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_size", GET_SIZE_HASH)
-    }
-
-    private const val POPUP_HASH = 2450610377L
-    private val popupBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "popup", POPUP_HASH)
-    }
-
-    private const val SET_INTERFACE_DIRECTION_HASH = 1265174801L
-    private val setInterfaceDirectionBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_interface_direction", SET_INTERFACE_DIRECTION_HASH)
-    }
-
-    private const val SET_POPUP_OPEN_CALLBACK_HASH = 3379118538L
-    private val setPopupOpenCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_popup_open_callback", SET_POPUP_OPEN_CALLBACK_HASH)
-    }
-
-    private const val GET_POPUP_OPEN_CALLBACK_HASH = 3170603026L
-    private val getPopupOpenCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", GET_POPUP_OPEN_CALLBACK_HASH)
-    }
-
-    private const val SET_POPUP_CLOSE_CALLBACK_HASH = 3379118538L
-    private val setPopupCloseCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_popup_close_callback", SET_POPUP_CLOSE_CALLBACK_HASH)
-    }
-
-    private const val GET_POPUP_CLOSE_CALLBACK_HASH = 3170603026L
-    private val getPopupCloseCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_popup_close_callback", GET_POPUP_CLOSE_CALLBACK_HASH)
-    }
-
-    private const val SET_MINIMUM_WIDTH_HASH = 1794382983L
-    private val setMinimumWidthBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_minimum_width", SET_MINIMUM_WIDTH_HASH)
-    }
-
-    private const val GET_MINIMUM_WIDTH_HASH = 866169185L
-    private val getMinimumWidthBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_minimum_width", GET_MINIMUM_WIDTH_HASH)
-    }
-
-    private const val IS_OPENED_HASH = 4155700596L
-    private val isOpenedBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_opened", IS_OPENED_HASH)
-    }
-
-    private const val ADD_SUBMENU_ITEM_HASH = 1002030223L
-    private val addSubmenuItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_submenu_item", ADD_SUBMENU_ITEM_HASH)
-    }
-
-    private const val ADD_ITEM_HASH = 980552939L
-    private val addItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_item", ADD_ITEM_HASH)
-    }
-
-    private const val ADD_CHECK_ITEM_HASH = 980552939L
-    private val addCheckItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_check_item", ADD_CHECK_ITEM_HASH)
-    }
-
-    private const val ADD_ICON_ITEM_HASH = 1372188274L
-    private val addIconItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_icon_item", ADD_ICON_ITEM_HASH)
-    }
-
-    private const val ADD_ICON_CHECK_ITEM_HASH = 1372188274L
-    private val addIconCheckItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_icon_check_item", ADD_ICON_CHECK_ITEM_HASH)
-    }
-
-    private const val ADD_RADIO_CHECK_ITEM_HASH = 980552939L
-    private val addRadioCheckItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_radio_check_item", ADD_RADIO_CHECK_ITEM_HASH)
-    }
-
-    private const val ADD_ICON_RADIO_CHECK_ITEM_HASH = 1372188274L
-    private val addIconRadioCheckItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_icon_radio_check_item", ADD_ICON_RADIO_CHECK_ITEM_HASH)
-    }
-
-    private const val ADD_MULTISTATE_ITEM_HASH = 2674635658L
-    private val addMultistateItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_multistate_item", ADD_MULTISTATE_ITEM_HASH)
-    }
-
-    private const val ADD_SEPARATOR_HASH = 448810126L
-    private val addSeparatorBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "add_separator", ADD_SEPARATOR_HASH)
-    }
-
-    private const val FIND_ITEM_INDEX_WITH_TEXT_HASH = 1362438794L
-    private val findItemIndexWithTextBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_text", FIND_ITEM_INDEX_WITH_TEXT_HASH)
-    }
-
-    private const val FIND_ITEM_INDEX_WITH_TAG_HASH = 1260085030L
-    private val findItemIndexWithTagBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_tag", FIND_ITEM_INDEX_WITH_TAG_HASH)
-    }
-
-    private const val FIND_ITEM_INDEX_WITH_SUBMENU_HASH = 893635918L
-    private val findItemIndexWithSubmenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_submenu", FIND_ITEM_INDEX_WITH_SUBMENU_HASH)
-    }
-
-    private const val IS_ITEM_CHECKED_HASH = 3120086654L
-    private val isItemCheckedBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_item_checked", IS_ITEM_CHECKED_HASH)
-    }
-
-    private const val IS_ITEM_CHECKABLE_HASH = 3120086654L
-    private val isItemCheckableBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_item_checkable", IS_ITEM_CHECKABLE_HASH)
-    }
-
-    private const val IS_ITEM_RADIO_CHECKABLE_HASH = 3120086654L
-    private val isItemRadioCheckableBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_item_radio_checkable", IS_ITEM_RADIO_CHECKABLE_HASH)
-    }
-
-    private const val GET_ITEM_CALLBACK_HASH = 1639989698L
-    private val getItemCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_callback", GET_ITEM_CALLBACK_HASH)
-    }
-
-    private const val GET_ITEM_KEY_CALLBACK_HASH = 1639989698L
-    private val getItemKeyCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_key_callback", GET_ITEM_KEY_CALLBACK_HASH)
-    }
-
-    private const val GET_ITEM_TAG_HASH = 4069510997L
-    private val getItemTagBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_tag", GET_ITEM_TAG_HASH)
-    }
-
-    private const val GET_ITEM_TEXT_HASH = 1464764419L
-    private val getItemTextBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_text", GET_ITEM_TEXT_HASH)
-    }
-
-    private const val GET_ITEM_SUBMENU_HASH = 1066463050L
-    private val getItemSubmenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_submenu", GET_ITEM_SUBMENU_HASH)
-    }
-
-    private const val GET_ITEM_ACCELERATOR_HASH = 316800700L
-    private val getItemAcceleratorBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_accelerator", GET_ITEM_ACCELERATOR_HASH)
-    }
-
-    private const val IS_ITEM_DISABLED_HASH = 3120086654L
-    private val isItemDisabledBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_item_disabled", IS_ITEM_DISABLED_HASH)
-    }
-
-    private const val IS_ITEM_HIDDEN_HASH = 3120086654L
-    private val isItemHiddenBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_item_hidden", IS_ITEM_HIDDEN_HASH)
-    }
-
-    private const val GET_ITEM_TOOLTIP_HASH = 1464764419L
-    private val getItemTooltipBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
-    }
-
-    private const val GET_ITEM_STATE_HASH = 1120910005L
-    private val getItemStateBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_state", GET_ITEM_STATE_HASH)
-    }
-
-    private const val GET_ITEM_MAX_STATES_HASH = 1120910005L
-    private val getItemMaxStatesBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_max_states", GET_ITEM_MAX_STATES_HASH)
-    }
-
-    private const val GET_ITEM_ICON_HASH = 3391850701L
-    private val getItemIconBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_icon", GET_ITEM_ICON_HASH)
-    }
-
-    private const val GET_ITEM_INDENTATION_LEVEL_HASH = 1120910005L
-    private val getItemIndentationLevelBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_indentation_level", GET_ITEM_INDENTATION_LEVEL_HASH)
-    }
-
-    private const val SET_ITEM_CHECKED_HASH = 2658558584L
-    private val setItemCheckedBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_checked", SET_ITEM_CHECKED_HASH)
-    }
-
-    private const val SET_ITEM_CHECKABLE_HASH = 2658558584L
-    private val setItemCheckableBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_checkable", SET_ITEM_CHECKABLE_HASH)
-    }
-
-    private const val SET_ITEM_RADIO_CHECKABLE_HASH = 2658558584L
-    private val setItemRadioCheckableBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_radio_checkable", SET_ITEM_RADIO_CHECKABLE_HASH)
-    }
-
-    private const val SET_ITEM_CALLBACK_HASH = 2779810226L
-    private val setItemCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_callback", SET_ITEM_CALLBACK_HASH)
-    }
-
-    private const val SET_ITEM_HOVER_CALLBACKS_HASH = 2779810226L
-    private val setItemHoverCallbacksBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_hover_callbacks", SET_ITEM_HOVER_CALLBACKS_HASH)
-    }
-
-    private const val SET_ITEM_KEY_CALLBACK_HASH = 2779810226L
-    private val setItemKeyCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_key_callback", SET_ITEM_KEY_CALLBACK_HASH)
-    }
-
-    private const val SET_ITEM_TAG_HASH = 2706844827L
-    private val setItemTagBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_tag", SET_ITEM_TAG_HASH)
-    }
-
-    private const val SET_ITEM_TEXT_HASH = 4153150897L
-    private val setItemTextBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_text", SET_ITEM_TEXT_HASH)
-    }
-
-    private const val SET_ITEM_SUBMENU_HASH = 2310537182L
-    private val setItemSubmenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_submenu", SET_ITEM_SUBMENU_HASH)
-    }
-
-    private const val SET_ITEM_ACCELERATOR_HASH = 786300043L
-    private val setItemAcceleratorBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_accelerator", SET_ITEM_ACCELERATOR_HASH)
-    }
-
-    private const val SET_ITEM_DISABLED_HASH = 2658558584L
-    private val setItemDisabledBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_disabled", SET_ITEM_DISABLED_HASH)
-    }
-
-    private const val SET_ITEM_HIDDEN_HASH = 2658558584L
-    private val setItemHiddenBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_hidden", SET_ITEM_HIDDEN_HASH)
-    }
-
-    private const val SET_ITEM_TOOLTIP_HASH = 4153150897L
-    private val setItemTooltipBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_tooltip", SET_ITEM_TOOLTIP_HASH)
-    }
-
-    private const val SET_ITEM_STATE_HASH = 4288446313L
-    private val setItemStateBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_state", SET_ITEM_STATE_HASH)
-    }
-
-    private const val SET_ITEM_MAX_STATES_HASH = 4288446313L
-    private val setItemMaxStatesBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_max_states", SET_ITEM_MAX_STATES_HASH)
-    }
-
-    private const val SET_ITEM_ICON_HASH = 1388763257L
-    private val setItemIconBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_icon", SET_ITEM_ICON_HASH)
-    }
-
-    private const val SET_ITEM_INDENTATION_LEVEL_HASH = 4288446313L
-    private val setItemIndentationLevelBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_indentation_level", SET_ITEM_INDENTATION_LEVEL_HASH)
-    }
-
-    private const val SET_ITEM_INDEX_HASH = 23951185L
-    private val setItemIndexBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "set_item_index", SET_ITEM_INDEX_HASH)
-    }
-
-    private const val GET_ITEM_COUNT_HASH = 2198884583L
-    private val getItemCountBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "get_item_count", GET_ITEM_COUNT_HASH)
-    }
-
-    private const val IS_SYSTEM_MENU_HASH = 4155700596L
-    private val isSystemMenuBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "is_system_menu", IS_SYSTEM_MENU_HASH)
-    }
-
-    private const val REMOVE_ITEM_HASH = 3411492887L
-    private val removeItemBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "remove_item", REMOVE_ITEM_HASH)
-    }
-
-    private const val CLEAR_HASH = 2722037293L
-    private val clearBind by lazy {
-        ObjectCalls.getMethodBind("NativeMenu", "clear", CLEAR_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("NativeMenu")
+
+        private const val HAS_FEATURE_HASH = 1708975490L
+        @JvmField
+        val hasFeatureBind =
+            ObjectCalls.getMethodBind("NativeMenu", "has_feature", HAS_FEATURE_HASH)
+
+        private const val HAS_SYSTEM_MENU_HASH = 718213027L
+        @JvmField
+        val hasSystemMenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "has_system_menu", HAS_SYSTEM_MENU_HASH)
+
+        private const val GET_SYSTEM_MENU_HASH = 469707506L
+        @JvmField
+        val getSystemMenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_system_menu", GET_SYSTEM_MENU_HASH)
+
+        private const val GET_SYSTEM_MENU_NAME_HASH = 1281499290L
+        @JvmField
+        val getSystemMenuNameBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_name", GET_SYSTEM_MENU_NAME_HASH)
+
+        private const val GET_SYSTEM_MENU_TEXT_HASH = 1281499290L
+        @JvmField
+        val getSystemMenuTextBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_system_menu_text", GET_SYSTEM_MENU_TEXT_HASH)
+
+        private const val SET_SYSTEM_MENU_TEXT_HASH = 3925225603L
+        @JvmField
+        val setSystemMenuTextBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_system_menu_text", SET_SYSTEM_MENU_TEXT_HASH)
+
+        private const val CREATE_MENU_HASH = 529393457L
+        @JvmField
+        val createMenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "create_menu", CREATE_MENU_HASH)
+
+        private const val HAS_MENU_HASH = 4155700596L
+        @JvmField
+        val hasMenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "has_menu", HAS_MENU_HASH)
+
+        private const val FREE_MENU_HASH = 2722037293L
+        @JvmField
+        val freeMenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "free_menu", FREE_MENU_HASH)
+
+        private const val GET_SIZE_HASH = 2440833711L
+        @JvmField
+        val getSizeBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_size", GET_SIZE_HASH)
+
+        private const val POPUP_HASH = 2450610377L
+        @JvmField
+        val popupBind =
+            ObjectCalls.getMethodBind("NativeMenu", "popup", POPUP_HASH)
+
+        private const val SET_INTERFACE_DIRECTION_HASH = 1265174801L
+        @JvmField
+        val setInterfaceDirectionBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_interface_direction", SET_INTERFACE_DIRECTION_HASH)
+
+        private const val SET_POPUP_OPEN_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val setPopupOpenCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_popup_open_callback", SET_POPUP_OPEN_CALLBACK_HASH)
+
+        private const val GET_POPUP_OPEN_CALLBACK_HASH = 3170603026L
+        @JvmField
+        val getPopupOpenCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", GET_POPUP_OPEN_CALLBACK_HASH)
+
+        private const val SET_POPUP_CLOSE_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val setPopupCloseCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_popup_close_callback", SET_POPUP_CLOSE_CALLBACK_HASH)
+
+        private const val GET_POPUP_CLOSE_CALLBACK_HASH = 3170603026L
+        @JvmField
+        val getPopupCloseCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_popup_close_callback", GET_POPUP_CLOSE_CALLBACK_HASH)
+
+        private const val SET_MINIMUM_WIDTH_HASH = 1794382983L
+        @JvmField
+        val setMinimumWidthBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_minimum_width", SET_MINIMUM_WIDTH_HASH)
+
+        private const val GET_MINIMUM_WIDTH_HASH = 866169185L
+        @JvmField
+        val getMinimumWidthBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_minimum_width", GET_MINIMUM_WIDTH_HASH)
+
+        private const val IS_OPENED_HASH = 4155700596L
+        @JvmField
+        val isOpenedBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_opened", IS_OPENED_HASH)
+
+        private const val ADD_SUBMENU_ITEM_HASH = 1002030223L
+        @JvmField
+        val addSubmenuItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_submenu_item", ADD_SUBMENU_ITEM_HASH)
+
+        private const val ADD_ITEM_HASH = 980552939L
+        @JvmField
+        val addItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_item", ADD_ITEM_HASH)
+
+        private const val ADD_CHECK_ITEM_HASH = 980552939L
+        @JvmField
+        val addCheckItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_check_item", ADD_CHECK_ITEM_HASH)
+
+        private const val ADD_ICON_ITEM_HASH = 1372188274L
+        @JvmField
+        val addIconItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_icon_item", ADD_ICON_ITEM_HASH)
+
+        private const val ADD_ICON_CHECK_ITEM_HASH = 1372188274L
+        @JvmField
+        val addIconCheckItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_icon_check_item", ADD_ICON_CHECK_ITEM_HASH)
+
+        private const val ADD_RADIO_CHECK_ITEM_HASH = 980552939L
+        @JvmField
+        val addRadioCheckItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_radio_check_item", ADD_RADIO_CHECK_ITEM_HASH)
+
+        private const val ADD_ICON_RADIO_CHECK_ITEM_HASH = 1372188274L
+        @JvmField
+        val addIconRadioCheckItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_icon_radio_check_item", ADD_ICON_RADIO_CHECK_ITEM_HASH)
+
+        private const val ADD_MULTISTATE_ITEM_HASH = 2674635658L
+        @JvmField
+        val addMultistateItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_multistate_item", ADD_MULTISTATE_ITEM_HASH)
+
+        private const val ADD_SEPARATOR_HASH = 448810126L
+        @JvmField
+        val addSeparatorBind =
+            ObjectCalls.getMethodBind("NativeMenu", "add_separator", ADD_SEPARATOR_HASH)
+
+        private const val FIND_ITEM_INDEX_WITH_TEXT_HASH = 1362438794L
+        @JvmField
+        val findItemIndexWithTextBind =
+            ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_text", FIND_ITEM_INDEX_WITH_TEXT_HASH)
+
+        private const val FIND_ITEM_INDEX_WITH_TAG_HASH = 1260085030L
+        @JvmField
+        val findItemIndexWithTagBind =
+            ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_tag", FIND_ITEM_INDEX_WITH_TAG_HASH)
+
+        private const val FIND_ITEM_INDEX_WITH_SUBMENU_HASH = 893635918L
+        @JvmField
+        val findItemIndexWithSubmenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "find_item_index_with_submenu", FIND_ITEM_INDEX_WITH_SUBMENU_HASH)
+
+        private const val IS_ITEM_CHECKED_HASH = 3120086654L
+        @JvmField
+        val isItemCheckedBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_item_checked", IS_ITEM_CHECKED_HASH)
+
+        private const val IS_ITEM_CHECKABLE_HASH = 3120086654L
+        @JvmField
+        val isItemCheckableBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_item_checkable", IS_ITEM_CHECKABLE_HASH)
+
+        private const val IS_ITEM_RADIO_CHECKABLE_HASH = 3120086654L
+        @JvmField
+        val isItemRadioCheckableBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_item_radio_checkable", IS_ITEM_RADIO_CHECKABLE_HASH)
+
+        private const val GET_ITEM_CALLBACK_HASH = 1639989698L
+        @JvmField
+        val getItemCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_callback", GET_ITEM_CALLBACK_HASH)
+
+        private const val GET_ITEM_KEY_CALLBACK_HASH = 1639989698L
+        @JvmField
+        val getItemKeyCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_key_callback", GET_ITEM_KEY_CALLBACK_HASH)
+
+        private const val GET_ITEM_TAG_HASH = 4069510997L
+        @JvmField
+        val getItemTagBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_tag", GET_ITEM_TAG_HASH)
+
+        private const val GET_ITEM_TEXT_HASH = 1464764419L
+        @JvmField
+        val getItemTextBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_text", GET_ITEM_TEXT_HASH)
+
+        private const val GET_ITEM_SUBMENU_HASH = 1066463050L
+        @JvmField
+        val getItemSubmenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_submenu", GET_ITEM_SUBMENU_HASH)
+
+        private const val GET_ITEM_ACCELERATOR_HASH = 316800700L
+        @JvmField
+        val getItemAcceleratorBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_accelerator", GET_ITEM_ACCELERATOR_HASH)
+
+        private const val IS_ITEM_DISABLED_HASH = 3120086654L
+        @JvmField
+        val isItemDisabledBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_item_disabled", IS_ITEM_DISABLED_HASH)
+
+        private const val IS_ITEM_HIDDEN_HASH = 3120086654L
+        @JvmField
+        val isItemHiddenBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_item_hidden", IS_ITEM_HIDDEN_HASH)
+
+        private const val GET_ITEM_TOOLTIP_HASH = 1464764419L
+        @JvmField
+        val getItemTooltipBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
+
+        private const val GET_ITEM_STATE_HASH = 1120910005L
+        @JvmField
+        val getItemStateBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_state", GET_ITEM_STATE_HASH)
+
+        private const val GET_ITEM_MAX_STATES_HASH = 1120910005L
+        @JvmField
+        val getItemMaxStatesBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_max_states", GET_ITEM_MAX_STATES_HASH)
+
+        private const val GET_ITEM_ICON_HASH = 3391850701L
+        @JvmField
+        val getItemIconBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_icon", GET_ITEM_ICON_HASH)
+
+        private const val GET_ITEM_INDENTATION_LEVEL_HASH = 1120910005L
+        @JvmField
+        val getItemIndentationLevelBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_indentation_level", GET_ITEM_INDENTATION_LEVEL_HASH)
+
+        private const val SET_ITEM_CHECKED_HASH = 2658558584L
+        @JvmField
+        val setItemCheckedBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_checked", SET_ITEM_CHECKED_HASH)
+
+        private const val SET_ITEM_CHECKABLE_HASH = 2658558584L
+        @JvmField
+        val setItemCheckableBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_checkable", SET_ITEM_CHECKABLE_HASH)
+
+        private const val SET_ITEM_RADIO_CHECKABLE_HASH = 2658558584L
+        @JvmField
+        val setItemRadioCheckableBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_radio_checkable", SET_ITEM_RADIO_CHECKABLE_HASH)
+
+        private const val SET_ITEM_CALLBACK_HASH = 2779810226L
+        @JvmField
+        val setItemCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_callback", SET_ITEM_CALLBACK_HASH)
+
+        private const val SET_ITEM_HOVER_CALLBACKS_HASH = 2779810226L
+        @JvmField
+        val setItemHoverCallbacksBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_hover_callbacks", SET_ITEM_HOVER_CALLBACKS_HASH)
+
+        private const val SET_ITEM_KEY_CALLBACK_HASH = 2779810226L
+        @JvmField
+        val setItemKeyCallbackBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_key_callback", SET_ITEM_KEY_CALLBACK_HASH)
+
+        private const val SET_ITEM_TAG_HASH = 2706844827L
+        @JvmField
+        val setItemTagBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_tag", SET_ITEM_TAG_HASH)
+
+        private const val SET_ITEM_TEXT_HASH = 4153150897L
+        @JvmField
+        val setItemTextBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_text", SET_ITEM_TEXT_HASH)
+
+        private const val SET_ITEM_SUBMENU_HASH = 2310537182L
+        @JvmField
+        val setItemSubmenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_submenu", SET_ITEM_SUBMENU_HASH)
+
+        private const val SET_ITEM_ACCELERATOR_HASH = 786300043L
+        @JvmField
+        val setItemAcceleratorBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_accelerator", SET_ITEM_ACCELERATOR_HASH)
+
+        private const val SET_ITEM_DISABLED_HASH = 2658558584L
+        @JvmField
+        val setItemDisabledBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_disabled", SET_ITEM_DISABLED_HASH)
+
+        private const val SET_ITEM_HIDDEN_HASH = 2658558584L
+        @JvmField
+        val setItemHiddenBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_hidden", SET_ITEM_HIDDEN_HASH)
+
+        private const val SET_ITEM_TOOLTIP_HASH = 4153150897L
+        @JvmField
+        val setItemTooltipBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_tooltip", SET_ITEM_TOOLTIP_HASH)
+
+        private const val SET_ITEM_STATE_HASH = 4288446313L
+        @JvmField
+        val setItemStateBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_state", SET_ITEM_STATE_HASH)
+
+        private const val SET_ITEM_MAX_STATES_HASH = 4288446313L
+        @JvmField
+        val setItemMaxStatesBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_max_states", SET_ITEM_MAX_STATES_HASH)
+
+        private const val SET_ITEM_ICON_HASH = 1388763257L
+        @JvmField
+        val setItemIconBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_icon", SET_ITEM_ICON_HASH)
+
+        private const val SET_ITEM_INDENTATION_LEVEL_HASH = 4288446313L
+        @JvmField
+        val setItemIndentationLevelBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_indentation_level", SET_ITEM_INDENTATION_LEVEL_HASH)
+
+        private const val SET_ITEM_INDEX_HASH = 23951185L
+        @JvmField
+        val setItemIndexBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_index", SET_ITEM_INDEX_HASH)
+
+        private const val GET_ITEM_COUNT_HASH = 2198884583L
+        @JvmField
+        val getItemCountBind =
+            ObjectCalls.getMethodBind("NativeMenu", "get_item_count", GET_ITEM_COUNT_HASH)
+
+        private const val IS_SYSTEM_MENU_HASH = 4155700596L
+        @JvmField
+        val isSystemMenuBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_system_menu", IS_SYSTEM_MENU_HASH)
+
+        private const val REMOVE_ITEM_HASH = 3411492887L
+        @JvmField
+        val removeItemBind =
+            ObjectCalls.getMethodBind("NativeMenu", "remove_item", REMOVE_ITEM_HASH)
+
+        private const val CLEAR_HASH = 2722037293L
+        @JvmField
+        val clearBind =
+            ObjectCalls.getMethodBind("NativeMenu", "clear", CLEAR_HASH)
     }
 }

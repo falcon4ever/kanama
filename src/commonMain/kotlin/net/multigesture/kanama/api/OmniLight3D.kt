@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -31,11 +32,11 @@ class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
         set(value) = setShadowMode(value)
 
     fun setShadowMode(mode: OmniLight3D.ShadowMode) {
-        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setShadowModeBind, segment, mode.value)
     }
 
     fun getShadowMode(): OmniLight3D.ShadowMode {
-        return OmniLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment))
+        return OmniLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShadowModeBind, segment))
     }
 
     /**
@@ -70,15 +71,17 @@ class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
 
         internal fun wrap(handle: RawSegment): OmniLight3D? =
             if (handle.address() == 0L) null else OmniLight3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SHADOW_MODE_HASH = 121862228L
-        private val setShadowModeBind by lazy {
+        @JvmField
+        val setShadowModeBind =
             ObjectCalls.getMethodBind("OmniLight3D", "set_shadow_mode", SET_SHADOW_MODE_HASH)
-        }
 
         private const val GET_SHADOW_MODE_HASH = 4181586331L
-        private val getShadowModeBind by lazy {
+        @JvmField
+        val getShadowModeBind =
             ObjectCalls.getMethodBind("OmniLight3D", "get_shadow_mode", GET_SHADOW_MODE_HASH)
-        }
     }
 }

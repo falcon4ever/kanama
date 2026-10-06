@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,12 +19,12 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
 
     fun setSource(value: VisualShaderNodeSample3D.Source) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
     }
 
     fun getSource(): VisualShaderNodeSample3D.Source {
         checkOpen()
-        return VisualShaderNodeSample3D.Source(ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment))
+        return VisualShaderNodeSample3D.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
     }
 
     @JvmInline
@@ -45,15 +46,17 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSample3D? =
             if (handle.address() == 0L) null else VisualShaderNodeSample3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SOURCE_HASH = 3315130991L
-        private val setSourceBind by lazy {
+        @JvmField
+        val setSourceBind =
             ObjectCalls.getMethodBind("VisualShaderNodeSample3D", "set_source", SET_SOURCE_HASH)
-        }
 
         private const val GET_SOURCE_HASH = 1079494121L
-        private val getSourceBind by lazy {
+        @JvmField
+        val getSourceBind =
             ObjectCalls.getMethodBind("VisualShaderNodeSample3D", "get_source", GET_SOURCE_HASH)
-        }
     }
 }

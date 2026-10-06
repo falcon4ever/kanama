@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,7 +17,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_subdir_count
      */
     fun getSubdirCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdirCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdirCountBind, segment)
     }
 
     /**
@@ -25,7 +26,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_subdir
      */
     fun getSubdir(idx: Int): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSubdirBind, segment, idx))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSubdirBind, segment, idx))
     }
 
     /**
@@ -34,7 +35,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_count
      */
     fun getFileCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFileCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFileCountBind, segment)
     }
 
     /**
@@ -43,7 +44,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file
      */
     fun getFile(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFileBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFileBind, segment, idx)
     }
 
     /**
@@ -52,7 +53,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_path
      */
     fun getFilePath(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFilePathBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFilePathBind, segment, idx)
     }
 
     /**
@@ -62,7 +63,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_type
      */
     fun getFileType(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getFileTypeBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getFileTypeBind, segment, idx)
     }
 
     /**
@@ -72,7 +73,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_script_class_name
      */
     fun getFileScriptClassName(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassNameBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFileScriptClassNameBind, segment, idx)
     }
 
     /**
@@ -82,7 +83,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_script_class_extends
      */
     fun getFileScriptClassExtends(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getFileScriptClassExtendsBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFileScriptClassExtendsBind, segment, idx)
     }
 
     /**
@@ -91,7 +92,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_file_import_is_valid
      */
     fun getFileImportIsValid(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getFileImportIsValidBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getFileImportIsValidBind, segment, idx)
     }
 
     /**
@@ -100,7 +101,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_name
      */
     fun getName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
     }
 
     /**
@@ -109,7 +110,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_path
      */
     fun getPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.get_parent
      */
     fun getParent(): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentBind, segment))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentBind, segment))
     }
 
     /**
@@ -128,7 +129,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.find_file_index
      */
     fun findFileIndex(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(findFileIndexBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findFileIndexBind, segment, name)
     }
 
     /**
@@ -137,7 +138,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorFileSystemDirectory.find_dir_index
      */
     fun findDirIndex(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(findDirIndexBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findDirIndexBind, segment, name)
     }
 
     companion object {
@@ -147,75 +148,77 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): EditorFileSystemDirectory? =
             if (handle.address() == 0L) null else EditorFileSystemDirectory(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SUBDIR_COUNT_HASH = 3905245786L
-        private val getSubdirCountBind by lazy {
+        @JvmField
+        val getSubdirCountBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_subdir_count", GET_SUBDIR_COUNT_HASH)
-        }
 
         private const val GET_SUBDIR_HASH = 2330964164L
-        private val getSubdirBind by lazy {
+        @JvmField
+        val getSubdirBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_subdir", GET_SUBDIR_HASH)
-        }
 
         private const val GET_FILE_COUNT_HASH = 3905245786L
-        private val getFileCountBind by lazy {
+        @JvmField
+        val getFileCountBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_count", GET_FILE_COUNT_HASH)
-        }
 
         private const val GET_FILE_HASH = 844755477L
-        private val getFileBind by lazy {
+        @JvmField
+        val getFileBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file", GET_FILE_HASH)
-        }
 
         private const val GET_FILE_PATH_HASH = 844755477L
-        private val getFilePathBind by lazy {
+        @JvmField
+        val getFilePathBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_path", GET_FILE_PATH_HASH)
-        }
 
         private const val GET_FILE_TYPE_HASH = 659327637L
-        private val getFileTypeBind by lazy {
+        @JvmField
+        val getFileTypeBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_type", GET_FILE_TYPE_HASH)
-        }
 
         private const val GET_FILE_SCRIPT_CLASS_NAME_HASH = 844755477L
-        private val getFileScriptClassNameBind by lazy {
+        @JvmField
+        val getFileScriptClassNameBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_script_class_name", GET_FILE_SCRIPT_CLASS_NAME_HASH)
-        }
 
         private const val GET_FILE_SCRIPT_CLASS_EXTENDS_HASH = 844755477L
-        private val getFileScriptClassExtendsBind by lazy {
+        @JvmField
+        val getFileScriptClassExtendsBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_script_class_extends", GET_FILE_SCRIPT_CLASS_EXTENDS_HASH)
-        }
 
         private const val GET_FILE_IMPORT_IS_VALID_HASH = 1116898809L
-        private val getFileImportIsValidBind by lazy {
+        @JvmField
+        val getFileImportIsValidBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_file_import_is_valid", GET_FILE_IMPORT_IS_VALID_HASH)
-        }
 
         private const val GET_NAME_HASH = 2841200299L
-        private val getNameBind by lazy {
+        @JvmField
+        val getNameBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_name", GET_NAME_HASH)
-        }
 
         private const val GET_PATH_HASH = 201670096L
-        private val getPathBind by lazy {
+        @JvmField
+        val getPathBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_path", GET_PATH_HASH)
-        }
 
         private const val GET_PARENT_HASH = 842323275L
-        private val getParentBind by lazy {
+        @JvmField
+        val getParentBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "get_parent", GET_PARENT_HASH)
-        }
 
         private const val FIND_FILE_INDEX_HASH = 1321353865L
-        private val findFileIndexBind by lazy {
+        @JvmField
+        val findFileIndexBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "find_file_index", FIND_FILE_INDEX_HASH)
-        }
 
         private const val FIND_DIR_INDEX_HASH = 1321353865L
-        private val findDirIndexBind by lazy {
+        @JvmField
+        val findDirIndexBind =
             ObjectCalls.getMethodBind("EditorFileSystemDirectory", "find_dir_index", FIND_DIR_INDEX_HASH)
-        }
     }
 }

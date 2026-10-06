@@ -75,7 +75,5 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceFormatLoader? =
             if (handle.address() == 0L) null else ResourceFormatLoader(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

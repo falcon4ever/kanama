@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -107,7 +108,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.activate_item_by_event
      */
     fun activateItemByEvent(event: InputEvent?, forGlobalOnly: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(activateItemByEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, forGlobalOnly)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(Binds.activateItemByEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, forGlobalOnly)
     }
 
     /**
@@ -118,7 +119,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_prefer_native_menu
      */
     fun setPreferNativeMenu(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPreferNativeMenuBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPreferNativeMenuBind, segment, enabled)
     }
 
     /**
@@ -129,7 +130,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_prefer_native_menu
      */
     fun isPreferNativeMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPreferNativeMenuBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPreferNativeMenuBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_native_menu
      */
     fun isNativeMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNativeMenuBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNativeMenuBind, segment)
     }
 
     /**
@@ -152,7 +153,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_item
      */
     fun addItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, segment, label, id, accel.value)
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(Binds.addItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -165,7 +166,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_item
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(Binds.addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -180,7 +181,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_check_item
      */
     fun addCheckItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, segment, label, id, accel.value)
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(Binds.addCheckItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -195,7 +196,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_check_item
      */
     fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(Binds.addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -210,7 +211,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_radio_check_item
      */
     fun addRadioCheckItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, segment, label, id, accel.value)
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(Binds.addRadioCheckItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -219,7 +220,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_item
      */
     fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(Binds.addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -233,7 +234,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_multistate_item
      */
     fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Key = Key.NONE) {
-        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, segment, label, maxStates, defaultState, id, accel.value)
+        ObjectCalls.ptrcallWithStringThreeIntLongArgs(Binds.addMultistateItemBind, segment, label, maxStates, defaultState, id, accel.value)
     }
 
     /**
@@ -244,7 +245,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_shortcut
      */
     fun addShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(addShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
+        ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(Binds.addShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
     }
 
     /**
@@ -256,7 +257,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_shortcut
      */
     fun addIconShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(addIconShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
+        ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(Binds.addIconShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
     }
 
     /**
@@ -269,7 +270,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_check_shortcut
      */
     fun addCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntBoolArgs(addCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.ptrcallWithObjectIntBoolArgs(Binds.addCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -282,7 +283,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_check_shortcut
      */
     fun addIconCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(Binds.addIconCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -295,7 +296,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_radio_check_shortcut
      */
     fun addRadioCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntBoolArgs(addRadioCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.ptrcallWithObjectIntBoolArgs(Binds.addRadioCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -304,7 +305,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_shortcut
      */
     fun addIconRadioCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconRadioCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
+        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(Binds.addIconRadioCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -317,7 +318,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_submenu_item
      */
     fun addSubmenuItem(label: String, submenu: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithTwoStringAndIntArgs(addSubmenuItemBind, segment, label, submenu, id)
+        ObjectCalls.ptrcallWithTwoStringAndIntArgs(Binds.addSubmenuItemBind, segment, label, submenu, id)
     }
 
     /**
@@ -331,7 +332,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_submenu_node_item
      */
     fun addSubmenuNodeItem(label: String, submenu: PopupMenu, id: Int = -1) {
-        ObjectCalls.ptrcallWithStringObjectIntArgs(addSubmenuNodeItemBind, segment, label, submenu.segment, id)
+        ObjectCalls.ptrcallWithStringObjectIntArgs(Binds.addSubmenuNodeItemBind, segment, label, submenu.segment, id)
     }
 
     /**
@@ -340,7 +341,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_text
      */
     fun setItemText(index: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, index, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemTextBind, segment, index, text)
     }
 
     /**
@@ -349,7 +350,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_text_direction
      */
     fun setItemTextDirection(index: Int, direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, index, direction.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemTextDirectionBind, segment, index, direction.value)
     }
 
     /**
@@ -360,7 +361,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_language
      */
     fun setItemLanguage(index: Int, language: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemLanguageBind, segment, index, language)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemLanguageBind, segment, index, language)
     }
 
     /**
@@ -371,7 +372,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_auto_translate_mode
      */
     fun setItemAutoTranslateMode(index: Int, mode: Node.AutoTranslateMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, index, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemAutoTranslateModeBind, segment, index, mode.value)
     }
 
     /**
@@ -380,7 +381,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon
      */
     fun setItemIcon(index: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, index, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemIconBind, segment, index, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -391,7 +392,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon_max_width
      */
     fun setItemIconMaxWidth(index: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIconMaxWidthBind, segment, index, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemIconMaxWidthBind, segment, index, width)
     }
 
     /**
@@ -400,7 +401,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon_modulate
      */
     fun setItemIconModulate(index: Int, modulate: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setItemIconModulateBind, segment, index, modulate)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setItemIconModulateBind, segment, index, modulate)
     }
 
     /**
@@ -409,7 +410,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_checked
      */
     fun setItemChecked(index: Int, checked: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemCheckedBind, segment, index, checked)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemCheckedBind, segment, index, checked)
     }
 
     /**
@@ -419,7 +420,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_id
      */
     fun setItemId(index: Int, id: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, segment, index, id)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemIdBind, segment, index, id)
     }
 
     /**
@@ -431,7 +432,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_accelerator
      */
     fun setItemAccelerator(index: Int, accel: Key) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, segment, index, accel.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemAcceleratorBind, segment, index, accel.value)
     }
 
     /**
@@ -441,7 +442,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_metadata
      */
     fun setItemMetadata(index: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, index, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setItemMetadataBind, segment, index, metadata)
     }
 
     /**
@@ -451,7 +452,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_disabled
      */
     fun setItemDisabled(index: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, index, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemDisabledBind, segment, index, disabled)
     }
 
     /**
@@ -461,7 +462,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_submenu
      */
     fun setItemSubmenu(index: Int, submenu: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemSubmenuBind, segment, index, submenu)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemSubmenuBind, segment, index, submenu)
     }
 
     /**
@@ -473,7 +474,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_submenu_node
      */
     fun setItemSubmenuNode(index: Int, submenu: PopupMenu) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemSubmenuNodeBind, segment, index, submenu.segment)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemSubmenuNodeBind, segment, index, submenu.segment)
     }
 
     /**
@@ -483,7 +484,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_as_separator
      */
     fun setItemAsSeparator(index: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsSeparatorBind, segment, index, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemAsSeparatorBind, segment, index, enable)
     }
 
     /**
@@ -494,7 +495,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_as_checkable
      */
     fun setItemAsCheckable(index: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsCheckableBind, segment, index, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemAsCheckableBind, segment, index, enable)
     }
 
     /**
@@ -504,7 +505,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_as_radio_checkable
      */
     fun setItemAsRadioCheckable(index: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemAsRadioCheckableBind, segment, index, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemAsRadioCheckableBind, segment, index, enable)
     }
 
     /**
@@ -513,7 +514,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_tooltip
      */
     fun setItemTooltip(index: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, index, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemTooltipBind, segment, index, tooltip)
     }
 
     /**
@@ -522,7 +523,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_shortcut
      */
     fun setItemShortcut(index: Int, shortcut: Shortcut?, global: Boolean = false) {
-        ObjectCalls.ptrcallWithIntObjectBoolArgs(setItemShortcutBind, segment, index, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, global)
+        ObjectCalls.ptrcallWithIntObjectBoolArgs(Binds.setItemShortcutBind, segment, index, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, global)
     }
 
     /**
@@ -531,7 +532,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_indent
      */
     fun setItemIndent(index: Int, indent: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIndentBind, segment, index, indent)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemIndentBind, segment, index, indent)
     }
 
     /**
@@ -540,7 +541,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_multistate
      */
     fun setItemMultistate(index: Int, state: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateBind, segment, index, state)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemMultistateBind, segment, index, state)
     }
 
     /**
@@ -549,7 +550,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_multistate_max
      */
     fun setItemMultistateMax(index: Int, maxStates: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemMultistateMaxBind, segment, index, maxStates)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemMultistateMaxBind, segment, index, maxStates)
     }
 
     /**
@@ -558,7 +559,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_shortcut_disabled
      */
     fun setItemShortcutDisabled(index: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemShortcutDisabledBind, segment, index, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemShortcutDisabledBind, segment, index, disabled)
     }
 
     /**
@@ -570,7 +571,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_index
      */
     fun setItemIndex(index: Int, targetIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIndexBind, segment, index, targetIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemIndexBind, segment, index, targetIndex)
     }
 
     /**
@@ -579,7 +580,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.toggle_item_checked
      */
     fun toggleItemChecked(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(toggleItemCheckedBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.toggleItemCheckedBind, segment, index)
     }
 
     /**
@@ -588,7 +589,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.toggle_item_multistate
      */
     fun toggleItemMultistate(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(toggleItemMultistateBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.toggleItemMultistateBind, segment, index)
     }
 
     /**
@@ -597,7 +598,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_text
      */
     fun getItemText(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemTextBind, segment, index)
     }
 
     /**
@@ -606,7 +607,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_text_direction
      */
     fun getItemTextDirection(index: Int): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, index))
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemTextDirectionBind, segment, index))
     }
 
     /**
@@ -615,7 +616,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_language
      */
     fun getItemLanguage(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemLanguageBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemLanguageBind, segment, index)
     }
 
     /**
@@ -624,7 +625,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_auto_translate_mode
      */
     fun getItemAutoTranslateMode(index: Int): Node.AutoTranslateMode {
-        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, index))
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemAutoTranslateModeBind, segment, index))
     }
 
     /**
@@ -633,7 +634,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon
      */
     fun getItemIcon(index: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, index))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemIconBind, segment, index))
     }
 
     /**
@@ -642,7 +643,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon_max_width
      */
     fun getItemIconMaxWidth(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIconMaxWidthBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemIconMaxWidthBind, segment, index)
     }
 
     /**
@@ -651,7 +652,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon_modulate
      */
     fun getItemIconModulate(index: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getItemIconModulateBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getItemIconModulateBind, segment, index)
     }
 
     /**
@@ -660,7 +661,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_checked
      */
     fun isItemChecked(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckedBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemCheckedBind, segment, index)
     }
 
     /**
@@ -669,7 +670,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_id
      */
     fun getItemId(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemIdBind, segment, index)
     }
 
     /**
@@ -679,7 +680,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_index
      */
     fun getItemIndex(id: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemIndexBind, segment, id)
     }
 
     /**
@@ -692,7 +693,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_accelerator
      */
     fun getItemAccelerator(index: Int): Key {
-        return Key(ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, segment, index))
+        return Key(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemAcceleratorBind, segment, index))
     }
 
     /**
@@ -702,7 +703,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_metadata
      */
     fun getItemMetadata(index: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getItemMetadataBind, segment, index)
     }
 
     /**
@@ -713,7 +714,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_disabled
      */
     fun isItemDisabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemDisabledBind, segment, index)
     }
 
     /**
@@ -723,7 +724,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_submenu
      */
     fun getItemSubmenu(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemSubmenuBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemSubmenuBind, segment, index)
     }
 
     /**
@@ -733,7 +734,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_submenu_node
      */
     fun getItemSubmenuNode(index: Int): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemSubmenuNodeBind, segment, index))
+        return PopupMenu.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemSubmenuNodeBind, segment, index))
     }
 
     /**
@@ -743,7 +744,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_separator
      */
     fun isItemSeparator(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemSeparatorBind, segment, index)
     }
 
     /**
@@ -754,7 +755,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_checkable
      */
     fun isItemCheckable(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemCheckableBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemCheckableBind, segment, index)
     }
 
     /**
@@ -764,7 +765,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_radio_checkable
      */
     fun isItemRadioCheckable(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemRadioCheckableBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemRadioCheckableBind, segment, index)
     }
 
     /**
@@ -773,7 +774,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_item_shortcut_disabled
      */
     fun isItemShortcutDisabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemShortcutDisabledBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemShortcutDisabledBind, segment, index)
     }
 
     /**
@@ -782,7 +783,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_tooltip
      */
     fun getItemTooltip(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemTooltipBind, segment, index)
     }
 
     /**
@@ -791,7 +792,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_shortcut
      */
     fun getItemShortcut(index: Int): Shortcut? {
-        return Shortcut.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemShortcutBind, segment, index))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemShortcutBind, segment, index))
     }
 
     /**
@@ -800,7 +801,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_indent
      */
     fun getItemIndent(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndentBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemIndentBind, segment, index)
     }
 
     /**
@@ -809,7 +810,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_multistate_max
      */
     fun getItemMultistateMax(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateMaxBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemMultistateMaxBind, segment, index)
     }
 
     /**
@@ -818,7 +819,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_multistate
      */
     fun getItemMultistate(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemMultistateBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemMultistateBind, segment, index)
     }
 
     /**
@@ -828,7 +829,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_focused_item
      */
     fun setFocusedItem(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFocusedItemBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFocusedItemBind, segment, index)
     }
 
     /**
@@ -837,7 +838,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_focused_item
      */
     fun getFocusedItem(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFocusedItemBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFocusedItemBind, segment)
     }
 
     /**
@@ -846,7 +847,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setItemCountBind, segment, count)
     }
 
     /**
@@ -855,7 +856,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
     }
 
     /**
@@ -864,7 +865,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.scroll_to_item
      */
     fun scrollToItem(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(scrollToItemBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.scrollToItemBind, segment, index)
     }
 
     /**
@@ -874,7 +875,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.remove_item
      */
     fun removeItem(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeItemBind, segment, index)
     }
 
     /**
@@ -885,7 +886,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_separator
      */
     fun addSeparator(label: String = "", id: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(addSeparatorBind, segment, label, id)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.addSeparatorBind, segment, label, id)
     }
 
     /**
@@ -895,7 +896,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.clear
      */
     fun clear(freeSubmenus: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(clearBind, segment, freeSubmenus)
+        ObjectCalls.ptrcallWithBoolArg(Binds.clearBind, segment, freeSubmenus)
     }
 
     /**
@@ -904,7 +905,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_hide_on_item_selection
      */
     fun setHideOnItemSelection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnItemSelectionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideOnItemSelectionBind, segment, enable)
     }
 
     /**
@@ -913,7 +914,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_hide_on_item_selection
      */
     fun isHideOnItemSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnItemSelectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHideOnItemSelectionBind, segment)
     }
 
     /**
@@ -922,7 +923,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_hide_on_checkable_item_selection
      */
     fun setHideOnCheckableItemSelection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnCheckableItemSelectionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideOnCheckableItemSelectionBind, segment, enable)
     }
 
     /**
@@ -931,7 +932,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_hide_on_checkable_item_selection
      */
     fun isHideOnCheckableItemSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnCheckableItemSelectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHideOnCheckableItemSelectionBind, segment)
     }
 
     /**
@@ -940,7 +941,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_hide_on_state_item_selection
      */
     fun setHideOnStateItemSelection(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnStateItemSelectionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideOnStateItemSelectionBind, segment, enable)
     }
 
     /**
@@ -949,7 +950,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_hide_on_state_item_selection
      */
     fun isHideOnStateItemSelection(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHideOnStateItemSelectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHideOnStateItemSelectionBind, segment)
     }
 
     /**
@@ -966,7 +967,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_submenu_popup_delay
      */
     fun setSubmenuPopupDelay(seconds: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSubmenuPopupDelayBind, segment, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSubmenuPopupDelayBind, segment, seconds)
     }
 
     /**
@@ -983,7 +984,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_submenu_popup_delay
      */
     fun getSubmenuPopupDelay(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSubmenuPopupDelayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSubmenuPopupDelayBind, segment)
     }
 
     /**
@@ -992,7 +993,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_allow_search
      */
     fun setAllowSearch(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowSearchBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSearchBind, segment, allow)
     }
 
     /**
@@ -1001,7 +1002,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_allow_search
      */
     fun getAllowSearch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowSearchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowSearchBind, segment)
     }
 
     /**
@@ -1010,7 +1011,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_system_menu
      */
     fun isSystemMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSystemMenuBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSystemMenuBind, segment)
     }
 
     /**
@@ -1020,7 +1021,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_system_menu
      */
     fun setSystemMenu(systemMenuId: NativeMenu.SystemMenus) {
-        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, segment, systemMenuId.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSystemMenuBind, segment, systemMenuId.value)
     }
 
     /**
@@ -1030,7 +1031,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_system_menu
      */
     fun getSystemMenu(): NativeMenu.SystemMenus {
-        return NativeMenu.SystemMenus(ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, segment))
+        return NativeMenu.SystemMenus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSystemMenuBind, segment))
     }
 
     /**
@@ -1041,7 +1042,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_enabled
      */
     fun setSearchBarEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSearchBarEnabledBind, segment, enabled)
     }
 
     /**
@@ -1052,7 +1053,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_search_bar_enabled
      */
     fun isSearchBarEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSearchBarEnabledBind, segment)
     }
 
     /**
@@ -1062,7 +1063,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_min_item_count
      */
     fun setSearchBarMinItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSearchBarMinItemCountBind, segment, count)
     }
 
     /**
@@ -1072,7 +1073,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_search_bar_min_item_count
      */
     fun getSearchBarMinItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSearchBarMinItemCountBind, segment)
     }
 
     /**
@@ -1084,7 +1085,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_fuzzy_search_enabled
      */
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSearchBarFuzzySearchEnabledBind, segment, enabled)
     }
 
     /**
@@ -1096,7 +1097,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.is_search_bar_fuzzy_search_enabled
      */
     fun isSearchBarFuzzySearchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSearchBarFuzzySearchEnabledBind, segment)
     }
 
     /**
@@ -1107,7 +1108,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_search_bar_fuzzy_search_max_misses
      */
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
     }
 
     /**
@@ -1118,7 +1119,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_search_bar_fuzzy_search_max_misses
      */
     fun getSearchBarFuzzySearchMaxMisses(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSearchBarFuzzySearchMaxMissesBind, segment)
     }
 
     /**
@@ -1127,7 +1128,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_shrink_height
      */
     fun setShrinkHeight(shrink: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShrinkHeightBind, segment, shrink)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShrinkHeightBind, segment, shrink)
     }
 
     /**
@@ -1136,7 +1137,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_shrink_height
      */
     fun getShrinkHeight(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShrinkHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShrinkHeightBind, segment)
     }
 
     /**
@@ -1145,7 +1146,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_shrink_width
      */
     fun setShrinkWidth(shrink: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShrinkWidthBind, segment, shrink)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShrinkWidthBind, segment, shrink)
     }
 
     /**
@@ -1154,7 +1155,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_shrink_width
      */
     fun getShrinkWidth(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShrinkWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShrinkWidthBind, segment)
     }
 
     /** Signal `id_pressed(id: int)`; see [TypedSignal]. */
@@ -1191,515 +1192,517 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
 
         internal fun wrap(handle: RawSegment): PopupMenu? =
             if (handle.address() == 0L) null else PopupMenu(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ACTIVATE_ITEM_BY_EVENT_HASH = 3716412023L
-        private val activateItemByEventBind by lazy {
+        @JvmField
+        val activateItemByEventBind =
             ObjectCalls.getMethodBind("PopupMenu", "activate_item_by_event", ACTIVATE_ITEM_BY_EVENT_HASH)
-        }
 
         private const val SET_PREFER_NATIVE_MENU_HASH = 2586408642L
-        private val setPreferNativeMenuBind by lazy {
+        @JvmField
+        val setPreferNativeMenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_prefer_native_menu", SET_PREFER_NATIVE_MENU_HASH)
-        }
 
         private const val IS_PREFER_NATIVE_MENU_HASH = 36873697L
-        private val isPreferNativeMenuBind by lazy {
+        @JvmField
+        val isPreferNativeMenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_prefer_native_menu", IS_PREFER_NATIVE_MENU_HASH)
-        }
 
         private const val IS_NATIVE_MENU_HASH = 36873697L
-        private val isNativeMenuBind by lazy {
+        @JvmField
+        val isNativeMenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_native_menu", IS_NATIVE_MENU_HASH)
-        }
 
         private const val ADD_ITEM_HASH = 3674230041L
-        private val addItemBind by lazy {
+        @JvmField
+        val addItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_item", ADD_ITEM_HASH)
-        }
 
         private const val ADD_ICON_ITEM_HASH = 1086190128L
-        private val addIconItemBind by lazy {
+        @JvmField
+        val addIconItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_icon_item", ADD_ICON_ITEM_HASH)
-        }
 
         private const val ADD_CHECK_ITEM_HASH = 3674230041L
-        private val addCheckItemBind by lazy {
+        @JvmField
+        val addCheckItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_check_item", ADD_CHECK_ITEM_HASH)
-        }
 
         private const val ADD_ICON_CHECK_ITEM_HASH = 1086190128L
-        private val addIconCheckItemBind by lazy {
+        @JvmField
+        val addIconCheckItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_icon_check_item", ADD_ICON_CHECK_ITEM_HASH)
-        }
 
         private const val ADD_RADIO_CHECK_ITEM_HASH = 3674230041L
-        private val addRadioCheckItemBind by lazy {
+        @JvmField
+        val addRadioCheckItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_radio_check_item", ADD_RADIO_CHECK_ITEM_HASH)
-        }
 
         private const val ADD_ICON_RADIO_CHECK_ITEM_HASH = 1086190128L
-        private val addIconRadioCheckItemBind by lazy {
+        @JvmField
+        val addIconRadioCheckItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_icon_radio_check_item", ADD_ICON_RADIO_CHECK_ITEM_HASH)
-        }
 
         private const val ADD_MULTISTATE_ITEM_HASH = 150780458L
-        private val addMultistateItemBind by lazy {
+        @JvmField
+        val addMultistateItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_multistate_item", ADD_MULTISTATE_ITEM_HASH)
-        }
 
         private const val ADD_SHORTCUT_HASH = 3451850107L
-        private val addShortcutBind by lazy {
+        @JvmField
+        val addShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_shortcut", ADD_SHORTCUT_HASH)
-        }
 
         private const val ADD_ICON_SHORTCUT_HASH = 2997871092L
-        private val addIconShortcutBind by lazy {
+        @JvmField
+        val addIconShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_icon_shortcut", ADD_ICON_SHORTCUT_HASH)
-        }
 
         private const val ADD_CHECK_SHORTCUT_HASH = 1642193386L
-        private val addCheckShortcutBind by lazy {
+        @JvmField
+        val addCheckShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_check_shortcut", ADD_CHECK_SHORTCUT_HASH)
-        }
 
         private const val ADD_ICON_CHECK_SHORTCUT_HASH = 3856247530L
-        private val addIconCheckShortcutBind by lazy {
+        @JvmField
+        val addIconCheckShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_icon_check_shortcut", ADD_ICON_CHECK_SHORTCUT_HASH)
-        }
 
         private const val ADD_RADIO_CHECK_SHORTCUT_HASH = 1642193386L
-        private val addRadioCheckShortcutBind by lazy {
+        @JvmField
+        val addRadioCheckShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_radio_check_shortcut", ADD_RADIO_CHECK_SHORTCUT_HASH)
-        }
 
         private const val ADD_ICON_RADIO_CHECK_SHORTCUT_HASH = 3856247530L
-        private val addIconRadioCheckShortcutBind by lazy {
+        @JvmField
+        val addIconRadioCheckShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_icon_radio_check_shortcut", ADD_ICON_RADIO_CHECK_SHORTCUT_HASH)
-        }
 
         private const val ADD_SUBMENU_ITEM_HASH = 2979222410L
-        private val addSubmenuItemBind by lazy {
+        @JvmField
+        val addSubmenuItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_submenu_item", ADD_SUBMENU_ITEM_HASH)
-        }
 
         private const val ADD_SUBMENU_NODE_ITEM_HASH = 1325455216L
-        private val addSubmenuNodeItemBind by lazy {
+        @JvmField
+        val addSubmenuNodeItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_submenu_node_item", ADD_SUBMENU_NODE_ITEM_HASH)
-        }
 
         private const val SET_ITEM_TEXT_HASH = 501894301L
-        private val setItemTextBind by lazy {
+        @JvmField
+        val setItemTextBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_text", SET_ITEM_TEXT_HASH)
-        }
 
         private const val SET_ITEM_TEXT_DIRECTION_HASH = 1707680378L
-        private val setItemTextDirectionBind by lazy {
+        @JvmField
+        val setItemTextDirectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_text_direction", SET_ITEM_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_ITEM_LANGUAGE_HASH = 501894301L
-        private val setItemLanguageBind by lazy {
+        @JvmField
+        val setItemLanguageBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_language", SET_ITEM_LANGUAGE_HASH)
-        }
 
         private const val SET_ITEM_AUTO_TRANSLATE_MODE_HASH = 287402019L
-        private val setItemAutoTranslateModeBind by lazy {
+        @JvmField
+        val setItemAutoTranslateModeBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_auto_translate_mode", SET_ITEM_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val SET_ITEM_ICON_HASH = 666127730L
-        private val setItemIconBind by lazy {
+        @JvmField
+        val setItemIconBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_icon", SET_ITEM_ICON_HASH)
-        }
 
         private const val SET_ITEM_ICON_MAX_WIDTH_HASH = 3937882851L
-        private val setItemIconMaxWidthBind by lazy {
+        @JvmField
+        val setItemIconMaxWidthBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_icon_max_width", SET_ITEM_ICON_MAX_WIDTH_HASH)
-        }
 
         private const val SET_ITEM_ICON_MODULATE_HASH = 2878471219L
-        private val setItemIconModulateBind by lazy {
+        @JvmField
+        val setItemIconModulateBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_icon_modulate", SET_ITEM_ICON_MODULATE_HASH)
-        }
 
         private const val SET_ITEM_CHECKED_HASH = 300928843L
-        private val setItemCheckedBind by lazy {
+        @JvmField
+        val setItemCheckedBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_checked", SET_ITEM_CHECKED_HASH)
-        }
 
         private const val SET_ITEM_ID_HASH = 3937882851L
-        private val setItemIdBind by lazy {
+        @JvmField
+        val setItemIdBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_id", SET_ITEM_ID_HASH)
-        }
 
         private const val SET_ITEM_ACCELERATOR_HASH = 2992817551L
-        private val setItemAcceleratorBind by lazy {
+        @JvmField
+        val setItemAcceleratorBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_accelerator", SET_ITEM_ACCELERATOR_HASH)
-        }
 
         private const val SET_ITEM_METADATA_HASH = 2152698145L
-        private val setItemMetadataBind by lazy {
+        @JvmField
+        val setItemMetadataBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_metadata", SET_ITEM_METADATA_HASH)
-        }
 
         private const val SET_ITEM_DISABLED_HASH = 300928843L
-        private val setItemDisabledBind by lazy {
+        @JvmField
+        val setItemDisabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_disabled", SET_ITEM_DISABLED_HASH)
-        }
 
         private const val SET_ITEM_SUBMENU_HASH = 501894301L
-        private val setItemSubmenuBind by lazy {
+        @JvmField
+        val setItemSubmenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_submenu", SET_ITEM_SUBMENU_HASH)
-        }
 
         private const val SET_ITEM_SUBMENU_NODE_HASH = 1068370740L
-        private val setItemSubmenuNodeBind by lazy {
+        @JvmField
+        val setItemSubmenuNodeBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_submenu_node", SET_ITEM_SUBMENU_NODE_HASH)
-        }
 
         private const val SET_ITEM_AS_SEPARATOR_HASH = 300928843L
-        private val setItemAsSeparatorBind by lazy {
+        @JvmField
+        val setItemAsSeparatorBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_as_separator", SET_ITEM_AS_SEPARATOR_HASH)
-        }
 
         private const val SET_ITEM_AS_CHECKABLE_HASH = 300928843L
-        private val setItemAsCheckableBind by lazy {
+        @JvmField
+        val setItemAsCheckableBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_as_checkable", SET_ITEM_AS_CHECKABLE_HASH)
-        }
 
         private const val SET_ITEM_AS_RADIO_CHECKABLE_HASH = 300928843L
-        private val setItemAsRadioCheckableBind by lazy {
+        @JvmField
+        val setItemAsRadioCheckableBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_as_radio_checkable", SET_ITEM_AS_RADIO_CHECKABLE_HASH)
-        }
 
         private const val SET_ITEM_TOOLTIP_HASH = 501894301L
-        private val setItemTooltipBind by lazy {
+        @JvmField
+        val setItemTooltipBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_tooltip", SET_ITEM_TOOLTIP_HASH)
-        }
 
         private const val SET_ITEM_SHORTCUT_HASH = 825127832L
-        private val setItemShortcutBind by lazy {
+        @JvmField
+        val setItemShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_shortcut", SET_ITEM_SHORTCUT_HASH)
-        }
 
         private const val SET_ITEM_INDENT_HASH = 3937882851L
-        private val setItemIndentBind by lazy {
+        @JvmField
+        val setItemIndentBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_indent", SET_ITEM_INDENT_HASH)
-        }
 
         private const val SET_ITEM_MULTISTATE_HASH = 3937882851L
-        private val setItemMultistateBind by lazy {
+        @JvmField
+        val setItemMultistateBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_multistate", SET_ITEM_MULTISTATE_HASH)
-        }
 
         private const val SET_ITEM_MULTISTATE_MAX_HASH = 3937882851L
-        private val setItemMultistateMaxBind by lazy {
+        @JvmField
+        val setItemMultistateMaxBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_multistate_max", SET_ITEM_MULTISTATE_MAX_HASH)
-        }
 
         private const val SET_ITEM_SHORTCUT_DISABLED_HASH = 300928843L
-        private val setItemShortcutDisabledBind by lazy {
+        @JvmField
+        val setItemShortcutDisabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_shortcut_disabled", SET_ITEM_SHORTCUT_DISABLED_HASH)
-        }
 
         private const val SET_ITEM_INDEX_HASH = 3937882851L
-        private val setItemIndexBind by lazy {
+        @JvmField
+        val setItemIndexBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_index", SET_ITEM_INDEX_HASH)
-        }
 
         private const val TOGGLE_ITEM_CHECKED_HASH = 1286410249L
-        private val toggleItemCheckedBind by lazy {
+        @JvmField
+        val toggleItemCheckedBind =
             ObjectCalls.getMethodBind("PopupMenu", "toggle_item_checked", TOGGLE_ITEM_CHECKED_HASH)
-        }
 
         private const val TOGGLE_ITEM_MULTISTATE_HASH = 1286410249L
-        private val toggleItemMultistateBind by lazy {
+        @JvmField
+        val toggleItemMultistateBind =
             ObjectCalls.getMethodBind("PopupMenu", "toggle_item_multistate", TOGGLE_ITEM_MULTISTATE_HASH)
-        }
 
         private const val GET_ITEM_TEXT_HASH = 844755477L
-        private val getItemTextBind by lazy {
+        @JvmField
+        val getItemTextBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_text", GET_ITEM_TEXT_HASH)
-        }
 
         private const val GET_ITEM_TEXT_DIRECTION_HASH = 4235602388L
-        private val getItemTextDirectionBind by lazy {
+        @JvmField
+        val getItemTextDirectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_text_direction", GET_ITEM_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_ITEM_LANGUAGE_HASH = 844755477L
-        private val getItemLanguageBind by lazy {
+        @JvmField
+        val getItemLanguageBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_language", GET_ITEM_LANGUAGE_HASH)
-        }
 
         private const val GET_ITEM_AUTO_TRANSLATE_MODE_HASH = 906302372L
-        private val getItemAutoTranslateModeBind by lazy {
+        @JvmField
+        val getItemAutoTranslateModeBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_auto_translate_mode", GET_ITEM_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val GET_ITEM_ICON_HASH = 3536238170L
-        private val getItemIconBind by lazy {
+        @JvmField
+        val getItemIconBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_icon", GET_ITEM_ICON_HASH)
-        }
 
         private const val GET_ITEM_ICON_MAX_WIDTH_HASH = 923996154L
-        private val getItemIconMaxWidthBind by lazy {
+        @JvmField
+        val getItemIconMaxWidthBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_icon_max_width", GET_ITEM_ICON_MAX_WIDTH_HASH)
-        }
 
         private const val GET_ITEM_ICON_MODULATE_HASH = 3457211756L
-        private val getItemIconModulateBind by lazy {
+        @JvmField
+        val getItemIconModulateBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_icon_modulate", GET_ITEM_ICON_MODULATE_HASH)
-        }
 
         private const val IS_ITEM_CHECKED_HASH = 1116898809L
-        private val isItemCheckedBind by lazy {
+        @JvmField
+        val isItemCheckedBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_checked", IS_ITEM_CHECKED_HASH)
-        }
 
         private const val GET_ITEM_ID_HASH = 923996154L
-        private val getItemIdBind by lazy {
+        @JvmField
+        val getItemIdBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_id", GET_ITEM_ID_HASH)
-        }
 
         private const val GET_ITEM_INDEX_HASH = 923996154L
-        private val getItemIndexBind by lazy {
+        @JvmField
+        val getItemIndexBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_index", GET_ITEM_INDEX_HASH)
-        }
 
         private const val GET_ITEM_ACCELERATOR_HASH = 253789942L
-        private val getItemAcceleratorBind by lazy {
+        @JvmField
+        val getItemAcceleratorBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_accelerator", GET_ITEM_ACCELERATOR_HASH)
-        }
 
         private const val GET_ITEM_METADATA_HASH = 4227898402L
-        private val getItemMetadataBind by lazy {
+        @JvmField
+        val getItemMetadataBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_metadata", GET_ITEM_METADATA_HASH)
-        }
 
         private const val IS_ITEM_DISABLED_HASH = 1116898809L
-        private val isItemDisabledBind by lazy {
+        @JvmField
+        val isItemDisabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_disabled", IS_ITEM_DISABLED_HASH)
-        }
 
         private const val GET_ITEM_SUBMENU_HASH = 844755477L
-        private val getItemSubmenuBind by lazy {
+        @JvmField
+        val getItemSubmenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_submenu", GET_ITEM_SUBMENU_HASH)
-        }
 
         private const val GET_ITEM_SUBMENU_NODE_HASH = 2100501353L
-        private val getItemSubmenuNodeBind by lazy {
+        @JvmField
+        val getItemSubmenuNodeBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_submenu_node", GET_ITEM_SUBMENU_NODE_HASH)
-        }
 
         private const val IS_ITEM_SEPARATOR_HASH = 1116898809L
-        private val isItemSeparatorBind by lazy {
+        @JvmField
+        val isItemSeparatorBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_separator", IS_ITEM_SEPARATOR_HASH)
-        }
 
         private const val IS_ITEM_CHECKABLE_HASH = 1116898809L
-        private val isItemCheckableBind by lazy {
+        @JvmField
+        val isItemCheckableBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_checkable", IS_ITEM_CHECKABLE_HASH)
-        }
 
         private const val IS_ITEM_RADIO_CHECKABLE_HASH = 1116898809L
-        private val isItemRadioCheckableBind by lazy {
+        @JvmField
+        val isItemRadioCheckableBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_radio_checkable", IS_ITEM_RADIO_CHECKABLE_HASH)
-        }
 
         private const val IS_ITEM_SHORTCUT_DISABLED_HASH = 1116898809L
-        private val isItemShortcutDisabledBind by lazy {
+        @JvmField
+        val isItemShortcutDisabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_shortcut_disabled", IS_ITEM_SHORTCUT_DISABLED_HASH)
-        }
 
         private const val GET_ITEM_TOOLTIP_HASH = 844755477L
-        private val getItemTooltipBind by lazy {
+        @JvmField
+        val getItemTooltipBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
-        }
 
         private const val GET_ITEM_SHORTCUT_HASH = 1449483325L
-        private val getItemShortcutBind by lazy {
+        @JvmField
+        val getItemShortcutBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_shortcut", GET_ITEM_SHORTCUT_HASH)
-        }
 
         private const val GET_ITEM_INDENT_HASH = 923996154L
-        private val getItemIndentBind by lazy {
+        @JvmField
+        val getItemIndentBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_indent", GET_ITEM_INDENT_HASH)
-        }
 
         private const val GET_ITEM_MULTISTATE_MAX_HASH = 923996154L
-        private val getItemMultistateMaxBind by lazy {
+        @JvmField
+        val getItemMultistateMaxBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_multistate_max", GET_ITEM_MULTISTATE_MAX_HASH)
-        }
 
         private const val GET_ITEM_MULTISTATE_HASH = 923996154L
-        private val getItemMultistateBind by lazy {
+        @JvmField
+        val getItemMultistateBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_multistate", GET_ITEM_MULTISTATE_HASH)
-        }
 
         private const val SET_FOCUSED_ITEM_HASH = 1286410249L
-        private val setFocusedItemBind by lazy {
+        @JvmField
+        val setFocusedItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_focused_item", SET_FOCUSED_ITEM_HASH)
-        }
 
         private const val GET_FOCUSED_ITEM_HASH = 3905245786L
-        private val getFocusedItemBind by lazy {
+        @JvmField
+        val getFocusedItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_focused_item", GET_FOCUSED_ITEM_HASH)
-        }
 
         private const val SET_ITEM_COUNT_HASH = 1286410249L
-        private val setItemCountBind by lazy {
+        @JvmField
+        val setItemCountBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_count", SET_ITEM_COUNT_HASH)
-        }
 
         private const val GET_ITEM_COUNT_HASH = 3905245786L
-        private val getItemCountBind by lazy {
+        @JvmField
+        val getItemCountBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_item_count", GET_ITEM_COUNT_HASH)
-        }
 
         private const val SCROLL_TO_ITEM_HASH = 1286410249L
-        private val scrollToItemBind by lazy {
+        @JvmField
+        val scrollToItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "scroll_to_item", SCROLL_TO_ITEM_HASH)
-        }
 
         private const val REMOVE_ITEM_HASH = 1286410249L
-        private val removeItemBind by lazy {
+        @JvmField
+        val removeItemBind =
             ObjectCalls.getMethodBind("PopupMenu", "remove_item", REMOVE_ITEM_HASH)
-        }
 
         private const val ADD_SEPARATOR_HASH = 2266703459L
-        private val addSeparatorBind by lazy {
+        @JvmField
+        val addSeparatorBind =
             ObjectCalls.getMethodBind("PopupMenu", "add_separator", ADD_SEPARATOR_HASH)
-        }
 
         private const val CLEAR_HASH = 107499316L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("PopupMenu", "clear", CLEAR_HASH)
-        }
 
         private const val SET_HIDE_ON_ITEM_SELECTION_HASH = 2586408642L
-        private val setHideOnItemSelectionBind by lazy {
+        @JvmField
+        val setHideOnItemSelectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_hide_on_item_selection", SET_HIDE_ON_ITEM_SELECTION_HASH)
-        }
 
         private const val IS_HIDE_ON_ITEM_SELECTION_HASH = 36873697L
-        private val isHideOnItemSelectionBind by lazy {
+        @JvmField
+        val isHideOnItemSelectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_hide_on_item_selection", IS_HIDE_ON_ITEM_SELECTION_HASH)
-        }
 
         private const val SET_HIDE_ON_CHECKABLE_ITEM_SELECTION_HASH = 2586408642L
-        private val setHideOnCheckableItemSelectionBind by lazy {
+        @JvmField
+        val setHideOnCheckableItemSelectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_hide_on_checkable_item_selection", SET_HIDE_ON_CHECKABLE_ITEM_SELECTION_HASH)
-        }
 
         private const val IS_HIDE_ON_CHECKABLE_ITEM_SELECTION_HASH = 36873697L
-        private val isHideOnCheckableItemSelectionBind by lazy {
+        @JvmField
+        val isHideOnCheckableItemSelectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_hide_on_checkable_item_selection", IS_HIDE_ON_CHECKABLE_ITEM_SELECTION_HASH)
-        }
 
         private const val SET_HIDE_ON_STATE_ITEM_SELECTION_HASH = 2586408642L
-        private val setHideOnStateItemSelectionBind by lazy {
+        @JvmField
+        val setHideOnStateItemSelectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_hide_on_state_item_selection", SET_HIDE_ON_STATE_ITEM_SELECTION_HASH)
-        }
 
         private const val IS_HIDE_ON_STATE_ITEM_SELECTION_HASH = 36873697L
-        private val isHideOnStateItemSelectionBind by lazy {
+        @JvmField
+        val isHideOnStateItemSelectionBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_hide_on_state_item_selection", IS_HIDE_ON_STATE_ITEM_SELECTION_HASH)
-        }
 
         private const val SET_SUBMENU_POPUP_DELAY_HASH = 373806689L
-        private val setSubmenuPopupDelayBind by lazy {
+        @JvmField
+        val setSubmenuPopupDelayBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_submenu_popup_delay", SET_SUBMENU_POPUP_DELAY_HASH)
-        }
 
         private const val GET_SUBMENU_POPUP_DELAY_HASH = 1740695150L
-        private val getSubmenuPopupDelayBind by lazy {
+        @JvmField
+        val getSubmenuPopupDelayBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_submenu_popup_delay", GET_SUBMENU_POPUP_DELAY_HASH)
-        }
 
         private const val SET_ALLOW_SEARCH_HASH = 2586408642L
-        private val setAllowSearchBind by lazy {
+        @JvmField
+        val setAllowSearchBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_allow_search", SET_ALLOW_SEARCH_HASH)
-        }
 
         private const val GET_ALLOW_SEARCH_HASH = 36873697L
-        private val getAllowSearchBind by lazy {
+        @JvmField
+        val getAllowSearchBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_allow_search", GET_ALLOW_SEARCH_HASH)
-        }
 
         private const val IS_SYSTEM_MENU_HASH = 36873697L
-        private val isSystemMenuBind by lazy {
+        @JvmField
+        val isSystemMenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_system_menu", IS_SYSTEM_MENU_HASH)
-        }
 
         private const val SET_SYSTEM_MENU_HASH = 600639674L
-        private val setSystemMenuBind by lazy {
+        @JvmField
+        val setSystemMenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_system_menu", SET_SYSTEM_MENU_HASH)
-        }
 
         private const val GET_SYSTEM_MENU_HASH = 1222557358L
-        private val getSystemMenuBind by lazy {
+        @JvmField
+        val getSystemMenuBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_system_menu", GET_SYSTEM_MENU_HASH)
-        }
 
         private const val SET_SEARCH_BAR_ENABLED_HASH = 2586408642L
-        private val setSearchBarEnabledBind by lazy {
+        @JvmField
+        val setSearchBarEnabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_search_bar_enabled", SET_SEARCH_BAR_ENABLED_HASH)
-        }
 
         private const val IS_SEARCH_BAR_ENABLED_HASH = 36873697L
-        private val isSearchBarEnabledBind by lazy {
+        @JvmField
+        val isSearchBarEnabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_search_bar_enabled", IS_SEARCH_BAR_ENABLED_HASH)
-        }
 
         private const val SET_SEARCH_BAR_MIN_ITEM_COUNT_HASH = 1286410249L
-        private val setSearchBarMinItemCountBind by lazy {
+        @JvmField
+        val setSearchBarMinItemCountBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_search_bar_min_item_count", SET_SEARCH_BAR_MIN_ITEM_COUNT_HASH)
-        }
 
         private const val GET_SEARCH_BAR_MIN_ITEM_COUNT_HASH = 3905245786L
-        private val getSearchBarMinItemCountBind by lazy {
+        @JvmField
+        val getSearchBarMinItemCountBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_search_bar_min_item_count", GET_SEARCH_BAR_MIN_ITEM_COUNT_HASH)
-        }
 
         private const val SET_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH = 2586408642L
-        private val setSearchBarFuzzySearchEnabledBind by lazy {
+        @JvmField
+        val setSearchBarFuzzySearchEnabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_search_bar_fuzzy_search_enabled", SET_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH)
-        }
 
         private const val IS_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH = 36873697L
-        private val isSearchBarFuzzySearchEnabledBind by lazy {
+        @JvmField
+        val isSearchBarFuzzySearchEnabledBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_search_bar_fuzzy_search_enabled", IS_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH)
-        }
 
         private const val SET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH = 1286410249L
-        private val setSearchBarFuzzySearchMaxMissesBind by lazy {
+        @JvmField
+        val setSearchBarFuzzySearchMaxMissesBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_search_bar_fuzzy_search_max_misses", SET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH)
-        }
 
         private const val GET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH = 3905245786L
-        private val getSearchBarFuzzySearchMaxMissesBind by lazy {
+        @JvmField
+        val getSearchBarFuzzySearchMaxMissesBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_search_bar_fuzzy_search_max_misses", GET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH)
-        }
 
         private const val SET_SHRINK_HEIGHT_HASH = 2586408642L
-        private val setShrinkHeightBind by lazy {
+        @JvmField
+        val setShrinkHeightBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_shrink_height", SET_SHRINK_HEIGHT_HASH)
-        }
 
         private const val GET_SHRINK_HEIGHT_HASH = 36873697L
-        private val getShrinkHeightBind by lazy {
+        @JvmField
+        val getShrinkHeightBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_shrink_height", GET_SHRINK_HEIGHT_HASH)
-        }
 
         private const val SET_SHRINK_WIDTH_HASH = 2586408642L
-        private val setShrinkWidthBind by lazy {
+        @JvmField
+        val setShrinkWidthBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_shrink_width", SET_SHRINK_WIDTH_HASH)
-        }
 
         private const val GET_SHRINK_WIDTH_HASH = 36873697L
-        private val getShrinkWidthBind by lazy {
+        @JvmField
+        val getShrinkWidthBind =
             ObjectCalls.getMethodBind("PopupMenu", "get_shrink_width", GET_SHRINK_WIDTH_HASH)
-        }
     }
 }

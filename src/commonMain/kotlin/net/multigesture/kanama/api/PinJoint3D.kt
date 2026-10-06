@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: PinJoint3D.set_param
      */
     fun setParam(param: PinJoint3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamBind, segment, param.value, value)
     }
 
     /**
@@ -27,7 +28,7 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: PinJoint3D.get_param
      */
     fun getParam(param: PinJoint3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamBind, segment, param.value)
     }
 
     /**
@@ -69,15 +70,17 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): PinJoint3D? =
             if (handle.address() == 0L) null else PinJoint3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PARAM_HASH = 2059913726L
-        private val setParamBind by lazy {
+        @JvmField
+        val setParamBind =
             ObjectCalls.getMethodBind("PinJoint3D", "set_param", SET_PARAM_HASH)
-        }
 
         private const val GET_PARAM_HASH = 1758438771L
-        private val getParamBind by lazy {
+        @JvmField
+        val getParamBind =
             ObjectCalls.getMethodBind("PinJoint3D", "get_param", GET_PARAM_HASH)
-        }
     }
 }

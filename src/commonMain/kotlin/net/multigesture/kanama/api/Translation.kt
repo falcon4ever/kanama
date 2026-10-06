@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun setLocale(locale: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setLocaleBind, segment, locale)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLocaleBind, segment, locale)
     }
 
     /**
@@ -40,7 +41,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getLocale(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun addMessage(srcMessage: String, xlatedMessage: String, context: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(addMessageBind, segment, srcMessage, xlatedMessage, context)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.addMessageBind, segment, srcMessage, xlatedMessage, context)
     }
 
     /**
@@ -63,7 +64,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun addPluralMessage(srcMessage: String, xlatedMessages: List<String>, context: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(addPluralMessageBind, segment, srcMessage, xlatedMessages, context)
+        ObjectCalls.ptrcallWithStringNamePackedStringListAndStringNameArgs(Binds.addPluralMessageBind, segment, srcMessage, xlatedMessages, context)
     }
 
     /**
@@ -73,7 +74,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMessage(srcMessage: String, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(getMessageBind, segment, srcMessage, context)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetStringName(Binds.getMessageBind, segment, srcMessage, context)
     }
 
     /**
@@ -86,7 +87,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getPluralMessage(srcMessage: String, srcPluralMessage: String, n: Int, context: String = ""): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(getPluralMessageBind, segment, srcMessage, srcPluralMessage, n, context)
+        return ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetStringName(Binds.getPluralMessageBind, segment, srcMessage, srcPluralMessage, n, context)
     }
 
     /**
@@ -96,7 +97,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun eraseMessage(srcMessage: String, context: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(eraseMessageBind, segment, srcMessage, context)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.eraseMessageBind, segment, srcMessage, context)
     }
 
     /**
@@ -109,7 +110,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMessageList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMessageListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getMessageListBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getTranslatedMessageList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTranslatedMessageListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getTranslatedMessageListBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMessageCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMessageCountBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun setPluralRulesOverride(rules: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setPluralRulesOverrideBind, segment, rules)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPluralRulesOverrideBind, segment, rules)
     }
 
     /**
@@ -155,7 +156,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
      */
     fun getPluralRulesOverride(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPluralRulesOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPluralRulesOverrideBind, segment)
     }
 
     companion object {
@@ -168,65 +169,67 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Translation? =
             if (handle.address() == 0L) null else Translation(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LOCALE_HASH = 83702148L
-        private val setLocaleBind by lazy {
+        @JvmField
+        val setLocaleBind =
             ObjectCalls.getMethodBind("Translation", "set_locale", SET_LOCALE_HASH)
-        }
 
         private const val GET_LOCALE_HASH = 201670096L
-        private val getLocaleBind by lazy {
+        @JvmField
+        val getLocaleBind =
             ObjectCalls.getMethodBind("Translation", "get_locale", GET_LOCALE_HASH)
-        }
 
         private const val ADD_MESSAGE_HASH = 3898530326L
-        private val addMessageBind by lazy {
+        @JvmField
+        val addMessageBind =
             ObjectCalls.getMethodBind("Translation", "add_message", ADD_MESSAGE_HASH)
-        }
 
         private const val ADD_PLURAL_MESSAGE_HASH = 2356982266L
-        private val addPluralMessageBind by lazy {
+        @JvmField
+        val addPluralMessageBind =
             ObjectCalls.getMethodBind("Translation", "add_plural_message", ADD_PLURAL_MESSAGE_HASH)
-        }
 
         private const val GET_MESSAGE_HASH = 1829228469L
-        private val getMessageBind by lazy {
+        @JvmField
+        val getMessageBind =
             ObjectCalls.getMethodBind("Translation", "get_message", GET_MESSAGE_HASH)
-        }
 
         private const val GET_PLURAL_MESSAGE_HASH = 229954002L
-        private val getPluralMessageBind by lazy {
+        @JvmField
+        val getPluralMessageBind =
             ObjectCalls.getMethodBind("Translation", "get_plural_message", GET_PLURAL_MESSAGE_HASH)
-        }
 
         private const val ERASE_MESSAGE_HASH = 3959009644L
-        private val eraseMessageBind by lazy {
+        @JvmField
+        val eraseMessageBind =
             ObjectCalls.getMethodBind("Translation", "erase_message", ERASE_MESSAGE_HASH)
-        }
 
         private const val GET_MESSAGE_LIST_HASH = 1139954409L
-        private val getMessageListBind by lazy {
+        @JvmField
+        val getMessageListBind =
             ObjectCalls.getMethodBind("Translation", "get_message_list", GET_MESSAGE_LIST_HASH)
-        }
 
         private const val GET_TRANSLATED_MESSAGE_LIST_HASH = 1139954409L
-        private val getTranslatedMessageListBind by lazy {
+        @JvmField
+        val getTranslatedMessageListBind =
             ObjectCalls.getMethodBind("Translation", "get_translated_message_list", GET_TRANSLATED_MESSAGE_LIST_HASH)
-        }
 
         private const val GET_MESSAGE_COUNT_HASH = 3905245786L
-        private val getMessageCountBind by lazy {
+        @JvmField
+        val getMessageCountBind =
             ObjectCalls.getMethodBind("Translation", "get_message_count", GET_MESSAGE_COUNT_HASH)
-        }
 
         private const val SET_PLURAL_RULES_OVERRIDE_HASH = 83702148L
-        private val setPluralRulesOverrideBind by lazy {
+        @JvmField
+        val setPluralRulesOverrideBind =
             ObjectCalls.getMethodBind("Translation", "set_plural_rules_override", SET_PLURAL_RULES_OVERRIDE_HASH)
-        }
 
         private const val GET_PLURAL_RULES_OVERRIDE_HASH = 201670096L
-        private val getPluralRulesOverrideBind by lazy {
+        @JvmField
+        val getPluralRulesOverrideBind =
             ObjectCalls.getMethodBind("Translation", "get_plural_rules_override", GET_PLURAL_RULES_OVERRIDE_HASH)
-        }
     }
 }

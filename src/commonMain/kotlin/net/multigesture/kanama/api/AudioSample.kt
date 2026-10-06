@@ -22,7 +22,5 @@ class AudioSample(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioSample? =
             if (handle.address() == 0L) null else AudioSample(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

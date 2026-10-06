@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -23,19 +24,19 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
         set(value) = setMakeLocalToPose(value)
 
     fun getTracker(): OpenXRRenderModelManager.RenderModelTracker {
-        return OpenXRRenderModelManager.RenderModelTracker(ObjectCalls.ptrcallNoArgsRetLong(getTrackerBind, segment))
+        return OpenXRRenderModelManager.RenderModelTracker(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerBind, segment))
     }
 
     fun setTracker(tracker: OpenXRRenderModelManager.RenderModelTracker) {
-        ObjectCalls.ptrcallWithLongArg(setTrackerBind, segment, tracker.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTrackerBind, segment, tracker.value)
     }
 
     fun getMakeLocalToPose(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getMakeLocalToPoseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getMakeLocalToPoseBind, segment)
     }
 
     fun setMakeLocalToPose(makeLocalToPose: String) {
-        ObjectCalls.ptrcallWithStringArg(setMakeLocalToPoseBind, segment, makeLocalToPose)
+        ObjectCalls.ptrcallWithStringArg(Binds.setMakeLocalToPoseBind, segment, makeLocalToPose)
     }
 
     /** Signal `render_model_added(render_model: OpenXRRenderModel)`; see [TypedSignal]. */
@@ -70,25 +71,27 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRRenderModelManager? =
             if (handle.address() == 0L) null else OpenXRRenderModelManager(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRACKER_HASH = 2456466356L
-        private val getTrackerBind by lazy {
+        @JvmField
+        val getTrackerBind =
             ObjectCalls.getMethodBind("OpenXRRenderModelManager", "get_tracker", GET_TRACKER_HASH)
-        }
 
         private const val SET_TRACKER_HASH = 2814627380L
-        private val setTrackerBind by lazy {
+        @JvmField
+        val setTrackerBind =
             ObjectCalls.getMethodBind("OpenXRRenderModelManager", "set_tracker", SET_TRACKER_HASH)
-        }
 
         private const val GET_MAKE_LOCAL_TO_POSE_HASH = 201670096L
-        private val getMakeLocalToPoseBind by lazy {
+        @JvmField
+        val getMakeLocalToPoseBind =
             ObjectCalls.getMethodBind("OpenXRRenderModelManager", "get_make_local_to_pose", GET_MAKE_LOCAL_TO_POSE_HASH)
-        }
 
         private const val SET_MAKE_LOCAL_TO_POSE_HASH = 83702148L
-        private val setMakeLocalToPoseBind by lazy {
+        @JvmField
+        val setMakeLocalToPoseBind =
             ObjectCalls.getMethodBind("OpenXRRenderModelManager", "set_make_local_to_pose", SET_MAKE_LOCAL_TO_POSE_HASH)
-        }
     }
 }

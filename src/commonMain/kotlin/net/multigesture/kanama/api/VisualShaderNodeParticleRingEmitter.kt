@@ -20,7 +20,5 @@ class VisualShaderNodeParticleRingEmitter(handle: GodotHandle) : VisualShaderNod
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleRingEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRingEmitter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

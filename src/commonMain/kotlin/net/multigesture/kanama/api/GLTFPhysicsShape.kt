@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -55,100 +56,100 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
 
     fun toNode(cacheShapes: Boolean = false): CollisionShape3D? {
         checkOpen()
-        return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toNodeBind, segment, cacheShapes))
+        return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toNodeBind, segment, cacheShapes))
     }
 
     fun toResource(cacheShapes: Boolean = false): Shape3D? {
         checkOpen()
-        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, segment, cacheShapes))
+        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toResourceBind, segment, cacheShapes))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
     fun getShapeType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getShapeTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getShapeTypeBind, segment)
     }
 
     fun setShapeType(shapeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setShapeTypeBind, segment, shapeType)
+        ObjectCalls.ptrcallWithStringArg(Binds.setShapeTypeBind, segment, shapeType)
     }
 
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     fun getIsTrigger(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsTriggerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsTriggerBind, segment)
     }
 
     fun setIsTrigger(isTrigger: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsTriggerBind, segment, isTrigger)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIsTriggerBind, segment, isTrigger)
     }
 
     fun getMeshIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMeshIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMeshIndexBind, segment)
     }
 
     fun setMeshIndex(meshIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMeshIndexBind, segment, meshIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMeshIndexBind, segment, meshIndex)
     }
 
     fun getImporterMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getImporterMeshBind, segment))
+        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImporterMeshBind, segment))
     }
 
     fun setImporterMesh(importerMesh: ImporterMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setImporterMeshBind, segment, listOf(importerMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setImporterMeshBind, segment, listOf(importerMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
         fun fromNode(shapeNode: CollisionShape3D): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, shapeNode.segment))
+            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, shapeNode.segment))
         }
 
         fun fromResource(shapeResource: Shape3D?): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
+            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
@@ -160,105 +161,107 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFPhysicsShape? =
             if (handle.address() == 0L) null else GLTFPhysicsShape(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FROM_NODE_HASH = 3613751275L
-        private val fromNodeBind by lazy {
+        @JvmField
+        val fromNodeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "from_node", FROM_NODE_HASH)
-        }
 
         private const val TO_NODE_HASH = 563689933L
-        private val toNodeBind by lazy {
+        @JvmField
+        val toNodeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "to_node", TO_NODE_HASH)
-        }
 
         private const val FROM_RESOURCE_HASH = 3845569786L
-        private val fromResourceBind by lazy {
+        @JvmField
+        val fromResourceBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "from_resource", FROM_RESOURCE_HASH)
-        }
 
         private const val TO_RESOURCE_HASH = 1913542110L
-        private val toResourceBind by lazy {
+        @JvmField
+        val toResourceBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "to_resource", TO_RESOURCE_HASH)
-        }
 
         private const val FROM_DICTIONARY_HASH = 2390691823L
-        private val fromDictionaryBind by lazy {
+        @JvmField
+        val fromDictionaryBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "from_dictionary", FROM_DICTIONARY_HASH)
-        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
-        private val toDictionaryBind by lazy {
+        @JvmField
+        val toDictionaryBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "to_dictionary", TO_DICTIONARY_HASH)
-        }
 
         private const val GET_SHAPE_TYPE_HASH = 201670096L
-        private val getShapeTypeBind by lazy {
+        @JvmField
+        val getShapeTypeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_shape_type", GET_SHAPE_TYPE_HASH)
-        }
 
         private const val SET_SHAPE_TYPE_HASH = 83702148L
-        private val setShapeTypeBind by lazy {
+        @JvmField
+        val setShapeTypeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_shape_type", SET_SHAPE_TYPE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_IS_TRIGGER_HASH = 36873697L
-        private val getIsTriggerBind by lazy {
+        @JvmField
+        val getIsTriggerBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_is_trigger", GET_IS_TRIGGER_HASH)
-        }
 
         private const val SET_IS_TRIGGER_HASH = 2586408642L
-        private val setIsTriggerBind by lazy {
+        @JvmField
+        val setIsTriggerBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_is_trigger", SET_IS_TRIGGER_HASH)
-        }
 
         private const val GET_MESH_INDEX_HASH = 3905245786L
-        private val getMeshIndexBind by lazy {
+        @JvmField
+        val getMeshIndexBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_mesh_index", GET_MESH_INDEX_HASH)
-        }
 
         private const val SET_MESH_INDEX_HASH = 1286410249L
-        private val setMeshIndexBind by lazy {
+        @JvmField
+        val setMeshIndexBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_mesh_index", SET_MESH_INDEX_HASH)
-        }
 
         private const val GET_IMPORTER_MESH_HASH = 3161779525L
-        private val getImporterMeshBind by lazy {
+        @JvmField
+        val getImporterMeshBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "get_importer_mesh", GET_IMPORTER_MESH_HASH)
-        }
 
         private const val SET_IMPORTER_MESH_HASH = 2255166972L
-        private val setImporterMeshBind by lazy {
+        @JvmField
+        val setImporterMeshBind =
             ObjectCalls.getMethodBind("GLTFPhysicsShape", "set_importer_mesh", SET_IMPORTER_MESH_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun has(property: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasBind, segment, property)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasBind, segment, property)
     }
 
     /**
@@ -28,7 +29,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFilesToExport(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFilesToExportBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesToExportBind, segment)
     }
 
     /**
@@ -40,7 +41,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomizedFiles(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getCustomizedFilesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getCustomizedFilesBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomizedFilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCustomizedFilesCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomizedFilesCountBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasExportFile(path: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasExportFileBind, segment, path)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasExportFileBind, segment, path)
     }
 
     /**
@@ -70,7 +71,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFileExportMode(path: String, default: EditorExportPreset.FileExportMode = EditorExportPreset.FileExportMode.NOT_CUSTOMIZED): EditorExportPreset.FileExportMode {
         checkOpen()
-        return EditorExportPreset.FileExportMode(ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, segment, path, default.value))
+        return EditorExportPreset.FileExportMode(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.getFileExportModeBind, segment, path, default.value))
     }
 
     /**
@@ -81,7 +82,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getProjectSetting(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getProjectSettingBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getProjectSettingBind, segment, name)
     }
 
     /**
@@ -91,7 +92,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPresetName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPresetNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPresetNameBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isRunnable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunnableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunnableBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun areAdvancedOptionsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(areAdvancedOptionsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areAdvancedOptionsEnabledBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDedicatedServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDedicatedServerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDedicatedServerBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportFilter(): EditorExportPreset.ExportFilter {
         checkOpen()
-        return EditorExportPreset.ExportFilter(ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, segment))
+        return EditorExportPreset.ExportFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getExportFilterBind, segment))
     }
 
     /**
@@ -141,7 +142,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIncludeFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIncludeFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIncludeFilterBind, segment)
     }
 
     /**
@@ -151,7 +152,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExcludeFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getExcludeFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExcludeFilterBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCustomFeaturesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomFeaturesBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPatches(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getPatchesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPatchesBind, segment)
     }
 
     /**
@@ -182,7 +183,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getExportPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExportPathBind, segment)
     }
 
     /**
@@ -192,7 +193,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptionInFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionInFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionInFilterBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptionExFilter(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionExFilterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionExFilterBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptPck(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEncryptPckBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEncryptPckBind, segment)
     }
 
     /**
@@ -222,7 +223,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptDirectory(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEncryptDirectoryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEncryptDirectoryBind, segment)
     }
 
     /**
@@ -232,7 +233,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncryptionKey(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEncryptionKeyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionKeyBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getScriptExportMode(): EditorExportPreset.ScriptExportMode {
         checkOpen()
-        return EditorExportPreset.ScriptExportMode(ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, segment))
+        return EditorExportPreset.ScriptExportMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScriptExportModeBind, segment))
     }
 
     /**
@@ -253,7 +254,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOrEnv(name: String, envVar: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(getOrEnvBind, segment, name, envVar)
+        return ObjectCalls.ptrcallWithStringNameAndStringArgRetVariantScalar(Binds.getOrEnvBind, segment, name, envVar)
     }
 
     /**
@@ -266,7 +267,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVersion(name: String, windowsVersion: Boolean): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, segment, name, windowsVersion)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(Binds.getVersionBind, segment, name, windowsVersion)
     }
 
     /**
@@ -329,130 +330,132 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPreset? =
             if (handle.address() == 0L) null else EditorExportPreset(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val HAS_HASH = 2619796661L
-        private val hasBind by lazy {
+        @JvmField
+        val hasBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "has", HAS_HASH)
-        }
 
         private const val GET_FILES_TO_EXPORT_HASH = 1139954409L
-        private val getFilesToExportBind by lazy {
+        @JvmField
+        val getFilesToExportBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_files_to_export", GET_FILES_TO_EXPORT_HASH)
-        }
 
         private const val GET_CUSTOMIZED_FILES_HASH = 3102165223L
-        private val getCustomizedFilesBind by lazy {
+        @JvmField
+        val getCustomizedFilesBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_customized_files", GET_CUSTOMIZED_FILES_HASH)
-        }
 
         private const val GET_CUSTOMIZED_FILES_COUNT_HASH = 3905245786L
-        private val getCustomizedFilesCountBind by lazy {
+        @JvmField
+        val getCustomizedFilesCountBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_customized_files_count", GET_CUSTOMIZED_FILES_COUNT_HASH)
-        }
 
         private const val HAS_EXPORT_FILE_HASH = 2323990056L
-        private val hasExportFileBind by lazy {
+        @JvmField
+        val hasExportFileBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "has_export_file", HAS_EXPORT_FILE_HASH)
-        }
 
         private const val GET_FILE_EXPORT_MODE_HASH = 407825436L
-        private val getFileExportModeBind by lazy {
+        @JvmField
+        val getFileExportModeBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_file_export_mode", GET_FILE_EXPORT_MODE_HASH)
-        }
 
         private const val GET_PROJECT_SETTING_HASH = 2138907829L
-        private val getProjectSettingBind by lazy {
+        @JvmField
+        val getProjectSettingBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_project_setting", GET_PROJECT_SETTING_HASH)
-        }
 
         private const val GET_PRESET_NAME_HASH = 201670096L
-        private val getPresetNameBind by lazy {
+        @JvmField
+        val getPresetNameBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_preset_name", GET_PRESET_NAME_HASH)
-        }
 
         private const val IS_RUNNABLE_HASH = 36873697L
-        private val isRunnableBind by lazy {
+        @JvmField
+        val isRunnableBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "is_runnable", IS_RUNNABLE_HASH)
-        }
 
         private const val ARE_ADVANCED_OPTIONS_ENABLED_HASH = 36873697L
-        private val areAdvancedOptionsEnabledBind by lazy {
+        @JvmField
+        val areAdvancedOptionsEnabledBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "are_advanced_options_enabled", ARE_ADVANCED_OPTIONS_ENABLED_HASH)
-        }
 
         private const val IS_DEDICATED_SERVER_HASH = 36873697L
-        private val isDedicatedServerBind by lazy {
+        @JvmField
+        val isDedicatedServerBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "is_dedicated_server", IS_DEDICATED_SERVER_HASH)
-        }
 
         private const val GET_EXPORT_FILTER_HASH = 4227045696L
-        private val getExportFilterBind by lazy {
+        @JvmField
+        val getExportFilterBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_export_filter", GET_EXPORT_FILTER_HASH)
-        }
 
         private const val GET_INCLUDE_FILTER_HASH = 201670096L
-        private val getIncludeFilterBind by lazy {
+        @JvmField
+        val getIncludeFilterBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_include_filter", GET_INCLUDE_FILTER_HASH)
-        }
 
         private const val GET_EXCLUDE_FILTER_HASH = 201670096L
-        private val getExcludeFilterBind by lazy {
+        @JvmField
+        val getExcludeFilterBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_exclude_filter", GET_EXCLUDE_FILTER_HASH)
-        }
 
         private const val GET_CUSTOM_FEATURES_HASH = 201670096L
-        private val getCustomFeaturesBind by lazy {
+        @JvmField
+        val getCustomFeaturesBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_custom_features", GET_CUSTOM_FEATURES_HASH)
-        }
 
         private const val GET_PATCHES_HASH = 1139954409L
-        private val getPatchesBind by lazy {
+        @JvmField
+        val getPatchesBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_patches", GET_PATCHES_HASH)
-        }
 
         private const val GET_EXPORT_PATH_HASH = 201670096L
-        private val getExportPathBind by lazy {
+        @JvmField
+        val getExportPathBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_export_path", GET_EXPORT_PATH_HASH)
-        }
 
         private const val GET_ENCRYPTION_IN_FILTER_HASH = 201670096L
-        private val getEncryptionInFilterBind by lazy {
+        @JvmField
+        val getEncryptionInFilterBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_encryption_in_filter", GET_ENCRYPTION_IN_FILTER_HASH)
-        }
 
         private const val GET_ENCRYPTION_EX_FILTER_HASH = 201670096L
-        private val getEncryptionExFilterBind by lazy {
+        @JvmField
+        val getEncryptionExFilterBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_encryption_ex_filter", GET_ENCRYPTION_EX_FILTER_HASH)
-        }
 
         private const val GET_ENCRYPT_PCK_HASH = 36873697L
-        private val getEncryptPckBind by lazy {
+        @JvmField
+        val getEncryptPckBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_encrypt_pck", GET_ENCRYPT_PCK_HASH)
-        }
 
         private const val GET_ENCRYPT_DIRECTORY_HASH = 36873697L
-        private val getEncryptDirectoryBind by lazy {
+        @JvmField
+        val getEncryptDirectoryBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_encrypt_directory", GET_ENCRYPT_DIRECTORY_HASH)
-        }
 
         private const val GET_ENCRYPTION_KEY_HASH = 201670096L
-        private val getEncryptionKeyBind by lazy {
+        @JvmField
+        val getEncryptionKeyBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_encryption_key", GET_ENCRYPTION_KEY_HASH)
-        }
 
         private const val GET_SCRIPT_EXPORT_MODE_HASH = 2835358398L
-        private val getScriptExportModeBind by lazy {
+        @JvmField
+        val getScriptExportModeBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_script_export_mode", GET_SCRIPT_EXPORT_MODE_HASH)
-        }
 
         private const val GET_OR_ENV_HASH = 389838787L
-        private val getOrEnvBind by lazy {
+        @JvmField
+        val getOrEnvBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_or_env", GET_OR_ENV_HASH)
-        }
 
         private const val GET_VERSION_HASH = 1132184663L
-        private val getVersionBind by lazy {
+        @JvmField
+        val getVersionBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_version", GET_VERSION_HASH)
-        }
     }
 }

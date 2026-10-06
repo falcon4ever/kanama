@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -323,7 +324,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_world_2d
      */
     fun setWorld2d(world2d: World2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -332,7 +333,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_world_2d
      */
     fun getWorld2d(): World2D? {
-        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
+        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getWorld2dBind, segment))
     }
 
     /**
@@ -342,7 +343,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.find_world_2d
      */
     fun findWorld2d(): World2D? {
-        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, segment))
+        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.findWorld2dBind, segment))
     }
 
     /**
@@ -352,7 +353,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_canvas_transform
      */
     fun setCanvasTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setCanvasTransformBind, segment, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setCanvasTransformBind, segment, xform)
     }
 
     /**
@@ -362,7 +363,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_canvas_transform
      */
     fun getCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getCanvasTransformBind, segment)
     }
 
     /**
@@ -371,7 +372,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_global_canvas_transform
      */
     fun setGlobalCanvasTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setGlobalCanvasTransformBind, segment, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setGlobalCanvasTransformBind, segment, xform)
     }
 
     /**
@@ -380,7 +381,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_global_canvas_transform
      */
     fun getGlobalCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalCanvasTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getGlobalCanvasTransformBind, segment)
     }
 
     /**
@@ -398,7 +399,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_stretch_transform
      */
     fun getStretchTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getStretchTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getStretchTransformBind, segment)
     }
 
     /**
@@ -407,7 +408,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_final_transform
      */
     fun getFinalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getFinalTransformBind, segment)
     }
 
     /**
@@ -417,7 +418,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_screen_transform
      */
     fun getScreenTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getScreenTransformBind, segment)
     }
 
     /**
@@ -426,7 +427,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_visible_rect
      */
     fun getVisibleRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getVisibleRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getVisibleRectBind, segment)
     }
 
     /**
@@ -438,7 +439,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_transparent_background
      */
     fun setTransparentBackground(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransparentBackgroundBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTransparentBackgroundBind, segment, enable)
     }
 
     /**
@@ -450,7 +451,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.has_transparent_background
      */
     fun hasTransparentBackground(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasTransparentBackgroundBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTransparentBackgroundBind, segment)
     }
 
     /**
@@ -466,7 +467,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_hdr_2d
      */
     fun setUseHdr2d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseHdr2dBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseHdr2dBind, segment, enable)
     }
 
     /**
@@ -482,7 +483,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_hdr_2d
      */
     fun isUsingHdr2d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdr2dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdr2dBind, segment)
     }
 
     /**
@@ -496,7 +497,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_msaa_2d
      */
     fun setMsaa2d(msaa: Viewport.MSAA) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, segment, msaa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMsaa2dBind, segment, msaa.value)
     }
 
     /**
@@ -510,7 +511,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_msaa_2d
      */
     fun getMsaa2d(): Viewport.MSAA {
-        return Viewport.MSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, segment))
+        return Viewport.MSAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMsaa2dBind, segment))
     }
 
     /**
@@ -525,7 +526,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_msaa_3d
      */
     fun setMsaa3d(msaa: Viewport.MSAA) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMsaa3dBind, segment, msaa.value)
     }
 
     /**
@@ -540,7 +541,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_msaa_3d
      */
     fun getMsaa3d(): Viewport.MSAA {
-        return Viewport.MSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment))
+        return Viewport.MSAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMsaa3dBind, segment))
     }
 
     /**
@@ -554,7 +555,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_screen_space_aa
      */
     fun setScreenSpaceAa(screenSpaceAa: Viewport.ScreenSpaceAA) {
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScreenSpaceAaBind, segment, screenSpaceAa.value)
     }
 
     /**
@@ -568,7 +569,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_screen_space_aa
      */
     fun getScreenSpaceAa(): Viewport.ScreenSpaceAA {
-        return Viewport.ScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment))
+        return Viewport.ScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScreenSpaceAaBind, segment))
     }
 
     /**
@@ -582,7 +583,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_taa
      */
     fun setUseTaa(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseTaaBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseTaaBind, segment, enable)
     }
 
     /**
@@ -596,7 +597,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_taa
      */
     fun isUsingTaa(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTaaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingTaaBind, segment)
     }
 
     /**
@@ -614,7 +615,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_debanding
      */
     fun setUseDebanding(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseDebandingBind, segment, enable)
     }
 
     /**
@@ -632,7 +633,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_debanding
      */
     fun isUsingDebanding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingDebandingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingDebandingBind, segment)
     }
 
     /**
@@ -651,7 +652,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_occlusion_culling
      */
     fun setUseOcclusionCulling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOcclusionCullingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseOcclusionCullingBind, segment, enable)
     }
 
     /**
@@ -670,7 +671,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_occlusion_culling
      */
     fun isUsingOcclusionCulling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOcclusionCullingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingOcclusionCullingBind, segment)
     }
 
     /**
@@ -679,7 +680,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_debug_draw
      */
     fun setDebugDraw(debugDraw: Viewport.DebugDraw) {
-        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, segment, debugDraw.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDebugDrawBind, segment, debugDraw.value)
     }
 
     /**
@@ -688,7 +689,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_debug_draw
      */
     fun getDebugDraw(): Viewport.DebugDraw {
-        return Viewport.DebugDraw(ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, segment))
+        return Viewport.DebugDraw(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDebugDrawBind, segment))
     }
 
     /**
@@ -699,7 +700,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_oversampling
      */
     fun setUseOversampling(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOversamplingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseOversamplingBind, segment, enable)
     }
 
     /**
@@ -710,7 +711,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_oversampling
      */
     fun isUsingOversampling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOversamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingOversamplingBind, segment)
     }
 
     /**
@@ -720,7 +721,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_oversampling_override
      */
     fun setOversamplingOverride(oversampling: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingOverrideBind, segment, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOversamplingOverrideBind, segment, oversampling)
     }
 
     /**
@@ -730,7 +731,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_oversampling_override
      */
     fun getOversamplingOverride(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingOverrideBind, segment)
     }
 
     /**
@@ -739,7 +740,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_oversampling
      */
     fun getOversampling(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
     }
 
     /**
@@ -748,7 +749,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_render_info
      */
     fun getRenderInfo(type: Viewport.RenderInfoType, info: Viewport.RenderInfo): Int {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, segment, type.value, info.value)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(Binds.getRenderInfoBind, segment, type.value, info.value)
     }
 
     /**
@@ -760,7 +761,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_texture
      */
     fun getTexture(): ViewportTexture? {
-        return ViewportTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return ViewportTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -771,7 +772,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_physics_object_picking
      */
     fun setPhysicsObjectPicking(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPhysicsObjectPickingBind, segment, enable)
     }
 
     /**
@@ -782,7 +783,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_physics_object_picking
      */
     fun getPhysicsObjectPicking(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPhysicsObjectPickingBind, segment)
     }
 
     /**
@@ -796,7 +797,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_physics_object_picking_sort
      */
     fun setPhysicsObjectPickingSort(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingSortBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPhysicsObjectPickingSortBind, segment, enable)
     }
 
     /**
@@ -810,7 +811,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_physics_object_picking_sort
      */
     fun getPhysicsObjectPickingSort(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingSortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPhysicsObjectPickingSortBind, segment)
     }
 
     /**
@@ -822,7 +823,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_physics_object_picking_first_only
      */
     fun setPhysicsObjectPickingFirstOnly(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingFirstOnlyBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPhysicsObjectPickingFirstOnlyBind, segment, enable)
     }
 
     /**
@@ -834,7 +835,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_physics_object_picking_first_only
      */
     fun getPhysicsObjectPickingFirstOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingFirstOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPhysicsObjectPickingFirstOnlyBind, segment)
     }
 
     /**
@@ -843,7 +844,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_viewport_rid
      */
     fun getViewportRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getViewportRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getViewportRidBind, segment)
     }
 
     /**
@@ -853,7 +854,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.push_text_input
      */
     fun pushTextInput(text: String) {
-        ObjectCalls.ptrcallWithStringArg(pushTextInputBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.pushTextInputBind, segment, text)
     }
 
     /**
@@ -874,7 +875,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.push_input
      */
     fun pushInput(event: InputEvent, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, segment, event.requireOpenHandle(), inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.pushInputBind, segment, event.requireOpenHandle(), inLocalCoords)
     }
 
     /**
@@ -893,7 +894,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.push_unhandled_input
      */
     fun pushUnhandledInput(event: InputEvent, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, segment, event.requireOpenHandle(), inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.pushUnhandledInputBind, segment, event.requireOpenHandle(), inLocalCoords)
     }
 
     /**
@@ -907,7 +908,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.notify_mouse_entered
      */
     fun notifyMouseEntered() {
-        ObjectCalls.ptrcallNoArgs(notifyMouseEnteredBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.notifyMouseEnteredBind, segment)
     }
 
     /**
@@ -921,7 +922,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.notify_mouse_exited
      */
     fun notifyMouseExited() {
-        ObjectCalls.ptrcallNoArgs(notifyMouseExitedBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.notifyMouseExitedBind, segment)
     }
 
     /**
@@ -930,7 +931,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_mouse_position
      */
     fun getMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMousePositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMousePositionBind, segment)
     }
 
     /**
@@ -941,7 +942,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.warp_mouse
      */
     fun warpMouse(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.warpMouseBind, segment, position)
     }
 
     /**
@@ -953,7 +954,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.update_mouse_cursor_state
      */
     fun updateMouseCursorState() {
-        ObjectCalls.ptrcallNoArgs(updateMouseCursorStateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateMouseCursorStateBind, segment)
     }
 
     /**
@@ -963,7 +964,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_cancel_drag
      */
     fun guiCancelDrag() {
-        ObjectCalls.ptrcallNoArgs(guiCancelDragBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.guiCancelDragBind, segment)
     }
 
     /**
@@ -972,7 +973,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_drag_data
      */
     fun guiGetDragData(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(guiGetDragDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.guiGetDragDataBind, segment)
     }
 
     /**
@@ -981,7 +982,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_drag_description
      */
     fun guiGetDragDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(guiGetDragDescriptionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.guiGetDragDescriptionBind, segment)
     }
 
     /**
@@ -990,7 +991,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_set_drag_description
      */
     fun guiSetDragDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(guiSetDragDescriptionBind, segment, description)
+        ObjectCalls.ptrcallWithStringArg(Binds.guiSetDragDescriptionBind, segment, description)
     }
 
     /**
@@ -1001,7 +1002,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_is_dragging
      */
     fun guiIsDragging(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDraggingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.guiIsDraggingBind, segment)
     }
 
     /**
@@ -1010,7 +1011,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_is_drag_successful
      */
     fun guiIsDragSuccessful(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(guiIsDragSuccessfulBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.guiIsDragSuccessfulBind, segment)
     }
 
     /**
@@ -1020,7 +1021,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_release_focus
      */
     fun guiReleaseFocus() {
-        ObjectCalls.ptrcallNoArgs(guiReleaseFocusBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.guiReleaseFocusBind, segment)
     }
 
     /**
@@ -1030,7 +1031,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_focus_owner
      */
     fun guiGetFocusOwner(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetFocusOwnerBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.guiGetFocusOwnerBind, segment))
     }
 
     /**
@@ -1042,7 +1043,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.gui_get_hovered_control
      */
     fun guiGetHoveredControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetHoveredControlBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.guiGetHoveredControlBind, segment))
     }
 
     /**
@@ -1051,7 +1052,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_disable_input
      */
     fun setDisableInput(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableInputBind, segment, disable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableInputBind, segment, disable)
     }
 
     /**
@@ -1060,7 +1061,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_input_disabled
      */
     fun isInputDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInputDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInputDisabledBind, segment)
     }
 
     /**
@@ -1072,7 +1073,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_size
      */
     fun setPositionalShadowAtlasSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPositionalShadowAtlasSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPositionalShadowAtlasSizeBind, segment, size)
     }
 
     /**
@@ -1084,7 +1085,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_size
      */
     fun getPositionalShadowAtlasSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPositionalShadowAtlasSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPositionalShadowAtlasSizeBind, segment)
     }
 
     /**
@@ -1095,7 +1096,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_16_bits
      */
     fun setPositionalShadowAtlas16Bits(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionalShadowAtlas16BitsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPositionalShadowAtlas16BitsBind, segment, enable)
     }
 
     /**
@@ -1106,7 +1107,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_16_bits
      */
     fun getPositionalShadowAtlas16Bits(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getPositionalShadowAtlas16BitsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPositionalShadowAtlas16BitsBind, segment)
     }
 
     /**
@@ -1115,7 +1116,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_snap_controls_to_pixels
      */
     fun setSnapControlsToPixels(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnapControlsToPixelsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSnapControlsToPixelsBind, segment, enabled)
     }
 
     /**
@@ -1124,7 +1125,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_snap_controls_to_pixels_enabled
      */
     fun isSnapControlsToPixelsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnapControlsToPixelsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSnapControlsToPixelsEnabledBind, segment)
     }
 
     /**
@@ -1135,7 +1136,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_snap_2d_transforms_to_pixel
      */
     fun setSnap2dTransformsToPixel(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnap2dTransformsToPixelBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSnap2dTransformsToPixelBind, segment, enabled)
     }
 
     /**
@@ -1146,7 +1147,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_snap_2d_transforms_to_pixel_enabled
      */
     fun isSnap2dTransformsToPixelEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dTransformsToPixelEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSnap2dTransformsToPixelEnabledBind, segment)
     }
 
     /**
@@ -1157,7 +1158,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_snap_2d_vertices_to_pixel
      */
     fun setSnap2dVerticesToPixel(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnap2dVerticesToPixelBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSnap2dVerticesToPixelBind, segment, enabled)
     }
 
     /**
@@ -1168,7 +1169,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_snap_2d_vertices_to_pixel_enabled
      */
     fun isSnap2dVerticesToPixelEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dVerticesToPixelEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSnap2dVerticesToPixelEnabledBind, segment)
     }
 
     /**
@@ -1177,7 +1178,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_quadrant_subdiv
      */
     fun setPositionalShadowAtlasQuadrantSubdiv(quadrant: Int, subdiv: Viewport.PositionalShadowAtlasQuadrantSubdiv) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv.value)
     }
 
     /**
@@ -1186,7 +1187,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_quadrant_subdiv
      */
     fun getPositionalShadowAtlasQuadrantSubdiv(quadrant: Int): Viewport.PositionalShadowAtlasQuadrantSubdiv {
-        return Viewport.PositionalShadowAtlasQuadrantSubdiv(ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant))
+        return Viewport.PositionalShadowAtlasQuadrantSubdiv(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant))
     }
 
     /**
@@ -1196,7 +1197,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_input_as_handled
      */
     fun setInputAsHandled() {
-        ObjectCalls.ptrcallNoArgs(setInputAsHandledBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setInputAsHandledBind, segment)
     }
 
     /**
@@ -1210,7 +1211,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_input_handled
      */
     fun isInputHandled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInputHandledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInputHandledBind, segment)
     }
 
     /**
@@ -1222,7 +1223,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_handle_input_locally
      */
     fun setHandleInputLocally(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHandleInputLocallyBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHandleInputLocallyBind, segment, enable)
     }
 
     /**
@@ -1234,7 +1235,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_handling_input_locally
      */
     fun isHandlingInputLocally(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHandlingInputLocallyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHandlingInputLocallyBind, segment)
     }
 
     /**
@@ -1243,7 +1244,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_default_canvas_item_texture_filter
      */
     fun setDefaultCanvasItemTextureFilter(mode: Viewport.DefaultCanvasItemTextureFilter) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultCanvasItemTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -1252,7 +1253,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_default_canvas_item_texture_filter
      */
     fun getDefaultCanvasItemTextureFilter(): Viewport.DefaultCanvasItemTextureFilter {
-        return Viewport.DefaultCanvasItemTextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, segment))
+        return Viewport.DefaultCanvasItemTextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultCanvasItemTextureFilterBind, segment))
     }
 
     /**
@@ -1263,7 +1264,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_embedding_subwindows
      */
     fun setEmbeddingSubwindows(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmbeddingSubwindowsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmbeddingSubwindowsBind, segment, enable)
     }
 
     /**
@@ -1274,7 +1275,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_embedding_subwindows
      */
     fun isEmbeddingSubwindows(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddingSubwindowsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmbeddingSubwindowsBind, segment)
     }
 
     /**
@@ -1284,7 +1285,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_embedded_subwindows
      */
     fun getEmbeddedSubwindows(): List<Window> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getEmbeddedSubwindowsBind, segment, Window::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getEmbeddedSubwindowsBind, segment, Window::wrap)
     }
 
     /**
@@ -1293,7 +1294,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_drag_threshold
      */
     fun setDragThreshold(threshold: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragThresholdBind, segment, threshold)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDragThresholdBind, segment, threshold)
     }
 
     /**
@@ -1302,7 +1303,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_drag_threshold
      */
     fun getDragThreshold(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDragThresholdBind, segment)
     }
 
     /**
@@ -1313,7 +1314,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_canvas_cull_mask
      */
     fun setCanvasCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCanvasCullMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCanvasCullMaskBind, segment, mask)
     }
 
     /**
@@ -1324,7 +1325,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_canvas_cull_mask
      */
     fun getCanvasCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCanvasCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCanvasCullMaskBind, segment)
     }
 
     /**
@@ -1334,7 +1335,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_canvas_cull_mask_bit
      */
     fun setCanvasCullMaskBit(layer: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setCanvasCullMaskBitBind, segment, layer, enable)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(Binds.setCanvasCullMaskBitBind, segment, layer, enable)
     }
 
     /**
@@ -1343,7 +1344,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_canvas_cull_mask_bit
      */
     fun getCanvasCullMaskBit(layer: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getCanvasCullMaskBitBind, segment, layer)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(Binds.getCanvasCullMaskBitBind, segment, layer)
     }
 
     /**
@@ -1352,7 +1353,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_default_canvas_item_texture_repeat
      */
     fun setDefaultCanvasItemTextureRepeat(mode: Viewport.DefaultCanvasItemTextureRepeat) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultCanvasItemTextureRepeatBind, segment, mode.value)
     }
 
     /**
@@ -1361,7 +1362,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_default_canvas_item_texture_repeat
      */
     fun getDefaultCanvasItemTextureRepeat(): Viewport.DefaultCanvasItemTextureRepeat {
-        return Viewport.DefaultCanvasItemTextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, segment))
+        return Viewport.DefaultCanvasItemTextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultCanvasItemTextureRepeatBind, segment))
     }
 
     /**
@@ -1377,7 +1378,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_sdf_oversize
      */
     fun setSdfOversize(oversize: Viewport.SDFOversize) {
-        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, segment, oversize.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSdfOversizeBind, segment, oversize.value)
     }
 
     /**
@@ -1393,7 +1394,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_sdf_oversize
      */
     fun getSdfOversize(): Viewport.SDFOversize {
-        return Viewport.SDFOversize(ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, segment))
+        return Viewport.SDFOversize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSdfOversizeBind, segment))
     }
 
     /**
@@ -1403,7 +1404,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_sdf_scale
      */
     fun setSdfScale(scale: Viewport.SDFScale) {
-        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, segment, scale.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSdfScaleBind, segment, scale.value)
     }
 
     /**
@@ -1413,7 +1414,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_sdf_scale
      */
     fun getSdfScale(): Viewport.SDFScale {
-        return Viewport.SDFScale(ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, segment))
+        return Viewport.SDFScale(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSdfScaleBind, segment))
     }
 
     /**
@@ -1434,7 +1435,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_mesh_lod_threshold
      */
     fun setMeshLodThreshold(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, segment, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMeshLodThresholdBind, segment, pixels)
     }
 
     /**
@@ -1455,7 +1456,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_mesh_lod_threshold
      */
     fun getMeshLodThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMeshLodThresholdBind, segment)
     }
 
     /**
@@ -1464,7 +1465,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_as_audio_listener_2d
      */
     fun setAsAudioListener2d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener2dBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsAudioListener2dBind, segment, enable)
     }
 
     /**
@@ -1473,7 +1474,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_audio_listener_2d
      */
     fun isAudioListener2d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener2dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAudioListener2dBind, segment)
     }
 
     /**
@@ -1483,7 +1484,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_audio_listener_2d
      */
     fun getAudioListener2d(): AudioListener2D? {
-        return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener2dBind, segment))
+        return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAudioListener2dBind, segment))
     }
 
     /**
@@ -1496,7 +1497,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_camera_2d
      */
     fun getCamera2d(): Camera2D? {
-        return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera2dBind, segment))
+        return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCamera2dBind, segment))
     }
 
     /**
@@ -1505,7 +1506,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_world_3d
      */
     fun setWorld3d(world3d: World3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1514,7 +1515,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_world_3d
      */
     fun getWorld3d(): World3D? {
-        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
+        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getWorld3dBind, segment))
     }
 
     /**
@@ -1524,7 +1525,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.find_world_3d
      */
     fun findWorld3d(): World3D? {
-        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, segment))
+        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.findWorld3dBind, segment))
     }
 
     /**
@@ -1533,7 +1534,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_own_world_3d
      */
     fun setUseOwnWorld3d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseOwnWorld3dBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseOwnWorld3dBind, segment, enable)
     }
 
     /**
@@ -1542,7 +1543,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_own_world_3d
      */
     fun isUsingOwnWorld3d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingOwnWorld3dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingOwnWorld3dBind, segment)
     }
 
     /**
@@ -1552,7 +1553,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_audio_listener_3d
      */
     fun getAudioListener3d(): AudioListener3D? {
-        return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener3dBind, segment))
+        return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAudioListener3dBind, segment))
     }
 
     /**
@@ -1565,7 +1566,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_camera_3d
      */
     fun getCamera3d(): Camera3D? {
-        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera3dBind, segment))
+        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCamera3dBind, segment))
     }
 
     /**
@@ -1574,7 +1575,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_as_audio_listener_3d
      */
     fun setAsAudioListener3d(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsAudioListener3dBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsAudioListener3dBind, segment, enable)
     }
 
     /**
@@ -1583,7 +1584,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_audio_listener_3d
      */
     fun isAudioListener3d(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener3dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAudioListener3dBind, segment)
     }
 
     /**
@@ -1592,7 +1593,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_disable_3d
      */
     fun setDisable3d(disable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisable3dBind, segment, disable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisable3dBind, segment, disable)
     }
 
     /**
@@ -1601,7 +1602,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_3d_disabled
      */
     fun is3dDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(is3dDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.is3dDisabledBind, segment)
     }
 
     /**
@@ -1611,7 +1612,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_use_xr
      */
     fun setUseXr(use: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseXrBind, segment, use)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseXrBind, segment, use)
     }
 
     /**
@@ -1621,7 +1622,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.is_using_xr
      */
     fun isUsingXr(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingXrBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingXrBind, segment)
     }
 
     /**
@@ -1635,7 +1636,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_scaling_3d_mode
      */
     fun setScaling3dMode(scaling3dMode: Viewport.Scaling3DMode) {
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScaling3dModeBind, segment, scaling3dMode.value)
     }
 
     /**
@@ -1649,7 +1650,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_scaling_3d_mode
      */
     fun getScaling3dMode(): Viewport.Scaling3DMode {
-        return Viewport.Scaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment))
+        return Viewport.Scaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScaling3dModeBind, segment))
     }
 
     /**
@@ -1668,7 +1669,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_scaling_3d_scale
      */
     fun setScaling3dScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setScaling3dScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setScaling3dScaleBind, segment, scale)
     }
 
     /**
@@ -1687,7 +1688,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_scaling_3d_scale
      */
     fun getScaling3dScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScaling3dScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getScaling3dScaleBind, segment)
     }
 
     /**
@@ -1699,7 +1700,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_fsr_sharpness
      */
     fun setFsrSharpness(fsrSharpness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, segment, fsrSharpness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFsrSharpnessBind, segment, fsrSharpness)
     }
 
     /**
@@ -1711,7 +1712,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_fsr_sharpness
      */
     fun getFsrSharpness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFsrSharpnessBind, segment)
     }
 
     /**
@@ -1732,7 +1733,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_texture_mipmap_bias
      */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, segment, textureMipmapBias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTextureMipmapBiasBind, segment, textureMipmapBias)
     }
 
     /**
@@ -1753,7 +1754,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_texture_mipmap_bias
      */
     fun getTextureMipmapBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTextureMipmapBiasBind, segment)
     }
 
     /**
@@ -1776,7 +1777,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_anisotropic_filtering_level
      */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Viewport.AnisotropicFiltering) {
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
     }
 
     /**
@@ -1799,7 +1800,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_anisotropic_filtering_level
      */
     fun getAnisotropicFilteringLevel(): Viewport.AnisotropicFiltering {
-        return Viewport.AnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment))
+        return Viewport.AnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAnisotropicFilteringLevelBind, segment))
     }
 
     /**
@@ -1809,7 +1810,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_mode
      */
     fun setVrsMode(mode: Viewport.VRSMode) {
-        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVrsModeBind, segment, mode.value)
     }
 
     /**
@@ -1819,7 +1820,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_mode
      */
     fun getVrsMode(): Viewport.VRSMode {
-        return Viewport.VRSMode(ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, segment))
+        return Viewport.VRSMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVrsModeBind, segment))
     }
 
     /**
@@ -1831,7 +1832,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_update_mode
      */
     fun setVrsUpdateMode(mode: Viewport.VRSUpdateMode) {
-        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVrsUpdateModeBind, segment, mode.value)
     }
 
     /**
@@ -1843,7 +1844,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_update_mode
      */
     fun getVrsUpdateMode(): Viewport.VRSUpdateMode {
-        return Viewport.VRSUpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, segment))
+        return Viewport.VRSUpdateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVrsUpdateModeBind, segment))
     }
 
     /**
@@ -1853,7 +1854,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_texture
      */
     fun setVrsTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1863,7 +1864,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_texture
      */
     fun getVrsTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVrsTextureBind, segment))
     }
 
     // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d).
@@ -2753,655 +2754,657 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): Viewport? =
             if (handle.address() == 0L) null else Viewport(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WORLD_2D_HASH = 2736080068L
-        private val setWorld2dBind by lazy {
+        @JvmField
+        val setWorld2dBind =
             ObjectCalls.getMethodBind("Viewport", "set_world_2d", SET_WORLD_2D_HASH)
-        }
 
         private const val GET_WORLD_2D_HASH = 2339128592L
-        private val getWorld2dBind by lazy {
+        @JvmField
+        val getWorld2dBind =
             ObjectCalls.getMethodBind("Viewport", "get_world_2d", GET_WORLD_2D_HASH)
-        }
 
         private const val FIND_WORLD_2D_HASH = 2339128592L
-        private val findWorld2dBind by lazy {
+        @JvmField
+        val findWorld2dBind =
             ObjectCalls.getMethodBind("Viewport", "find_world_2d", FIND_WORLD_2D_HASH)
-        }
 
         private const val SET_CANVAS_TRANSFORM_HASH = 2761652528L
-        private val setCanvasTransformBind by lazy {
+        @JvmField
+        val setCanvasTransformBind =
             ObjectCalls.getMethodBind("Viewport", "set_canvas_transform", SET_CANVAS_TRANSFORM_HASH)
-        }
 
         private const val GET_CANVAS_TRANSFORM_HASH = 3814499831L
-        private val getCanvasTransformBind by lazy {
+        @JvmField
+        val getCanvasTransformBind =
             ObjectCalls.getMethodBind("Viewport", "get_canvas_transform", GET_CANVAS_TRANSFORM_HASH)
-        }
 
         private const val SET_GLOBAL_CANVAS_TRANSFORM_HASH = 2761652528L
-        private val setGlobalCanvasTransformBind by lazy {
+        @JvmField
+        val setGlobalCanvasTransformBind =
             ObjectCalls.getMethodBind("Viewport", "set_global_canvas_transform", SET_GLOBAL_CANVAS_TRANSFORM_HASH)
-        }
 
         private const val GET_GLOBAL_CANVAS_TRANSFORM_HASH = 3814499831L
-        private val getGlobalCanvasTransformBind by lazy {
+        @JvmField
+        val getGlobalCanvasTransformBind =
             ObjectCalls.getMethodBind("Viewport", "get_global_canvas_transform", GET_GLOBAL_CANVAS_TRANSFORM_HASH)
-        }
 
         private const val GET_STRETCH_TRANSFORM_HASH = 3814499831L
-        private val getStretchTransformBind by lazy {
+        @JvmField
+        val getStretchTransformBind =
             ObjectCalls.getMethodBind("Viewport", "get_stretch_transform", GET_STRETCH_TRANSFORM_HASH)
-        }
 
         private const val GET_FINAL_TRANSFORM_HASH = 3814499831L
-        private val getFinalTransformBind by lazy {
+        @JvmField
+        val getFinalTransformBind =
             ObjectCalls.getMethodBind("Viewport", "get_final_transform", GET_FINAL_TRANSFORM_HASH)
-        }
 
         private const val GET_SCREEN_TRANSFORM_HASH = 3814499831L
-        private val getScreenTransformBind by lazy {
+        @JvmField
+        val getScreenTransformBind =
             ObjectCalls.getMethodBind("Viewport", "get_screen_transform", GET_SCREEN_TRANSFORM_HASH)
-        }
 
         private const val GET_VISIBLE_RECT_HASH = 1639390495L
-        private val getVisibleRectBind by lazy {
+        @JvmField
+        val getVisibleRectBind =
             ObjectCalls.getMethodBind("Viewport", "get_visible_rect", GET_VISIBLE_RECT_HASH)
-        }
 
         private const val SET_TRANSPARENT_BACKGROUND_HASH = 2586408642L
-        private val setTransparentBackgroundBind by lazy {
+        @JvmField
+        val setTransparentBackgroundBind =
             ObjectCalls.getMethodBind("Viewport", "set_transparent_background", SET_TRANSPARENT_BACKGROUND_HASH)
-        }
 
         private const val HAS_TRANSPARENT_BACKGROUND_HASH = 36873697L
-        private val hasTransparentBackgroundBind by lazy {
+        @JvmField
+        val hasTransparentBackgroundBind =
             ObjectCalls.getMethodBind("Viewport", "has_transparent_background", HAS_TRANSPARENT_BACKGROUND_HASH)
-        }
 
         private const val SET_USE_HDR_2D_HASH = 2586408642L
-        private val setUseHdr2dBind by lazy {
+        @JvmField
+        val setUseHdr2dBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_hdr_2d", SET_USE_HDR_2D_HASH)
-        }
 
         private const val IS_USING_HDR_2D_HASH = 36873697L
-        private val isUsingHdr2dBind by lazy {
+        @JvmField
+        val isUsingHdr2dBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_hdr_2d", IS_USING_HDR_2D_HASH)
-        }
 
         private const val SET_MSAA_2D_HASH = 3330258708L
-        private val setMsaa2dBind by lazy {
+        @JvmField
+        val setMsaa2dBind =
             ObjectCalls.getMethodBind("Viewport", "set_msaa_2d", SET_MSAA_2D_HASH)
-        }
 
         private const val GET_MSAA_2D_HASH = 2542055527L
-        private val getMsaa2dBind by lazy {
+        @JvmField
+        val getMsaa2dBind =
             ObjectCalls.getMethodBind("Viewport", "get_msaa_2d", GET_MSAA_2D_HASH)
-        }
 
         private const val SET_MSAA_3D_HASH = 3330258708L
-        private val setMsaa3dBind by lazy {
+        @JvmField
+        val setMsaa3dBind =
             ObjectCalls.getMethodBind("Viewport", "set_msaa_3d", SET_MSAA_3D_HASH)
-        }
 
         private const val GET_MSAA_3D_HASH = 2542055527L
-        private val getMsaa3dBind by lazy {
+        @JvmField
+        val getMsaa3dBind =
             ObjectCalls.getMethodBind("Viewport", "get_msaa_3d", GET_MSAA_3D_HASH)
-        }
 
         private const val SET_SCREEN_SPACE_AA_HASH = 3544169389L
-        private val setScreenSpaceAaBind by lazy {
+        @JvmField
+        val setScreenSpaceAaBind =
             ObjectCalls.getMethodBind("Viewport", "set_screen_space_aa", SET_SCREEN_SPACE_AA_HASH)
-        }
 
         private const val GET_SCREEN_SPACE_AA_HASH = 1390814124L
-        private val getScreenSpaceAaBind by lazy {
+        @JvmField
+        val getScreenSpaceAaBind =
             ObjectCalls.getMethodBind("Viewport", "get_screen_space_aa", GET_SCREEN_SPACE_AA_HASH)
-        }
 
         private const val SET_USE_TAA_HASH = 2586408642L
-        private val setUseTaaBind by lazy {
+        @JvmField
+        val setUseTaaBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_taa", SET_USE_TAA_HASH)
-        }
 
         private const val IS_USING_TAA_HASH = 36873697L
-        private val isUsingTaaBind by lazy {
+        @JvmField
+        val isUsingTaaBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_taa", IS_USING_TAA_HASH)
-        }
 
         private const val SET_USE_DEBANDING_HASH = 2586408642L
-        private val setUseDebandingBind by lazy {
+        @JvmField
+        val setUseDebandingBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_debanding", SET_USE_DEBANDING_HASH)
-        }
 
         private const val IS_USING_DEBANDING_HASH = 36873697L
-        private val isUsingDebandingBind by lazy {
+        @JvmField
+        val isUsingDebandingBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_debanding", IS_USING_DEBANDING_HASH)
-        }
 
         private const val SET_USE_OCCLUSION_CULLING_HASH = 2586408642L
-        private val setUseOcclusionCullingBind by lazy {
+        @JvmField
+        val setUseOcclusionCullingBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_occlusion_culling", SET_USE_OCCLUSION_CULLING_HASH)
-        }
 
         private const val IS_USING_OCCLUSION_CULLING_HASH = 36873697L
-        private val isUsingOcclusionCullingBind by lazy {
+        @JvmField
+        val isUsingOcclusionCullingBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_occlusion_culling", IS_USING_OCCLUSION_CULLING_HASH)
-        }
 
         private const val SET_DEBUG_DRAW_HASH = 1970246205L
-        private val setDebugDrawBind by lazy {
+        @JvmField
+        val setDebugDrawBind =
             ObjectCalls.getMethodBind("Viewport", "set_debug_draw", SET_DEBUG_DRAW_HASH)
-        }
 
         private const val GET_DEBUG_DRAW_HASH = 579191299L
-        private val getDebugDrawBind by lazy {
+        @JvmField
+        val getDebugDrawBind =
             ObjectCalls.getMethodBind("Viewport", "get_debug_draw", GET_DEBUG_DRAW_HASH)
-        }
 
         private const val SET_USE_OVERSAMPLING_HASH = 2586408642L
-        private val setUseOversamplingBind by lazy {
+        @JvmField
+        val setUseOversamplingBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_oversampling", SET_USE_OVERSAMPLING_HASH)
-        }
 
         private const val IS_USING_OVERSAMPLING_HASH = 36873697L
-        private val isUsingOversamplingBind by lazy {
+        @JvmField
+        val isUsingOversamplingBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_oversampling", IS_USING_OVERSAMPLING_HASH)
-        }
 
         private const val SET_OVERSAMPLING_OVERRIDE_HASH = 373806689L
-        private val setOversamplingOverrideBind by lazy {
+        @JvmField
+        val setOversamplingOverrideBind =
             ObjectCalls.getMethodBind("Viewport", "set_oversampling_override", SET_OVERSAMPLING_OVERRIDE_HASH)
-        }
 
         private const val GET_OVERSAMPLING_OVERRIDE_HASH = 1740695150L
-        private val getOversamplingOverrideBind by lazy {
+        @JvmField
+        val getOversamplingOverrideBind =
             ObjectCalls.getMethodBind("Viewport", "get_oversampling_override", GET_OVERSAMPLING_OVERRIDE_HASH)
-        }
 
         private const val GET_OVERSAMPLING_HASH = 1740695150L
-        private val getOversamplingBind by lazy {
+        @JvmField
+        val getOversamplingBind =
             ObjectCalls.getMethodBind("Viewport", "get_oversampling", GET_OVERSAMPLING_HASH)
-        }
 
         private const val GET_RENDER_INFO_HASH = 481977019L
-        private val getRenderInfoBind by lazy {
+        @JvmField
+        val getRenderInfoBind =
             ObjectCalls.getMethodBind("Viewport", "get_render_info", GET_RENDER_INFO_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 1746695840L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("Viewport", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_PHYSICS_OBJECT_PICKING_HASH = 2586408642L
-        private val setPhysicsObjectPickingBind by lazy {
+        @JvmField
+        val setPhysicsObjectPickingBind =
             ObjectCalls.getMethodBind("Viewport", "set_physics_object_picking", SET_PHYSICS_OBJECT_PICKING_HASH)
-        }
 
         private const val GET_PHYSICS_OBJECT_PICKING_HASH = 2240911060L
-        private val getPhysicsObjectPickingBind by lazy {
+        @JvmField
+        val getPhysicsObjectPickingBind =
             ObjectCalls.getMethodBind("Viewport", "get_physics_object_picking", GET_PHYSICS_OBJECT_PICKING_HASH)
-        }
 
         private const val SET_PHYSICS_OBJECT_PICKING_SORT_HASH = 2586408642L
-        private val setPhysicsObjectPickingSortBind by lazy {
+        @JvmField
+        val setPhysicsObjectPickingSortBind =
             ObjectCalls.getMethodBind("Viewport", "set_physics_object_picking_sort", SET_PHYSICS_OBJECT_PICKING_SORT_HASH)
-        }
 
         private const val GET_PHYSICS_OBJECT_PICKING_SORT_HASH = 2240911060L
-        private val getPhysicsObjectPickingSortBind by lazy {
+        @JvmField
+        val getPhysicsObjectPickingSortBind =
             ObjectCalls.getMethodBind("Viewport", "get_physics_object_picking_sort", GET_PHYSICS_OBJECT_PICKING_SORT_HASH)
-        }
 
         private const val SET_PHYSICS_OBJECT_PICKING_FIRST_ONLY_HASH = 2586408642L
-        private val setPhysicsObjectPickingFirstOnlyBind by lazy {
+        @JvmField
+        val setPhysicsObjectPickingFirstOnlyBind =
             ObjectCalls.getMethodBind("Viewport", "set_physics_object_picking_first_only", SET_PHYSICS_OBJECT_PICKING_FIRST_ONLY_HASH)
-        }
 
         private const val GET_PHYSICS_OBJECT_PICKING_FIRST_ONLY_HASH = 2240911060L
-        private val getPhysicsObjectPickingFirstOnlyBind by lazy {
+        @JvmField
+        val getPhysicsObjectPickingFirstOnlyBind =
             ObjectCalls.getMethodBind("Viewport", "get_physics_object_picking_first_only", GET_PHYSICS_OBJECT_PICKING_FIRST_ONLY_HASH)
-        }
 
         private const val GET_VIEWPORT_RID_HASH = 2944877500L
-        private val getViewportRidBind by lazy {
+        @JvmField
+        val getViewportRidBind =
             ObjectCalls.getMethodBind("Viewport", "get_viewport_rid", GET_VIEWPORT_RID_HASH)
-        }
 
         private const val PUSH_TEXT_INPUT_HASH = 83702148L
-        private val pushTextInputBind by lazy {
+        @JvmField
+        val pushTextInputBind =
             ObjectCalls.getMethodBind("Viewport", "push_text_input", PUSH_TEXT_INPUT_HASH)
-        }
 
         private const val PUSH_INPUT_HASH = 3644664830L
-        private val pushInputBind by lazy {
+        @JvmField
+        val pushInputBind =
             ObjectCalls.getMethodBind("Viewport", "push_input", PUSH_INPUT_HASH)
-        }
 
         private const val PUSH_UNHANDLED_INPUT_HASH = 3644664830L
-        private val pushUnhandledInputBind by lazy {
+        @JvmField
+        val pushUnhandledInputBind =
             ObjectCalls.getMethodBind("Viewport", "push_unhandled_input", PUSH_UNHANDLED_INPUT_HASH)
-        }
 
         private const val NOTIFY_MOUSE_ENTERED_HASH = 3218959716L
-        private val notifyMouseEnteredBind by lazy {
+        @JvmField
+        val notifyMouseEnteredBind =
             ObjectCalls.getMethodBind("Viewport", "notify_mouse_entered", NOTIFY_MOUSE_ENTERED_HASH)
-        }
 
         private const val NOTIFY_MOUSE_EXITED_HASH = 3218959716L
-        private val notifyMouseExitedBind by lazy {
+        @JvmField
+        val notifyMouseExitedBind =
             ObjectCalls.getMethodBind("Viewport", "notify_mouse_exited", NOTIFY_MOUSE_EXITED_HASH)
-        }
 
         private const val GET_MOUSE_POSITION_HASH = 3341600327L
-        private val getMousePositionBind by lazy {
+        @JvmField
+        val getMousePositionBind =
             ObjectCalls.getMethodBind("Viewport", "get_mouse_position", GET_MOUSE_POSITION_HASH)
-        }
 
         private const val WARP_MOUSE_HASH = 743155724L
-        private val warpMouseBind by lazy {
+        @JvmField
+        val warpMouseBind =
             ObjectCalls.getMethodBind("Viewport", "warp_mouse", WARP_MOUSE_HASH)
-        }
 
         private const val UPDATE_MOUSE_CURSOR_STATE_HASH = 3218959716L
-        private val updateMouseCursorStateBind by lazy {
+        @JvmField
+        val updateMouseCursorStateBind =
             ObjectCalls.getMethodBind("Viewport", "update_mouse_cursor_state", UPDATE_MOUSE_CURSOR_STATE_HASH)
-        }
 
         private const val GUI_CANCEL_DRAG_HASH = 3218959716L
-        private val guiCancelDragBind by lazy {
+        @JvmField
+        val guiCancelDragBind =
             ObjectCalls.getMethodBind("Viewport", "gui_cancel_drag", GUI_CANCEL_DRAG_HASH)
-        }
 
         private const val GUI_GET_DRAG_DATA_HASH = 1214101251L
-        private val guiGetDragDataBind by lazy {
+        @JvmField
+        val guiGetDragDataBind =
             ObjectCalls.getMethodBind("Viewport", "gui_get_drag_data", GUI_GET_DRAG_DATA_HASH)
-        }
 
         private const val GUI_GET_DRAG_DESCRIPTION_HASH = 201670096L
-        private val guiGetDragDescriptionBind by lazy {
+        @JvmField
+        val guiGetDragDescriptionBind =
             ObjectCalls.getMethodBind("Viewport", "gui_get_drag_description", GUI_GET_DRAG_DESCRIPTION_HASH)
-        }
 
         private const val GUI_SET_DRAG_DESCRIPTION_HASH = 83702148L
-        private val guiSetDragDescriptionBind by lazy {
+        @JvmField
+        val guiSetDragDescriptionBind =
             ObjectCalls.getMethodBind("Viewport", "gui_set_drag_description", GUI_SET_DRAG_DESCRIPTION_HASH)
-        }
 
         private const val GUI_IS_DRAGGING_HASH = 36873697L
-        private val guiIsDraggingBind by lazy {
+        @JvmField
+        val guiIsDraggingBind =
             ObjectCalls.getMethodBind("Viewport", "gui_is_dragging", GUI_IS_DRAGGING_HASH)
-        }
 
         private const val GUI_IS_DRAG_SUCCESSFUL_HASH = 36873697L
-        private val guiIsDragSuccessfulBind by lazy {
+        @JvmField
+        val guiIsDragSuccessfulBind =
             ObjectCalls.getMethodBind("Viewport", "gui_is_drag_successful", GUI_IS_DRAG_SUCCESSFUL_HASH)
-        }
 
         private const val GUI_RELEASE_FOCUS_HASH = 3218959716L
-        private val guiReleaseFocusBind by lazy {
+        @JvmField
+        val guiReleaseFocusBind =
             ObjectCalls.getMethodBind("Viewport", "gui_release_focus", GUI_RELEASE_FOCUS_HASH)
-        }
 
         private const val GUI_GET_FOCUS_OWNER_HASH = 2783021301L
-        private val guiGetFocusOwnerBind by lazy {
+        @JvmField
+        val guiGetFocusOwnerBind =
             ObjectCalls.getMethodBind("Viewport", "gui_get_focus_owner", GUI_GET_FOCUS_OWNER_HASH)
-        }
 
         private const val GUI_GET_HOVERED_CONTROL_HASH = 2783021301L
-        private val guiGetHoveredControlBind by lazy {
+        @JvmField
+        val guiGetHoveredControlBind =
             ObjectCalls.getMethodBind("Viewport", "gui_get_hovered_control", GUI_GET_HOVERED_CONTROL_HASH)
-        }
 
         private const val SET_DISABLE_INPUT_HASH = 2586408642L
-        private val setDisableInputBind by lazy {
+        @JvmField
+        val setDisableInputBind =
             ObjectCalls.getMethodBind("Viewport", "set_disable_input", SET_DISABLE_INPUT_HASH)
-        }
 
         private const val IS_INPUT_DISABLED_HASH = 36873697L
-        private val isInputDisabledBind by lazy {
+        @JvmField
+        val isInputDisabledBind =
             ObjectCalls.getMethodBind("Viewport", "is_input_disabled", IS_INPUT_DISABLED_HASH)
-        }
 
         private const val SET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH = 1286410249L
-        private val setPositionalShadowAtlasSizeBind by lazy {
+        @JvmField
+        val setPositionalShadowAtlasSizeBind =
             ObjectCalls.getMethodBind("Viewport", "set_positional_shadow_atlas_size", SET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH)
-        }
 
         private const val GET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH = 3905245786L
-        private val getPositionalShadowAtlasSizeBind by lazy {
+        @JvmField
+        val getPositionalShadowAtlasSizeBind =
             ObjectCalls.getMethodBind("Viewport", "get_positional_shadow_atlas_size", GET_POSITIONAL_SHADOW_ATLAS_SIZE_HASH)
-        }
 
         private const val SET_POSITIONAL_SHADOW_ATLAS_16_BITS_HASH = 2586408642L
-        private val setPositionalShadowAtlas16BitsBind by lazy {
+        @JvmField
+        val setPositionalShadowAtlas16BitsBind =
             ObjectCalls.getMethodBind("Viewport", "set_positional_shadow_atlas_16_bits", SET_POSITIONAL_SHADOW_ATLAS_16_BITS_HASH)
-        }
 
         private const val GET_POSITIONAL_SHADOW_ATLAS_16_BITS_HASH = 36873697L
-        private val getPositionalShadowAtlas16BitsBind by lazy {
+        @JvmField
+        val getPositionalShadowAtlas16BitsBind =
             ObjectCalls.getMethodBind("Viewport", "get_positional_shadow_atlas_16_bits", GET_POSITIONAL_SHADOW_ATLAS_16_BITS_HASH)
-        }
 
         private const val SET_SNAP_CONTROLS_TO_PIXELS_HASH = 2586408642L
-        private val setSnapControlsToPixelsBind by lazy {
+        @JvmField
+        val setSnapControlsToPixelsBind =
             ObjectCalls.getMethodBind("Viewport", "set_snap_controls_to_pixels", SET_SNAP_CONTROLS_TO_PIXELS_HASH)
-        }
 
         private const val IS_SNAP_CONTROLS_TO_PIXELS_ENABLED_HASH = 36873697L
-        private val isSnapControlsToPixelsEnabledBind by lazy {
+        @JvmField
+        val isSnapControlsToPixelsEnabledBind =
             ObjectCalls.getMethodBind("Viewport", "is_snap_controls_to_pixels_enabled", IS_SNAP_CONTROLS_TO_PIXELS_ENABLED_HASH)
-        }
 
         private const val SET_SNAP_2D_TRANSFORMS_TO_PIXEL_HASH = 2586408642L
-        private val setSnap2dTransformsToPixelBind by lazy {
+        @JvmField
+        val setSnap2dTransformsToPixelBind =
             ObjectCalls.getMethodBind("Viewport", "set_snap_2d_transforms_to_pixel", SET_SNAP_2D_TRANSFORMS_TO_PIXEL_HASH)
-        }
 
         private const val IS_SNAP_2D_TRANSFORMS_TO_PIXEL_ENABLED_HASH = 36873697L
-        private val isSnap2dTransformsToPixelEnabledBind by lazy {
+        @JvmField
+        val isSnap2dTransformsToPixelEnabledBind =
             ObjectCalls.getMethodBind("Viewport", "is_snap_2d_transforms_to_pixel_enabled", IS_SNAP_2D_TRANSFORMS_TO_PIXEL_ENABLED_HASH)
-        }
 
         private const val SET_SNAP_2D_VERTICES_TO_PIXEL_HASH = 2586408642L
-        private val setSnap2dVerticesToPixelBind by lazy {
+        @JvmField
+        val setSnap2dVerticesToPixelBind =
             ObjectCalls.getMethodBind("Viewport", "set_snap_2d_vertices_to_pixel", SET_SNAP_2D_VERTICES_TO_PIXEL_HASH)
-        }
 
         private const val IS_SNAP_2D_VERTICES_TO_PIXEL_ENABLED_HASH = 36873697L
-        private val isSnap2dVerticesToPixelEnabledBind by lazy {
+        @JvmField
+        val isSnap2dVerticesToPixelEnabledBind =
             ObjectCalls.getMethodBind("Viewport", "is_snap_2d_vertices_to_pixel_enabled", IS_SNAP_2D_VERTICES_TO_PIXEL_ENABLED_HASH)
-        }
 
         private const val SET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIV_HASH = 2596956071L
-        private val setPositionalShadowAtlasQuadrantSubdivBind by lazy {
+        @JvmField
+        val setPositionalShadowAtlasQuadrantSubdivBind =
             ObjectCalls.getMethodBind("Viewport", "set_positional_shadow_atlas_quadrant_subdiv", SET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIV_HASH)
-        }
 
         private const val GET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIV_HASH = 2676778355L
-        private val getPositionalShadowAtlasQuadrantSubdivBind by lazy {
+        @JvmField
+        val getPositionalShadowAtlasQuadrantSubdivBind =
             ObjectCalls.getMethodBind("Viewport", "get_positional_shadow_atlas_quadrant_subdiv", GET_POSITIONAL_SHADOW_ATLAS_QUADRANT_SUBDIV_HASH)
-        }
 
         private const val SET_INPUT_AS_HANDLED_HASH = 3218959716L
-        private val setInputAsHandledBind by lazy {
+        @JvmField
+        val setInputAsHandledBind =
             ObjectCalls.getMethodBind("Viewport", "set_input_as_handled", SET_INPUT_AS_HANDLED_HASH)
-        }
 
         private const val IS_INPUT_HANDLED_HASH = 36873697L
-        private val isInputHandledBind by lazy {
+        @JvmField
+        val isInputHandledBind =
             ObjectCalls.getMethodBind("Viewport", "is_input_handled", IS_INPUT_HANDLED_HASH)
-        }
 
         private const val SET_HANDLE_INPUT_LOCALLY_HASH = 2586408642L
-        private val setHandleInputLocallyBind by lazy {
+        @JvmField
+        val setHandleInputLocallyBind =
             ObjectCalls.getMethodBind("Viewport", "set_handle_input_locally", SET_HANDLE_INPUT_LOCALLY_HASH)
-        }
 
         private const val IS_HANDLING_INPUT_LOCALLY_HASH = 36873697L
-        private val isHandlingInputLocallyBind by lazy {
+        @JvmField
+        val isHandlingInputLocallyBind =
             ObjectCalls.getMethodBind("Viewport", "is_handling_input_locally", IS_HANDLING_INPUT_LOCALLY_HASH)
-        }
 
         private const val SET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH = 2815160100L
-        private val setDefaultCanvasItemTextureFilterBind by lazy {
+        @JvmField
+        val setDefaultCanvasItemTextureFilterBind =
             ObjectCalls.getMethodBind("Viewport", "set_default_canvas_item_texture_filter", SET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH = 896601198L
-        private val getDefaultCanvasItemTextureFilterBind by lazy {
+        @JvmField
+        val getDefaultCanvasItemTextureFilterBind =
             ObjectCalls.getMethodBind("Viewport", "get_default_canvas_item_texture_filter", GET_DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_HASH)
-        }
 
         private const val SET_EMBEDDING_SUBWINDOWS_HASH = 2586408642L
-        private val setEmbeddingSubwindowsBind by lazy {
+        @JvmField
+        val setEmbeddingSubwindowsBind =
             ObjectCalls.getMethodBind("Viewport", "set_embedding_subwindows", SET_EMBEDDING_SUBWINDOWS_HASH)
-        }
 
         private const val IS_EMBEDDING_SUBWINDOWS_HASH = 36873697L
-        private val isEmbeddingSubwindowsBind by lazy {
+        @JvmField
+        val isEmbeddingSubwindowsBind =
             ObjectCalls.getMethodBind("Viewport", "is_embedding_subwindows", IS_EMBEDDING_SUBWINDOWS_HASH)
-        }
 
         private const val GET_EMBEDDED_SUBWINDOWS_HASH = 3995934104L
-        private val getEmbeddedSubwindowsBind by lazy {
+        @JvmField
+        val getEmbeddedSubwindowsBind =
             ObjectCalls.getMethodBind("Viewport", "get_embedded_subwindows", GET_EMBEDDED_SUBWINDOWS_HASH)
-        }
 
         private const val SET_DRAG_THRESHOLD_HASH = 1286410249L
-        private val setDragThresholdBind by lazy {
+        @JvmField
+        val setDragThresholdBind =
             ObjectCalls.getMethodBind("Viewport", "set_drag_threshold", SET_DRAG_THRESHOLD_HASH)
-        }
 
         private const val GET_DRAG_THRESHOLD_HASH = 3905245786L
-        private val getDragThresholdBind by lazy {
+        @JvmField
+        val getDragThresholdBind =
             ObjectCalls.getMethodBind("Viewport", "get_drag_threshold", GET_DRAG_THRESHOLD_HASH)
-        }
 
         private const val SET_CANVAS_CULL_MASK_HASH = 1286410249L
-        private val setCanvasCullMaskBind by lazy {
+        @JvmField
+        val setCanvasCullMaskBind =
             ObjectCalls.getMethodBind("Viewport", "set_canvas_cull_mask", SET_CANVAS_CULL_MASK_HASH)
-        }
 
         private const val GET_CANVAS_CULL_MASK_HASH = 3905245786L
-        private val getCanvasCullMaskBind by lazy {
+        @JvmField
+        val getCanvasCullMaskBind =
             ObjectCalls.getMethodBind("Viewport", "get_canvas_cull_mask", GET_CANVAS_CULL_MASK_HASH)
-        }
 
         private const val SET_CANVAS_CULL_MASK_BIT_HASH = 300928843L
-        private val setCanvasCullMaskBitBind by lazy {
+        @JvmField
+        val setCanvasCullMaskBitBind =
             ObjectCalls.getMethodBind("Viewport", "set_canvas_cull_mask_bit", SET_CANVAS_CULL_MASK_BIT_HASH)
-        }
 
         private const val GET_CANVAS_CULL_MASK_BIT_HASH = 1116898809L
-        private val getCanvasCullMaskBitBind by lazy {
+        @JvmField
+        val getCanvasCullMaskBitBind =
             ObjectCalls.getMethodBind("Viewport", "get_canvas_cull_mask_bit", GET_CANVAS_CULL_MASK_BIT_HASH)
-        }
 
         private const val SET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH = 1658513413L
-        private val setDefaultCanvasItemTextureRepeatBind by lazy {
+        @JvmField
+        val setDefaultCanvasItemTextureRepeatBind =
             ObjectCalls.getMethodBind("Viewport", "set_default_canvas_item_texture_repeat", SET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH)
-        }
 
         private const val GET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH = 4049774160L
-        private val getDefaultCanvasItemTextureRepeatBind by lazy {
+        @JvmField
+        val getDefaultCanvasItemTextureRepeatBind =
             ObjectCalls.getMethodBind("Viewport", "get_default_canvas_item_texture_repeat", GET_DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_HASH)
-        }
 
         private const val SET_SDF_OVERSIZE_HASH = 2574159017L
-        private val setSdfOversizeBind by lazy {
+        @JvmField
+        val setSdfOversizeBind =
             ObjectCalls.getMethodBind("Viewport", "set_sdf_oversize", SET_SDF_OVERSIZE_HASH)
-        }
 
         private const val GET_SDF_OVERSIZE_HASH = 2631427510L
-        private val getSdfOversizeBind by lazy {
+        @JvmField
+        val getSdfOversizeBind =
             ObjectCalls.getMethodBind("Viewport", "get_sdf_oversize", GET_SDF_OVERSIZE_HASH)
-        }
 
         private const val SET_SDF_SCALE_HASH = 1402773951L
-        private val setSdfScaleBind by lazy {
+        @JvmField
+        val setSdfScaleBind =
             ObjectCalls.getMethodBind("Viewport", "set_sdf_scale", SET_SDF_SCALE_HASH)
-        }
 
         private const val GET_SDF_SCALE_HASH = 3162688184L
-        private val getSdfScaleBind by lazy {
+        @JvmField
+        val getSdfScaleBind =
             ObjectCalls.getMethodBind("Viewport", "get_sdf_scale", GET_SDF_SCALE_HASH)
-        }
 
         private const val SET_MESH_LOD_THRESHOLD_HASH = 373806689L
-        private val setMeshLodThresholdBind by lazy {
+        @JvmField
+        val setMeshLodThresholdBind =
             ObjectCalls.getMethodBind("Viewport", "set_mesh_lod_threshold", SET_MESH_LOD_THRESHOLD_HASH)
-        }
 
         private const val GET_MESH_LOD_THRESHOLD_HASH = 1740695150L
-        private val getMeshLodThresholdBind by lazy {
+        @JvmField
+        val getMeshLodThresholdBind =
             ObjectCalls.getMethodBind("Viewport", "get_mesh_lod_threshold", GET_MESH_LOD_THRESHOLD_HASH)
-        }
 
         private const val SET_AS_AUDIO_LISTENER_2D_HASH = 2586408642L
-        private val setAsAudioListener2dBind by lazy {
+        @JvmField
+        val setAsAudioListener2dBind =
             ObjectCalls.getMethodBind("Viewport", "set_as_audio_listener_2d", SET_AS_AUDIO_LISTENER_2D_HASH)
-        }
 
         private const val IS_AUDIO_LISTENER_2D_HASH = 36873697L
-        private val isAudioListener2dBind by lazy {
+        @JvmField
+        val isAudioListener2dBind =
             ObjectCalls.getMethodBind("Viewport", "is_audio_listener_2d", IS_AUDIO_LISTENER_2D_HASH)
-        }
 
         private const val GET_AUDIO_LISTENER_2D_HASH = 1840977180L
-        private val getAudioListener2dBind by lazy {
+        @JvmField
+        val getAudioListener2dBind =
             ObjectCalls.getMethodBind("Viewport", "get_audio_listener_2d", GET_AUDIO_LISTENER_2D_HASH)
-        }
 
         private const val GET_CAMERA_2D_HASH = 3551466917L
-        private val getCamera2dBind by lazy {
+        @JvmField
+        val getCamera2dBind =
             ObjectCalls.getMethodBind("Viewport", "get_camera_2d", GET_CAMERA_2D_HASH)
-        }
 
         private const val SET_WORLD_3D_HASH = 1400875337L
-        private val setWorld3dBind by lazy {
+        @JvmField
+        val setWorld3dBind =
             ObjectCalls.getMethodBind("Viewport", "set_world_3d", SET_WORLD_3D_HASH)
-        }
 
         private const val GET_WORLD_3D_HASH = 317588385L
-        private val getWorld3dBind by lazy {
+        @JvmField
+        val getWorld3dBind =
             ObjectCalls.getMethodBind("Viewport", "get_world_3d", GET_WORLD_3D_HASH)
-        }
 
         private const val FIND_WORLD_3D_HASH = 317588385L
-        private val findWorld3dBind by lazy {
+        @JvmField
+        val findWorld3dBind =
             ObjectCalls.getMethodBind("Viewport", "find_world_3d", FIND_WORLD_3D_HASH)
-        }
 
         private const val SET_USE_OWN_WORLD_3D_HASH = 2586408642L
-        private val setUseOwnWorld3dBind by lazy {
+        @JvmField
+        val setUseOwnWorld3dBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_own_world_3d", SET_USE_OWN_WORLD_3D_HASH)
-        }
 
         private const val IS_USING_OWN_WORLD_3D_HASH = 36873697L
-        private val isUsingOwnWorld3dBind by lazy {
+        @JvmField
+        val isUsingOwnWorld3dBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_own_world_3d", IS_USING_OWN_WORLD_3D_HASH)
-        }
 
         private const val GET_AUDIO_LISTENER_3D_HASH = 3472246991L
-        private val getAudioListener3dBind by lazy {
+        @JvmField
+        val getAudioListener3dBind =
             ObjectCalls.getMethodBind("Viewport", "get_audio_listener_3d", GET_AUDIO_LISTENER_3D_HASH)
-        }
 
         private const val GET_CAMERA_3D_HASH = 2285090890L
-        private val getCamera3dBind by lazy {
+        @JvmField
+        val getCamera3dBind =
             ObjectCalls.getMethodBind("Viewport", "get_camera_3d", GET_CAMERA_3D_HASH)
-        }
 
         private const val SET_AS_AUDIO_LISTENER_3D_HASH = 2586408642L
-        private val setAsAudioListener3dBind by lazy {
+        @JvmField
+        val setAsAudioListener3dBind =
             ObjectCalls.getMethodBind("Viewport", "set_as_audio_listener_3d", SET_AS_AUDIO_LISTENER_3D_HASH)
-        }
 
         private const val IS_AUDIO_LISTENER_3D_HASH = 36873697L
-        private val isAudioListener3dBind by lazy {
+        @JvmField
+        val isAudioListener3dBind =
             ObjectCalls.getMethodBind("Viewport", "is_audio_listener_3d", IS_AUDIO_LISTENER_3D_HASH)
-        }
 
         private const val SET_DISABLE_3D_HASH = 2586408642L
-        private val setDisable3dBind by lazy {
+        @JvmField
+        val setDisable3dBind =
             ObjectCalls.getMethodBind("Viewport", "set_disable_3d", SET_DISABLE_3D_HASH)
-        }
 
         private const val IS_3D_DISABLED_HASH = 36873697L
-        private val is3dDisabledBind by lazy {
+        @JvmField
+        val is3dDisabledBind =
             ObjectCalls.getMethodBind("Viewport", "is_3d_disabled", IS_3D_DISABLED_HASH)
-        }
 
         private const val SET_USE_XR_HASH = 2586408642L
-        private val setUseXrBind by lazy {
+        @JvmField
+        val setUseXrBind =
             ObjectCalls.getMethodBind("Viewport", "set_use_xr", SET_USE_XR_HASH)
-        }
 
         private const val IS_USING_XR_HASH = 36873697L
-        private val isUsingXrBind by lazy {
+        @JvmField
+        val isUsingXrBind =
             ObjectCalls.getMethodBind("Viewport", "is_using_xr", IS_USING_XR_HASH)
-        }
 
         private const val SET_SCALING_3D_MODE_HASH = 1531597597L
-        private val setScaling3dModeBind by lazy {
+        @JvmField
+        val setScaling3dModeBind =
             ObjectCalls.getMethodBind("Viewport", "set_scaling_3d_mode", SET_SCALING_3D_MODE_HASH)
-        }
 
         private const val GET_SCALING_3D_MODE_HASH = 2597660574L
-        private val getScaling3dModeBind by lazy {
+        @JvmField
+        val getScaling3dModeBind =
             ObjectCalls.getMethodBind("Viewport", "get_scaling_3d_mode", GET_SCALING_3D_MODE_HASH)
-        }
 
         private const val SET_SCALING_3D_SCALE_HASH = 373806689L
-        private val setScaling3dScaleBind by lazy {
+        @JvmField
+        val setScaling3dScaleBind =
             ObjectCalls.getMethodBind("Viewport", "set_scaling_3d_scale", SET_SCALING_3D_SCALE_HASH)
-        }
 
         private const val GET_SCALING_3D_SCALE_HASH = 1740695150L
-        private val getScaling3dScaleBind by lazy {
+        @JvmField
+        val getScaling3dScaleBind =
             ObjectCalls.getMethodBind("Viewport", "get_scaling_3d_scale", GET_SCALING_3D_SCALE_HASH)
-        }
 
         private const val SET_FSR_SHARPNESS_HASH = 373806689L
-        private val setFsrSharpnessBind by lazy {
+        @JvmField
+        val setFsrSharpnessBind =
             ObjectCalls.getMethodBind("Viewport", "set_fsr_sharpness", SET_FSR_SHARPNESS_HASH)
-        }
 
         private const val GET_FSR_SHARPNESS_HASH = 1740695150L
-        private val getFsrSharpnessBind by lazy {
+        @JvmField
+        val getFsrSharpnessBind =
             ObjectCalls.getMethodBind("Viewport", "get_fsr_sharpness", GET_FSR_SHARPNESS_HASH)
-        }
 
         private const val SET_TEXTURE_MIPMAP_BIAS_HASH = 373806689L
-        private val setTextureMipmapBiasBind by lazy {
+        @JvmField
+        val setTextureMipmapBiasBind =
             ObjectCalls.getMethodBind("Viewport", "set_texture_mipmap_bias", SET_TEXTURE_MIPMAP_BIAS_HASH)
-        }
 
         private const val GET_TEXTURE_MIPMAP_BIAS_HASH = 1740695150L
-        private val getTextureMipmapBiasBind by lazy {
+        @JvmField
+        val getTextureMipmapBiasBind =
             ObjectCalls.getMethodBind("Viewport", "get_texture_mipmap_bias", GET_TEXTURE_MIPMAP_BIAS_HASH)
-        }
 
         private const val SET_ANISOTROPIC_FILTERING_LEVEL_HASH = 3445583046L
-        private val setAnisotropicFilteringLevelBind by lazy {
+        @JvmField
+        val setAnisotropicFilteringLevelBind =
             ObjectCalls.getMethodBind("Viewport", "set_anisotropic_filtering_level", SET_ANISOTROPIC_FILTERING_LEVEL_HASH)
-        }
 
         private const val GET_ANISOTROPIC_FILTERING_LEVEL_HASH = 3991528932L
-        private val getAnisotropicFilteringLevelBind by lazy {
+        @JvmField
+        val getAnisotropicFilteringLevelBind =
             ObjectCalls.getMethodBind("Viewport", "get_anisotropic_filtering_level", GET_ANISOTROPIC_FILTERING_LEVEL_HASH)
-        }
 
         private const val SET_VRS_MODE_HASH = 2749867817L
-        private val setVrsModeBind by lazy {
+        @JvmField
+        val setVrsModeBind =
             ObjectCalls.getMethodBind("Viewport", "set_vrs_mode", SET_VRS_MODE_HASH)
-        }
 
         private const val GET_VRS_MODE_HASH = 349660525L
-        private val getVrsModeBind by lazy {
+        @JvmField
+        val getVrsModeBind =
             ObjectCalls.getMethodBind("Viewport", "get_vrs_mode", GET_VRS_MODE_HASH)
-        }
 
         private const val SET_VRS_UPDATE_MODE_HASH = 3182412319L
-        private val setVrsUpdateModeBind by lazy {
+        @JvmField
+        val setVrsUpdateModeBind =
             ObjectCalls.getMethodBind("Viewport", "set_vrs_update_mode", SET_VRS_UPDATE_MODE_HASH)
-        }
 
         private const val GET_VRS_UPDATE_MODE_HASH = 2255951583L
-        private val getVrsUpdateModeBind by lazy {
+        @JvmField
+        val getVrsUpdateModeBind =
             ObjectCalls.getMethodBind("Viewport", "get_vrs_update_mode", GET_VRS_UPDATE_MODE_HASH)
-        }
 
         private const val SET_VRS_TEXTURE_HASH = 4051416890L
-        private val setVrsTextureBind by lazy {
+        @JvmField
+        val setVrsTextureBind =
             ObjectCalls.getMethodBind("Viewport", "set_vrs_texture", SET_VRS_TEXTURE_HASH)
-        }
 
         private const val GET_VRS_TEXTURE_HASH = 3635182373L
-        private val getVrsTextureBind by lazy {
+        @JvmField
+        val getVrsTextureBind =
             ObjectCalls.getMethodBind("Viewport", "get_vrs_texture", GET_VRS_TEXTURE_HASH)
-        }
     }
 }

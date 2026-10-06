@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -37,7 +38,7 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.set_body_tracker
      */
     fun setBodyTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBodyTrackerBind, segment, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setBodyTrackerBind, segment, trackerName)
     }
 
     /**
@@ -47,7 +48,7 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.get_body_tracker
      */
     fun getBodyTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getBodyTrackerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getBodyTrackerBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.set_body_update
      */
     fun setBodyUpdate(bodyUpdate: XRBodyModifier3D.BodyUpdate) {
-        ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, segment, bodyUpdate.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBodyUpdateBind, segment, bodyUpdate.value)
     }
 
     /**
@@ -65,7 +66,7 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.get_body_update
      */
     fun getBodyUpdate(): XRBodyModifier3D.BodyUpdate {
-        return XRBodyModifier3D.BodyUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, segment))
+        return XRBodyModifier3D.BodyUpdate(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBodyUpdateBind, segment))
     }
 
     /**
@@ -74,7 +75,7 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.set_bone_update
      */
     fun setBoneUpdate(boneUpdate: XRBodyModifier3D.BoneUpdate) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBoneUpdateBind, segment, boneUpdate.value)
     }
 
     /**
@@ -83,7 +84,7 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: XRBodyModifier3D.get_bone_update
      */
     fun getBoneUpdate(): XRBodyModifier3D.BoneUpdate {
-        return XRBodyModifier3D.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
+        return XRBodyModifier3D.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBoneUpdateBind, segment))
     }
 
     /**
@@ -163,35 +164,37 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRBodyModifier3D? =
             if (handle.address() == 0L) null else XRBodyModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BODY_TRACKER_HASH = 3304788590L
-        private val setBodyTrackerBind by lazy {
+        @JvmField
+        val setBodyTrackerBind =
             ObjectCalls.getMethodBind("XRBodyModifier3D", "set_body_tracker", SET_BODY_TRACKER_HASH)
-        }
 
         private const val GET_BODY_TRACKER_HASH = 2002593661L
-        private val getBodyTrackerBind by lazy {
+        @JvmField
+        val getBodyTrackerBind =
             ObjectCalls.getMethodBind("XRBodyModifier3D", "get_body_tracker", GET_BODY_TRACKER_HASH)
-        }
 
         private const val SET_BODY_UPDATE_HASH = 2211199417L
-        private val setBodyUpdateBind by lazy {
+        @JvmField
+        val setBodyUpdateBind =
             ObjectCalls.getMethodBind("XRBodyModifier3D", "set_body_update", SET_BODY_UPDATE_HASH)
-        }
 
         private const val GET_BODY_UPDATE_HASH = 2642335328L
-        private val getBodyUpdateBind by lazy {
+        @JvmField
+        val getBodyUpdateBind =
             ObjectCalls.getMethodBind("XRBodyModifier3D", "get_body_update", GET_BODY_UPDATE_HASH)
-        }
 
         private const val SET_BONE_UPDATE_HASH = 3356796943L
-        private val setBoneUpdateBind by lazy {
+        @JvmField
+        val setBoneUpdateBind =
             ObjectCalls.getMethodBind("XRBodyModifier3D", "set_bone_update", SET_BONE_UPDATE_HASH)
-        }
 
         private const val GET_BONE_UPDATE_HASH = 1309305964L
-        private val getBoneUpdateBind by lazy {
+        @JvmField
+        val getBoneUpdateBind =
             ObjectCalls.getMethodBind("XRBodyModifier3D", "get_bone_update", GET_BONE_UPDATE_HASH)
-        }
     }
 }

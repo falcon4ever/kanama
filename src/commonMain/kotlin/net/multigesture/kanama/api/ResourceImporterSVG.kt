@@ -23,7 +23,5 @@ class ResourceImporterSVG(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterSVG? =
             if (handle.address() == 0L) null else ResourceImporterSVG(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

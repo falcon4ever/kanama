@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -48,92 +49,92 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
 
     fun isSessionSupported(sessionMode: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(isSessionSupportedBind, segment, sessionMode)
+        ObjectCalls.ptrcallWithStringArg(Binds.isSessionSupportedBind, segment, sessionMode)
     }
 
     fun setSessionMode(sessionMode: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSessionModeBind, segment, sessionMode)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSessionModeBind, segment, sessionMode)
     }
 
     fun getSessionMode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSessionModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSessionModeBind, segment)
     }
 
     fun setRequiredFeatures(requiredFeatures: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setRequiredFeaturesBind, segment, requiredFeatures)
+        ObjectCalls.ptrcallWithStringArg(Binds.setRequiredFeaturesBind, segment, requiredFeatures)
     }
 
     fun getRequiredFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getRequiredFeaturesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRequiredFeaturesBind, segment)
     }
 
     fun setOptionalFeatures(optionalFeatures: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOptionalFeaturesBind, segment, optionalFeatures)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOptionalFeaturesBind, segment, optionalFeatures)
     }
 
     fun getOptionalFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOptionalFeaturesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOptionalFeaturesBind, segment)
     }
 
     fun getReferenceSpaceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getReferenceSpaceTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getReferenceSpaceTypeBind, segment)
     }
 
     fun getEnabledFeatures(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEnabledFeaturesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEnabledFeaturesBind, segment)
     }
 
     fun setRequestedReferenceSpaceTypes(requestedReferenceSpaceTypes: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setRequestedReferenceSpaceTypesBind, segment, requestedReferenceSpaceTypes)
+        ObjectCalls.ptrcallWithStringArg(Binds.setRequestedReferenceSpaceTypesBind, segment, requestedReferenceSpaceTypes)
     }
 
     fun getRequestedReferenceSpaceTypes(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getRequestedReferenceSpaceTypesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRequestedReferenceSpaceTypesBind, segment)
     }
 
     fun isInputSourceActive(inputSourceId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputSourceActiveBind, segment, inputSourceId)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputSourceActiveBind, segment, inputSourceId)
     }
 
     fun getInputSourceTracker(inputSourceId: Int): XRControllerTracker? {
         checkOpen()
-        return XRControllerTracker.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, segment, inputSourceId))
+        return XRControllerTracker.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInputSourceTrackerBind, segment, inputSourceId))
     }
 
     fun getInputSourceTargetRayMode(inputSourceId: Int): WebXRInterface.TargetRayMode {
         checkOpen()
-        return WebXRInterface.TargetRayMode(ObjectCalls.ptrcallWithIntArgRetLong(getInputSourceTargetRayModeBind, segment, inputSourceId))
+        return WebXRInterface.TargetRayMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getInputSourceTargetRayModeBind, segment, inputSourceId))
     }
 
     fun getVisibilityState(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getVisibilityStateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVisibilityStateBind, segment)
     }
 
     fun getDisplayRefreshRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDisplayRefreshRateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayRefreshRateBind, segment)
     }
 
     fun setDisplayRefreshRate(refreshRate: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDisplayRefreshRateBind, segment, refreshRate)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayRefreshRateBind, segment, refreshRate)
     }
 
     fun getAvailableDisplayRefreshRates(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getAvailableDisplayRefreshRatesBind, segment)
     }
 
     /** Signal `session_supported(session_mode: String, supported: bool)`; see [TypedSignal]. */
@@ -237,95 +238,97 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebXRInterface? =
             if (handle.address() == 0L) null else WebXRInterface(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_SESSION_SUPPORTED_HASH = 83702148L
-        private val isSessionSupportedBind by lazy {
+        @JvmField
+        val isSessionSupportedBind =
             ObjectCalls.getMethodBind("WebXRInterface", "is_session_supported", IS_SESSION_SUPPORTED_HASH)
-        }
 
         private const val SET_SESSION_MODE_HASH = 83702148L
-        private val setSessionModeBind by lazy {
+        @JvmField
+        val setSessionModeBind =
             ObjectCalls.getMethodBind("WebXRInterface", "set_session_mode", SET_SESSION_MODE_HASH)
-        }
 
         private const val GET_SESSION_MODE_HASH = 201670096L
-        private val getSessionModeBind by lazy {
+        @JvmField
+        val getSessionModeBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_session_mode", GET_SESSION_MODE_HASH)
-        }
 
         private const val SET_REQUIRED_FEATURES_HASH = 83702148L
-        private val setRequiredFeaturesBind by lazy {
+        @JvmField
+        val setRequiredFeaturesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "set_required_features", SET_REQUIRED_FEATURES_HASH)
-        }
 
         private const val GET_REQUIRED_FEATURES_HASH = 201670096L
-        private val getRequiredFeaturesBind by lazy {
+        @JvmField
+        val getRequiredFeaturesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_required_features", GET_REQUIRED_FEATURES_HASH)
-        }
 
         private const val SET_OPTIONAL_FEATURES_HASH = 83702148L
-        private val setOptionalFeaturesBind by lazy {
+        @JvmField
+        val setOptionalFeaturesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "set_optional_features", SET_OPTIONAL_FEATURES_HASH)
-        }
 
         private const val GET_OPTIONAL_FEATURES_HASH = 201670096L
-        private val getOptionalFeaturesBind by lazy {
+        @JvmField
+        val getOptionalFeaturesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_optional_features", GET_OPTIONAL_FEATURES_HASH)
-        }
 
         private const val GET_REFERENCE_SPACE_TYPE_HASH = 201670096L
-        private val getReferenceSpaceTypeBind by lazy {
+        @JvmField
+        val getReferenceSpaceTypeBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_reference_space_type", GET_REFERENCE_SPACE_TYPE_HASH)
-        }
 
         private const val GET_ENABLED_FEATURES_HASH = 201670096L
-        private val getEnabledFeaturesBind by lazy {
+        @JvmField
+        val getEnabledFeaturesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_enabled_features", GET_ENABLED_FEATURES_HASH)
-        }
 
         private const val SET_REQUESTED_REFERENCE_SPACE_TYPES_HASH = 83702148L
-        private val setRequestedReferenceSpaceTypesBind by lazy {
+        @JvmField
+        val setRequestedReferenceSpaceTypesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "set_requested_reference_space_types", SET_REQUESTED_REFERENCE_SPACE_TYPES_HASH)
-        }
 
         private const val GET_REQUESTED_REFERENCE_SPACE_TYPES_HASH = 201670096L
-        private val getRequestedReferenceSpaceTypesBind by lazy {
+        @JvmField
+        val getRequestedReferenceSpaceTypesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_requested_reference_space_types", GET_REQUESTED_REFERENCE_SPACE_TYPES_HASH)
-        }
 
         private const val IS_INPUT_SOURCE_ACTIVE_HASH = 1116898809L
-        private val isInputSourceActiveBind by lazy {
+        @JvmField
+        val isInputSourceActiveBind =
             ObjectCalls.getMethodBind("WebXRInterface", "is_input_source_active", IS_INPUT_SOURCE_ACTIVE_HASH)
-        }
 
         private const val GET_INPUT_SOURCE_TRACKER_HASH = 399776966L
-        private val getInputSourceTrackerBind by lazy {
+        @JvmField
+        val getInputSourceTrackerBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_input_source_tracker", GET_INPUT_SOURCE_TRACKER_HASH)
-        }
 
         private const val GET_INPUT_SOURCE_TARGET_RAY_MODE_HASH = 2852387453L
-        private val getInputSourceTargetRayModeBind by lazy {
+        @JvmField
+        val getInputSourceTargetRayModeBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_input_source_target_ray_mode", GET_INPUT_SOURCE_TARGET_RAY_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_STATE_HASH = 201670096L
-        private val getVisibilityStateBind by lazy {
+        @JvmField
+        val getVisibilityStateBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_visibility_state", GET_VISIBILITY_STATE_HASH)
-        }
 
         private const val GET_DISPLAY_REFRESH_RATE_HASH = 1740695150L
-        private val getDisplayRefreshRateBind by lazy {
+        @JvmField
+        val getDisplayRefreshRateBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_display_refresh_rate", GET_DISPLAY_REFRESH_RATE_HASH)
-        }
 
         private const val SET_DISPLAY_REFRESH_RATE_HASH = 373806689L
-        private val setDisplayRefreshRateBind by lazy {
+        @JvmField
+        val setDisplayRefreshRateBind =
             ObjectCalls.getMethodBind("WebXRInterface", "set_display_refresh_rate", SET_DISPLAY_REFRESH_RATE_HASH)
-        }
 
         private const val GET_AVAILABLE_DISPLAY_REFRESH_RATES_HASH = 3995934104L
-        private val getAvailableDisplayRefreshRatesBind by lazy {
+        @JvmField
+        val getAvailableDisplayRefreshRatesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_available_display_refresh_rates", GET_AVAILABLE_DISPLAY_REFRESH_RATES_HASH)
-        }
     }
 }

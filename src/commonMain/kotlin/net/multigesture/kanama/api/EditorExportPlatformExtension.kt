@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
      */
     fun setConfigError(errorText: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setConfigErrorBind, segment, errorText)
+        ObjectCalls.ptrcallWithStringArg(Binds.setConfigErrorBind, segment, errorText)
     }
 
     /**
@@ -31,7 +32,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
      */
     fun getConfigError(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getConfigErrorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConfigErrorBind, segment)
     }
 
     /**
@@ -43,7 +44,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
      */
     fun setConfigMissingTemplates(missingTemplates: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setConfigMissingTemplatesBind, segment, missingTemplates)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setConfigMissingTemplatesBind, segment, missingTemplates)
     }
 
     /**
@@ -55,7 +56,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
      */
     fun getConfigMissingTemplates(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getConfigMissingTemplatesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConfigMissingTemplatesBind, segment)
     }
 
     companion object {
@@ -68,25 +69,27 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformExtension? =
             if (handle.address() == 0L) null else EditorExportPlatformExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CONFIG_ERROR_HASH = 3089850668L
-        private val setConfigErrorBind by lazy {
+        @JvmField
+        val setConfigErrorBind =
             ObjectCalls.getMethodBind("EditorExportPlatformExtension", "set_config_error", SET_CONFIG_ERROR_HASH)
-        }
 
         private const val GET_CONFIG_ERROR_HASH = 201670096L
-        private val getConfigErrorBind by lazy {
+        @JvmField
+        val getConfigErrorBind =
             ObjectCalls.getMethodBind("EditorExportPlatformExtension", "get_config_error", GET_CONFIG_ERROR_HASH)
-        }
 
         private const val SET_CONFIG_MISSING_TEMPLATES_HASH = 1695273946L
-        private val setConfigMissingTemplatesBind by lazy {
+        @JvmField
+        val setConfigMissingTemplatesBind =
             ObjectCalls.getMethodBind("EditorExportPlatformExtension", "set_config_missing_templates", SET_CONFIG_MISSING_TEMPLATES_HASH)
-        }
 
         private const val GET_CONFIG_MISSING_TEMPLATES_HASH = 36873697L
-        private val getConfigMissingTemplatesBind by lazy {
+        @JvmField
+        val getConfigMissingTemplatesBind =
             ObjectCalls.getMethodBind("EditorExportPlatformExtension", "get_config_missing_templates", GET_CONFIG_MISSING_TEMPLATES_HASH)
-        }
     }
 }

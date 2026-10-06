@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
@@ -18,14 +19,16 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: GDExtensionManager.load_extension_from_function
  */
 fun GDExtensionManager.loadExtensionFromFunction(path: String, initFunc: MemorySegment): GDExtensionManager.LoadStatus {
-    return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc))
+    return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(GDExtensionManagerJvmBinds.loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc))
 }
 
 private val gDExtensionManagerSingleton: RawSegment by lazy {
     ObjectCalls.getSingleton("GDExtensionManager")
 }
 
-private const val LOAD_EXTENSION_FROM_FUNCTION_HASH = 1565094761L
-private val loadExtensionFromFunctionBind by lazy {
-    ObjectCalls.getMethodBind("GDExtensionManager", "load_extension_from_function", LOAD_EXTENSION_FROM_FUNCTION_HASH)
+private object GDExtensionManagerJvmBinds {
+    private const val LOAD_EXTENSION_FROM_FUNCTION_HASH = 1565094761L
+    @JvmField
+    val loadExtensionFromFunctionBind =
+        ObjectCalls.getMethodBind("GDExtensionManager", "load_extension_from_function", LOAD_EXTENSION_FROM_FUNCTION_HASH)
 }

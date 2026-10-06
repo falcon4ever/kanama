@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -42,7 +43,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setCeilingDb(ceiling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCeilingDbBind, segment, ceiling)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCeilingDbBind, segment, ceiling)
     }
 
     /**
@@ -52,7 +53,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getCeilingDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCeilingDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCeilingDbBind, segment)
     }
 
     /**
@@ -63,7 +64,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setThresholdDb(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setThresholdDbBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdDbBind, segment, threshold)
     }
 
     /**
@@ -74,7 +75,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getThresholdDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdDbBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setSoftClipDb(softClip: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSoftClipDbBind, segment, softClip)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSoftClipDbBind, segment, softClip)
     }
 
     /**
@@ -94,7 +95,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSoftClipDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftClipDbBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setSoftClipRatio(softClip: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSoftClipRatioBind, segment, softClip)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSoftClipRatioBind, segment, softClip)
     }
 
     /**
@@ -116,7 +117,7 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSoftClipRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftClipRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftClipRatioBind, segment)
     }
 
     companion object {
@@ -129,45 +130,47 @@ class AudioEffectLimiter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectLimiter? =
             if (handle.address() == 0L) null else AudioEffectLimiter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CEILING_DB_HASH = 373806689L
-        private val setCeilingDbBind by lazy {
+        @JvmField
+        val setCeilingDbBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "set_ceiling_db", SET_CEILING_DB_HASH)
-        }
 
         private const val GET_CEILING_DB_HASH = 1740695150L
-        private val getCeilingDbBind by lazy {
+        @JvmField
+        val getCeilingDbBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "get_ceiling_db", GET_CEILING_DB_HASH)
-        }
 
         private const val SET_THRESHOLD_DB_HASH = 373806689L
-        private val setThresholdDbBind by lazy {
+        @JvmField
+        val setThresholdDbBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "set_threshold_db", SET_THRESHOLD_DB_HASH)
-        }
 
         private const val GET_THRESHOLD_DB_HASH = 1740695150L
-        private val getThresholdDbBind by lazy {
+        @JvmField
+        val getThresholdDbBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "get_threshold_db", GET_THRESHOLD_DB_HASH)
-        }
 
         private const val SET_SOFT_CLIP_DB_HASH = 373806689L
-        private val setSoftClipDbBind by lazy {
+        @JvmField
+        val setSoftClipDbBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "set_soft_clip_db", SET_SOFT_CLIP_DB_HASH)
-        }
 
         private const val GET_SOFT_CLIP_DB_HASH = 1740695150L
-        private val getSoftClipDbBind by lazy {
+        @JvmField
+        val getSoftClipDbBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "get_soft_clip_db", GET_SOFT_CLIP_DB_HASH)
-        }
 
         private const val SET_SOFT_CLIP_RATIO_HASH = 373806689L
-        private val setSoftClipRatioBind by lazy {
+        @JvmField
+        val setSoftClipRatioBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "set_soft_clip_ratio", SET_SOFT_CLIP_RATIO_HASH)
-        }
 
         private const val GET_SOFT_CLIP_RATIO_HASH = 1740695150L
-        private val getSoftClipRatioBind by lazy {
+        @JvmField
+        val getSoftClipRatioBind =
             ObjectCalls.getMethodBind("AudioEffectLimiter", "get_soft_clip_ratio", GET_SOFT_CLIP_RATIO_HASH)
-        }
     }
 }

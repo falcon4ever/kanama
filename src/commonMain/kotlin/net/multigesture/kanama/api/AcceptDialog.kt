@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_ok_button
      */
     fun getOkButton(): Button? {
-        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOkButtonBind, segment))
+        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOkButtonBind, segment))
     }
 
     /**
@@ -60,7 +61,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_label
      */
     fun getLabel(): Label? {
-        return Label.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelBind, segment))
+        return Label.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLabelBind, segment))
     }
 
     /**
@@ -75,7 +76,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_hide_on_ok
      */
     fun setHideOnOk(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideOnOkBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideOnOkBind, segment, enabled)
     }
 
     /**
@@ -90,7 +91,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_hide_on_ok
      */
     fun getHideOnOk(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getHideOnOkBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHideOnOkBind, segment)
     }
 
     /**
@@ -100,7 +101,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_close_on_escape
      */
     fun setCloseOnEscape(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCloseOnEscapeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCloseOnEscapeBind, segment, enabled)
     }
 
     /**
@@ -110,7 +111,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_close_on_escape
      */
     fun getCloseOnEscape(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCloseOnEscapeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCloseOnEscapeBind, segment)
     }
 
     /**
@@ -123,7 +124,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.add_button
      */
     fun addButton(text: String, right: Boolean = false, action: String = ""): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithStringBoolStringArgsRetObject(addButtonBind, segment, text, right, action))
+        return Button.wrap(ObjectCalls.ptrcallWithStringBoolStringArgsRetObject(Binds.addButtonBind, segment, text, right, action))
     }
 
     /**
@@ -134,7 +135,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.add_cancel_button
      */
     fun addCancelButton(name: String): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithStringArgRetObject(addCancelButtonBind, segment, name))
+        return Button.wrap(ObjectCalls.ptrcallWithStringArgRetObject(Binds.addCancelButtonBind, segment, name))
     }
 
     /**
@@ -145,7 +146,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.remove_button
      */
     fun removeButton(button: Button) {
-        ObjectCalls.ptrcallWithObjectArgs(removeButtonBind, segment, listOf(button.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeButtonBind, segment, listOf(button.segment))
     }
 
     /**
@@ -155,7 +156,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.register_text_enter
      */
     fun registerTextEnter(lineEdit: LineEdit) {
-        ObjectCalls.ptrcallWithObjectArgs(registerTextEnterBind, segment, listOf(lineEdit.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.registerTextEnterBind, segment, listOf(lineEdit.segment))
     }
 
     /**
@@ -164,7 +165,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -173,7 +174,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -182,7 +183,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_autowrap
      */
     fun setAutowrap(autowrap: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutowrapBind, segment, autowrap)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutowrapBind, segment, autowrap)
     }
 
     /**
@@ -191,7 +192,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.has_autowrap
      */
     fun hasAutowrap(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutowrapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutowrapBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.set_ok_button_text
      */
     fun setOkButtonText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setOkButtonTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOkButtonTextBind, segment, text)
     }
 
     /**
@@ -211,7 +212,7 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
      * Generated from Godot docs: AcceptDialog.get_ok_button_text
      */
     fun getOkButtonText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getOkButtonTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOkButtonTextBind, segment)
     }
 
     /** Signal `confirmed()`; see [TypedSignal]. */
@@ -242,85 +243,87 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
 
         internal fun wrap(handle: RawSegment): AcceptDialog? =
             if (handle.address() == 0L) null else AcceptDialog(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_OK_BUTTON_HASH = 1856205918L
-        private val getOkButtonBind by lazy {
+        @JvmField
+        val getOkButtonBind =
             ObjectCalls.getMethodBind("AcceptDialog", "get_ok_button", GET_OK_BUTTON_HASH)
-        }
 
         private const val GET_LABEL_HASH = 566733104L
-        private val getLabelBind by lazy {
+        @JvmField
+        val getLabelBind =
             ObjectCalls.getMethodBind("AcceptDialog", "get_label", GET_LABEL_HASH)
-        }
 
         private const val SET_HIDE_ON_OK_HASH = 2586408642L
-        private val setHideOnOkBind by lazy {
+        @JvmField
+        val setHideOnOkBind =
             ObjectCalls.getMethodBind("AcceptDialog", "set_hide_on_ok", SET_HIDE_ON_OK_HASH)
-        }
 
         private const val GET_HIDE_ON_OK_HASH = 36873697L
-        private val getHideOnOkBind by lazy {
+        @JvmField
+        val getHideOnOkBind =
             ObjectCalls.getMethodBind("AcceptDialog", "get_hide_on_ok", GET_HIDE_ON_OK_HASH)
-        }
 
         private const val SET_CLOSE_ON_ESCAPE_HASH = 2586408642L
-        private val setCloseOnEscapeBind by lazy {
+        @JvmField
+        val setCloseOnEscapeBind =
             ObjectCalls.getMethodBind("AcceptDialog", "set_close_on_escape", SET_CLOSE_ON_ESCAPE_HASH)
-        }
 
         private const val GET_CLOSE_ON_ESCAPE_HASH = 36873697L
-        private val getCloseOnEscapeBind by lazy {
+        @JvmField
+        val getCloseOnEscapeBind =
             ObjectCalls.getMethodBind("AcceptDialog", "get_close_on_escape", GET_CLOSE_ON_ESCAPE_HASH)
-        }
 
         private const val ADD_BUTTON_HASH = 3328440682L
-        private val addButtonBind by lazy {
+        @JvmField
+        val addButtonBind =
             ObjectCalls.getMethodBind("AcceptDialog", "add_button", ADD_BUTTON_HASH)
-        }
 
         private const val ADD_CANCEL_BUTTON_HASH = 242045556L
-        private val addCancelButtonBind by lazy {
+        @JvmField
+        val addCancelButtonBind =
             ObjectCalls.getMethodBind("AcceptDialog", "add_cancel_button", ADD_CANCEL_BUTTON_HASH)
-        }
 
         private const val REMOVE_BUTTON_HASH = 2068354942L
-        private val removeButtonBind by lazy {
+        @JvmField
+        val removeButtonBind =
             ObjectCalls.getMethodBind("AcceptDialog", "remove_button", REMOVE_BUTTON_HASH)
-        }
 
         private const val REGISTER_TEXT_ENTER_HASH = 3714008017L
-        private val registerTextEnterBind by lazy {
+        @JvmField
+        val registerTextEnterBind =
             ObjectCalls.getMethodBind("AcceptDialog", "register_text_enter", REGISTER_TEXT_ENTER_HASH)
-        }
 
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("AcceptDialog", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("AcceptDialog", "get_text", GET_TEXT_HASH)
-        }
 
         private const val SET_AUTOWRAP_HASH = 2586408642L
-        private val setAutowrapBind by lazy {
+        @JvmField
+        val setAutowrapBind =
             ObjectCalls.getMethodBind("AcceptDialog", "set_autowrap", SET_AUTOWRAP_HASH)
-        }
 
         private const val HAS_AUTOWRAP_HASH = 2240911060L
-        private val hasAutowrapBind by lazy {
+        @JvmField
+        val hasAutowrapBind =
             ObjectCalls.getMethodBind("AcceptDialog", "has_autowrap", HAS_AUTOWRAP_HASH)
-        }
 
         private const val SET_OK_BUTTON_TEXT_HASH = 83702148L
-        private val setOkButtonTextBind by lazy {
+        @JvmField
+        val setOkButtonTextBind =
             ObjectCalls.getMethodBind("AcceptDialog", "set_ok_button_text", SET_OK_BUTTON_TEXT_HASH)
-        }
 
         private const val GET_OK_BUTTON_TEXT_HASH = 201670096L
-        private val getOkButtonTextBind by lazy {
+        @JvmField
+        val getOkButtonTextBind =
             ObjectCalls.getMethodBind("AcceptDialog", "get_ok_button_text", GET_OK_BUTTON_TEXT_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class Cubemap(handle: GodotHandle) : ImageTextureLayered(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -35,10 +36,12 @@ class Cubemap(handle: GodotHandle) : ImageTextureLayered(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Cubemap? =
             if (handle.address() == 0L) null else Cubemap(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
-        private val createPlaceholderBind by lazy {
+        @JvmField
+        val createPlaceholderBind =
             ObjectCalls.getMethodBind("Cubemap", "create_placeholder", CREATE_PLACEHOLDER_HASH)
-        }
     }
 }

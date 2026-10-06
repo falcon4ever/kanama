@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -200,7 +201,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -213,7 +214,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_enabled
      */
     fun setAvoidanceEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAvoidanceEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAvoidanceEnabledBind, segment, enabled)
     }
 
     /**
@@ -226,7 +227,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_enabled
      */
     fun getAvoidanceEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAvoidanceEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAvoidanceEnabledBind, segment)
     }
 
     /**
@@ -240,7 +241,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_desired_distance
      */
     fun setPathDesiredDistance(desiredDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathDesiredDistanceBind, segment, desiredDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathDesiredDistanceBind, segment, desiredDistance)
     }
 
     /**
@@ -254,7 +255,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_desired_distance
      */
     fun getPathDesiredDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathDesiredDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathDesiredDistanceBind, segment)
     }
 
     /**
@@ -271,7 +272,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_target_desired_distance
      */
     fun setTargetDesiredDistance(desiredDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTargetDesiredDistanceBind, segment, desiredDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTargetDesiredDistanceBind, segment, desiredDistance)
     }
 
     /**
@@ -288,7 +289,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_target_desired_distance
      */
     fun getTargetDesiredDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetDesiredDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetDesiredDistanceBind, segment)
     }
 
     /**
@@ -301,7 +302,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -314,7 +315,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -323,7 +324,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_neighbor_distance
      */
     fun setNeighborDistance(neighborDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNeighborDistanceBind, segment, neighborDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNeighborDistanceBind, segment, neighborDistance)
     }
 
     /**
@@ -332,7 +333,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_neighbor_distance
      */
     fun getNeighborDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNeighborDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNeighborDistanceBind, segment)
     }
 
     /**
@@ -341,7 +342,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_max_neighbors
      */
     fun setMaxNeighbors(maxNeighbors: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxNeighborsBind, segment, maxNeighbors)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxNeighborsBind, segment, maxNeighbors)
     }
 
     /**
@@ -350,7 +351,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_max_neighbors
      */
     fun getMaxNeighbors(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxNeighborsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxNeighborsBind, segment)
     }
 
     /**
@@ -362,7 +363,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_time_horizon_agents
      */
     fun setTimeHorizonAgents(timeHorizon: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeHorizonAgentsBind, segment, timeHorizon)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimeHorizonAgentsBind, segment, timeHorizon)
     }
 
     /**
@@ -374,7 +375,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_time_horizon_agents
      */
     fun getTimeHorizonAgents(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeHorizonAgentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeHorizonAgentsBind, segment)
     }
 
     /**
@@ -387,7 +388,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_time_horizon_obstacles
      */
     fun setTimeHorizonObstacles(timeHorizon: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeHorizonObstaclesBind, segment, timeHorizon)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimeHorizonObstaclesBind, segment, timeHorizon)
     }
 
     /**
@@ -400,7 +401,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_time_horizon_obstacles
      */
     fun getTimeHorizonObstacles(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeHorizonObstaclesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeHorizonObstaclesBind, segment)
     }
 
     /**
@@ -409,7 +410,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_max_speed
      */
     fun setMaxSpeed(maxSpeed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxSpeedBind, segment, maxSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxSpeedBind, segment, maxSpeed)
     }
 
     /**
@@ -418,7 +419,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_max_speed
      */
     fun getMaxSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxSpeedBind, segment)
     }
 
     /**
@@ -429,7 +430,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_max_distance
      */
     fun setPathMaxDistance(maxSpeed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathMaxDistanceBind, segment, maxSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathMaxDistanceBind, segment, maxSpeed)
     }
 
     /**
@@ -440,7 +441,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_max_distance
      */
     fun getPathMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathMaxDistanceBind, segment)
     }
 
     /**
@@ -451,7 +452,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -462,7 +463,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getNavigationLayersBind, segment)
     }
 
     /**
@@ -472,7 +473,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_navigation_layer_value
      */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setNavigationLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -482,7 +483,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_navigation_layer_value
      */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getNavigationLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -491,7 +492,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_pathfinding_algorithm
      */
     fun setPathfindingAlgorithm(pathfindingAlgorithm: NavigationPathQueryParameters2D.PathfindingAlgorithm) {
-        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
     }
 
     /**
@@ -500,7 +501,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_pathfinding_algorithm
      */
     fun getPathfindingAlgorithm(): NavigationPathQueryParameters2D.PathfindingAlgorithm {
-        return NavigationPathQueryParameters2D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment))
+        return NavigationPathQueryParameters2D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathfindingAlgorithmBind, segment))
     }
 
     /**
@@ -509,7 +510,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_postprocessing
      */
     fun setPathPostprocessing(pathPostprocessing: NavigationPathQueryParameters2D.PathPostProcessing) {
-        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathPostprocessingBind, segment, pathPostprocessing.value)
     }
 
     /**
@@ -518,7 +519,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_postprocessing
      */
     fun getPathPostprocessing(): NavigationPathQueryParameters2D.PathPostProcessing {
-        return NavigationPathQueryParameters2D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment))
+        return NavigationPathQueryParameters2D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathPostprocessingBind, segment))
     }
 
     /**
@@ -527,7 +528,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_metadata_flags
      */
     fun setPathMetadataFlags(flags: NavigationPathQueryParameters2D.PathMetadataFlags) {
-        ObjectCalls.ptrcallWithLongArg(setPathMetadataFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPathMetadataFlagsBind, segment, flags.value)
     }
 
     /**
@@ -536,7 +537,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_metadata_flags
      */
     fun getPathMetadataFlags(): NavigationPathQueryParameters2D.PathMetadataFlags {
-        return NavigationPathQueryParameters2D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(getPathMetadataFlagsBind, segment))
+        return NavigationPathQueryParameters2D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPathMetadataFlagsBind, segment))
     }
 
     /**
@@ -546,7 +547,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -559,7 +560,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -569,7 +570,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_target_position
      */
     fun setTargetPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTargetPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setTargetPositionBind, segment, position)
     }
 
     /**
@@ -579,7 +580,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_target_position
      */
     fun getTargetPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTargetPositionBind, segment)
     }
 
     /**
@@ -592,7 +593,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_simplify_path
      */
     fun setSimplifyPath(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSimplifyPathBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSimplifyPathBind, segment, enabled)
     }
 
     /**
@@ -605,7 +606,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_simplify_path
      */
     fun getSimplifyPath(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimplifyPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSimplifyPathBind, segment)
     }
 
     /**
@@ -614,7 +615,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_simplify_epsilon
      */
     fun setSimplifyEpsilon(epsilon: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSimplifyEpsilonBind, segment, epsilon)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSimplifyEpsilonBind, segment, epsilon)
     }
 
     /**
@@ -623,7 +624,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_simplify_epsilon
      */
     fun getSimplifyEpsilon(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSimplifyEpsilonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSimplifyEpsilonBind, segment)
     }
 
     /**
@@ -633,7 +634,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_return_max_length
      */
     fun setPathReturnMaxLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathReturnMaxLengthBind, segment, length)
     }
 
     /**
@@ -643,7 +644,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_return_max_length
      */
     fun getPathReturnMaxLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxLengthBind, segment)
     }
 
     /**
@@ -656,7 +657,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_return_max_radius
      */
     fun setPathReturnMaxRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathReturnMaxRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathReturnMaxRadiusBind, segment, radius)
     }
 
     /**
@@ -669,7 +670,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_return_max_radius
      */
     fun getPathReturnMaxRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathReturnMaxRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathReturnMaxRadiusBind, segment)
     }
 
     /**
@@ -683,7 +684,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_search_max_polygons
      */
     fun setPathSearchMaxPolygons(maxPolygons: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPathSearchMaxPolygonsBind, segment, maxPolygons)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPathSearchMaxPolygonsBind, segment, maxPolygons)
     }
 
     /**
@@ -697,7 +698,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_search_max_polygons
      */
     fun getPathSearchMaxPolygons(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPathSearchMaxPolygonsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathSearchMaxPolygonsBind, segment)
     }
 
     /**
@@ -712,7 +713,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_path_search_max_distance
      */
     fun setPathSearchMaxDistance(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPathSearchMaxDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathSearchMaxDistanceBind, segment, distance)
     }
 
     /**
@@ -727,7 +728,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_search_max_distance
      */
     fun getPathSearchMaxDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathSearchMaxDistanceBind, segment)
     }
 
     /**
@@ -737,7 +738,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_path_length
      */
     fun getPathLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathLengthBind, segment)
     }
 
     /**
@@ -749,7 +750,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_next_path_position
      */
     fun getNextPathPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getNextPathPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNextPathPositionBind, segment)
     }
 
     /**
@@ -760,7 +761,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_velocity_forced
      */
     fun setVelocityForced(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityForcedBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityForcedBind, segment, velocity)
     }
 
     /**
@@ -772,7 +773,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_velocity
      */
     fun setVelocity(velocity: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityBind, segment, velocity)
     }
 
     /**
@@ -784,7 +785,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_velocity
      */
     fun getVelocity(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
     }
 
     /**
@@ -794,7 +795,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.distance_to_target
      */
     fun distanceToTarget(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(distanceToTargetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.distanceToTargetBind, segment)
     }
 
     /**
@@ -803,7 +804,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_result
      */
     fun getCurrentNavigationResult(): NavigationPathQueryResult2D? {
-        return NavigationPathQueryResult2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurrentNavigationResultBind, segment))
+        return NavigationPathQueryResult2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentNavigationResultBind, segment))
     }
 
     /**
@@ -817,7 +818,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_path
      */
     fun getCurrentNavigationPath(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getCurrentNavigationPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getCurrentNavigationPathBind, segment)
     }
 
     /**
@@ -826,7 +827,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_path_index
      */
     fun getCurrentNavigationPathIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentNavigationPathIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentNavigationPathIndexBind, segment)
     }
 
     /**
@@ -837,7 +838,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.is_target_reached
      */
     fun isTargetReached(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTargetReachedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTargetReachedBind, segment)
     }
 
     /**
@@ -847,7 +848,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.is_target_reachable
      */
     fun isTargetReachable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTargetReachableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTargetReachableBind, segment)
     }
 
     /**
@@ -860,7 +861,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.is_navigation_finished
      */
     fun isNavigationFinished(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNavigationFinishedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNavigationFinishedBind, segment)
     }
 
     /**
@@ -871,7 +872,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_final_position
      */
     fun getFinalPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFinalPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFinalPositionBind, segment)
     }
 
     /**
@@ -881,7 +882,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_layers
      */
     fun setAvoidanceLayers(layers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceLayersBind, segment, layers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setAvoidanceLayersBind, segment, layers)
     }
 
     /**
@@ -891,7 +892,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_layers
      */
     fun getAvoidanceLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getAvoidanceLayersBind, segment)
     }
 
     /**
@@ -901,7 +902,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_mask
      */
     fun setAvoidanceMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setAvoidanceMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setAvoidanceMaskBind, segment, mask)
     }
 
     /**
@@ -911,7 +912,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_mask
      */
     fun getAvoidanceMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getAvoidanceMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getAvoidanceMaskBind, segment)
     }
 
     /**
@@ -921,7 +922,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_layer_value
      */
     fun setAvoidanceLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAvoidanceLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -931,7 +932,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_layer_value
      */
     fun getAvoidanceLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getAvoidanceLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -941,7 +942,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_mask_value
      */
     fun setAvoidanceMaskValue(maskNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setAvoidanceMaskValueBind, segment, maskNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setAvoidanceMaskValueBind, segment, maskNumber, value)
     }
 
     /**
@@ -951,7 +952,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_mask_value
      */
     fun getAvoidanceMaskValue(maskNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getAvoidanceMaskValueBind, segment, maskNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getAvoidanceMaskValueBind, segment, maskNumber)
     }
 
     /**
@@ -962,7 +963,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_avoidance_priority
      */
     fun setAvoidancePriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAvoidancePriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAvoidancePriorityBind, segment, priority)
     }
 
     /**
@@ -973,7 +974,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_avoidance_priority
      */
     fun getAvoidancePriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAvoidancePriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAvoidancePriorityBind, segment)
     }
 
     /**
@@ -982,7 +983,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_enabled
      */
     fun setDebugEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugEnabledBind, segment, enabled)
     }
 
     /**
@@ -991,7 +992,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_enabled
      */
     fun getDebugEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDebugEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDebugEnabledBind, segment)
     }
 
     /**
@@ -1000,7 +1001,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_use_custom
      */
     fun setDebugUseCustom(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugUseCustomBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugUseCustomBind, segment, enabled)
     }
 
     /**
@@ -1009,7 +1010,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_use_custom
      */
     fun getDebugUseCustom(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDebugUseCustomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDebugUseCustomBind, segment)
     }
 
     /**
@@ -1018,7 +1019,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_path_custom_color
      */
     fun setDebugPathCustomColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugPathCustomColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDebugPathCustomColorBind, segment, color)
     }
 
     /**
@@ -1027,7 +1028,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_path_custom_color
      */
     fun getDebugPathCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugPathCustomColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDebugPathCustomColorBind, segment)
     }
 
     /**
@@ -1037,7 +1038,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_path_custom_point_size
      */
     fun setDebugPathCustomPointSize(pointSize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDebugPathCustomPointSizeBind, segment, pointSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDebugPathCustomPointSizeBind, segment, pointSize)
     }
 
     /**
@@ -1047,7 +1048,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_path_custom_point_size
      */
     fun getDebugPathCustomPointSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomPointSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDebugPathCustomPointSizeBind, segment)
     }
 
     /**
@@ -1057,7 +1058,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.set_debug_path_custom_line_width
      */
     fun setDebugPathCustomLineWidth(lineWidth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDebugPathCustomLineWidthBind, segment, lineWidth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDebugPathCustomLineWidthBind, segment, lineWidth)
     }
 
     /**
@@ -1067,7 +1068,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_debug_path_custom_line_width
      */
     fun getDebugPathCustomLineWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomLineWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDebugPathCustomLineWidthBind, segment)
     }
 
     /** Signal `path_changed()`; see [TypedSignal]. */
@@ -1116,405 +1117,407 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationAgent2D? =
             if (handle.address() == 0L) null else NavigationAgent2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_rid", GET_RID_HASH)
-        }
 
         private const val SET_AVOIDANCE_ENABLED_HASH = 2586408642L
-        private val setAvoidanceEnabledBind by lazy {
+        @JvmField
+        val setAvoidanceEnabledBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_avoidance_enabled", SET_AVOIDANCE_ENABLED_HASH)
-        }
 
         private const val GET_AVOIDANCE_ENABLED_HASH = 36873697L
-        private val getAvoidanceEnabledBind by lazy {
+        @JvmField
+        val getAvoidanceEnabledBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_avoidance_enabled", GET_AVOIDANCE_ENABLED_HASH)
-        }
 
         private const val SET_PATH_DESIRED_DISTANCE_HASH = 373806689L
-        private val setPathDesiredDistanceBind by lazy {
+        @JvmField
+        val setPathDesiredDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_desired_distance", SET_PATH_DESIRED_DISTANCE_HASH)
-        }
 
         private const val GET_PATH_DESIRED_DISTANCE_HASH = 1740695150L
-        private val getPathDesiredDistanceBind by lazy {
+        @JvmField
+        val getPathDesiredDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_desired_distance", GET_PATH_DESIRED_DISTANCE_HASH)
-        }
 
         private const val SET_TARGET_DESIRED_DISTANCE_HASH = 373806689L
-        private val setTargetDesiredDistanceBind by lazy {
+        @JvmField
+        val setTargetDesiredDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_target_desired_distance", SET_TARGET_DESIRED_DISTANCE_HASH)
-        }
 
         private const val GET_TARGET_DESIRED_DISTANCE_HASH = 1740695150L
-        private val getTargetDesiredDistanceBind by lazy {
+        @JvmField
+        val getTargetDesiredDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_target_desired_distance", GET_TARGET_DESIRED_DISTANCE_HASH)
-        }
 
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_NEIGHBOR_DISTANCE_HASH = 373806689L
-        private val setNeighborDistanceBind by lazy {
+        @JvmField
+        val setNeighborDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_neighbor_distance", SET_NEIGHBOR_DISTANCE_HASH)
-        }
 
         private const val GET_NEIGHBOR_DISTANCE_HASH = 1740695150L
-        private val getNeighborDistanceBind by lazy {
+        @JvmField
+        val getNeighborDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_neighbor_distance", GET_NEIGHBOR_DISTANCE_HASH)
-        }
 
         private const val SET_MAX_NEIGHBORS_HASH = 1286410249L
-        private val setMaxNeighborsBind by lazy {
+        @JvmField
+        val setMaxNeighborsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_max_neighbors", SET_MAX_NEIGHBORS_HASH)
-        }
 
         private const val GET_MAX_NEIGHBORS_HASH = 3905245786L
-        private val getMaxNeighborsBind by lazy {
+        @JvmField
+        val getMaxNeighborsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_max_neighbors", GET_MAX_NEIGHBORS_HASH)
-        }
 
         private const val SET_TIME_HORIZON_AGENTS_HASH = 373806689L
-        private val setTimeHorizonAgentsBind by lazy {
+        @JvmField
+        val setTimeHorizonAgentsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_time_horizon_agents", SET_TIME_HORIZON_AGENTS_HASH)
-        }
 
         private const val GET_TIME_HORIZON_AGENTS_HASH = 1740695150L
-        private val getTimeHorizonAgentsBind by lazy {
+        @JvmField
+        val getTimeHorizonAgentsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_time_horizon_agents", GET_TIME_HORIZON_AGENTS_HASH)
-        }
 
         private const val SET_TIME_HORIZON_OBSTACLES_HASH = 373806689L
-        private val setTimeHorizonObstaclesBind by lazy {
+        @JvmField
+        val setTimeHorizonObstaclesBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_time_horizon_obstacles", SET_TIME_HORIZON_OBSTACLES_HASH)
-        }
 
         private const val GET_TIME_HORIZON_OBSTACLES_HASH = 1740695150L
-        private val getTimeHorizonObstaclesBind by lazy {
+        @JvmField
+        val getTimeHorizonObstaclesBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_time_horizon_obstacles", GET_TIME_HORIZON_OBSTACLES_HASH)
-        }
 
         private const val SET_MAX_SPEED_HASH = 373806689L
-        private val setMaxSpeedBind by lazy {
+        @JvmField
+        val setMaxSpeedBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_max_speed", SET_MAX_SPEED_HASH)
-        }
 
         private const val GET_MAX_SPEED_HASH = 1740695150L
-        private val getMaxSpeedBind by lazy {
+        @JvmField
+        val getMaxSpeedBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_max_speed", GET_MAX_SPEED_HASH)
-        }
 
         private const val SET_PATH_MAX_DISTANCE_HASH = 373806689L
-        private val setPathMaxDistanceBind by lazy {
+        @JvmField
+        val setPathMaxDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_max_distance", SET_PATH_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_PATH_MAX_DISTANCE_HASH = 191475506L
-        private val getPathMaxDistanceBind by lazy {
+        @JvmField
+        val getPathMaxDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_max_distance", GET_PATH_MAX_DISTANCE_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYERS_HASH = 1286410249L
-        private val setNavigationLayersBind by lazy {
+        @JvmField
+        val setNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_navigation_layers", SET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYERS_HASH = 3905245786L
-        private val getNavigationLayersBind by lazy {
+        @JvmField
+        val getNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_navigation_layers", GET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYER_VALUE_HASH = 300928843L
-        private val setNavigationLayerValueBind by lazy {
+        @JvmField
+        val setNavigationLayerValueBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_navigation_layer_value", SET_NAVIGATION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYER_VALUE_HASH = 1116898809L
-        private val getNavigationLayerValueBind by lazy {
+        @JvmField
+        val getNavigationLayerValueBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_navigation_layer_value", GET_NAVIGATION_LAYER_VALUE_HASH)
-        }
 
         private const val SET_PATHFINDING_ALGORITHM_HASH = 2783519915L
-        private val setPathfindingAlgorithmBind by lazy {
+        @JvmField
+        val setPathfindingAlgorithmBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_pathfinding_algorithm", SET_PATHFINDING_ALGORITHM_HASH)
-        }
 
         private const val GET_PATHFINDING_ALGORITHM_HASH = 3000421146L
-        private val getPathfindingAlgorithmBind by lazy {
+        @JvmField
+        val getPathfindingAlgorithmBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_pathfinding_algorithm", GET_PATHFINDING_ALGORITHM_HASH)
-        }
 
         private const val SET_PATH_POSTPROCESSING_HASH = 2864409082L
-        private val setPathPostprocessingBind by lazy {
+        @JvmField
+        val setPathPostprocessingBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_postprocessing", SET_PATH_POSTPROCESSING_HASH)
-        }
 
         private const val GET_PATH_POSTPROCESSING_HASH = 3798118993L
-        private val getPathPostprocessingBind by lazy {
+        @JvmField
+        val getPathPostprocessingBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_postprocessing", GET_PATH_POSTPROCESSING_HASH)
-        }
 
         private const val SET_PATH_METADATA_FLAGS_HASH = 24274129L
-        private val setPathMetadataFlagsBind by lazy {
+        @JvmField
+        val setPathMetadataFlagsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_metadata_flags", SET_PATH_METADATA_FLAGS_HASH)
-        }
 
         private const val GET_PATH_METADATA_FLAGS_HASH = 488152976L
-        private val getPathMetadataFlagsBind by lazy {
+        @JvmField
+        val getPathMetadataFlagsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_metadata_flags", GET_PATH_METADATA_FLAGS_HASH)
-        }
 
         private const val SET_NAVIGATION_MAP_HASH = 2722037293L
-        private val setNavigationMapBind by lazy {
+        @JvmField
+        val setNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_navigation_map", SET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val SET_TARGET_POSITION_HASH = 743155724L
-        private val setTargetPositionBind by lazy {
+        @JvmField
+        val setTargetPositionBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_target_position", SET_TARGET_POSITION_HASH)
-        }
 
         private const val GET_TARGET_POSITION_HASH = 3341600327L
-        private val getTargetPositionBind by lazy {
+        @JvmField
+        val getTargetPositionBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_target_position", GET_TARGET_POSITION_HASH)
-        }
 
         private const val SET_SIMPLIFY_PATH_HASH = 2586408642L
-        private val setSimplifyPathBind by lazy {
+        @JvmField
+        val setSimplifyPathBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_simplify_path", SET_SIMPLIFY_PATH_HASH)
-        }
 
         private const val GET_SIMPLIFY_PATH_HASH = 36873697L
-        private val getSimplifyPathBind by lazy {
+        @JvmField
+        val getSimplifyPathBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_simplify_path", GET_SIMPLIFY_PATH_HASH)
-        }
 
         private const val SET_SIMPLIFY_EPSILON_HASH = 373806689L
-        private val setSimplifyEpsilonBind by lazy {
+        @JvmField
+        val setSimplifyEpsilonBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_simplify_epsilon", SET_SIMPLIFY_EPSILON_HASH)
-        }
 
         private const val GET_SIMPLIFY_EPSILON_HASH = 1740695150L
-        private val getSimplifyEpsilonBind by lazy {
+        @JvmField
+        val getSimplifyEpsilonBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_simplify_epsilon", GET_SIMPLIFY_EPSILON_HASH)
-        }
 
         private const val SET_PATH_RETURN_MAX_LENGTH_HASH = 373806689L
-        private val setPathReturnMaxLengthBind by lazy {
+        @JvmField
+        val setPathReturnMaxLengthBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_return_max_length", SET_PATH_RETURN_MAX_LENGTH_HASH)
-        }
 
         private const val GET_PATH_RETURN_MAX_LENGTH_HASH = 1740695150L
-        private val getPathReturnMaxLengthBind by lazy {
+        @JvmField
+        val getPathReturnMaxLengthBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_return_max_length", GET_PATH_RETURN_MAX_LENGTH_HASH)
-        }
 
         private const val SET_PATH_RETURN_MAX_RADIUS_HASH = 373806689L
-        private val setPathReturnMaxRadiusBind by lazy {
+        @JvmField
+        val setPathReturnMaxRadiusBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_return_max_radius", SET_PATH_RETURN_MAX_RADIUS_HASH)
-        }
 
         private const val GET_PATH_RETURN_MAX_RADIUS_HASH = 1740695150L
-        private val getPathReturnMaxRadiusBind by lazy {
+        @JvmField
+        val getPathReturnMaxRadiusBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_return_max_radius", GET_PATH_RETURN_MAX_RADIUS_HASH)
-        }
 
         private const val SET_PATH_SEARCH_MAX_POLYGONS_HASH = 1286410249L
-        private val setPathSearchMaxPolygonsBind by lazy {
+        @JvmField
+        val setPathSearchMaxPolygonsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_search_max_polygons", SET_PATH_SEARCH_MAX_POLYGONS_HASH)
-        }
 
         private const val GET_PATH_SEARCH_MAX_POLYGONS_HASH = 3905245786L
-        private val getPathSearchMaxPolygonsBind by lazy {
+        @JvmField
+        val getPathSearchMaxPolygonsBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_search_max_polygons", GET_PATH_SEARCH_MAX_POLYGONS_HASH)
-        }
 
         private const val SET_PATH_SEARCH_MAX_DISTANCE_HASH = 373806689L
-        private val setPathSearchMaxDistanceBind by lazy {
+        @JvmField
+        val setPathSearchMaxDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_path_search_max_distance", SET_PATH_SEARCH_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_PATH_SEARCH_MAX_DISTANCE_HASH = 1740695150L
-        private val getPathSearchMaxDistanceBind by lazy {
+        @JvmField
+        val getPathSearchMaxDistanceBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_search_max_distance", GET_PATH_SEARCH_MAX_DISTANCE_HASH)
-        }
 
         private const val GET_PATH_LENGTH_HASH = 1740695150L
-        private val getPathLengthBind by lazy {
+        @JvmField
+        val getPathLengthBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_path_length", GET_PATH_LENGTH_HASH)
-        }
 
         private const val GET_NEXT_PATH_POSITION_HASH = 1497962370L
-        private val getNextPathPositionBind by lazy {
+        @JvmField
+        val getNextPathPositionBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_next_path_position", GET_NEXT_PATH_POSITION_HASH)
-        }
 
         private const val SET_VELOCITY_FORCED_HASH = 743155724L
-        private val setVelocityForcedBind by lazy {
+        @JvmField
+        val setVelocityForcedBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_velocity_forced", SET_VELOCITY_FORCED_HASH)
-        }
 
         private const val SET_VELOCITY_HASH = 743155724L
-        private val setVelocityBind by lazy {
+        @JvmField
+        val setVelocityBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_velocity", SET_VELOCITY_HASH)
-        }
 
         private const val GET_VELOCITY_HASH = 1497962370L
-        private val getVelocityBind by lazy {
+        @JvmField
+        val getVelocityBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_velocity", GET_VELOCITY_HASH)
-        }
 
         private const val DISTANCE_TO_TARGET_HASH = 1740695150L
-        private val distanceToTargetBind by lazy {
+        @JvmField
+        val distanceToTargetBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "distance_to_target", DISTANCE_TO_TARGET_HASH)
-        }
 
         private const val GET_CURRENT_NAVIGATION_RESULT_HASH = 166799483L
-        private val getCurrentNavigationResultBind by lazy {
+        @JvmField
+        val getCurrentNavigationResultBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_current_navigation_result", GET_CURRENT_NAVIGATION_RESULT_HASH)
-        }
 
         private const val GET_CURRENT_NAVIGATION_PATH_HASH = 2961356807L
-        private val getCurrentNavigationPathBind by lazy {
+        @JvmField
+        val getCurrentNavigationPathBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_current_navigation_path", GET_CURRENT_NAVIGATION_PATH_HASH)
-        }
 
         private const val GET_CURRENT_NAVIGATION_PATH_INDEX_HASH = 3905245786L
-        private val getCurrentNavigationPathIndexBind by lazy {
+        @JvmField
+        val getCurrentNavigationPathIndexBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_current_navigation_path_index", GET_CURRENT_NAVIGATION_PATH_INDEX_HASH)
-        }
 
         private const val IS_TARGET_REACHED_HASH = 36873697L
-        private val isTargetReachedBind by lazy {
+        @JvmField
+        val isTargetReachedBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "is_target_reached", IS_TARGET_REACHED_HASH)
-        }
 
         private const val IS_TARGET_REACHABLE_HASH = 2240911060L
-        private val isTargetReachableBind by lazy {
+        @JvmField
+        val isTargetReachableBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "is_target_reachable", IS_TARGET_REACHABLE_HASH)
-        }
 
         private const val IS_NAVIGATION_FINISHED_HASH = 2240911060L
-        private val isNavigationFinishedBind by lazy {
+        @JvmField
+        val isNavigationFinishedBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "is_navigation_finished", IS_NAVIGATION_FINISHED_HASH)
-        }
 
         private const val GET_FINAL_POSITION_HASH = 1497962370L
-        private val getFinalPositionBind by lazy {
+        @JvmField
+        val getFinalPositionBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_final_position", GET_FINAL_POSITION_HASH)
-        }
 
         private const val SET_AVOIDANCE_LAYERS_HASH = 1286410249L
-        private val setAvoidanceLayersBind by lazy {
+        @JvmField
+        val setAvoidanceLayersBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_avoidance_layers", SET_AVOIDANCE_LAYERS_HASH)
-        }
 
         private const val GET_AVOIDANCE_LAYERS_HASH = 3905245786L
-        private val getAvoidanceLayersBind by lazy {
+        @JvmField
+        val getAvoidanceLayersBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_avoidance_layers", GET_AVOIDANCE_LAYERS_HASH)
-        }
 
         private const val SET_AVOIDANCE_MASK_HASH = 1286410249L
-        private val setAvoidanceMaskBind by lazy {
+        @JvmField
+        val setAvoidanceMaskBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_avoidance_mask", SET_AVOIDANCE_MASK_HASH)
-        }
 
         private const val GET_AVOIDANCE_MASK_HASH = 3905245786L
-        private val getAvoidanceMaskBind by lazy {
+        @JvmField
+        val getAvoidanceMaskBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_avoidance_mask", GET_AVOIDANCE_MASK_HASH)
-        }
 
         private const val SET_AVOIDANCE_LAYER_VALUE_HASH = 300928843L
-        private val setAvoidanceLayerValueBind by lazy {
+        @JvmField
+        val setAvoidanceLayerValueBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_avoidance_layer_value", SET_AVOIDANCE_LAYER_VALUE_HASH)
-        }
 
         private const val GET_AVOIDANCE_LAYER_VALUE_HASH = 1116898809L
-        private val getAvoidanceLayerValueBind by lazy {
+        @JvmField
+        val getAvoidanceLayerValueBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_avoidance_layer_value", GET_AVOIDANCE_LAYER_VALUE_HASH)
-        }
 
         private const val SET_AVOIDANCE_MASK_VALUE_HASH = 300928843L
-        private val setAvoidanceMaskValueBind by lazy {
+        @JvmField
+        val setAvoidanceMaskValueBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_avoidance_mask_value", SET_AVOIDANCE_MASK_VALUE_HASH)
-        }
 
         private const val GET_AVOIDANCE_MASK_VALUE_HASH = 1116898809L
-        private val getAvoidanceMaskValueBind by lazy {
+        @JvmField
+        val getAvoidanceMaskValueBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_avoidance_mask_value", GET_AVOIDANCE_MASK_VALUE_HASH)
-        }
 
         private const val SET_AVOIDANCE_PRIORITY_HASH = 373806689L
-        private val setAvoidancePriorityBind by lazy {
+        @JvmField
+        val setAvoidancePriorityBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_avoidance_priority", SET_AVOIDANCE_PRIORITY_HASH)
-        }
 
         private const val GET_AVOIDANCE_PRIORITY_HASH = 1740695150L
-        private val getAvoidancePriorityBind by lazy {
+        @JvmField
+        val getAvoidancePriorityBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_avoidance_priority", GET_AVOIDANCE_PRIORITY_HASH)
-        }
 
         private const val SET_DEBUG_ENABLED_HASH = 2586408642L
-        private val setDebugEnabledBind by lazy {
+        @JvmField
+        val setDebugEnabledBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_debug_enabled", SET_DEBUG_ENABLED_HASH)
-        }
 
         private const val GET_DEBUG_ENABLED_HASH = 36873697L
-        private val getDebugEnabledBind by lazy {
+        @JvmField
+        val getDebugEnabledBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_debug_enabled", GET_DEBUG_ENABLED_HASH)
-        }
 
         private const val SET_DEBUG_USE_CUSTOM_HASH = 2586408642L
-        private val setDebugUseCustomBind by lazy {
+        @JvmField
+        val setDebugUseCustomBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_debug_use_custom", SET_DEBUG_USE_CUSTOM_HASH)
-        }
 
         private const val GET_DEBUG_USE_CUSTOM_HASH = 36873697L
-        private val getDebugUseCustomBind by lazy {
+        @JvmField
+        val getDebugUseCustomBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_debug_use_custom", GET_DEBUG_USE_CUSTOM_HASH)
-        }
 
         private const val SET_DEBUG_PATH_CUSTOM_COLOR_HASH = 2920490490L
-        private val setDebugPathCustomColorBind by lazy {
+        @JvmField
+        val setDebugPathCustomColorBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_debug_path_custom_color", SET_DEBUG_PATH_CUSTOM_COLOR_HASH)
-        }
 
         private const val GET_DEBUG_PATH_CUSTOM_COLOR_HASH = 3444240500L
-        private val getDebugPathCustomColorBind by lazy {
+        @JvmField
+        val getDebugPathCustomColorBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_debug_path_custom_color", GET_DEBUG_PATH_CUSTOM_COLOR_HASH)
-        }
 
         private const val SET_DEBUG_PATH_CUSTOM_POINT_SIZE_HASH = 373806689L
-        private val setDebugPathCustomPointSizeBind by lazy {
+        @JvmField
+        val setDebugPathCustomPointSizeBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_debug_path_custom_point_size", SET_DEBUG_PATH_CUSTOM_POINT_SIZE_HASH)
-        }
 
         private const val GET_DEBUG_PATH_CUSTOM_POINT_SIZE_HASH = 1740695150L
-        private val getDebugPathCustomPointSizeBind by lazy {
+        @JvmField
+        val getDebugPathCustomPointSizeBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_debug_path_custom_point_size", GET_DEBUG_PATH_CUSTOM_POINT_SIZE_HASH)
-        }
 
         private const val SET_DEBUG_PATH_CUSTOM_LINE_WIDTH_HASH = 373806689L
-        private val setDebugPathCustomLineWidthBind by lazy {
+        @JvmField
+        val setDebugPathCustomLineWidthBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "set_debug_path_custom_line_width", SET_DEBUG_PATH_CUSTOM_LINE_WIDTH_HASH)
-        }
 
         private const val GET_DEBUG_PATH_CUSTOM_LINE_WIDTH_HASH = 1740695150L
-        private val getDebugPathCustomLineWidthBind by lazy {
+        @JvmField
+        val getDebugPathCustomLineWidthBind =
             ObjectCalls.getMethodBind("NavigationAgent2D", "get_debug_path_custom_line_width", GET_DEBUG_PATH_CUSTOM_LINE_WIDTH_HASH)
-        }
     }
 }

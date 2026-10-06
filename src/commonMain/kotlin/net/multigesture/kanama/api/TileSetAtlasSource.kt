@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -53,7 +54,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -63,7 +64,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -73,7 +74,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setMargins(margins: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setMarginsBind, segment, margins)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setMarginsBind, segment, margins)
     }
 
     /**
@@ -83,7 +84,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getMargins(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getMarginsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getMarginsBind, segment)
     }
 
     /**
@@ -93,7 +94,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setSeparation(separation: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSeparationBind, segment, separation)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSeparationBind, segment, separation)
     }
 
     /**
@@ -103,7 +104,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getSeparation(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSeparationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSeparationBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTextureRegionSize(textureRegionSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setTextureRegionSizeBind, segment, textureRegionSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setTextureRegionSizeBind, segment, textureRegionSize)
     }
 
     /**
@@ -125,7 +126,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTextureRegionSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureRegionSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTextureRegionSizeBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setUseTexturePadding(useTexturePadding: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseTexturePaddingBind, segment, useTexturePadding)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseTexturePaddingBind, segment, useTexturePadding)
     }
 
     /**
@@ -151,7 +152,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getUseTexturePadding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseTexturePaddingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseTexturePaddingBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun createTile(atlasCoords: Vector2i, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoVector2iArgs(createTileBind, segment, atlasCoords, size)
+        ObjectCalls.ptrcallWithTwoVector2iArgs(Binds.createTileBind, segment, atlasCoords, size)
     }
 
     /**
@@ -171,7 +172,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun removeTile(atlasCoords: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(removeTileBind, segment, atlasCoords)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.removeTileBind, segment, atlasCoords)
     }
 
     /**
@@ -185,7 +186,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun moveTileInAtlas(atlasCoords: Vector2i, newAtlasCoords: Vector2i, newSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeVector2iArgs(moveTileInAtlasBind, segment, atlasCoords, newAtlasCoords, newSize)
+        ObjectCalls.ptrcallWithThreeVector2iArgs(Binds.moveTileInAtlasBind, segment, atlasCoords, newAtlasCoords, newSize)
     }
 
     /**
@@ -195,7 +196,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileSizeInAtlas(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileSizeInAtlasBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileSizeInAtlasBind, segment, atlasCoords)
     }
 
     /**
@@ -207,7 +208,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun hasRoomForTile(atlasCoords: Vector2i, size: Vector2i, animationColumns: Int, animationSeparation: Vector2i, framesCount: Int, ignoredTile: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(hasRoomForTileBind, segment, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
+        return ObjectCalls.ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(Binds.hasRoomForTileBind, segment, atlasCoords, size, animationColumns, animationSeparation, framesCount, ignoredTile)
     }
 
     /**
@@ -219,7 +220,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTilesToBeRemovedOnChange(texture: Texture2D?, margins: Vector2i, separation: Vector2i, textureRegionSize: Vector2i): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, margins, separation, textureRegionSize)
+        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(Binds.getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, margins, separation, textureRegionSize)
     }
 
     /**
@@ -230,7 +231,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAtCoords(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAtCoordsBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileAtCoordsBind, segment, atlasCoords)
     }
 
     /**
@@ -241,7 +242,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun hasTilesOutsideTexture(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasTilesOutsideTextureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTilesOutsideTextureBind, segment)
     }
 
     /**
@@ -252,7 +253,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun clearTilesOutsideTexture() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearTilesOutsideTextureBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearTilesOutsideTextureBind, segment)
     }
 
     /**
@@ -264,7 +265,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTileAnimationColumns(atlasCoords: Vector2i, frameColumns: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationColumnsBind, segment, atlasCoords, frameColumns)
+        ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.setTileAnimationColumnsBind, segment, atlasCoords, frameColumns)
     }
 
     /**
@@ -274,7 +275,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationColumns(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationColumnsBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getTileAnimationColumnsBind, segment, atlasCoords)
     }
 
     /**
@@ -285,7 +286,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTileAnimationSeparation(atlasCoords: Vector2i, separation: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoVector2iArgs(setTileAnimationSeparationBind, segment, atlasCoords, separation)
+        ObjectCalls.ptrcallWithTwoVector2iArgs(Binds.setTileAnimationSeparationBind, segment, atlasCoords, separation)
     }
 
     /**
@@ -296,7 +297,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationSeparation(atlasCoords: Vector2i): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(getTileAnimationSeparationBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2i(Binds.getTileAnimationSeparationBind, segment, atlasCoords)
     }
 
     /**
@@ -306,7 +307,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTileAnimationSpeed(atlasCoords: Vector2i, speed: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndDoubleArg(setTileAnimationSpeedBind, segment, atlasCoords, speed)
+        ObjectCalls.ptrcallWithVector2iAndDoubleArg(Binds.setTileAnimationSpeedBind, segment, atlasCoords, speed)
     }
 
     /**
@@ -316,7 +317,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationSpeed(atlasCoords: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationSpeedBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getTileAnimationSpeedBind, segment, atlasCoords)
     }
 
     /**
@@ -327,7 +328,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTileAnimationMode(atlasCoords: Vector2i, mode: TileSetAtlasSource.TileAnimationMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, segment, atlasCoords, mode.value)
+        ObjectCalls.ptrcallWithVector2iAndLongArg(Binds.setTileAnimationModeBind, segment, atlasCoords, mode.value)
     }
 
     /**
@@ -338,7 +339,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationMode(atlasCoords: Vector2i): TileSetAtlasSource.TileAnimationMode {
         checkOpen()
-        return TileSetAtlasSource.TileAnimationMode(ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, segment, atlasCoords))
+        return TileSetAtlasSource.TileAnimationMode(ObjectCalls.ptrcallWithVector2iArgRetLong(Binds.getTileAnimationModeBind, segment, atlasCoords))
     }
 
     /**
@@ -348,7 +349,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTileAnimationFramesCount(atlasCoords: Vector2i, framesCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndIntArg(setTileAnimationFramesCountBind, segment, atlasCoords, framesCount)
+        ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.setTileAnimationFramesCountBind, segment, atlasCoords, framesCount)
     }
 
     /**
@@ -358,7 +359,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationFramesCount(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getTileAnimationFramesCountBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getTileAnimationFramesCountBind, segment, atlasCoords)
     }
 
     /**
@@ -369,7 +370,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int, duration: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iIntDoubleArgs(setTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex, duration)
+        ObjectCalls.ptrcallWithVector2iIntDoubleArgs(Binds.setTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex, duration)
     }
 
     /**
@@ -380,7 +381,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationFrameDuration(atlasCoords: Vector2i, frameIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(getTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetDouble(Binds.getTileAnimationFrameDurationBind, segment, atlasCoords, frameIndex)
     }
 
     /**
@@ -391,7 +392,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileAnimationTotalDuration(atlasCoords: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getTileAnimationTotalDurationBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getTileAnimationTotalDurationBind, segment, atlasCoords)
     }
 
     /**
@@ -404,7 +405,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun createAlternativeTile(atlasCoords: Vector2i, alternativeIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(createAlternativeTileBind, segment, atlasCoords, alternativeIdOverride)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(Binds.createAlternativeTileBind, segment, atlasCoords, alternativeIdOverride)
     }
 
     /**
@@ -415,7 +416,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun removeAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndIntArg(removeAlternativeTileBind, segment, atlasCoords, alternativeTile)
+        ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.removeAlternativeTileBind, segment, atlasCoords, alternativeTile)
     }
 
     /**
@@ -426,7 +427,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setAlternativeTileId(atlasCoords: Vector2i, alternativeTile: Int, newId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(setAlternativeTileIdBind, segment, atlasCoords, alternativeTile, newId)
+        ObjectCalls.ptrcallWithVector2iAndTwoIntArgs(Binds.setAlternativeTileIdBind, segment, atlasCoords, alternativeTile, newId)
     }
 
     /**
@@ -436,7 +437,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getNextAlternativeTileId(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getNextAlternativeTileIdBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getNextAlternativeTileIdBind, segment, atlasCoords)
     }
 
     /**
@@ -446,7 +447,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileData(atlasCoords: Vector2i, alternativeTile: Int): TileData? {
         checkOpen()
-        return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(getTileDataBind, segment, atlasCoords, alternativeTile))
+        return TileData.wrap(ObjectCalls.ptrcallWithVector2iAndIntArgRetObject(Binds.getTileDataBind, segment, atlasCoords, alternativeTile))
     }
 
     /**
@@ -457,7 +458,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getAtlasGridSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getAtlasGridSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getAtlasGridSizeBind, segment)
     }
 
     /**
@@ -468,7 +469,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTileTextureRegion(atlasCoords: Vector2i, frame: Int = 0): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getTileTextureRegionBind, segment, atlasCoords, frame)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(Binds.getTileTextureRegionBind, segment, atlasCoords, frame)
     }
 
     /**
@@ -479,7 +480,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getRuntimeTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRuntimeTextureBind, segment))
     }
 
     /**
@@ -491,7 +492,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getRuntimeTileTextureRegion(atlasCoords: Vector2i, frame: Int): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(Binds.getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
     }
 
     /**
@@ -539,210 +540,212 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetAtlasSource? =
             if (handle.address() == 0L) null else TileSetAtlasSource(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_MARGINS_HASH = 1130785943L
-        private val setMarginsBind by lazy {
+        @JvmField
+        val setMarginsBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_margins", SET_MARGINS_HASH)
-        }
 
         private const val GET_MARGINS_HASH = 3690982128L
-        private val getMarginsBind by lazy {
+        @JvmField
+        val getMarginsBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_margins", GET_MARGINS_HASH)
-        }
 
         private const val SET_SEPARATION_HASH = 1130785943L
-        private val setSeparationBind by lazy {
+        @JvmField
+        val setSeparationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_separation", SET_SEPARATION_HASH)
-        }
 
         private const val GET_SEPARATION_HASH = 3690982128L
-        private val getSeparationBind by lazy {
+        @JvmField
+        val getSeparationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_separation", GET_SEPARATION_HASH)
-        }
 
         private const val SET_TEXTURE_REGION_SIZE_HASH = 1130785943L
-        private val setTextureRegionSizeBind by lazy {
+        @JvmField
+        val setTextureRegionSizeBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_texture_region_size", SET_TEXTURE_REGION_SIZE_HASH)
-        }
 
         private const val GET_TEXTURE_REGION_SIZE_HASH = 3690982128L
-        private val getTextureRegionSizeBind by lazy {
+        @JvmField
+        val getTextureRegionSizeBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_texture_region_size", GET_TEXTURE_REGION_SIZE_HASH)
-        }
 
         private const val SET_USE_TEXTURE_PADDING_HASH = 2586408642L
-        private val setUseTexturePaddingBind by lazy {
+        @JvmField
+        val setUseTexturePaddingBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_use_texture_padding", SET_USE_TEXTURE_PADDING_HASH)
-        }
 
         private const val GET_USE_TEXTURE_PADDING_HASH = 36873697L
-        private val getUseTexturePaddingBind by lazy {
+        @JvmField
+        val getUseTexturePaddingBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_use_texture_padding", GET_USE_TEXTURE_PADDING_HASH)
-        }
 
         private const val CREATE_TILE_HASH = 190528769L
-        private val createTileBind by lazy {
+        @JvmField
+        val createTileBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "create_tile", CREATE_TILE_HASH)
-        }
 
         private const val REMOVE_TILE_HASH = 1130785943L
-        private val removeTileBind by lazy {
+        @JvmField
+        val removeTileBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "remove_tile", REMOVE_TILE_HASH)
-        }
 
         private const val MOVE_TILE_IN_ATLAS_HASH = 3870111920L
-        private val moveTileInAtlasBind by lazy {
+        @JvmField
+        val moveTileInAtlasBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "move_tile_in_atlas", MOVE_TILE_IN_ATLAS_HASH)
-        }
 
         private const val GET_TILE_SIZE_IN_ATLAS_HASH = 3050897911L
-        private val getTileSizeInAtlasBind by lazy {
+        @JvmField
+        val getTileSizeInAtlasBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_size_in_atlas", GET_TILE_SIZE_IN_ATLAS_HASH)
-        }
 
         private const val HAS_ROOM_FOR_TILE_HASH = 3018597268L
-        private val hasRoomForTileBind by lazy {
+        @JvmField
+        val hasRoomForTileBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "has_room_for_tile", HAS_ROOM_FOR_TILE_HASH)
-        }
 
         private const val GET_TILES_TO_BE_REMOVED_ON_CHANGE_HASH = 1240378054L
-        private val getTilesToBeRemovedOnChangeBind by lazy {
+        @JvmField
+        val getTilesToBeRemovedOnChangeBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tiles_to_be_removed_on_change", GET_TILES_TO_BE_REMOVED_ON_CHANGE_HASH)
-        }
 
         private const val GET_TILE_AT_COORDS_HASH = 3050897911L
-        private val getTileAtCoordsBind by lazy {
+        @JvmField
+        val getTileAtCoordsBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_at_coords", GET_TILE_AT_COORDS_HASH)
-        }
 
         private const val HAS_TILES_OUTSIDE_TEXTURE_HASH = 36873697L
-        private val hasTilesOutsideTextureBind by lazy {
+        @JvmField
+        val hasTilesOutsideTextureBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "has_tiles_outside_texture", HAS_TILES_OUTSIDE_TEXTURE_HASH)
-        }
 
         private const val CLEAR_TILES_OUTSIDE_TEXTURE_HASH = 3218959716L
-        private val clearTilesOutsideTextureBind by lazy {
+        @JvmField
+        val clearTilesOutsideTextureBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "clear_tiles_outside_texture", CLEAR_TILES_OUTSIDE_TEXTURE_HASH)
-        }
 
         private const val SET_TILE_ANIMATION_COLUMNS_HASH = 3200960707L
-        private val setTileAnimationColumnsBind by lazy {
+        @JvmField
+        val setTileAnimationColumnsBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_tile_animation_columns", SET_TILE_ANIMATION_COLUMNS_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_COLUMNS_HASH = 2485466453L
-        private val getTileAnimationColumnsBind by lazy {
+        @JvmField
+        val getTileAnimationColumnsBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_columns", GET_TILE_ANIMATION_COLUMNS_HASH)
-        }
 
         private const val SET_TILE_ANIMATION_SEPARATION_HASH = 1941061099L
-        private val setTileAnimationSeparationBind by lazy {
+        @JvmField
+        val setTileAnimationSeparationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_tile_animation_separation", SET_TILE_ANIMATION_SEPARATION_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_SEPARATION_HASH = 3050897911L
-        private val getTileAnimationSeparationBind by lazy {
+        @JvmField
+        val getTileAnimationSeparationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_separation", GET_TILE_ANIMATION_SEPARATION_HASH)
-        }
 
         private const val SET_TILE_ANIMATION_SPEED_HASH = 2262553149L
-        private val setTileAnimationSpeedBind by lazy {
+        @JvmField
+        val setTileAnimationSpeedBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_tile_animation_speed", SET_TILE_ANIMATION_SPEED_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_SPEED_HASH = 719993801L
-        private val getTileAnimationSpeedBind by lazy {
+        @JvmField
+        val getTileAnimationSpeedBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_speed", GET_TILE_ANIMATION_SPEED_HASH)
-        }
 
         private const val SET_TILE_ANIMATION_MODE_HASH = 3192753483L
-        private val setTileAnimationModeBind by lazy {
+        @JvmField
+        val setTileAnimationModeBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_tile_animation_mode", SET_TILE_ANIMATION_MODE_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_MODE_HASH = 4025349959L
-        private val getTileAnimationModeBind by lazy {
+        @JvmField
+        val getTileAnimationModeBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_mode", GET_TILE_ANIMATION_MODE_HASH)
-        }
 
         private const val SET_TILE_ANIMATION_FRAMES_COUNT_HASH = 3200960707L
-        private val setTileAnimationFramesCountBind by lazy {
+        @JvmField
+        val setTileAnimationFramesCountBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_tile_animation_frames_count", SET_TILE_ANIMATION_FRAMES_COUNT_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_FRAMES_COUNT_HASH = 2485466453L
-        private val getTileAnimationFramesCountBind by lazy {
+        @JvmField
+        val getTileAnimationFramesCountBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_frames_count", GET_TILE_ANIMATION_FRAMES_COUNT_HASH)
-        }
 
         private const val SET_TILE_ANIMATION_FRAME_DURATION_HASH = 2843487787L
-        private val setTileAnimationFrameDurationBind by lazy {
+        @JvmField
+        val setTileAnimationFrameDurationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_tile_animation_frame_duration", SET_TILE_ANIMATION_FRAME_DURATION_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_FRAME_DURATION_HASH = 1802448425L
-        private val getTileAnimationFrameDurationBind by lazy {
+        @JvmField
+        val getTileAnimationFrameDurationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_frame_duration", GET_TILE_ANIMATION_FRAME_DURATION_HASH)
-        }
 
         private const val GET_TILE_ANIMATION_TOTAL_DURATION_HASH = 719993801L
-        private val getTileAnimationTotalDurationBind by lazy {
+        @JvmField
+        val getTileAnimationTotalDurationBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_animation_total_duration", GET_TILE_ANIMATION_TOTAL_DURATION_HASH)
-        }
 
         private const val CREATE_ALTERNATIVE_TILE_HASH = 2226298068L
-        private val createAlternativeTileBind by lazy {
+        @JvmField
+        val createAlternativeTileBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "create_alternative_tile", CREATE_ALTERNATIVE_TILE_HASH)
-        }
 
         private const val REMOVE_ALTERNATIVE_TILE_HASH = 3200960707L
-        private val removeAlternativeTileBind by lazy {
+        @JvmField
+        val removeAlternativeTileBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "remove_alternative_tile", REMOVE_ALTERNATIVE_TILE_HASH)
-        }
 
         private const val SET_ALTERNATIVE_TILE_ID_HASH = 1499785778L
-        private val setAlternativeTileIdBind by lazy {
+        @JvmField
+        val setAlternativeTileIdBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "set_alternative_tile_id", SET_ALTERNATIVE_TILE_ID_HASH)
-        }
 
         private const val GET_NEXT_ALTERNATIVE_TILE_ID_HASH = 2485466453L
-        private val getNextAlternativeTileIdBind by lazy {
+        @JvmField
+        val getNextAlternativeTileIdBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_next_alternative_tile_id", GET_NEXT_ALTERNATIVE_TILE_ID_HASH)
-        }
 
         private const val GET_TILE_DATA_HASH = 3534028207L
-        private val getTileDataBind by lazy {
+        @JvmField
+        val getTileDataBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_data", GET_TILE_DATA_HASH)
-        }
 
         private const val GET_ATLAS_GRID_SIZE_HASH = 3690982128L
-        private val getAtlasGridSizeBind by lazy {
+        @JvmField
+        val getAtlasGridSizeBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_atlas_grid_size", GET_ATLAS_GRID_SIZE_HASH)
-        }
 
         private const val GET_TILE_TEXTURE_REGION_HASH = 241857547L
-        private val getTileTextureRegionBind by lazy {
+        @JvmField
+        val getTileTextureRegionBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_tile_texture_region", GET_TILE_TEXTURE_REGION_HASH)
-        }
 
         private const val GET_RUNTIME_TEXTURE_HASH = 3635182373L
-        private val getRuntimeTextureBind by lazy {
+        @JvmField
+        val getRuntimeTextureBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_runtime_texture", GET_RUNTIME_TEXTURE_HASH)
-        }
 
         private const val GET_RUNTIME_TILE_TEXTURE_REGION_HASH = 104874263L
-        private val getRuntimeTileTextureRegionBind by lazy {
+        @JvmField
+        val getRuntimeTileTextureRegionBind =
             ObjectCalls.getMethodBind("TileSetAtlasSource", "get_runtime_tile_texture_region", GET_RUNTIME_TILE_TEXTURE_REGION_HASH)
-        }
     }
 }

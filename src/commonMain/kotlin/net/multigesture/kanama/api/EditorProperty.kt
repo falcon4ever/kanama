@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -89,7 +90,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_label
      */
     fun setLabel(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setLabelBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLabelBind, segment, text)
     }
 
     /**
@@ -98,7 +99,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_label
      */
     fun getLabel(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLabelBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_read_only
      */
     fun setReadOnly(readOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, segment, readOnly)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setReadOnlyBind, segment, readOnly)
     }
 
     /**
@@ -116,7 +117,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_read_only
      */
     fun isReadOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReadOnlyBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_draw_label
      */
     fun setDrawLabel(drawLabel: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawLabelBind, segment, drawLabel)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawLabelBind, segment, drawLabel)
     }
 
     /**
@@ -134,7 +135,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_draw_label
      */
     fun isDrawLabel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawLabelBind, segment)
     }
 
     /**
@@ -143,7 +144,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_draw_background
      */
     fun setDrawBackground(drawBackground: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawBackgroundBind, segment, drawBackground)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawBackgroundBind, segment, drawBackground)
     }
 
     /**
@@ -152,7 +153,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_draw_background
      */
     fun isDrawBackground(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawBackgroundBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawBackgroundBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_checkable
      */
     fun setCheckable(checkable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCheckableBind, segment, checkable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCheckableBind, segment, checkable)
     }
 
     /**
@@ -170,7 +171,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_checkable
      */
     fun isCheckable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCheckableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCheckableBind, segment)
     }
 
     /**
@@ -179,7 +180,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_checked
      */
     fun setChecked(checked: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCheckedBind, segment, checked)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCheckedBind, segment, checked)
     }
 
     /**
@@ -188,7 +189,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_checked
      */
     fun isChecked(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCheckedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCheckedBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_draw_warning
      */
     fun setDrawWarning(drawWarning: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawWarningBind, segment, drawWarning)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawWarningBind, segment, drawWarning)
     }
 
     /**
@@ -208,7 +209,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_draw_warning
      */
     fun isDrawWarning(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawWarningBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawWarningBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_keying
      */
     fun setKeying(keying: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeyingBind, segment, keying)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeyingBind, segment, keying)
     }
 
     /**
@@ -226,7 +227,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_keying
      */
     fun isKeying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeyingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeyingBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_deletable
      */
     fun setDeletable(deletable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeletableBind, segment, deletable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeletableBind, segment, deletable)
     }
 
     /**
@@ -244,7 +245,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_deletable
      */
     fun isDeletable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeletableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeletableBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_edited_property
      */
     fun getEditedProperty(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getEditedPropertyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getEditedPropertyBind, segment)
     }
 
     /**
@@ -267,7 +268,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_edited_object
      */
     fun getEditedObject(): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, segment))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditedObjectBind, segment))
     }
 
     /**
@@ -276,7 +277,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.update_property
      */
     fun updateProperty() {
-        ObjectCalls.ptrcallNoArgs(updatePropertyBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updatePropertyBind, segment)
     }
 
     /**
@@ -286,7 +287,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.add_focusable
      */
     fun addFocusable(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(addFocusableBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addFocusableBind, segment, listOf(control.segment))
     }
 
     /**
@@ -296,7 +297,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_bottom_editor
      */
     fun setBottomEditor(editor: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(setBottomEditorBind, segment, listOf(editor.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setBottomEditorBind, segment, listOf(editor.segment))
     }
 
     /**
@@ -305,7 +306,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_selectable
      */
     fun setSelectable(selectable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectableBind, segment, selectable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectableBind, segment, selectable)
     }
 
     /**
@@ -314,7 +315,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_selectable
      */
     fun isSelectable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectableBind, segment)
     }
 
     /**
@@ -323,7 +324,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_use_folding
      */
     fun setUseFolding(useFolding: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFoldingBind, segment, useFolding)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseFoldingBind, segment, useFolding)
     }
 
     /**
@@ -332,7 +333,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_using_folding
      */
     fun isUsingFolding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingFoldingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingFoldingBind, segment)
     }
 
     /**
@@ -341,7 +342,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_name_split_ratio
      */
     fun setNameSplitRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNameSplitRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNameSplitRatioBind, segment, ratio)
     }
 
     /**
@@ -350,7 +351,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.get_name_split_ratio
      */
     fun getNameSplitRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNameSplitRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNameSplitRatioBind, segment)
     }
 
     /**
@@ -359,7 +360,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.deselect
      */
     fun deselect() {
-        ObjectCalls.ptrcallNoArgs(deselectBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.deselectBind, segment)
     }
 
     /**
@@ -368,7 +369,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.is_selected
      */
     fun isSelected(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectedBind, segment)
     }
 
     /**
@@ -377,7 +378,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.select
      */
     fun select(focusable: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(selectBind, segment, focusable)
+        ObjectCalls.ptrcallWithIntArg(Binds.selectBind, segment, focusable)
     }
 
     /**
@@ -386,7 +387,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_object_and_property
      */
     fun setObjectAndProperty(objectValue: GodotObject, property: String) {
-        ObjectCalls.ptrcallWithObjectAndStringNameArg(setObjectAndPropertyBind, segment, objectValue.segment, property)
+        ObjectCalls.ptrcallWithObjectAndStringNameArg(Binds.setObjectAndPropertyBind, segment, objectValue.segment, property)
     }
 
     /**
@@ -396,7 +397,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.set_label_reference
      */
     fun setLabelReference(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(setLabelReferenceBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setLabelReferenceBind, segment, listOf(control.segment))
     }
 
     /**
@@ -407,7 +408,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: EditorProperty.emit_changed
      */
     fun emitChanged(property: String, value: Any?, field: String = "", changing: Boolean = false) {
-        ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(emitChangedBind, segment, property, value, field, changing)
+        ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(Binds.emitChangedBind, segment, property, value, field, changing)
     }
 
     /** Signal `property_changed(property: StringName, value: Variant, field: StringName, changing: bool)`; see [TypedSignal]. */
@@ -498,180 +499,182 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): EditorProperty? =
             if (handle.address() == 0L) null else EditorProperty(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LABEL_HASH = 83702148L
-        private val setLabelBind by lazy {
+        @JvmField
+        val setLabelBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_label", SET_LABEL_HASH)
-        }
 
         private const val GET_LABEL_HASH = 201670096L
-        private val getLabelBind by lazy {
+        @JvmField
+        val getLabelBind =
             ObjectCalls.getMethodBind("EditorProperty", "get_label", GET_LABEL_HASH)
-        }
 
         private const val SET_READ_ONLY_HASH = 2586408642L
-        private val setReadOnlyBind by lazy {
+        @JvmField
+        val setReadOnlyBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_read_only", SET_READ_ONLY_HASH)
-        }
 
         private const val IS_READ_ONLY_HASH = 36873697L
-        private val isReadOnlyBind by lazy {
+        @JvmField
+        val isReadOnlyBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_read_only", IS_READ_ONLY_HASH)
-        }
 
         private const val SET_DRAW_LABEL_HASH = 2586408642L
-        private val setDrawLabelBind by lazy {
+        @JvmField
+        val setDrawLabelBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_draw_label", SET_DRAW_LABEL_HASH)
-        }
 
         private const val IS_DRAW_LABEL_HASH = 36873697L
-        private val isDrawLabelBind by lazy {
+        @JvmField
+        val isDrawLabelBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_draw_label", IS_DRAW_LABEL_HASH)
-        }
 
         private const val SET_DRAW_BACKGROUND_HASH = 2586408642L
-        private val setDrawBackgroundBind by lazy {
+        @JvmField
+        val setDrawBackgroundBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_draw_background", SET_DRAW_BACKGROUND_HASH)
-        }
 
         private const val IS_DRAW_BACKGROUND_HASH = 36873697L
-        private val isDrawBackgroundBind by lazy {
+        @JvmField
+        val isDrawBackgroundBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_draw_background", IS_DRAW_BACKGROUND_HASH)
-        }
 
         private const val SET_CHECKABLE_HASH = 2586408642L
-        private val setCheckableBind by lazy {
+        @JvmField
+        val setCheckableBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_checkable", SET_CHECKABLE_HASH)
-        }
 
         private const val IS_CHECKABLE_HASH = 36873697L
-        private val isCheckableBind by lazy {
+        @JvmField
+        val isCheckableBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_checkable", IS_CHECKABLE_HASH)
-        }
 
         private const val SET_CHECKED_HASH = 2586408642L
-        private val setCheckedBind by lazy {
+        @JvmField
+        val setCheckedBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_checked", SET_CHECKED_HASH)
-        }
 
         private const val IS_CHECKED_HASH = 36873697L
-        private val isCheckedBind by lazy {
+        @JvmField
+        val isCheckedBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_checked", IS_CHECKED_HASH)
-        }
 
         private const val SET_DRAW_WARNING_HASH = 2586408642L
-        private val setDrawWarningBind by lazy {
+        @JvmField
+        val setDrawWarningBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_draw_warning", SET_DRAW_WARNING_HASH)
-        }
 
         private const val IS_DRAW_WARNING_HASH = 36873697L
-        private val isDrawWarningBind by lazy {
+        @JvmField
+        val isDrawWarningBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_draw_warning", IS_DRAW_WARNING_HASH)
-        }
 
         private const val SET_KEYING_HASH = 2586408642L
-        private val setKeyingBind by lazy {
+        @JvmField
+        val setKeyingBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_keying", SET_KEYING_HASH)
-        }
 
         private const val IS_KEYING_HASH = 36873697L
-        private val isKeyingBind by lazy {
+        @JvmField
+        val isKeyingBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_keying", IS_KEYING_HASH)
-        }
 
         private const val SET_DELETABLE_HASH = 2586408642L
-        private val setDeletableBind by lazy {
+        @JvmField
+        val setDeletableBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_deletable", SET_DELETABLE_HASH)
-        }
 
         private const val IS_DELETABLE_HASH = 36873697L
-        private val isDeletableBind by lazy {
+        @JvmField
+        val isDeletableBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_deletable", IS_DELETABLE_HASH)
-        }
 
         private const val GET_EDITED_PROPERTY_HASH = 2002593661L
-        private val getEditedPropertyBind by lazy {
+        @JvmField
+        val getEditedPropertyBind =
             ObjectCalls.getMethodBind("EditorProperty", "get_edited_property", GET_EDITED_PROPERTY_HASH)
-        }
 
         private const val GET_EDITED_OBJECT_HASH = 2050059866L
-        private val getEditedObjectBind by lazy {
+        @JvmField
+        val getEditedObjectBind =
             ObjectCalls.getMethodBind("EditorProperty", "get_edited_object", GET_EDITED_OBJECT_HASH)
-        }
 
         private const val UPDATE_PROPERTY_HASH = 3218959716L
-        private val updatePropertyBind by lazy {
+        @JvmField
+        val updatePropertyBind =
             ObjectCalls.getMethodBind("EditorProperty", "update_property", UPDATE_PROPERTY_HASH)
-        }
 
         private const val ADD_FOCUSABLE_HASH = 1496901182L
-        private val addFocusableBind by lazy {
+        @JvmField
+        val addFocusableBind =
             ObjectCalls.getMethodBind("EditorProperty", "add_focusable", ADD_FOCUSABLE_HASH)
-        }
 
         private const val SET_BOTTOM_EDITOR_HASH = 1496901182L
-        private val setBottomEditorBind by lazy {
+        @JvmField
+        val setBottomEditorBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_bottom_editor", SET_BOTTOM_EDITOR_HASH)
-        }
 
         private const val SET_SELECTABLE_HASH = 2586408642L
-        private val setSelectableBind by lazy {
+        @JvmField
+        val setSelectableBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_selectable", SET_SELECTABLE_HASH)
-        }
 
         private const val IS_SELECTABLE_HASH = 36873697L
-        private val isSelectableBind by lazy {
+        @JvmField
+        val isSelectableBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_selectable", IS_SELECTABLE_HASH)
-        }
 
         private const val SET_USE_FOLDING_HASH = 2586408642L
-        private val setUseFoldingBind by lazy {
+        @JvmField
+        val setUseFoldingBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_use_folding", SET_USE_FOLDING_HASH)
-        }
 
         private const val IS_USING_FOLDING_HASH = 36873697L
-        private val isUsingFoldingBind by lazy {
+        @JvmField
+        val isUsingFoldingBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_using_folding", IS_USING_FOLDING_HASH)
-        }
 
         private const val SET_NAME_SPLIT_RATIO_HASH = 373806689L
-        private val setNameSplitRatioBind by lazy {
+        @JvmField
+        val setNameSplitRatioBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_name_split_ratio", SET_NAME_SPLIT_RATIO_HASH)
-        }
 
         private const val GET_NAME_SPLIT_RATIO_HASH = 1740695150L
-        private val getNameSplitRatioBind by lazy {
+        @JvmField
+        val getNameSplitRatioBind =
             ObjectCalls.getMethodBind("EditorProperty", "get_name_split_ratio", GET_NAME_SPLIT_RATIO_HASH)
-        }
 
         private const val DESELECT_HASH = 3218959716L
-        private val deselectBind by lazy {
+        @JvmField
+        val deselectBind =
             ObjectCalls.getMethodBind("EditorProperty", "deselect", DESELECT_HASH)
-        }
 
         private const val IS_SELECTED_HASH = 36873697L
-        private val isSelectedBind by lazy {
+        @JvmField
+        val isSelectedBind =
             ObjectCalls.getMethodBind("EditorProperty", "is_selected", IS_SELECTED_HASH)
-        }
 
         private const val SELECT_HASH = 1025054187L
-        private val selectBind by lazy {
+        @JvmField
+        val selectBind =
             ObjectCalls.getMethodBind("EditorProperty", "select", SELECT_HASH)
-        }
 
         private const val SET_OBJECT_AND_PROPERTY_HASH = 4157606280L
-        private val setObjectAndPropertyBind by lazy {
+        @JvmField
+        val setObjectAndPropertyBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_object_and_property", SET_OBJECT_AND_PROPERTY_HASH)
-        }
 
         private const val SET_LABEL_REFERENCE_HASH = 1496901182L
-        private val setLabelReferenceBind by lazy {
+        @JvmField
+        val setLabelReferenceBind =
             ObjectCalls.getMethodBind("EditorProperty", "set_label_reference", SET_LABEL_REFERENCE_HASH)
-        }
 
         private const val EMIT_CHANGED_HASH = 1822500399L
-        private val emitChangedBind by lazy {
+        @JvmField
+        val emitChangedBind =
             ObjectCalls.getMethodBind("EditorProperty", "emit_changed", EMIT_CHANGED_HASH)
-        }
     }
 }

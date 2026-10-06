@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -48,7 +49,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_remote_node
      */
     fun setRemoteNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRemoteNodeBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setRemoteNodeBind, segment, path)
     }
 
     /**
@@ -57,7 +58,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_remote_node
      */
     fun getRemoteNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRemoteNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRemoteNodeBind, segment)
     }
 
     /**
@@ -67,7 +68,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.force_update_cache
      */
     fun forceUpdateCache() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateCacheBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceUpdateCacheBind, segment)
     }
 
     /**
@@ -76,7 +77,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_use_global_coordinates
      */
     fun setUseGlobalCoordinates(useGlobalCoordinates: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseGlobalCoordinatesBind, segment, useGlobalCoordinates)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseGlobalCoordinatesBind, segment, useGlobalCoordinates)
     }
 
     /**
@@ -85,7 +86,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_use_global_coordinates
      */
     fun getUseGlobalCoordinates(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseGlobalCoordinatesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseGlobalCoordinatesBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_update_position
      */
     fun setUpdatePosition(updateRemotePosition: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdatePositionBind, segment, updateRemotePosition)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUpdatePositionBind, segment, updateRemotePosition)
     }
 
     /**
@@ -103,7 +104,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_update_position
      */
     fun getUpdatePosition(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdatePositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUpdatePositionBind, segment)
     }
 
     /**
@@ -112,7 +113,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_update_rotation
      */
     fun setUpdateRotation(updateRemoteRotation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdateRotationBind, segment, updateRemoteRotation)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUpdateRotationBind, segment, updateRemoteRotation)
     }
 
     /**
@@ -121,7 +122,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_update_rotation
      */
     fun getUpdateRotation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUpdateRotationBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.set_update_scale
      */
     fun setUpdateScale(updateRemoteScale: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdateScaleBind, segment, updateRemoteScale)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUpdateScaleBind, segment, updateRemoteScale)
     }
 
     /**
@@ -139,7 +140,7 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: RemoteTransform2D.get_update_scale
      */
     fun getUpdateScale(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUpdateScaleBind, segment)
     }
 
     companion object {
@@ -149,60 +150,62 @@ class RemoteTransform2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): RemoteTransform2D? =
             if (handle.address() == 0L) null else RemoteTransform2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_REMOTE_NODE_HASH = 1348162250L
-        private val setRemoteNodeBind by lazy {
+        @JvmField
+        val setRemoteNodeBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "set_remote_node", SET_REMOTE_NODE_HASH)
-        }
 
         private const val GET_REMOTE_NODE_HASH = 4075236667L
-        private val getRemoteNodeBind by lazy {
+        @JvmField
+        val getRemoteNodeBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "get_remote_node", GET_REMOTE_NODE_HASH)
-        }
 
         private const val FORCE_UPDATE_CACHE_HASH = 3218959716L
-        private val forceUpdateCacheBind by lazy {
+        @JvmField
+        val forceUpdateCacheBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "force_update_cache", FORCE_UPDATE_CACHE_HASH)
-        }
 
         private const val SET_USE_GLOBAL_COORDINATES_HASH = 2586408642L
-        private val setUseGlobalCoordinatesBind by lazy {
+        @JvmField
+        val setUseGlobalCoordinatesBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "set_use_global_coordinates", SET_USE_GLOBAL_COORDINATES_HASH)
-        }
 
         private const val GET_USE_GLOBAL_COORDINATES_HASH = 36873697L
-        private val getUseGlobalCoordinatesBind by lazy {
+        @JvmField
+        val getUseGlobalCoordinatesBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "get_use_global_coordinates", GET_USE_GLOBAL_COORDINATES_HASH)
-        }
 
         private const val SET_UPDATE_POSITION_HASH = 2586408642L
-        private val setUpdatePositionBind by lazy {
+        @JvmField
+        val setUpdatePositionBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "set_update_position", SET_UPDATE_POSITION_HASH)
-        }
 
         private const val GET_UPDATE_POSITION_HASH = 36873697L
-        private val getUpdatePositionBind by lazy {
+        @JvmField
+        val getUpdatePositionBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "get_update_position", GET_UPDATE_POSITION_HASH)
-        }
 
         private const val SET_UPDATE_ROTATION_HASH = 2586408642L
-        private val setUpdateRotationBind by lazy {
+        @JvmField
+        val setUpdateRotationBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "set_update_rotation", SET_UPDATE_ROTATION_HASH)
-        }
 
         private const val GET_UPDATE_ROTATION_HASH = 36873697L
-        private val getUpdateRotationBind by lazy {
+        @JvmField
+        val getUpdateRotationBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "get_update_rotation", GET_UPDATE_ROTATION_HASH)
-        }
 
         private const val SET_UPDATE_SCALE_HASH = 2586408642L
-        private val setUpdateScaleBind by lazy {
+        @JvmField
+        val setUpdateScaleBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "set_update_scale", SET_UPDATE_SCALE_HASH)
-        }
 
         private const val GET_UPDATE_SCALE_HASH = 36873697L
-        private val getUpdateScaleBind by lazy {
+        @JvmField
+        val getUpdateScaleBind =
             ObjectCalls.getMethodBind("RemoteTransform2D", "get_update_scale", GET_UPDATE_SCALE_HASH)
-        }
     }
 }

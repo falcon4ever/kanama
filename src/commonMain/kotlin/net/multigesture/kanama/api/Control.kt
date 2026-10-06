@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -389,7 +390,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.accept_event
      */
     fun acceptEvent() {
-        ObjectCalls.ptrcallNoArgs(acceptEventBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.acceptEventBind, segment)
     }
 
     /**
@@ -398,7 +399,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_maximum_size
      */
     fun getMaximumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMaximumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMaximumSizeBind, segment)
     }
 
     /**
@@ -409,7 +410,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_combined_maximum_size
      */
     fun getCombinedMaximumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedMaximumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCombinedMaximumSizeBind, segment)
     }
 
     /**
@@ -418,7 +419,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_minimum_size
      */
     fun getMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinimumSizeBind, segment)
     }
 
     /**
@@ -427,7 +428,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_combined_minimum_size
      */
     fun getCombinedMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedMinimumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCombinedMinimumSizeBind, segment)
     }
 
     /**
@@ -437,7 +438,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_propagate_maximum_size
      */
     fun setPropagateMaximumSize(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPropagateMaximumSizeBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPropagateMaximumSizeBind, segment, enable)
     }
 
     /**
@@ -447,7 +448,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_propagating_maximum_size
      */
     fun isPropagatingMaximumSize(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPropagatingMaximumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPropagatingMaximumSizeBind, segment)
     }
 
     /**
@@ -459,7 +460,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_bound_minimum_size
      */
     fun getBoundMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundMinimumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundMinimumSizeBind, segment)
     }
 
     /**
@@ -470,7 +471,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchors_preset
      */
     fun setAnchorsPreset(preset: Control.LayoutPreset, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setAnchorsPresetBind, segment, preset.value, keepOffsets)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setAnchorsPresetBind, segment, preset.value, keepOffsets)
     }
 
     /**
@@ -483,7 +484,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offsets_preset
      */
     fun setOffsetsPreset(preset: Control.LayoutPreset, resizeMode: Control.LayoutPresetMode = Control.LayoutPresetMode.MINSIZE, margin: Int = 0) {
-        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setOffsetsPresetBind, segment, preset.value, resizeMode.value, margin)
+        ObjectCalls.ptrcallWithTwoLongAndIntArgs(Binds.setOffsetsPresetBind, segment, preset.value, resizeMode.value, margin)
     }
 
     /**
@@ -492,7 +493,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchors_and_offsets_preset
      */
     fun setAnchorsAndOffsetsPreset(preset: Control.LayoutPreset, resizeMode: Control.LayoutPresetMode = Control.LayoutPresetMode.MINSIZE, margin: Int = 0) {
-        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setAnchorsAndOffsetsPresetBind, segment, preset.value, resizeMode.value, margin)
+        ObjectCalls.ptrcallWithTwoLongAndIntArgs(Binds.setAnchorsAndOffsetsPresetBind, segment, preset.value, resizeMode.value, margin)
     }
 
     /**
@@ -506,7 +507,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchor
      */
     fun setAnchor(side: Side, anchor: Double, keepOffset: Boolean = false, pushOppositeAnchor: Boolean = true) {
-        ObjectCalls.ptrcallWithLongDoubleTwoBoolArgs(setAnchorBind, segment, side.value, anchor, keepOffset, pushOppositeAnchor)
+        ObjectCalls.ptrcallWithLongDoubleTwoBoolArgs(Binds.setAnchorBind, segment, side.value, anchor, keepOffset, pushOppositeAnchor)
     }
 
     /**
@@ -517,7 +518,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_anchor
      */
     fun getAnchor(side: Side): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getAnchorBind, segment, side.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getAnchorBind, segment, side.value)
     }
 
     /**
@@ -529,7 +530,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset
      */
     fun setOffset(side: Side, offset: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setOffsetBind, segment, side.value, offset)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setOffsetBind, segment, side.value, offset)
     }
 
     /**
@@ -541,7 +542,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset
      */
     fun getOffset(offset: Side): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getOffsetBind, segment, offset.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getOffsetBind, segment, offset.value)
     }
 
     /**
@@ -551,7 +552,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_anchor_and_offset
      */
     fun setAnchorAndOffset(side: Side, anchor: Double, offset: Double, pushOppositeAnchor: Boolean = false) {
-        ObjectCalls.ptrcallWithLongTwoDoubleAndBoolArgs(setAnchorAndOffsetBind, segment, side.value, anchor, offset, pushOppositeAnchor)
+        ObjectCalls.ptrcallWithLongTwoDoubleAndBoolArgs(Binds.setAnchorAndOffsetBind, segment, side.value, anchor, offset, pushOppositeAnchor)
     }
 
     /**
@@ -560,7 +561,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_begin
      */
     fun setBegin(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setBeginBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setBeginBind, segment, position)
     }
 
     /**
@@ -569,7 +570,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_end
      */
     fun setEnd(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setEndBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setEndBind, segment, position)
     }
 
     /**
@@ -579,7 +580,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_position
      */
     fun setPosition(position: Vector2, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2AndBoolArg(setPositionBind, segment, position, keepOffsets)
+        ObjectCalls.ptrcallWithVector2AndBoolArg(Binds.setPositionBind, segment, position, keepOffsets)
     }
 
     /**
@@ -589,7 +590,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_size
      */
     fun setSize(size: Vector2, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2AndBoolArg(setSizeBind, segment, size, keepOffsets)
+        ObjectCalls.ptrcallWithVector2AndBoolArg(Binds.setSizeBind, segment, size, keepOffsets)
     }
 
     /**
@@ -599,7 +600,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.reset_size
      */
     fun resetSize() {
-        ObjectCalls.ptrcallNoArgs(resetSizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetSizeBind, segment)
     }
 
     /**
@@ -618,7 +619,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_custom_maximum_size
      */
     fun setCustomMaximumSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setCustomMaximumSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setCustomMaximumSizeBind, segment, size)
     }
 
     /**
@@ -634,7 +635,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_custom_minimum_size
      */
     fun setCustomMinimumSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setCustomMinimumSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setCustomMinimumSizeBind, segment, size)
     }
 
     /**
@@ -644,7 +645,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_global_position
      */
     fun setGlobalPosition(position: Vector2, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2AndBoolArg(setGlobalPositionBind, segment, position, keepOffsets)
+        ObjectCalls.ptrcallWithVector2AndBoolArg(Binds.setGlobalPositionBind, segment, position, keepOffsets)
     }
 
     /**
@@ -655,7 +656,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_rotation
      */
     fun setRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRotationBind, segment, radians)
     }
 
     /**
@@ -664,7 +665,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_rotation_degrees
      */
     fun setRotationDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationDegreesBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRotationDegreesBind, segment, degrees)
     }
 
     /**
@@ -688,7 +689,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_scale
      */
     fun setScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScaleBind, segment, scale)
     }
 
     /**
@@ -699,7 +700,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_pivot_offset
      */
     fun setPivotOffset(pivotOffset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPivotOffsetBind, segment, pivotOffset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPivotOffsetBind, segment, pivotOffset)
     }
 
     /**
@@ -711,7 +712,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_pivot_offset_ratio
      */
     fun setPivotOffsetRatio(ratio: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPivotOffsetRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPivotOffsetRatioBind, segment, ratio)
     }
 
     /**
@@ -720,7 +721,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_begin
      */
     fun getBegin(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBeginBind, segment)
     }
 
     /**
@@ -729,7 +730,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_end
      */
     fun getEnd(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getEndBind, segment)
     }
 
     /**
@@ -739,7 +740,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_position
      */
     fun getPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     /**
@@ -749,7 +750,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_size
      */
     fun getSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     /**
@@ -760,7 +761,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_rotation
      */
     fun getRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRotationBind, segment)
     }
 
     /**
@@ -769,7 +770,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_rotation_degrees
      */
     fun getRotationDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRotationDegreesBind, segment)
     }
 
     /**
@@ -793,7 +794,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_scale
      */
     fun getScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScaleBind, segment)
     }
 
     /**
@@ -804,7 +805,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_pivot_offset
      */
     fun getPivotOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPivotOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPivotOffsetBind, segment)
     }
 
     /**
@@ -816,7 +817,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_pivot_offset_ratio
      */
     fun getPivotOffsetRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPivotOffsetRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPivotOffsetRatioBind, segment)
     }
 
     /**
@@ -826,7 +827,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_combined_pivot_offset
      */
     fun getCombinedPivotOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCombinedPivotOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCombinedPivotOffsetBind, segment)
     }
 
     /**
@@ -845,7 +846,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_custom_maximum_size
      */
     fun getCustomMaximumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCustomMaximumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCustomMaximumSizeBind, segment)
     }
 
     /**
@@ -861,7 +862,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_custom_minimum_size
      */
     fun getCustomMinimumSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCustomMinimumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCustomMinimumSizeBind, segment)
     }
 
     /**
@@ -870,7 +871,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_parent_area_size
      */
     fun getParentAreaSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getParentAreaSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getParentAreaSizeBind, segment)
     }
 
     /**
@@ -879,7 +880,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_global_position
      */
     fun getGlobalPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalPositionBind, segment)
     }
 
     /**
@@ -890,7 +891,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_screen_position
      */
     fun getScreenPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenPositionBind, segment)
     }
 
     /**
@@ -902,7 +903,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_rect
      */
     fun getRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRectBind, segment)
     }
 
     /**
@@ -915,7 +916,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_global_rect
      */
     fun getGlobalRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getGlobalRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getGlobalRectBind, segment)
     }
 
     /**
@@ -927,7 +928,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_mode
      */
     fun setFocusMode(mode: Control.FocusMode) {
-        ObjectCalls.ptrcallWithLongArg(setFocusModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFocusModeBind, segment, mode.value)
     }
 
     /**
@@ -939,7 +940,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_mode
      */
     fun getFocusMode(): Control.FocusMode {
-        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getFocusModeBind, segment))
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFocusModeBind, segment))
     }
 
     /**
@@ -951,7 +952,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_mode_with_override
      */
     fun getFocusModeWithOverride(): Control.FocusMode {
-        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getFocusModeWithOverrideBind, segment))
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFocusModeWithOverrideBind, segment))
     }
 
     /**
@@ -963,7 +964,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_behavior_recursive
      */
     fun setFocusBehaviorRecursive(focusBehaviorRecursive: Control.FocusBehaviorRecursive) {
-        ObjectCalls.ptrcallWithLongArg(setFocusBehaviorRecursiveBind, segment, focusBehaviorRecursive.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFocusBehaviorRecursiveBind, segment, focusBehaviorRecursive.value)
     }
 
     /**
@@ -975,7 +976,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_behavior_recursive
      */
     fun getFocusBehaviorRecursive(): Control.FocusBehaviorRecursive {
-        return Control.FocusBehaviorRecursive(ObjectCalls.ptrcallNoArgsRetLong(getFocusBehaviorRecursiveBind, segment))
+        return Control.FocusBehaviorRecursive(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFocusBehaviorRecursiveBind, segment))
     }
 
     /**
@@ -987,7 +988,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_focus
      */
     fun hasFocus(ignoreHiddenFocus: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithBoolArgRetBool(hasFocusBind, segment, ignoreHiddenFocus)
+        return ObjectCalls.ptrcallWithBoolArgRetBool(Binds.hasFocusBind, segment, ignoreHiddenFocus)
     }
 
     /**
@@ -1001,7 +1002,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.grab_focus
      */
     fun grabFocus(hideFocus: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(grabFocusBind, segment, hideFocus)
+        ObjectCalls.ptrcallWithBoolArg(Binds.grabFocusBind, segment, hideFocus)
     }
 
     /**
@@ -1010,7 +1011,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.release_focus
      */
     fun releaseFocus() {
-        ObjectCalls.ptrcallNoArgs(releaseFocusBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.releaseFocusBind, segment)
     }
 
     /**
@@ -1019,7 +1020,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.find_prev_valid_focus
      */
     fun findPrevValidFocus(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(findPrevValidFocusBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.findPrevValidFocusBind, segment))
     }
 
     /**
@@ -1028,7 +1029,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.find_next_valid_focus
      */
     fun findNextValidFocus(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(findNextValidFocusBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.findNextValidFocusBind, segment))
     }
 
     /**
@@ -1038,7 +1039,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.find_valid_focus_neighbor
      */
     fun findValidFocusNeighbor(side: Side): Control? {
-        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(findValidFocusNeighborBind, segment, side.value))
+        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(Binds.findValidFocusNeighborBind, segment, side.value))
     }
 
     /**
@@ -1049,7 +1050,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_h_size_flags
      */
     fun setHSizeFlags(flags: Control.SizeFlags) {
-        ObjectCalls.ptrcallWithLongArg(setHSizeFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHSizeFlagsBind, segment, flags.value)
     }
 
     /**
@@ -1060,7 +1061,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_h_size_flags
      */
     fun getHSizeFlags(): Control.SizeFlags {
-        return Control.SizeFlags(ObjectCalls.ptrcallNoArgsRetLong(getHSizeFlagsBind, segment))
+        return Control.SizeFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHSizeFlagsBind, segment))
     }
 
     /**
@@ -1072,7 +1073,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_stretch_ratio
      */
     fun setStretchRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStretchRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStretchRatioBind, segment, ratio)
     }
 
     /**
@@ -1084,7 +1085,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_stretch_ratio
      */
     fun getStretchRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStretchRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStretchRatioBind, segment)
     }
 
     /**
@@ -1095,7 +1096,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_v_size_flags
      */
     fun setVSizeFlags(flags: Control.SizeFlags) {
-        ObjectCalls.ptrcallWithLongArg(setVSizeFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVSizeFlagsBind, segment, flags.value)
     }
 
     /**
@@ -1106,7 +1107,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_v_size_flags
      */
     fun getVSizeFlags(): Control.SizeFlags {
-        return Control.SizeFlags(ObjectCalls.ptrcallNoArgsRetLong(getVSizeFlagsBind, segment))
+        return Control.SizeFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVSizeFlagsBind, segment))
     }
 
     /**
@@ -1116,7 +1117,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_enabled
      */
     fun setOffsetTransformEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOffsetTransformEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOffsetTransformEnabledBind, segment, enabled)
     }
 
     /**
@@ -1126,7 +1127,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_offset_transform_enabled
      */
     fun isOffsetTransformEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOffsetTransformEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOffsetTransformEnabledBind, segment)
     }
 
     /**
@@ -1136,7 +1137,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_position
      */
     fun setOffsetTransformPosition(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPositionBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetTransformPositionBind, segment, offset)
     }
 
     /**
@@ -1146,7 +1147,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_position
      */
     fun getOffsetTransformPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetTransformPositionBind, segment)
     }
 
     /**
@@ -1158,7 +1159,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_position_ratio
      */
     fun setOffsetTransformPositionRatio(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPositionRatioBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetTransformPositionRatioBind, segment, offset)
     }
 
     /**
@@ -1170,7 +1171,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_position_ratio
      */
     fun getOffsetTransformPositionRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPositionRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetTransformPositionRatioBind, segment)
     }
 
     /**
@@ -1180,7 +1181,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_scale
      */
     fun setOffsetTransformScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetTransformScaleBind, segment, scale)
     }
 
     /**
@@ -1190,7 +1191,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_scale
      */
     fun getOffsetTransformScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetTransformScaleBind, segment)
     }
 
     /**
@@ -1200,7 +1201,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_rotation
      */
     fun setOffsetTransformRotation(rotation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOffsetTransformRotationBind, segment, rotation)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOffsetTransformRotationBind, segment, rotation)
     }
 
     /**
@@ -1210,7 +1211,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_rotation
      */
     fun getOffsetTransformRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOffsetTransformRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOffsetTransformRotationBind, segment)
     }
 
     /**
@@ -1221,7 +1222,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_pivot
      */
     fun setOffsetTransformPivot(pivot: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPivotBind, segment, pivot)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetTransformPivotBind, segment, pivot)
     }
 
     /**
@@ -1232,7 +1233,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_pivot
      */
     fun getOffsetTransformPivot(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPivotBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetTransformPivotBind, segment)
     }
 
     /**
@@ -1244,7 +1245,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_pivot_ratio
      */
     fun setOffsetTransformPivotRatio(pivot: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetTransformPivotRatioBind, segment, pivot)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetTransformPivotRatioBind, segment, pivot)
     }
 
     /**
@@ -1256,7 +1257,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_offset_transform_pivot_ratio
      */
     fun getOffsetTransformPivotRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetTransformPivotRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetTransformPivotRatioBind, segment)
     }
 
     /**
@@ -1269,7 +1270,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_offset_transform_visual_only
      */
     fun setOffsetTransformVisualOnly(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOffsetTransformVisualOnlyBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOffsetTransformVisualOnlyBind, segment, enabled)
     }
 
     /**
@@ -1282,7 +1283,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_offset_transform_visual_only
      */
     fun isOffsetTransformVisualOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOffsetTransformVisualOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOffsetTransformVisualOnlyBind, segment)
     }
 
     /**
@@ -1293,7 +1294,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_theme
      */
     fun setTheme(theme: Theme?) {
-        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1304,7 +1305,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme
      */
     fun getTheme(): Theme? {
-        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, segment))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getThemeBind, segment))
     }
 
     /**
@@ -1322,7 +1323,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_theme_type_variation
      */
     fun setThemeTypeVariation(themeType: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setThemeTypeVariationBind, segment, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setThemeTypeVariationBind, segment, themeType)
     }
 
     /**
@@ -1340,7 +1341,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_type_variation
      */
     fun getThemeTypeVariation(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getThemeTypeVariationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getThemeTypeVariationBind, segment)
     }
 
     /**
@@ -1350,7 +1351,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.begin_bulk_theme_override
      */
     fun beginBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(beginBulkThemeOverrideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.beginBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1359,7 +1360,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.end_bulk_theme_override
      */
     fun endBulkThemeOverride() {
-        ObjectCalls.ptrcallNoArgs(endBulkThemeOverrideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endBulkThemeOverrideBind, segment)
     }
 
     /**
@@ -1370,7 +1371,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_icon_override
      */
     fun addThemeIconOverride(name: String, texture: Texture2D) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeIconOverrideBind, segment, name, texture.requireOpenHandle())
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeIconOverrideBind, segment, name, texture.requireOpenHandle())
     }
 
     /**
@@ -1381,7 +1382,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_stylebox_override
      */
     fun addThemeStyleboxOverride(name: String, stylebox: StyleBox) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeStyleboxOverrideBind, segment, name, stylebox.requireOpenHandle())
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeStyleboxOverrideBind, segment, name, stylebox.requireOpenHandle())
     }
 
     /**
@@ -1392,7 +1393,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_font_override
      */
     fun addThemeFontOverride(name: String, font: Font) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addThemeFontOverrideBind, segment, name, font.requireOpenHandle())
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeFontOverrideBind, segment, name, font.requireOpenHandle())
     }
 
     /**
@@ -1403,7 +1404,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_font_size_override
      */
     fun addThemeFontSizeOverride(name: String, fontSize: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeFontSizeOverrideBind, segment, name, fontSize)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.addThemeFontSizeOverrideBind, segment, name, fontSize)
     }
 
     /**
@@ -1414,7 +1415,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_color_override
      */
     fun addThemeColorOverride(name: String, color: Color) {
-        ObjectCalls.ptrcallWithStringNameAndColorArg(addThemeColorOverrideBind, segment, name, color)
+        ObjectCalls.ptrcallWithStringNameAndColorArg(Binds.addThemeColorOverrideBind, segment, name, color)
     }
 
     /**
@@ -1425,7 +1426,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.add_theme_constant_override
      */
     fun addThemeConstantOverride(name: String, constant: Int) {
-        ObjectCalls.ptrcallWithStringNameAndIntArg(addThemeConstantOverrideBind, segment, name, constant)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.addThemeConstantOverrideBind, segment, name, constant)
     }
 
     /**
@@ -1435,7 +1436,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_icon_override
      */
     fun removeThemeIconOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeIconOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1445,7 +1446,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_stylebox_override
      */
     fun removeThemeStyleboxOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeStyleboxOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1455,7 +1456,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_font_override
      */
     fun removeThemeFontOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1465,7 +1466,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_font_size_override
      */
     fun removeThemeFontSizeOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeFontSizeOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1475,7 +1476,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_color_override
      */
     fun removeThemeColorOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeColorOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1485,7 +1486,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.remove_theme_constant_override
      */
     fun removeThemeConstantOverride(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeThemeConstantOverrideBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1495,7 +1496,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_icon
      */
     fun getThemeIcon(name: String, themeType: String = ""): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, segment, name, themeType))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeIconBind, segment, name, themeType))
     }
 
     /**
@@ -1505,7 +1506,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_stylebox
      */
     fun getThemeStylebox(name: String, themeType: String = ""): StyleBox? {
-        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, segment, name, themeType))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -1515,7 +1516,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_font
      */
     fun getThemeFont(name: String, themeType: String = ""): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, segment, name, themeType))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeFontBind, segment, name, themeType))
     }
 
     /**
@@ -1525,7 +1526,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_font_size
      */
     fun getThemeFontSize(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeFontSizeBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1543,7 +1544,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_color
      */
     fun getThemeColor(name: String, themeType: String = ""): Color {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getThemeColorBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(Binds.getThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1553,7 +1554,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_constant
      */
     fun getThemeConstant(name: String, themeType: String = ""): Int {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getThemeConstantBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1563,7 +1564,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_icon_override
      */
     fun hasThemeIconOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeIconOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeIconOverrideBind, segment, name)
     }
 
     /**
@@ -1573,7 +1574,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_stylebox_override
      */
     fun hasThemeStyleboxOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeStyleboxOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeStyleboxOverrideBind, segment, name)
     }
 
     /**
@@ -1583,7 +1584,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font_override
      */
     fun hasThemeFontOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeFontOverrideBind, segment, name)
     }
 
     /**
@@ -1593,7 +1594,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font_size_override
      */
     fun hasThemeFontSizeOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeFontSizeOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeFontSizeOverrideBind, segment, name)
     }
 
     /**
@@ -1603,7 +1604,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_color_override
      */
     fun hasThemeColorOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeColorOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeColorOverrideBind, segment, name)
     }
 
     /**
@@ -1613,7 +1614,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_constant_override
      */
     fun hasThemeConstantOverride(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasThemeConstantOverrideBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeConstantOverrideBind, segment, name)
     }
 
     /**
@@ -1623,7 +1624,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_icon
      */
     fun hasThemeIcon(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeIconBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeIconBind, segment, name, themeType)
     }
 
     /**
@@ -1633,7 +1634,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_stylebox
      */
     fun hasThemeStylebox(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeStyleboxBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -1643,7 +1644,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font
      */
     fun hasThemeFont(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeFontBind, segment, name, themeType)
     }
 
     /**
@@ -1653,7 +1654,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_font_size
      */
     fun hasThemeFontSize(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeFontSizeBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -1663,7 +1664,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_color
      */
     fun hasThemeColor(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeColorBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeColorBind, segment, name, themeType)
     }
 
     /**
@@ -1673,7 +1674,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.has_theme_constant
      */
     fun hasThemeConstant(name: String, themeType: String = ""): Boolean {
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasThemeConstantBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeConstantBind, segment, name, themeType)
     }
 
     /**
@@ -1683,7 +1684,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_base_scale
      */
     fun getThemeDefaultBaseScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThemeDefaultBaseScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThemeDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -1693,7 +1694,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_font
      */
     fun getThemeDefaultFont(): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getThemeDefaultFontBind, segment))
     }
 
     /**
@@ -1703,7 +1704,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_font_size
      */
     fun getThemeDefaultFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getThemeDefaultFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getThemeDefaultFontSizeBind, segment)
     }
 
     /**
@@ -1712,7 +1713,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_parent_control
      */
     fun getParentControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentControlBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentControlBind, segment))
     }
 
     /**
@@ -1723,7 +1724,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_h_grow_direction
      */
     fun setHGrowDirection(direction: Control.GrowDirection) {
-        ObjectCalls.ptrcallWithLongArg(setHGrowDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHGrowDirectionBind, segment, direction.value)
     }
 
     /**
@@ -1734,7 +1735,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_h_grow_direction
      */
     fun getHGrowDirection(): Control.GrowDirection {
-        return Control.GrowDirection(ObjectCalls.ptrcallNoArgsRetLong(getHGrowDirectionBind, segment))
+        return Control.GrowDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHGrowDirectionBind, segment))
     }
 
     /**
@@ -1745,7 +1746,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_v_grow_direction
      */
     fun setVGrowDirection(direction: Control.GrowDirection) {
-        ObjectCalls.ptrcallWithLongArg(setVGrowDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVGrowDirectionBind, segment, direction.value)
     }
 
     /**
@@ -1756,7 +1757,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_v_grow_direction
      */
     fun getVGrowDirection(): Control.GrowDirection {
-        return Control.GrowDirection(ObjectCalls.ptrcallNoArgsRetLong(getVGrowDirectionBind, segment))
+        return Control.GrowDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVGrowDirectionBind, segment))
     }
 
     /**
@@ -1768,7 +1769,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_tooltip_auto_translate_mode
      */
     fun setTooltipAutoTranslateMode(mode: Node.AutoTranslateMode) {
-        ObjectCalls.ptrcallWithLongArg(setTooltipAutoTranslateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTooltipAutoTranslateModeBind, segment, mode.value)
     }
 
     /**
@@ -1780,7 +1781,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_tooltip_auto_translate_mode
      */
     fun getTooltipAutoTranslateMode(): Node.AutoTranslateMode {
-        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(getTooltipAutoTranslateModeBind, segment))
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTooltipAutoTranslateModeBind, segment))
     }
 
     /**
@@ -1798,7 +1799,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_tooltip_text
      */
     fun setTooltipText(hint: String) {
-        ObjectCalls.ptrcallWithStringArg(setTooltipTextBind, segment, hint)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTooltipTextBind, segment, hint)
     }
 
     /**
@@ -1816,7 +1817,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_tooltip_text
      */
     fun getTooltipText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTooltipTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTooltipTextBind, segment)
     }
 
     /**
@@ -1829,7 +1830,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_tooltip
      */
     fun getTooltip(atPosition: Vector2 = Vector2(0.0, 0.0)): String {
-        return ObjectCalls.ptrcallWithVector2ArgRetString(getTooltipBind, segment, atPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetString(Binds.getTooltipBind, segment, atPosition)
     }
 
     /**
@@ -1839,7 +1840,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_translation_context
      */
     fun setTranslationContext(context: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTranslationContextBind, segment, context)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setTranslationContextBind, segment, context)
     }
 
     /**
@@ -1849,7 +1850,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_translation_context
      */
     fun getTranslationContext(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTranslationContextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTranslationContextBind, segment)
     }
 
     /**
@@ -1860,7 +1861,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_default_cursor_shape
      */
     fun setDefaultCursorShape(shape: Control.CursorShape) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultCursorShapeBind, segment, shape.value)
     }
 
     /**
@@ -1871,7 +1872,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_default_cursor_shape
      */
     fun getDefaultCursorShape(): Control.CursorShape {
-        return Control.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(getDefaultCursorShapeBind, segment))
+        return Control.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultCursorShapeBind, segment))
     }
 
     /**
@@ -1883,7 +1884,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_cursor_shape
      */
     fun getCursorShape(atPosition: Vector2 = Vector2(0.0, 0.0)): Control.CursorShape {
-        return Control.CursorShape(ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, segment, atPosition))
+        return Control.CursorShape(ObjectCalls.ptrcallWithVector2ArgRetLong(Binds.getCursorShapeBind, segment, atPosition))
     }
 
     /**
@@ -1895,7 +1896,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_neighbor
      */
     fun setFocusNeighbor(side: Side, neighbor: NodePath) {
-        ObjectCalls.ptrcallWithLongAndNodePathArg(setFocusNeighborBind, segment, side.value, neighbor)
+        ObjectCalls.ptrcallWithLongAndNodePathArg(Binds.setFocusNeighborBind, segment, side.value, neighbor)
     }
 
     /**
@@ -1907,7 +1908,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_neighbor
      */
     fun getFocusNeighbor(side: Side): NodePath {
-        return ObjectCalls.ptrcallWithLongArgRetNodePath(getFocusNeighborBind, segment, side.value)
+        return ObjectCalls.ptrcallWithLongArgRetNodePath(Binds.getFocusNeighborBind, segment, side.value)
     }
 
     /**
@@ -1919,7 +1920,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_next
      */
     fun setFocusNext(next: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setFocusNextBind, segment, next)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setFocusNextBind, segment, next)
     }
 
     /**
@@ -1931,7 +1932,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_next
      */
     fun getFocusNext(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getFocusNextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getFocusNextBind, segment)
     }
 
     /**
@@ -1943,7 +1944,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_focus_previous
      */
     fun setFocusPrevious(previous: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setFocusPreviousBind, segment, previous)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setFocusPreviousBind, segment, previous)
     }
 
     /**
@@ -1955,7 +1956,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_focus_previous
      */
     fun getFocusPrevious(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getFocusPreviousBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getFocusPreviousBind, segment)
     }
 
     /**
@@ -1967,7 +1968,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.force_drag
      */
     fun forceDrag(data: Any?, preview: Control) {
-        ObjectCalls.ptrcallWithVariantAndObjectArg(forceDragBind, segment, data, preview.segment)
+        ObjectCalls.ptrcallWithVariantAndObjectArg(Binds.forceDragBind, segment, data, preview.segment)
     }
 
     /**
@@ -1976,7 +1977,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.accessibility_drag
      */
     fun accessibilityDrag() {
-        ObjectCalls.ptrcallNoArgs(accessibilityDragBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.accessibilityDragBind, segment)
     }
 
     /**
@@ -1985,7 +1986,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.accessibility_drop
      */
     fun accessibilityDrop() {
-        ObjectCalls.ptrcallNoArgs(accessibilityDropBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.accessibilityDropBind, segment)
     }
 
     /**
@@ -1994,7 +1995,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_name
      */
     fun setAccessibilityName(name: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAccessibilityNameBind, segment, name)
     }
 
     /**
@@ -2003,7 +2004,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_name
      */
     fun getAccessibilityName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAccessibilityNameBind, segment)
     }
 
     /**
@@ -2012,7 +2013,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_description
      */
     fun setAccessibilityDescription(description: String) {
-        ObjectCalls.ptrcallWithStringArg(setAccessibilityDescriptionBind, segment, description)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAccessibilityDescriptionBind, segment, description)
     }
 
     /**
@@ -2021,7 +2022,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_description
      */
     fun getAccessibilityDescription(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getAccessibilityDescriptionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAccessibilityDescriptionBind, segment)
     }
 
     /**
@@ -2031,7 +2032,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_live
      */
     fun setAccessibilityLive(mode: AccessibilityServer.AccessibilityLiveMode) {
-        ObjectCalls.ptrcallWithLongArg(setAccessibilityLiveBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAccessibilityLiveBind, segment, mode.value)
     }
 
     /**
@@ -2041,7 +2042,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_live
      */
     fun getAccessibilityLive(): AccessibilityServer.AccessibilityLiveMode {
-        return AccessibilityServer.AccessibilityLiveMode(ObjectCalls.ptrcallNoArgsRetLong(getAccessibilityLiveBind, segment))
+        return AccessibilityServer.AccessibilityLiveMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessibilityLiveBind, segment))
     }
 
     /**
@@ -2050,7 +2051,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_controls_nodes
      */
     fun setAccessibilityControlsNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityControlsNodesBind, segment, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(Binds.setAccessibilityControlsNodesBind, segment, nodePath)
     }
 
     /**
@@ -2059,7 +2060,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_controls_nodes
      */
     fun getAccessibilityControlsNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityControlsNodesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getAccessibilityControlsNodesBind, segment)
     }
 
     /**
@@ -2068,7 +2069,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_described_by_nodes
      */
     fun setAccessibilityDescribedByNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityDescribedByNodesBind, segment, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(Binds.setAccessibilityDescribedByNodesBind, segment, nodePath)
     }
 
     /**
@@ -2077,7 +2078,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_described_by_nodes
      */
     fun getAccessibilityDescribedByNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityDescribedByNodesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getAccessibilityDescribedByNodesBind, segment)
     }
 
     /**
@@ -2086,7 +2087,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_labeled_by_nodes
      */
     fun setAccessibilityLabeledByNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityLabeledByNodesBind, segment, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(Binds.setAccessibilityLabeledByNodesBind, segment, nodePath)
     }
 
     /**
@@ -2095,7 +2096,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_labeled_by_nodes
      */
     fun getAccessibilityLabeledByNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityLabeledByNodesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getAccessibilityLabeledByNodesBind, segment)
     }
 
     /**
@@ -2104,7 +2105,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_accessibility_flow_to_nodes
      */
     fun setAccessibilityFlowToNodes(nodePath: List<NodePath>) {
-        ObjectCalls.ptrcallWithNodePathListArg(setAccessibilityFlowToNodesBind, segment, nodePath)
+        ObjectCalls.ptrcallWithNodePathListArg(Binds.setAccessibilityFlowToNodesBind, segment, nodePath)
     }
 
     /**
@@ -2113,7 +2114,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_accessibility_flow_to_nodes
      */
     fun getAccessibilityFlowToNodes(): List<NodePath> {
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getAccessibilityFlowToNodesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getAccessibilityFlowToNodesBind, segment)
     }
 
     /**
@@ -2126,7 +2127,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_mouse_filter
      */
     fun setMouseFilter(filter: Control.MouseFilter) {
-        ObjectCalls.ptrcallWithLongArg(setMouseFilterBind, segment, filter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMouseFilterBind, segment, filter.value)
     }
 
     /**
@@ -2139,7 +2140,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_mouse_filter
      */
     fun getMouseFilter(): Control.MouseFilter {
-        return Control.MouseFilter(ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterBind, segment))
+        return Control.MouseFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMouseFilterBind, segment))
     }
 
     /**
@@ -2151,7 +2152,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_mouse_filter_with_override
      */
     fun getMouseFilterWithOverride(): Control.MouseFilter {
-        return Control.MouseFilter(ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterWithOverrideBind, segment))
+        return Control.MouseFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMouseFilterWithOverrideBind, segment))
     }
 
     /**
@@ -2163,7 +2164,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_mouse_behavior_recursive
      */
     fun setMouseBehaviorRecursive(mouseBehaviorRecursive: Control.MouseBehaviorRecursive) {
-        ObjectCalls.ptrcallWithLongArg(setMouseBehaviorRecursiveBind, segment, mouseBehaviorRecursive.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMouseBehaviorRecursiveBind, segment, mouseBehaviorRecursive.value)
     }
 
     /**
@@ -2175,7 +2176,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_mouse_behavior_recursive
      */
     fun getMouseBehaviorRecursive(): Control.MouseBehaviorRecursive {
-        return Control.MouseBehaviorRecursive(ObjectCalls.ptrcallNoArgsRetLong(getMouseBehaviorRecursiveBind, segment))
+        return Control.MouseBehaviorRecursive(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMouseBehaviorRecursiveBind, segment))
     }
 
     /**
@@ -2188,7 +2189,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_force_pass_scroll_events
      */
     fun setForcePassScrollEvents(forcePassScrollEvents: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setForcePassScrollEventsBind, segment, forcePassScrollEvents)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setForcePassScrollEventsBind, segment, forcePassScrollEvents)
     }
 
     /**
@@ -2201,7 +2202,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_force_pass_scroll_events
      */
     fun isForcePassScrollEvents(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isForcePassScrollEventsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isForcePassScrollEventsBind, segment)
     }
 
     /**
@@ -2212,7 +2213,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_clip_contents
      */
     fun setClipContents(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClipContentsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setClipContentsBind, segment, enable)
     }
 
     /**
@@ -2223,7 +2224,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_clipping_contents
      */
     fun isClippingContents(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClippingContentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isClippingContentsBind, segment)
     }
 
     /**
@@ -2233,7 +2234,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.grab_click_focus
      */
     fun grabClickFocus() {
-        ObjectCalls.ptrcallNoArgs(grabClickFocusBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.grabClickFocusBind, segment)
     }
 
     /**
@@ -2247,7 +2248,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_drag_forwarding
      */
     fun setDragForwarding(dragFunc: GodotCallable, canDropFunc: GodotCallable, dropFunc: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeCallableArgs(setDragForwardingBind, segment, dragFunc.target.segment, dragFunc.method, canDropFunc.target.segment, canDropFunc.method, dropFunc.target.segment, dropFunc.method)
+        ObjectCalls.ptrcallWithThreeCallableArgs(Binds.setDragForwardingBind, segment, dragFunc.target.segment, dragFunc.method, canDropFunc.target.segment, canDropFunc.method, dropFunc.target.segment, dropFunc.method)
     }
 
     /**
@@ -2259,7 +2260,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_drag_preview
      */
     fun setDragPreview(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(setDragPreviewBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setDragPreviewBind, segment, listOf(control.segment))
     }
 
     /**
@@ -2269,7 +2270,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_drag_successful
      */
     fun isDragSuccessful(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragSuccessfulBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragSuccessfulBind, segment)
     }
 
     /**
@@ -2280,7 +2281,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.warp_mouse
      */
     fun warpMouse(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.warpMouseBind, segment, position)
     }
 
     /**
@@ -2291,7 +2292,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_shortcut_context
      */
     fun setShortcutContext(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutContextBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setShortcutContextBind, segment, listOf(node.segment))
     }
 
     /**
@@ -2302,7 +2303,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_shortcut_context
      */
     fun getShortcutContext(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutContextBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShortcutContextBind, segment))
     }
 
     /**
@@ -2315,7 +2316,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.update_maximum_size
      */
     fun updateMaximumSize() {
-        ObjectCalls.ptrcallNoArgs(updateMaximumSizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateMaximumSizeBind, segment)
     }
 
     /**
@@ -2326,7 +2327,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.update_minimum_size
      */
     fun updateMinimumSize() {
-        ObjectCalls.ptrcallNoArgs(updateMinimumSizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateMinimumSizeBind, segment)
     }
 
     /**
@@ -2336,7 +2337,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_layout_direction
      */
     fun setLayoutDirection(direction: Control.LayoutDirection) {
-        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLayoutDirectionBind, segment, direction.value)
     }
 
     /**
@@ -2346,7 +2347,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_layout_direction
      */
     fun getLayoutDirection(): Control.LayoutDirection {
-        return Control.LayoutDirection(ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment))
+        return Control.LayoutDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLayoutDirectionBind, segment))
     }
 
     /**
@@ -2355,7 +2356,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_layout_rtl
      */
     fun isLayoutRtl(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLayoutRtlBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLayoutRtlBind, segment)
     }
 
     /**
@@ -2365,7 +2366,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_auto_translate
      */
     fun setAutoTranslate(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoTranslateBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoTranslateBind, segment, enable)
     }
 
     /**
@@ -2375,7 +2376,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_auto_translating
      */
     fun isAutoTranslating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoTranslatingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoTranslatingBind, segment)
     }
 
     /**
@@ -2387,7 +2388,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_localize_numeral_system
      */
     fun setLocalizeNumeralSystem(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLocalizeNumeralSystemBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLocalizeNumeralSystemBind, segment, enable)
     }
 
     /**
@@ -2399,7 +2400,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.is_localizing_numeral_system
      */
     fun isLocalizingNumeralSystem(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalizingNumeralSystemBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLocalizingNumeralSystemBind, segment)
     }
 
     /** Signal `resized()`; see [TypedSignal]. */
@@ -3159,910 +3160,912 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
         internal fun wrap(handle: RawSegment): Control? =
             if (handle.address() == 0L) null else Control(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ACCEPT_EVENT_HASH = 3218959716L
-        private val acceptEventBind by lazy {
+        @JvmField
+        val acceptEventBind =
             ObjectCalls.getMethodBind("Control", "accept_event", ACCEPT_EVENT_HASH)
-        }
 
         private const val GET_MAXIMUM_SIZE_HASH = 3341600327L
-        private val getMaximumSizeBind by lazy {
+        @JvmField
+        val getMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_maximum_size", GET_MAXIMUM_SIZE_HASH)
-        }
 
         private const val GET_COMBINED_MAXIMUM_SIZE_HASH = 3341600327L
-        private val getCombinedMaximumSizeBind by lazy {
+        @JvmField
+        val getCombinedMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_combined_maximum_size", GET_COMBINED_MAXIMUM_SIZE_HASH)
-        }
 
         private const val GET_MINIMUM_SIZE_HASH = 3341600327L
-        private val getMinimumSizeBind by lazy {
+        @JvmField
+        val getMinimumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_minimum_size", GET_MINIMUM_SIZE_HASH)
-        }
 
         private const val GET_COMBINED_MINIMUM_SIZE_HASH = 3341600327L
-        private val getCombinedMinimumSizeBind by lazy {
+        @JvmField
+        val getCombinedMinimumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_combined_minimum_size", GET_COMBINED_MINIMUM_SIZE_HASH)
-        }
 
         private const val SET_PROPAGATE_MAXIMUM_SIZE_HASH = 2586408642L
-        private val setPropagateMaximumSizeBind by lazy {
+        @JvmField
+        val setPropagateMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "set_propagate_maximum_size", SET_PROPAGATE_MAXIMUM_SIZE_HASH)
-        }
 
         private const val IS_PROPAGATING_MAXIMUM_SIZE_HASH = 2240911060L
-        private val isPropagatingMaximumSizeBind by lazy {
+        @JvmField
+        val isPropagatingMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "is_propagating_maximum_size", IS_PROPAGATING_MAXIMUM_SIZE_HASH)
-        }
 
         private const val GET_BOUND_MINIMUM_SIZE_HASH = 3341600327L
-        private val getBoundMinimumSizeBind by lazy {
+        @JvmField
+        val getBoundMinimumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_bound_minimum_size", GET_BOUND_MINIMUM_SIZE_HASH)
-        }
 
         private const val SET_ANCHORS_PRESET_HASH = 509135270L
-        private val setAnchorsPresetBind by lazy {
+        @JvmField
+        val setAnchorsPresetBind =
             ObjectCalls.getMethodBind("Control", "set_anchors_preset", SET_ANCHORS_PRESET_HASH)
-        }
 
         private const val SET_OFFSETS_PRESET_HASH = 3724524307L
-        private val setOffsetsPresetBind by lazy {
+        @JvmField
+        val setOffsetsPresetBind =
             ObjectCalls.getMethodBind("Control", "set_offsets_preset", SET_OFFSETS_PRESET_HASH)
-        }
 
         private const val SET_ANCHORS_AND_OFFSETS_PRESET_HASH = 3724524307L
-        private val setAnchorsAndOffsetsPresetBind by lazy {
+        @JvmField
+        val setAnchorsAndOffsetsPresetBind =
             ObjectCalls.getMethodBind("Control", "set_anchors_and_offsets_preset", SET_ANCHORS_AND_OFFSETS_PRESET_HASH)
-        }
 
         private const val SET_ANCHOR_HASH = 2302782885L
-        private val setAnchorBind by lazy {
+        @JvmField
+        val setAnchorBind =
             ObjectCalls.getMethodBind("Control", "set_anchor", SET_ANCHOR_HASH)
-        }
 
         private const val GET_ANCHOR_HASH = 2869120046L
-        private val getAnchorBind by lazy {
+        @JvmField
+        val getAnchorBind =
             ObjectCalls.getMethodBind("Control", "get_anchor", GET_ANCHOR_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 4290182280L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("Control", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 2869120046L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("Control", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_ANCHOR_AND_OFFSET_HASH = 4031722181L
-        private val setAnchorAndOffsetBind by lazy {
+        @JvmField
+        val setAnchorAndOffsetBind =
             ObjectCalls.getMethodBind("Control", "set_anchor_and_offset", SET_ANCHOR_AND_OFFSET_HASH)
-        }
 
         private const val SET_BEGIN_HASH = 743155724L
-        private val setBeginBind by lazy {
+        @JvmField
+        val setBeginBind =
             ObjectCalls.getMethodBind("Control", "set_begin", SET_BEGIN_HASH)
-        }
 
         private const val SET_END_HASH = 743155724L
-        private val setEndBind by lazy {
+        @JvmField
+        val setEndBind =
             ObjectCalls.getMethodBind("Control", "set_end", SET_END_HASH)
-        }
 
         private const val SET_POSITION_HASH = 2436320129L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("Control", "set_position", SET_POSITION_HASH)
-        }
 
         private const val SET_SIZE_HASH = 2436320129L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("Control", "set_size", SET_SIZE_HASH)
-        }
 
         private const val RESET_SIZE_HASH = 3218959716L
-        private val resetSizeBind by lazy {
+        @JvmField
+        val resetSizeBind =
             ObjectCalls.getMethodBind("Control", "reset_size", RESET_SIZE_HASH)
-        }
 
         private const val SET_CUSTOM_MAXIMUM_SIZE_HASH = 743155724L
-        private val setCustomMaximumSizeBind by lazy {
+        @JvmField
+        val setCustomMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "set_custom_maximum_size", SET_CUSTOM_MAXIMUM_SIZE_HASH)
-        }
 
         private const val SET_CUSTOM_MINIMUM_SIZE_HASH = 743155724L
-        private val setCustomMinimumSizeBind by lazy {
+        @JvmField
+        val setCustomMinimumSizeBind =
             ObjectCalls.getMethodBind("Control", "set_custom_minimum_size", SET_CUSTOM_MINIMUM_SIZE_HASH)
-        }
 
         private const val SET_GLOBAL_POSITION_HASH = 2436320129L
-        private val setGlobalPositionBind by lazy {
+        @JvmField
+        val setGlobalPositionBind =
             ObjectCalls.getMethodBind("Control", "set_global_position", SET_GLOBAL_POSITION_HASH)
-        }
 
         private const val SET_ROTATION_HASH = 373806689L
-        private val setRotationBind by lazy {
+        @JvmField
+        val setRotationBind =
             ObjectCalls.getMethodBind("Control", "set_rotation", SET_ROTATION_HASH)
-        }
 
         private const val SET_ROTATION_DEGREES_HASH = 373806689L
-        private val setRotationDegreesBind by lazy {
+        @JvmField
+        val setRotationDegreesBind =
             ObjectCalls.getMethodBind("Control", "set_rotation_degrees", SET_ROTATION_DEGREES_HASH)
-        }
 
         private const val SET_SCALE_HASH = 743155724L
-        private val setScaleBind by lazy {
+        @JvmField
+        val setScaleBind =
             ObjectCalls.getMethodBind("Control", "set_scale", SET_SCALE_HASH)
-        }
 
         private const val SET_PIVOT_OFFSET_HASH = 743155724L
-        private val setPivotOffsetBind by lazy {
+        @JvmField
+        val setPivotOffsetBind =
             ObjectCalls.getMethodBind("Control", "set_pivot_offset", SET_PIVOT_OFFSET_HASH)
-        }
 
         private const val SET_PIVOT_OFFSET_RATIO_HASH = 743155724L
-        private val setPivotOffsetRatioBind by lazy {
+        @JvmField
+        val setPivotOffsetRatioBind =
             ObjectCalls.getMethodBind("Control", "set_pivot_offset_ratio", SET_PIVOT_OFFSET_RATIO_HASH)
-        }
 
         private const val GET_BEGIN_HASH = 3341600327L
-        private val getBeginBind by lazy {
+        @JvmField
+        val getBeginBind =
             ObjectCalls.getMethodBind("Control", "get_begin", GET_BEGIN_HASH)
-        }
 
         private const val GET_END_HASH = 3341600327L
-        private val getEndBind by lazy {
+        @JvmField
+        val getEndBind =
             ObjectCalls.getMethodBind("Control", "get_end", GET_END_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("Control", "get_position", GET_POSITION_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("Control", "get_size", GET_SIZE_HASH)
-        }
 
         private const val GET_ROTATION_HASH = 1740695150L
-        private val getRotationBind by lazy {
+        @JvmField
+        val getRotationBind =
             ObjectCalls.getMethodBind("Control", "get_rotation", GET_ROTATION_HASH)
-        }
 
         private const val GET_ROTATION_DEGREES_HASH = 1740695150L
-        private val getRotationDegreesBind by lazy {
+        @JvmField
+        val getRotationDegreesBind =
             ObjectCalls.getMethodBind("Control", "get_rotation_degrees", GET_ROTATION_DEGREES_HASH)
-        }
 
         private const val GET_SCALE_HASH = 3341600327L
-        private val getScaleBind by lazy {
+        @JvmField
+        val getScaleBind =
             ObjectCalls.getMethodBind("Control", "get_scale", GET_SCALE_HASH)
-        }
 
         private const val GET_PIVOT_OFFSET_HASH = 3341600327L
-        private val getPivotOffsetBind by lazy {
+        @JvmField
+        val getPivotOffsetBind =
             ObjectCalls.getMethodBind("Control", "get_pivot_offset", GET_PIVOT_OFFSET_HASH)
-        }
 
         private const val GET_PIVOT_OFFSET_RATIO_HASH = 3341600327L
-        private val getPivotOffsetRatioBind by lazy {
+        @JvmField
+        val getPivotOffsetRatioBind =
             ObjectCalls.getMethodBind("Control", "get_pivot_offset_ratio", GET_PIVOT_OFFSET_RATIO_HASH)
-        }
 
         private const val GET_COMBINED_PIVOT_OFFSET_HASH = 3341600327L
-        private val getCombinedPivotOffsetBind by lazy {
+        @JvmField
+        val getCombinedPivotOffsetBind =
             ObjectCalls.getMethodBind("Control", "get_combined_pivot_offset", GET_COMBINED_PIVOT_OFFSET_HASH)
-        }
 
         private const val GET_CUSTOM_MAXIMUM_SIZE_HASH = 3341600327L
-        private val getCustomMaximumSizeBind by lazy {
+        @JvmField
+        val getCustomMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_custom_maximum_size", GET_CUSTOM_MAXIMUM_SIZE_HASH)
-        }
 
         private const val GET_CUSTOM_MINIMUM_SIZE_HASH = 3341600327L
-        private val getCustomMinimumSizeBind by lazy {
+        @JvmField
+        val getCustomMinimumSizeBind =
             ObjectCalls.getMethodBind("Control", "get_custom_minimum_size", GET_CUSTOM_MINIMUM_SIZE_HASH)
-        }
 
         private const val GET_PARENT_AREA_SIZE_HASH = 3341600327L
-        private val getParentAreaSizeBind by lazy {
+        @JvmField
+        val getParentAreaSizeBind =
             ObjectCalls.getMethodBind("Control", "get_parent_area_size", GET_PARENT_AREA_SIZE_HASH)
-        }
 
         private const val GET_GLOBAL_POSITION_HASH = 3341600327L
-        private val getGlobalPositionBind by lazy {
+        @JvmField
+        val getGlobalPositionBind =
             ObjectCalls.getMethodBind("Control", "get_global_position", GET_GLOBAL_POSITION_HASH)
-        }
 
         private const val GET_SCREEN_POSITION_HASH = 3341600327L
-        private val getScreenPositionBind by lazy {
+        @JvmField
+        val getScreenPositionBind =
             ObjectCalls.getMethodBind("Control", "get_screen_position", GET_SCREEN_POSITION_HASH)
-        }
 
         private const val GET_RECT_HASH = 1639390495L
-        private val getRectBind by lazy {
+        @JvmField
+        val getRectBind =
             ObjectCalls.getMethodBind("Control", "get_rect", GET_RECT_HASH)
-        }
 
         private const val GET_GLOBAL_RECT_HASH = 1639390495L
-        private val getGlobalRectBind by lazy {
+        @JvmField
+        val getGlobalRectBind =
             ObjectCalls.getMethodBind("Control", "get_global_rect", GET_GLOBAL_RECT_HASH)
-        }
 
         private const val SET_FOCUS_MODE_HASH = 3232914922L
-        private val setFocusModeBind by lazy {
+        @JvmField
+        val setFocusModeBind =
             ObjectCalls.getMethodBind("Control", "set_focus_mode", SET_FOCUS_MODE_HASH)
-        }
 
         private const val GET_FOCUS_MODE_HASH = 2132829277L
-        private val getFocusModeBind by lazy {
+        @JvmField
+        val getFocusModeBind =
             ObjectCalls.getMethodBind("Control", "get_focus_mode", GET_FOCUS_MODE_HASH)
-        }
 
         private const val GET_FOCUS_MODE_WITH_OVERRIDE_HASH = 2132829277L
-        private val getFocusModeWithOverrideBind by lazy {
+        @JvmField
+        val getFocusModeWithOverrideBind =
             ObjectCalls.getMethodBind("Control", "get_focus_mode_with_override", GET_FOCUS_MODE_WITH_OVERRIDE_HASH)
-        }
 
         private const val SET_FOCUS_BEHAVIOR_RECURSIVE_HASH = 4256832521L
-        private val setFocusBehaviorRecursiveBind by lazy {
+        @JvmField
+        val setFocusBehaviorRecursiveBind =
             ObjectCalls.getMethodBind("Control", "set_focus_behavior_recursive", SET_FOCUS_BEHAVIOR_RECURSIVE_HASH)
-        }
 
         private const val GET_FOCUS_BEHAVIOR_RECURSIVE_HASH = 2435707181L
-        private val getFocusBehaviorRecursiveBind by lazy {
+        @JvmField
+        val getFocusBehaviorRecursiveBind =
             ObjectCalls.getMethodBind("Control", "get_focus_behavior_recursive", GET_FOCUS_BEHAVIOR_RECURSIVE_HASH)
-        }
 
         private const val HAS_FOCUS_HASH = 3302206351L
-        private val hasFocusBind by lazy {
+        @JvmField
+        val hasFocusBind =
             ObjectCalls.getMethodBind("Control", "has_focus", HAS_FOCUS_HASH)
-        }
 
         private const val GRAB_FOCUS_HASH = 107499316L
-        private val grabFocusBind by lazy {
+        @JvmField
+        val grabFocusBind =
             ObjectCalls.getMethodBind("Control", "grab_focus", GRAB_FOCUS_HASH)
-        }
 
         private const val RELEASE_FOCUS_HASH = 3218959716L
-        private val releaseFocusBind by lazy {
+        @JvmField
+        val releaseFocusBind =
             ObjectCalls.getMethodBind("Control", "release_focus", RELEASE_FOCUS_HASH)
-        }
 
         private const val FIND_PREV_VALID_FOCUS_HASH = 2783021301L
-        private val findPrevValidFocusBind by lazy {
+        @JvmField
+        val findPrevValidFocusBind =
             ObjectCalls.getMethodBind("Control", "find_prev_valid_focus", FIND_PREV_VALID_FOCUS_HASH)
-        }
 
         private const val FIND_NEXT_VALID_FOCUS_HASH = 2783021301L
-        private val findNextValidFocusBind by lazy {
+        @JvmField
+        val findNextValidFocusBind =
             ObjectCalls.getMethodBind("Control", "find_next_valid_focus", FIND_NEXT_VALID_FOCUS_HASH)
-        }
 
         private const val FIND_VALID_FOCUS_NEIGHBOR_HASH = 1543910170L
-        private val findValidFocusNeighborBind by lazy {
+        @JvmField
+        val findValidFocusNeighborBind =
             ObjectCalls.getMethodBind("Control", "find_valid_focus_neighbor", FIND_VALID_FOCUS_NEIGHBOR_HASH)
-        }
 
         private const val SET_H_SIZE_FLAGS_HASH = 394851643L
-        private val setHSizeFlagsBind by lazy {
+        @JvmField
+        val setHSizeFlagsBind =
             ObjectCalls.getMethodBind("Control", "set_h_size_flags", SET_H_SIZE_FLAGS_HASH)
-        }
 
         private const val GET_H_SIZE_FLAGS_HASH = 3781367401L
-        private val getHSizeFlagsBind by lazy {
+        @JvmField
+        val getHSizeFlagsBind =
             ObjectCalls.getMethodBind("Control", "get_h_size_flags", GET_H_SIZE_FLAGS_HASH)
-        }
 
         private const val SET_STRETCH_RATIO_HASH = 373806689L
-        private val setStretchRatioBind by lazy {
+        @JvmField
+        val setStretchRatioBind =
             ObjectCalls.getMethodBind("Control", "set_stretch_ratio", SET_STRETCH_RATIO_HASH)
-        }
 
         private const val GET_STRETCH_RATIO_HASH = 1740695150L
-        private val getStretchRatioBind by lazy {
+        @JvmField
+        val getStretchRatioBind =
             ObjectCalls.getMethodBind("Control", "get_stretch_ratio", GET_STRETCH_RATIO_HASH)
-        }
 
         private const val SET_V_SIZE_FLAGS_HASH = 394851643L
-        private val setVSizeFlagsBind by lazy {
+        @JvmField
+        val setVSizeFlagsBind =
             ObjectCalls.getMethodBind("Control", "set_v_size_flags", SET_V_SIZE_FLAGS_HASH)
-        }
 
         private const val GET_V_SIZE_FLAGS_HASH = 3781367401L
-        private val getVSizeFlagsBind by lazy {
+        @JvmField
+        val getVSizeFlagsBind =
             ObjectCalls.getMethodBind("Control", "get_v_size_flags", GET_V_SIZE_FLAGS_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_ENABLED_HASH = 2586408642L
-        private val setOffsetTransformEnabledBind by lazy {
+        @JvmField
+        val setOffsetTransformEnabledBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_enabled", SET_OFFSET_TRANSFORM_ENABLED_HASH)
-        }
 
         private const val IS_OFFSET_TRANSFORM_ENABLED_HASH = 36873697L
-        private val isOffsetTransformEnabledBind by lazy {
+        @JvmField
+        val isOffsetTransformEnabledBind =
             ObjectCalls.getMethodBind("Control", "is_offset_transform_enabled", IS_OFFSET_TRANSFORM_ENABLED_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_POSITION_HASH = 743155724L
-        private val setOffsetTransformPositionBind by lazy {
+        @JvmField
+        val setOffsetTransformPositionBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_position", SET_OFFSET_TRANSFORM_POSITION_HASH)
-        }
 
         private const val GET_OFFSET_TRANSFORM_POSITION_HASH = 3341600327L
-        private val getOffsetTransformPositionBind by lazy {
+        @JvmField
+        val getOffsetTransformPositionBind =
             ObjectCalls.getMethodBind("Control", "get_offset_transform_position", GET_OFFSET_TRANSFORM_POSITION_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_POSITION_RATIO_HASH = 743155724L
-        private val setOffsetTransformPositionRatioBind by lazy {
+        @JvmField
+        val setOffsetTransformPositionRatioBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_position_ratio", SET_OFFSET_TRANSFORM_POSITION_RATIO_HASH)
-        }
 
         private const val GET_OFFSET_TRANSFORM_POSITION_RATIO_HASH = 3341600327L
-        private val getOffsetTransformPositionRatioBind by lazy {
+        @JvmField
+        val getOffsetTransformPositionRatioBind =
             ObjectCalls.getMethodBind("Control", "get_offset_transform_position_ratio", GET_OFFSET_TRANSFORM_POSITION_RATIO_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_SCALE_HASH = 743155724L
-        private val setOffsetTransformScaleBind by lazy {
+        @JvmField
+        val setOffsetTransformScaleBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_scale", SET_OFFSET_TRANSFORM_SCALE_HASH)
-        }
 
         private const val GET_OFFSET_TRANSFORM_SCALE_HASH = 3341600327L
-        private val getOffsetTransformScaleBind by lazy {
+        @JvmField
+        val getOffsetTransformScaleBind =
             ObjectCalls.getMethodBind("Control", "get_offset_transform_scale", GET_OFFSET_TRANSFORM_SCALE_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_ROTATION_HASH = 373806689L
-        private val setOffsetTransformRotationBind by lazy {
+        @JvmField
+        val setOffsetTransformRotationBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_rotation", SET_OFFSET_TRANSFORM_ROTATION_HASH)
-        }
 
         private const val GET_OFFSET_TRANSFORM_ROTATION_HASH = 1740695150L
-        private val getOffsetTransformRotationBind by lazy {
+        @JvmField
+        val getOffsetTransformRotationBind =
             ObjectCalls.getMethodBind("Control", "get_offset_transform_rotation", GET_OFFSET_TRANSFORM_ROTATION_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_PIVOT_HASH = 743155724L
-        private val setOffsetTransformPivotBind by lazy {
+        @JvmField
+        val setOffsetTransformPivotBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_pivot", SET_OFFSET_TRANSFORM_PIVOT_HASH)
-        }
 
         private const val GET_OFFSET_TRANSFORM_PIVOT_HASH = 3341600327L
-        private val getOffsetTransformPivotBind by lazy {
+        @JvmField
+        val getOffsetTransformPivotBind =
             ObjectCalls.getMethodBind("Control", "get_offset_transform_pivot", GET_OFFSET_TRANSFORM_PIVOT_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_PIVOT_RATIO_HASH = 743155724L
-        private val setOffsetTransformPivotRatioBind by lazy {
+        @JvmField
+        val setOffsetTransformPivotRatioBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_pivot_ratio", SET_OFFSET_TRANSFORM_PIVOT_RATIO_HASH)
-        }
 
         private const val GET_OFFSET_TRANSFORM_PIVOT_RATIO_HASH = 3341600327L
-        private val getOffsetTransformPivotRatioBind by lazy {
+        @JvmField
+        val getOffsetTransformPivotRatioBind =
             ObjectCalls.getMethodBind("Control", "get_offset_transform_pivot_ratio", GET_OFFSET_TRANSFORM_PIVOT_RATIO_HASH)
-        }
 
         private const val SET_OFFSET_TRANSFORM_VISUAL_ONLY_HASH = 2586408642L
-        private val setOffsetTransformVisualOnlyBind by lazy {
+        @JvmField
+        val setOffsetTransformVisualOnlyBind =
             ObjectCalls.getMethodBind("Control", "set_offset_transform_visual_only", SET_OFFSET_TRANSFORM_VISUAL_ONLY_HASH)
-        }
 
         private const val IS_OFFSET_TRANSFORM_VISUAL_ONLY_HASH = 36873697L
-        private val isOffsetTransformVisualOnlyBind by lazy {
+        @JvmField
+        val isOffsetTransformVisualOnlyBind =
             ObjectCalls.getMethodBind("Control", "is_offset_transform_visual_only", IS_OFFSET_TRANSFORM_VISUAL_ONLY_HASH)
-        }
 
         private const val SET_THEME_HASH = 2326690814L
-        private val setThemeBind by lazy {
+        @JvmField
+        val setThemeBind =
             ObjectCalls.getMethodBind("Control", "set_theme", SET_THEME_HASH)
-        }
 
         private const val GET_THEME_HASH = 3846893731L
-        private val getThemeBind by lazy {
+        @JvmField
+        val getThemeBind =
             ObjectCalls.getMethodBind("Control", "get_theme", GET_THEME_HASH)
-        }
 
         private const val SET_THEME_TYPE_VARIATION_HASH = 3304788590L
-        private val setThemeTypeVariationBind by lazy {
+        @JvmField
+        val setThemeTypeVariationBind =
             ObjectCalls.getMethodBind("Control", "set_theme_type_variation", SET_THEME_TYPE_VARIATION_HASH)
-        }
 
         private const val GET_THEME_TYPE_VARIATION_HASH = 2002593661L
-        private val getThemeTypeVariationBind by lazy {
+        @JvmField
+        val getThemeTypeVariationBind =
             ObjectCalls.getMethodBind("Control", "get_theme_type_variation", GET_THEME_TYPE_VARIATION_HASH)
-        }
 
         private const val BEGIN_BULK_THEME_OVERRIDE_HASH = 3218959716L
-        private val beginBulkThemeOverrideBind by lazy {
+        @JvmField
+        val beginBulkThemeOverrideBind =
             ObjectCalls.getMethodBind("Control", "begin_bulk_theme_override", BEGIN_BULK_THEME_OVERRIDE_HASH)
-        }
 
         private const val END_BULK_THEME_OVERRIDE_HASH = 3218959716L
-        private val endBulkThemeOverrideBind by lazy {
+        @JvmField
+        val endBulkThemeOverrideBind =
             ObjectCalls.getMethodBind("Control", "end_bulk_theme_override", END_BULK_THEME_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_ICON_OVERRIDE_HASH = 1373065600L
-        private val addThemeIconOverrideBind by lazy {
+        @JvmField
+        val addThemeIconOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_icon_override", ADD_THEME_ICON_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_STYLEBOX_OVERRIDE_HASH = 4188838905L
-        private val addThemeStyleboxOverrideBind by lazy {
+        @JvmField
+        val addThemeStyleboxOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_stylebox_override", ADD_THEME_STYLEBOX_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_FONT_OVERRIDE_HASH = 3518018674L
-        private val addThemeFontOverrideBind by lazy {
+        @JvmField
+        val addThemeFontOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_font_override", ADD_THEME_FONT_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_FONT_SIZE_OVERRIDE_HASH = 2415702435L
-        private val addThemeFontSizeOverrideBind by lazy {
+        @JvmField
+        val addThemeFontSizeOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_font_size_override", ADD_THEME_FONT_SIZE_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_COLOR_OVERRIDE_HASH = 4260178595L
-        private val addThemeColorOverrideBind by lazy {
+        @JvmField
+        val addThemeColorOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_color_override", ADD_THEME_COLOR_OVERRIDE_HASH)
-        }
 
         private const val ADD_THEME_CONSTANT_OVERRIDE_HASH = 2415702435L
-        private val addThemeConstantOverrideBind by lazy {
+        @JvmField
+        val addThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_constant_override", ADD_THEME_CONSTANT_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_ICON_OVERRIDE_HASH = 3304788590L
-        private val removeThemeIconOverrideBind by lazy {
+        @JvmField
+        val removeThemeIconOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_icon_override", REMOVE_THEME_ICON_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_STYLEBOX_OVERRIDE_HASH = 3304788590L
-        private val removeThemeStyleboxOverrideBind by lazy {
+        @JvmField
+        val removeThemeStyleboxOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_stylebox_override", REMOVE_THEME_STYLEBOX_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_FONT_OVERRIDE_HASH = 3304788590L
-        private val removeThemeFontOverrideBind by lazy {
+        @JvmField
+        val removeThemeFontOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_font_override", REMOVE_THEME_FONT_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_FONT_SIZE_OVERRIDE_HASH = 3304788590L
-        private val removeThemeFontSizeOverrideBind by lazy {
+        @JvmField
+        val removeThemeFontSizeOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_font_size_override", REMOVE_THEME_FONT_SIZE_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_COLOR_OVERRIDE_HASH = 3304788590L
-        private val removeThemeColorOverrideBind by lazy {
+        @JvmField
+        val removeThemeColorOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_color_override", REMOVE_THEME_COLOR_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_THEME_CONSTANT_OVERRIDE_HASH = 3304788590L
-        private val removeThemeConstantOverrideBind by lazy {
+        @JvmField
+        val removeThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_constant_override", REMOVE_THEME_CONSTANT_OVERRIDE_HASH)
-        }
 
         private const val GET_THEME_ICON_HASH = 3163973443L
-        private val getThemeIconBind by lazy {
+        @JvmField
+        val getThemeIconBind =
             ObjectCalls.getMethodBind("Control", "get_theme_icon", GET_THEME_ICON_HASH)
-        }
 
         private const val GET_THEME_STYLEBOX_HASH = 604739069L
-        private val getThemeStyleboxBind by lazy {
+        @JvmField
+        val getThemeStyleboxBind =
             ObjectCalls.getMethodBind("Control", "get_theme_stylebox", GET_THEME_STYLEBOX_HASH)
-        }
 
         private const val GET_THEME_FONT_HASH = 2826986490L
-        private val getThemeFontBind by lazy {
+        @JvmField
+        val getThemeFontBind =
             ObjectCalls.getMethodBind("Control", "get_theme_font", GET_THEME_FONT_HASH)
-        }
 
         private const val GET_THEME_FONT_SIZE_HASH = 1327056374L
-        private val getThemeFontSizeBind by lazy {
+        @JvmField
+        val getThemeFontSizeBind =
             ObjectCalls.getMethodBind("Control", "get_theme_font_size", GET_THEME_FONT_SIZE_HASH)
-        }
 
         private const val GET_THEME_COLOR_HASH = 2798751242L
-        private val getThemeColorBind by lazy {
+        @JvmField
+        val getThemeColorBind =
             ObjectCalls.getMethodBind("Control", "get_theme_color", GET_THEME_COLOR_HASH)
-        }
 
         private const val GET_THEME_CONSTANT_HASH = 1327056374L
-        private val getThemeConstantBind by lazy {
+        @JvmField
+        val getThemeConstantBind =
             ObjectCalls.getMethodBind("Control", "get_theme_constant", GET_THEME_CONSTANT_HASH)
-        }
 
         private const val HAS_THEME_ICON_OVERRIDE_HASH = 2619796661L
-        private val hasThemeIconOverrideBind by lazy {
+        @JvmField
+        val hasThemeIconOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_icon_override", HAS_THEME_ICON_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_STYLEBOX_OVERRIDE_HASH = 2619796661L
-        private val hasThemeStyleboxOverrideBind by lazy {
+        @JvmField
+        val hasThemeStyleboxOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_stylebox_override", HAS_THEME_STYLEBOX_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_FONT_OVERRIDE_HASH = 2619796661L
-        private val hasThemeFontOverrideBind by lazy {
+        @JvmField
+        val hasThemeFontOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_font_override", HAS_THEME_FONT_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_FONT_SIZE_OVERRIDE_HASH = 2619796661L
-        private val hasThemeFontSizeOverrideBind by lazy {
+        @JvmField
+        val hasThemeFontSizeOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_font_size_override", HAS_THEME_FONT_SIZE_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_COLOR_OVERRIDE_HASH = 2619796661L
-        private val hasThemeColorOverrideBind by lazy {
+        @JvmField
+        val hasThemeColorOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_color_override", HAS_THEME_COLOR_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_CONSTANT_OVERRIDE_HASH = 2619796661L
-        private val hasThemeConstantOverrideBind by lazy {
+        @JvmField
+        val hasThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_constant_override", HAS_THEME_CONSTANT_OVERRIDE_HASH)
-        }
 
         private const val HAS_THEME_ICON_HASH = 866386512L
-        private val hasThemeIconBind by lazy {
+        @JvmField
+        val hasThemeIconBind =
             ObjectCalls.getMethodBind("Control", "has_theme_icon", HAS_THEME_ICON_HASH)
-        }
 
         private const val HAS_THEME_STYLEBOX_HASH = 866386512L
-        private val hasThemeStyleboxBind by lazy {
+        @JvmField
+        val hasThemeStyleboxBind =
             ObjectCalls.getMethodBind("Control", "has_theme_stylebox", HAS_THEME_STYLEBOX_HASH)
-        }
 
         private const val HAS_THEME_FONT_HASH = 866386512L
-        private val hasThemeFontBind by lazy {
+        @JvmField
+        val hasThemeFontBind =
             ObjectCalls.getMethodBind("Control", "has_theme_font", HAS_THEME_FONT_HASH)
-        }
 
         private const val HAS_THEME_FONT_SIZE_HASH = 866386512L
-        private val hasThemeFontSizeBind by lazy {
+        @JvmField
+        val hasThemeFontSizeBind =
             ObjectCalls.getMethodBind("Control", "has_theme_font_size", HAS_THEME_FONT_SIZE_HASH)
-        }
 
         private const val HAS_THEME_COLOR_HASH = 866386512L
-        private val hasThemeColorBind by lazy {
+        @JvmField
+        val hasThemeColorBind =
             ObjectCalls.getMethodBind("Control", "has_theme_color", HAS_THEME_COLOR_HASH)
-        }
 
         private const val HAS_THEME_CONSTANT_HASH = 866386512L
-        private val hasThemeConstantBind by lazy {
+        @JvmField
+        val hasThemeConstantBind =
             ObjectCalls.getMethodBind("Control", "has_theme_constant", HAS_THEME_CONSTANT_HASH)
-        }
 
         private const val GET_THEME_DEFAULT_BASE_SCALE_HASH = 1740695150L
-        private val getThemeDefaultBaseScaleBind by lazy {
+        @JvmField
+        val getThemeDefaultBaseScaleBind =
             ObjectCalls.getMethodBind("Control", "get_theme_default_base_scale", GET_THEME_DEFAULT_BASE_SCALE_HASH)
-        }
 
         private const val GET_THEME_DEFAULT_FONT_HASH = 3229501585L
-        private val getThemeDefaultFontBind by lazy {
+        @JvmField
+        val getThemeDefaultFontBind =
             ObjectCalls.getMethodBind("Control", "get_theme_default_font", GET_THEME_DEFAULT_FONT_HASH)
-        }
 
         private const val GET_THEME_DEFAULT_FONT_SIZE_HASH = 3905245786L
-        private val getThemeDefaultFontSizeBind by lazy {
+        @JvmField
+        val getThemeDefaultFontSizeBind =
             ObjectCalls.getMethodBind("Control", "get_theme_default_font_size", GET_THEME_DEFAULT_FONT_SIZE_HASH)
-        }
 
         private const val GET_PARENT_CONTROL_HASH = 2783021301L
-        private val getParentControlBind by lazy {
+        @JvmField
+        val getParentControlBind =
             ObjectCalls.getMethodBind("Control", "get_parent_control", GET_PARENT_CONTROL_HASH)
-        }
 
         private const val SET_H_GROW_DIRECTION_HASH = 2022385301L
-        private val setHGrowDirectionBind by lazy {
+        @JvmField
+        val setHGrowDirectionBind =
             ObjectCalls.getMethodBind("Control", "set_h_grow_direction", SET_H_GROW_DIRECTION_HASH)
-        }
 
         private const val GET_H_GROW_DIRECTION_HASH = 3635610155L
-        private val getHGrowDirectionBind by lazy {
+        @JvmField
+        val getHGrowDirectionBind =
             ObjectCalls.getMethodBind("Control", "get_h_grow_direction", GET_H_GROW_DIRECTION_HASH)
-        }
 
         private const val SET_V_GROW_DIRECTION_HASH = 2022385301L
-        private val setVGrowDirectionBind by lazy {
+        @JvmField
+        val setVGrowDirectionBind =
             ObjectCalls.getMethodBind("Control", "set_v_grow_direction", SET_V_GROW_DIRECTION_HASH)
-        }
 
         private const val GET_V_GROW_DIRECTION_HASH = 3635610155L
-        private val getVGrowDirectionBind by lazy {
+        @JvmField
+        val getVGrowDirectionBind =
             ObjectCalls.getMethodBind("Control", "get_v_grow_direction", GET_V_GROW_DIRECTION_HASH)
-        }
 
         private const val SET_TOOLTIP_AUTO_TRANSLATE_MODE_HASH = 776149714L
-        private val setTooltipAutoTranslateModeBind by lazy {
+        @JvmField
+        val setTooltipAutoTranslateModeBind =
             ObjectCalls.getMethodBind("Control", "set_tooltip_auto_translate_mode", SET_TOOLTIP_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val GET_TOOLTIP_AUTO_TRANSLATE_MODE_HASH = 2498906432L
-        private val getTooltipAutoTranslateModeBind by lazy {
+        @JvmField
+        val getTooltipAutoTranslateModeBind =
             ObjectCalls.getMethodBind("Control", "get_tooltip_auto_translate_mode", GET_TOOLTIP_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val SET_TOOLTIP_TEXT_HASH = 83702148L
-        private val setTooltipTextBind by lazy {
+        @JvmField
+        val setTooltipTextBind =
             ObjectCalls.getMethodBind("Control", "set_tooltip_text", SET_TOOLTIP_TEXT_HASH)
-        }
 
         private const val GET_TOOLTIP_TEXT_HASH = 201670096L
-        private val getTooltipTextBind by lazy {
+        @JvmField
+        val getTooltipTextBind =
             ObjectCalls.getMethodBind("Control", "get_tooltip_text", GET_TOOLTIP_TEXT_HASH)
-        }
 
         private const val GET_TOOLTIP_HASH = 2895288280L
-        private val getTooltipBind by lazy {
+        @JvmField
+        val getTooltipBind =
             ObjectCalls.getMethodBind("Control", "get_tooltip", GET_TOOLTIP_HASH)
-        }
 
         private const val SET_TRANSLATION_CONTEXT_HASH = 3304788590L
-        private val setTranslationContextBind by lazy {
+        @JvmField
+        val setTranslationContextBind =
             ObjectCalls.getMethodBind("Control", "set_translation_context", SET_TRANSLATION_CONTEXT_HASH)
-        }
 
         private const val GET_TRANSLATION_CONTEXT_HASH = 2002593661L
-        private val getTranslationContextBind by lazy {
+        @JvmField
+        val getTranslationContextBind =
             ObjectCalls.getMethodBind("Control", "get_translation_context", GET_TRANSLATION_CONTEXT_HASH)
-        }
 
         private const val SET_DEFAULT_CURSOR_SHAPE_HASH = 217062046L
-        private val setDefaultCursorShapeBind by lazy {
+        @JvmField
+        val setDefaultCursorShapeBind =
             ObjectCalls.getMethodBind("Control", "set_default_cursor_shape", SET_DEFAULT_CURSOR_SHAPE_HASH)
-        }
 
         private const val GET_DEFAULT_CURSOR_SHAPE_HASH = 2359535750L
-        private val getDefaultCursorShapeBind by lazy {
+        @JvmField
+        val getDefaultCursorShapeBind =
             ObjectCalls.getMethodBind("Control", "get_default_cursor_shape", GET_DEFAULT_CURSOR_SHAPE_HASH)
-        }
 
         private const val GET_CURSOR_SHAPE_HASH = 1395773853L
-        private val getCursorShapeBind by lazy {
+        @JvmField
+        val getCursorShapeBind =
             ObjectCalls.getMethodBind("Control", "get_cursor_shape", GET_CURSOR_SHAPE_HASH)
-        }
 
         private const val SET_FOCUS_NEIGHBOR_HASH = 2024461774L
-        private val setFocusNeighborBind by lazy {
+        @JvmField
+        val setFocusNeighborBind =
             ObjectCalls.getMethodBind("Control", "set_focus_neighbor", SET_FOCUS_NEIGHBOR_HASH)
-        }
 
         private const val GET_FOCUS_NEIGHBOR_HASH = 2757935761L
-        private val getFocusNeighborBind by lazy {
+        @JvmField
+        val getFocusNeighborBind =
             ObjectCalls.getMethodBind("Control", "get_focus_neighbor", GET_FOCUS_NEIGHBOR_HASH)
-        }
 
         private const val SET_FOCUS_NEXT_HASH = 1348162250L
-        private val setFocusNextBind by lazy {
+        @JvmField
+        val setFocusNextBind =
             ObjectCalls.getMethodBind("Control", "set_focus_next", SET_FOCUS_NEXT_HASH)
-        }
 
         private const val GET_FOCUS_NEXT_HASH = 4075236667L
-        private val getFocusNextBind by lazy {
+        @JvmField
+        val getFocusNextBind =
             ObjectCalls.getMethodBind("Control", "get_focus_next", GET_FOCUS_NEXT_HASH)
-        }
 
         private const val SET_FOCUS_PREVIOUS_HASH = 1348162250L
-        private val setFocusPreviousBind by lazy {
+        @JvmField
+        val setFocusPreviousBind =
             ObjectCalls.getMethodBind("Control", "set_focus_previous", SET_FOCUS_PREVIOUS_HASH)
-        }
 
         private const val GET_FOCUS_PREVIOUS_HASH = 4075236667L
-        private val getFocusPreviousBind by lazy {
+        @JvmField
+        val getFocusPreviousBind =
             ObjectCalls.getMethodBind("Control", "get_focus_previous", GET_FOCUS_PREVIOUS_HASH)
-        }
 
         private const val FORCE_DRAG_HASH = 3191844692L
-        private val forceDragBind by lazy {
+        @JvmField
+        val forceDragBind =
             ObjectCalls.getMethodBind("Control", "force_drag", FORCE_DRAG_HASH)
-        }
 
         private const val ACCESSIBILITY_DRAG_HASH = 3218959716L
-        private val accessibilityDragBind by lazy {
+        @JvmField
+        val accessibilityDragBind =
             ObjectCalls.getMethodBind("Control", "accessibility_drag", ACCESSIBILITY_DRAG_HASH)
-        }
 
         private const val ACCESSIBILITY_DROP_HASH = 3218959716L
-        private val accessibilityDropBind by lazy {
+        @JvmField
+        val accessibilityDropBind =
             ObjectCalls.getMethodBind("Control", "accessibility_drop", ACCESSIBILITY_DROP_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_NAME_HASH = 83702148L
-        private val setAccessibilityNameBind by lazy {
+        @JvmField
+        val setAccessibilityNameBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_name", SET_ACCESSIBILITY_NAME_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_NAME_HASH = 201670096L
-        private val getAccessibilityNameBind by lazy {
+        @JvmField
+        val getAccessibilityNameBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_name", GET_ACCESSIBILITY_NAME_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_DESCRIPTION_HASH = 83702148L
-        private val setAccessibilityDescriptionBind by lazy {
+        @JvmField
+        val setAccessibilityDescriptionBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_description", SET_ACCESSIBILITY_DESCRIPTION_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_DESCRIPTION_HASH = 201670096L
-        private val getAccessibilityDescriptionBind by lazy {
+        @JvmField
+        val getAccessibilityDescriptionBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_description", GET_ACCESSIBILITY_DESCRIPTION_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_LIVE_HASH = 353443434L
-        private val setAccessibilityLiveBind by lazy {
+        @JvmField
+        val setAccessibilityLiveBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_live", SET_ACCESSIBILITY_LIVE_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_LIVE_HASH = 2858591811L
-        private val getAccessibilityLiveBind by lazy {
+        @JvmField
+        val getAccessibilityLiveBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_live", GET_ACCESSIBILITY_LIVE_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_CONTROLS_NODES_HASH = 381264803L
-        private val setAccessibilityControlsNodesBind by lazy {
+        @JvmField
+        val setAccessibilityControlsNodesBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_controls_nodes", SET_ACCESSIBILITY_CONTROLS_NODES_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_CONTROLS_NODES_HASH = 3995934104L
-        private val getAccessibilityControlsNodesBind by lazy {
+        @JvmField
+        val getAccessibilityControlsNodesBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_controls_nodes", GET_ACCESSIBILITY_CONTROLS_NODES_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH = 381264803L
-        private val setAccessibilityDescribedByNodesBind by lazy {
+        @JvmField
+        val setAccessibilityDescribedByNodesBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_described_by_nodes", SET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH = 3995934104L
-        private val getAccessibilityDescribedByNodesBind by lazy {
+        @JvmField
+        val getAccessibilityDescribedByNodesBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_described_by_nodes", GET_ACCESSIBILITY_DESCRIBED_BY_NODES_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_LABELED_BY_NODES_HASH = 381264803L
-        private val setAccessibilityLabeledByNodesBind by lazy {
+        @JvmField
+        val setAccessibilityLabeledByNodesBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_labeled_by_nodes", SET_ACCESSIBILITY_LABELED_BY_NODES_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_LABELED_BY_NODES_HASH = 3995934104L
-        private val getAccessibilityLabeledByNodesBind by lazy {
+        @JvmField
+        val getAccessibilityLabeledByNodesBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_labeled_by_nodes", GET_ACCESSIBILITY_LABELED_BY_NODES_HASH)
-        }
 
         private const val SET_ACCESSIBILITY_FLOW_TO_NODES_HASH = 381264803L
-        private val setAccessibilityFlowToNodesBind by lazy {
+        @JvmField
+        val setAccessibilityFlowToNodesBind =
             ObjectCalls.getMethodBind("Control", "set_accessibility_flow_to_nodes", SET_ACCESSIBILITY_FLOW_TO_NODES_HASH)
-        }
 
         private const val GET_ACCESSIBILITY_FLOW_TO_NODES_HASH = 3995934104L
-        private val getAccessibilityFlowToNodesBind by lazy {
+        @JvmField
+        val getAccessibilityFlowToNodesBind =
             ObjectCalls.getMethodBind("Control", "get_accessibility_flow_to_nodes", GET_ACCESSIBILITY_FLOW_TO_NODES_HASH)
-        }
 
         private const val SET_MOUSE_FILTER_HASH = 3891156122L
-        private val setMouseFilterBind by lazy {
+        @JvmField
+        val setMouseFilterBind =
             ObjectCalls.getMethodBind("Control", "set_mouse_filter", SET_MOUSE_FILTER_HASH)
-        }
 
         private const val GET_MOUSE_FILTER_HASH = 1572545674L
-        private val getMouseFilterBind by lazy {
+        @JvmField
+        val getMouseFilterBind =
             ObjectCalls.getMethodBind("Control", "get_mouse_filter", GET_MOUSE_FILTER_HASH)
-        }
 
         private const val GET_MOUSE_FILTER_WITH_OVERRIDE_HASH = 1572545674L
-        private val getMouseFilterWithOverrideBind by lazy {
+        @JvmField
+        val getMouseFilterWithOverrideBind =
             ObjectCalls.getMethodBind("Control", "get_mouse_filter_with_override", GET_MOUSE_FILTER_WITH_OVERRIDE_HASH)
-        }
 
         private const val SET_MOUSE_BEHAVIOR_RECURSIVE_HASH = 849284636L
-        private val setMouseBehaviorRecursiveBind by lazy {
+        @JvmField
+        val setMouseBehaviorRecursiveBind =
             ObjectCalls.getMethodBind("Control", "set_mouse_behavior_recursive", SET_MOUSE_BEHAVIOR_RECURSIVE_HASH)
-        }
 
         private const val GET_MOUSE_BEHAVIOR_RECURSIVE_HASH = 3779367402L
-        private val getMouseBehaviorRecursiveBind by lazy {
+        @JvmField
+        val getMouseBehaviorRecursiveBind =
             ObjectCalls.getMethodBind("Control", "get_mouse_behavior_recursive", GET_MOUSE_BEHAVIOR_RECURSIVE_HASH)
-        }
 
         private const val SET_FORCE_PASS_SCROLL_EVENTS_HASH = 2586408642L
-        private val setForcePassScrollEventsBind by lazy {
+        @JvmField
+        val setForcePassScrollEventsBind =
             ObjectCalls.getMethodBind("Control", "set_force_pass_scroll_events", SET_FORCE_PASS_SCROLL_EVENTS_HASH)
-        }
 
         private const val IS_FORCE_PASS_SCROLL_EVENTS_HASH = 36873697L
-        private val isForcePassScrollEventsBind by lazy {
+        @JvmField
+        val isForcePassScrollEventsBind =
             ObjectCalls.getMethodBind("Control", "is_force_pass_scroll_events", IS_FORCE_PASS_SCROLL_EVENTS_HASH)
-        }
 
         private const val SET_CLIP_CONTENTS_HASH = 2586408642L
-        private val setClipContentsBind by lazy {
+        @JvmField
+        val setClipContentsBind =
             ObjectCalls.getMethodBind("Control", "set_clip_contents", SET_CLIP_CONTENTS_HASH)
-        }
 
         private const val IS_CLIPPING_CONTENTS_HASH = 2240911060L
-        private val isClippingContentsBind by lazy {
+        @JvmField
+        val isClippingContentsBind =
             ObjectCalls.getMethodBind("Control", "is_clipping_contents", IS_CLIPPING_CONTENTS_HASH)
-        }
 
         private const val GRAB_CLICK_FOCUS_HASH = 3218959716L
-        private val grabClickFocusBind by lazy {
+        @JvmField
+        val grabClickFocusBind =
             ObjectCalls.getMethodBind("Control", "grab_click_focus", GRAB_CLICK_FOCUS_HASH)
-        }
 
         private const val SET_DRAG_FORWARDING_HASH = 1076571380L
-        private val setDragForwardingBind by lazy {
+        @JvmField
+        val setDragForwardingBind =
             ObjectCalls.getMethodBind("Control", "set_drag_forwarding", SET_DRAG_FORWARDING_HASH)
-        }
 
         private const val SET_DRAG_PREVIEW_HASH = 1496901182L
-        private val setDragPreviewBind by lazy {
+        @JvmField
+        val setDragPreviewBind =
             ObjectCalls.getMethodBind("Control", "set_drag_preview", SET_DRAG_PREVIEW_HASH)
-        }
 
         private const val IS_DRAG_SUCCESSFUL_HASH = 36873697L
-        private val isDragSuccessfulBind by lazy {
+        @JvmField
+        val isDragSuccessfulBind =
             ObjectCalls.getMethodBind("Control", "is_drag_successful", IS_DRAG_SUCCESSFUL_HASH)
-        }
 
         private const val WARP_MOUSE_HASH = 743155724L
-        private val warpMouseBind by lazy {
+        @JvmField
+        val warpMouseBind =
             ObjectCalls.getMethodBind("Control", "warp_mouse", WARP_MOUSE_HASH)
-        }
 
         private const val SET_SHORTCUT_CONTEXT_HASH = 1078189570L
-        private val setShortcutContextBind by lazy {
+        @JvmField
+        val setShortcutContextBind =
             ObjectCalls.getMethodBind("Control", "set_shortcut_context", SET_SHORTCUT_CONTEXT_HASH)
-        }
 
         private const val GET_SHORTCUT_CONTEXT_HASH = 3160264692L
-        private val getShortcutContextBind by lazy {
+        @JvmField
+        val getShortcutContextBind =
             ObjectCalls.getMethodBind("Control", "get_shortcut_context", GET_SHORTCUT_CONTEXT_HASH)
-        }
 
         private const val UPDATE_MAXIMUM_SIZE_HASH = 3218959716L
-        private val updateMaximumSizeBind by lazy {
+        @JvmField
+        val updateMaximumSizeBind =
             ObjectCalls.getMethodBind("Control", "update_maximum_size", UPDATE_MAXIMUM_SIZE_HASH)
-        }
 
         private const val UPDATE_MINIMUM_SIZE_HASH = 3218959716L
-        private val updateMinimumSizeBind by lazy {
+        @JvmField
+        val updateMinimumSizeBind =
             ObjectCalls.getMethodBind("Control", "update_minimum_size", UPDATE_MINIMUM_SIZE_HASH)
-        }
 
         private const val SET_LAYOUT_DIRECTION_HASH = 3310692370L
-        private val setLayoutDirectionBind by lazy {
+        @JvmField
+        val setLayoutDirectionBind =
             ObjectCalls.getMethodBind("Control", "set_layout_direction", SET_LAYOUT_DIRECTION_HASH)
-        }
 
         private const val GET_LAYOUT_DIRECTION_HASH = 1546772008L
-        private val getLayoutDirectionBind by lazy {
+        @JvmField
+        val getLayoutDirectionBind =
             ObjectCalls.getMethodBind("Control", "get_layout_direction", GET_LAYOUT_DIRECTION_HASH)
-        }
 
         private const val IS_LAYOUT_RTL_HASH = 36873697L
-        private val isLayoutRtlBind by lazy {
+        @JvmField
+        val isLayoutRtlBind =
             ObjectCalls.getMethodBind("Control", "is_layout_rtl", IS_LAYOUT_RTL_HASH)
-        }
 
         private const val SET_AUTO_TRANSLATE_HASH = 2586408642L
-        private val setAutoTranslateBind by lazy {
+        @JvmField
+        val setAutoTranslateBind =
             ObjectCalls.getMethodBind("Control", "set_auto_translate", SET_AUTO_TRANSLATE_HASH)
-        }
 
         private const val IS_AUTO_TRANSLATING_HASH = 36873697L
-        private val isAutoTranslatingBind by lazy {
+        @JvmField
+        val isAutoTranslatingBind =
             ObjectCalls.getMethodBind("Control", "is_auto_translating", IS_AUTO_TRANSLATING_HASH)
-        }
 
         private const val SET_LOCALIZE_NUMERAL_SYSTEM_HASH = 2586408642L
-        private val setLocalizeNumeralSystemBind by lazy {
+        @JvmField
+        val setLocalizeNumeralSystemBind =
             ObjectCalls.getMethodBind("Control", "set_localize_numeral_system", SET_LOCALIZE_NUMERAL_SYSTEM_HASH)
-        }
 
         private const val IS_LOCALIZING_NUMERAL_SYSTEM_HASH = 36873697L
-        private val isLocalizingNumeralSystemBind by lazy {
+        @JvmField
+        val isLocalizingNumeralSystemBind =
             ObjectCalls.getMethodBind("Control", "is_localizing_numeral_system", IS_LOCALIZING_NUMERAL_SYSTEM_HASH)
-        }
     }
 }

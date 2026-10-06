@@ -19,7 +19,5 @@ class VFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
 
         internal fun wrap(handle: RawSegment): VFlowContainer? =
             if (handle.address() == 0L) null else VFlowContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

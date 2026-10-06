@@ -22,7 +22,5 @@ class AudioEffectHighPassFilter(handle: GodotHandle) : AudioEffectFilter(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighPassFilter? =
             if (handle.address() == 0L) null else AudioEffectHighPassFilter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -43,7 +44,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getNameBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCapabilities(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCapabilitiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCapabilitiesBind, segment)
     }
 
     /**
@@ -64,7 +65,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPrimary(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPrimaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPrimaryBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPrimary(primary: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPrimaryBind, segment, primary)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPrimaryBind, segment, primary)
     }
 
     /**
@@ -84,7 +85,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isInitialized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInitializedBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun initialize(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(initializeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.initializeBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun uninitialize() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(uninitializeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.uninitializeBind, segment)
     }
 
     /**
@@ -128,7 +129,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSystemInfo(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSystemInfoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSystemInfoBind, segment)
     }
 
     /**
@@ -139,7 +140,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackingStatus(): XRInterface.TrackingStatus {
         checkOpen()
-        return XRInterface.TrackingStatus(ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, segment))
+        return XRInterface.TrackingStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackingStatusBind, segment))
     }
 
     /**
@@ -150,7 +151,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRenderTargetSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRenderTargetSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRenderTargetSizeBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun triggerHapticPulse(actionName: String, trackerName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(triggerHapticPulseBind, segment, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
+        ObjectCalls.ptrcallWithStringStringNameFourDoubleArgs(Binds.triggerHapticPulseBind, segment, actionName, trackerName, frequency, amplitude, durationSec, delaySec)
     }
 
     /**
@@ -186,7 +187,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun supportsPlayAreaMode(mode: XRInterface.PlayAreaMode): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, segment, mode.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.supportsPlayAreaModeBind, segment, mode.value)
     }
 
     /**
@@ -196,7 +197,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPlayAreaMode(): XRInterface.PlayAreaMode {
         checkOpen()
-        return XRInterface.PlayAreaMode(ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, segment))
+        return XRInterface.PlayAreaMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlayAreaModeBind, segment))
     }
 
     /**
@@ -206,7 +207,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPlayAreaMode(mode: XRInterface.PlayAreaMode): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, segment, mode.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.setPlayAreaModeBind, segment, mode.value)
     }
 
     /**
@@ -219,7 +220,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPlayArea(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPlayAreaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPlayAreaBind, segment)
     }
 
     /**
@@ -229,7 +230,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAnchorDetectionIsEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAnchorDetectionIsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAnchorDetectionIsEnabledBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAnchorDetectionIsEnabled(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAnchorDetectionIsEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAnchorDetectionIsEnabledBind, segment, enable)
     }
 
     /**
@@ -250,7 +251,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCameraFeedId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCameraFeedIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraFeedIdBind, segment)
     }
 
     /**
@@ -260,7 +261,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPassthroughSupported(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughSupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPassthroughSupportedBind, segment)
     }
 
     /**
@@ -270,7 +271,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPassthroughEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPassthroughEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPassthroughEnabledBind, segment)
     }
 
     /**
@@ -281,7 +282,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun startPassthrough(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(startPassthroughBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.startPassthroughBind, segment)
     }
 
     /**
@@ -291,7 +292,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stopPassthrough() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopPassthroughBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopPassthroughBind, segment)
     }
 
     /**
@@ -303,7 +304,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransformForView(view: Long, camTransform: Transform3D): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(getTransformForViewBind, segment, view, camTransform)
+        return ObjectCalls.ptrcallWithUInt32Transform3DArgsRetTransform3D(Binds.getTransformForViewBind, segment, view, camTransform)
     }
 
     /**
@@ -313,7 +314,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getProjectionForView(view: Long, aspect: Double, near: Double, far: Double): Projection {
         checkOpen()
-        return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(getProjectionForViewBind, segment, view, aspect, near, far)
+        return ObjectCalls.ptrcallWithUInt32ThreeDoubleArgsRetProjection(Binds.getProjectionForViewBind, segment, view, aspect, near, far)
     }
 
     /**
@@ -324,7 +325,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSupportedEnvironmentBlendModes(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getSupportedEnvironmentBlendModesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getSupportedEnvironmentBlendModesBind, segment)
     }
 
     /**
@@ -335,7 +336,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnvironmentBlendMode(mode: XRInterface.EnvironmentBlendMode): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, segment, mode.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.setEnvironmentBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -346,7 +347,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnvironmentBlendMode(): XRInterface.EnvironmentBlendMode {
         checkOpen()
-        return XRInterface.EnvironmentBlendMode(ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, segment))
+        return XRInterface.EnvironmentBlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEnvironmentBlendModeBind, segment))
     }
 
     /** Signal `play_area_changed(mode: int)`; see [TypedSignal]. */
@@ -586,145 +587,147 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRInterface? =
             if (handle.address() == 0L) null else XRInterface(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_NAME_HASH = 2002593661L
-        private val getNameBind by lazy {
+        @JvmField
+        val getNameBind =
             ObjectCalls.getMethodBind("XRInterface", "get_name", GET_NAME_HASH)
-        }
 
         private const val GET_CAPABILITIES_HASH = 3905245786L
-        private val getCapabilitiesBind by lazy {
+        @JvmField
+        val getCapabilitiesBind =
             ObjectCalls.getMethodBind("XRInterface", "get_capabilities", GET_CAPABILITIES_HASH)
-        }
 
         private const val IS_PRIMARY_HASH = 2240911060L
-        private val isPrimaryBind by lazy {
+        @JvmField
+        val isPrimaryBind =
             ObjectCalls.getMethodBind("XRInterface", "is_primary", IS_PRIMARY_HASH)
-        }
 
         private const val SET_PRIMARY_HASH = 2586408642L
-        private val setPrimaryBind by lazy {
+        @JvmField
+        val setPrimaryBind =
             ObjectCalls.getMethodBind("XRInterface", "set_primary", SET_PRIMARY_HASH)
-        }
 
         private const val IS_INITIALIZED_HASH = 36873697L
-        private val isInitializedBind by lazy {
+        @JvmField
+        val isInitializedBind =
             ObjectCalls.getMethodBind("XRInterface", "is_initialized", IS_INITIALIZED_HASH)
-        }
 
         private const val INITIALIZE_HASH = 2240911060L
-        private val initializeBind by lazy {
+        @JvmField
+        val initializeBind =
             ObjectCalls.getMethodBind("XRInterface", "initialize", INITIALIZE_HASH)
-        }
 
         private const val UNINITIALIZE_HASH = 3218959716L
-        private val uninitializeBind by lazy {
+        @JvmField
+        val uninitializeBind =
             ObjectCalls.getMethodBind("XRInterface", "uninitialize", UNINITIALIZE_HASH)
-        }
 
         private const val GET_SYSTEM_INFO_HASH = 2382534195L
-        private val getSystemInfoBind by lazy {
+        @JvmField
+        val getSystemInfoBind =
             ObjectCalls.getMethodBind("XRInterface", "get_system_info", GET_SYSTEM_INFO_HASH)
-        }
 
         private const val GET_TRACKING_STATUS_HASH = 167423259L
-        private val getTrackingStatusBind by lazy {
+        @JvmField
+        val getTrackingStatusBind =
             ObjectCalls.getMethodBind("XRInterface", "get_tracking_status", GET_TRACKING_STATUS_HASH)
-        }
 
         private const val GET_RENDER_TARGET_SIZE_HASH = 1497962370L
-        private val getRenderTargetSizeBind by lazy {
+        @JvmField
+        val getRenderTargetSizeBind =
             ObjectCalls.getMethodBind("XRInterface", "get_render_target_size", GET_RENDER_TARGET_SIZE_HASH)
-        }
 
         private const val GET_VIEW_COUNT_HASH = 2455072627L
-        private val getViewCountBind by lazy {
+        @JvmField
+        val getViewCountBind =
             ObjectCalls.getMethodBind("XRInterface", "get_view_count", GET_VIEW_COUNT_HASH)
-        }
 
         private const val TRIGGER_HAPTIC_PULSE_HASH = 3752640163L
-        private val triggerHapticPulseBind by lazy {
+        @JvmField
+        val triggerHapticPulseBind =
             ObjectCalls.getMethodBind("XRInterface", "trigger_haptic_pulse", TRIGGER_HAPTIC_PULSE_HASH)
-        }
 
         private const val SUPPORTS_PLAY_AREA_MODE_HASH = 3429955281L
-        private val supportsPlayAreaModeBind by lazy {
+        @JvmField
+        val supportsPlayAreaModeBind =
             ObjectCalls.getMethodBind("XRInterface", "supports_play_area_mode", SUPPORTS_PLAY_AREA_MODE_HASH)
-        }
 
         private const val GET_PLAY_AREA_MODE_HASH = 1615132885L
-        private val getPlayAreaModeBind by lazy {
+        @JvmField
+        val getPlayAreaModeBind =
             ObjectCalls.getMethodBind("XRInterface", "get_play_area_mode", GET_PLAY_AREA_MODE_HASH)
-        }
 
         private const val SET_PLAY_AREA_MODE_HASH = 3429955281L
-        private val setPlayAreaModeBind by lazy {
+        @JvmField
+        val setPlayAreaModeBind =
             ObjectCalls.getMethodBind("XRInterface", "set_play_area_mode", SET_PLAY_AREA_MODE_HASH)
-        }
 
         private const val GET_PLAY_AREA_HASH = 497664490L
-        private val getPlayAreaBind by lazy {
+        @JvmField
+        val getPlayAreaBind =
             ObjectCalls.getMethodBind("XRInterface", "get_play_area", GET_PLAY_AREA_HASH)
-        }
 
         private const val GET_ANCHOR_DETECTION_IS_ENABLED_HASH = 36873697L
-        private val getAnchorDetectionIsEnabledBind by lazy {
+        @JvmField
+        val getAnchorDetectionIsEnabledBind =
             ObjectCalls.getMethodBind("XRInterface", "get_anchor_detection_is_enabled", GET_ANCHOR_DETECTION_IS_ENABLED_HASH)
-        }
 
         private const val SET_ANCHOR_DETECTION_IS_ENABLED_HASH = 2586408642L
-        private val setAnchorDetectionIsEnabledBind by lazy {
+        @JvmField
+        val setAnchorDetectionIsEnabledBind =
             ObjectCalls.getMethodBind("XRInterface", "set_anchor_detection_is_enabled", SET_ANCHOR_DETECTION_IS_ENABLED_HASH)
-        }
 
         private const val GET_CAMERA_FEED_ID_HASH = 2455072627L
-        private val getCameraFeedIdBind by lazy {
+        @JvmField
+        val getCameraFeedIdBind =
             ObjectCalls.getMethodBind("XRInterface", "get_camera_feed_id", GET_CAMERA_FEED_ID_HASH)
-        }
 
         private const val IS_PASSTHROUGH_SUPPORTED_HASH = 2240911060L
-        private val isPassthroughSupportedBind by lazy {
+        @JvmField
+        val isPassthroughSupportedBind =
             ObjectCalls.getMethodBind("XRInterface", "is_passthrough_supported", IS_PASSTHROUGH_SUPPORTED_HASH)
-        }
 
         private const val IS_PASSTHROUGH_ENABLED_HASH = 2240911060L
-        private val isPassthroughEnabledBind by lazy {
+        @JvmField
+        val isPassthroughEnabledBind =
             ObjectCalls.getMethodBind("XRInterface", "is_passthrough_enabled", IS_PASSTHROUGH_ENABLED_HASH)
-        }
 
         private const val START_PASSTHROUGH_HASH = 2240911060L
-        private val startPassthroughBind by lazy {
+        @JvmField
+        val startPassthroughBind =
             ObjectCalls.getMethodBind("XRInterface", "start_passthrough", START_PASSTHROUGH_HASH)
-        }
 
         private const val STOP_PASSTHROUGH_HASH = 3218959716L
-        private val stopPassthroughBind by lazy {
+        @JvmField
+        val stopPassthroughBind =
             ObjectCalls.getMethodBind("XRInterface", "stop_passthrough", STOP_PASSTHROUGH_HASH)
-        }
 
         private const val GET_TRANSFORM_FOR_VIEW_HASH = 518934792L
-        private val getTransformForViewBind by lazy {
+        @JvmField
+        val getTransformForViewBind =
             ObjectCalls.getMethodBind("XRInterface", "get_transform_for_view", GET_TRANSFORM_FOR_VIEW_HASH)
-        }
 
         private const val GET_PROJECTION_FOR_VIEW_HASH = 3766090294L
-        private val getProjectionForViewBind by lazy {
+        @JvmField
+        val getProjectionForViewBind =
             ObjectCalls.getMethodBind("XRInterface", "get_projection_for_view", GET_PROJECTION_FOR_VIEW_HASH)
-        }
 
         private const val GET_SUPPORTED_ENVIRONMENT_BLEND_MODES_HASH = 2915620761L
-        private val getSupportedEnvironmentBlendModesBind by lazy {
+        @JvmField
+        val getSupportedEnvironmentBlendModesBind =
             ObjectCalls.getMethodBind("XRInterface", "get_supported_environment_blend_modes", GET_SUPPORTED_ENVIRONMENT_BLEND_MODES_HASH)
-        }
 
         private const val SET_ENVIRONMENT_BLEND_MODE_HASH = 551152418L
-        private val setEnvironmentBlendModeBind by lazy {
+        @JvmField
+        val setEnvironmentBlendModeBind =
             ObjectCalls.getMethodBind("XRInterface", "set_environment_blend_mode", SET_ENVIRONMENT_BLEND_MODE_HASH)
-        }
 
         private const val GET_ENVIRONMENT_BLEND_MODE_HASH = 1984334071L
-        private val getEnvironmentBlendModeBind by lazy {
+        @JvmField
+        val getEnvironmentBlendModeBind =
             ObjectCalls.getMethodBind("XRInterface", "get_environment_blend_mode", GET_ENVIRONMENT_BLEND_MODE_HASH)
-        }
     }
 }

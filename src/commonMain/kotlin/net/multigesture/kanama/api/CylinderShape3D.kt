@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -40,7 +41,7 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -60,7 +61,7 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     companion object {
@@ -73,25 +74,27 @@ class CylinderShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CylinderShape3D? =
             if (handle.address() == 0L) null else CylinderShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("CylinderShape3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("CylinderShape3D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("CylinderShape3D", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("CylinderShape3D", "get_height", GET_HEIGHT_HASH)
-        }
     }
 }

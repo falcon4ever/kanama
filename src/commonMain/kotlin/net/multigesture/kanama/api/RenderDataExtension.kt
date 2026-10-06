@@ -19,7 +19,5 @@ class RenderDataExtension(handle: GodotHandle) : RenderData(handle) {
 
         internal fun wrap(handle: RawSegment): RenderDataExtension? =
             if (handle.address() == 0L) null else RenderDataExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

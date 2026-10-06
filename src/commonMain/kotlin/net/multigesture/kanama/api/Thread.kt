@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,7 +23,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(callable: GodotCallable, priority: Thread.Priority = Thread.Priority.NORMAL): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, segment, callable.target.segment, callable.method, priority.value))
+        return GodotError(ObjectCalls.ptrcallWithCallableLongArgsRetLong(Binds.startBind, segment, callable.target.segment, callable.method, priority.value))
     }
 
     /**
@@ -33,7 +34,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getId(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIdBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isStarted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStartedBind, segment)
     }
 
     /**
@@ -57,7 +58,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isAlive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAliveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAliveBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
      */
     fun waitToFinish(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.waitToFinishBind, segment)
     }
 
     /**
@@ -123,7 +124,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: Thread.set_thread_safety_checks_enabled
          */
         fun setThreadSafetyChecksEnabled(enabled: Boolean) {
-            ObjectCalls.ptrcallWithBoolArg(setThreadSafetyChecksEnabledBind, NULL_SEGMENT, enabled)
+            ObjectCalls.ptrcallWithBoolArg(Binds.setThreadSafetyChecksEnabledBind, NULL_SEGMENT, enabled)
         }
 
         /**
@@ -133,7 +134,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: Thread.is_main_thread
          */
         fun isMainThread(): Boolean {
-            return ObjectCalls.ptrcallNoArgsRetBool(isMainThreadBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMainThreadBind, NULL_SEGMENT)
         }
 
         @JvmStatic
@@ -145,40 +146,42 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Thread? =
             if (handle.address() == 0L) null else Thread(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val START_HASH = 1327203254L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("Thread", "start", START_HASH)
-        }
 
         private const val GET_ID_HASH = 201670096L
-        private val getIdBind by lazy {
+        @JvmField
+        val getIdBind =
             ObjectCalls.getMethodBind("Thread", "get_id", GET_ID_HASH)
-        }
 
         private const val IS_STARTED_HASH = 36873697L
-        private val isStartedBind by lazy {
+        @JvmField
+        val isStartedBind =
             ObjectCalls.getMethodBind("Thread", "is_started", IS_STARTED_HASH)
-        }
 
         private const val IS_ALIVE_HASH = 36873697L
-        private val isAliveBind by lazy {
+        @JvmField
+        val isAliveBind =
             ObjectCalls.getMethodBind("Thread", "is_alive", IS_ALIVE_HASH)
-        }
 
         private const val WAIT_TO_FINISH_HASH = 1460262497L
-        private val waitToFinishBind by lazy {
+        @JvmField
+        val waitToFinishBind =
             ObjectCalls.getMethodBind("Thread", "wait_to_finish", WAIT_TO_FINISH_HASH)
-        }
 
         private const val SET_THREAD_SAFETY_CHECKS_ENABLED_HASH = 2586408642L
-        private val setThreadSafetyChecksEnabledBind by lazy {
+        @JvmField
+        val setThreadSafetyChecksEnabledBind =
             ObjectCalls.getMethodBind("Thread", "set_thread_safety_checks_enabled", SET_THREAD_SAFETY_CHECKS_ENABLED_HASH)
-        }
 
         private const val IS_MAIN_THREAD_HASH = 2240911060L
-        private val isMainThreadBind by lazy {
+        @JvmField
+        val isMainThreadBind =
             ObjectCalls.getMethodBind("Thread", "is_main_thread", IS_MAIN_THREAD_HASH)
-        }
     }
 }

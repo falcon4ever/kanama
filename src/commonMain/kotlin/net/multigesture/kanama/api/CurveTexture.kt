@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -34,7 +35,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -44,7 +45,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -54,7 +55,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
     }
 
     /**
@@ -65,7 +66,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setTextureMode(textureMode: CurveTexture.TextureMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, textureMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureModeBind, segment, textureMode.value)
     }
 
     /**
@@ -76,7 +77,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureMode(): CurveTexture.TextureMode {
         checkOpen()
-        return CurveTexture.TextureMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment))
+        return CurveTexture.TextureMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureModeBind, segment))
     }
 
     /**
@@ -115,30 +116,32 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CurveTexture? =
             if (handle.address() == 0L) null else CurveTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("CurveTexture", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val SET_CURVE_HASH = 270443179L
-        private val setCurveBind by lazy {
+        @JvmField
+        val setCurveBind =
             ObjectCalls.getMethodBind("CurveTexture", "set_curve", SET_CURVE_HASH)
-        }
 
         private const val GET_CURVE_HASH = 2460114913L
-        private val getCurveBind by lazy {
+        @JvmField
+        val getCurveBind =
             ObjectCalls.getMethodBind("CurveTexture", "get_curve", GET_CURVE_HASH)
-        }
 
         private const val SET_TEXTURE_MODE_HASH = 1321955367L
-        private val setTextureModeBind by lazy {
+        @JvmField
+        val setTextureModeBind =
             ObjectCalls.getMethodBind("CurveTexture", "set_texture_mode", SET_TEXTURE_MODE_HASH)
-        }
 
         private const val GET_TEXTURE_MODE_HASH = 715756376L
-        private val getTextureModeBind by lazy {
+        @JvmField
+        val getTextureModeBind =
             ObjectCalls.getMethodBind("CurveTexture", "get_texture_mode", GET_TEXTURE_MODE_HASH)
-        }
     }
 }

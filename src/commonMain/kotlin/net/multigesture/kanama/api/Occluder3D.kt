@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertices(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getVerticesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getVerticesBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getIndices(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
     }
 
     companion object {
@@ -41,15 +42,17 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Occluder3D? =
             if (handle.address() == 0L) null else Occluder3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_VERTICES_HASH = 497664490L
-        private val getVerticesBind by lazy {
+        @JvmField
+        val getVerticesBind =
             ObjectCalls.getMethodBind("Occluder3D", "get_vertices", GET_VERTICES_HASH)
-        }
 
         private const val GET_INDICES_HASH = 1930428628L
-        private val getIndicesBind by lazy {
+        @JvmField
+        val getIndicesBind =
             ObjectCalls.getMethodBind("Occluder3D", "get_indices", GET_INDICES_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -50,7 +51,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -60,7 +61,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_resolution
      */
     fun setResolution(resolution: GPUParticlesCollisionHeightField3D.Resolution) {
-        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setResolutionBind, segment, resolution.value)
     }
 
     /**
@@ -82,7 +83,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_resolution
      */
     fun getResolution(): GPUParticlesCollisionHeightField3D.Resolution {
-        return GPUParticlesCollisionHeightField3D.Resolution(ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment))
+        return GPUParticlesCollisionHeightField3D.Resolution(ObjectCalls.ptrcallNoArgsRetLong(Binds.getResolutionBind, segment))
     }
 
     /**
@@ -91,7 +92,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_update_mode
      */
     fun setUpdateMode(updateMode: GPUParticlesCollisionHeightField3D.UpdateMode) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, updateMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setUpdateModeBind, segment, updateMode.value)
     }
 
     /**
@@ -100,7 +101,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_update_mode
      */
     fun getUpdateMode(): GPUParticlesCollisionHeightField3D.UpdateMode {
-        return GPUParticlesCollisionHeightField3D.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment))
+        return GPUParticlesCollisionHeightField3D.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUpdateModeBind, segment))
     }
 
     /**
@@ -116,7 +117,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_heightfield_mask
      */
     fun setHeightfieldMask(heightfieldMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setHeightfieldMaskBind, segment, heightfieldMask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setHeightfieldMaskBind, segment, heightfieldMask)
     }
 
     /**
@@ -132,7 +133,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_heightfield_mask
      */
     fun getHeightfieldMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getHeightfieldMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getHeightfieldMaskBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_heightfield_mask_value
      */
     fun setHeightfieldMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setHeightfieldMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setHeightfieldMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -152,7 +153,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_heightfield_mask_value
      */
     fun getHeightfieldMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getHeightfieldMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getHeightfieldMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -165,7 +166,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_follow_camera_enabled
      */
     fun setFollowCameraEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowCameraEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFollowCameraEnabledBind, segment, enabled)
     }
 
     /**
@@ -178,7 +179,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.is_follow_camera_enabled
      */
     fun isFollowCameraEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFollowCameraEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFollowCameraEnabledBind, segment)
     }
 
     /**
@@ -275,65 +276,67 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
 
         internal fun wrap(handle: RawSegment): GPUParticlesCollisionHeightField3D? =
             if (handle.address() == 0L) null else GPUParticlesCollisionHeightField3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_RESOLUTION_HASH = 1009996517L
-        private val setResolutionBind by lazy {
+        @JvmField
+        val setResolutionBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "set_resolution", SET_RESOLUTION_HASH)
-        }
 
         private const val GET_RESOLUTION_HASH = 1156065644L
-        private val getResolutionBind by lazy {
+        @JvmField
+        val getResolutionBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "get_resolution", GET_RESOLUTION_HASH)
-        }
 
         private const val SET_UPDATE_MODE_HASH = 673680859L
-        private val setUpdateModeBind by lazy {
+        @JvmField
+        val setUpdateModeBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "set_update_mode", SET_UPDATE_MODE_HASH)
-        }
 
         private const val GET_UPDATE_MODE_HASH = 1998141380L
-        private val getUpdateModeBind by lazy {
+        @JvmField
+        val getUpdateModeBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "get_update_mode", GET_UPDATE_MODE_HASH)
-        }
 
         private const val SET_HEIGHTFIELD_MASK_HASH = 1286410249L
-        private val setHeightfieldMaskBind by lazy {
+        @JvmField
+        val setHeightfieldMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "set_heightfield_mask", SET_HEIGHTFIELD_MASK_HASH)
-        }
 
         private const val GET_HEIGHTFIELD_MASK_HASH = 3905245786L
-        private val getHeightfieldMaskBind by lazy {
+        @JvmField
+        val getHeightfieldMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "get_heightfield_mask", GET_HEIGHTFIELD_MASK_HASH)
-        }
 
         private const val SET_HEIGHTFIELD_MASK_VALUE_HASH = 300928843L
-        private val setHeightfieldMaskValueBind by lazy {
+        @JvmField
+        val setHeightfieldMaskValueBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "set_heightfield_mask_value", SET_HEIGHTFIELD_MASK_VALUE_HASH)
-        }
 
         private const val GET_HEIGHTFIELD_MASK_VALUE_HASH = 1116898809L
-        private val getHeightfieldMaskValueBind by lazy {
+        @JvmField
+        val getHeightfieldMaskValueBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "get_heightfield_mask_value", GET_HEIGHTFIELD_MASK_VALUE_HASH)
-        }
 
         private const val SET_FOLLOW_CAMERA_ENABLED_HASH = 2586408642L
-        private val setFollowCameraEnabledBind by lazy {
+        @JvmField
+        val setFollowCameraEnabledBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "set_follow_camera_enabled", SET_FOLLOW_CAMERA_ENABLED_HASH)
-        }
 
         private const val IS_FOLLOW_CAMERA_ENABLED_HASH = 36873697L
-        private val isFollowCameraEnabledBind by lazy {
+        @JvmField
+        val isFollowCameraEnabledBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionHeightField3D", "is_follow_camera_enabled", IS_FOLLOW_CAMERA_ENABLED_HASH)
-        }
     }
 }

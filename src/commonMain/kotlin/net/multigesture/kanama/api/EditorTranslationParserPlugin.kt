@@ -23,7 +23,5 @@ class EditorTranslationParserPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorTranslationParserPlugin? =
             if (handle.address() == 0L) null else EditorTranslationParserPlugin(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

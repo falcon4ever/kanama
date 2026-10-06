@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -11,11 +12,11 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) {
     fun getBindingModifier(): OpenXRBindingModifier? {
-        return OpenXRBindingModifier.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getBindingModifierBind, segment))
+        return OpenXRBindingModifier.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getBindingModifierBind, segment))
     }
 
     fun setup(actionMap: OpenXRActionMap?, bindingModifier: OpenXRBindingModifier?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, bindingModifier?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, bindingModifier?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /** Signal `binding_modifier_removed(binding_modifier_editor: Object)`; see [TypedSignal]. */
@@ -34,15 +35,17 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
 
         internal fun wrap(handle: RawSegment): OpenXRBindingModifierEditor? =
             if (handle.address() == 0L) null else OpenXRBindingModifierEditor(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_BINDING_MODIFIER_HASH = 2930765082L
-        private val getBindingModifierBind by lazy {
+        @JvmField
+        val getBindingModifierBind =
             ObjectCalls.getMethodBind("OpenXRBindingModifierEditor", "get_binding_modifier", GET_BINDING_MODIFIER_HASH)
-        }
 
         private const val SETUP_HASH = 1284787389L
-        private val setupBind by lazy {
+        @JvmField
+        val setupBind =
             ObjectCalls.getMethodBind("OpenXRBindingModifierEditor", "setup", SETUP_HASH)
-        }
     }
 }

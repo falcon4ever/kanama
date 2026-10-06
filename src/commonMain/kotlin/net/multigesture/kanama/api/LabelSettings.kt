@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -94,7 +95,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setLineSpacing(spacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, spacing)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, spacing)
     }
 
     /**
@@ -105,7 +106,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setParagraphSpacing(spacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setParagraphSpacingBind, segment, spacing)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setParagraphSpacingBind, segment, spacing)
     }
 
     /**
@@ -125,7 +126,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getParagraphSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getParagraphSpacingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getParagraphSpacingBind, segment)
     }
 
     /**
@@ -135,7 +136,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -145,7 +146,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
     }
 
     /**
@@ -155,7 +156,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setFontSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontSizeBind, segment, size)
     }
 
     /**
@@ -165,7 +166,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
     }
 
     /**
@@ -175,7 +176,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setFontColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setFontColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setFontColorBind, segment, color)
     }
 
     /**
@@ -185,7 +186,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getFontColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getFontColorBind, segment)
     }
 
     /**
@@ -195,7 +196,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setOutlineSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOutlineSizeBind, segment, size)
     }
 
     /**
@@ -205,7 +206,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutlineSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineSizeBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setOutlineColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setOutlineColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setOutlineColorBind, segment, color)
     }
 
     /**
@@ -225,7 +226,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutlineColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getOutlineColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getOutlineColorBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setShadowSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setShadowSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setShadowSizeBind, segment, size)
     }
 
     /**
@@ -245,7 +246,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getShadowSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getShadowSizeBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setShadowColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setShadowColorBind, segment, color)
     }
 
     /**
@@ -265,7 +266,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
     }
 
     /**
@@ -275,7 +276,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setShadowOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setShadowOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setShadowOffsetBind, segment, offset)
     }
 
     /**
@@ -285,7 +286,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getShadowOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getShadowOffsetBind, segment)
     }
 
     /**
@@ -295,7 +296,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedOutlineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStackedOutlineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStackedOutlineCountBind, segment)
     }
 
     /**
@@ -305,7 +306,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedOutlineCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStackedOutlineCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStackedOutlineCountBind, segment, count)
     }
 
     /**
@@ -316,7 +317,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun addStackedOutline(index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addStackedOutlineBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.addStackedOutlineBind, segment, index)
     }
 
     /**
@@ -327,7 +328,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun moveStackedOutline(fromIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveStackedOutlineBind, segment, fromIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveStackedOutlineBind, segment, fromIndex, toPosition)
     }
 
     /**
@@ -337,7 +338,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun removeStackedOutline(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeStackedOutlineBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeStackedOutlineBind, segment, index)
     }
 
     /**
@@ -347,7 +348,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedOutlineSize(index: Int, size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setStackedOutlineSizeBind, segment, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setStackedOutlineSizeBind, segment, index, size)
     }
 
     /**
@@ -357,7 +358,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedOutlineSize(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getStackedOutlineSizeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getStackedOutlineSizeBind, segment, index)
     }
 
     /**
@@ -367,7 +368,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedOutlineColor(index: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setStackedOutlineColorBind, segment, index, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setStackedOutlineColorBind, segment, index, color)
     }
 
     /**
@@ -377,7 +378,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedOutlineColor(index: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getStackedOutlineColorBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getStackedOutlineColorBind, segment, index)
     }
 
     /**
@@ -387,7 +388,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStackedShadowCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStackedShadowCountBind, segment)
     }
 
     /**
@@ -397,7 +398,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedShadowCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStackedShadowCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStackedShadowCountBind, segment, count)
     }
 
     /**
@@ -408,7 +409,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun addStackedShadow(index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addStackedShadowBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.addStackedShadowBind, segment, index)
     }
 
     /**
@@ -418,7 +419,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun moveStackedShadow(fromIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveStackedShadowBind, segment, fromIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveStackedShadowBind, segment, fromIndex, toPosition)
     }
 
     /**
@@ -428,7 +429,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun removeStackedShadow(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeStackedShadowBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeStackedShadowBind, segment, index)
     }
 
     /**
@@ -438,7 +439,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedShadowOffset(index: Int, offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setStackedShadowOffsetBind, segment, index, offset)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setStackedShadowOffsetBind, segment, index, offset)
     }
 
     /**
@@ -448,7 +449,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowOffset(index: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getStackedShadowOffsetBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getStackedShadowOffsetBind, segment, index)
     }
 
     /**
@@ -458,7 +459,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedShadowColor(index: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setStackedShadowColorBind, segment, index, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setStackedShadowColorBind, segment, index, color)
     }
 
     /**
@@ -468,7 +469,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowColor(index: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getStackedShadowColorBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getStackedShadowColorBind, segment, index)
     }
 
     /**
@@ -478,7 +479,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun setStackedShadowOutlineSize(index: Int, size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setStackedShadowOutlineSizeBind, segment, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setStackedShadowOutlineSizeBind, segment, index, size)
     }
 
     /**
@@ -488,7 +489,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getStackedShadowOutlineSize(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getStackedShadowOutlineSizeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getStackedShadowOutlineSizeBind, segment, index)
     }
 
     companion object {
@@ -501,205 +502,207 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): LabelSettings? =
             if (handle.address() == 0L) null else LabelSettings(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LINE_SPACING_HASH = 373806689L
-        private val setLineSpacingBind by lazy {
+        @JvmField
+        val setLineSpacingBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_line_spacing", SET_LINE_SPACING_HASH)
-        }
 
         private const val GET_LINE_SPACING_HASH = 1740695150L
-        private val getLineSpacingBind by lazy {
+        @JvmField
+        val getLineSpacingBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_line_spacing", GET_LINE_SPACING_HASH)
-        }
 
         private const val SET_PARAGRAPH_SPACING_HASH = 373806689L
-        private val setParagraphSpacingBind by lazy {
+        @JvmField
+        val setParagraphSpacingBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_paragraph_spacing", SET_PARAGRAPH_SPACING_HASH)
-        }
 
         private const val GET_PARAGRAPH_SPACING_HASH = 1740695150L
-        private val getParagraphSpacingBind by lazy {
+        @JvmField
+        val getParagraphSpacingBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_paragraph_spacing", GET_PARAGRAPH_SPACING_HASH)
-        }
 
         private const val SET_FONT_HASH = 1262170328L
-        private val setFontBind by lazy {
+        @JvmField
+        val setFontBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_font", SET_FONT_HASH)
-        }
 
         private const val GET_FONT_HASH = 3229501585L
-        private val getFontBind by lazy {
+        @JvmField
+        val getFontBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_font", GET_FONT_HASH)
-        }
 
         private const val SET_FONT_SIZE_HASH = 1286410249L
-        private val setFontSizeBind by lazy {
+        @JvmField
+        val setFontSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_font_size", SET_FONT_SIZE_HASH)
-        }
 
         private const val GET_FONT_SIZE_HASH = 3905245786L
-        private val getFontSizeBind by lazy {
+        @JvmField
+        val getFontSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_font_size", GET_FONT_SIZE_HASH)
-        }
 
         private const val SET_FONT_COLOR_HASH = 2920490490L
-        private val setFontColorBind by lazy {
+        @JvmField
+        val setFontColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_font_color", SET_FONT_COLOR_HASH)
-        }
 
         private const val GET_FONT_COLOR_HASH = 3444240500L
-        private val getFontColorBind by lazy {
+        @JvmField
+        val getFontColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_font_color", GET_FONT_COLOR_HASH)
-        }
 
         private const val SET_OUTLINE_SIZE_HASH = 1286410249L
-        private val setOutlineSizeBind by lazy {
+        @JvmField
+        val setOutlineSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_outline_size", SET_OUTLINE_SIZE_HASH)
-        }
 
         private const val GET_OUTLINE_SIZE_HASH = 3905245786L
-        private val getOutlineSizeBind by lazy {
+        @JvmField
+        val getOutlineSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_outline_size", GET_OUTLINE_SIZE_HASH)
-        }
 
         private const val SET_OUTLINE_COLOR_HASH = 2920490490L
-        private val setOutlineColorBind by lazy {
+        @JvmField
+        val setOutlineColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_outline_color", SET_OUTLINE_COLOR_HASH)
-        }
 
         private const val GET_OUTLINE_COLOR_HASH = 3444240500L
-        private val getOutlineColorBind by lazy {
+        @JvmField
+        val getOutlineColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_outline_color", GET_OUTLINE_COLOR_HASH)
-        }
 
         private const val SET_SHADOW_SIZE_HASH = 1286410249L
-        private val setShadowSizeBind by lazy {
+        @JvmField
+        val setShadowSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_shadow_size", SET_SHADOW_SIZE_HASH)
-        }
 
         private const val GET_SHADOW_SIZE_HASH = 3905245786L
-        private val getShadowSizeBind by lazy {
+        @JvmField
+        val getShadowSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_shadow_size", GET_SHADOW_SIZE_HASH)
-        }
 
         private const val SET_SHADOW_COLOR_HASH = 2920490490L
-        private val setShadowColorBind by lazy {
+        @JvmField
+        val setShadowColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_shadow_color", SET_SHADOW_COLOR_HASH)
-        }
 
         private const val GET_SHADOW_COLOR_HASH = 3444240500L
-        private val getShadowColorBind by lazy {
+        @JvmField
+        val getShadowColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_shadow_color", GET_SHADOW_COLOR_HASH)
-        }
 
         private const val SET_SHADOW_OFFSET_HASH = 743155724L
-        private val setShadowOffsetBind by lazy {
+        @JvmField
+        val setShadowOffsetBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_shadow_offset", SET_SHADOW_OFFSET_HASH)
-        }
 
         private const val GET_SHADOW_OFFSET_HASH = 3341600327L
-        private val getShadowOffsetBind by lazy {
+        @JvmField
+        val getShadowOffsetBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_shadow_offset", GET_SHADOW_OFFSET_HASH)
-        }
 
         private const val GET_STACKED_OUTLINE_COUNT_HASH = 3905245786L
-        private val getStackedOutlineCountBind by lazy {
+        @JvmField
+        val getStackedOutlineCountBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_outline_count", GET_STACKED_OUTLINE_COUNT_HASH)
-        }
 
         private const val SET_STACKED_OUTLINE_COUNT_HASH = 1286410249L
-        private val setStackedOutlineCountBind by lazy {
+        @JvmField
+        val setStackedOutlineCountBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_outline_count", SET_STACKED_OUTLINE_COUNT_HASH)
-        }
 
         private const val ADD_STACKED_OUTLINE_HASH = 1025054187L
-        private val addStackedOutlineBind by lazy {
+        @JvmField
+        val addStackedOutlineBind =
             ObjectCalls.getMethodBind("LabelSettings", "add_stacked_outline", ADD_STACKED_OUTLINE_HASH)
-        }
 
         private const val MOVE_STACKED_OUTLINE_HASH = 3937882851L
-        private val moveStackedOutlineBind by lazy {
+        @JvmField
+        val moveStackedOutlineBind =
             ObjectCalls.getMethodBind("LabelSettings", "move_stacked_outline", MOVE_STACKED_OUTLINE_HASH)
-        }
 
         private const val REMOVE_STACKED_OUTLINE_HASH = 1286410249L
-        private val removeStackedOutlineBind by lazy {
+        @JvmField
+        val removeStackedOutlineBind =
             ObjectCalls.getMethodBind("LabelSettings", "remove_stacked_outline", REMOVE_STACKED_OUTLINE_HASH)
-        }
 
         private const val SET_STACKED_OUTLINE_SIZE_HASH = 3937882851L
-        private val setStackedOutlineSizeBind by lazy {
+        @JvmField
+        val setStackedOutlineSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_outline_size", SET_STACKED_OUTLINE_SIZE_HASH)
-        }
 
         private const val GET_STACKED_OUTLINE_SIZE_HASH = 923996154L
-        private val getStackedOutlineSizeBind by lazy {
+        @JvmField
+        val getStackedOutlineSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_outline_size", GET_STACKED_OUTLINE_SIZE_HASH)
-        }
 
         private const val SET_STACKED_OUTLINE_COLOR_HASH = 2878471219L
-        private val setStackedOutlineColorBind by lazy {
+        @JvmField
+        val setStackedOutlineColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_outline_color", SET_STACKED_OUTLINE_COLOR_HASH)
-        }
 
         private const val GET_STACKED_OUTLINE_COLOR_HASH = 3457211756L
-        private val getStackedOutlineColorBind by lazy {
+        @JvmField
+        val getStackedOutlineColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_outline_color", GET_STACKED_OUTLINE_COLOR_HASH)
-        }
 
         private const val GET_STACKED_SHADOW_COUNT_HASH = 3905245786L
-        private val getStackedShadowCountBind by lazy {
+        @JvmField
+        val getStackedShadowCountBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_shadow_count", GET_STACKED_SHADOW_COUNT_HASH)
-        }
 
         private const val SET_STACKED_SHADOW_COUNT_HASH = 1286410249L
-        private val setStackedShadowCountBind by lazy {
+        @JvmField
+        val setStackedShadowCountBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_shadow_count", SET_STACKED_SHADOW_COUNT_HASH)
-        }
 
         private const val ADD_STACKED_SHADOW_HASH = 1025054187L
-        private val addStackedShadowBind by lazy {
+        @JvmField
+        val addStackedShadowBind =
             ObjectCalls.getMethodBind("LabelSettings", "add_stacked_shadow", ADD_STACKED_SHADOW_HASH)
-        }
 
         private const val MOVE_STACKED_SHADOW_HASH = 3937882851L
-        private val moveStackedShadowBind by lazy {
+        @JvmField
+        val moveStackedShadowBind =
             ObjectCalls.getMethodBind("LabelSettings", "move_stacked_shadow", MOVE_STACKED_SHADOW_HASH)
-        }
 
         private const val REMOVE_STACKED_SHADOW_HASH = 1286410249L
-        private val removeStackedShadowBind by lazy {
+        @JvmField
+        val removeStackedShadowBind =
             ObjectCalls.getMethodBind("LabelSettings", "remove_stacked_shadow", REMOVE_STACKED_SHADOW_HASH)
-        }
 
         private const val SET_STACKED_SHADOW_OFFSET_HASH = 163021252L
-        private val setStackedShadowOffsetBind by lazy {
+        @JvmField
+        val setStackedShadowOffsetBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_shadow_offset", SET_STACKED_SHADOW_OFFSET_HASH)
-        }
 
         private const val GET_STACKED_SHADOW_OFFSET_HASH = 2299179447L
-        private val getStackedShadowOffsetBind by lazy {
+        @JvmField
+        val getStackedShadowOffsetBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_shadow_offset", GET_STACKED_SHADOW_OFFSET_HASH)
-        }
 
         private const val SET_STACKED_SHADOW_COLOR_HASH = 2878471219L
-        private val setStackedShadowColorBind by lazy {
+        @JvmField
+        val setStackedShadowColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_shadow_color", SET_STACKED_SHADOW_COLOR_HASH)
-        }
 
         private const val GET_STACKED_SHADOW_COLOR_HASH = 3457211756L
-        private val getStackedShadowColorBind by lazy {
+        @JvmField
+        val getStackedShadowColorBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_shadow_color", GET_STACKED_SHADOW_COLOR_HASH)
-        }
 
         private const val SET_STACKED_SHADOW_OUTLINE_SIZE_HASH = 3937882851L
-        private val setStackedShadowOutlineSizeBind by lazy {
+        @JvmField
+        val setStackedShadowOutlineSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "set_stacked_shadow_outline_size", SET_STACKED_SHADOW_OUTLINE_SIZE_HASH)
-        }
 
         private const val GET_STACKED_SHADOW_OUTLINE_SIZE_HASH = 923996154L
-        private val getStackedShadowOutlineSizeBind by lazy {
+        @JvmField
+        val getStackedShadowOutlineSizeBind =
             ObjectCalls.getMethodBind("LabelSettings", "get_stacked_shadow_outline_size", GET_STACKED_SHADOW_OUTLINE_SIZE_HASH)
-        }
     }
 }

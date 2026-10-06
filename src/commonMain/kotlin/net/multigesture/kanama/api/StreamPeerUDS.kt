@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun bind(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(bindBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.bindBind, segment, path))
     }
 
     /**
@@ -29,7 +30,7 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun connectToHost(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.connectToHostBind, segment, path))
     }
 
     /**
@@ -39,7 +40,7 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getConnectedPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getConnectedPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedPathBind, segment)
     }
 
     companion object {
@@ -52,20 +53,22 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerUDS? =
             if (handle.address() == 0L) null else StreamPeerUDS(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val BIND_HASH = 166001499L
-        private val bindBind by lazy {
+        @JvmField
+        val bindBind =
             ObjectCalls.getMethodBind("StreamPeerUDS", "bind", BIND_HASH)
-        }
 
         private const val CONNECT_TO_HOST_HASH = 166001499L
-        private val connectToHostBind by lazy {
+        @JvmField
+        val connectToHostBind =
             ObjectCalls.getMethodBind("StreamPeerUDS", "connect_to_host", CONNECT_TO_HOST_HASH)
-        }
 
         private const val GET_CONNECTED_PATH_HASH = 201670096L
-        private val getConnectedPathBind by lazy {
+        @JvmField
+        val getConnectedPathBind =
             ObjectCalls.getMethodBind("StreamPeerUDS", "get_connected_path", GET_CONNECTED_PATH_HASH)
-        }
     }
 }

@@ -20,7 +20,5 @@ class VSplitContainer(handle: GodotHandle) : SplitContainer(handle) {
 
         internal fun wrap(handle: RawSegment): VSplitContainer? =
             if (handle.address() == 0L) null else VSplitContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

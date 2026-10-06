@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -42,7 +43,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(Binds.connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -52,7 +53,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setConnection(connection: StreamPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, segment, listOf(connection?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setConnectionBind, segment, listOf(connection?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -62,7 +63,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnection(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, segment))
+        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getConnectionBind, segment))
     }
 
     /**
@@ -77,7 +78,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun requestRaw(method: HTTPClient.Method, url: String, headers: List<String>, body: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(requestRawBind, segment, method.value, url, headers, body))
+        return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(Binds.requestRawBind, segment, method.value, url, headers, body))
     }
 
     /**
@@ -92,12 +93,12 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun request(method: HTTPClient.Method, url: String, headers: List<String>, body: String = ""): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(requestBind, segment, method.value, url, headers, body))
+        return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(Binds.requestBind, segment, method.value, url, headers, body))
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasResponse(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasResponseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasResponseBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isResponseChunked(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isResponseChunkedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResponseChunkedBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseCode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getResponseCodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getResponseCodeBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResponseHeadersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getResponseHeadersBind, segment)
     }
 
     /**
@@ -149,7 +150,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseHeadersAsDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getResponseHeadersAsDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getResponseHeadersAsDictionaryBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getResponseBodyLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getResponseBodyLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getResponseBodyLengthBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun readResponseBodyChunk(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(readResponseBodyChunkBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.readResponseBodyChunkBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setReadChunkSize(bytes: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setReadChunkSizeBind, segment, bytes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setReadChunkSizeBind, segment, bytes)
     }
 
     /**
@@ -194,7 +195,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getReadChunkSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReadChunkSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getReadChunkSizeBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBlockingMode(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBlockingModeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBlockingModeBind, segment, enabled)
     }
 
     /**
@@ -214,7 +215,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBlockingModeEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBlockingModeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBlockingModeEnabledBind, segment)
     }
 
     /**
@@ -224,7 +225,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStatus(): HTTPClient.Status {
         checkOpen()
-        return HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
+        return HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
     }
 
     /**
@@ -234,7 +235,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
     }
 
     /**
@@ -245,7 +246,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHttpProxy(host: String, port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpProxyBind, segment, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.setHttpProxyBind, segment, host, port)
     }
 
     /**
@@ -256,7 +257,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHttpsProxy(host: String, port: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, segment, host, port)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.setHttpsProxyBind, segment, host, port)
     }
 
     /**
@@ -267,7 +268,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun queryStringFromDict(fields: Map<String, Any?>): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetString(queryStringFromDictBind, segment, fields)
+        return ObjectCalls.ptrcallWithDictionaryArgRetString(Binds.queryStringFromDictBind, segment, fields)
     }
 
     /**
@@ -909,115 +910,117 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HTTPClient? =
             if (handle.address() == 0L) null else HTTPClient(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CONNECT_TO_HOST_HASH = 504540374L
-        private val connectToHostBind by lazy {
+        @JvmField
+        val connectToHostBind =
             ObjectCalls.getMethodBind("HTTPClient", "connect_to_host", CONNECT_TO_HOST_HASH)
-        }
 
         private const val SET_CONNECTION_HASH = 3281897016L
-        private val setConnectionBind by lazy {
+        @JvmField
+        val setConnectionBind =
             ObjectCalls.getMethodBind("HTTPClient", "set_connection", SET_CONNECTION_HASH)
-        }
 
         private const val GET_CONNECTION_HASH = 2741655269L
-        private val getConnectionBind by lazy {
+        @JvmField
+        val getConnectionBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_connection", GET_CONNECTION_HASH)
-        }
 
         private const val REQUEST_RAW_HASH = 540161961L
-        private val requestRawBind by lazy {
+        @JvmField
+        val requestRawBind =
             ObjectCalls.getMethodBind("HTTPClient", "request_raw", REQUEST_RAW_HASH)
-        }
 
         private const val REQUEST_HASH = 3778990155L
-        private val requestBind by lazy {
+        @JvmField
+        val requestBind =
             ObjectCalls.getMethodBind("HTTPClient", "request", REQUEST_HASH)
-        }
 
         private const val CLOSE_HASH = 3218959716L
-        private val closeConnectionBind by lazy {
+        @JvmField
+        val closeConnectionBind =
             ObjectCalls.getMethodBind("HTTPClient", "close", CLOSE_HASH)
-        }
 
         private const val HAS_RESPONSE_HASH = 36873697L
-        private val hasResponseBind by lazy {
+        @JvmField
+        val hasResponseBind =
             ObjectCalls.getMethodBind("HTTPClient", "has_response", HAS_RESPONSE_HASH)
-        }
 
         private const val IS_RESPONSE_CHUNKED_HASH = 36873697L
-        private val isResponseChunkedBind by lazy {
+        @JvmField
+        val isResponseChunkedBind =
             ObjectCalls.getMethodBind("HTTPClient", "is_response_chunked", IS_RESPONSE_CHUNKED_HASH)
-        }
 
         private const val GET_RESPONSE_CODE_HASH = 3905245786L
-        private val getResponseCodeBind by lazy {
+        @JvmField
+        val getResponseCodeBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_response_code", GET_RESPONSE_CODE_HASH)
-        }
 
         private const val GET_RESPONSE_HEADERS_HASH = 2981934095L
-        private val getResponseHeadersBind by lazy {
+        @JvmField
+        val getResponseHeadersBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_response_headers", GET_RESPONSE_HEADERS_HASH)
-        }
 
         private const val GET_RESPONSE_HEADERS_AS_DICTIONARY_HASH = 2382534195L
-        private val getResponseHeadersAsDictionaryBind by lazy {
+        @JvmField
+        val getResponseHeadersAsDictionaryBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_response_headers_as_dictionary", GET_RESPONSE_HEADERS_AS_DICTIONARY_HASH)
-        }
 
         private const val GET_RESPONSE_BODY_LENGTH_HASH = 3905245786L
-        private val getResponseBodyLengthBind by lazy {
+        @JvmField
+        val getResponseBodyLengthBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_response_body_length", GET_RESPONSE_BODY_LENGTH_HASH)
-        }
 
         private const val READ_RESPONSE_BODY_CHUNK_HASH = 2115431945L
-        private val readResponseBodyChunkBind by lazy {
+        @JvmField
+        val readResponseBodyChunkBind =
             ObjectCalls.getMethodBind("HTTPClient", "read_response_body_chunk", READ_RESPONSE_BODY_CHUNK_HASH)
-        }
 
         private const val SET_READ_CHUNK_SIZE_HASH = 1286410249L
-        private val setReadChunkSizeBind by lazy {
+        @JvmField
+        val setReadChunkSizeBind =
             ObjectCalls.getMethodBind("HTTPClient", "set_read_chunk_size", SET_READ_CHUNK_SIZE_HASH)
-        }
 
         private const val GET_READ_CHUNK_SIZE_HASH = 3905245786L
-        private val getReadChunkSizeBind by lazy {
+        @JvmField
+        val getReadChunkSizeBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_read_chunk_size", GET_READ_CHUNK_SIZE_HASH)
-        }
 
         private const val SET_BLOCKING_MODE_HASH = 2586408642L
-        private val setBlockingModeBind by lazy {
+        @JvmField
+        val setBlockingModeBind =
             ObjectCalls.getMethodBind("HTTPClient", "set_blocking_mode", SET_BLOCKING_MODE_HASH)
-        }
 
         private const val IS_BLOCKING_MODE_ENABLED_HASH = 36873697L
-        private val isBlockingModeEnabledBind by lazy {
+        @JvmField
+        val isBlockingModeEnabledBind =
             ObjectCalls.getMethodBind("HTTPClient", "is_blocking_mode_enabled", IS_BLOCKING_MODE_ENABLED_HASH)
-        }
 
         private const val GET_STATUS_HASH = 1426656811L
-        private val getStatusBind by lazy {
+        @JvmField
+        val getStatusBind =
             ObjectCalls.getMethodBind("HTTPClient", "get_status", GET_STATUS_HASH)
-        }
 
         private const val POLL_HASH = 166280745L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("HTTPClient", "poll", POLL_HASH)
-        }
 
         private const val SET_HTTP_PROXY_HASH = 2956805083L
-        private val setHttpProxyBind by lazy {
+        @JvmField
+        val setHttpProxyBind =
             ObjectCalls.getMethodBind("HTTPClient", "set_http_proxy", SET_HTTP_PROXY_HASH)
-        }
 
         private const val SET_HTTPS_PROXY_HASH = 2956805083L
-        private val setHttpsProxyBind by lazy {
+        @JvmField
+        val setHttpsProxyBind =
             ObjectCalls.getMethodBind("HTTPClient", "set_https_proxy", SET_HTTPS_PROXY_HASH)
-        }
 
         private const val QUERY_STRING_FROM_DICT_HASH = 2538086567L
-        private val queryStringFromDictBind by lazy {
+        @JvmField
+        val queryStringFromDictBind =
             ObjectCalls.getMethodBind("HTTPClient", "query_string_from_dict", QUERY_STRING_FROM_DICT_HASH)
-        }
     }
 }

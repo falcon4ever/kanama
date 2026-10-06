@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -33,7 +34,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setBufferLength(seconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, segment, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBufferLengthBind, segment, seconds)
     }
 
     /**
@@ -44,7 +45,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFftSize(size: AudioEffectSpectrumAnalyzer.FFTSize) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, segment, size.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFftSizeBind, segment, size.value)
     }
 
     /**
@@ -68,7 +69,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFftSize(): AudioEffectSpectrumAnalyzer.FFTSize {
         checkOpen()
-        return AudioEffectSpectrumAnalyzer.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment))
+        return AudioEffectSpectrumAnalyzer.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFftSizeBind, segment))
     }
 
     /**
@@ -134,25 +135,27 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectSpectrumAnalyzer? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BUFFER_LENGTH_HASH = 373806689L
-        private val setBufferLengthBind by lazy {
+        @JvmField
+        val setBufferLengthBind =
             ObjectCalls.getMethodBind("AudioEffectSpectrumAnalyzer", "set_buffer_length", SET_BUFFER_LENGTH_HASH)
-        }
 
         private const val GET_BUFFER_LENGTH_HASH = 1740695150L
-        private val getBufferLengthBind by lazy {
+        @JvmField
+        val getBufferLengthBind =
             ObjectCalls.getMethodBind("AudioEffectSpectrumAnalyzer", "get_buffer_length", GET_BUFFER_LENGTH_HASH)
-        }
 
         private const val SET_FFT_SIZE_HASH = 1202879215L
-        private val setFftSizeBind by lazy {
+        @JvmField
+        val setFftSizeBind =
             ObjectCalls.getMethodBind("AudioEffectSpectrumAnalyzer", "set_fft_size", SET_FFT_SIZE_HASH)
-        }
 
         private const val GET_FFT_SIZE_HASH = 3925405343L
-        private val getFftSizeBind by lazy {
+        @JvmField
+        val getFftSizeBind =
             ObjectCalls.getMethodBind("AudioEffectSpectrumAnalyzer", "get_fft_size", GET_FFT_SIZE_HASH)
-        }
     }
 }

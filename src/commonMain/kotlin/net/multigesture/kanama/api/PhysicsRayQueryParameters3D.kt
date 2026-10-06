@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -69,7 +70,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFrom(from: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setFromBind, segment, from)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setFromBind, segment, from)
     }
 
     /**
@@ -79,7 +80,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrom(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getFromBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getFromBind, segment)
     }
 
     /**
@@ -89,7 +90,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTo(to: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setToBind, segment, to)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setToBind, segment, to)
     }
 
     /**
@@ -99,7 +100,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTo(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getToBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getToBind, segment)
     }
 
     /**
@@ -112,7 +113,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCollisionMask(collisionMask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, collisionMask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, collisionMask)
     }
 
     /**
@@ -125,7 +126,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setExclude(exclude: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
+        ObjectCalls.ptrcallWithRIDListArg(Binds.setExcludeBind, segment, exclude)
     }
 
     /**
@@ -151,7 +152,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExclude(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getExcludeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getExcludeBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCollideWithBodies(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -171,7 +172,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCollideWithBodiesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCollideWithAreas(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -191,7 +192,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isCollideWithAreasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithAreasEnabledBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHitFromInside(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHitFromInsideBind, segment, enable)
     }
 
     /**
@@ -213,7 +214,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isHitFromInsideEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHitFromInsideEnabledBind, segment)
     }
 
     /**
@@ -224,7 +225,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHitBackFaces(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHitBackFacesBind, segment, enable)
     }
 
     /**
@@ -235,7 +236,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isHitBackFacesEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHitBackFacesEnabledBind, segment)
     }
 
     companion object {
@@ -246,7 +247,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: PhysicsRayQueryParameters3D.create
          */
         fun create(from: Vector3, to: Vector3, collisionMask: Long = 4294967295L, exclude: List<RID>): PhysicsRayQueryParameters3D? {
-            return PhysicsRayQueryParameters3D.wrapOwned(ObjectCalls.ptrcallWithTwoVector3UInt32RIDListArgsRetObject(createBind, NULL_SEGMENT, from, to, collisionMask, exclude))
+            return PhysicsRayQueryParameters3D.wrapOwned(ObjectCalls.ptrcallWithTwoVector3UInt32RIDListArgsRetObject(Binds.createBind, NULL_SEGMENT, from, to, collisionMask, exclude))
         }
 
         @JvmStatic
@@ -258,90 +259,92 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsRayQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_HASH = 3110599579L
-        private val createBind by lazy {
+        @JvmField
+        val createBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "create", CREATE_HASH)
-        }
 
         private const val SET_FROM_HASH = 3460891852L
-        private val setFromBind by lazy {
+        @JvmField
+        val setFromBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_from", SET_FROM_HASH)
-        }
 
         private const val GET_FROM_HASH = 3360562783L
-        private val getFromBind by lazy {
+        @JvmField
+        val getFromBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_from", GET_FROM_HASH)
-        }
 
         private const val SET_TO_HASH = 3460891852L
-        private val setToBind by lazy {
+        @JvmField
+        val setToBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_to", SET_TO_HASH)
-        }
 
         private const val GET_TO_HASH = 3360562783L
-        private val getToBind by lazy {
+        @JvmField
+        val getToBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_to", GET_TO_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val SET_EXCLUDE_HASH = 381264803L
-        private val setExcludeBind by lazy {
+        @JvmField
+        val setExcludeBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_exclude", SET_EXCLUDE_HASH)
-        }
 
         private const val GET_EXCLUDE_HASH = 3995934104L
-        private val getExcludeBind by lazy {
+        @JvmField
+        val getExcludeBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "get_exclude", GET_EXCLUDE_HASH)
-        }
 
         private const val SET_COLLIDE_WITH_BODIES_HASH = 2586408642L
-        private val setCollideWithBodiesBind by lazy {
+        @JvmField
+        val setCollideWithBodiesBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_collide_with_bodies", SET_COLLIDE_WITH_BODIES_HASH)
-        }
 
         private const val IS_COLLIDE_WITH_BODIES_ENABLED_HASH = 36873697L
-        private val isCollideWithBodiesEnabledBind by lazy {
+        @JvmField
+        val isCollideWithBodiesEnabledBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_collide_with_bodies_enabled", IS_COLLIDE_WITH_BODIES_ENABLED_HASH)
-        }
 
         private const val SET_COLLIDE_WITH_AREAS_HASH = 2586408642L
-        private val setCollideWithAreasBind by lazy {
+        @JvmField
+        val setCollideWithAreasBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_collide_with_areas", SET_COLLIDE_WITH_AREAS_HASH)
-        }
 
         private const val IS_COLLIDE_WITH_AREAS_ENABLED_HASH = 36873697L
-        private val isCollideWithAreasEnabledBind by lazy {
+        @JvmField
+        val isCollideWithAreasEnabledBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_collide_with_areas_enabled", IS_COLLIDE_WITH_AREAS_ENABLED_HASH)
-        }
 
         private const val SET_HIT_FROM_INSIDE_HASH = 2586408642L
-        private val setHitFromInsideBind by lazy {
+        @JvmField
+        val setHitFromInsideBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_hit_from_inside", SET_HIT_FROM_INSIDE_HASH)
-        }
 
         private const val IS_HIT_FROM_INSIDE_ENABLED_HASH = 36873697L
-        private val isHitFromInsideEnabledBind by lazy {
+        @JvmField
+        val isHitFromInsideEnabledBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_hit_from_inside_enabled", IS_HIT_FROM_INSIDE_ENABLED_HASH)
-        }
 
         private const val SET_HIT_BACK_FACES_HASH = 2586408642L
-        private val setHitBackFacesBind by lazy {
+        @JvmField
+        val setHitBackFacesBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_hit_back_faces", SET_HIT_BACK_FACES_HASH)
-        }
 
         private const val IS_HIT_BACK_FACES_ENABLED_HASH = 36873697L
-        private val isHitBackFacesEnabledBind by lazy {
+        @JvmField
+        val isHitBackFacesEnabledBind =
             ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "is_hit_back_faces_enabled", IS_HIT_BACK_FACES_ENABLED_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOptionValue(name: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getOptionValueBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getOptionValueBind, segment, name)
     }
 
     /**
@@ -30,7 +31,7 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addImportOption(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, segment, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(Binds.addImportOptionBind, segment, name, value)
     }
 
     /**
@@ -41,7 +42,7 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addImportOptionAdvanced(type: VariantType, name: String, defaultValue: Any?, hint: GodotPropertyHint = GodotPropertyHint.NONE, hintString: String = "", usageFlags: Int = 6) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
+        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(Binds.addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
     }
 
     /**
@@ -75,20 +76,22 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScenePostImportPlugin? =
             if (handle.address() == 0L) null else EditorScenePostImportPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_OPTION_VALUE_HASH = 2760726917L
-        private val getOptionValueBind by lazy {
+        @JvmField
+        val getOptionValueBind =
             ObjectCalls.getMethodBind("EditorScenePostImportPlugin", "get_option_value", GET_OPTION_VALUE_HASH)
-        }
 
         private const val ADD_IMPORT_OPTION_HASH = 402577236L
-        private val addImportOptionBind by lazy {
+        @JvmField
+        val addImportOptionBind =
             ObjectCalls.getMethodBind("EditorScenePostImportPlugin", "add_import_option", ADD_IMPORT_OPTION_HASH)
-        }
 
         private const val ADD_IMPORT_OPTION_ADVANCED_HASH = 3674075649L
-        private val addImportOptionAdvancedBind by lazy {
+        @JvmField
+        val addImportOptionAdvancedBind =
             ObjectCalls.getMethodBind("EditorScenePostImportPlugin", "add_import_option_advanced", ADD_IMPORT_OPTION_ADVANCED_HASH)
-        }
     }
 }

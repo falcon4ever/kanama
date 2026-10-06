@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -25,7 +26,7 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setBlendMode(blendMode: BlitMaterial.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, blendMode.value)
     }
 
     /**
@@ -35,7 +36,7 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getBlendMode(): BlitMaterial.BlendMode {
         checkOpen()
-        return BlitMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
+        return BlitMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
     }
 
     /**
@@ -90,15 +91,17 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): BlitMaterial? =
             if (handle.address() == 0L) null else BlitMaterial(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BLEND_MODE_HASH = 80206916L
-        private val setBlendModeBind by lazy {
+        @JvmField
+        val setBlendModeBind =
             ObjectCalls.getMethodBind("BlitMaterial", "set_blend_mode", SET_BLEND_MODE_HASH)
-        }
 
         private const val GET_BLEND_MODE_HASH = 4234246416L
-        private val getBlendModeBind by lazy {
+        @JvmField
+        val getBlendModeBind =
             ObjectCalls.getMethodBind("BlitMaterial", "get_blend_mode", GET_BLEND_MODE_HASH)
-        }
     }
 }

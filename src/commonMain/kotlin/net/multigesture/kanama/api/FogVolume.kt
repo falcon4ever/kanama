@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -47,7 +48,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -66,7 +67,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -78,7 +79,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_shape
      */
     fun setShape(shape: RenderingServer.FogVolumeShape) {
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setShapeBind, segment, shape.value)
     }
 
     /**
@@ -90,7 +91,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_shape
      */
     fun getShape(): RenderingServer.FogVolumeShape {
-        return RenderingServer.FogVolumeShape(ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment))
+        return RenderingServer.FogVolumeShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShapeBind, segment))
     }
 
     /**
@@ -100,7 +101,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -110,7 +111,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     companion object {
@@ -120,35 +121,37 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): FogVolume? =
             if (handle.address() == 0L) null else FogVolume(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("FogVolume", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("FogVolume", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SHAPE_HASH = 1416323362L
-        private val setShapeBind by lazy {
+        @JvmField
+        val setShapeBind =
             ObjectCalls.getMethodBind("FogVolume", "set_shape", SET_SHAPE_HASH)
-        }
 
         private const val GET_SHAPE_HASH = 3920334604L
-        private val getShapeBind by lazy {
+        @JvmField
+        val getShapeBind =
             ObjectCalls.getMethodBind("FogVolume", "get_shape", GET_SHAPE_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("FogVolume", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("FogVolume", "get_material", GET_MATERIAL_HASH)
-        }
     }
 }

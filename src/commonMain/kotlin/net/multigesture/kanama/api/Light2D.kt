@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -109,7 +110,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -118,7 +119,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_editor_only
      */
     fun setEditorOnly(editorOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, editorOnly)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditorOnlyBind, segment, editorOnly)
     }
 
     /**
@@ -136,7 +137,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.is_editor_only
      */
     fun isEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditorOnlyBind, segment)
     }
 
     /**
@@ -145,7 +146,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -154,7 +155,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -163,7 +164,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_energy
      */
     fun setEnergy(energy: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyBind, segment, energy)
     }
 
     /**
@@ -172,7 +173,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_energy
      */
     fun getEnergy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_z_range_min
      */
     fun setZRangeMin(z: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZRangeMinBind, segment, z)
+        ObjectCalls.ptrcallWithIntArg(Binds.setZRangeMinBind, segment, z)
     }
 
     /**
@@ -190,7 +191,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_z_range_min
      */
     fun getZRangeMin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZRangeMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getZRangeMinBind, segment)
     }
 
     /**
@@ -199,7 +200,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_z_range_max
      */
     fun setZRangeMax(z: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZRangeMaxBind, segment, z)
+        ObjectCalls.ptrcallWithIntArg(Binds.setZRangeMaxBind, segment, z)
     }
 
     /**
@@ -208,7 +209,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_z_range_max
      */
     fun getZRangeMax(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZRangeMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getZRangeMaxBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_layer_range_min
      */
     fun setLayerRangeMin(layer: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLayerRangeMinBind, segment, layer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLayerRangeMinBind, segment, layer)
     }
 
     /**
@@ -226,7 +227,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_layer_range_min
      */
     fun getLayerRangeMin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayerRangeMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLayerRangeMinBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_layer_range_max
      */
     fun setLayerRangeMax(layer: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLayerRangeMaxBind, segment, layer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLayerRangeMaxBind, segment, layer)
     }
 
     /**
@@ -244,7 +245,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_layer_range_max
      */
     fun getLayerRangeMax(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLayerRangeMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLayerRangeMaxBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_item_cull_mask
      */
     fun setItemCullMask(itemCullMask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCullMaskBind, segment, itemCullMask)
+        ObjectCalls.ptrcallWithIntArg(Binds.setItemCullMaskBind, segment, itemCullMask)
     }
 
     /**
@@ -268,7 +269,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_item_cull_mask
      */
     fun getItemCullMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCullMaskBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_item_shadow_cull_mask
      */
     fun setItemShadowCullMask(itemShadowCullMask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemShadowCullMaskBind, segment, itemShadowCullMask)
+        ObjectCalls.ptrcallWithIntArg(Binds.setItemShadowCullMaskBind, segment, itemShadowCullMask)
     }
 
     /**
@@ -290,7 +291,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_item_shadow_cull_mask
      */
     fun getItemShadowCullMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemShadowCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemShadowCullMaskBind, segment)
     }
 
     /**
@@ -299,7 +300,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_enabled
      */
     fun setShadowEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShadowEnabledBind, segment, enabled)
     }
 
     /**
@@ -308,7 +309,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.is_shadow_enabled
      */
     fun isShadowEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShadowEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShadowEnabledBind, segment)
     }
 
     /**
@@ -319,7 +320,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_smooth
      */
     fun setShadowSmooth(smooth: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setShadowSmoothBind, segment, smooth)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setShadowSmoothBind, segment, smooth)
     }
 
     /**
@@ -330,7 +331,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_shadow_smooth
      */
     fun getShadowSmooth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getShadowSmoothBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getShadowSmoothBind, segment)
     }
 
     /**
@@ -339,7 +340,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_filter
      */
     fun setShadowFilter(filter: Light2D.ShadowFilter) {
-        ObjectCalls.ptrcallWithLongArg(setShadowFilterBind, segment, filter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setShadowFilterBind, segment, filter.value)
     }
 
     /**
@@ -348,7 +349,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_shadow_filter
      */
     fun getShadowFilter(): Light2D.ShadowFilter {
-        return Light2D.ShadowFilter(ObjectCalls.ptrcallNoArgsRetLong(getShadowFilterBind, segment))
+        return Light2D.ShadowFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShadowFilterBind, segment))
     }
 
     /**
@@ -357,7 +358,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_shadow_color
      */
     fun setShadowColor(shadowColor: Color) {
-        ObjectCalls.ptrcallWithColorArg(setShadowColorBind, segment, shadowColor)
+        ObjectCalls.ptrcallWithColorArg(Binds.setShadowColorBind, segment, shadowColor)
     }
 
     /**
@@ -366,7 +367,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_shadow_color
      */
     fun getShadowColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getShadowColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getShadowColorBind, segment)
     }
 
     /**
@@ -375,7 +376,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_blend_mode
      */
     fun setBlendMode(mode: Light2D.BlendMode) {
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -384,7 +385,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_blend_mode
      */
     fun getBlendMode(): Light2D.BlendMode {
-        return Light2D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
+        return Light2D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
     }
 
     /**
@@ -394,7 +395,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.set_height
      */
     fun setHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -404,7 +405,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Light2D.get_height
      */
     fun getHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     /**
@@ -480,165 +481,167 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Light2D? =
             if (handle.address() == 0L) null else Light2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("Light2D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("Light2D", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_EDITOR_ONLY_HASH = 2586408642L
-        private val setEditorOnlyBind by lazy {
+        @JvmField
+        val setEditorOnlyBind =
             ObjectCalls.getMethodBind("Light2D", "set_editor_only", SET_EDITOR_ONLY_HASH)
-        }
 
         private const val IS_EDITOR_ONLY_HASH = 36873697L
-        private val isEditorOnlyBind by lazy {
+        @JvmField
+        val isEditorOnlyBind =
             ObjectCalls.getMethodBind("Light2D", "is_editor_only", IS_EDITOR_ONLY_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("Light2D", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("Light2D", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_ENERGY_HASH = 373806689L
-        private val setEnergyBind by lazy {
+        @JvmField
+        val setEnergyBind =
             ObjectCalls.getMethodBind("Light2D", "set_energy", SET_ENERGY_HASH)
-        }
 
         private const val GET_ENERGY_HASH = 1740695150L
-        private val getEnergyBind by lazy {
+        @JvmField
+        val getEnergyBind =
             ObjectCalls.getMethodBind("Light2D", "get_energy", GET_ENERGY_HASH)
-        }
 
         private const val SET_Z_RANGE_MIN_HASH = 1286410249L
-        private val setZRangeMinBind by lazy {
+        @JvmField
+        val setZRangeMinBind =
             ObjectCalls.getMethodBind("Light2D", "set_z_range_min", SET_Z_RANGE_MIN_HASH)
-        }
 
         private const val GET_Z_RANGE_MIN_HASH = 3905245786L
-        private val getZRangeMinBind by lazy {
+        @JvmField
+        val getZRangeMinBind =
             ObjectCalls.getMethodBind("Light2D", "get_z_range_min", GET_Z_RANGE_MIN_HASH)
-        }
 
         private const val SET_Z_RANGE_MAX_HASH = 1286410249L
-        private val setZRangeMaxBind by lazy {
+        @JvmField
+        val setZRangeMaxBind =
             ObjectCalls.getMethodBind("Light2D", "set_z_range_max", SET_Z_RANGE_MAX_HASH)
-        }
 
         private const val GET_Z_RANGE_MAX_HASH = 3905245786L
-        private val getZRangeMaxBind by lazy {
+        @JvmField
+        val getZRangeMaxBind =
             ObjectCalls.getMethodBind("Light2D", "get_z_range_max", GET_Z_RANGE_MAX_HASH)
-        }
 
         private const val SET_LAYER_RANGE_MIN_HASH = 1286410249L
-        private val setLayerRangeMinBind by lazy {
+        @JvmField
+        val setLayerRangeMinBind =
             ObjectCalls.getMethodBind("Light2D", "set_layer_range_min", SET_LAYER_RANGE_MIN_HASH)
-        }
 
         private const val GET_LAYER_RANGE_MIN_HASH = 3905245786L
-        private val getLayerRangeMinBind by lazy {
+        @JvmField
+        val getLayerRangeMinBind =
             ObjectCalls.getMethodBind("Light2D", "get_layer_range_min", GET_LAYER_RANGE_MIN_HASH)
-        }
 
         private const val SET_LAYER_RANGE_MAX_HASH = 1286410249L
-        private val setLayerRangeMaxBind by lazy {
+        @JvmField
+        val setLayerRangeMaxBind =
             ObjectCalls.getMethodBind("Light2D", "set_layer_range_max", SET_LAYER_RANGE_MAX_HASH)
-        }
 
         private const val GET_LAYER_RANGE_MAX_HASH = 3905245786L
-        private val getLayerRangeMaxBind by lazy {
+        @JvmField
+        val getLayerRangeMaxBind =
             ObjectCalls.getMethodBind("Light2D", "get_layer_range_max", GET_LAYER_RANGE_MAX_HASH)
-        }
 
         private const val SET_ITEM_CULL_MASK_HASH = 1286410249L
-        private val setItemCullMaskBind by lazy {
+        @JvmField
+        val setItemCullMaskBind =
             ObjectCalls.getMethodBind("Light2D", "set_item_cull_mask", SET_ITEM_CULL_MASK_HASH)
-        }
 
         private const val GET_ITEM_CULL_MASK_HASH = 3905245786L
-        private val getItemCullMaskBind by lazy {
+        @JvmField
+        val getItemCullMaskBind =
             ObjectCalls.getMethodBind("Light2D", "get_item_cull_mask", GET_ITEM_CULL_MASK_HASH)
-        }
 
         private const val SET_ITEM_SHADOW_CULL_MASK_HASH = 1286410249L
-        private val setItemShadowCullMaskBind by lazy {
+        @JvmField
+        val setItemShadowCullMaskBind =
             ObjectCalls.getMethodBind("Light2D", "set_item_shadow_cull_mask", SET_ITEM_SHADOW_CULL_MASK_HASH)
-        }
 
         private const val GET_ITEM_SHADOW_CULL_MASK_HASH = 3905245786L
-        private val getItemShadowCullMaskBind by lazy {
+        @JvmField
+        val getItemShadowCullMaskBind =
             ObjectCalls.getMethodBind("Light2D", "get_item_shadow_cull_mask", GET_ITEM_SHADOW_CULL_MASK_HASH)
-        }
 
         private const val SET_SHADOW_ENABLED_HASH = 2586408642L
-        private val setShadowEnabledBind by lazy {
+        @JvmField
+        val setShadowEnabledBind =
             ObjectCalls.getMethodBind("Light2D", "set_shadow_enabled", SET_SHADOW_ENABLED_HASH)
-        }
 
         private const val IS_SHADOW_ENABLED_HASH = 36873697L
-        private val isShadowEnabledBind by lazy {
+        @JvmField
+        val isShadowEnabledBind =
             ObjectCalls.getMethodBind("Light2D", "is_shadow_enabled", IS_SHADOW_ENABLED_HASH)
-        }
 
         private const val SET_SHADOW_SMOOTH_HASH = 373806689L
-        private val setShadowSmoothBind by lazy {
+        @JvmField
+        val setShadowSmoothBind =
             ObjectCalls.getMethodBind("Light2D", "set_shadow_smooth", SET_SHADOW_SMOOTH_HASH)
-        }
 
         private const val GET_SHADOW_SMOOTH_HASH = 1740695150L
-        private val getShadowSmoothBind by lazy {
+        @JvmField
+        val getShadowSmoothBind =
             ObjectCalls.getMethodBind("Light2D", "get_shadow_smooth", GET_SHADOW_SMOOTH_HASH)
-        }
 
         private const val SET_SHADOW_FILTER_HASH = 3209356555L
-        private val setShadowFilterBind by lazy {
+        @JvmField
+        val setShadowFilterBind =
             ObjectCalls.getMethodBind("Light2D", "set_shadow_filter", SET_SHADOW_FILTER_HASH)
-        }
 
         private const val GET_SHADOW_FILTER_HASH = 1973619177L
-        private val getShadowFilterBind by lazy {
+        @JvmField
+        val getShadowFilterBind =
             ObjectCalls.getMethodBind("Light2D", "get_shadow_filter", GET_SHADOW_FILTER_HASH)
-        }
 
         private const val SET_SHADOW_COLOR_HASH = 2920490490L
-        private val setShadowColorBind by lazy {
+        @JvmField
+        val setShadowColorBind =
             ObjectCalls.getMethodBind("Light2D", "set_shadow_color", SET_SHADOW_COLOR_HASH)
-        }
 
         private const val GET_SHADOW_COLOR_HASH = 3444240500L
-        private val getShadowColorBind by lazy {
+        @JvmField
+        val getShadowColorBind =
             ObjectCalls.getMethodBind("Light2D", "get_shadow_color", GET_SHADOW_COLOR_HASH)
-        }
 
         private const val SET_BLEND_MODE_HASH = 2916638796L
-        private val setBlendModeBind by lazy {
+        @JvmField
+        val setBlendModeBind =
             ObjectCalls.getMethodBind("Light2D", "set_blend_mode", SET_BLEND_MODE_HASH)
-        }
 
         private const val GET_BLEND_MODE_HASH = 936255250L
-        private val getBlendModeBind by lazy {
+        @JvmField
+        val getBlendModeBind =
             ObjectCalls.getMethodBind("Light2D", "get_blend_mode", GET_BLEND_MODE_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("Light2D", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("Light2D", "get_height", GET_HEIGHT_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -38,7 +39,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setup() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setupBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setupBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun execute(delta: Double, executionMode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleAndIntArgs(executeBind, segment, delta, executionMode)
+        ObjectCalls.ptrcallWithDoubleAndIntArgs(Binds.executeBind, segment, delta, executionMode)
     }
 
     /**
@@ -61,7 +62,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun enableAllModifications(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(enableAllModificationsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.enableAllModificationsBind, segment, enabled)
     }
 
     /**
@@ -71,7 +72,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getModification(modIdx: Int): SkeletonModification2D? {
         checkOpen()
-        return SkeletonModification2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, segment, modIdx))
+        return SkeletonModification2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getModificationBind, segment, modIdx))
     }
 
     /**
@@ -81,7 +82,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun addModification(modification: SkeletonModification2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addModificationBind, segment, listOf(modification?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addModificationBind, segment, listOf(modification?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -91,7 +92,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun deleteModification(modIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(deleteModificationBind, segment, modIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.deleteModificationBind, segment, modIdx)
     }
 
     /**
@@ -101,7 +102,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setModification(modIdx: Int, modification: SkeletonModification2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, segment, modIdx, modification?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setModificationBind, segment, modIdx, modification?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -111,7 +112,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setModificationCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setModificationCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setModificationCountBind, segment, count)
     }
 
     /**
@@ -121,7 +122,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getModificationCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getModificationCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getModificationCountBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getIsSetup(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsSetupBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsSetupBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -153,7 +154,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
     }
 
     /**
@@ -165,7 +166,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStrengthBind, segment, strength)
     }
 
     /**
@@ -177,7 +178,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStrengthBind, segment)
     }
 
     /**
@@ -187,7 +188,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getSkeleton(): Skeleton2D? {
         checkOpen()
-        return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
+        return Skeleton2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkeletonBind, segment))
     }
 
     companion object {
@@ -200,80 +201,82 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModificationStack2D? =
             if (handle.address() == 0L) null else SkeletonModificationStack2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SETUP_HASH = 3218959716L
-        private val setupBind by lazy {
+        @JvmField
+        val setupBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "setup", SETUP_HASH)
-        }
 
         private const val EXECUTE_HASH = 1005356550L
-        private val executeBind by lazy {
+        @JvmField
+        val executeBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "execute", EXECUTE_HASH)
-        }
 
         private const val ENABLE_ALL_MODIFICATIONS_HASH = 2586408642L
-        private val enableAllModificationsBind by lazy {
+        @JvmField
+        val enableAllModificationsBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "enable_all_modifications", ENABLE_ALL_MODIFICATIONS_HASH)
-        }
 
         private const val GET_MODIFICATION_HASH = 2570274329L
-        private val getModificationBind by lazy {
+        @JvmField
+        val getModificationBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "get_modification", GET_MODIFICATION_HASH)
-        }
 
         private const val ADD_MODIFICATION_HASH = 354162120L
-        private val addModificationBind by lazy {
+        @JvmField
+        val addModificationBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "add_modification", ADD_MODIFICATION_HASH)
-        }
 
         private const val DELETE_MODIFICATION_HASH = 1286410249L
-        private val deleteModificationBind by lazy {
+        @JvmField
+        val deleteModificationBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "delete_modification", DELETE_MODIFICATION_HASH)
-        }
 
         private const val SET_MODIFICATION_HASH = 1098262544L
-        private val setModificationBind by lazy {
+        @JvmField
+        val setModificationBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "set_modification", SET_MODIFICATION_HASH)
-        }
 
         private const val SET_MODIFICATION_COUNT_HASH = 1286410249L
-        private val setModificationCountBind by lazy {
+        @JvmField
+        val setModificationCountBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "set_modification_count", SET_MODIFICATION_COUNT_HASH)
-        }
 
         private const val GET_MODIFICATION_COUNT_HASH = 3905245786L
-        private val getModificationCountBind by lazy {
+        @JvmField
+        val getModificationCountBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "get_modification_count", GET_MODIFICATION_COUNT_HASH)
-        }
 
         private const val GET_IS_SETUP_HASH = 36873697L
-        private val getIsSetupBind by lazy {
+        @JvmField
+        val getIsSetupBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "get_is_setup", GET_IS_SETUP_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val GET_ENABLED_HASH = 36873697L
-        private val getEnabledBind by lazy {
+        @JvmField
+        val getEnabledBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "get_enabled", GET_ENABLED_HASH)
-        }
 
         private const val SET_STRENGTH_HASH = 373806689L
-        private val setStrengthBind by lazy {
+        @JvmField
+        val setStrengthBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "set_strength", SET_STRENGTH_HASH)
-        }
 
         private const val GET_STRENGTH_HASH = 1740695150L
-        private val getStrengthBind by lazy {
+        @JvmField
+        val getStrengthBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "get_strength", GET_STRENGTH_HASH)
-        }
 
         private const val GET_SKELETON_HASH = 1697361217L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("SkeletonModificationStack2D", "get_skeleton", GET_SKELETON_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaClassName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getJavaClassNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getJavaClassNameBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaMethodList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getJavaMethodListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getJavaMethodListBind, segment)
     }
 
     /**
@@ -38,7 +39,7 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaParentClass(): JavaClass? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getJavaParentClassBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getJavaParentClassBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -53,7 +54,7 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasJavaMethod(method: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasJavaMethodBind, segment, method)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasJavaMethodBind, segment, method)
     }
 
     companion object {
@@ -66,25 +67,27 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JavaClass? =
             if (handle.address() == 0L) null else JavaClass(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_JAVA_CLASS_NAME_HASH = 201670096L
-        private val getJavaClassNameBind by lazy {
+        @JvmField
+        val getJavaClassNameBind =
             ObjectCalls.getMethodBind("JavaClass", "get_java_class_name", GET_JAVA_CLASS_NAME_HASH)
-        }
 
         private const val GET_JAVA_METHOD_LIST_HASH = 3995934104L
-        private val getJavaMethodListBind by lazy {
+        @JvmField
+        val getJavaMethodListBind =
             ObjectCalls.getMethodBind("JavaClass", "get_java_method_list", GET_JAVA_METHOD_LIST_HASH)
-        }
 
         private const val GET_JAVA_PARENT_CLASS_HASH = 541536347L
-        private val getJavaParentClassBind by lazy {
+        @JvmField
+        val getJavaParentClassBind =
             ObjectCalls.getMethodBind("JavaClass", "get_java_parent_class", GET_JAVA_PARENT_CLASS_HASH)
-        }
 
         private const val HAS_JAVA_METHOD_HASH = 2619796661L
-        private val hasJavaMethodBind by lazy {
+        @JvmField
+        val hasJavaMethodBind =
             ObjectCalls.getMethodBind("JavaClass", "has_java_method", HAS_JAVA_METHOD_HASH)
-        }
     }
 }

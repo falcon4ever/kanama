@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,12 +19,12 @@ class VisualShaderNodeIntOp(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setOperator(op: VisualShaderNodeIntOp.Operator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOperatorBind, segment, op.value)
     }
 
     fun getOperator(): VisualShaderNodeIntOp.Operator {
         checkOpen()
-        return VisualShaderNodeIntOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment))
+        return VisualShaderNodeIntOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperatorBind, segment))
     }
 
     @JvmInline
@@ -55,15 +56,17 @@ class VisualShaderNodeIntOp(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIntOp? =
             if (handle.address() == 0L) null else VisualShaderNodeIntOp(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OPERATOR_HASH = 1677909323L
-        private val setOperatorBind by lazy {
+        @JvmField
+        val setOperatorBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntOp", "set_operator", SET_OPERATOR_HASH)
-        }
 
         private const val GET_OPERATOR_HASH = 1236987913L
-        private val getOperatorBind by lazy {
+        @JvmField
+        val getOperatorBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntOp", "get_operator", GET_OPERATOR_HASH)
-        }
     }
 }

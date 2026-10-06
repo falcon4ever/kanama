@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLanguageName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageNameBind, segment)
     }
 
     /**
@@ -27,7 +28,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
     }
 
     /**
@@ -37,7 +38,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameCountBind, segment)
     }
 
     /**
@@ -47,7 +48,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameFunction(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFunctionBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFrameFunctionBind, segment, index)
     }
 
     /**
@@ -57,7 +58,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameFile(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getFrameFileBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getFrameFileBind, segment, index)
     }
 
     /**
@@ -67,7 +68,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrameLine(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getFrameLineBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getFrameLineBind, segment, index)
     }
 
     /**
@@ -79,7 +80,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlobalVariableCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGlobalVariableCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGlobalVariableCountBind, segment)
     }
 
     /**
@@ -89,7 +90,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlobalVariableName(variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getGlobalVariableNameBind, segment, variableIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getGlobalVariableNameBind, segment, variableIndex)
     }
 
     /**
@@ -102,7 +103,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getGlobalVariableValue(variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getGlobalVariableValueBind, segment, variableIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getGlobalVariableValueBind, segment, variableIndex)
     }
 
     /**
@@ -114,7 +115,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalVariableCount(frameIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLocalVariableCountBind, segment, frameIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getLocalVariableCountBind, segment, frameIndex)
     }
 
     /**
@@ -125,7 +126,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLocalVariableNameBind, segment, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getLocalVariableNameBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -139,7 +140,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLocalVariableValueBind, segment, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getLocalVariableValueBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -151,7 +152,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMemberVariableCount(frameIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getMemberVariableCountBind, segment, frameIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getMemberVariableCountBind, segment, frameIndex)
     }
 
     /**
@@ -162,7 +163,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMemberVariableName(frameIndex: Int, variableIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getMemberVariableNameBind, segment, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getMemberVariableNameBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -176,7 +177,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMemberVariableValue(frameIndex: Int, variableIndex: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getMemberVariableValueBind, segment, frameIndex, variableIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getMemberVariableValueBind, segment, frameIndex, variableIndex)
     }
 
     /**
@@ -189,7 +190,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
      */
     fun format(indentAll: Int = 0, indentFrames: Int = 4): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(formatBind, segment, indentAll, indentFrames)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.formatBind, segment, indentAll, indentFrames)
     }
 
     companion object {
@@ -202,85 +203,87 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ScriptBacktrace? =
             if (handle.address() == 0L) null else ScriptBacktrace(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_LANGUAGE_NAME_HASH = 201670096L
-        private val getLanguageNameBind by lazy {
+        @JvmField
+        val getLanguageNameBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_language_name", GET_LANGUAGE_NAME_HASH)
-        }
 
         private const val IS_EMPTY_HASH = 36873697L
-        private val isEmptyBind by lazy {
+        @JvmField
+        val isEmptyBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "is_empty", IS_EMPTY_HASH)
-        }
 
         private const val GET_FRAME_COUNT_HASH = 3905245786L
-        private val getFrameCountBind by lazy {
+        @JvmField
+        val getFrameCountBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_count", GET_FRAME_COUNT_HASH)
-        }
 
         private const val GET_FRAME_FUNCTION_HASH = 844755477L
-        private val getFrameFunctionBind by lazy {
+        @JvmField
+        val getFrameFunctionBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_function", GET_FRAME_FUNCTION_HASH)
-        }
 
         private const val GET_FRAME_FILE_HASH = 844755477L
-        private val getFrameFileBind by lazy {
+        @JvmField
+        val getFrameFileBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_file", GET_FRAME_FILE_HASH)
-        }
 
         private const val GET_FRAME_LINE_HASH = 923996154L
-        private val getFrameLineBind by lazy {
+        @JvmField
+        val getFrameLineBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_frame_line", GET_FRAME_LINE_HASH)
-        }
 
         private const val GET_GLOBAL_VARIABLE_COUNT_HASH = 3905245786L
-        private val getGlobalVariableCountBind by lazy {
+        @JvmField
+        val getGlobalVariableCountBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_count", GET_GLOBAL_VARIABLE_COUNT_HASH)
-        }
 
         private const val GET_GLOBAL_VARIABLE_NAME_HASH = 844755477L
-        private val getGlobalVariableNameBind by lazy {
+        @JvmField
+        val getGlobalVariableNameBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_name", GET_GLOBAL_VARIABLE_NAME_HASH)
-        }
 
         private const val GET_GLOBAL_VARIABLE_VALUE_HASH = 4227898402L
-        private val getGlobalVariableValueBind by lazy {
+        @JvmField
+        val getGlobalVariableValueBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_global_variable_value", GET_GLOBAL_VARIABLE_VALUE_HASH)
-        }
 
         private const val GET_LOCAL_VARIABLE_COUNT_HASH = 923996154L
-        private val getLocalVariableCountBind by lazy {
+        @JvmField
+        val getLocalVariableCountBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_count", GET_LOCAL_VARIABLE_COUNT_HASH)
-        }
 
         private const val GET_LOCAL_VARIABLE_NAME_HASH = 1391810591L
-        private val getLocalVariableNameBind by lazy {
+        @JvmField
+        val getLocalVariableNameBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_name", GET_LOCAL_VARIABLE_NAME_HASH)
-        }
 
         private const val GET_LOCAL_VARIABLE_VALUE_HASH = 678354945L
-        private val getLocalVariableValueBind by lazy {
+        @JvmField
+        val getLocalVariableValueBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_local_variable_value", GET_LOCAL_VARIABLE_VALUE_HASH)
-        }
 
         private const val GET_MEMBER_VARIABLE_COUNT_HASH = 923996154L
-        private val getMemberVariableCountBind by lazy {
+        @JvmField
+        val getMemberVariableCountBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_count", GET_MEMBER_VARIABLE_COUNT_HASH)
-        }
 
         private const val GET_MEMBER_VARIABLE_NAME_HASH = 1391810591L
-        private val getMemberVariableNameBind by lazy {
+        @JvmField
+        val getMemberVariableNameBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_name", GET_MEMBER_VARIABLE_NAME_HASH)
-        }
 
         private const val GET_MEMBER_VARIABLE_VALUE_HASH = 678354945L
-        private val getMemberVariableValueBind by lazy {
+        @JvmField
+        val getMemberVariableValueBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "get_member_variable_value", GET_MEMBER_VARIABLE_VALUE_HASH)
-        }
 
         private const val FORMAT_HASH = 3464456933L
-        private val formatBind by lazy {
+        @JvmField
+        val formatBind =
             ObjectCalls.getMethodBind("ScriptBacktrace", "format", FORMAT_HASH)
-        }
     }
 }

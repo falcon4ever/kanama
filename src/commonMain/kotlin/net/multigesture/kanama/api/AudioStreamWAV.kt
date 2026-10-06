@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -71,7 +72,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setData(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, segment, data)
+        ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataBind, segment, data)
     }
 
     /**
@@ -84,7 +85,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setFormat(format: AudioStreamWAV.Format) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, format.value)
     }
 
     /**
@@ -104,7 +105,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getFormat(): AudioStreamWAV.Format {
         checkOpen()
-        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -114,7 +115,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setLoopMode(loopMode: AudioStreamWAV.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLoopModeBind, segment, loopMode.value)
     }
 
     /**
@@ -124,7 +125,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopMode(): AudioStreamWAV.LoopMode {
         checkOpen()
-        return AudioStreamWAV.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
+        return AudioStreamWAV.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
     }
 
     /**
@@ -134,7 +135,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setLoopBegin(loopBegin: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLoopBeginBind, segment, loopBegin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLoopBeginBind, segment, loopBegin)
     }
 
     /**
@@ -144,7 +145,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopBegin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopBeginBind, segment)
     }
 
     /**
@@ -154,7 +155,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setLoopEnd(loopEnd: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLoopEndBind, segment, loopEnd)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLoopEndBind, segment, loopEnd)
     }
 
     /**
@@ -164,7 +165,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getLoopEnd(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLoopEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLoopEndBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setMixRate(mixRate: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMixRateBind, segment, mixRate)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMixRateBind, segment, mixRate)
     }
 
     /**
@@ -196,7 +197,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getMixRate(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMixRateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMixRateBind, segment)
     }
 
     /**
@@ -206,7 +207,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setStereo(stereo: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setStereoBind, segment, stereo)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setStereoBind, segment, stereo)
     }
 
     /**
@@ -216,7 +217,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun isStereo(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isStereoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStereoBind, segment)
     }
 
     /**
@@ -230,7 +231,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setTags(tags: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setTagsBind, segment, tags)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setTagsBind, segment, tags)
     }
 
     /**
@@ -244,7 +245,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getTags(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getTagsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTagsBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      */
     fun saveToWav(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveToWavBind, segment, path))
     }
 
     /**
@@ -340,7 +341,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
          * Generated from Godot docs: AudioStreamWAV.load_from_buffer
          */
         fun loadFromBuffer(streamData: ByteArray, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
-            return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData, options))
+            return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(Binds.loadFromBufferBind, NULL_SEGMENT, streamData, options))
         }
 
         /**
@@ -350,7 +351,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
          * Generated from Godot docs: AudioStreamWAV.load_from_file
          */
         fun loadFromFile(path: String, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
-            return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, NULL_SEGMENT, path, options))
+            return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(Binds.loadFromFileBind, NULL_SEGMENT, path, options))
         }
 
         @JvmStatic
@@ -362,100 +363,102 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamWAV? =
             if (handle.address() == 0L) null else AudioStreamWAV(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LOAD_FROM_BUFFER_HASH = 4266838938L
-        private val loadFromBufferBind by lazy {
+        @JvmField
+        val loadFromBufferBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "load_from_buffer", LOAD_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_FROM_FILE_HASH = 4015802384L
-        private val loadFromFileBind by lazy {
+        @JvmField
+        val loadFromFileBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "load_from_file", LOAD_FROM_FILE_HASH)
-        }
 
         private const val SET_DATA_HASH = 2971499966L
-        private val setDataBind by lazy {
+        @JvmField
+        val setDataBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_data", SET_DATA_HASH)
-        }
 
         private const val GET_DATA_HASH = 2362200018L
-        private val getDataBind by lazy {
+        @JvmField
+        val getDataBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_data", GET_DATA_HASH)
-        }
 
         private const val SET_FORMAT_HASH = 60648488L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_format", SET_FORMAT_HASH)
-        }
 
         private const val GET_FORMAT_HASH = 3151724922L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val SET_LOOP_MODE_HASH = 2444882972L
-        private val setLoopModeBind by lazy {
+        @JvmField
+        val setLoopModeBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_loop_mode", SET_LOOP_MODE_HASH)
-        }
 
         private const val GET_LOOP_MODE_HASH = 393560655L
-        private val getLoopModeBind by lazy {
+        @JvmField
+        val getLoopModeBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_loop_mode", GET_LOOP_MODE_HASH)
-        }
 
         private const val SET_LOOP_BEGIN_HASH = 1286410249L
-        private val setLoopBeginBind by lazy {
+        @JvmField
+        val setLoopBeginBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_loop_begin", SET_LOOP_BEGIN_HASH)
-        }
 
         private const val GET_LOOP_BEGIN_HASH = 3905245786L
-        private val getLoopBeginBind by lazy {
+        @JvmField
+        val getLoopBeginBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_loop_begin", GET_LOOP_BEGIN_HASH)
-        }
 
         private const val SET_LOOP_END_HASH = 1286410249L
-        private val setLoopEndBind by lazy {
+        @JvmField
+        val setLoopEndBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_loop_end", SET_LOOP_END_HASH)
-        }
 
         private const val GET_LOOP_END_HASH = 3905245786L
-        private val getLoopEndBind by lazy {
+        @JvmField
+        val getLoopEndBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_loop_end", GET_LOOP_END_HASH)
-        }
 
         private const val SET_MIX_RATE_HASH = 1286410249L
-        private val setMixRateBind by lazy {
+        @JvmField
+        val setMixRateBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_mix_rate", SET_MIX_RATE_HASH)
-        }
 
         private const val GET_MIX_RATE_HASH = 3905245786L
-        private val getMixRateBind by lazy {
+        @JvmField
+        val getMixRateBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_mix_rate", GET_MIX_RATE_HASH)
-        }
 
         private const val SET_STEREO_HASH = 2586408642L
-        private val setStereoBind by lazy {
+        @JvmField
+        val setStereoBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_stereo", SET_STEREO_HASH)
-        }
 
         private const val IS_STEREO_HASH = 36873697L
-        private val isStereoBind by lazy {
+        @JvmField
+        val isStereoBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "is_stereo", IS_STEREO_HASH)
-        }
 
         private const val SET_TAGS_HASH = 4155329257L
-        private val setTagsBind by lazy {
+        @JvmField
+        val setTagsBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "set_tags", SET_TAGS_HASH)
-        }
 
         private const val GET_TAGS_HASH = 3102165223L
-        private val getTagsBind by lazy {
+        @JvmField
+        val getTagsBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "get_tags", GET_TAGS_HASH)
-        }
 
         private const val SAVE_TO_WAV_HASH = 166001499L
-        private val saveToWavBind by lazy {
+        @JvmField
+        val saveToWavBind =
             ObjectCalls.getMethodBind("AudioStreamWAV", "save_to_wav", SAVE_TO_WAV_HASH)
-        }
     }
 }

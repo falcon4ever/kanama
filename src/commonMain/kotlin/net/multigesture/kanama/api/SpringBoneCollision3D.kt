@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -43,7 +44,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_skeleton
      */
     fun getSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkeletonBind, segment))
     }
 
     /**
@@ -52,7 +53,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -61,7 +62,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBoneNameBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_bone
      */
     fun setBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneBind, segment, bone)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBoneBind, segment, bone)
     }
 
     /**
@@ -79,7 +80,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_bone
      */
     fun getBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneBind, segment)
     }
 
     /**
@@ -88,7 +89,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_position_offset
      */
     fun setPositionOffset(offset: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setPositionOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setPositionOffsetBind, segment, offset)
     }
 
     /**
@@ -97,7 +98,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_position_offset
      */
     fun getPositionOffset(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getPositionOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getPositionOffsetBind, segment)
     }
 
     /**
@@ -106,7 +107,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.set_rotation_offset
      */
     fun setRotationOffset(offset: Quaternion) {
-        ObjectCalls.ptrcallWithQuaternionArg(setRotationOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithQuaternionArg(Binds.setRotationOffsetBind, segment, offset)
     }
 
     /**
@@ -115,7 +116,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringBoneCollision3D.get_rotation_offset
      */
     fun getRotationOffset(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRotationOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getRotationOffsetBind, segment)
     }
 
     companion object {
@@ -125,50 +126,52 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): SpringBoneCollision3D? =
             if (handle.address() == 0L) null else SpringBoneCollision3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SKELETON_HASH = 1488626673L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "get_skeleton", GET_SKELETON_HASH)
-        }
 
         private const val SET_BONE_NAME_HASH = 83702148L
-        private val setBoneNameBind by lazy {
+        @JvmField
+        val setBoneNameBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "set_bone_name", SET_BONE_NAME_HASH)
-        }
 
         private const val GET_BONE_NAME_HASH = 201670096L
-        private val getBoneNameBind by lazy {
+        @JvmField
+        val getBoneNameBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "get_bone_name", GET_BONE_NAME_HASH)
-        }
 
         private const val SET_BONE_HASH = 1286410249L
-        private val setBoneBind by lazy {
+        @JvmField
+        val setBoneBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "set_bone", SET_BONE_HASH)
-        }
 
         private const val GET_BONE_HASH = 3905245786L
-        private val getBoneBind by lazy {
+        @JvmField
+        val getBoneBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "get_bone", GET_BONE_HASH)
-        }
 
         private const val SET_POSITION_OFFSET_HASH = 3460891852L
-        private val setPositionOffsetBind by lazy {
+        @JvmField
+        val setPositionOffsetBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "set_position_offset", SET_POSITION_OFFSET_HASH)
-        }
 
         private const val GET_POSITION_OFFSET_HASH = 3360562783L
-        private val getPositionOffsetBind by lazy {
+        @JvmField
+        val getPositionOffsetBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "get_position_offset", GET_POSITION_OFFSET_HASH)
-        }
 
         private const val SET_ROTATION_OFFSET_HASH = 1727505552L
-        private val setRotationOffsetBind by lazy {
+        @JvmField
+        val setRotationOffsetBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "set_rotation_offset", SET_ROTATION_OFFSET_HASH)
-        }
 
         private const val GET_ROTATION_OFFSET_HASH = 1222331677L
-        private val getRotationOffsetBind by lazy {
+        @JvmField
+        val getRotationOffsetBind =
             ObjectCalls.getMethodBind("SpringBoneCollision3D", "get_rotation_offset", GET_ROTATION_OFFSET_HASH)
-        }
     }
 }

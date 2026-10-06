@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -37,7 +38,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setAction(action: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setActionBind, segment, action)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setActionBind, segment, action)
     }
 
     /**
@@ -48,7 +49,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getAction(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
     }
 
     /**
@@ -70,7 +71,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setStrength(strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStrengthBind, segment, strength)
     }
 
     /**
@@ -82,7 +83,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStrengthBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setEventIndex(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setEventIndexBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.setEventIndexBind, segment, index)
     }
 
     /**
@@ -106,7 +107,7 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getEventIndex(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEventIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEventIndexBind, segment)
     }
 
     companion object {
@@ -119,40 +120,42 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventAction? =
             if (handle.address() == 0L) null else InputEventAction(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ACTION_HASH = 3304788590L
-        private val setActionBind by lazy {
+        @JvmField
+        val setActionBind =
             ObjectCalls.getMethodBind("InputEventAction", "set_action", SET_ACTION_HASH)
-        }
 
         private const val GET_ACTION_HASH = 2002593661L
-        private val getActionBind by lazy {
+        @JvmField
+        val getActionBind =
             ObjectCalls.getMethodBind("InputEventAction", "get_action", GET_ACTION_HASH)
-        }
 
         private const val SET_PRESSED_HASH = 2586408642L
-        private val setPressedBind by lazy {
+        @JvmField
+        val setPressedBind =
             ObjectCalls.getMethodBind("InputEventAction", "set_pressed", SET_PRESSED_HASH)
-        }
 
         private const val SET_STRENGTH_HASH = 373806689L
-        private val setStrengthBind by lazy {
+        @JvmField
+        val setStrengthBind =
             ObjectCalls.getMethodBind("InputEventAction", "set_strength", SET_STRENGTH_HASH)
-        }
 
         private const val GET_STRENGTH_HASH = 1740695150L
-        private val getStrengthBind by lazy {
+        @JvmField
+        val getStrengthBind =
             ObjectCalls.getMethodBind("InputEventAction", "get_strength", GET_STRENGTH_HASH)
-        }
 
         private const val SET_EVENT_INDEX_HASH = 1286410249L
-        private val setEventIndexBind by lazy {
+        @JvmField
+        val setEventIndexBind =
             ObjectCalls.getMethodBind("InputEventAction", "set_event_index", SET_EVENT_INDEX_HASH)
-        }
 
         private const val GET_EVENT_INDEX_HASH = 3905245786L
-        private val getEventIndexBind by lazy {
+        @JvmField
+        val getEventIndexBind =
             ObjectCalls.getMethodBind("InputEventAction", "get_event_index", GET_EVENT_INDEX_HASH)
-        }
     }
 }

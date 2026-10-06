@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,12 +19,12 @@ class VisualShaderNodeIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setFunction(func: VisualShaderNodeIntFunc.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
     fun getFunction(): VisualShaderNodeIntFunc.Function {
         checkOpen()
-        return VisualShaderNodeIntFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+        return VisualShaderNodeIntFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
     @JvmInline
@@ -47,15 +48,17 @@ class VisualShaderNodeIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIntFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeIntFunc(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FUNCTION_HASH = 424195284L
-        private val setFunctionBind by lazy {
+        @JvmField
+        val setFunctionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntFunc", "set_function", SET_FUNCTION_HASH)
-        }
 
         private const val GET_FUNCTION_HASH = 2753496911L
-        private val getFunctionBind by lazy {
+        @JvmField
+        val getFunctionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntFunc", "get_function", GET_FUNCTION_HASH)
-        }
     }
 }

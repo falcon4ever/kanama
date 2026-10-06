@@ -20,7 +20,5 @@ class VisualShaderNodeRandomRange(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRandomRange? =
             if (handle.address() == 0L) null else VisualShaderNodeRandomRange(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

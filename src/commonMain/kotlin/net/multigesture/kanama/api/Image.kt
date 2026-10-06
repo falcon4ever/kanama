@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,7 +23,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
     }
 
     /**
@@ -32,7 +33,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
     }
 
     /**
@@ -42,7 +43,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -52,7 +53,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
     }
 
     /**
@@ -62,7 +63,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -72,7 +73,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getDataSize(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDataSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDataSizeBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun convert(format: Image.Format) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(convertBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.convertBind, segment, format.value)
     }
 
     /**
@@ -104,7 +105,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMipmapCountBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getMipmapOffset(mipmap: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getMipmapOffsetBind, segment, mipmap)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getMipmapOffsetBind, segment, mipmap)
     }
 
     /**
@@ -127,7 +128,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun resizeToPo2(square: Boolean = false, interpolation: Image.Interpolation = Image.Interpolation.BILINEAR) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, segment, square, interpolation.value)
+        ObjectCalls.ptrcallWithBoolAndLongArgs(Binds.resizeToPo2Bind, segment, square, interpolation.value)
     }
 
     /**
@@ -140,7 +141,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun resize(width: Int, height: Int, interpolation: Image.Interpolation = Image.Interpolation.BILINEAR) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, segment, width, height, interpolation.value)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(Binds.resizeBind, segment, width, height, interpolation.value)
     }
 
     /**
@@ -150,7 +151,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun shrinkX2() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(shrinkX2Bind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.shrinkX2Bind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun crop(width: Int, height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(cropBind, segment, width, height)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.cropBind, segment, width, height)
     }
 
     /**
@@ -171,7 +172,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun flipX() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flipXBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.flipXBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun flipY() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(flipYBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.flipYBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun generateMipmaps(renormalize: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, segment, renormalize))
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.generateMipmapsBind, segment, renormalize))
     }
 
     /**
@@ -208,7 +209,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun clearMipmaps() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMipmapsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearMipmapsBind, segment)
     }
 
     /**
@@ -218,7 +219,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun setData(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(setDataBind, segment, width, height, useMipmaps, format.value, data)
+        ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(Binds.setDataBind, segment, width, height, useMipmaps, format.value, data)
     }
 
     /**
@@ -228,7 +229,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun isEmpty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptyBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
     }
 
     /**
@@ -253,7 +254,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun savePng(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.savePngBind, segment, path))
     }
 
     /**
@@ -263,7 +264,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun savePngToBuffer(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(savePngToBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.savePngToBufferBind, segment)
     }
 
     /**
@@ -278,7 +279,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveJpg(path: String, quality: Double = 0.75): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, segment, path, quality))
+        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(Binds.saveJpgBind, segment, path, quality))
     }
 
     /**
@@ -293,7 +294,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveJpgToBuffer(quality: Double = 0.75): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetByteArray(saveJpgToBufferBind, segment, quality)
+        return ObjectCalls.ptrcallWithDoubleArgRetByteArray(Binds.saveJpgToBufferBind, segment, quality)
     }
 
     /**
@@ -311,7 +312,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, segment, path, grayscale, colorImage, maxLinearValue))
+        return GodotError(ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(Binds.saveExrBind, segment, path, grayscale, colorImage, maxLinearValue))
     }
 
     /**
@@ -329,7 +330,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveExrToBuffer(grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(saveExrToBufferBind, segment, grayscale, colorImage, maxLinearValue)
+        return ObjectCalls.ptrcallWithTwoBoolAndDoubleArgRetByteArray(Binds.saveExrToBufferBind, segment, grayscale, colorImage, maxLinearValue)
     }
 
     /**
@@ -343,7 +344,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveDds(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveDdsBind, segment, path))
     }
 
     /**
@@ -357,7 +358,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveDdsToBuffer(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(saveDdsToBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.saveDdsToBufferBind, segment)
     }
 
     /**
@@ -371,7 +372,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, segment, path, lossy, quality))
+        return GodotError(ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(Binds.saveWebpBind, segment, path, lossy, quality))
     }
 
     /**
@@ -384,7 +385,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun saveWebpToBuffer(lossy: Boolean = false, quality: Double = 0.75): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(saveWebpToBufferBind, segment, lossy, quality)
+        return ObjectCalls.ptrcallWithBoolAndDoubleArgRetByteArray(Binds.saveWebpToBufferBind, segment, lossy, quality)
     }
 
     /**
@@ -396,7 +397,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun detectAlpha(): Image.AlphaMode {
         checkOpen()
-        return Image.AlphaMode(ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, segment))
+        return Image.AlphaMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.detectAlphaBind, segment))
     }
 
     /**
@@ -407,7 +408,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun isInvisible(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInvisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInvisibleBind, segment)
     }
 
     /**
@@ -418,7 +419,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun detectUsedChannels(source: Image.CompressSource = Image.CompressSource.GENERIC): Image.UsedChannels {
         checkOpen()
-        return Image.UsedChannels(ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, segment, source.value))
+        return Image.UsedChannels(ObjectCalls.ptrcallWithLongArgRetLong(Binds.detectUsedChannelsBind, segment, source.value))
     }
 
     /**
@@ -434,7 +435,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun compress(mode: Image.CompressMode, source: Image.CompressSource = Image.CompressSource.GENERIC, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, segment, mode.value, source.value, astcFormat.value))
+        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressBind, segment, mode.value, source.value, astcFormat.value))
     }
 
     /**
@@ -451,7 +452,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun compressFromChannels(mode: Image.CompressMode, channels: Image.UsedChannels, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, segment, mode.value, channels.value, astcFormat.value))
+        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressFromChannelsBind, segment, mode.value, channels.value, astcFormat.value))
     }
 
     /**
@@ -465,7 +466,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun decompress(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(decompressBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.decompressBind, segment))
     }
 
     /**
@@ -475,7 +476,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun isCompressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCompressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCompressedBind, segment)
     }
 
     /**
@@ -487,7 +488,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun rotate90(direction: ClockDirection) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(rotate90Bind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.rotate90Bind, segment, direction.value)
     }
 
     /**
@@ -497,7 +498,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun rotate180() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(rotate180Bind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.rotate180Bind, segment)
     }
 
     /**
@@ -507,7 +508,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun fixAlphaEdges() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(fixAlphaEdgesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.fixAlphaEdgesBind, segment)
     }
 
     /**
@@ -518,7 +519,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun premultiplyAlpha() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(premultiplyAlphaBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.premultiplyAlphaBind, segment)
     }
 
     /**
@@ -532,7 +533,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun srgbToLinear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(srgbToLinearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.srgbToLinearBind, segment)
     }
 
     /**
@@ -543,7 +544,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun linearToSrgb() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(linearToSrgbBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.linearToSrgbBind, segment)
     }
 
     /**
@@ -555,7 +556,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun normalMapToXy() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(normalMapToXyBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.normalMapToXyBind, segment)
     }
 
     /**
@@ -566,7 +567,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun rgbeToSrgb(): Image? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(rgbeToSrgbBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.rgbeToSrgbBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -582,7 +583,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun bumpMapToNormalMap(bumpScale: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(bumpMapToNormalMapBind, segment, bumpScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.bumpMapToNormalMapBind, segment, bumpScale)
     }
 
     /**
@@ -594,7 +595,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun computeImageMetrics(comparedImage: Image?, useLuma: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: NULL_SEGMENT, useLuma)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(Binds.computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: NULL_SEGMENT, useLuma)
     }
 
     /**
@@ -608,7 +609,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blitRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blitRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(Binds.blitRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -622,7 +623,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blitRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blitRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(Binds.blitRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -634,7 +635,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blendRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blendRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(Binds.blendRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -649,7 +650,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blendRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blendRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
+        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(Binds.blendRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -659,7 +660,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun fill(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(fillBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.fillBind, segment, color)
     }
 
     /**
@@ -669,7 +670,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun fillRect(rect: Rect2i, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndColorArg(fillRectBind, segment, rect, color)
+        ObjectCalls.ptrcallWithRect2iAndColorArg(Binds.fillRectBind, segment, rect, color)
     }
 
     /**
@@ -680,7 +681,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getUsedRect(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getUsedRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getUsedRectBind, segment)
     }
 
     /**
@@ -690,7 +691,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getRegion(region: Rect2i): Image? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithRect2iArgRetObject(getRegionBind, segment, region)
+        val ret = ObjectCalls.ptrcallWithRect2iArgRetObject(Binds.getRegionBind, segment, region)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -705,7 +706,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun copyFrom(src: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.copyFromBind, segment, listOf(src?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -716,7 +717,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getPixelv(point: Vector2i): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetColor(getPixelvBind, segment, point)
+        return ObjectCalls.ptrcallWithVector2iArgRetColor(Binds.getPixelvBind, segment, point)
     }
 
     /**
@@ -727,7 +728,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun getPixel(x: Int, y: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getPixelBind, segment, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getPixelBind, segment, x, y)
     }
 
     /**
@@ -737,7 +738,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun setPixelv(point: Vector2i, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndColorArg(setPixelvBind, segment, point, color)
+        ObjectCalls.ptrcallWithVector2iAndColorArg(Binds.setPixelvBind, segment, point, color)
     }
 
     /**
@@ -747,7 +748,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun setPixel(x: Int, y: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setPixelBind, segment, x, y, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(Binds.setPixelBind, segment, x, y, color)
     }
 
     /**
@@ -758,7 +759,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun adjustBcs(brightness: Double, contrast: Double, saturation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeDoubleArgs(adjustBcsBind, segment, brightness, contrast, saturation)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(Binds.adjustBcsBind, segment, brightness, contrast, saturation)
     }
 
     /**
@@ -768,7 +769,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadPngFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadPngFromBufferBind, segment, buffer))
     }
 
     /**
@@ -778,7 +779,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadJpgFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadJpgFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadJpgFromBufferBind, segment, buffer))
     }
 
     /**
@@ -788,7 +789,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadWebpFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadWebpFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadWebpFromBufferBind, segment, buffer))
     }
 
     /**
@@ -800,7 +801,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadTgaFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadTgaFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadTgaFromBufferBind, segment, buffer))
     }
 
     /**
@@ -814,7 +815,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadBmpFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadBmpFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadBmpFromBufferBind, segment, buffer))
     }
 
     /**
@@ -829,7 +830,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadKtxFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadKtxFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadKtxFromBufferBind, segment, buffer))
     }
 
     /**
@@ -841,7 +842,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadDdsFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadDdsFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadDdsFromBufferBind, segment, buffer))
     }
 
     /**
@@ -851,7 +852,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadExrFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadExrFromBufferBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.loadExrFromBufferBind, segment, buffer))
     }
 
     /**
@@ -865,7 +866,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadSvgFromBuffer(buffer: ByteArray, scale: Double = 1.0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(loadSvgFromBufferBind, segment, buffer, scale))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(Binds.loadSvgFromBufferBind, segment, buffer, scale))
     }
 
     /**
@@ -877,7 +878,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun loadSvgFromString(svgStr: String, scale: Double = 1.0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, segment, svgStr, scale))
+        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(Binds.loadSvgFromStringBind, segment, svgStr, scale))
     }
 
     /**
@@ -1480,7 +1481,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create
          */
         fun create(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format): Image? {
-            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(Binds.createBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
         }
 
         /**
@@ -1490,7 +1491,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create_empty
          */
         fun createEmpty(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format): Image? {
-            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(Binds.createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
         }
 
         /**
@@ -1500,7 +1501,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create_from_data
          */
         fun createFromData(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format, data: ByteArray): Image? {
-            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format.value, data))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(Binds.createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format.value, data))
         }
 
         /**
@@ -1509,7 +1510,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.load_from_file
          */
         fun loadFromFile(path: String): Image? {
-            return Image.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadFromFileBind, NULL_SEGMENT, path))
         }
 
         const val MAX_WIDTH: Long = 16777216L
@@ -1524,385 +1525,387 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Image? =
             if (handle.address() == 0L) null else Image(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_WIDTH_HASH = 3905245786L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("Image", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 3905245786L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("Image", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("Image", "get_size", GET_SIZE_HASH)
-        }
 
         private const val HAS_MIPMAPS_HASH = 36873697L
-        private val hasMipmapsBind by lazy {
+        @JvmField
+        val hasMipmapsBind =
             ObjectCalls.getMethodBind("Image", "has_mipmaps", HAS_MIPMAPS_HASH)
-        }
 
         private const val GET_FORMAT_HASH = 3847873762L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("Image", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val GET_DATA_HASH = 2362200018L
-        private val getDataBind by lazy {
+        @JvmField
+        val getDataBind =
             ObjectCalls.getMethodBind("Image", "get_data", GET_DATA_HASH)
-        }
 
         private const val GET_DATA_SIZE_HASH = 3905245786L
-        private val getDataSizeBind by lazy {
+        @JvmField
+        val getDataSizeBind =
             ObjectCalls.getMethodBind("Image", "get_data_size", GET_DATA_SIZE_HASH)
-        }
 
         private const val CONVERT_HASH = 2120693146L
-        private val convertBind by lazy {
+        @JvmField
+        val convertBind =
             ObjectCalls.getMethodBind("Image", "convert", CONVERT_HASH)
-        }
 
         private const val GET_MIPMAP_COUNT_HASH = 3905245786L
-        private val getMipmapCountBind by lazy {
+        @JvmField
+        val getMipmapCountBind =
             ObjectCalls.getMethodBind("Image", "get_mipmap_count", GET_MIPMAP_COUNT_HASH)
-        }
 
         private const val GET_MIPMAP_OFFSET_HASH = 923996154L
-        private val getMipmapOffsetBind by lazy {
+        @JvmField
+        val getMipmapOffsetBind =
             ObjectCalls.getMethodBind("Image", "get_mipmap_offset", GET_MIPMAP_OFFSET_HASH)
-        }
 
         private const val RESIZE_TO_PO2_HASH = 4189212329L
-        private val resizeToPo2Bind by lazy {
+        @JvmField
+        val resizeToPo2Bind =
             ObjectCalls.getMethodBind("Image", "resize_to_po2", RESIZE_TO_PO2_HASH)
-        }
 
         private const val RESIZE_HASH = 994498151L
-        private val resizeBind by lazy {
+        @JvmField
+        val resizeBind =
             ObjectCalls.getMethodBind("Image", "resize", RESIZE_HASH)
-        }
 
         private const val SHRINK_X2_HASH = 3218959716L
-        private val shrinkX2Bind by lazy {
+        @JvmField
+        val shrinkX2Bind =
             ObjectCalls.getMethodBind("Image", "shrink_x2", SHRINK_X2_HASH)
-        }
 
         private const val CROP_HASH = 3937882851L
-        private val cropBind by lazy {
+        @JvmField
+        val cropBind =
             ObjectCalls.getMethodBind("Image", "crop", CROP_HASH)
-        }
 
         private const val FLIP_X_HASH = 3218959716L
-        private val flipXBind by lazy {
+        @JvmField
+        val flipXBind =
             ObjectCalls.getMethodBind("Image", "flip_x", FLIP_X_HASH)
-        }
 
         private const val FLIP_Y_HASH = 3218959716L
-        private val flipYBind by lazy {
+        @JvmField
+        val flipYBind =
             ObjectCalls.getMethodBind("Image", "flip_y", FLIP_Y_HASH)
-        }
 
         private const val GENERATE_MIPMAPS_HASH = 1633102583L
-        private val generateMipmapsBind by lazy {
+        @JvmField
+        val generateMipmapsBind =
             ObjectCalls.getMethodBind("Image", "generate_mipmaps", GENERATE_MIPMAPS_HASH)
-        }
 
         private const val CLEAR_MIPMAPS_HASH = 3218959716L
-        private val clearMipmapsBind by lazy {
+        @JvmField
+        val clearMipmapsBind =
             ObjectCalls.getMethodBind("Image", "clear_mipmaps", CLEAR_MIPMAPS_HASH)
-        }
 
         private const val CREATE_HASH = 986942177L
-        private val createBind by lazy {
+        @JvmField
+        val createBind =
             ObjectCalls.getMethodBind("Image", "create", CREATE_HASH)
-        }
 
         private const val CREATE_EMPTY_HASH = 986942177L
-        private val createEmptyBind by lazy {
+        @JvmField
+        val createEmptyBind =
             ObjectCalls.getMethodBind("Image", "create_empty", CREATE_EMPTY_HASH)
-        }
 
         private const val CREATE_FROM_DATA_HASH = 299398494L
-        private val createFromDataBind by lazy {
+        @JvmField
+        val createFromDataBind =
             ObjectCalls.getMethodBind("Image", "create_from_data", CREATE_FROM_DATA_HASH)
-        }
 
         private const val SET_DATA_HASH = 2740482212L
-        private val setDataBind by lazy {
+        @JvmField
+        val setDataBind =
             ObjectCalls.getMethodBind("Image", "set_data", SET_DATA_HASH)
-        }
 
         private const val IS_EMPTY_HASH = 36873697L
-        private val isEmptyBind by lazy {
+        @JvmField
+        val isEmptyBind =
             ObjectCalls.getMethodBind("Image", "is_empty", IS_EMPTY_HASH)
-        }
 
         private const val LOAD_HASH = 166001499L
-        private val loadBind by lazy {
+        @JvmField
+        val loadBind =
             ObjectCalls.getMethodBind("Image", "load", LOAD_HASH)
-        }
 
         private const val LOAD_FROM_FILE_HASH = 736337515L
-        private val loadFromFileBind by lazy {
+        @JvmField
+        val loadFromFileBind =
             ObjectCalls.getMethodBind("Image", "load_from_file", LOAD_FROM_FILE_HASH)
-        }
 
         private const val SAVE_PNG_HASH = 2113323047L
-        private val savePngBind by lazy {
+        @JvmField
+        val savePngBind =
             ObjectCalls.getMethodBind("Image", "save_png", SAVE_PNG_HASH)
-        }
 
         private const val SAVE_PNG_TO_BUFFER_HASH = 2362200018L
-        private val savePngToBufferBind by lazy {
+        @JvmField
+        val savePngToBufferBind =
             ObjectCalls.getMethodBind("Image", "save_png_to_buffer", SAVE_PNG_TO_BUFFER_HASH)
-        }
 
         private const val SAVE_JPG_HASH = 2800019068L
-        private val saveJpgBind by lazy {
+        @JvmField
+        val saveJpgBind =
             ObjectCalls.getMethodBind("Image", "save_jpg", SAVE_JPG_HASH)
-        }
 
         private const val SAVE_JPG_TO_BUFFER_HASH = 592235273L
-        private val saveJpgToBufferBind by lazy {
+        @JvmField
+        val saveJpgToBufferBind =
             ObjectCalls.getMethodBind("Image", "save_jpg_to_buffer", SAVE_JPG_TO_BUFFER_HASH)
-        }
 
         private const val SAVE_EXR_HASH = 2018602448L
-        private val saveExrBind by lazy {
+        @JvmField
+        val saveExrBind =
             ObjectCalls.getMethodBind("Image", "save_exr", SAVE_EXR_HASH)
-        }
 
         private const val SAVE_EXR_TO_BUFFER_HASH = 1477518536L
-        private val saveExrToBufferBind by lazy {
+        @JvmField
+        val saveExrToBufferBind =
             ObjectCalls.getMethodBind("Image", "save_exr_to_buffer", SAVE_EXR_TO_BUFFER_HASH)
-        }
 
         private const val SAVE_DDS_HASH = 2113323047L
-        private val saveDdsBind by lazy {
+        @JvmField
+        val saveDdsBind =
             ObjectCalls.getMethodBind("Image", "save_dds", SAVE_DDS_HASH)
-        }
 
         private const val SAVE_DDS_TO_BUFFER_HASH = 2362200018L
-        private val saveDdsToBufferBind by lazy {
+        @JvmField
+        val saveDdsToBufferBind =
             ObjectCalls.getMethodBind("Image", "save_dds_to_buffer", SAVE_DDS_TO_BUFFER_HASH)
-        }
 
         private const val SAVE_WEBP_HASH = 2781156876L
-        private val saveWebpBind by lazy {
+        @JvmField
+        val saveWebpBind =
             ObjectCalls.getMethodBind("Image", "save_webp", SAVE_WEBP_HASH)
-        }
 
         private const val SAVE_WEBP_TO_BUFFER_HASH = 1214628238L
-        private val saveWebpToBufferBind by lazy {
+        @JvmField
+        val saveWebpToBufferBind =
             ObjectCalls.getMethodBind("Image", "save_webp_to_buffer", SAVE_WEBP_TO_BUFFER_HASH)
-        }
 
         private const val DETECT_ALPHA_HASH = 2030116505L
-        private val detectAlphaBind by lazy {
+        @JvmField
+        val detectAlphaBind =
             ObjectCalls.getMethodBind("Image", "detect_alpha", DETECT_ALPHA_HASH)
-        }
 
         private const val IS_INVISIBLE_HASH = 36873697L
-        private val isInvisibleBind by lazy {
+        @JvmField
+        val isInvisibleBind =
             ObjectCalls.getMethodBind("Image", "is_invisible", IS_INVISIBLE_HASH)
-        }
 
         private const val DETECT_USED_CHANNELS_HASH = 2703139984L
-        private val detectUsedChannelsBind by lazy {
+        @JvmField
+        val detectUsedChannelsBind =
             ObjectCalls.getMethodBind("Image", "detect_used_channels", DETECT_USED_CHANNELS_HASH)
-        }
 
         private const val COMPRESS_HASH = 2975424957L
-        private val compressBind by lazy {
+        @JvmField
+        val compressBind =
             ObjectCalls.getMethodBind("Image", "compress", COMPRESS_HASH)
-        }
 
         private const val COMPRESS_FROM_CHANNELS_HASH = 4212890953L
-        private val compressFromChannelsBind by lazy {
+        @JvmField
+        val compressFromChannelsBind =
             ObjectCalls.getMethodBind("Image", "compress_from_channels", COMPRESS_FROM_CHANNELS_HASH)
-        }
 
         private const val DECOMPRESS_HASH = 166280745L
-        private val decompressBind by lazy {
+        @JvmField
+        val decompressBind =
             ObjectCalls.getMethodBind("Image", "decompress", DECOMPRESS_HASH)
-        }
 
         private const val IS_COMPRESSED_HASH = 36873697L
-        private val isCompressedBind by lazy {
+        @JvmField
+        val isCompressedBind =
             ObjectCalls.getMethodBind("Image", "is_compressed", IS_COMPRESSED_HASH)
-        }
 
         private const val ROTATE_90_HASH = 1901204267L
-        private val rotate90Bind by lazy {
+        @JvmField
+        val rotate90Bind =
             ObjectCalls.getMethodBind("Image", "rotate_90", ROTATE_90_HASH)
-        }
 
         private const val ROTATE_180_HASH = 3218959716L
-        private val rotate180Bind by lazy {
+        @JvmField
+        val rotate180Bind =
             ObjectCalls.getMethodBind("Image", "rotate_180", ROTATE_180_HASH)
-        }
 
         private const val FIX_ALPHA_EDGES_HASH = 3218959716L
-        private val fixAlphaEdgesBind by lazy {
+        @JvmField
+        val fixAlphaEdgesBind =
             ObjectCalls.getMethodBind("Image", "fix_alpha_edges", FIX_ALPHA_EDGES_HASH)
-        }
 
         private const val PREMULTIPLY_ALPHA_HASH = 3218959716L
-        private val premultiplyAlphaBind by lazy {
+        @JvmField
+        val premultiplyAlphaBind =
             ObjectCalls.getMethodBind("Image", "premultiply_alpha", PREMULTIPLY_ALPHA_HASH)
-        }
 
         private const val SRGB_TO_LINEAR_HASH = 3218959716L
-        private val srgbToLinearBind by lazy {
+        @JvmField
+        val srgbToLinearBind =
             ObjectCalls.getMethodBind("Image", "srgb_to_linear", SRGB_TO_LINEAR_HASH)
-        }
 
         private const val LINEAR_TO_SRGB_HASH = 3218959716L
-        private val linearToSrgbBind by lazy {
+        @JvmField
+        val linearToSrgbBind =
             ObjectCalls.getMethodBind("Image", "linear_to_srgb", LINEAR_TO_SRGB_HASH)
-        }
 
         private const val NORMAL_MAP_TO_XY_HASH = 3218959716L
-        private val normalMapToXyBind by lazy {
+        @JvmField
+        val normalMapToXyBind =
             ObjectCalls.getMethodBind("Image", "normal_map_to_xy", NORMAL_MAP_TO_XY_HASH)
-        }
 
         private const val RGBE_TO_SRGB_HASH = 564927088L
-        private val rgbeToSrgbBind by lazy {
+        @JvmField
+        val rgbeToSrgbBind =
             ObjectCalls.getMethodBind("Image", "rgbe_to_srgb", RGBE_TO_SRGB_HASH)
-        }
 
         private const val BUMP_MAP_TO_NORMAL_MAP_HASH = 3423495036L
-        private val bumpMapToNormalMapBind by lazy {
+        @JvmField
+        val bumpMapToNormalMapBind =
             ObjectCalls.getMethodBind("Image", "bump_map_to_normal_map", BUMP_MAP_TO_NORMAL_MAP_HASH)
-        }
 
         private const val COMPUTE_IMAGE_METRICS_HASH = 3080961247L
-        private val computeImageMetricsBind by lazy {
+        @JvmField
+        val computeImageMetricsBind =
             ObjectCalls.getMethodBind("Image", "compute_image_metrics", COMPUTE_IMAGE_METRICS_HASH)
-        }
 
         private const val BLIT_RECT_HASH = 2903928755L
-        private val blitRectBind by lazy {
+        @JvmField
+        val blitRectBind =
             ObjectCalls.getMethodBind("Image", "blit_rect", BLIT_RECT_HASH)
-        }
 
         private const val BLIT_RECT_MASK_HASH = 3383581145L
-        private val blitRectMaskBind by lazy {
+        @JvmField
+        val blitRectMaskBind =
             ObjectCalls.getMethodBind("Image", "blit_rect_mask", BLIT_RECT_MASK_HASH)
-        }
 
         private const val BLEND_RECT_HASH = 2903928755L
-        private val blendRectBind by lazy {
+        @JvmField
+        val blendRectBind =
             ObjectCalls.getMethodBind("Image", "blend_rect", BLEND_RECT_HASH)
-        }
 
         private const val BLEND_RECT_MASK_HASH = 3383581145L
-        private val blendRectMaskBind by lazy {
+        @JvmField
+        val blendRectMaskBind =
             ObjectCalls.getMethodBind("Image", "blend_rect_mask", BLEND_RECT_MASK_HASH)
-        }
 
         private const val FILL_HASH = 2920490490L
-        private val fillBind by lazy {
+        @JvmField
+        val fillBind =
             ObjectCalls.getMethodBind("Image", "fill", FILL_HASH)
-        }
 
         private const val FILL_RECT_HASH = 514693913L
-        private val fillRectBind by lazy {
+        @JvmField
+        val fillRectBind =
             ObjectCalls.getMethodBind("Image", "fill_rect", FILL_RECT_HASH)
-        }
 
         private const val GET_USED_RECT_HASH = 410525958L
-        private val getUsedRectBind by lazy {
+        @JvmField
+        val getUsedRectBind =
             ObjectCalls.getMethodBind("Image", "get_used_rect", GET_USED_RECT_HASH)
-        }
 
         private const val GET_REGION_HASH = 2601441065L
-        private val getRegionBind by lazy {
+        @JvmField
+        val getRegionBind =
             ObjectCalls.getMethodBind("Image", "get_region", GET_REGION_HASH)
-        }
 
         private const val COPY_FROM_HASH = 532598488L
-        private val copyFromBind by lazy {
+        @JvmField
+        val copyFromBind =
             ObjectCalls.getMethodBind("Image", "copy_from", COPY_FROM_HASH)
-        }
 
         private const val GET_PIXELV_HASH = 1532707496L
-        private val getPixelvBind by lazy {
+        @JvmField
+        val getPixelvBind =
             ObjectCalls.getMethodBind("Image", "get_pixelv", GET_PIXELV_HASH)
-        }
 
         private const val GET_PIXEL_HASH = 2165839948L
-        private val getPixelBind by lazy {
+        @JvmField
+        val getPixelBind =
             ObjectCalls.getMethodBind("Image", "get_pixel", GET_PIXEL_HASH)
-        }
 
         private const val SET_PIXELV_HASH = 287851464L
-        private val setPixelvBind by lazy {
+        @JvmField
+        val setPixelvBind =
             ObjectCalls.getMethodBind("Image", "set_pixelv", SET_PIXELV_HASH)
-        }
 
         private const val SET_PIXEL_HASH = 3733378741L
-        private val setPixelBind by lazy {
+        @JvmField
+        val setPixelBind =
             ObjectCalls.getMethodBind("Image", "set_pixel", SET_PIXEL_HASH)
-        }
 
         private const val ADJUST_BCS_HASH = 2385087082L
-        private val adjustBcsBind by lazy {
+        @JvmField
+        val adjustBcsBind =
             ObjectCalls.getMethodBind("Image", "adjust_bcs", ADJUST_BCS_HASH)
-        }
 
         private const val LOAD_PNG_FROM_BUFFER_HASH = 680677267L
-        private val loadPngFromBufferBind by lazy {
+        @JvmField
+        val loadPngFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_png_from_buffer", LOAD_PNG_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_JPG_FROM_BUFFER_HASH = 680677267L
-        private val loadJpgFromBufferBind by lazy {
+        @JvmField
+        val loadJpgFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_jpg_from_buffer", LOAD_JPG_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_WEBP_FROM_BUFFER_HASH = 680677267L
-        private val loadWebpFromBufferBind by lazy {
+        @JvmField
+        val loadWebpFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_webp_from_buffer", LOAD_WEBP_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_TGA_FROM_BUFFER_HASH = 680677267L
-        private val loadTgaFromBufferBind by lazy {
+        @JvmField
+        val loadTgaFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_tga_from_buffer", LOAD_TGA_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_BMP_FROM_BUFFER_HASH = 680677267L
-        private val loadBmpFromBufferBind by lazy {
+        @JvmField
+        val loadBmpFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_bmp_from_buffer", LOAD_BMP_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_KTX_FROM_BUFFER_HASH = 680677267L
-        private val loadKtxFromBufferBind by lazy {
+        @JvmField
+        val loadKtxFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_ktx_from_buffer", LOAD_KTX_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_DDS_FROM_BUFFER_HASH = 680677267L
-        private val loadDdsFromBufferBind by lazy {
+        @JvmField
+        val loadDdsFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_dds_from_buffer", LOAD_DDS_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_EXR_FROM_BUFFER_HASH = 680677267L
-        private val loadExrFromBufferBind by lazy {
+        @JvmField
+        val loadExrFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_exr_from_buffer", LOAD_EXR_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_SVG_FROM_BUFFER_HASH = 311853421L
-        private val loadSvgFromBufferBind by lazy {
+        @JvmField
+        val loadSvgFromBufferBind =
             ObjectCalls.getMethodBind("Image", "load_svg_from_buffer", LOAD_SVG_FROM_BUFFER_HASH)
-        }
 
         private const val LOAD_SVG_FROM_STRING_HASH = 3254053600L
-        private val loadSvgFromStringBind by lazy {
+        @JvmField
+        val loadSvgFromStringBind =
             ObjectCalls.getMethodBind("Image", "load_svg_from_string", LOAD_SVG_FROM_STRING_HASH)
-        }
     }
 }

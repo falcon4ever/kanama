@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_amount
      */
     fun setAmount(index: Int, amount: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setAmountBind, segment, index, amount)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setAmountBind, segment, index, amount)
     }
 
     /**
@@ -27,7 +28,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_amount
      */
     fun getAmount(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getAmountBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getAmountBind, segment, index)
     }
 
     /**
@@ -36,7 +37,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_apply_bone_name
      */
     fun setApplyBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setApplyBoneNameBind, segment, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setApplyBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -45,7 +46,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_apply_bone_name
      */
     fun getApplyBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getApplyBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getApplyBoneNameBind, segment, index)
     }
 
     /**
@@ -54,7 +55,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_apply_bone
      */
     fun setApplyBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setApplyBoneBind, segment, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setApplyBoneBind, segment, index, bone)
     }
 
     /**
@@ -63,7 +64,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_apply_bone
      */
     fun getApplyBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getApplyBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getApplyBoneBind, segment, index)
     }
 
     /**
@@ -72,7 +73,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_reference_type
      */
     fun setReferenceType(index: Int, type: BoneConstraint3D.ReferenceType) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTypeBind, segment, index, type.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setReferenceTypeBind, segment, index, type.value)
     }
 
     /**
@@ -81,7 +82,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_reference_type
      */
     fun getReferenceType(index: Int): BoneConstraint3D.ReferenceType {
-        return BoneConstraint3D.ReferenceType(ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTypeBind, segment, index))
+        return BoneConstraint3D.ReferenceType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getReferenceTypeBind, segment, index))
     }
 
     /**
@@ -91,7 +92,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_reference_bone_name
      */
     fun setReferenceBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setReferenceBoneNameBind, segment, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setReferenceBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -101,7 +102,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_reference_bone_name
      */
     fun getReferenceBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getReferenceBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getReferenceBoneNameBind, segment, index)
     }
 
     /**
@@ -111,7 +112,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_reference_bone
      */
     fun setReferenceBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setReferenceBoneBind, segment, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setReferenceBoneBind, segment, index, bone)
     }
 
     /**
@@ -121,7 +122,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_reference_bone
      */
     fun getReferenceBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getReferenceBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getReferenceBoneBind, segment, index)
     }
 
     /**
@@ -131,7 +132,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_reference_node
      */
     fun setReferenceNode(index: Int, node: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setReferenceNodeBind, segment, index, node)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setReferenceNodeBind, segment, index, node)
     }
 
     /**
@@ -141,7 +142,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_reference_node
      */
     fun getReferenceNode(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getReferenceNodeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getReferenceNodeBind, segment, index)
     }
 
     /**
@@ -150,7 +151,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.set_setting_count
      */
     fun setSettingCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSettingCountBind, segment, count)
     }
 
     /**
@@ -159,7 +160,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.get_setting_count
      */
     fun getSettingCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSettingCountBind, segment)
     }
 
     /**
@@ -168,7 +169,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneConstraint3D.clear_setting
      */
     fun clearSetting() {
-        ObjectCalls.ptrcallNoArgs(clearSettingBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearSettingBind, segment)
     }
 
     /**
@@ -204,90 +205,92 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): BoneConstraint3D? =
             if (handle.address() == 0L) null else BoneConstraint3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_AMOUNT_HASH = 1602489585L
-        private val setAmountBind by lazy {
+        @JvmField
+        val setAmountBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_amount", SET_AMOUNT_HASH)
-        }
 
         private const val GET_AMOUNT_HASH = 2339986948L
-        private val getAmountBind by lazy {
+        @JvmField
+        val getAmountBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_amount", GET_AMOUNT_HASH)
-        }
 
         private const val SET_APPLY_BONE_NAME_HASH = 501894301L
-        private val setApplyBoneNameBind by lazy {
+        @JvmField
+        val setApplyBoneNameBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_apply_bone_name", SET_APPLY_BONE_NAME_HASH)
-        }
 
         private const val GET_APPLY_BONE_NAME_HASH = 844755477L
-        private val getApplyBoneNameBind by lazy {
+        @JvmField
+        val getApplyBoneNameBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_apply_bone_name", GET_APPLY_BONE_NAME_HASH)
-        }
 
         private const val SET_APPLY_BONE_HASH = 3937882851L
-        private val setApplyBoneBind by lazy {
+        @JvmField
+        val setApplyBoneBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_apply_bone", SET_APPLY_BONE_HASH)
-        }
 
         private const val GET_APPLY_BONE_HASH = 923996154L
-        private val getApplyBoneBind by lazy {
+        @JvmField
+        val getApplyBoneBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_apply_bone", GET_APPLY_BONE_HASH)
-        }
 
         private const val SET_REFERENCE_TYPE_HASH = 1830520418L
-        private val setReferenceTypeBind by lazy {
+        @JvmField
+        val setReferenceTypeBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_type", SET_REFERENCE_TYPE_HASH)
-        }
 
         private const val GET_REFERENCE_TYPE_HASH = 3456416152L
-        private val getReferenceTypeBind by lazy {
+        @JvmField
+        val getReferenceTypeBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_reference_type", GET_REFERENCE_TYPE_HASH)
-        }
 
         private const val SET_REFERENCE_BONE_NAME_HASH = 501894301L
-        private val setReferenceBoneNameBind by lazy {
+        @JvmField
+        val setReferenceBoneNameBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_bone_name", SET_REFERENCE_BONE_NAME_HASH)
-        }
 
         private const val GET_REFERENCE_BONE_NAME_HASH = 844755477L
-        private val getReferenceBoneNameBind by lazy {
+        @JvmField
+        val getReferenceBoneNameBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_reference_bone_name", GET_REFERENCE_BONE_NAME_HASH)
-        }
 
         private const val SET_REFERENCE_BONE_HASH = 3937882851L
-        private val setReferenceBoneBind by lazy {
+        @JvmField
+        val setReferenceBoneBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_bone", SET_REFERENCE_BONE_HASH)
-        }
 
         private const val GET_REFERENCE_BONE_HASH = 923996154L
-        private val getReferenceBoneBind by lazy {
+        @JvmField
+        val getReferenceBoneBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_reference_bone", GET_REFERENCE_BONE_HASH)
-        }
 
         private const val SET_REFERENCE_NODE_HASH = 2761262315L
-        private val setReferenceNodeBind by lazy {
+        @JvmField
+        val setReferenceNodeBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_reference_node", SET_REFERENCE_NODE_HASH)
-        }
 
         private const val GET_REFERENCE_NODE_HASH = 408788394L
-        private val getReferenceNodeBind by lazy {
+        @JvmField
+        val getReferenceNodeBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_reference_node", GET_REFERENCE_NODE_HASH)
-        }
 
         private const val SET_SETTING_COUNT_HASH = 1286410249L
-        private val setSettingCountBind by lazy {
+        @JvmField
+        val setSettingCountBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "set_setting_count", SET_SETTING_COUNT_HASH)
-        }
 
         private const val GET_SETTING_COUNT_HASH = 3905245786L
-        private val getSettingCountBind by lazy {
+        @JvmField
+        val getSettingCountBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "get_setting_count", GET_SETTING_COUNT_HASH)
-        }
 
         private const val CLEAR_SETTING_HASH = 3218959716L
-        private val clearSettingBind by lazy {
+        @JvmField
+        val clearSettingBind =
             ObjectCalls.getMethodBind("BoneConstraint3D", "clear_setting", CLEAR_SETTING_HASH)
-        }
     }
 }

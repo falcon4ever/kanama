@@ -22,7 +22,5 @@ open class Texture(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture? =
             if (handle.address() == 0L) null else Texture(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

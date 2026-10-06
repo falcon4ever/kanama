@@ -19,7 +19,5 @@ class VSlider(handle: GodotHandle) : Slider(handle) {
 
         internal fun wrap(handle: RawSegment): VSlider? =
             if (handle.address() == 0L) null else VSlider(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -62,7 +63,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setThreshold(threshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setThresholdBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdBind, segment, threshold)
     }
 
     /**
@@ -73,7 +74,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRatio(ratio: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRatioBind, segment, ratio)
     }
 
     /**
@@ -97,7 +98,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRatio(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRatioBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setGain(gain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGainBind, segment, gain)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGainBind, segment, gain)
     }
 
     /**
@@ -117,7 +118,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGainBind, segment)
     }
 
     /**
@@ -128,7 +129,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setAttackUs(attackUs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAttackUsBind, segment, attackUs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAttackUsBind, segment, attackUs)
     }
 
     /**
@@ -139,7 +140,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getAttackUs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAttackUsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAttackUsBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setReleaseMs(releaseMs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setReleaseMsBind, segment, releaseMs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setReleaseMsBind, segment, releaseMs)
     }
 
     /**
@@ -161,7 +162,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getReleaseMs(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getReleaseMsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getReleaseMsBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setMix(mix: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMixBind, segment, mix)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMixBind, segment, mix)
     }
 
     /**
@@ -183,7 +184,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getMix(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMixBind, segment)
     }
 
     /**
@@ -193,7 +194,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setSidechain(sidechain: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setSidechainBind, segment, sidechain)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setSidechainBind, segment, sidechain)
     }
 
     /**
@@ -203,7 +204,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSidechain(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getSidechainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSidechainBind, segment)
     }
 
     companion object {
@@ -216,75 +217,77 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectCompressor? =
             if (handle.address() == 0L) null else AudioEffectCompressor(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_THRESHOLD_HASH = 373806689L
-        private val setThresholdBind by lazy {
+        @JvmField
+        val setThresholdBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_threshold", SET_THRESHOLD_HASH)
-        }
 
         private const val GET_THRESHOLD_HASH = 1740695150L
-        private val getThresholdBind by lazy {
+        @JvmField
+        val getThresholdBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_threshold", GET_THRESHOLD_HASH)
-        }
 
         private const val SET_RATIO_HASH = 373806689L
-        private val setRatioBind by lazy {
+        @JvmField
+        val setRatioBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_ratio", SET_RATIO_HASH)
-        }
 
         private const val GET_RATIO_HASH = 1740695150L
-        private val getRatioBind by lazy {
+        @JvmField
+        val getRatioBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_ratio", GET_RATIO_HASH)
-        }
 
         private const val SET_GAIN_HASH = 373806689L
-        private val setGainBind by lazy {
+        @JvmField
+        val setGainBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_gain", SET_GAIN_HASH)
-        }
 
         private const val GET_GAIN_HASH = 1740695150L
-        private val getGainBind by lazy {
+        @JvmField
+        val getGainBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_gain", GET_GAIN_HASH)
-        }
 
         private const val SET_ATTACK_US_HASH = 373806689L
-        private val setAttackUsBind by lazy {
+        @JvmField
+        val setAttackUsBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_attack_us", SET_ATTACK_US_HASH)
-        }
 
         private const val GET_ATTACK_US_HASH = 1740695150L
-        private val getAttackUsBind by lazy {
+        @JvmField
+        val getAttackUsBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_attack_us", GET_ATTACK_US_HASH)
-        }
 
         private const val SET_RELEASE_MS_HASH = 373806689L
-        private val setReleaseMsBind by lazy {
+        @JvmField
+        val setReleaseMsBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_release_ms", SET_RELEASE_MS_HASH)
-        }
 
         private const val GET_RELEASE_MS_HASH = 1740695150L
-        private val getReleaseMsBind by lazy {
+        @JvmField
+        val getReleaseMsBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_release_ms", GET_RELEASE_MS_HASH)
-        }
 
         private const val SET_MIX_HASH = 373806689L
-        private val setMixBind by lazy {
+        @JvmField
+        val setMixBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_mix", SET_MIX_HASH)
-        }
 
         private const val GET_MIX_HASH = 1740695150L
-        private val getMixBind by lazy {
+        @JvmField
+        val getMixBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_mix", GET_MIX_HASH)
-        }
 
         private const val SET_SIDECHAIN_HASH = 3304788590L
-        private val setSidechainBind by lazy {
+        @JvmField
+        val setSidechainBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "set_sidechain", SET_SIDECHAIN_HASH)
-        }
 
         private const val GET_SIDECHAIN_HASH = 2002593661L
-        private val getSidechainBind by lazy {
+        @JvmField
+        val getSidechainBind =
             ObjectCalls.getMethodBind("AudioEffectCompressor", "get_sidechain", GET_SIDECHAIN_HASH)
-        }
     }
 }

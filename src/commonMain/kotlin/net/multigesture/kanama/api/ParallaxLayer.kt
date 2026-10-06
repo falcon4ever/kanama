@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.set_motion_scale
      */
     fun setMotionScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMotionScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setMotionScaleBind, segment, scale)
     }
 
     /**
@@ -45,7 +46,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.get_motion_scale
      */
     fun getMotionScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMotionScaleBind, segment)
     }
 
     /**
@@ -55,7 +56,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.set_motion_offset
      */
     fun setMotionOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMotionOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setMotionOffsetBind, segment, offset)
     }
 
     /**
@@ -65,7 +66,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.get_motion_offset
      */
     fun getMotionOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMotionOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMotionOffsetBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.set_mirroring
      */
     fun setMirroring(mirror: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMirroringBind, segment, mirror)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setMirroringBind, segment, mirror)
     }
 
     /**
@@ -109,7 +110,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ParallaxLayer.get_mirroring
      */
     fun getMirroring(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMirroringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMirroringBind, segment)
     }
 
     companion object {
@@ -119,35 +120,37 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): ParallaxLayer? =
             if (handle.address() == 0L) null else ParallaxLayer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MOTION_SCALE_HASH = 743155724L
-        private val setMotionScaleBind by lazy {
+        @JvmField
+        val setMotionScaleBind =
             ObjectCalls.getMethodBind("ParallaxLayer", "set_motion_scale", SET_MOTION_SCALE_HASH)
-        }
 
         private const val GET_MOTION_SCALE_HASH = 3341600327L
-        private val getMotionScaleBind by lazy {
+        @JvmField
+        val getMotionScaleBind =
             ObjectCalls.getMethodBind("ParallaxLayer", "get_motion_scale", GET_MOTION_SCALE_HASH)
-        }
 
         private const val SET_MOTION_OFFSET_HASH = 743155724L
-        private val setMotionOffsetBind by lazy {
+        @JvmField
+        val setMotionOffsetBind =
             ObjectCalls.getMethodBind("ParallaxLayer", "set_motion_offset", SET_MOTION_OFFSET_HASH)
-        }
 
         private const val GET_MOTION_OFFSET_HASH = 3341600327L
-        private val getMotionOffsetBind by lazy {
+        @JvmField
+        val getMotionOffsetBind =
             ObjectCalls.getMethodBind("ParallaxLayer", "get_motion_offset", GET_MOTION_OFFSET_HASH)
-        }
 
         private const val SET_MIRRORING_HASH = 743155724L
-        private val setMirroringBind by lazy {
+        @JvmField
+        val setMirroringBind =
             ObjectCalls.getMethodBind("ParallaxLayer", "set_mirroring", SET_MIRRORING_HASH)
-        }
 
         private const val GET_MIRRORING_HASH = 3341600327L
-        private val getMirroringBind by lazy {
+        @JvmField
+        val getMirroringBind =
             ObjectCalls.getMethodBind("ParallaxLayer", "get_mirroring", GET_MIRRORING_HASH)
-        }
     }
 }

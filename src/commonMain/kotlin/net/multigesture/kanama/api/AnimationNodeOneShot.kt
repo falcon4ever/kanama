@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -82,7 +83,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setFadeinTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFadeinTimeBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeinTimeBind, segment, time)
     }
 
     /**
@@ -94,7 +95,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeinTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeinTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeinTimeBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setFadeinCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFadeinCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -116,7 +117,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeinCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFadeinCurveBind, segment))
     }
 
     /**
@@ -128,7 +129,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setFadeoutTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFadeoutTimeBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeoutTimeBind, segment, time)
     }
 
     /**
@@ -140,7 +141,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeoutTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadeoutTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeoutTimeBind, segment)
     }
 
     /**
@@ -151,7 +152,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setFadeoutCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFadeoutCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -162,7 +163,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeoutCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFadeoutCurveBind, segment))
     }
 
     /**
@@ -173,7 +174,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setBreakLoopAtEnd(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBreakLoopAtEndBind, segment, enable)
     }
 
     /**
@@ -184,7 +185,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isLoopBrokenAtEnd(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLoopBrokenAtEndBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setAbortOnReset(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAbortOnResetBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAbortOnResetBind, segment, enable)
     }
 
     /**
@@ -204,7 +205,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isAbortedOnReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbortedOnResetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbortedOnResetBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setAutorestart(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAutorestartBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutorestartBind, segment, active)
     }
 
     /**
@@ -230,7 +231,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun hasAutorestart(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutorestartBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutorestartBind, segment)
     }
 
     /**
@@ -240,7 +241,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setAutorestartDelay(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutorestartDelayBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutorestartDelayBind, segment, time)
     }
 
     /**
@@ -250,7 +251,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getAutorestartDelay(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartDelayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutorestartDelayBind, segment)
     }
 
     /**
@@ -261,7 +262,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setAutorestartRandomDelay(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutorestartRandomDelayBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutorestartRandomDelayBind, segment, time)
     }
 
     /**
@@ -272,7 +273,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getAutorestartRandomDelay(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutorestartRandomDelayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutorestartRandomDelayBind, segment)
     }
 
     /**
@@ -282,7 +283,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setMixMode(mode: AnimationNodeOneShot.MixMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMixModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMixModeBind, segment, mode.value)
     }
 
     /**
@@ -292,7 +293,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getMixMode(): AnimationNodeOneShot.MixMode {
         checkOpen()
-        return AnimationNodeOneShot.MixMode(ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, segment))
+        return AnimationNodeOneShot.MixMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMixModeBind, segment))
     }
 
     /**
@@ -366,105 +367,107 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeOneShot? =
             if (handle.address() == 0L) null else AnimationNodeOneShot(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FADEIN_TIME_HASH = 373806689L
-        private val setFadeinTimeBind by lazy {
+        @JvmField
+        val setFadeinTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_fadein_time", SET_FADEIN_TIME_HASH)
-        }
 
         private const val GET_FADEIN_TIME_HASH = 1740695150L
-        private val getFadeinTimeBind by lazy {
+        @JvmField
+        val getFadeinTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_fadein_time", GET_FADEIN_TIME_HASH)
-        }
 
         private const val SET_FADEIN_CURVE_HASH = 270443179L
-        private val setFadeinCurveBind by lazy {
+        @JvmField
+        val setFadeinCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_fadein_curve", SET_FADEIN_CURVE_HASH)
-        }
 
         private const val GET_FADEIN_CURVE_HASH = 2460114913L
-        private val getFadeinCurveBind by lazy {
+        @JvmField
+        val getFadeinCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_fadein_curve", GET_FADEIN_CURVE_HASH)
-        }
 
         private const val SET_FADEOUT_TIME_HASH = 373806689L
-        private val setFadeoutTimeBind by lazy {
+        @JvmField
+        val setFadeoutTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_fadeout_time", SET_FADEOUT_TIME_HASH)
-        }
 
         private const val GET_FADEOUT_TIME_HASH = 1740695150L
-        private val getFadeoutTimeBind by lazy {
+        @JvmField
+        val getFadeoutTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_fadeout_time", GET_FADEOUT_TIME_HASH)
-        }
 
         private const val SET_FADEOUT_CURVE_HASH = 270443179L
-        private val setFadeoutCurveBind by lazy {
+        @JvmField
+        val setFadeoutCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_fadeout_curve", SET_FADEOUT_CURVE_HASH)
-        }
 
         private const val GET_FADEOUT_CURVE_HASH = 2460114913L
-        private val getFadeoutCurveBind by lazy {
+        @JvmField
+        val getFadeoutCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_fadeout_curve", GET_FADEOUT_CURVE_HASH)
-        }
 
         private const val SET_BREAK_LOOP_AT_END_HASH = 2586408642L
-        private val setBreakLoopAtEndBind by lazy {
+        @JvmField
+        val setBreakLoopAtEndBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_break_loop_at_end", SET_BREAK_LOOP_AT_END_HASH)
-        }
 
         private const val IS_LOOP_BROKEN_AT_END_HASH = 36873697L
-        private val isLoopBrokenAtEndBind by lazy {
+        @JvmField
+        val isLoopBrokenAtEndBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "is_loop_broken_at_end", IS_LOOP_BROKEN_AT_END_HASH)
-        }
 
         private const val SET_ABORT_ON_RESET_HASH = 2586408642L
-        private val setAbortOnResetBind by lazy {
+        @JvmField
+        val setAbortOnResetBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_abort_on_reset", SET_ABORT_ON_RESET_HASH)
-        }
 
         private const val IS_ABORTED_ON_RESET_HASH = 36873697L
-        private val isAbortedOnResetBind by lazy {
+        @JvmField
+        val isAbortedOnResetBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "is_aborted_on_reset", IS_ABORTED_ON_RESET_HASH)
-        }
 
         private const val SET_AUTORESTART_HASH = 2586408642L
-        private val setAutorestartBind by lazy {
+        @JvmField
+        val setAutorestartBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_autorestart", SET_AUTORESTART_HASH)
-        }
 
         private const val HAS_AUTORESTART_HASH = 36873697L
-        private val hasAutorestartBind by lazy {
+        @JvmField
+        val hasAutorestartBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "has_autorestart", HAS_AUTORESTART_HASH)
-        }
 
         private const val SET_AUTORESTART_DELAY_HASH = 373806689L
-        private val setAutorestartDelayBind by lazy {
+        @JvmField
+        val setAutorestartDelayBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_autorestart_delay", SET_AUTORESTART_DELAY_HASH)
-        }
 
         private const val GET_AUTORESTART_DELAY_HASH = 1740695150L
-        private val getAutorestartDelayBind by lazy {
+        @JvmField
+        val getAutorestartDelayBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_autorestart_delay", GET_AUTORESTART_DELAY_HASH)
-        }
 
         private const val SET_AUTORESTART_RANDOM_DELAY_HASH = 373806689L
-        private val setAutorestartRandomDelayBind by lazy {
+        @JvmField
+        val setAutorestartRandomDelayBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_autorestart_random_delay", SET_AUTORESTART_RANDOM_DELAY_HASH)
-        }
 
         private const val GET_AUTORESTART_RANDOM_DELAY_HASH = 1740695150L
-        private val getAutorestartRandomDelayBind by lazy {
+        @JvmField
+        val getAutorestartRandomDelayBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_autorestart_random_delay", GET_AUTORESTART_RANDOM_DELAY_HASH)
-        }
 
         private const val SET_MIX_MODE_HASH = 1018899799L
-        private val setMixModeBind by lazy {
+        @JvmField
+        val setMixModeBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "set_mix_mode", SET_MIX_MODE_HASH)
-        }
 
         private const val GET_MIX_MODE_HASH = 3076550526L
-        private val getMixModeBind by lazy {
+        @JvmField
+        val getMixModeBind =
             ObjectCalls.getMethodBind("AnimationNodeOneShot", "get_mix_mode", GET_MIX_MODE_HASH)
-        }
     }
 }

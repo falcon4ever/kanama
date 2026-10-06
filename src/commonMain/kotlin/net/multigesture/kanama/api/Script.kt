@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun canInstantiate(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canInstantiateBind, segment)
     }
 
     /**
@@ -37,7 +38,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSourceCode(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSourceCodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasSourceCodeBind, segment)
     }
 
     /**
@@ -48,7 +49,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceCode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSourceCodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceCodeBind, segment)
     }
 
     /**
@@ -59,7 +60,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceCode(source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSourceCodeBind, segment, source)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSourceCodeBind, segment, source)
     }
 
     /**
@@ -69,7 +70,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun reload(keepState: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, segment, keepState))
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.reloadBind, segment, keepState))
     }
 
     /**
@@ -79,7 +80,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getBaseScript(): Script? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseScriptBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseScriptBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -94,7 +95,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceBaseType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getInstanceBaseTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getInstanceBaseTypeBind, segment)
     }
 
     /**
@@ -106,7 +107,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlobalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getGlobalNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getGlobalNameBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun hasScriptMethod(methodName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptMethodBind, segment, methodName)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasScriptMethodBind, segment, methodName)
     }
 
     /**
@@ -126,7 +127,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun hasScriptSignal(signalName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasScriptSignalBind, segment, signalName)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasScriptSignalBind, segment, signalName)
     }
 
     /**
@@ -137,7 +138,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptPropertyList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptPropertyListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptPropertyListBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptMethodList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptMethodListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptMethodListBind, segment)
     }
 
     /**
@@ -159,7 +160,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptSignalList(): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getScriptSignalListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getScriptSignalListBind, segment)
     }
 
     /**
@@ -169,7 +170,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getScriptConstantMap(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getScriptConstantMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getScriptConstantMapBind, segment)
     }
 
     /**
@@ -179,7 +180,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getPropertyDefaultValue(property: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getPropertyDefaultValueBind, segment, property)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getPropertyDefaultValueBind, segment, property)
     }
 
     /**
@@ -189,7 +190,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun isTool(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isToolBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isToolBind, segment)
     }
 
     /**
@@ -200,7 +201,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun isAbstract(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbstractBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbstractBind, segment)
     }
 
     /**
@@ -210,7 +211,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun getRpcConfig(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRpcConfigBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getRpcConfigBind, segment)
     }
 
     /**
@@ -220,7 +221,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      */
     fun instanceHas(baseObject: GodotObject): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(instanceHasBind, segment, baseObject.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.instanceHasBind, segment, baseObject.segment)
     }
 
     companion object {
@@ -233,100 +234,102 @@ open class Script(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Script? =
             if (handle.address() == 0L) null else Script(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CAN_INSTANTIATE_HASH = 36873697L
-        private val canInstantiateBind by lazy {
+        @JvmField
+        val canInstantiateBind =
             ObjectCalls.getMethodBind("Script", "can_instantiate", CAN_INSTANTIATE_HASH)
-        }
 
         private const val HAS_SOURCE_CODE_HASH = 36873697L
-        private val hasSourceCodeBind by lazy {
+        @JvmField
+        val hasSourceCodeBind =
             ObjectCalls.getMethodBind("Script", "has_source_code", HAS_SOURCE_CODE_HASH)
-        }
 
         private const val GET_SOURCE_CODE_HASH = 201670096L
-        private val getSourceCodeBind by lazy {
+        @JvmField
+        val getSourceCodeBind =
             ObjectCalls.getMethodBind("Script", "get_source_code", GET_SOURCE_CODE_HASH)
-        }
 
         private const val SET_SOURCE_CODE_HASH = 83702148L
-        private val setSourceCodeBind by lazy {
+        @JvmField
+        val setSourceCodeBind =
             ObjectCalls.getMethodBind("Script", "set_source_code", SET_SOURCE_CODE_HASH)
-        }
 
         private const val RELOAD_HASH = 1633102583L
-        private val reloadBind by lazy {
+        @JvmField
+        val reloadBind =
             ObjectCalls.getMethodBind("Script", "reload", RELOAD_HASH)
-        }
 
         private const val GET_BASE_SCRIPT_HASH = 278624046L
-        private val getBaseScriptBind by lazy {
+        @JvmField
+        val getBaseScriptBind =
             ObjectCalls.getMethodBind("Script", "get_base_script", GET_BASE_SCRIPT_HASH)
-        }
 
         private const val GET_INSTANCE_BASE_TYPE_HASH = 2002593661L
-        private val getInstanceBaseTypeBind by lazy {
+        @JvmField
+        val getInstanceBaseTypeBind =
             ObjectCalls.getMethodBind("Script", "get_instance_base_type", GET_INSTANCE_BASE_TYPE_HASH)
-        }
 
         private const val GET_GLOBAL_NAME_HASH = 2002593661L
-        private val getGlobalNameBind by lazy {
+        @JvmField
+        val getGlobalNameBind =
             ObjectCalls.getMethodBind("Script", "get_global_name", GET_GLOBAL_NAME_HASH)
-        }
 
         private const val HAS_SCRIPT_METHOD_HASH = 2619796661L
-        private val hasScriptMethodBind by lazy {
+        @JvmField
+        val hasScriptMethodBind =
             ObjectCalls.getMethodBind("Script", "has_script_method", HAS_SCRIPT_METHOD_HASH)
-        }
 
         private const val HAS_SCRIPT_SIGNAL_HASH = 2619796661L
-        private val hasScriptSignalBind by lazy {
+        @JvmField
+        val hasScriptSignalBind =
             ObjectCalls.getMethodBind("Script", "has_script_signal", HAS_SCRIPT_SIGNAL_HASH)
-        }
 
         private const val GET_SCRIPT_PROPERTY_LIST_HASH = 2915620761L
-        private val getScriptPropertyListBind by lazy {
+        @JvmField
+        val getScriptPropertyListBind =
             ObjectCalls.getMethodBind("Script", "get_script_property_list", GET_SCRIPT_PROPERTY_LIST_HASH)
-        }
 
         private const val GET_SCRIPT_METHOD_LIST_HASH = 2915620761L
-        private val getScriptMethodListBind by lazy {
+        @JvmField
+        val getScriptMethodListBind =
             ObjectCalls.getMethodBind("Script", "get_script_method_list", GET_SCRIPT_METHOD_LIST_HASH)
-        }
 
         private const val GET_SCRIPT_SIGNAL_LIST_HASH = 2915620761L
-        private val getScriptSignalListBind by lazy {
+        @JvmField
+        val getScriptSignalListBind =
             ObjectCalls.getMethodBind("Script", "get_script_signal_list", GET_SCRIPT_SIGNAL_LIST_HASH)
-        }
 
         private const val GET_SCRIPT_CONSTANT_MAP_HASH = 2382534195L
-        private val getScriptConstantMapBind by lazy {
+        @JvmField
+        val getScriptConstantMapBind =
             ObjectCalls.getMethodBind("Script", "get_script_constant_map", GET_SCRIPT_CONSTANT_MAP_HASH)
-        }
 
         private const val GET_PROPERTY_DEFAULT_VALUE_HASH = 2138907829L
-        private val getPropertyDefaultValueBind by lazy {
+        @JvmField
+        val getPropertyDefaultValueBind =
             ObjectCalls.getMethodBind("Script", "get_property_default_value", GET_PROPERTY_DEFAULT_VALUE_HASH)
-        }
 
         private const val IS_TOOL_HASH = 36873697L
-        private val isToolBind by lazy {
+        @JvmField
+        val isToolBind =
             ObjectCalls.getMethodBind("Script", "is_tool", IS_TOOL_HASH)
-        }
 
         private const val IS_ABSTRACT_HASH = 36873697L
-        private val isAbstractBind by lazy {
+        @JvmField
+        val isAbstractBind =
             ObjectCalls.getMethodBind("Script", "is_abstract", IS_ABSTRACT_HASH)
-        }
 
         private const val GET_RPC_CONFIG_HASH = 1214101251L
-        private val getRpcConfigBind by lazy {
+        @JvmField
+        val getRpcConfigBind =
             ObjectCalls.getMethodBind("Script", "get_rpc_config", GET_RPC_CONFIG_HASH)
-        }
 
         private const val INSTANCE_HAS_HASH = 397768994L
-        private val instanceHasBind by lazy {
+        @JvmField
+        val instanceHasBind =
             ObjectCalls.getMethodBind("Script", "instance_has", INSTANCE_HAS_HASH)
-        }
     }
 }

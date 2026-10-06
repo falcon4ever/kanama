@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -48,82 +49,82 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
 
     fun isValidGateway(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isValidGatewayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidGatewayBind, segment)
     }
 
     fun queryExternalAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(queryExternalAddressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
     }
 
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(addPortMappingBind, segment, port, portInternal, desc, proto, duration)
+        return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
     }
 
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(deletePortMappingBind, segment, port, proto)
+        return ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
     }
 
     fun setDescriptionUrl(url: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setDescriptionUrlBind, segment, url)
+        ObjectCalls.ptrcallWithStringArg(Binds.setDescriptionUrlBind, segment, url)
     }
 
     fun getDescriptionUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getDescriptionUrlBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionUrlBind, segment)
     }
 
     fun setServiceType(type: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setServiceTypeBind, segment, type)
+        ObjectCalls.ptrcallWithStringArg(Binds.setServiceTypeBind, segment, type)
     }
 
     fun getServiceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getServiceTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getServiceTypeBind, segment)
     }
 
     fun setIgdControlUrl(url: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setIgdControlUrlBind, segment, url)
+        ObjectCalls.ptrcallWithStringArg(Binds.setIgdControlUrlBind, segment, url)
     }
 
     fun getIgdControlUrl(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIgdControlUrlBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdControlUrlBind, segment)
     }
 
     fun setIgdServiceType(type: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setIgdServiceTypeBind, segment, type)
+        ObjectCalls.ptrcallWithStringArg(Binds.setIgdServiceTypeBind, segment, type)
     }
 
     fun getIgdServiceType(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIgdServiceTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdServiceTypeBind, segment)
     }
 
     fun setIgdOurAddr(addr: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setIgdOurAddrBind, segment, addr)
+        ObjectCalls.ptrcallWithStringArg(Binds.setIgdOurAddrBind, segment, addr)
     }
 
     fun getIgdOurAddr(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getIgdOurAddrBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdOurAddrBind, segment)
     }
 
     fun setIgdStatus(status: UPNPDevice.IGDStatus) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setIgdStatusBind, segment, status.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setIgdStatusBind, segment, status.value)
     }
 
     fun getIgdStatus(): UPNPDevice.IGDStatus {
         checkOpen()
-        return UPNPDevice.IGDStatus(ObjectCalls.ptrcallNoArgsRetLong(getIgdStatusBind, segment))
+        return UPNPDevice.IGDStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getIgdStatusBind, segment))
     }
 
     @JvmInline
@@ -152,85 +153,87 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UPNPDevice? =
             if (handle.address() == 0L) null else UPNPDevice(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_VALID_GATEWAY_HASH = 36873697L
-        private val isValidGatewayBind by lazy {
+        @JvmField
+        val isValidGatewayBind =
             ObjectCalls.getMethodBind("UPNPDevice", "is_valid_gateway", IS_VALID_GATEWAY_HASH)
-        }
 
         private const val QUERY_EXTERNAL_ADDRESS_HASH = 201670096L
-        private val queryExternalAddressBind by lazy {
+        @JvmField
+        val queryExternalAddressBind =
             ObjectCalls.getMethodBind("UPNPDevice", "query_external_address", QUERY_EXTERNAL_ADDRESS_HASH)
-        }
 
         private const val ADD_PORT_MAPPING_HASH = 818314583L
-        private val addPortMappingBind by lazy {
+        @JvmField
+        val addPortMappingBind =
             ObjectCalls.getMethodBind("UPNPDevice", "add_port_mapping", ADD_PORT_MAPPING_HASH)
-        }
 
         private const val DELETE_PORT_MAPPING_HASH = 3444187325L
-        private val deletePortMappingBind by lazy {
+        @JvmField
+        val deletePortMappingBind =
             ObjectCalls.getMethodBind("UPNPDevice", "delete_port_mapping", DELETE_PORT_MAPPING_HASH)
-        }
 
         private const val SET_DESCRIPTION_URL_HASH = 83702148L
-        private val setDescriptionUrlBind by lazy {
+        @JvmField
+        val setDescriptionUrlBind =
             ObjectCalls.getMethodBind("UPNPDevice", "set_description_url", SET_DESCRIPTION_URL_HASH)
-        }
 
         private const val GET_DESCRIPTION_URL_HASH = 201670096L
-        private val getDescriptionUrlBind by lazy {
+        @JvmField
+        val getDescriptionUrlBind =
             ObjectCalls.getMethodBind("UPNPDevice", "get_description_url", GET_DESCRIPTION_URL_HASH)
-        }
 
         private const val SET_SERVICE_TYPE_HASH = 83702148L
-        private val setServiceTypeBind by lazy {
+        @JvmField
+        val setServiceTypeBind =
             ObjectCalls.getMethodBind("UPNPDevice", "set_service_type", SET_SERVICE_TYPE_HASH)
-        }
 
         private const val GET_SERVICE_TYPE_HASH = 201670096L
-        private val getServiceTypeBind by lazy {
+        @JvmField
+        val getServiceTypeBind =
             ObjectCalls.getMethodBind("UPNPDevice", "get_service_type", GET_SERVICE_TYPE_HASH)
-        }
 
         private const val SET_IGD_CONTROL_URL_HASH = 83702148L
-        private val setIgdControlUrlBind by lazy {
+        @JvmField
+        val setIgdControlUrlBind =
             ObjectCalls.getMethodBind("UPNPDevice", "set_igd_control_url", SET_IGD_CONTROL_URL_HASH)
-        }
 
         private const val GET_IGD_CONTROL_URL_HASH = 201670096L
-        private val getIgdControlUrlBind by lazy {
+        @JvmField
+        val getIgdControlUrlBind =
             ObjectCalls.getMethodBind("UPNPDevice", "get_igd_control_url", GET_IGD_CONTROL_URL_HASH)
-        }
 
         private const val SET_IGD_SERVICE_TYPE_HASH = 83702148L
-        private val setIgdServiceTypeBind by lazy {
+        @JvmField
+        val setIgdServiceTypeBind =
             ObjectCalls.getMethodBind("UPNPDevice", "set_igd_service_type", SET_IGD_SERVICE_TYPE_HASH)
-        }
 
         private const val GET_IGD_SERVICE_TYPE_HASH = 201670096L
-        private val getIgdServiceTypeBind by lazy {
+        @JvmField
+        val getIgdServiceTypeBind =
             ObjectCalls.getMethodBind("UPNPDevice", "get_igd_service_type", GET_IGD_SERVICE_TYPE_HASH)
-        }
 
         private const val SET_IGD_OUR_ADDR_HASH = 83702148L
-        private val setIgdOurAddrBind by lazy {
+        @JvmField
+        val setIgdOurAddrBind =
             ObjectCalls.getMethodBind("UPNPDevice", "set_igd_our_addr", SET_IGD_OUR_ADDR_HASH)
-        }
 
         private const val GET_IGD_OUR_ADDR_HASH = 201670096L
-        private val getIgdOurAddrBind by lazy {
+        @JvmField
+        val getIgdOurAddrBind =
             ObjectCalls.getMethodBind("UPNPDevice", "get_igd_our_addr", GET_IGD_OUR_ADDR_HASH)
-        }
 
         private const val SET_IGD_STATUS_HASH = 519504122L
-        private val setIgdStatusBind by lazy {
+        @JvmField
+        val setIgdStatusBind =
             ObjectCalls.getMethodBind("UPNPDevice", "set_igd_status", SET_IGD_STATUS_HASH)
-        }
 
         private const val GET_IGD_STATUS_HASH = 180887011L
-        private val getIgdStatusBind by lazy {
+        @JvmField
+        val getIgdStatusBind =
             ObjectCalls.getMethodBind("UPNPDevice", "get_igd_status", GET_IGD_STATUS_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -47,51 +48,51 @@ class CSGTorus3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setInnerRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerRadiusBind, segment, radius)
     }
 
     fun getInnerRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerRadiusBind, segment)
     }
 
     fun setOuterRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterRadiusBind, segment, radius)
     }
 
     fun getOuterRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterRadiusBind, segment)
     }
 
     fun setSides(sides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSidesBind, segment, sides)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSidesBind, segment, sides)
     }
 
     fun getSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSidesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSidesBind, segment)
     }
 
     fun setRingSides(sides: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRingSidesBind, segment, sides)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingSidesBind, segment, sides)
     }
 
     fun getRingSides(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingSidesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingSidesBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSmoothFacesBind, segment)
     }
 
     companion object {
@@ -101,65 +102,67 @@ class CSGTorus3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGTorus3D? =
             if (handle.address() == 0L) null else CSGTorus3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INNER_RADIUS_HASH = 373806689L
-        private val setInnerRadiusBind by lazy {
+        @JvmField
+        val setInnerRadiusBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "set_inner_radius", SET_INNER_RADIUS_HASH)
-        }
 
         private const val GET_INNER_RADIUS_HASH = 1740695150L
-        private val getInnerRadiusBind by lazy {
+        @JvmField
+        val getInnerRadiusBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "get_inner_radius", GET_INNER_RADIUS_HASH)
-        }
 
         private const val SET_OUTER_RADIUS_HASH = 373806689L
-        private val setOuterRadiusBind by lazy {
+        @JvmField
+        val setOuterRadiusBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "set_outer_radius", SET_OUTER_RADIUS_HASH)
-        }
 
         private const val GET_OUTER_RADIUS_HASH = 1740695150L
-        private val getOuterRadiusBind by lazy {
+        @JvmField
+        val getOuterRadiusBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "get_outer_radius", GET_OUTER_RADIUS_HASH)
-        }
 
         private const val SET_SIDES_HASH = 1286410249L
-        private val setSidesBind by lazy {
+        @JvmField
+        val setSidesBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "set_sides", SET_SIDES_HASH)
-        }
 
         private const val GET_SIDES_HASH = 3905245786L
-        private val getSidesBind by lazy {
+        @JvmField
+        val getSidesBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "get_sides", GET_SIDES_HASH)
-        }
 
         private const val SET_RING_SIDES_HASH = 1286410249L
-        private val setRingSidesBind by lazy {
+        @JvmField
+        val setRingSidesBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "set_ring_sides", SET_RING_SIDES_HASH)
-        }
 
         private const val GET_RING_SIDES_HASH = 3905245786L
-        private val getRingSidesBind by lazy {
+        @JvmField
+        val getRingSidesBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "get_ring_sides", GET_RING_SIDES_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "get_material", GET_MATERIAL_HASH)
-        }
 
         private const val SET_SMOOTH_FACES_HASH = 2586408642L
-        private val setSmoothFacesBind by lazy {
+        @JvmField
+        val setSmoothFacesBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "set_smooth_faces", SET_SMOOTH_FACES_HASH)
-        }
 
         private const val GET_SMOOTH_FACES_HASH = 36873697L
-        private val getSmoothFacesBind by lazy {
+        @JvmField
+        val getSmoothFacesBind =
             ObjectCalls.getMethodBind("CSGTorus3D", "get_smooth_faces", GET_SMOOTH_FACES_HASH)
-        }
     }
 }

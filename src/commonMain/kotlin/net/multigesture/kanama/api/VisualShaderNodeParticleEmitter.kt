@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,12 +18,12 @@ open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNo
 
     fun setMode2d(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMode2dBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMode2dBind, segment, enabled)
     }
 
     fun isMode2d(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMode2dBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMode2dBind, segment)
     }
 
     companion object {
@@ -35,15 +36,17 @@ open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNo
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleEmitter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MODE_2D_HASH = 2586408642L
-        private val setMode2dBind by lazy {
+        @JvmField
+        val setMode2dBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleEmitter", "set_mode_2d", SET_MODE_2D_HASH)
-        }
 
         private const val IS_MODE_2D_HASH = 36873697L
-        private val isMode2dBind by lazy {
+        @JvmField
+        val isMode2dBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleEmitter", "is_mode_2d", IS_MODE_2D_HASH)
-        }
     }
 }

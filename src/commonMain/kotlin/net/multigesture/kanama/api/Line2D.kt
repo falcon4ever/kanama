@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -106,7 +107,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_points
      */
     fun setPoints(points: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, segment, points)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPointsBind, segment, points)
     }
 
     /**
@@ -116,7 +117,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_points
      */
     fun getPoints(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPointsBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_point_position
      */
     fun setPointPosition(index: Int, position: Vector2) {
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setPointPositionBind, segment, index, position)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setPointPositionBind, segment, index, position)
     }
 
     /**
@@ -134,7 +135,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_point_position
      */
     fun getPointPosition(index: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getPointPositionBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getPointPositionBind, segment, index)
     }
 
     /**
@@ -143,7 +144,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_point_count
      */
     fun getPointCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.add_point
      */
     fun addPoint(position: Vector2, index: Int = -1) {
-        ObjectCalls.ptrcallWithVector2AndIntArg(addPointBind, segment, position, index)
+        ObjectCalls.ptrcallWithVector2AndIntArg(Binds.addPointBind, segment, position, index)
     }
 
     /**
@@ -165,7 +166,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.remove_point
      */
     fun removePoint(index: Int) {
-        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, index)
     }
 
     /**
@@ -174,7 +175,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.clear_points
      */
     fun clearPoints() {
-        ObjectCalls.ptrcallNoArgs(clearPointsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearPointsBind, segment)
     }
 
     /**
@@ -187,7 +188,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_closed
      */
     fun setClosed(closed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClosedBind, segment, closed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setClosedBind, segment, closed)
     }
 
     /**
@@ -200,7 +201,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.is_closed
      */
     fun isClosed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClosedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isClosedBind, segment)
     }
 
     /**
@@ -209,7 +210,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_width
      */
     fun setWidth(width: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -218,7 +219,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_width
      */
     fun getWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
     }
 
     /**
@@ -228,7 +229,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_curve
      */
     fun setCurve(curve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -238,7 +239,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_curve
      */
     fun getCurve(): Curve? {
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
     }
 
     /**
@@ -247,7 +248,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_default_color
      */
     fun setDefaultColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDefaultColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDefaultColorBind, segment, color)
     }
 
     /**
@@ -256,7 +257,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_default_color
      */
     fun getDefaultColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDefaultColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDefaultColorBind, segment)
     }
 
     /**
@@ -266,7 +267,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_gradient
      */
     fun setGradient(color: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(color?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGradientBind, segment, listOf(color?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -276,7 +277,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_gradient
      */
     fun getGradient(): Gradient? {
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
     }
 
     /**
@@ -285,7 +286,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -294,7 +295,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -303,7 +304,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_texture_mode
      */
     fun setTextureMode(mode: Line2D.LineTextureMode) {
-        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureModeBind, segment, mode.value)
     }
 
     /**
@@ -312,7 +313,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_texture_mode
      */
     fun getTextureMode(): Line2D.LineTextureMode {
-        return Line2D.LineTextureMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment))
+        return Line2D.LineTextureMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureModeBind, segment))
     }
 
     /**
@@ -321,7 +322,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_joint_mode
      */
     fun setJointMode(mode: Line2D.LineJointMode) {
-        ObjectCalls.ptrcallWithLongArg(setJointModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJointModeBind, segment, mode.value)
     }
 
     /**
@@ -330,7 +331,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_joint_mode
      */
     fun getJointMode(): Line2D.LineJointMode {
-        return Line2D.LineJointMode(ObjectCalls.ptrcallNoArgsRetLong(getJointModeBind, segment))
+        return Line2D.LineJointMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJointModeBind, segment))
     }
 
     /**
@@ -339,7 +340,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_begin_cap_mode
      */
     fun setBeginCapMode(mode: Line2D.LineCapMode) {
-        ObjectCalls.ptrcallWithLongArg(setBeginCapModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBeginCapModeBind, segment, mode.value)
     }
 
     /**
@@ -348,7 +349,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_begin_cap_mode
      */
     fun getBeginCapMode(): Line2D.LineCapMode {
-        return Line2D.LineCapMode(ObjectCalls.ptrcallNoArgsRetLong(getBeginCapModeBind, segment))
+        return Line2D.LineCapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBeginCapModeBind, segment))
     }
 
     /**
@@ -357,7 +358,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_end_cap_mode
      */
     fun setEndCapMode(mode: Line2D.LineCapMode) {
-        ObjectCalls.ptrcallWithLongArg(setEndCapModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEndCapModeBind, segment, mode.value)
     }
 
     /**
@@ -366,7 +367,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_end_cap_mode
      */
     fun getEndCapMode(): Line2D.LineCapMode {
-        return Line2D.LineCapMode(ObjectCalls.ptrcallNoArgsRetLong(getEndCapModeBind, segment))
+        return Line2D.LineCapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEndCapModeBind, segment))
     }
 
     /**
@@ -378,7 +379,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_sharp_limit
      */
     fun setSharpLimit(limit: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSharpLimitBind, segment, limit)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSharpLimitBind, segment, limit)
     }
 
     /**
@@ -390,7 +391,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_sharp_limit
      */
     fun getSharpLimit(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSharpLimitBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSharpLimitBind, segment)
     }
 
     /**
@@ -400,7 +401,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_round_precision
      */
     fun setRoundPrecision(precision: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRoundPrecisionBind, segment, precision)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRoundPrecisionBind, segment, precision)
     }
 
     /**
@@ -410,7 +411,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_round_precision
      */
     fun getRoundPrecision(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRoundPrecisionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRoundPrecisionBind, segment)
     }
 
     /**
@@ -420,7 +421,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_antialiased
      */
     fun setAntialiased(antialiased: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAntialiasedBind, segment, antialiased)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAntialiasedBind, segment, antialiased)
     }
 
     /**
@@ -430,7 +431,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_antialiased
      */
     fun getAntialiased(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAntialiasedBind, segment)
     }
 
     /**
@@ -536,175 +537,177 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Line2D? =
             if (handle.address() == 0L) null else Line2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POINTS_HASH = 1509147220L
-        private val setPointsBind by lazy {
+        @JvmField
+        val setPointsBind =
             ObjectCalls.getMethodBind("Line2D", "set_points", SET_POINTS_HASH)
-        }
 
         private const val GET_POINTS_HASH = 2961356807L
-        private val getPointsBind by lazy {
+        @JvmField
+        val getPointsBind =
             ObjectCalls.getMethodBind("Line2D", "get_points", GET_POINTS_HASH)
-        }
 
         private const val SET_POINT_POSITION_HASH = 163021252L
-        private val setPointPositionBind by lazy {
+        @JvmField
+        val setPointPositionBind =
             ObjectCalls.getMethodBind("Line2D", "set_point_position", SET_POINT_POSITION_HASH)
-        }
 
         private const val GET_POINT_POSITION_HASH = 2299179447L
-        private val getPointPositionBind by lazy {
+        @JvmField
+        val getPointPositionBind =
             ObjectCalls.getMethodBind("Line2D", "get_point_position", GET_POINT_POSITION_HASH)
-        }
 
         private const val GET_POINT_COUNT_HASH = 3905245786L
-        private val getPointCountBind by lazy {
+        @JvmField
+        val getPointCountBind =
             ObjectCalls.getMethodBind("Line2D", "get_point_count", GET_POINT_COUNT_HASH)
-        }
 
         private const val ADD_POINT_HASH = 2654014372L
-        private val addPointBind by lazy {
+        @JvmField
+        val addPointBind =
             ObjectCalls.getMethodBind("Line2D", "add_point", ADD_POINT_HASH)
-        }
 
         private const val REMOVE_POINT_HASH = 1286410249L
-        private val removePointBind by lazy {
+        @JvmField
+        val removePointBind =
             ObjectCalls.getMethodBind("Line2D", "remove_point", REMOVE_POINT_HASH)
-        }
 
         private const val CLEAR_POINTS_HASH = 3218959716L
-        private val clearPointsBind by lazy {
+        @JvmField
+        val clearPointsBind =
             ObjectCalls.getMethodBind("Line2D", "clear_points", CLEAR_POINTS_HASH)
-        }
 
         private const val SET_CLOSED_HASH = 2586408642L
-        private val setClosedBind by lazy {
+        @JvmField
+        val setClosedBind =
             ObjectCalls.getMethodBind("Line2D", "set_closed", SET_CLOSED_HASH)
-        }
 
         private const val IS_CLOSED_HASH = 36873697L
-        private val isClosedBind by lazy {
+        @JvmField
+        val isClosedBind =
             ObjectCalls.getMethodBind("Line2D", "is_closed", IS_CLOSED_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 373806689L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("Line2D", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 1740695150L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("Line2D", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val SET_CURVE_HASH = 270443179L
-        private val setCurveBind by lazy {
+        @JvmField
+        val setCurveBind =
             ObjectCalls.getMethodBind("Line2D", "set_curve", SET_CURVE_HASH)
-        }
 
         private const val GET_CURVE_HASH = 2460114913L
-        private val getCurveBind by lazy {
+        @JvmField
+        val getCurveBind =
             ObjectCalls.getMethodBind("Line2D", "get_curve", GET_CURVE_HASH)
-        }
 
         private const val SET_DEFAULT_COLOR_HASH = 2920490490L
-        private val setDefaultColorBind by lazy {
+        @JvmField
+        val setDefaultColorBind =
             ObjectCalls.getMethodBind("Line2D", "set_default_color", SET_DEFAULT_COLOR_HASH)
-        }
 
         private const val GET_DEFAULT_COLOR_HASH = 3444240500L
-        private val getDefaultColorBind by lazy {
+        @JvmField
+        val getDefaultColorBind =
             ObjectCalls.getMethodBind("Line2D", "get_default_color", GET_DEFAULT_COLOR_HASH)
-        }
 
         private const val SET_GRADIENT_HASH = 2756054477L
-        private val setGradientBind by lazy {
+        @JvmField
+        val setGradientBind =
             ObjectCalls.getMethodBind("Line2D", "set_gradient", SET_GRADIENT_HASH)
-        }
 
         private const val GET_GRADIENT_HASH = 132272999L
-        private val getGradientBind by lazy {
+        @JvmField
+        val getGradientBind =
             ObjectCalls.getMethodBind("Line2D", "get_gradient", GET_GRADIENT_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("Line2D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("Line2D", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_TEXTURE_MODE_HASH = 1952559516L
-        private val setTextureModeBind by lazy {
+        @JvmField
+        val setTextureModeBind =
             ObjectCalls.getMethodBind("Line2D", "set_texture_mode", SET_TEXTURE_MODE_HASH)
-        }
 
         private const val GET_TEXTURE_MODE_HASH = 2341040722L
-        private val getTextureModeBind by lazy {
+        @JvmField
+        val getTextureModeBind =
             ObjectCalls.getMethodBind("Line2D", "get_texture_mode", GET_TEXTURE_MODE_HASH)
-        }
 
         private const val SET_JOINT_MODE_HASH = 604292979L
-        private val setJointModeBind by lazy {
+        @JvmField
+        val setJointModeBind =
             ObjectCalls.getMethodBind("Line2D", "set_joint_mode", SET_JOINT_MODE_HASH)
-        }
 
         private const val GET_JOINT_MODE_HASH = 2546544037L
-        private val getJointModeBind by lazy {
+        @JvmField
+        val getJointModeBind =
             ObjectCalls.getMethodBind("Line2D", "get_joint_mode", GET_JOINT_MODE_HASH)
-        }
 
         private const val SET_BEGIN_CAP_MODE_HASH = 1669024546L
-        private val setBeginCapModeBind by lazy {
+        @JvmField
+        val setBeginCapModeBind =
             ObjectCalls.getMethodBind("Line2D", "set_begin_cap_mode", SET_BEGIN_CAP_MODE_HASH)
-        }
 
         private const val GET_BEGIN_CAP_MODE_HASH = 1107511441L
-        private val getBeginCapModeBind by lazy {
+        @JvmField
+        val getBeginCapModeBind =
             ObjectCalls.getMethodBind("Line2D", "get_begin_cap_mode", GET_BEGIN_CAP_MODE_HASH)
-        }
 
         private const val SET_END_CAP_MODE_HASH = 1669024546L
-        private val setEndCapModeBind by lazy {
+        @JvmField
+        val setEndCapModeBind =
             ObjectCalls.getMethodBind("Line2D", "set_end_cap_mode", SET_END_CAP_MODE_HASH)
-        }
 
         private const val GET_END_CAP_MODE_HASH = 1107511441L
-        private val getEndCapModeBind by lazy {
+        @JvmField
+        val getEndCapModeBind =
             ObjectCalls.getMethodBind("Line2D", "get_end_cap_mode", GET_END_CAP_MODE_HASH)
-        }
 
         private const val SET_SHARP_LIMIT_HASH = 373806689L
-        private val setSharpLimitBind by lazy {
+        @JvmField
+        val setSharpLimitBind =
             ObjectCalls.getMethodBind("Line2D", "set_sharp_limit", SET_SHARP_LIMIT_HASH)
-        }
 
         private const val GET_SHARP_LIMIT_HASH = 1740695150L
-        private val getSharpLimitBind by lazy {
+        @JvmField
+        val getSharpLimitBind =
             ObjectCalls.getMethodBind("Line2D", "get_sharp_limit", GET_SHARP_LIMIT_HASH)
-        }
 
         private const val SET_ROUND_PRECISION_HASH = 1286410249L
-        private val setRoundPrecisionBind by lazy {
+        @JvmField
+        val setRoundPrecisionBind =
             ObjectCalls.getMethodBind("Line2D", "set_round_precision", SET_ROUND_PRECISION_HASH)
-        }
 
         private const val GET_ROUND_PRECISION_HASH = 3905245786L
-        private val getRoundPrecisionBind by lazy {
+        @JvmField
+        val getRoundPrecisionBind =
             ObjectCalls.getMethodBind("Line2D", "get_round_precision", GET_ROUND_PRECISION_HASH)
-        }
 
         private const val SET_ANTIALIASED_HASH = 2586408642L
-        private val setAntialiasedBind by lazy {
+        @JvmField
+        val setAntialiasedBind =
             ObjectCalls.getMethodBind("Line2D", "set_antialiased", SET_ANTIALIASED_HASH)
-        }
 
         private const val GET_ANTIALIASED_HASH = 36873697L
-        private val getAntialiasedBind by lazy {
+        @JvmField
+        val getAntialiasedBind =
             ObjectCalls.getMethodBind("Line2D", "get_antialiased", GET_ANTIALIASED_HASH)
-        }
     }
 }

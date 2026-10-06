@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -42,43 +43,43 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
         set(value) = setBoneUpdate(value)
 
     fun setHand(hand: OpenXRHand.Hands) {
-        ObjectCalls.ptrcallWithLongArg(setHandBind, segment, hand.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHandBind, segment, hand.value)
     }
 
     fun getHand(): OpenXRHand.Hands {
-        return OpenXRHand.Hands(ObjectCalls.ptrcallNoArgsRetLong(getHandBind, segment))
+        return OpenXRHand.Hands(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHandBind, segment))
     }
 
     fun setHandSkeleton(handSkeleton: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setHandSkeletonBind, segment, handSkeleton)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setHandSkeletonBind, segment, handSkeleton)
     }
 
     fun getHandSkeleton(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getHandSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getHandSkeletonBind, segment)
     }
 
     fun setMotionRange(motionRange: OpenXRHand.MotionRange) {
-        ObjectCalls.ptrcallWithLongArg(setMotionRangeBind, segment, motionRange.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMotionRangeBind, segment, motionRange.value)
     }
 
     fun getMotionRange(): OpenXRHand.MotionRange {
-        return OpenXRHand.MotionRange(ObjectCalls.ptrcallNoArgsRetLong(getMotionRangeBind, segment))
+        return OpenXRHand.MotionRange(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMotionRangeBind, segment))
     }
 
     fun setSkeletonRig(skeletonRig: OpenXRHand.SkeletonRig) {
-        ObjectCalls.ptrcallWithLongArg(setSkeletonRigBind, segment, skeletonRig.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSkeletonRigBind, segment, skeletonRig.value)
     }
 
     fun getSkeletonRig(): OpenXRHand.SkeletonRig {
-        return OpenXRHand.SkeletonRig(ObjectCalls.ptrcallNoArgsRetLong(getSkeletonRigBind, segment))
+        return OpenXRHand.SkeletonRig(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSkeletonRigBind, segment))
     }
 
     fun setBoneUpdate(boneUpdate: OpenXRHand.BoneUpdate) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBoneUpdateBind, segment, boneUpdate.value)
     }
 
     fun getBoneUpdate(): OpenXRHand.BoneUpdate {
-        return OpenXRHand.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
+        return OpenXRHand.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBoneUpdateBind, segment))
     }
 
     @JvmInline
@@ -124,55 +125,57 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRHand? =
             if (handle.address() == 0L) null else OpenXRHand(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HAND_HASH = 1849328560L
-        private val setHandBind by lazy {
+        @JvmField
+        val setHandBind =
             ObjectCalls.getMethodBind("OpenXRHand", "set_hand", SET_HAND_HASH)
-        }
 
         private const val GET_HAND_HASH = 2850644561L
-        private val getHandBind by lazy {
+        @JvmField
+        val getHandBind =
             ObjectCalls.getMethodBind("OpenXRHand", "get_hand", GET_HAND_HASH)
-        }
 
         private const val SET_HAND_SKELETON_HASH = 1348162250L
-        private val setHandSkeletonBind by lazy {
+        @JvmField
+        val setHandSkeletonBind =
             ObjectCalls.getMethodBind("OpenXRHand", "set_hand_skeleton", SET_HAND_SKELETON_HASH)
-        }
 
         private const val GET_HAND_SKELETON_HASH = 4075236667L
-        private val getHandSkeletonBind by lazy {
+        @JvmField
+        val getHandSkeletonBind =
             ObjectCalls.getMethodBind("OpenXRHand", "get_hand_skeleton", GET_HAND_SKELETON_HASH)
-        }
 
         private const val SET_MOTION_RANGE_HASH = 3326516003L
-        private val setMotionRangeBind by lazy {
+        @JvmField
+        val setMotionRangeBind =
             ObjectCalls.getMethodBind("OpenXRHand", "set_motion_range", SET_MOTION_RANGE_HASH)
-        }
 
         private const val GET_MOTION_RANGE_HASH = 2191822314L
-        private val getMotionRangeBind by lazy {
+        @JvmField
+        val getMotionRangeBind =
             ObjectCalls.getMethodBind("OpenXRHand", "get_motion_range", GET_MOTION_RANGE_HASH)
-        }
 
         private const val SET_SKELETON_RIG_HASH = 1528072213L
-        private val setSkeletonRigBind by lazy {
+        @JvmField
+        val setSkeletonRigBind =
             ObjectCalls.getMethodBind("OpenXRHand", "set_skeleton_rig", SET_SKELETON_RIG_HASH)
-        }
 
         private const val GET_SKELETON_RIG_HASH = 968409338L
-        private val getSkeletonRigBind by lazy {
+        @JvmField
+        val getSkeletonRigBind =
             ObjectCalls.getMethodBind("OpenXRHand", "get_skeleton_rig", GET_SKELETON_RIG_HASH)
-        }
 
         private const val SET_BONE_UPDATE_HASH = 3144625444L
-        private val setBoneUpdateBind by lazy {
+        @JvmField
+        val setBoneUpdateBind =
             ObjectCalls.getMethodBind("OpenXRHand", "set_bone_update", SET_BONE_UPDATE_HASH)
-        }
 
         private const val GET_BONE_UPDATE_HASH = 1310695248L
-        private val getBoneUpdateBind by lazy {
+        @JvmField
+        val getBoneUpdateBind =
             ObjectCalls.getMethodBind("OpenXRHand", "get_bone_update", GET_BONE_UPDATE_HASH)
-        }
     }
 }

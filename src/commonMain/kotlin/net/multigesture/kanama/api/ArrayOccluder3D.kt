@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun setArrays(vertices: List<Vector3>, indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListAndPackedInt32ListArgs(setArraysBind, segment, vertices, indices)
+        ObjectCalls.ptrcallWithPackedVector3ListAndPackedInt32ListArgs(Binds.setArraysBind, segment, vertices, indices)
     }
 
     /**
@@ -31,7 +32,7 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun setVertices(vertices: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setVerticesBind, segment, vertices)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setVerticesBind, segment, vertices)
     }
 
     /**
@@ -44,7 +45,7 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun setIndices(indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, segment, indices)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setIndicesBind, segment, indices)
     }
 
     companion object {
@@ -57,20 +58,22 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ArrayOccluder3D? =
             if (handle.address() == 0L) null else ArrayOccluder3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ARRAYS_HASH = 3233972621L
-        private val setArraysBind by lazy {
+        @JvmField
+        val setArraysBind =
             ObjectCalls.getMethodBind("ArrayOccluder3D", "set_arrays", SET_ARRAYS_HASH)
-        }
 
         private const val SET_VERTICES_HASH = 334873810L
-        private val setVerticesBind by lazy {
+        @JvmField
+        val setVerticesBind =
             ObjectCalls.getMethodBind("ArrayOccluder3D", "set_vertices", SET_VERTICES_HASH)
-        }
 
         private const val SET_INDICES_HASH = 3614634198L
-        private val setIndicesBind by lazy {
+        @JvmField
+        val setIndicesBind =
             ObjectCalls.getMethodBind("ArrayOccluder3D", "set_indices", SET_INDICES_HASH)
-        }
     }
 }

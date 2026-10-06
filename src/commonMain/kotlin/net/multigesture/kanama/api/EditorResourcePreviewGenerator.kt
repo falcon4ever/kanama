@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
      */
     fun requestDrawAndWait(viewport: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(requestDrawAndWaitBind, segment, viewport)
+        ObjectCalls.ptrcallWithRIDArg(Binds.requestDrawAndWaitBind, segment, viewport)
     }
 
     companion object {
@@ -31,10 +32,12 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorResourcePreviewGenerator? =
             if (handle.address() == 0L) null else EditorResourcePreviewGenerator(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val REQUEST_DRAW_AND_WAIT_HASH = 145472570L
-        private val requestDrawAndWaitBind by lazy {
+        @JvmField
+        val requestDrawAndWaitBind =
             ObjectCalls.getMethodBind("EditorResourcePreviewGenerator", "request_draw_and_wait", REQUEST_DRAW_AND_WAIT_HASH)
-        }
     }
 }

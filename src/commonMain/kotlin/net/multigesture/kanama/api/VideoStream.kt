@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
      */
     fun setFile(file: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFileBind, segment, file)
+        ObjectCalls.ptrcallWithStringArg(Binds.setFileBind, segment, file)
     }
 
     /**
@@ -36,7 +37,7 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
      */
     fun getFile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFileBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFileBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VideoStream? =
             if (handle.address() == 0L) null else VideoStream(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FILE_HASH = 83702148L
-        private val setFileBind by lazy {
+        @JvmField
+        val setFileBind =
             ObjectCalls.getMethodBind("VideoStream", "set_file", SET_FILE_HASH)
-        }
 
         private const val GET_FILE_HASH = 2841200299L
-        private val getFileBind by lazy {
+        @JvmField
+        val getFileBind =
             ObjectCalls.getMethodBind("VideoStream", "get_file", GET_FILE_HASH)
-        }
     }
 }

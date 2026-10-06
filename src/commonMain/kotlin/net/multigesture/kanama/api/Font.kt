@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun setFallbacks(fallbacks: List<Font>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setFallbacksBind, segment, fallbacks)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setFallbacksBind, segment, fallbacks)
     }
 
     /**
@@ -42,7 +43,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbacks(): List<Font> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, segment, Font::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getFallbacksBind, segment, Font::wrapBorrowed)
     }
 
     /**
@@ -52,7 +53,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun findVariation(variationCoordinates: Map<String, Any?>, faceIndex: Int = 0, strength: Double = 0.0, transform: Transform2D, spacingTop: Int = 0, spacingBottom: Int = 0, spacingSpace: Int = 0, spacingGlyph: Int = 0, baselineOffset: Double = 0.0, paletteIndex: Long = 0L, customColors: List<Color>): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(findVariationBind, segment, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
+        return ObjectCalls.ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(Binds.findVariationBind, segment, variationCoordinates, faceIndex, strength, transform, spacingTop, spacingBottom, spacingSpace, spacingGlyph, baselineOffset, paletteIndex, customColors)
     }
 
     /**
@@ -62,7 +63,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getRids(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getRidsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getRidsBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getHeight(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getHeightBind, segment, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getHeightBind, segment, fontSize)
     }
 
     /**
@@ -87,7 +88,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getAscent(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getAscentBind, segment, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getAscentBind, segment, fontSize)
     }
 
     /**
@@ -100,7 +101,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getDescent(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getDescentBind, segment, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getDescentBind, segment, fontSize)
     }
 
     /**
@@ -112,7 +113,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getUnderlinePosition(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlinePositionBind, segment, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getUnderlinePositionBind, segment, fontSize)
     }
 
     /**
@@ -124,7 +125,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getUnderlineThickness(fontSize: Int = 16): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getUnderlineThicknessBind, segment, fontSize)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getUnderlineThicknessBind, segment, fontSize)
     }
 
     /**
@@ -134,7 +135,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFontNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFontNameBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontStyleName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFontStyleNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFontStyleNameBind, segment)
     }
 
     /**
@@ -155,7 +156,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getOtNameStrings(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getOtNameStringsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOtNameStringsBind, segment)
     }
 
     /**
@@ -165,7 +166,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontStyle(): TextServer.FontStyle {
         checkOpen()
-        return TextServer.FontStyle(ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, segment))
+        return TextServer.FontStyle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFontStyleBind, segment))
     }
 
     /**
@@ -176,7 +177,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontWeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontWeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontWeightBind, segment)
     }
 
     /**
@@ -187,7 +188,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontStretch(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontStretchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontStretchBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaletteCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPaletteCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPaletteCountBind, segment)
     }
 
     /**
@@ -209,7 +210,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaletteName(index: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getPaletteNameBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getPaletteNameBind, segment, index)
     }
 
     /**
@@ -221,7 +222,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getPaletteColors(index: Long): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedColorList(getPaletteColorsBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetPackedColorList(Binds.getPaletteColorsBind, segment, index)
     }
 
     /**
@@ -231,7 +232,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpacing(spacing: TextServer.SpacingType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, segment, spacing.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getSpacingBind, segment, spacing.value)
     }
 
     /**
@@ -242,7 +243,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getOpentypeFeatures(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeaturesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOpentypeFeaturesBind, segment)
     }
 
     /**
@@ -252,7 +253,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun setCacheCapacity(singleLine: Int, multiLine: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setCacheCapacityBind, segment, singleLine, multiLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setCacheCapacityBind, segment, singleLine, multiLine)
     }
 
     /**
@@ -263,7 +264,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getStringSize(text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, segment, text, alignment.value, width, fontSize, justificationFlags.value, direction.value, orientation.value)
+        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(Binds.getStringSizeBind, segment, text, alignment.value, width, fontSize, justificationFlags.value, direction.value, orientation.value)
     }
 
     /**
@@ -274,7 +275,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getMultilineStringSize(text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, segment, text, alignment.value, width, fontSize, maxLines, brkFlags.value, justificationFlags.value, direction.value, orientation.value)
+        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(Binds.getMultilineStringSizeBind, segment, text, alignment.value, width, fontSize, maxLines, brkFlags.value, justificationFlags.value, direction.value, orientation.value)
     }
 
     /**
@@ -288,7 +289,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(Binds.drawStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -303,7 +304,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(Binds.drawMultilineStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -317,7 +318,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(Binds.drawStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -332,7 +333,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(Binds.drawMultilineStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -345,7 +346,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getCharSize(char: Int, fontSize: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(getCharSizeBind, segment, char, fontSize)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.getCharSizeBind, segment, char, fontSize)
     }
 
     /**
@@ -359,7 +360,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawChar(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, modulate: Color, oversampling: Double = 0.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(drawCharBind, segment, canvasItem, pos, char, fontSize, modulate, oversampling)
+        return ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(Binds.drawCharBind, segment, canvasItem, pos, char, fontSize, modulate, oversampling)
     }
 
     /**
@@ -374,7 +375,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun drawCharOutline(canvasItem: RID, pos: Vector2, char: Int, fontSize: Int, size: Int = -1, modulate: Color, oversampling: Double = 0.0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(drawCharOutlineBind, segment, canvasItem, pos, char, fontSize, size, modulate, oversampling)
+        return ObjectCalls.ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(Binds.drawCharOutlineBind, segment, canvasItem, pos, char, fontSize, size, modulate, oversampling)
     }
 
     /**
@@ -384,7 +385,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun hasChar(char: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasCharBind, segment, char)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasCharBind, segment, char)
     }
 
     /**
@@ -395,7 +396,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSupportedChars(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSupportedCharsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSupportedCharsBind, segment)
     }
 
     /**
@@ -406,7 +407,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun isLanguageSupported(language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isLanguageSupportedBind, segment, language)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isLanguageSupportedBind, segment, language)
     }
 
     /**
@@ -417,7 +418,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun isScriptSupported(script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(isScriptSupportedBind, segment, script)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isScriptSupportedBind, segment, script)
     }
 
     /**
@@ -427,7 +428,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSupportedFeatureList(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedFeatureListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSupportedFeatureListBind, segment)
     }
 
     /**
@@ -441,7 +442,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getSupportedVariationList(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getSupportedVariationListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getSupportedVariationListBind, segment)
     }
 
     /**
@@ -451,7 +452,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFaceCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFaceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFaceCountBind, segment)
     }
 
     companion object {
@@ -464,190 +465,192 @@ open class Font(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Font? =
             if (handle.address() == 0L) null else Font(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FALLBACKS_HASH = 381264803L
-        private val setFallbacksBind by lazy {
+        @JvmField
+        val setFallbacksBind =
             ObjectCalls.getMethodBind("Font", "set_fallbacks", SET_FALLBACKS_HASH)
-        }
 
         private const val GET_FALLBACKS_HASH = 3995934104L
-        private val getFallbacksBind by lazy {
+        @JvmField
+        val getFallbacksBind =
             ObjectCalls.getMethodBind("Font", "get_fallbacks", GET_FALLBACKS_HASH)
-        }
 
         private const val FIND_VARIATION_HASH = 3275867622L
-        private val findVariationBind by lazy {
+        @JvmField
+        val findVariationBind =
             ObjectCalls.getMethodBind("Font", "find_variation", FIND_VARIATION_HASH)
-        }
 
         private const val GET_RIDS_HASH = 3995934104L
-        private val getRidsBind by lazy {
+        @JvmField
+        val getRidsBind =
             ObjectCalls.getMethodBind("Font", "get_rids", GET_RIDS_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 378113874L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("Font", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val GET_ASCENT_HASH = 378113874L
-        private val getAscentBind by lazy {
+        @JvmField
+        val getAscentBind =
             ObjectCalls.getMethodBind("Font", "get_ascent", GET_ASCENT_HASH)
-        }
 
         private const val GET_DESCENT_HASH = 378113874L
-        private val getDescentBind by lazy {
+        @JvmField
+        val getDescentBind =
             ObjectCalls.getMethodBind("Font", "get_descent", GET_DESCENT_HASH)
-        }
 
         private const val GET_UNDERLINE_POSITION_HASH = 378113874L
-        private val getUnderlinePositionBind by lazy {
+        @JvmField
+        val getUnderlinePositionBind =
             ObjectCalls.getMethodBind("Font", "get_underline_position", GET_UNDERLINE_POSITION_HASH)
-        }
 
         private const val GET_UNDERLINE_THICKNESS_HASH = 378113874L
-        private val getUnderlineThicknessBind by lazy {
+        @JvmField
+        val getUnderlineThicknessBind =
             ObjectCalls.getMethodBind("Font", "get_underline_thickness", GET_UNDERLINE_THICKNESS_HASH)
-        }
 
         private const val GET_FONT_NAME_HASH = 201670096L
-        private val getFontNameBind by lazy {
+        @JvmField
+        val getFontNameBind =
             ObjectCalls.getMethodBind("Font", "get_font_name", GET_FONT_NAME_HASH)
-        }
 
         private const val GET_FONT_STYLE_NAME_HASH = 201670096L
-        private val getFontStyleNameBind by lazy {
+        @JvmField
+        val getFontStyleNameBind =
             ObjectCalls.getMethodBind("Font", "get_font_style_name", GET_FONT_STYLE_NAME_HASH)
-        }
 
         private const val GET_OT_NAME_STRINGS_HASH = 3102165223L
-        private val getOtNameStringsBind by lazy {
+        @JvmField
+        val getOtNameStringsBind =
             ObjectCalls.getMethodBind("Font", "get_ot_name_strings", GET_OT_NAME_STRINGS_HASH)
-        }
 
         private const val GET_FONT_STYLE_HASH = 2520224254L
-        private val getFontStyleBind by lazy {
+        @JvmField
+        val getFontStyleBind =
             ObjectCalls.getMethodBind("Font", "get_font_style", GET_FONT_STYLE_HASH)
-        }
 
         private const val GET_FONT_WEIGHT_HASH = 3905245786L
-        private val getFontWeightBind by lazy {
+        @JvmField
+        val getFontWeightBind =
             ObjectCalls.getMethodBind("Font", "get_font_weight", GET_FONT_WEIGHT_HASH)
-        }
 
         private const val GET_FONT_STRETCH_HASH = 3905245786L
-        private val getFontStretchBind by lazy {
+        @JvmField
+        val getFontStretchBind =
             ObjectCalls.getMethodBind("Font", "get_font_stretch", GET_FONT_STRETCH_HASH)
-        }
 
         private const val GET_PALETTE_COUNT_HASH = 3905245786L
-        private val getPaletteCountBind by lazy {
+        @JvmField
+        val getPaletteCountBind =
             ObjectCalls.getMethodBind("Font", "get_palette_count", GET_PALETTE_COUNT_HASH)
-        }
 
         private const val GET_PALETTE_NAME_HASH = 844755477L
-        private val getPaletteNameBind by lazy {
+        @JvmField
+        val getPaletteNameBind =
             ObjectCalls.getMethodBind("Font", "get_palette_name", GET_PALETTE_NAME_HASH)
-        }
 
         private const val GET_PALETTE_COLORS_HASH = 2552048864L
-        private val getPaletteColorsBind by lazy {
+        @JvmField
+        val getPaletteColorsBind =
             ObjectCalls.getMethodBind("Font", "get_palette_colors", GET_PALETTE_COLORS_HASH)
-        }
 
         private const val GET_SPACING_HASH = 1310880908L
-        private val getSpacingBind by lazy {
+        @JvmField
+        val getSpacingBind =
             ObjectCalls.getMethodBind("Font", "get_spacing", GET_SPACING_HASH)
-        }
 
         private const val GET_OPENTYPE_FEATURES_HASH = 3102165223L
-        private val getOpentypeFeaturesBind by lazy {
+        @JvmField
+        val getOpentypeFeaturesBind =
             ObjectCalls.getMethodBind("Font", "get_opentype_features", GET_OPENTYPE_FEATURES_HASH)
-        }
 
         private const val SET_CACHE_CAPACITY_HASH = 3937882851L
-        private val setCacheCapacityBind by lazy {
+        @JvmField
+        val setCacheCapacityBind =
             ObjectCalls.getMethodBind("Font", "set_cache_capacity", SET_CACHE_CAPACITY_HASH)
-        }
 
         private const val GET_STRING_SIZE_HASH = 1868866121L
-        private val getStringSizeBind by lazy {
+        @JvmField
+        val getStringSizeBind =
             ObjectCalls.getMethodBind("Font", "get_string_size", GET_STRING_SIZE_HASH)
-        }
 
         private const val GET_MULTILINE_STRING_SIZE_HASH = 519636710L
-        private val getMultilineStringSizeBind by lazy {
+        @JvmField
+        val getMultilineStringSizeBind =
             ObjectCalls.getMethodBind("Font", "get_multiline_string_size", GET_MULTILINE_STRING_SIZE_HASH)
-        }
 
         private const val DRAW_STRING_HASH = 1976686372L
-        private val drawStringBind by lazy {
+        @JvmField
+        val drawStringBind =
             ObjectCalls.getMethodBind("Font", "draw_string", DRAW_STRING_HASH)
-        }
 
         private const val DRAW_MULTILINE_STRING_HASH = 2686601589L
-        private val drawMultilineStringBind by lazy {
+        @JvmField
+        val drawMultilineStringBind =
             ObjectCalls.getMethodBind("Font", "draw_multiline_string", DRAW_MULTILINE_STRING_HASH)
-        }
 
         private const val DRAW_STRING_OUTLINE_HASH = 701417663L
-        private val drawStringOutlineBind by lazy {
+        @JvmField
+        val drawStringOutlineBind =
             ObjectCalls.getMethodBind("Font", "draw_string_outline", DRAW_STRING_OUTLINE_HASH)
-        }
 
         private const val DRAW_MULTILINE_STRING_OUTLINE_HASH = 4147839237L
-        private val drawMultilineStringOutlineBind by lazy {
+        @JvmField
+        val drawMultilineStringOutlineBind =
             ObjectCalls.getMethodBind("Font", "draw_multiline_string_outline", DRAW_MULTILINE_STRING_OUTLINE_HASH)
-        }
 
         private const val GET_CHAR_SIZE_HASH = 3016396712L
-        private val getCharSizeBind by lazy {
+        @JvmField
+        val getCharSizeBind =
             ObjectCalls.getMethodBind("Font", "get_char_size", GET_CHAR_SIZE_HASH)
-        }
 
         private const val DRAW_CHAR_HASH = 3500170256L
-        private val drawCharBind by lazy {
+        @JvmField
+        val drawCharBind =
             ObjectCalls.getMethodBind("Font", "draw_char", DRAW_CHAR_HASH)
-        }
 
         private const val DRAW_CHAR_OUTLINE_HASH = 1684114874L
-        private val drawCharOutlineBind by lazy {
+        @JvmField
+        val drawCharOutlineBind =
             ObjectCalls.getMethodBind("Font", "draw_char_outline", DRAW_CHAR_OUTLINE_HASH)
-        }
 
         private const val HAS_CHAR_HASH = 1116898809L
-        private val hasCharBind by lazy {
+        @JvmField
+        val hasCharBind =
             ObjectCalls.getMethodBind("Font", "has_char", HAS_CHAR_HASH)
-        }
 
         private const val GET_SUPPORTED_CHARS_HASH = 201670096L
-        private val getSupportedCharsBind by lazy {
+        @JvmField
+        val getSupportedCharsBind =
             ObjectCalls.getMethodBind("Font", "get_supported_chars", GET_SUPPORTED_CHARS_HASH)
-        }
 
         private const val IS_LANGUAGE_SUPPORTED_HASH = 3927539163L
-        private val isLanguageSupportedBind by lazy {
+        @JvmField
+        val isLanguageSupportedBind =
             ObjectCalls.getMethodBind("Font", "is_language_supported", IS_LANGUAGE_SUPPORTED_HASH)
-        }
 
         private const val IS_SCRIPT_SUPPORTED_HASH = 3927539163L
-        private val isScriptSupportedBind by lazy {
+        @JvmField
+        val isScriptSupportedBind =
             ObjectCalls.getMethodBind("Font", "is_script_supported", IS_SCRIPT_SUPPORTED_HASH)
-        }
 
         private const val GET_SUPPORTED_FEATURE_LIST_HASH = 3102165223L
-        private val getSupportedFeatureListBind by lazy {
+        @JvmField
+        val getSupportedFeatureListBind =
             ObjectCalls.getMethodBind("Font", "get_supported_feature_list", GET_SUPPORTED_FEATURE_LIST_HASH)
-        }
 
         private const val GET_SUPPORTED_VARIATION_LIST_HASH = 3102165223L
-        private val getSupportedVariationListBind by lazy {
+        @JvmField
+        val getSupportedVariationListBind =
             ObjectCalls.getMethodBind("Font", "get_supported_variation_list", GET_SUPPORTED_VARIATION_LIST_HASH)
-        }
 
         private const val GET_FACE_COUNT_HASH = 3905245786L
-        private val getFaceCountBind by lazy {
+        @JvmField
+        val getFaceCountBind =
             ObjectCalls.getMethodBind("Font", "get_face_count", GET_FACE_COUNT_HASH)
-        }
     }
 }

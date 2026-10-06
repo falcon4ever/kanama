@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,12 +19,12 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
 
     fun setTexture(value: Texture3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getTexture(): Texture3D? {
         checkOpen()
-        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     companion object {
@@ -36,15 +37,17 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture3D? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 1188404210L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture3D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 373985333L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture3D", "get_texture", GET_TEXTURE_HASH)
-        }
     }
 }
