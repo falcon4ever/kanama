@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -68,7 +69,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setAnimation(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setAnimationBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAnimationBind, segment, name)
     }
 
     /**
@@ -79,7 +80,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getAnimation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAnimationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAnimationBind, segment)
     }
 
     /**
@@ -89,7 +90,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setPlayMode(mode: AnimationNodeAnimation.PlayMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlayModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPlayModeBind, segment, mode.value)
     }
 
     /**
@@ -99,7 +100,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getPlayMode(): AnimationNodeAnimation.PlayMode {
         checkOpen()
-        return AnimationNodeAnimation.PlayMode(ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, segment))
+        return AnimationNodeAnimation.PlayMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlayModeBind, segment))
     }
 
     /**
@@ -111,7 +112,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setAdvanceOnStart(advanceOnStart: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAdvanceOnStartBind, segment, advanceOnStart)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAdvanceOnStartBind, segment, advanceOnStart)
     }
 
     /**
@@ -123,7 +124,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun isAdvanceOnStart(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAdvanceOnStartBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAdvanceOnStartBind, segment)
     }
 
     /**
@@ -134,7 +135,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setUseCustomTimeline(useCustomTimeline: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomTimelineBind, segment, useCustomTimeline)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomTimelineBind, segment, useCustomTimeline)
     }
 
     /**
@@ -145,7 +146,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun isUsingCustomTimeline(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomTimelineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomTimelineBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setTimelineLength(timelineLength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimelineLengthBind, segment, timelineLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimelineLengthBind, segment, timelineLength)
     }
 
     /**
@@ -167,7 +168,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getTimelineLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimelineLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimelineLengthBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setStretchTimeScale(stretchTimeScale: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setStretchTimeScaleBind, segment, stretchTimeScale)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setStretchTimeScaleBind, segment, stretchTimeScale)
     }
 
     /**
@@ -193,7 +194,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun isStretchingTimeScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isStretchingTimeScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStretchingTimeScaleBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setStartOffset(startOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStartOffsetBind, segment, startOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStartOffsetBind, segment, startOffset)
     }
 
     /**
@@ -215,7 +216,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getStartOffset(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStartOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStartOffsetBind, segment)
     }
 
     /**
@@ -229,7 +230,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun setLoopMode(loopMode: Animation.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLoopModeBind, segment, loopMode.value)
     }
 
     /**
@@ -243,7 +244,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun getLoopMode(): Animation.LoopMode {
         checkOpen()
-        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
+        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
     }
 
     /**
@@ -280,85 +281,87 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeAnimation? =
             if (handle.address() == 0L) null else AnimationNodeAnimation(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ANIMATION_HASH = 3304788590L
-        private val setAnimationBind by lazy {
+        @JvmField
+        val setAnimationBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_animation", SET_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_HASH = 2002593661L
-        private val getAnimationBind by lazy {
+        @JvmField
+        val getAnimationBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "get_animation", GET_ANIMATION_HASH)
-        }
 
         private const val SET_PLAY_MODE_HASH = 3347718873L
-        private val setPlayModeBind by lazy {
+        @JvmField
+        val setPlayModeBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_play_mode", SET_PLAY_MODE_HASH)
-        }
 
         private const val GET_PLAY_MODE_HASH = 2061244637L
-        private val getPlayModeBind by lazy {
+        @JvmField
+        val getPlayModeBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "get_play_mode", GET_PLAY_MODE_HASH)
-        }
 
         private const val SET_ADVANCE_ON_START_HASH = 2586408642L
-        private val setAdvanceOnStartBind by lazy {
+        @JvmField
+        val setAdvanceOnStartBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_advance_on_start", SET_ADVANCE_ON_START_HASH)
-        }
 
         private const val IS_ADVANCE_ON_START_HASH = 36873697L
-        private val isAdvanceOnStartBind by lazy {
+        @JvmField
+        val isAdvanceOnStartBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "is_advance_on_start", IS_ADVANCE_ON_START_HASH)
-        }
 
         private const val SET_USE_CUSTOM_TIMELINE_HASH = 2586408642L
-        private val setUseCustomTimelineBind by lazy {
+        @JvmField
+        val setUseCustomTimelineBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_use_custom_timeline", SET_USE_CUSTOM_TIMELINE_HASH)
-        }
 
         private const val IS_USING_CUSTOM_TIMELINE_HASH = 36873697L
-        private val isUsingCustomTimelineBind by lazy {
+        @JvmField
+        val isUsingCustomTimelineBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "is_using_custom_timeline", IS_USING_CUSTOM_TIMELINE_HASH)
-        }
 
         private const val SET_TIMELINE_LENGTH_HASH = 373806689L
-        private val setTimelineLengthBind by lazy {
+        @JvmField
+        val setTimelineLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_timeline_length", SET_TIMELINE_LENGTH_HASH)
-        }
 
         private const val GET_TIMELINE_LENGTH_HASH = 1740695150L
-        private val getTimelineLengthBind by lazy {
+        @JvmField
+        val getTimelineLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "get_timeline_length", GET_TIMELINE_LENGTH_HASH)
-        }
 
         private const val SET_STRETCH_TIME_SCALE_HASH = 2586408642L
-        private val setStretchTimeScaleBind by lazy {
+        @JvmField
+        val setStretchTimeScaleBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_stretch_time_scale", SET_STRETCH_TIME_SCALE_HASH)
-        }
 
         private const val IS_STRETCHING_TIME_SCALE_HASH = 36873697L
-        private val isStretchingTimeScaleBind by lazy {
+        @JvmField
+        val isStretchingTimeScaleBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "is_stretching_time_scale", IS_STRETCHING_TIME_SCALE_HASH)
-        }
 
         private const val SET_START_OFFSET_HASH = 373806689L
-        private val setStartOffsetBind by lazy {
+        @JvmField
+        val setStartOffsetBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_start_offset", SET_START_OFFSET_HASH)
-        }
 
         private const val GET_START_OFFSET_HASH = 1740695150L
-        private val getStartOffsetBind by lazy {
+        @JvmField
+        val getStartOffsetBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "get_start_offset", GET_START_OFFSET_HASH)
-        }
 
         private const val SET_LOOP_MODE_HASH = 3155355575L
-        private val setLoopModeBind by lazy {
+        @JvmField
+        val setLoopModeBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "set_loop_mode", SET_LOOP_MODE_HASH)
-        }
 
         private const val GET_LOOP_MODE_HASH = 1988889481L
-        private val getLoopModeBind by lazy {
+        @JvmField
+        val getLoopModeBind =
             ObjectCalls.getMethodBind("AnimationNodeAnimation", "get_loop_mode", GET_LOOP_MODE_HASH)
-        }
     }
 }

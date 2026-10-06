@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -24,77 +25,77 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
     fun setActionSets(actionSets: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setActionSetsBind, segment, actionSets)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setActionSetsBind, segment, actionSets)
     }
 
     fun getActionSets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getActionSetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionSetsBind, segment)
     }
 
     fun getActionSetCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getActionSetCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getActionSetCountBind, segment)
     }
 
     fun findActionSet(name: String): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findActionSetBind, segment, name))
+        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findActionSetBind, segment, name))
     }
 
     fun getActionSet(idx: Int): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getActionSetBind, segment, idx))
+        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getActionSetBind, segment, idx))
     }
 
     fun addActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun removeActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun setInteractionProfiles(interactionProfiles: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setInteractionProfilesBind, segment, interactionProfiles)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setInteractionProfilesBind, segment, interactionProfiles)
     }
 
     fun getInteractionProfiles(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getInteractionProfilesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getInteractionProfilesBind, segment)
     }
 
     fun getInteractionProfileCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInteractionProfileCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInteractionProfileCountBind, segment)
     }
 
     fun findInteractionProfile(name: String): OpenXRInteractionProfile? {
         checkOpen()
-        return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findInteractionProfileBind, segment, name))
+        return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findInteractionProfileBind, segment, name))
     }
 
     fun getInteractionProfile(idx: Int): OpenXRInteractionProfile? {
         checkOpen()
-        return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInteractionProfileBind, segment, idx))
+        return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInteractionProfileBind, segment, idx))
     }
 
     fun addInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun removeInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun createDefaultActionSets() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(createDefaultActionSetsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.createDefaultActionSetsBind, segment)
     }
 
     companion object {
@@ -107,80 +108,82 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRActionMap? =
             if (handle.address() == 0L) null else OpenXRActionMap(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ACTION_SETS_HASH = 381264803L
-        private val setActionSetsBind by lazy {
+        @JvmField
+        val setActionSetsBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "set_action_sets", SET_ACTION_SETS_HASH)
-        }
 
         private const val GET_ACTION_SETS_HASH = 3995934104L
-        private val getActionSetsBind by lazy {
+        @JvmField
+        val getActionSetsBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_action_sets", GET_ACTION_SETS_HASH)
-        }
 
         private const val GET_ACTION_SET_COUNT_HASH = 3905245786L
-        private val getActionSetCountBind by lazy {
+        @JvmField
+        val getActionSetCountBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_action_set_count", GET_ACTION_SET_COUNT_HASH)
-        }
 
         private const val FIND_ACTION_SET_HASH = 1888809267L
-        private val findActionSetBind by lazy {
+        @JvmField
+        val findActionSetBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "find_action_set", FIND_ACTION_SET_HASH)
-        }
 
         private const val GET_ACTION_SET_HASH = 1789580336L
-        private val getActionSetBind by lazy {
+        @JvmField
+        val getActionSetBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_action_set", GET_ACTION_SET_HASH)
-        }
 
         private const val ADD_ACTION_SET_HASH = 2093310581L
-        private val addActionSetBind by lazy {
+        @JvmField
+        val addActionSetBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "add_action_set", ADD_ACTION_SET_HASH)
-        }
 
         private const val REMOVE_ACTION_SET_HASH = 2093310581L
-        private val removeActionSetBind by lazy {
+        @JvmField
+        val removeActionSetBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "remove_action_set", REMOVE_ACTION_SET_HASH)
-        }
 
         private const val SET_INTERACTION_PROFILES_HASH = 381264803L
-        private val setInteractionProfilesBind by lazy {
+        @JvmField
+        val setInteractionProfilesBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "set_interaction_profiles", SET_INTERACTION_PROFILES_HASH)
-        }
 
         private const val GET_INTERACTION_PROFILES_HASH = 3995934104L
-        private val getInteractionProfilesBind by lazy {
+        @JvmField
+        val getInteractionProfilesBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_interaction_profiles", GET_INTERACTION_PROFILES_HASH)
-        }
 
         private const val GET_INTERACTION_PROFILE_COUNT_HASH = 3905245786L
-        private val getInteractionProfileCountBind by lazy {
+        @JvmField
+        val getInteractionProfileCountBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_interaction_profile_count", GET_INTERACTION_PROFILE_COUNT_HASH)
-        }
 
         private const val FIND_INTERACTION_PROFILE_HASH = 3095875538L
-        private val findInteractionProfileBind by lazy {
+        @JvmField
+        val findInteractionProfileBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "find_interaction_profile", FIND_INTERACTION_PROFILE_HASH)
-        }
 
         private const val GET_INTERACTION_PROFILE_HASH = 2546151210L
-        private val getInteractionProfileBind by lazy {
+        @JvmField
+        val getInteractionProfileBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "get_interaction_profile", GET_INTERACTION_PROFILE_HASH)
-        }
 
         private const val ADD_INTERACTION_PROFILE_HASH = 2697953512L
-        private val addInteractionProfileBind by lazy {
+        @JvmField
+        val addInteractionProfileBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "add_interaction_profile", ADD_INTERACTION_PROFILE_HASH)
-        }
 
         private const val REMOVE_INTERACTION_PROFILE_HASH = 2697953512L
-        private val removeInteractionProfileBind by lazy {
+        @JvmField
+        val removeInteractionProfileBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "remove_interaction_profile", REMOVE_INTERACTION_PROFILE_HASH)
-        }
 
         private const val CREATE_DEFAULT_ACTION_SETS_HASH = 3218959716L
-        private val createDefaultActionSetsBind by lazy {
+        @JvmField
+        val createDefaultActionSetsBind =
             ObjectCalls.getMethodBind("OpenXRActionMap", "create_default_action_sets", CREATE_DEFAULT_ACTION_SETS_HASH)
-        }
     }
 }

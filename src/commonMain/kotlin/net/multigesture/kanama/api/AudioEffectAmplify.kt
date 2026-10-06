@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVolumeDb(volume: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, volume)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeDbBind, segment, volume)
     }
 
     /**
@@ -42,7 +43,7 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVolumeDb(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeDbBind, segment)
     }
 
     /**
@@ -55,7 +56,7 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVolumeLinear(volume: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeLinearBind, segment, volume)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeLinearBind, segment, volume)
     }
 
     /**
@@ -68,7 +69,7 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVolumeLinear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeLinearBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeLinearBind, segment)
     }
 
     companion object {
@@ -81,25 +82,27 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectAmplify? =
             if (handle.address() == 0L) null else AudioEffectAmplify(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VOLUME_DB_HASH = 373806689L
-        private val setVolumeDbBind by lazy {
+        @JvmField
+        val setVolumeDbBind =
             ObjectCalls.getMethodBind("AudioEffectAmplify", "set_volume_db", SET_VOLUME_DB_HASH)
-        }
 
         private const val GET_VOLUME_DB_HASH = 1740695150L
-        private val getVolumeDbBind by lazy {
+        @JvmField
+        val getVolumeDbBind =
             ObjectCalls.getMethodBind("AudioEffectAmplify", "get_volume_db", GET_VOLUME_DB_HASH)
-        }
 
         private const val SET_VOLUME_LINEAR_HASH = 373806689L
-        private val setVolumeLinearBind by lazy {
+        @JvmField
+        val setVolumeLinearBind =
             ObjectCalls.getMethodBind("AudioEffectAmplify", "set_volume_linear", SET_VOLUME_LINEAR_HASH)
-        }
 
         private const val GET_VOLUME_LINEAR_HASH = 1740695150L
-        private val getVolumeLinearBind by lazy {
+        @JvmField
+        val getVolumeLinearBind =
             ObjectCalls.getMethodBind("AudioEffectAmplify", "get_volume_linear", GET_VOLUME_LINEAR_HASH)
-        }
     }
 }

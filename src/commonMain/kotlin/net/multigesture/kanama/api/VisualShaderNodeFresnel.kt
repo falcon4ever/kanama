@@ -20,7 +20,5 @@ class VisualShaderNodeFresnel(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFresnel? =
             if (handle.address() == 0L) null else VisualShaderNodeFresnel(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,17 +19,17 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
 
     fun getStructureType(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructureTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructureTypeBind, segment)
     }
 
     fun setNext(entity: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNextBind, segment, listOf(entity?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNextBind, segment, listOf(entity?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -46,20 +47,22 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRStructureBase? =
             if (handle.address() == 0L) null else OpenXRStructureBase(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_STRUCTURE_TYPE_HASH = 2455072627L
-        private val getStructureTypeBind by lazy {
+        @JvmField
+        val getStructureTypeBind =
             ObjectCalls.getMethodBind("OpenXRStructureBase", "get_structure_type", GET_STRUCTURE_TYPE_HASH)
-        }
 
         private const val SET_NEXT_HASH = 334698771L
-        private val setNextBind by lazy {
+        @JvmField
+        val setNextBind =
             ObjectCalls.getMethodBind("OpenXRStructureBase", "set_next", SET_NEXT_HASH)
-        }
 
         private const val GET_NEXT_HASH = 2798796760L
-        private val getNextBind by lazy {
+        @JvmField
+        val getNextBind =
             ObjectCalls.getMethodBind("OpenXRStructureBase", "get_next", GET_NEXT_HASH)
-        }
     }
 }

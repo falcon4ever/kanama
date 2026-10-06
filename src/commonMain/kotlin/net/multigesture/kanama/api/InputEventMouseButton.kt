@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -38,7 +39,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setFactor(factor: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFactorBind, segment, factor)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFactorBind, segment, factor)
     }
 
     /**
@@ -50,7 +51,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFactorBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setButtonIndex(buttonIndex: MouseButton) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setButtonIndexBind, segment, buttonIndex.value)
     }
 
     /**
@@ -70,7 +71,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getButtonIndex(): MouseButton {
         checkOpen()
-        return MouseButton(ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment))
+        return MouseButton(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonIndexBind, segment))
     }
 
     /**
@@ -81,7 +82,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
     }
 
     /**
@@ -91,7 +92,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setCanceled(canceled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCanceledBind, segment, canceled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCanceledBind, segment, canceled)
     }
 
     /**
@@ -101,7 +102,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setDoubleClick(doubleClick: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDoubleClickBind, segment, doubleClick)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDoubleClickBind, segment, doubleClick)
     }
 
     /**
@@ -111,7 +112,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun isDoubleClick(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDoubleClickBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDoubleClickBind, segment)
     }
 
     companion object {
@@ -134,45 +135,47 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseButton? =
             if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_FACTOR_HASH = 373806689L
-        private val setFactorBind by lazy {
+        @JvmField
+        val setFactorBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "set_factor", SET_FACTOR_HASH)
-        }
 
         private const val GET_FACTOR_HASH = 1740695150L
-        private val getFactorBind by lazy {
+        @JvmField
+        val getFactorBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "get_factor", GET_FACTOR_HASH)
-        }
 
         private const val SET_BUTTON_INDEX_HASH = 3624991109L
-        private val setButtonIndexBind by lazy {
+        @JvmField
+        val setButtonIndexBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "set_button_index", SET_BUTTON_INDEX_HASH)
-        }
 
         private const val GET_BUTTON_INDEX_HASH = 1132662608L
-        private val getButtonIndexBind by lazy {
+        @JvmField
+        val getButtonIndexBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "get_button_index", GET_BUTTON_INDEX_HASH)
-        }
 
         private const val SET_PRESSED_HASH = 2586408642L
-        private val setPressedBind by lazy {
+        @JvmField
+        val setPressedBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "set_pressed", SET_PRESSED_HASH)
-        }
 
         private const val SET_CANCELED_HASH = 2586408642L
-        private val setCanceledBind by lazy {
+        @JvmField
+        val setCanceledBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "set_canceled", SET_CANCELED_HASH)
-        }
 
         private const val SET_DOUBLE_CLICK_HASH = 2586408642L
-        private val setDoubleClickBind by lazy {
+        @JvmField
+        val setDoubleClickBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "set_double_click", SET_DOUBLE_CLICK_HASH)
-        }
 
         private const val IS_DOUBLE_CLICK_HASH = 36873697L
-        private val isDoubleClickBind by lazy {
+        @JvmField
+        val isDoubleClickBind =
             ObjectCalls.getMethodBind("InputEventMouseButton", "is_double_click", IS_DOUBLE_CLICK_HASH)
-        }
     }
 }

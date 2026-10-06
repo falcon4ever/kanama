@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,13 +12,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: Time
  */
 object Time {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("Time")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     @JvmStatic
     fun getDateTimeDictFromUnixTime(unixTime: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithLongArgRetDictionary(getDateTimeDictFromUnixTimeBind, singleton, unixTime)
+        return ObjectCalls.ptrcallWithLongArgRetDictionary(Binds.getDateTimeDictFromUnixTimeBind, singleton, unixTime)
     }
 
     /**
@@ -28,7 +28,7 @@ object Time {
      */
     @JvmStatic
     fun getDateDictFromUnixTime(unixTime: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithLongArgRetDictionary(getDateDictFromUnixTimeBind, singleton, unixTime)
+        return ObjectCalls.ptrcallWithLongArgRetDictionary(Binds.getDateDictFromUnixTimeBind, singleton, unixTime)
     }
 
     /**
@@ -38,12 +38,12 @@ object Time {
      */
     @JvmStatic
     fun getTimeDictFromUnixTime(unixTime: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithLongArgRetDictionary(getTimeDictFromUnixTimeBind, singleton, unixTime)
+        return ObjectCalls.ptrcallWithLongArgRetDictionary(Binds.getTimeDictFromUnixTimeBind, singleton, unixTime)
     }
 
     @JvmStatic
     fun getDateTimeStringFromUnixTime(unixTime: Long, useSpace: Boolean = false): String {
-        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getDateTimeStringFromUnixTimeBind, singleton, unixTime, useSpace)
+        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(Binds.getDateTimeStringFromUnixTimeBind, singleton, unixTime, useSpace)
     }
 
     /**
@@ -53,7 +53,7 @@ object Time {
      */
     @JvmStatic
     fun getDateStringFromUnixTime(unixTime: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getDateStringFromUnixTimeBind, singleton, unixTime)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getDateStringFromUnixTimeBind, singleton, unixTime)
     }
 
     /**
@@ -63,27 +63,27 @@ object Time {
      */
     @JvmStatic
     fun getTimeStringFromUnixTime(unixTime: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getTimeStringFromUnixTimeBind, singleton, unixTime)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getTimeStringFromUnixTimeBind, singleton, unixTime)
     }
 
     @JvmStatic
     fun getDateTimeDictFromDateTimeString(value: String, weekday: Boolean): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetDictionary(getDateTimeDictFromDateTimeStringBind, singleton, value, weekday)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetDictionary(Binds.getDateTimeDictFromDateTimeStringBind, singleton, value, weekday)
     }
 
     @JvmStatic
     fun getDateTimeStringFromDateTimeDict(values: Map<String, Any?>, useSpace: Boolean = false): String {
-        return ObjectCalls.ptrcallWithDictionaryAndBoolArgRetString(getDateTimeStringFromDateTimeDictBind, singleton, values, useSpace)
+        return ObjectCalls.ptrcallWithDictionaryAndBoolArgRetString(Binds.getDateTimeStringFromDateTimeDictBind, singleton, values, useSpace)
     }
 
     @JvmStatic
     fun getUnixTimeFromDateTimeDict(values: Map<String, Any?>): Long {
-        return ObjectCalls.ptrcallWithDictionaryArgRetLong(getUnixTimeFromDateTimeDictBind, singleton, values)
+        return ObjectCalls.ptrcallWithDictionaryArgRetLong(Binds.getUnixTimeFromDateTimeDictBind, singleton, values)
     }
 
     @JvmStatic
     fun getUnixTimeFromDateTimeString(value: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(getUnixTimeFromDateTimeStringBind, singleton, value)
+        return ObjectCalls.ptrcallWithStringArgRetLong(Binds.getUnixTimeFromDateTimeStringBind, singleton, value)
     }
 
     /**
@@ -94,12 +94,12 @@ object Time {
      */
     @JvmStatic
     fun getOffsetStringFromOffsetMinutes(minutes: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getOffsetStringFromOffsetMinutesBind, singleton, minutes)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getOffsetStringFromOffsetMinutesBind, singleton, minutes)
     }
 
     @JvmStatic
     fun getDateTimeDictFromSystem(utc: Boolean = false): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithBoolArgRetDictionary(getDateTimeDictFromSystemBind, singleton, utc)
+        return ObjectCalls.ptrcallWithBoolArgRetDictionary(Binds.getDateTimeDictFromSystemBind, singleton, utc)
     }
 
     /**
@@ -110,7 +110,7 @@ object Time {
      */
     @JvmStatic
     fun getDateDictFromSystem(utc: Boolean = false): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithBoolArgRetDictionary(getDateDictFromSystemBind, singleton, utc)
+        return ObjectCalls.ptrcallWithBoolArgRetDictionary(Binds.getDateDictFromSystemBind, singleton, utc)
     }
 
     /**
@@ -121,12 +121,12 @@ object Time {
      */
     @JvmStatic
     fun getTimeDictFromSystem(utc: Boolean = false): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithBoolArgRetDictionary(getTimeDictFromSystemBind, singleton, utc)
+        return ObjectCalls.ptrcallWithBoolArgRetDictionary(Binds.getTimeDictFromSystemBind, singleton, utc)
     }
 
     @JvmStatic
     fun getDateTimeStringFromSystem(utc: Boolean = false, useSpace: Boolean = false): String {
-        return ObjectCalls.ptrcallWithTwoBoolArgsRetString(getDateTimeStringFromSystemBind, singleton, utc, useSpace)
+        return ObjectCalls.ptrcallWithTwoBoolArgsRetString(Binds.getDateTimeStringFromSystemBind, singleton, utc, useSpace)
     }
 
     /**
@@ -137,7 +137,7 @@ object Time {
      */
     @JvmStatic
     fun getDateStringFromSystem(utc: Boolean = false): String {
-        return ObjectCalls.ptrcallWithBoolArgRetString(getDateStringFromSystemBind, singleton, utc)
+        return ObjectCalls.ptrcallWithBoolArgRetString(Binds.getDateStringFromSystemBind, singleton, utc)
     }
 
     /**
@@ -148,7 +148,7 @@ object Time {
      */
     @JvmStatic
     fun getTimeStringFromSystem(utc: Boolean = false): String {
-        return ObjectCalls.ptrcallWithBoolArgRetString(getTimeStringFromSystemBind, singleton, utc)
+        return ObjectCalls.ptrcallWithBoolArgRetString(Binds.getTimeStringFromSystemBind, singleton, utc)
     }
 
     /**
@@ -160,7 +160,7 @@ object Time {
      */
     @JvmStatic
     fun getTimeZoneFromSystem(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getTimeZoneFromSystemBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTimeZoneFromSystemBind, singleton)
     }
 
     /**
@@ -174,7 +174,7 @@ object Time {
      */
     @JvmStatic
     fun getUnixTimeFromSystem(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUnixTimeFromSystemBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUnixTimeFromSystemBind, singleton)
     }
 
     /**
@@ -185,7 +185,7 @@ object Time {
      */
     @JvmStatic
     fun getTicksMsec(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTicksMsecBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getTicksMsecBind, singleton)
     }
 
     /**
@@ -196,7 +196,7 @@ object Time {
      */
     @JvmStatic
     fun getTicksUsec(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTicksUsecBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getTicksUsecBind, singleton)
     }
 
     /**
@@ -344,108 +344,113 @@ object Time {
     internal fun wrap(handle: RawSegment): Time? =
         if (handle.address() == 0L) null else this
 
-    private const val GET_DATETIME_DICT_FROM_UNIX_TIME_HASH = 3485342025L
-    private val getDateTimeDictFromUnixTimeBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_unix_time", GET_DATETIME_DICT_FROM_UNIX_TIME_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("Time")
 
-    private const val GET_DATE_DICT_FROM_UNIX_TIME_HASH = 3485342025L
-    private val getDateDictFromUnixTimeBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_date_dict_from_unix_time", GET_DATE_DICT_FROM_UNIX_TIME_HASH)
-    }
+        private const val GET_DATETIME_DICT_FROM_UNIX_TIME_HASH = 3485342025L
+        @JvmField
+        val getDateTimeDictFromUnixTimeBind =
+            ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_unix_time", GET_DATETIME_DICT_FROM_UNIX_TIME_HASH)
 
-    private const val GET_TIME_DICT_FROM_UNIX_TIME_HASH = 3485342025L
-    private val getTimeDictFromUnixTimeBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_time_dict_from_unix_time", GET_TIME_DICT_FROM_UNIX_TIME_HASH)
-    }
+        private const val GET_DATE_DICT_FROM_UNIX_TIME_HASH = 3485342025L
+        @JvmField
+        val getDateDictFromUnixTimeBind =
+            ObjectCalls.getMethodBind("Time", "get_date_dict_from_unix_time", GET_DATE_DICT_FROM_UNIX_TIME_HASH)
 
-    private const val GET_DATETIME_STRING_FROM_UNIX_TIME_HASH = 2311239925L
-    private val getDateTimeStringFromUnixTimeBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_datetime_string_from_unix_time", GET_DATETIME_STRING_FROM_UNIX_TIME_HASH)
-    }
+        private const val GET_TIME_DICT_FROM_UNIX_TIME_HASH = 3485342025L
+        @JvmField
+        val getTimeDictFromUnixTimeBind =
+            ObjectCalls.getMethodBind("Time", "get_time_dict_from_unix_time", GET_TIME_DICT_FROM_UNIX_TIME_HASH)
 
-    private const val GET_DATE_STRING_FROM_UNIX_TIME_HASH = 844755477L
-    private val getDateStringFromUnixTimeBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_date_string_from_unix_time", GET_DATE_STRING_FROM_UNIX_TIME_HASH)
-    }
+        private const val GET_DATETIME_STRING_FROM_UNIX_TIME_HASH = 2311239925L
+        @JvmField
+        val getDateTimeStringFromUnixTimeBind =
+            ObjectCalls.getMethodBind("Time", "get_datetime_string_from_unix_time", GET_DATETIME_STRING_FROM_UNIX_TIME_HASH)
 
-    private const val GET_TIME_STRING_FROM_UNIX_TIME_HASH = 844755477L
-    private val getTimeStringFromUnixTimeBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_time_string_from_unix_time", GET_TIME_STRING_FROM_UNIX_TIME_HASH)
-    }
+        private const val GET_DATE_STRING_FROM_UNIX_TIME_HASH = 844755477L
+        @JvmField
+        val getDateStringFromUnixTimeBind =
+            ObjectCalls.getMethodBind("Time", "get_date_string_from_unix_time", GET_DATE_STRING_FROM_UNIX_TIME_HASH)
 
-    private const val GET_DATETIME_DICT_FROM_DATETIME_STRING_HASH = 3253569256L
-    private val getDateTimeDictFromDateTimeStringBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_datetime_string", GET_DATETIME_DICT_FROM_DATETIME_STRING_HASH)
-    }
+        private const val GET_TIME_STRING_FROM_UNIX_TIME_HASH = 844755477L
+        @JvmField
+        val getTimeStringFromUnixTimeBind =
+            ObjectCalls.getMethodBind("Time", "get_time_string_from_unix_time", GET_TIME_STRING_FROM_UNIX_TIME_HASH)
 
-    private const val GET_DATETIME_STRING_FROM_DATETIME_DICT_HASH = 1898123706L
-    private val getDateTimeStringFromDateTimeDictBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_datetime_string_from_datetime_dict", GET_DATETIME_STRING_FROM_DATETIME_DICT_HASH)
-    }
+        private const val GET_DATETIME_DICT_FROM_DATETIME_STRING_HASH = 3253569256L
+        @JvmField
+        val getDateTimeDictFromDateTimeStringBind =
+            ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_datetime_string", GET_DATETIME_DICT_FROM_DATETIME_STRING_HASH)
 
-    private const val GET_UNIX_TIME_FROM_DATETIME_DICT_HASH = 3021115443L
-    private val getUnixTimeFromDateTimeDictBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_unix_time_from_datetime_dict", GET_UNIX_TIME_FROM_DATETIME_DICT_HASH)
-    }
+        private const val GET_DATETIME_STRING_FROM_DATETIME_DICT_HASH = 1898123706L
+        @JvmField
+        val getDateTimeStringFromDateTimeDictBind =
+            ObjectCalls.getMethodBind("Time", "get_datetime_string_from_datetime_dict", GET_DATETIME_STRING_FROM_DATETIME_DICT_HASH)
 
-    private const val GET_UNIX_TIME_FROM_DATETIME_STRING_HASH = 1321353865L
-    private val getUnixTimeFromDateTimeStringBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_unix_time_from_datetime_string", GET_UNIX_TIME_FROM_DATETIME_STRING_HASH)
-    }
+        private const val GET_UNIX_TIME_FROM_DATETIME_DICT_HASH = 3021115443L
+        @JvmField
+        val getUnixTimeFromDateTimeDictBind =
+            ObjectCalls.getMethodBind("Time", "get_unix_time_from_datetime_dict", GET_UNIX_TIME_FROM_DATETIME_DICT_HASH)
 
-    private const val GET_OFFSET_STRING_FROM_OFFSET_MINUTES_HASH = 844755477L
-    private val getOffsetStringFromOffsetMinutesBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_offset_string_from_offset_minutes", GET_OFFSET_STRING_FROM_OFFSET_MINUTES_HASH)
-    }
+        private const val GET_UNIX_TIME_FROM_DATETIME_STRING_HASH = 1321353865L
+        @JvmField
+        val getUnixTimeFromDateTimeStringBind =
+            ObjectCalls.getMethodBind("Time", "get_unix_time_from_datetime_string", GET_UNIX_TIME_FROM_DATETIME_STRING_HASH)
 
-    private const val GET_DATETIME_DICT_FROM_SYSTEM_HASH = 205769976L
-    private val getDateTimeDictFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_system", GET_DATETIME_DICT_FROM_SYSTEM_HASH)
-    }
+        private const val GET_OFFSET_STRING_FROM_OFFSET_MINUTES_HASH = 844755477L
+        @JvmField
+        val getOffsetStringFromOffsetMinutesBind =
+            ObjectCalls.getMethodBind("Time", "get_offset_string_from_offset_minutes", GET_OFFSET_STRING_FROM_OFFSET_MINUTES_HASH)
 
-    private const val GET_DATE_DICT_FROM_SYSTEM_HASH = 205769976L
-    private val getDateDictFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_date_dict_from_system", GET_DATE_DICT_FROM_SYSTEM_HASH)
-    }
+        private const val GET_DATETIME_DICT_FROM_SYSTEM_HASH = 205769976L
+        @JvmField
+        val getDateTimeDictFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_system", GET_DATETIME_DICT_FROM_SYSTEM_HASH)
 
-    private const val GET_TIME_DICT_FROM_SYSTEM_HASH = 205769976L
-    private val getTimeDictFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_time_dict_from_system", GET_TIME_DICT_FROM_SYSTEM_HASH)
-    }
+        private const val GET_DATE_DICT_FROM_SYSTEM_HASH = 205769976L
+        @JvmField
+        val getDateDictFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_date_dict_from_system", GET_DATE_DICT_FROM_SYSTEM_HASH)
 
-    private const val GET_DATETIME_STRING_FROM_SYSTEM_HASH = 1136425492L
-    private val getDateTimeStringFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_datetime_string_from_system", GET_DATETIME_STRING_FROM_SYSTEM_HASH)
-    }
+        private const val GET_TIME_DICT_FROM_SYSTEM_HASH = 205769976L
+        @JvmField
+        val getTimeDictFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_time_dict_from_system", GET_TIME_DICT_FROM_SYSTEM_HASH)
 
-    private const val GET_DATE_STRING_FROM_SYSTEM_HASH = 1162154673L
-    private val getDateStringFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_date_string_from_system", GET_DATE_STRING_FROM_SYSTEM_HASH)
-    }
+        private const val GET_DATETIME_STRING_FROM_SYSTEM_HASH = 1136425492L
+        @JvmField
+        val getDateTimeStringFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_datetime_string_from_system", GET_DATETIME_STRING_FROM_SYSTEM_HASH)
 
-    private const val GET_TIME_STRING_FROM_SYSTEM_HASH = 1162154673L
-    private val getTimeStringFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_time_string_from_system", GET_TIME_STRING_FROM_SYSTEM_HASH)
-    }
+        private const val GET_DATE_STRING_FROM_SYSTEM_HASH = 1162154673L
+        @JvmField
+        val getDateStringFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_date_string_from_system", GET_DATE_STRING_FROM_SYSTEM_HASH)
 
-    private const val GET_TIME_ZONE_FROM_SYSTEM_HASH = 3102165223L
-    private val getTimeZoneFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_time_zone_from_system", GET_TIME_ZONE_FROM_SYSTEM_HASH)
-    }
+        private const val GET_TIME_STRING_FROM_SYSTEM_HASH = 1162154673L
+        @JvmField
+        val getTimeStringFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_time_string_from_system", GET_TIME_STRING_FROM_SYSTEM_HASH)
 
-    private const val GET_UNIX_TIME_FROM_SYSTEM_HASH = 1740695150L
-    private val getUnixTimeFromSystemBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_unix_time_from_system", GET_UNIX_TIME_FROM_SYSTEM_HASH)
-    }
+        private const val GET_TIME_ZONE_FROM_SYSTEM_HASH = 3102165223L
+        @JvmField
+        val getTimeZoneFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_time_zone_from_system", GET_TIME_ZONE_FROM_SYSTEM_HASH)
 
-    private const val GET_TICKS_MSEC_HASH = 3905245786L
-    private val getTicksMsecBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_ticks_msec", GET_TICKS_MSEC_HASH)
-    }
+        private const val GET_UNIX_TIME_FROM_SYSTEM_HASH = 1740695150L
+        @JvmField
+        val getUnixTimeFromSystemBind =
+            ObjectCalls.getMethodBind("Time", "get_unix_time_from_system", GET_UNIX_TIME_FROM_SYSTEM_HASH)
 
-    private const val GET_TICKS_USEC_HASH = 3905245786L
-    private val getTicksUsecBind by lazy {
-        ObjectCalls.getMethodBind("Time", "get_ticks_usec", GET_TICKS_USEC_HASH)
+        private const val GET_TICKS_MSEC_HASH = 3905245786L
+        @JvmField
+        val getTicksMsecBind =
+            ObjectCalls.getMethodBind("Time", "get_ticks_msec", GET_TICKS_MSEC_HASH)
+
+        private const val GET_TICKS_USEC_HASH = 3905245786L
+        @JvmField
+        val getTicksUsecBind =
+            ObjectCalls.getMethodBind("Time", "get_ticks_usec", GET_TICKS_USEC_HASH)
     }
 }

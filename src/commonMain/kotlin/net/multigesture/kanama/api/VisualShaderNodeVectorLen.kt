@@ -20,7 +20,5 @@ class VisualShaderNodeVectorLen(handle: GodotHandle) : VisualShaderNodeVectorBas
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorLen? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorLen(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

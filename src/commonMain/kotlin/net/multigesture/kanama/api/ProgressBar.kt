@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -42,7 +43,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_fill_mode
      */
     fun setFillMode(mode: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFillModeBind, segment, mode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFillModeBind, segment, mode)
     }
 
     /**
@@ -51,7 +52,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.get_fill_mode
      */
     fun getFillMode(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFillModeBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_show_percentage
      */
     fun setShowPercentage(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowPercentageBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowPercentageBind, segment, visible)
     }
 
     /**
@@ -69,7 +70,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.is_percentage_shown
      */
     fun isPercentageShown(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPercentageShownBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPercentageShownBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_indeterminate
      */
     fun setIndeterminate(indeterminate: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIndeterminateBind, segment, indeterminate)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIndeterminateBind, segment, indeterminate)
     }
 
     /**
@@ -89,7 +90,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.is_indeterminate
      */
     fun isIndeterminate(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIndeterminateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIndeterminateBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.set_editor_preview_indeterminate
      */
     fun setEditorPreviewIndeterminate(previewIndeterminate: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorPreviewIndeterminateBind, segment, previewIndeterminate)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditorPreviewIndeterminateBind, segment, previewIndeterminate)
     }
 
     /**
@@ -107,7 +108,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: ProgressBar.is_editor_preview_indeterminate_enabled
      */
     fun isEditorPreviewIndeterminateEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorPreviewIndeterminateEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditorPreviewIndeterminateEnabledBind, segment)
     }
 
     /**
@@ -157,45 +158,47 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): ProgressBar? =
             if (handle.address() == 0L) null else ProgressBar(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FILL_MODE_HASH = 1286410249L
-        private val setFillModeBind by lazy {
+        @JvmField
+        val setFillModeBind =
             ObjectCalls.getMethodBind("ProgressBar", "set_fill_mode", SET_FILL_MODE_HASH)
-        }
 
         private const val GET_FILL_MODE_HASH = 2455072627L
-        private val getFillModeBind by lazy {
+        @JvmField
+        val getFillModeBind =
             ObjectCalls.getMethodBind("ProgressBar", "get_fill_mode", GET_FILL_MODE_HASH)
-        }
 
         private const val SET_SHOW_PERCENTAGE_HASH = 2586408642L
-        private val setShowPercentageBind by lazy {
+        @JvmField
+        val setShowPercentageBind =
             ObjectCalls.getMethodBind("ProgressBar", "set_show_percentage", SET_SHOW_PERCENTAGE_HASH)
-        }
 
         private const val IS_PERCENTAGE_SHOWN_HASH = 36873697L
-        private val isPercentageShownBind by lazy {
+        @JvmField
+        val isPercentageShownBind =
             ObjectCalls.getMethodBind("ProgressBar", "is_percentage_shown", IS_PERCENTAGE_SHOWN_HASH)
-        }
 
         private const val SET_INDETERMINATE_HASH = 2586408642L
-        private val setIndeterminateBind by lazy {
+        @JvmField
+        val setIndeterminateBind =
             ObjectCalls.getMethodBind("ProgressBar", "set_indeterminate", SET_INDETERMINATE_HASH)
-        }
 
         private const val IS_INDETERMINATE_HASH = 36873697L
-        private val isIndeterminateBind by lazy {
+        @JvmField
+        val isIndeterminateBind =
             ObjectCalls.getMethodBind("ProgressBar", "is_indeterminate", IS_INDETERMINATE_HASH)
-        }
 
         private const val SET_EDITOR_PREVIEW_INDETERMINATE_HASH = 2586408642L
-        private val setEditorPreviewIndeterminateBind by lazy {
+        @JvmField
+        val setEditorPreviewIndeterminateBind =
             ObjectCalls.getMethodBind("ProgressBar", "set_editor_preview_indeterminate", SET_EDITOR_PREVIEW_INDETERMINATE_HASH)
-        }
 
         private const val IS_EDITOR_PREVIEW_INDETERMINATE_ENABLED_HASH = 36873697L
-        private val isEditorPreviewIndeterminateEnabledBind by lazy {
+        @JvmField
+        val isEditorPreviewIndeterminateEnabledBind =
             ObjectCalls.getMethodBind("ProgressBar", "is_editor_preview_indeterminate_enabled", IS_EDITOR_PREVIEW_INDETERMINATE_ENABLED_HASH)
-        }
     }
 }

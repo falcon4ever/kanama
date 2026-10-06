@@ -22,7 +22,5 @@ class IntervalTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): IntervalTweener? =
             if (handle.address() == 0L) null else IntervalTweener(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

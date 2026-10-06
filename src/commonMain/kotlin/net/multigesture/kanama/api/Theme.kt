@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -40,7 +41,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setIcon(name: String, themeType: String, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setIconBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -52,7 +53,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIcon(name: String, themeType: String): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, segment, name, themeType))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getIconBind, segment, name, themeType))
     }
 
     /**
@@ -63,7 +64,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasIcon(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasIconBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasIconBind, segment, name, themeType)
     }
 
     /**
@@ -75,7 +76,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameIcon(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameIconBind, segment, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameIconBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -86,7 +87,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearIcon(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearIconBind, segment, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearIconBind, segment, name, themeType)
     }
 
     /**
@@ -97,7 +98,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIconList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getIconListBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getIconListBind, segment, themeType)
     }
 
     /**
@@ -108,7 +109,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIconTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getIconTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getIconTypeListBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setStylebox(name: String, themeType: String, texture: StyleBox?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setStyleboxBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -131,7 +132,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStylebox(name: String, themeType: String): StyleBox? {
         checkOpen()
-        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, segment, name, themeType))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -142,7 +143,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasStylebox(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasStyleboxBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -154,7 +155,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameStylebox(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameStyleboxBind, segment, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameStyleboxBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -165,7 +166,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearStylebox(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearStyleboxBind, segment, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearStyleboxBind, segment, name, themeType)
     }
 
     /**
@@ -176,7 +177,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStyleboxList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getStyleboxListBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getStyleboxListBind, segment, themeType)
     }
 
     /**
@@ -187,7 +188,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStyleboxTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getStyleboxTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getStyleboxTypeListBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setFont(name: String, themeType: String, font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, segment, name, themeType, font?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setFontBind, segment, name, themeType, font?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -212,7 +213,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFont(name: String, themeType: String): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, segment, name, themeType))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getFontBind, segment, name, themeType))
     }
 
     /**
@@ -224,7 +225,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasFont(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasFontBind, segment, name, themeType)
     }
 
     /**
@@ -236,7 +237,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameFont(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontBind, segment, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameFontBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -247,7 +248,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearFont(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontBind, segment, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearFontBind, segment, name, themeType)
     }
 
     /**
@@ -258,7 +259,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontListBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getFontListBind, segment, themeType)
     }
 
     /**
@@ -269,7 +270,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontTypeListBind, segment)
     }
 
     /**
@@ -280,7 +281,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setFontSize(name: String, themeType: String, fontSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setFontSizeBind, segment, name, themeType, fontSize)
+        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(Binds.setFontSizeBind, segment, name, themeType, fontSize)
     }
 
     /**
@@ -294,7 +295,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSize(name: String, themeType: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getFontSizeBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -306,7 +307,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasFontSize(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasFontSizeBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -318,7 +319,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameFontSize(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameFontSizeBind, segment, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameFontSizeBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -329,7 +330,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearFontSize(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearFontSizeBind, segment, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearFontSizeBind, segment, name, themeType)
     }
 
     /**
@@ -340,7 +341,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSizeList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getFontSizeListBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getFontSizeListBind, segment, themeType)
     }
 
     /**
@@ -351,7 +352,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFontSizeTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontSizeTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontSizeTypeListBind, segment)
     }
 
     /**
@@ -362,7 +363,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setColor(name: String, themeType: String, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndColorArg(setColorBind, segment, name, themeType, color)
+        ObjectCalls.ptrcallWithTwoStringNameAndColorArg(Binds.setColorBind, segment, name, themeType, color)
     }
 
     /**
@@ -373,7 +374,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getColor(name: String, themeType: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(getColorBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetColor(Binds.getColorBind, segment, name, themeType)
     }
 
     /**
@@ -384,7 +385,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasColor(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasColorBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasColorBind, segment, name, themeType)
     }
 
     /**
@@ -396,7 +397,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameColor(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameColorBind, segment, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameColorBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -407,7 +408,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearColor(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearColorBind, segment, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearColorBind, segment, name, themeType)
     }
 
     /**
@@ -418,7 +419,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getColorList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getColorListBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getColorListBind, segment, themeType)
     }
 
     /**
@@ -429,7 +430,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getColorTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getColorTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getColorTypeListBind, segment)
     }
 
     /**
@@ -440,7 +441,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setConstant(name: String, themeType: String, constant: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(setConstantBind, segment, name, themeType, constant)
+        ObjectCalls.ptrcallWithTwoStringNameAndIntArg(Binds.setConstantBind, segment, name, themeType, constant)
     }
 
     /**
@@ -451,7 +452,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getConstant(name: String, themeType: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(getConstantBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getConstantBind, segment, name, themeType)
     }
 
     /**
@@ -462,7 +463,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasConstant(name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(hasConstantBind, segment, name, themeType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasConstantBind, segment, name, themeType)
     }
 
     /**
@@ -474,7 +475,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameConstant(oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeStringNameArgs(renameConstantBind, segment, oldName, name, themeType)
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameConstantBind, segment, oldName, name, themeType)
     }
 
     /**
@@ -485,7 +486,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearConstant(name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(clearConstantBind, segment, name, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearConstantBind, segment, name, themeType)
     }
 
     /**
@@ -496,7 +497,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getConstantList(themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getConstantListBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getConstantListBind, segment, themeType)
     }
 
     /**
@@ -507,7 +508,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getConstantTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getConstantTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getConstantTypeListBind, segment)
     }
 
     /**
@@ -520,7 +521,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setDefaultBaseScale(baseScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDefaultBaseScaleBind, segment, baseScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDefaultBaseScaleBind, segment, baseScale)
     }
 
     /**
@@ -533,7 +534,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultBaseScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultBaseScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -544,7 +545,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasDefaultBaseScale(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultBaseScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultBaseScaleBind, segment)
     }
 
     /**
@@ -557,7 +558,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setDefaultFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setDefaultFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -570,7 +571,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultFont(): Font? {
         checkOpen()
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDefaultFontBind, segment))
     }
 
     /**
@@ -580,7 +581,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasDefaultFont(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultFontBind, segment)
     }
 
     /**
@@ -594,7 +595,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setDefaultFontSize(fontSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDefaultFontSizeBind, segment, fontSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDefaultFontSizeBind, segment, fontSize)
     }
 
     /**
@@ -608,7 +609,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultFontSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultFontSizeBind, segment)
     }
 
     /**
@@ -619,7 +620,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasDefaultFontSize(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDefaultFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDefaultFontSizeBind, segment)
     }
 
     /**
@@ -632,7 +633,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setThemeItem(dataType: Theme.DataType, name: String, themeType: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, segment, dataType.value, name, themeType, value)
+        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(Binds.setThemeItemBind, segment, dataType.value, name, themeType, value)
     }
 
     /**
@@ -645,7 +646,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getThemeItem(dataType: Theme.DataType, name: String, themeType: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, segment, dataType.value, name, themeType)
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(Binds.getThemeItemBind, segment, dataType.value, name, themeType)
     }
 
     /**
@@ -658,7 +659,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun hasThemeItem(dataType: Theme.DataType, name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, segment, dataType.value, name, themeType)
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(Binds.hasThemeItemBind, segment, dataType.value, name, themeType)
     }
 
     /**
@@ -672,7 +673,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameThemeItem(dataType: Theme.DataType, oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, segment, dataType.value, oldName, name, themeType)
+        ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(Binds.renameThemeItemBind, segment, dataType.value, oldName, name, themeType)
     }
 
     /**
@@ -685,7 +686,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearThemeItem(dataType: Theme.DataType, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, segment, dataType.value, name, themeType)
+        ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(Binds.clearThemeItemBind, segment, dataType.value, name, themeType)
     }
 
     /**
@@ -698,7 +699,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getThemeItemList(dataType: Theme.DataType, themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, segment, dataType.value, themeType)
+        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(Binds.getThemeItemListBind, segment, dataType.value, themeType)
     }
 
     /**
@@ -710,7 +711,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getThemeItemTypeList(dataType: Theme.DataType): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, segment, dataType.value)
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(Binds.getThemeItemTypeListBind, segment, dataType.value)
     }
 
     /**
@@ -725,7 +726,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setTypeVariation(themeType: String, baseType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(setTypeVariationBind, segment, themeType, baseType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.setTypeVariationBind, segment, themeType, baseType)
     }
 
     /**
@@ -735,7 +736,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun isTypeVariation(themeType: String, baseType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(isTypeVariationBind, segment, themeType, baseType)
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.isTypeVariationBind, segment, themeType, baseType)
     }
 
     /**
@@ -745,7 +746,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clearTypeVariation(themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(clearTypeVariationBind, segment, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.clearTypeVariationBind, segment, themeType)
     }
 
     /**
@@ -756,7 +757,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getTypeVariationBase(themeType: String): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetStringName(getTypeVariationBaseBind, segment, themeType)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringName(Binds.getTypeVariationBaseBind, segment, themeType)
     }
 
     /**
@@ -766,7 +767,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getTypeVariationList(baseType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(getTypeVariationListBind, segment, baseType)
+        return ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(Binds.getTypeVariationListBind, segment, baseType)
     }
 
     /**
@@ -778,7 +779,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun addType(themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(addTypeBind, segment, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.addTypeBind, segment, themeType)
     }
 
     /**
@@ -790,7 +791,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun removeType(themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeTypeBind, segment, themeType)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeTypeBind, segment, themeType)
     }
 
     /**
@@ -803,7 +804,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun renameType(oldThemeType: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameTypeBind, segment, oldThemeType, themeType)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameTypeBind, segment, oldThemeType, themeType)
     }
 
     /**
@@ -814,7 +815,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getTypeList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getTypeListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getTypeListBind, segment)
     }
 
     /**
@@ -827,7 +828,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun mergeWith(other: Theme?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, segment, listOf(other?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.mergeWithBind, segment, listOf(other?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -837,7 +838,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -904,350 +905,352 @@ class Theme(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Theme? =
             if (handle.address() == 0L) null else Theme(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ICON_HASH = 2188371082L
-        private val setIconBind by lazy {
+        @JvmField
+        val setIconBind =
             ObjectCalls.getMethodBind("Theme", "set_icon", SET_ICON_HASH)
-        }
 
         private const val GET_ICON_HASH = 934555193L
-        private val getIconBind by lazy {
+        @JvmField
+        val getIconBind =
             ObjectCalls.getMethodBind("Theme", "get_icon", GET_ICON_HASH)
-        }
 
         private const val HAS_ICON_HASH = 471820014L
-        private val hasIconBind by lazy {
+        @JvmField
+        val hasIconBind =
             ObjectCalls.getMethodBind("Theme", "has_icon", HAS_ICON_HASH)
-        }
 
         private const val RENAME_ICON_HASH = 642128662L
-        private val renameIconBind by lazy {
+        @JvmField
+        val renameIconBind =
             ObjectCalls.getMethodBind("Theme", "rename_icon", RENAME_ICON_HASH)
-        }
 
         private const val CLEAR_ICON_HASH = 3740211285L
-        private val clearIconBind by lazy {
+        @JvmField
+        val clearIconBind =
             ObjectCalls.getMethodBind("Theme", "clear_icon", CLEAR_ICON_HASH)
-        }
 
         private const val GET_ICON_LIST_HASH = 4291131558L
-        private val getIconListBind by lazy {
+        @JvmField
+        val getIconListBind =
             ObjectCalls.getMethodBind("Theme", "get_icon_list", GET_ICON_LIST_HASH)
-        }
 
         private const val GET_ICON_TYPE_LIST_HASH = 1139954409L
-        private val getIconTypeListBind by lazy {
+        @JvmField
+        val getIconTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_icon_type_list", GET_ICON_TYPE_LIST_HASH)
-        }
 
         private const val SET_STYLEBOX_HASH = 2075907568L
-        private val setStyleboxBind by lazy {
+        @JvmField
+        val setStyleboxBind =
             ObjectCalls.getMethodBind("Theme", "set_stylebox", SET_STYLEBOX_HASH)
-        }
 
         private const val GET_STYLEBOX_HASH = 3405608165L
-        private val getStyleboxBind by lazy {
+        @JvmField
+        val getStyleboxBind =
             ObjectCalls.getMethodBind("Theme", "get_stylebox", GET_STYLEBOX_HASH)
-        }
 
         private const val HAS_STYLEBOX_HASH = 471820014L
-        private val hasStyleboxBind by lazy {
+        @JvmField
+        val hasStyleboxBind =
             ObjectCalls.getMethodBind("Theme", "has_stylebox", HAS_STYLEBOX_HASH)
-        }
 
         private const val RENAME_STYLEBOX_HASH = 642128662L
-        private val renameStyleboxBind by lazy {
+        @JvmField
+        val renameStyleboxBind =
             ObjectCalls.getMethodBind("Theme", "rename_stylebox", RENAME_STYLEBOX_HASH)
-        }
 
         private const val CLEAR_STYLEBOX_HASH = 3740211285L
-        private val clearStyleboxBind by lazy {
+        @JvmField
+        val clearStyleboxBind =
             ObjectCalls.getMethodBind("Theme", "clear_stylebox", CLEAR_STYLEBOX_HASH)
-        }
 
         private const val GET_STYLEBOX_LIST_HASH = 4291131558L
-        private val getStyleboxListBind by lazy {
+        @JvmField
+        val getStyleboxListBind =
             ObjectCalls.getMethodBind("Theme", "get_stylebox_list", GET_STYLEBOX_LIST_HASH)
-        }
 
         private const val GET_STYLEBOX_TYPE_LIST_HASH = 1139954409L
-        private val getStyleboxTypeListBind by lazy {
+        @JvmField
+        val getStyleboxTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_stylebox_type_list", GET_STYLEBOX_TYPE_LIST_HASH)
-        }
 
         private const val SET_FONT_HASH = 177292320L
-        private val setFontBind by lazy {
+        @JvmField
+        val setFontBind =
             ObjectCalls.getMethodBind("Theme", "set_font", SET_FONT_HASH)
-        }
 
         private const val GET_FONT_HASH = 3445063586L
-        private val getFontBind by lazy {
+        @JvmField
+        val getFontBind =
             ObjectCalls.getMethodBind("Theme", "get_font", GET_FONT_HASH)
-        }
 
         private const val HAS_FONT_HASH = 471820014L
-        private val hasFontBind by lazy {
+        @JvmField
+        val hasFontBind =
             ObjectCalls.getMethodBind("Theme", "has_font", HAS_FONT_HASH)
-        }
 
         private const val RENAME_FONT_HASH = 642128662L
-        private val renameFontBind by lazy {
+        @JvmField
+        val renameFontBind =
             ObjectCalls.getMethodBind("Theme", "rename_font", RENAME_FONT_HASH)
-        }
 
         private const val CLEAR_FONT_HASH = 3740211285L
-        private val clearFontBind by lazy {
+        @JvmField
+        val clearFontBind =
             ObjectCalls.getMethodBind("Theme", "clear_font", CLEAR_FONT_HASH)
-        }
 
         private const val GET_FONT_LIST_HASH = 4291131558L
-        private val getFontListBind by lazy {
+        @JvmField
+        val getFontListBind =
             ObjectCalls.getMethodBind("Theme", "get_font_list", GET_FONT_LIST_HASH)
-        }
 
         private const val GET_FONT_TYPE_LIST_HASH = 1139954409L
-        private val getFontTypeListBind by lazy {
+        @JvmField
+        val getFontTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_font_type_list", GET_FONT_TYPE_LIST_HASH)
-        }
 
         private const val SET_FONT_SIZE_HASH = 281601298L
-        private val setFontSizeBind by lazy {
+        @JvmField
+        val setFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "set_font_size", SET_FONT_SIZE_HASH)
-        }
 
         private const val GET_FONT_SIZE_HASH = 2419549490L
-        private val getFontSizeBind by lazy {
+        @JvmField
+        val getFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "get_font_size", GET_FONT_SIZE_HASH)
-        }
 
         private const val HAS_FONT_SIZE_HASH = 471820014L
-        private val hasFontSizeBind by lazy {
+        @JvmField
+        val hasFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "has_font_size", HAS_FONT_SIZE_HASH)
-        }
 
         private const val RENAME_FONT_SIZE_HASH = 642128662L
-        private val renameFontSizeBind by lazy {
+        @JvmField
+        val renameFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "rename_font_size", RENAME_FONT_SIZE_HASH)
-        }
 
         private const val CLEAR_FONT_SIZE_HASH = 3740211285L
-        private val clearFontSizeBind by lazy {
+        @JvmField
+        val clearFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "clear_font_size", CLEAR_FONT_SIZE_HASH)
-        }
 
         private const val GET_FONT_SIZE_LIST_HASH = 4291131558L
-        private val getFontSizeListBind by lazy {
+        @JvmField
+        val getFontSizeListBind =
             ObjectCalls.getMethodBind("Theme", "get_font_size_list", GET_FONT_SIZE_LIST_HASH)
-        }
 
         private const val GET_FONT_SIZE_TYPE_LIST_HASH = 1139954409L
-        private val getFontSizeTypeListBind by lazy {
+        @JvmField
+        val getFontSizeTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_font_size_type_list", GET_FONT_SIZE_TYPE_LIST_HASH)
-        }
 
         private const val SET_COLOR_HASH = 4111215154L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("Theme", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 2015923404L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("Theme", "get_color", GET_COLOR_HASH)
-        }
 
         private const val HAS_COLOR_HASH = 471820014L
-        private val hasColorBind by lazy {
+        @JvmField
+        val hasColorBind =
             ObjectCalls.getMethodBind("Theme", "has_color", HAS_COLOR_HASH)
-        }
 
         private const val RENAME_COLOR_HASH = 642128662L
-        private val renameColorBind by lazy {
+        @JvmField
+        val renameColorBind =
             ObjectCalls.getMethodBind("Theme", "rename_color", RENAME_COLOR_HASH)
-        }
 
         private const val CLEAR_COLOR_HASH = 3740211285L
-        private val clearColorBind by lazy {
+        @JvmField
+        val clearColorBind =
             ObjectCalls.getMethodBind("Theme", "clear_color", CLEAR_COLOR_HASH)
-        }
 
         private const val GET_COLOR_LIST_HASH = 4291131558L
-        private val getColorListBind by lazy {
+        @JvmField
+        val getColorListBind =
             ObjectCalls.getMethodBind("Theme", "get_color_list", GET_COLOR_LIST_HASH)
-        }
 
         private const val GET_COLOR_TYPE_LIST_HASH = 1139954409L
-        private val getColorTypeListBind by lazy {
+        @JvmField
+        val getColorTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_color_type_list", GET_COLOR_TYPE_LIST_HASH)
-        }
 
         private const val SET_CONSTANT_HASH = 281601298L
-        private val setConstantBind by lazy {
+        @JvmField
+        val setConstantBind =
             ObjectCalls.getMethodBind("Theme", "set_constant", SET_CONSTANT_HASH)
-        }
 
         private const val GET_CONSTANT_HASH = 2419549490L
-        private val getConstantBind by lazy {
+        @JvmField
+        val getConstantBind =
             ObjectCalls.getMethodBind("Theme", "get_constant", GET_CONSTANT_HASH)
-        }
 
         private const val HAS_CONSTANT_HASH = 471820014L
-        private val hasConstantBind by lazy {
+        @JvmField
+        val hasConstantBind =
             ObjectCalls.getMethodBind("Theme", "has_constant", HAS_CONSTANT_HASH)
-        }
 
         private const val RENAME_CONSTANT_HASH = 642128662L
-        private val renameConstantBind by lazy {
+        @JvmField
+        val renameConstantBind =
             ObjectCalls.getMethodBind("Theme", "rename_constant", RENAME_CONSTANT_HASH)
-        }
 
         private const val CLEAR_CONSTANT_HASH = 3740211285L
-        private val clearConstantBind by lazy {
+        @JvmField
+        val clearConstantBind =
             ObjectCalls.getMethodBind("Theme", "clear_constant", CLEAR_CONSTANT_HASH)
-        }
 
         private const val GET_CONSTANT_LIST_HASH = 4291131558L
-        private val getConstantListBind by lazy {
+        @JvmField
+        val getConstantListBind =
             ObjectCalls.getMethodBind("Theme", "get_constant_list", GET_CONSTANT_LIST_HASH)
-        }
 
         private const val GET_CONSTANT_TYPE_LIST_HASH = 1139954409L
-        private val getConstantTypeListBind by lazy {
+        @JvmField
+        val getConstantTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_constant_type_list", GET_CONSTANT_TYPE_LIST_HASH)
-        }
 
         private const val SET_DEFAULT_BASE_SCALE_HASH = 373806689L
-        private val setDefaultBaseScaleBind by lazy {
+        @JvmField
+        val setDefaultBaseScaleBind =
             ObjectCalls.getMethodBind("Theme", "set_default_base_scale", SET_DEFAULT_BASE_SCALE_HASH)
-        }
 
         private const val GET_DEFAULT_BASE_SCALE_HASH = 1740695150L
-        private val getDefaultBaseScaleBind by lazy {
+        @JvmField
+        val getDefaultBaseScaleBind =
             ObjectCalls.getMethodBind("Theme", "get_default_base_scale", GET_DEFAULT_BASE_SCALE_HASH)
-        }
 
         private const val HAS_DEFAULT_BASE_SCALE_HASH = 36873697L
-        private val hasDefaultBaseScaleBind by lazy {
+        @JvmField
+        val hasDefaultBaseScaleBind =
             ObjectCalls.getMethodBind("Theme", "has_default_base_scale", HAS_DEFAULT_BASE_SCALE_HASH)
-        }
 
         private const val SET_DEFAULT_FONT_HASH = 1262170328L
-        private val setDefaultFontBind by lazy {
+        @JvmField
+        val setDefaultFontBind =
             ObjectCalls.getMethodBind("Theme", "set_default_font", SET_DEFAULT_FONT_HASH)
-        }
 
         private const val GET_DEFAULT_FONT_HASH = 3229501585L
-        private val getDefaultFontBind by lazy {
+        @JvmField
+        val getDefaultFontBind =
             ObjectCalls.getMethodBind("Theme", "get_default_font", GET_DEFAULT_FONT_HASH)
-        }
 
         private const val HAS_DEFAULT_FONT_HASH = 36873697L
-        private val hasDefaultFontBind by lazy {
+        @JvmField
+        val hasDefaultFontBind =
             ObjectCalls.getMethodBind("Theme", "has_default_font", HAS_DEFAULT_FONT_HASH)
-        }
 
         private const val SET_DEFAULT_FONT_SIZE_HASH = 1286410249L
-        private val setDefaultFontSizeBind by lazy {
+        @JvmField
+        val setDefaultFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "set_default_font_size", SET_DEFAULT_FONT_SIZE_HASH)
-        }
 
         private const val GET_DEFAULT_FONT_SIZE_HASH = 3905245786L
-        private val getDefaultFontSizeBind by lazy {
+        @JvmField
+        val getDefaultFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "get_default_font_size", GET_DEFAULT_FONT_SIZE_HASH)
-        }
 
         private const val HAS_DEFAULT_FONT_SIZE_HASH = 36873697L
-        private val hasDefaultFontSizeBind by lazy {
+        @JvmField
+        val hasDefaultFontSizeBind =
             ObjectCalls.getMethodBind("Theme", "has_default_font_size", HAS_DEFAULT_FONT_SIZE_HASH)
-        }
 
         private const val SET_THEME_ITEM_HASH = 2492983623L
-        private val setThemeItemBind by lazy {
+        @JvmField
+        val setThemeItemBind =
             ObjectCalls.getMethodBind("Theme", "set_theme_item", SET_THEME_ITEM_HASH)
-        }
 
         private const val GET_THEME_ITEM_HASH = 2191024021L
-        private val getThemeItemBind by lazy {
+        @JvmField
+        val getThemeItemBind =
             ObjectCalls.getMethodBind("Theme", "get_theme_item", GET_THEME_ITEM_HASH)
-        }
 
         private const val HAS_THEME_ITEM_HASH = 1739311056L
-        private val hasThemeItemBind by lazy {
+        @JvmField
+        val hasThemeItemBind =
             ObjectCalls.getMethodBind("Theme", "has_theme_item", HAS_THEME_ITEM_HASH)
-        }
 
         private const val RENAME_THEME_ITEM_HASH = 3900867553L
-        private val renameThemeItemBind by lazy {
+        @JvmField
+        val renameThemeItemBind =
             ObjectCalls.getMethodBind("Theme", "rename_theme_item", RENAME_THEME_ITEM_HASH)
-        }
 
         private const val CLEAR_THEME_ITEM_HASH = 2965505587L
-        private val clearThemeItemBind by lazy {
+        @JvmField
+        val clearThemeItemBind =
             ObjectCalls.getMethodBind("Theme", "clear_theme_item", CLEAR_THEME_ITEM_HASH)
-        }
 
         private const val GET_THEME_ITEM_LIST_HASH = 3726716710L
-        private val getThemeItemListBind by lazy {
+        @JvmField
+        val getThemeItemListBind =
             ObjectCalls.getMethodBind("Theme", "get_theme_item_list", GET_THEME_ITEM_LIST_HASH)
-        }
 
         private const val GET_THEME_ITEM_TYPE_LIST_HASH = 1316004935L
-        private val getThemeItemTypeListBind by lazy {
+        @JvmField
+        val getThemeItemTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_theme_item_type_list", GET_THEME_ITEM_TYPE_LIST_HASH)
-        }
 
         private const val SET_TYPE_VARIATION_HASH = 3740211285L
-        private val setTypeVariationBind by lazy {
+        @JvmField
+        val setTypeVariationBind =
             ObjectCalls.getMethodBind("Theme", "set_type_variation", SET_TYPE_VARIATION_HASH)
-        }
 
         private const val IS_TYPE_VARIATION_HASH = 471820014L
-        private val isTypeVariationBind by lazy {
+        @JvmField
+        val isTypeVariationBind =
             ObjectCalls.getMethodBind("Theme", "is_type_variation", IS_TYPE_VARIATION_HASH)
-        }
 
         private const val CLEAR_TYPE_VARIATION_HASH = 3304788590L
-        private val clearTypeVariationBind by lazy {
+        @JvmField
+        val clearTypeVariationBind =
             ObjectCalls.getMethodBind("Theme", "clear_type_variation", CLEAR_TYPE_VARIATION_HASH)
-        }
 
         private const val GET_TYPE_VARIATION_BASE_HASH = 1965194235L
-        private val getTypeVariationBaseBind by lazy {
+        @JvmField
+        val getTypeVariationBaseBind =
             ObjectCalls.getMethodBind("Theme", "get_type_variation_base", GET_TYPE_VARIATION_BASE_HASH)
-        }
 
         private const val GET_TYPE_VARIATION_LIST_HASH = 1761182771L
-        private val getTypeVariationListBind by lazy {
+        @JvmField
+        val getTypeVariationListBind =
             ObjectCalls.getMethodBind("Theme", "get_type_variation_list", GET_TYPE_VARIATION_LIST_HASH)
-        }
 
         private const val ADD_TYPE_HASH = 3304788590L
-        private val addTypeBind by lazy {
+        @JvmField
+        val addTypeBind =
             ObjectCalls.getMethodBind("Theme", "add_type", ADD_TYPE_HASH)
-        }
 
         private const val REMOVE_TYPE_HASH = 3304788590L
-        private val removeTypeBind by lazy {
+        @JvmField
+        val removeTypeBind =
             ObjectCalls.getMethodBind("Theme", "remove_type", REMOVE_TYPE_HASH)
-        }
 
         private const val RENAME_TYPE_HASH = 3740211285L
-        private val renameTypeBind by lazy {
+        @JvmField
+        val renameTypeBind =
             ObjectCalls.getMethodBind("Theme", "rename_type", RENAME_TYPE_HASH)
-        }
 
         private const val GET_TYPE_LIST_HASH = 1139954409L
-        private val getTypeListBind by lazy {
+        @JvmField
+        val getTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_type_list", GET_TYPE_LIST_HASH)
-        }
 
         private const val MERGE_WITH_HASH = 2326690814L
-        private val mergeWithBind by lazy {
+        @JvmField
+        val mergeWithBind =
             ObjectCalls.getMethodBind("Theme", "merge_with", MERGE_WITH_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("Theme", "clear", CLEAR_HASH)
-        }
     }
 }

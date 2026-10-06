@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -17,9 +18,8 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: NavigationServer2D
  */
 object NavigationServer2D {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("NavigationServer2D")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Returns all created navigation map `RID`s on the NavigationServer. This returns both 2D and 3D
@@ -29,7 +29,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun getMaps(): List<RID> {
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getMapsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getMapsBind, singleton)
     }
 
     /**
@@ -39,7 +39,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(mapCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.mapCreateBind, singleton)
     }
 
     /**
@@ -49,7 +49,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetActive(map: RID, active: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(mapSetActiveBind, singleton, map, active)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.mapSetActiveBind, singleton, map, active)
     }
 
     /**
@@ -59,7 +59,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapIsActive(map: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(mapIsActiveBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.mapIsActiveBind, singleton, map)
     }
 
     /**
@@ -70,7 +70,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetCellSize(map: RID, cellSize: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(mapSetCellSizeBind, singleton, map, cellSize)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.mapSetCellSizeBind, singleton, map, cellSize)
     }
 
     /**
@@ -80,7 +80,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetCellSize(map: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(mapGetCellSizeBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.mapGetCellSizeBind, singleton, map)
     }
 
     /**
@@ -90,7 +90,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetMergeRasterizerCellScale(map: RID, scale: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(mapSetMergeRasterizerCellScaleBind, singleton, map, scale)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.mapSetMergeRasterizerCellScaleBind, singleton, map, scale)
     }
 
     /**
@@ -100,7 +100,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetMergeRasterizerCellScale(map: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(mapGetMergeRasterizerCellScaleBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.mapGetMergeRasterizerCellScaleBind, singleton, map)
     }
 
     /**
@@ -112,7 +112,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetUseEdgeConnections(map: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(mapSetUseEdgeConnectionsBind, singleton, map, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.mapSetUseEdgeConnectionsBind, singleton, map, enabled)
     }
 
     /**
@@ -124,7 +124,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetUseEdgeConnections(map: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(mapGetUseEdgeConnectionsBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.mapGetUseEdgeConnectionsBind, singleton, map)
     }
 
     /**
@@ -134,7 +134,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetEdgeConnectionMargin(map: RID, margin: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(mapSetEdgeConnectionMarginBind, singleton, map, margin)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.mapSetEdgeConnectionMarginBind, singleton, map, margin)
     }
 
     /**
@@ -145,7 +145,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetEdgeConnectionMargin(map: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(mapGetEdgeConnectionMarginBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.mapGetEdgeConnectionMarginBind, singleton, map)
     }
 
     /**
@@ -155,7 +155,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetLinkConnectionRadius(map: RID, radius: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(mapSetLinkConnectionRadiusBind, singleton, map, radius)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.mapSetLinkConnectionRadiusBind, singleton, map, radius)
     }
 
     /**
@@ -166,7 +166,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetLinkConnectionRadius(map: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(mapGetLinkConnectionRadiusBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.mapGetLinkConnectionRadiusBind, singleton, map)
     }
 
     /**
@@ -177,7 +177,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetPath(map: RID, origin: Vector2, destination: Vector2, optimize: Boolean, navigationLayers: Long = 1L): List<Vector2> {
-        return ObjectCalls.ptrcallWithRIDTwoVector2BoolUInt32ArgsRetPackedVector2List(mapGetPathBind, singleton, map, origin, destination, optimize, navigationLayers)
+        return ObjectCalls.ptrcallWithRIDTwoVector2BoolUInt32ArgsRetPackedVector2List(Binds.mapGetPathBind, singleton, map, origin, destination, optimize, navigationLayers)
     }
 
     /**
@@ -188,7 +188,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetClosestPoint(map: RID, toPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetVector2(mapGetClosestPointBind, singleton, map, toPoint)
+        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetVector2(Binds.mapGetClosestPointBind, singleton, map, toPoint)
     }
 
     /**
@@ -199,7 +199,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetClosestPointOwner(map: RID, toPoint: Vector2): RID {
-        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetRID(mapGetClosestPointOwnerBind, singleton, map, toPoint)
+        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetRID(Binds.mapGetClosestPointOwnerBind, singleton, map, toPoint)
     }
 
     /**
@@ -210,7 +210,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetLinks(map: RID): List<RID> {
-        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetLinksBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(Binds.mapGetLinksBind, singleton, map)
     }
 
     /**
@@ -221,7 +221,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetRegions(map: RID): List<RID> {
-        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetRegionsBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(Binds.mapGetRegionsBind, singleton, map)
     }
 
     /**
@@ -232,7 +232,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetAgents(map: RID): List<RID> {
-        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetAgentsBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(Binds.mapGetAgentsBind, singleton, map)
     }
 
     /**
@@ -243,7 +243,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetObstacles(map: RID): List<RID> {
-        return ObjectCalls.ptrcallWithRIDArgRetRIDList(mapGetObstaclesBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetRIDList(Binds.mapGetObstaclesBind, singleton, map)
     }
 
     /**
@@ -270,7 +270,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapForceUpdate(map: RID) {
-        ObjectCalls.ptrcallWithRIDArg(mapForceUpdateBind, singleton, map)
+        ObjectCalls.ptrcallWithRIDArg(Binds.mapForceUpdateBind, singleton, map)
     }
 
     /**
@@ -282,7 +282,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetIterationId(map: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(mapGetIterationIdBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.mapGetIterationIdBind, singleton, map)
     }
 
     /**
@@ -293,7 +293,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapSetUseAsyncIterations(map: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(mapSetUseAsyncIterationsBind, singleton, map, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.mapSetUseAsyncIterationsBind, singleton, map, enabled)
     }
 
     /**
@@ -304,7 +304,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetUseAsyncIterations(map: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(mapGetUseAsyncIterationsBind, singleton, map)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.mapGetUseAsyncIterationsBind, singleton, map)
     }
 
     /**
@@ -317,7 +317,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun mapGetRandomPoint(map: RID, navigationLayers: Long, uniformly: Boolean): Vector2 {
-        return ObjectCalls.ptrcallWithRIDUInt32BoolArgsRetVector2(mapGetRandomPointBind, singleton, map, navigationLayers, uniformly)
+        return ObjectCalls.ptrcallWithRIDUInt32BoolArgsRetVector2(Binds.mapGetRandomPointBind, singleton, map, navigationLayers, uniformly)
     }
 
     /**
@@ -330,7 +330,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun queryPath(parameters: NavigationPathQueryParameters2D?, result: NavigationPathQueryResult2D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(queryPathBind, singleton, parameters?.requireOpenHandle() ?: NULL_SEGMENT, result?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.queryPathBind, singleton, parameters?.requireOpenHandle() ?: NULL_SEGMENT, result?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -340,7 +340,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(regionCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.regionCreateBind, singleton)
     }
 
     /**
@@ -353,7 +353,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetIterationId(region: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(regionGetIterationIdBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.regionGetIterationIdBind, singleton, region)
     }
 
     /**
@@ -364,7 +364,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetUseAsyncIterations(region: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(regionSetUseAsyncIterationsBind, singleton, region, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.regionSetUseAsyncIterationsBind, singleton, region, enabled)
     }
 
     /**
@@ -375,7 +375,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetUseAsyncIterations(region: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(regionGetUseAsyncIterationsBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.regionGetUseAsyncIterationsBind, singleton, region)
     }
 
     /**
@@ -385,7 +385,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetEnabled(region: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(regionSetEnabledBind, singleton, region, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.regionSetEnabledBind, singleton, region, enabled)
     }
 
     /**
@@ -395,7 +395,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetEnabled(region: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(regionGetEnabledBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.regionGetEnabledBind, singleton, region)
     }
 
     /**
@@ -406,7 +406,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetUseEdgeConnections(region: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(regionSetUseEdgeConnectionsBind, singleton, region, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.regionSetUseEdgeConnectionsBind, singleton, region, enabled)
     }
 
     /**
@@ -417,7 +417,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetUseEdgeConnections(region: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(regionGetUseEdgeConnectionsBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.regionGetUseEdgeConnectionsBind, singleton, region)
     }
 
     /**
@@ -427,7 +427,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetEnterCost(region: RID, enterCost: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(regionSetEnterCostBind, singleton, region, enterCost)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.regionSetEnterCostBind, singleton, region, enterCost)
     }
 
     /**
@@ -437,7 +437,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetEnterCost(region: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(regionGetEnterCostBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.regionGetEnterCostBind, singleton, region)
     }
 
     /**
@@ -447,7 +447,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetTravelCost(region: RID, travelCost: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(regionSetTravelCostBind, singleton, region, travelCost)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.regionSetTravelCostBind, singleton, region, travelCost)
     }
 
     /**
@@ -457,7 +457,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetTravelCost(region: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(regionGetTravelCostBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.regionGetTravelCostBind, singleton, region)
     }
 
     /**
@@ -467,7 +467,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetOwnerId(region: RID, ownerId: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(regionSetOwnerIdBind, singleton, region, ownerId)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.regionSetOwnerIdBind, singleton, region, ownerId)
     }
 
     /**
@@ -477,7 +477,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetOwnerId(region: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(regionGetOwnerIdBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.regionGetOwnerIdBind, singleton, region)
     }
 
     /**
@@ -495,7 +495,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionOwnsPoint(region: RID, point: Vector2): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetBool(regionOwnsPointBind, singleton, region, point)
+        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetBool(Binds.regionOwnsPointBind, singleton, region, point)
     }
 
     /**
@@ -505,7 +505,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetMap(region: RID, map: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(regionSetMapBind, singleton, region, map)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.regionSetMapBind, singleton, region, map)
     }
 
     /**
@@ -515,7 +515,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetMap(region: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(regionGetMapBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.regionGetMapBind, singleton, region)
     }
 
     /**
@@ -526,7 +526,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetNavigationLayers(region: RID, navigationLayers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(regionSetNavigationLayersBind, singleton, region, navigationLayers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.regionSetNavigationLayersBind, singleton, region, navigationLayers)
     }
 
     /**
@@ -536,7 +536,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetNavigationLayers(region: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(regionGetNavigationLayersBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.regionGetNavigationLayersBind, singleton, region)
     }
 
     /**
@@ -546,7 +546,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetTransform(region: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(regionSetTransformBind, singleton, region, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.regionSetTransformBind, singleton, region, transform)
     }
 
     /**
@@ -556,7 +556,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetTransform(region: RID): Transform2D {
-        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(regionGetTransformBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetTransform2D(Binds.regionGetTransformBind, singleton, region)
     }
 
     /**
@@ -566,7 +566,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionSetNavigationPolygon(region: RID, navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithRIDAndObjectArg(regionSetNavigationPolygonBind, singleton, region, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithRIDAndObjectArg(Binds.regionSetNavigationPolygonBind, singleton, region, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -576,7 +576,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetConnectionsCount(region: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(regionGetConnectionsCountBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.regionGetConnectionsCountBind, singleton, region)
     }
 
     /**
@@ -587,7 +587,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetConnectionPathwayStart(region: RID, connection: Int): Vector2 {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetVector2(regionGetConnectionPathwayStartBind, singleton, region, connection)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetVector2(Binds.regionGetConnectionPathwayStartBind, singleton, region, connection)
     }
 
     /**
@@ -598,7 +598,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetConnectionPathwayEnd(region: RID, connection: Int): Vector2 {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetVector2(regionGetConnectionPathwayEndBind, singleton, region, connection)
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetVector2(Binds.regionGetConnectionPathwayEndBind, singleton, region, connection)
     }
 
     /**
@@ -609,7 +609,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetClosestPoint(region: RID, toPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetVector2(regionGetClosestPointBind, singleton, region, toPoint)
+        return ObjectCalls.ptrcallWithRIDAndVector2ArgRetVector2(Binds.regionGetClosestPointBind, singleton, region, toPoint)
     }
 
     /**
@@ -621,7 +621,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetRandomPoint(region: RID, navigationLayers: Long, uniformly: Boolean): Vector2 {
-        return ObjectCalls.ptrcallWithRIDUInt32BoolArgsRetVector2(regionGetRandomPointBind, singleton, region, navigationLayers, uniformly)
+        return ObjectCalls.ptrcallWithRIDUInt32BoolArgsRetVector2(Binds.regionGetRandomPointBind, singleton, region, navigationLayers, uniformly)
     }
 
     /**
@@ -631,7 +631,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun regionGetBounds(region: RID): Rect2 {
-        return ObjectCalls.ptrcallWithRIDArgRetRect2(regionGetBoundsBind, singleton, region)
+        return ObjectCalls.ptrcallWithRIDArgRetRect2(Binds.regionGetBoundsBind, singleton, region)
     }
 
     /**
@@ -641,7 +641,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(linkCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.linkCreateBind, singleton)
     }
 
     /**
@@ -654,7 +654,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetIterationId(link: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(linkGetIterationIdBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.linkGetIterationIdBind, singleton, link)
     }
 
     /**
@@ -664,7 +664,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetMap(link: RID, map: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(linkSetMapBind, singleton, link, map)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.linkSetMapBind, singleton, link, map)
     }
 
     /**
@@ -674,7 +674,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetMap(link: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(linkGetMapBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.linkGetMapBind, singleton, link)
     }
 
     /**
@@ -684,7 +684,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetEnabled(link: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(linkSetEnabledBind, singleton, link, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.linkSetEnabledBind, singleton, link, enabled)
     }
 
     /**
@@ -694,7 +694,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetEnabled(link: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(linkGetEnabledBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.linkGetEnabledBind, singleton, link)
     }
 
     /**
@@ -704,7 +704,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetBidirectional(link: RID, bidirectional: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(linkSetBidirectionalBind, singleton, link, bidirectional)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.linkSetBidirectionalBind, singleton, link, bidirectional)
     }
 
     /**
@@ -714,7 +714,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkIsBidirectional(link: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(linkIsBidirectionalBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.linkIsBidirectionalBind, singleton, link)
     }
 
     /**
@@ -725,7 +725,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetNavigationLayers(link: RID, navigationLayers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(linkSetNavigationLayersBind, singleton, link, navigationLayers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.linkSetNavigationLayersBind, singleton, link, navigationLayers)
     }
 
     /**
@@ -735,7 +735,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetNavigationLayers(link: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(linkGetNavigationLayersBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.linkGetNavigationLayersBind, singleton, link)
     }
 
     /**
@@ -745,7 +745,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetStartPosition(link: RID, position: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(linkSetStartPositionBind, singleton, link, position)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.linkSetStartPositionBind, singleton, link, position)
     }
 
     /**
@@ -755,7 +755,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetStartPosition(link: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(linkGetStartPositionBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.linkGetStartPositionBind, singleton, link)
     }
 
     /**
@@ -765,7 +765,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetEndPosition(link: RID, position: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(linkSetEndPositionBind, singleton, link, position)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.linkSetEndPositionBind, singleton, link, position)
     }
 
     /**
@@ -775,7 +775,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetEndPosition(link: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(linkGetEndPositionBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.linkGetEndPositionBind, singleton, link)
     }
 
     /**
@@ -785,7 +785,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetEnterCost(link: RID, enterCost: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(linkSetEnterCostBind, singleton, link, enterCost)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.linkSetEnterCostBind, singleton, link, enterCost)
     }
 
     /**
@@ -795,7 +795,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetEnterCost(link: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(linkGetEnterCostBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.linkGetEnterCostBind, singleton, link)
     }
 
     /**
@@ -805,7 +805,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetTravelCost(link: RID, travelCost: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(linkSetTravelCostBind, singleton, link, travelCost)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.linkSetTravelCostBind, singleton, link, travelCost)
     }
 
     /**
@@ -815,7 +815,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetTravelCost(link: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(linkGetTravelCostBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.linkGetTravelCostBind, singleton, link)
     }
 
     /**
@@ -825,7 +825,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkSetOwnerId(link: RID, ownerId: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(linkSetOwnerIdBind, singleton, link, ownerId)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.linkSetOwnerIdBind, singleton, link, ownerId)
     }
 
     /**
@@ -835,7 +835,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun linkGetOwnerId(link: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(linkGetOwnerIdBind, singleton, link)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.linkGetOwnerIdBind, singleton, link)
     }
 
     /**
@@ -845,7 +845,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(agentCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.agentCreateBind, singleton)
     }
 
     /**
@@ -855,7 +855,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetAvoidanceEnabled(agent: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(agentSetAvoidanceEnabledBind, singleton, agent, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.agentSetAvoidanceEnabledBind, singleton, agent, enabled)
     }
 
     /**
@@ -865,7 +865,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetAvoidanceEnabled(agent: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(agentGetAvoidanceEnabledBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.agentGetAvoidanceEnabledBind, singleton, agent)
     }
 
     /**
@@ -875,7 +875,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetMap(agent: RID, map: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(agentSetMapBind, singleton, agent, map)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.agentSetMapBind, singleton, agent, map)
     }
 
     /**
@@ -885,7 +885,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetMap(agent: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(agentGetMapBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.agentGetMapBind, singleton, agent)
     }
 
     /**
@@ -896,7 +896,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetPaused(agent: RID, paused: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(agentSetPausedBind, singleton, agent, paused)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.agentSetPausedBind, singleton, agent, paused)
     }
 
     /**
@@ -906,7 +906,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetPaused(agent: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(agentGetPausedBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.agentGetPausedBind, singleton, agent)
     }
 
     /**
@@ -918,7 +918,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetNeighborDistance(agent: RID, distance: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(agentSetNeighborDistanceBind, singleton, agent, distance)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.agentSetNeighborDistanceBind, singleton, agent, distance)
     }
 
     /**
@@ -929,7 +929,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetNeighborDistance(agent: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(agentGetNeighborDistanceBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.agentGetNeighborDistanceBind, singleton, agent)
     }
 
     /**
@@ -941,7 +941,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetMaxNeighbors(agent: RID, count: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(agentSetMaxNeighborsBind, singleton, agent, count)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.agentSetMaxNeighborsBind, singleton, agent, count)
     }
 
     /**
@@ -952,7 +952,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetMaxNeighbors(agent: RID): Int {
-        return ObjectCalls.ptrcallWithRIDArgRetInt(agentGetMaxNeighborsBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetInt(Binds.agentGetMaxNeighborsBind, singleton, agent)
     }
 
     /**
@@ -965,7 +965,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetTimeHorizonAgents(agent: RID, timeHorizon: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(agentSetTimeHorizonAgentsBind, singleton, agent, timeHorizon)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.agentSetTimeHorizonAgentsBind, singleton, agent, timeHorizon)
     }
 
     /**
@@ -976,7 +976,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetTimeHorizonAgents(agent: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(agentGetTimeHorizonAgentsBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.agentGetTimeHorizonAgentsBind, singleton, agent)
     }
 
     /**
@@ -990,7 +990,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetTimeHorizonObstacles(agent: RID, timeHorizon: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(agentSetTimeHorizonObstaclesBind, singleton, agent, timeHorizon)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.agentSetTimeHorizonObstaclesBind, singleton, agent, timeHorizon)
     }
 
     /**
@@ -1001,7 +1001,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetTimeHorizonObstacles(agent: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(agentGetTimeHorizonObstaclesBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.agentGetTimeHorizonObstaclesBind, singleton, agent)
     }
 
     /**
@@ -1011,7 +1011,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetRadius(agent: RID, radius: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(agentSetRadiusBind, singleton, agent, radius)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.agentSetRadiusBind, singleton, agent, radius)
     }
 
     /**
@@ -1021,7 +1021,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetRadius(agent: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(agentGetRadiusBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.agentGetRadiusBind, singleton, agent)
     }
 
     /**
@@ -1031,7 +1031,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetMaxSpeed(agent: RID, maxSpeed: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(agentSetMaxSpeedBind, singleton, agent, maxSpeed)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.agentSetMaxSpeedBind, singleton, agent, maxSpeed)
     }
 
     /**
@@ -1041,7 +1041,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetMaxSpeed(agent: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(agentGetMaxSpeedBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.agentGetMaxSpeedBind, singleton, agent)
     }
 
     /**
@@ -1053,7 +1053,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetVelocityForced(agent: RID, velocity: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(agentSetVelocityForcedBind, singleton, agent, velocity)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.agentSetVelocityForcedBind, singleton, agent, velocity)
     }
 
     /**
@@ -1066,7 +1066,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetVelocity(agent: RID, velocity: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(agentSetVelocityBind, singleton, agent, velocity)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.agentSetVelocityBind, singleton, agent, velocity)
     }
 
     /**
@@ -1076,7 +1076,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetVelocity(agent: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(agentGetVelocityBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.agentGetVelocityBind, singleton, agent)
     }
 
     /**
@@ -1086,7 +1086,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetPosition(agent: RID, position: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(agentSetPositionBind, singleton, agent, position)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.agentSetPositionBind, singleton, agent, position)
     }
 
     /**
@@ -1096,7 +1096,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetPosition(agent: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(agentGetPositionBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.agentGetPositionBind, singleton, agent)
     }
 
     /**
@@ -1106,7 +1106,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentIsMapChanged(agent: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(agentIsMapChangedBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.agentIsMapChangedBind, singleton, agent)
     }
 
     /**
@@ -1121,7 +1121,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetAvoidanceCallback(agent: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(agentSetAvoidanceCallbackBind, singleton, agent, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.agentSetAvoidanceCallbackBind, singleton, agent, callback.target.segment, callback.method)
     }
 
     /**
@@ -1131,7 +1131,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentHasAvoidanceCallback(agent: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(agentHasAvoidanceCallbackBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.agentHasAvoidanceCallbackBind, singleton, agent)
     }
 
     /**
@@ -1141,7 +1141,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetAvoidanceLayers(agent: RID, layers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(agentSetAvoidanceLayersBind, singleton, agent, layers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.agentSetAvoidanceLayersBind, singleton, agent, layers)
     }
 
     /**
@@ -1151,7 +1151,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetAvoidanceLayers(agent: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(agentGetAvoidanceLayersBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.agentGetAvoidanceLayersBind, singleton, agent)
     }
 
     /**
@@ -1161,7 +1161,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetAvoidanceMask(agent: RID, mask: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(agentSetAvoidanceMaskBind, singleton, agent, mask)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.agentSetAvoidanceMaskBind, singleton, agent, mask)
     }
 
     /**
@@ -1171,7 +1171,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetAvoidanceMask(agent: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(agentGetAvoidanceMaskBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.agentGetAvoidanceMaskBind, singleton, agent)
     }
 
     /**
@@ -1185,7 +1185,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentSetAvoidancePriority(agent: RID, priority: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(agentSetAvoidancePriorityBind, singleton, agent, priority)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.agentSetAvoidancePriorityBind, singleton, agent, priority)
     }
 
     /**
@@ -1195,7 +1195,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun agentGetAvoidancePriority(agent: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(agentGetAvoidancePriorityBind, singleton, agent)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.agentGetAvoidancePriorityBind, singleton, agent)
     }
 
     /**
@@ -1205,7 +1205,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(obstacleCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.obstacleCreateBind, singleton)
     }
 
     /**
@@ -1215,7 +1215,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetAvoidanceEnabled(obstacle: RID, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(obstacleSetAvoidanceEnabledBind, singleton, obstacle, enabled)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.obstacleSetAvoidanceEnabledBind, singleton, obstacle, enabled)
     }
 
     /**
@@ -1225,7 +1225,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetAvoidanceEnabled(obstacle: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(obstacleGetAvoidanceEnabledBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.obstacleGetAvoidanceEnabledBind, singleton, obstacle)
     }
 
     /**
@@ -1235,7 +1235,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetMap(obstacle: RID, map: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(obstacleSetMapBind, singleton, obstacle, map)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.obstacleSetMapBind, singleton, obstacle, map)
     }
 
     /**
@@ -1245,7 +1245,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetMap(obstacle: RID): RID {
-        return ObjectCalls.ptrcallWithRIDArgRetRID(obstacleGetMapBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetRID(Binds.obstacleGetMapBind, singleton, obstacle)
     }
 
     /**
@@ -1256,7 +1256,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetPaused(obstacle: RID, paused: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(obstacleSetPausedBind, singleton, obstacle, paused)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.obstacleSetPausedBind, singleton, obstacle, paused)
     }
 
     /**
@@ -1266,7 +1266,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetPaused(obstacle: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(obstacleGetPausedBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.obstacleGetPausedBind, singleton, obstacle)
     }
 
     /**
@@ -1276,7 +1276,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetRadius(obstacle: RID, radius: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(obstacleSetRadiusBind, singleton, obstacle, radius)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.obstacleSetRadiusBind, singleton, obstacle, radius)
     }
 
     /**
@@ -1286,7 +1286,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetRadius(obstacle: RID): Double {
-        return ObjectCalls.ptrcallWithRIDArgRetDouble(obstacleGetRadiusBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetDouble(Binds.obstacleGetRadiusBind, singleton, obstacle)
     }
 
     /**
@@ -1297,7 +1297,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetVelocity(obstacle: RID, velocity: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(obstacleSetVelocityBind, singleton, obstacle, velocity)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.obstacleSetVelocityBind, singleton, obstacle, velocity)
     }
 
     /**
@@ -1307,7 +1307,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetVelocity(obstacle: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(obstacleGetVelocityBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.obstacleGetVelocityBind, singleton, obstacle)
     }
 
     /**
@@ -1317,7 +1317,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetPosition(obstacle: RID, position: Vector2) {
-        ObjectCalls.ptrcallWithRIDAndVector2Arg(obstacleSetPositionBind, singleton, obstacle, position)
+        ObjectCalls.ptrcallWithRIDAndVector2Arg(Binds.obstacleSetPositionBind, singleton, obstacle, position)
     }
 
     /**
@@ -1327,7 +1327,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetPosition(obstacle: RID): Vector2 {
-        return ObjectCalls.ptrcallWithRIDArgRetVector2(obstacleGetPositionBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetVector2(Binds.obstacleGetPositionBind, singleton, obstacle)
     }
 
     /**
@@ -1338,7 +1338,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetVertices(obstacle: RID, vertices: List<Vector2>) {
-        ObjectCalls.ptrcallWithRIDAndPackedVector2ListArg(obstacleSetVerticesBind, singleton, obstacle, vertices)
+        ObjectCalls.ptrcallWithRIDAndPackedVector2ListArg(Binds.obstacleSetVerticesBind, singleton, obstacle, vertices)
     }
 
     /**
@@ -1348,7 +1348,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetVertices(obstacle: RID): List<Vector2> {
-        return ObjectCalls.ptrcallWithRIDArgRetPackedVector2List(obstacleGetVerticesBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetPackedVector2List(Binds.obstacleGetVerticesBind, singleton, obstacle)
     }
 
     /**
@@ -1358,7 +1358,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleSetAvoidanceLayers(obstacle: RID, layers: Long) {
-        ObjectCalls.ptrcallWithRIDAndUInt32Arg(obstacleSetAvoidanceLayersBind, singleton, obstacle, layers)
+        ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.obstacleSetAvoidanceLayersBind, singleton, obstacle, layers)
     }
 
     /**
@@ -1368,7 +1368,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun obstacleGetAvoidanceLayers(obstacle: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetUInt32(obstacleGetAvoidanceLayersBind, singleton, obstacle)
+        return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.obstacleGetAvoidanceLayersBind, singleton, obstacle)
     }
 
     /**
@@ -1386,7 +1386,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun parseSourceGeometryData(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, rootNode: Node, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithThreeObjectCallableArgs(Binds.parseSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -1397,7 +1397,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -1409,7 +1409,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun bakeFromSourceGeometryDataAsync(navigationPolygon: NavigationPolygon?, sourceGeometryData: NavigationMeshSourceGeometryData2D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataAsyncBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(Binds.bakeFromSourceGeometryDataAsyncBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -1419,7 +1419,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun isBakingNavigationPolygon(navigationPolygon: NavigationPolygon?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isBakingNavigationPolygonBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.isBakingNavigationPolygonBind, singleton, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1431,7 +1431,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun sourceGeometryParserCreate(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(sourceGeometryParserCreateBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.sourceGeometryParserCreateBind, singleton)
     }
 
     /**
@@ -1445,7 +1445,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun sourceGeometryParserSetCallback(parser: RID, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDCallableArgs(sourceGeometryParserSetCallbackBind, singleton, parser, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithRIDCallableArgs(Binds.sourceGeometryParserSetCallbackBind, singleton, parser, callback.target.segment, callback.method)
     }
 
     /**
@@ -1459,7 +1459,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun simplifyPath(path: List<Vector2>, epsilon: Double): List<Vector2> {
-        return ObjectCalls.ptrcallWithPackedVector2ListAndDoubleArgRetPackedVector2List(simplifyPathBind, singleton, path, epsilon)
+        return ObjectCalls.ptrcallWithPackedVector2ListAndDoubleArgRetPackedVector2List(Binds.simplifyPathBind, singleton, path, epsilon)
     }
 
     /**
@@ -1469,7 +1469,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun freeRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeRidBind, singleton, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeRidBind, singleton, rid)
     }
 
     /**
@@ -1479,7 +1479,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun setActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, singleton, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, singleton, active)
     }
 
     /**
@@ -1489,7 +1489,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun setDebugEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDebugEnabledBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugEnabledBind, singleton, enabled)
     }
 
     /**
@@ -1499,7 +1499,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun getDebugEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDebugEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDebugEnabledBind, singleton)
     }
 
     /**
@@ -1509,7 +1509,7 @@ object NavigationServer2D {
      */
     @JvmStatic
     fun getProcessInfo(processInfo: NavigationServer2D.ProcessInfo): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getProcessInfoBind, singleton, processInfo.value)
     }
 
     /** Signal `map_changed(map: RID)`; see [TypedSignal]. */
@@ -1615,688 +1615,693 @@ object NavigationServer2D {
     internal fun wrap(handle: RawSegment): NavigationServer2D? =
         if (handle.address() == 0L) null else this
 
-    private const val GET_MAPS_HASH = 3995934104L
-    private val getMapsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "get_maps", GET_MAPS_HASH)
-    }
-
-    private const val MAP_CREATE_HASH = 529393457L
-    private val mapCreateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_create", MAP_CREATE_HASH)
-    }
-
-    private const val MAP_SET_ACTIVE_HASH = 1265174801L
-    private val mapSetActiveBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_active", MAP_SET_ACTIVE_HASH)
-    }
-
-    private const val MAP_IS_ACTIVE_HASH = 4155700596L
-    private val mapIsActiveBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_is_active", MAP_IS_ACTIVE_HASH)
-    }
-
-    private const val MAP_SET_CELL_SIZE_HASH = 1794382983L
-    private val mapSetCellSizeBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_cell_size", MAP_SET_CELL_SIZE_HASH)
-    }
-
-    private const val MAP_GET_CELL_SIZE_HASH = 866169185L
-    private val mapGetCellSizeBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_cell_size", MAP_GET_CELL_SIZE_HASH)
-    }
-
-    private const val MAP_SET_MERGE_RASTERIZER_CELL_SCALE_HASH = 1794382983L
-    private val mapSetMergeRasterizerCellScaleBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_merge_rasterizer_cell_scale", MAP_SET_MERGE_RASTERIZER_CELL_SCALE_HASH)
-    }
-
-    private const val MAP_GET_MERGE_RASTERIZER_CELL_SCALE_HASH = 866169185L
-    private val mapGetMergeRasterizerCellScaleBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_merge_rasterizer_cell_scale", MAP_GET_MERGE_RASTERIZER_CELL_SCALE_HASH)
-    }
-
-    private const val MAP_SET_USE_EDGE_CONNECTIONS_HASH = 1265174801L
-    private val mapSetUseEdgeConnectionsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_use_edge_connections", MAP_SET_USE_EDGE_CONNECTIONS_HASH)
-    }
-
-    private const val MAP_GET_USE_EDGE_CONNECTIONS_HASH = 4155700596L
-    private val mapGetUseEdgeConnectionsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_use_edge_connections", MAP_GET_USE_EDGE_CONNECTIONS_HASH)
-    }
-
-    private const val MAP_SET_EDGE_CONNECTION_MARGIN_HASH = 1794382983L
-    private val mapSetEdgeConnectionMarginBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_edge_connection_margin", MAP_SET_EDGE_CONNECTION_MARGIN_HASH)
-    }
-
-    private const val MAP_GET_EDGE_CONNECTION_MARGIN_HASH = 866169185L
-    private val mapGetEdgeConnectionMarginBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_edge_connection_margin", MAP_GET_EDGE_CONNECTION_MARGIN_HASH)
-    }
-
-    private const val MAP_SET_LINK_CONNECTION_RADIUS_HASH = 1794382983L
-    private val mapSetLinkConnectionRadiusBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_link_connection_radius", MAP_SET_LINK_CONNECTION_RADIUS_HASH)
-    }
-
-    private const val MAP_GET_LINK_CONNECTION_RADIUS_HASH = 866169185L
-    private val mapGetLinkConnectionRadiusBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_link_connection_radius", MAP_GET_LINK_CONNECTION_RADIUS_HASH)
-    }
-
-    private const val MAP_GET_PATH_HASH = 1279824844L
-    private val mapGetPathBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_path", MAP_GET_PATH_HASH)
-    }
-
-    private const val MAP_GET_CLOSEST_POINT_HASH = 1358334418L
-    private val mapGetClosestPointBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_closest_point", MAP_GET_CLOSEST_POINT_HASH)
-    }
-
-    private const val MAP_GET_CLOSEST_POINT_OWNER_HASH = 1353467510L
-    private val mapGetClosestPointOwnerBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_closest_point_owner", MAP_GET_CLOSEST_POINT_OWNER_HASH)
-    }
-
-    private const val MAP_GET_LINKS_HASH = 2684255073L
-    private val mapGetLinksBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_links", MAP_GET_LINKS_HASH)
-    }
-
-    private const val MAP_GET_REGIONS_HASH = 2684255073L
-    private val mapGetRegionsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_regions", MAP_GET_REGIONS_HASH)
-    }
-
-    private const val MAP_GET_AGENTS_HASH = 2684255073L
-    private val mapGetAgentsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_agents", MAP_GET_AGENTS_HASH)
-    }
-
-    private const val MAP_GET_OBSTACLES_HASH = 2684255073L
-    private val mapGetObstaclesBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_obstacles", MAP_GET_OBSTACLES_HASH)
-    }
-
-    private const val MAP_FORCE_UPDATE_HASH = 2722037293L
-    private val mapForceUpdateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_force_update", MAP_FORCE_UPDATE_HASH)
-    }
-
-    private const val MAP_GET_ITERATION_ID_HASH = 2198884583L
-    private val mapGetIterationIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_iteration_id", MAP_GET_ITERATION_ID_HASH)
-    }
-
-    private const val MAP_SET_USE_ASYNC_ITERATIONS_HASH = 1265174801L
-    private val mapSetUseAsyncIterationsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_set_use_async_iterations", MAP_SET_USE_ASYNC_ITERATIONS_HASH)
-    }
-
-    private const val MAP_GET_USE_ASYNC_ITERATIONS_HASH = 4155700596L
-    private val mapGetUseAsyncIterationsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_use_async_iterations", MAP_GET_USE_ASYNC_ITERATIONS_HASH)
-    }
-
-    private const val MAP_GET_RANDOM_POINT_HASH = 3271000763L
-    private val mapGetRandomPointBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "map_get_random_point", MAP_GET_RANDOM_POINT_HASH)
-    }
-
-    private const val QUERY_PATH_HASH = 1254915886L
-    private val queryPathBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "query_path", QUERY_PATH_HASH)
-    }
-
-    private const val REGION_CREATE_HASH = 529393457L
-    private val regionCreateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_create", REGION_CREATE_HASH)
-    }
-
-    private const val REGION_GET_ITERATION_ID_HASH = 2198884583L
-    private val regionGetIterationIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_iteration_id", REGION_GET_ITERATION_ID_HASH)
-    }
-
-    private const val REGION_SET_USE_ASYNC_ITERATIONS_HASH = 1265174801L
-    private val regionSetUseAsyncIterationsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_use_async_iterations", REGION_SET_USE_ASYNC_ITERATIONS_HASH)
-    }
-
-    private const val REGION_GET_USE_ASYNC_ITERATIONS_HASH = 4155700596L
-    private val regionGetUseAsyncIterationsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_use_async_iterations", REGION_GET_USE_ASYNC_ITERATIONS_HASH)
-    }
-
-    private const val REGION_SET_ENABLED_HASH = 1265174801L
-    private val regionSetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_enabled", REGION_SET_ENABLED_HASH)
-    }
-
-    private const val REGION_GET_ENABLED_HASH = 4155700596L
-    private val regionGetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_enabled", REGION_GET_ENABLED_HASH)
-    }
-
-    private const val REGION_SET_USE_EDGE_CONNECTIONS_HASH = 1265174801L
-    private val regionSetUseEdgeConnectionsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_use_edge_connections", REGION_SET_USE_EDGE_CONNECTIONS_HASH)
-    }
-
-    private const val REGION_GET_USE_EDGE_CONNECTIONS_HASH = 4155700596L
-    private val regionGetUseEdgeConnectionsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_use_edge_connections", REGION_GET_USE_EDGE_CONNECTIONS_HASH)
-    }
-
-    private const val REGION_SET_ENTER_COST_HASH = 1794382983L
-    private val regionSetEnterCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_enter_cost", REGION_SET_ENTER_COST_HASH)
-    }
-
-    private const val REGION_GET_ENTER_COST_HASH = 866169185L
-    private val regionGetEnterCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_enter_cost", REGION_GET_ENTER_COST_HASH)
-    }
-
-    private const val REGION_SET_TRAVEL_COST_HASH = 1794382983L
-    private val regionSetTravelCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_travel_cost", REGION_SET_TRAVEL_COST_HASH)
-    }
-
-    private const val REGION_GET_TRAVEL_COST_HASH = 866169185L
-    private val regionGetTravelCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_travel_cost", REGION_GET_TRAVEL_COST_HASH)
-    }
-
-    private const val REGION_SET_OWNER_ID_HASH = 3411492887L
-    private val regionSetOwnerIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_owner_id", REGION_SET_OWNER_ID_HASH)
-    }
-
-    private const val REGION_GET_OWNER_ID_HASH = 2198884583L
-    private val regionGetOwnerIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_owner_id", REGION_GET_OWNER_ID_HASH)
-    }
-
-    private const val REGION_OWNS_POINT_HASH = 219849798L
-    private val regionOwnsPointBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_owns_point", REGION_OWNS_POINT_HASH)
-    }
-
-    private const val REGION_SET_MAP_HASH = 395945892L
-    private val regionSetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_map", REGION_SET_MAP_HASH)
-    }
-
-    private const val REGION_GET_MAP_HASH = 3814569979L
-    private val regionGetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_map", REGION_GET_MAP_HASH)
-    }
-
-    private const val REGION_SET_NAVIGATION_LAYERS_HASH = 3411492887L
-    private val regionSetNavigationLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_navigation_layers", REGION_SET_NAVIGATION_LAYERS_HASH)
-    }
-
-    private const val REGION_GET_NAVIGATION_LAYERS_HASH = 2198884583L
-    private val regionGetNavigationLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_navigation_layers", REGION_GET_NAVIGATION_LAYERS_HASH)
-    }
-
-    private const val REGION_SET_TRANSFORM_HASH = 1246044741L
-    private val regionSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_transform", REGION_SET_TRANSFORM_HASH)
-    }
-
-    private const val REGION_GET_TRANSFORM_HASH = 213527486L
-    private val regionGetTransformBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_transform", REGION_GET_TRANSFORM_HASH)
-    }
-
-    private const val REGION_SET_NAVIGATION_POLYGON_HASH = 3633623451L
-    private val regionSetNavigationPolygonBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_set_navigation_polygon", REGION_SET_NAVIGATION_POLYGON_HASH)
-    }
-
-    private const val REGION_GET_CONNECTIONS_COUNT_HASH = 2198884583L
-    private val regionGetConnectionsCountBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_connections_count", REGION_GET_CONNECTIONS_COUNT_HASH)
-    }
-
-    private const val REGION_GET_CONNECTION_PATHWAY_START_HASH = 2546185844L
-    private val regionGetConnectionPathwayStartBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_connection_pathway_start", REGION_GET_CONNECTION_PATHWAY_START_HASH)
-    }
-
-    private const val REGION_GET_CONNECTION_PATHWAY_END_HASH = 2546185844L
-    private val regionGetConnectionPathwayEndBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_connection_pathway_end", REGION_GET_CONNECTION_PATHWAY_END_HASH)
-    }
-
-    private const val REGION_GET_CLOSEST_POINT_HASH = 1358334418L
-    private val regionGetClosestPointBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_closest_point", REGION_GET_CLOSEST_POINT_HASH)
-    }
-
-    private const val REGION_GET_RANDOM_POINT_HASH = 3271000763L
-    private val regionGetRandomPointBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_random_point", REGION_GET_RANDOM_POINT_HASH)
-    }
-
-    private const val REGION_GET_BOUNDS_HASH = 1097232729L
-    private val regionGetBoundsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "region_get_bounds", REGION_GET_BOUNDS_HASH)
-    }
-
-    private const val LINK_CREATE_HASH = 529393457L
-    private val linkCreateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_create", LINK_CREATE_HASH)
-    }
-
-    private const val LINK_GET_ITERATION_ID_HASH = 2198884583L
-    private val linkGetIterationIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_iteration_id", LINK_GET_ITERATION_ID_HASH)
-    }
-
-    private const val LINK_SET_MAP_HASH = 395945892L
-    private val linkSetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_map", LINK_SET_MAP_HASH)
-    }
-
-    private const val LINK_GET_MAP_HASH = 3814569979L
-    private val linkGetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_map", LINK_GET_MAP_HASH)
-    }
-
-    private const val LINK_SET_ENABLED_HASH = 1265174801L
-    private val linkSetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_enabled", LINK_SET_ENABLED_HASH)
-    }
-
-    private const val LINK_GET_ENABLED_HASH = 4155700596L
-    private val linkGetEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_enabled", LINK_GET_ENABLED_HASH)
-    }
-
-    private const val LINK_SET_BIDIRECTIONAL_HASH = 1265174801L
-    private val linkSetBidirectionalBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_bidirectional", LINK_SET_BIDIRECTIONAL_HASH)
-    }
-
-    private const val LINK_IS_BIDIRECTIONAL_HASH = 4155700596L
-    private val linkIsBidirectionalBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_is_bidirectional", LINK_IS_BIDIRECTIONAL_HASH)
-    }
-
-    private const val LINK_SET_NAVIGATION_LAYERS_HASH = 3411492887L
-    private val linkSetNavigationLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_navigation_layers", LINK_SET_NAVIGATION_LAYERS_HASH)
-    }
-
-    private const val LINK_GET_NAVIGATION_LAYERS_HASH = 2198884583L
-    private val linkGetNavigationLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_navigation_layers", LINK_GET_NAVIGATION_LAYERS_HASH)
-    }
-
-    private const val LINK_SET_START_POSITION_HASH = 3201125042L
-    private val linkSetStartPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_start_position", LINK_SET_START_POSITION_HASH)
-    }
-
-    private const val LINK_GET_START_POSITION_HASH = 2440833711L
-    private val linkGetStartPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_start_position", LINK_GET_START_POSITION_HASH)
-    }
-
-    private const val LINK_SET_END_POSITION_HASH = 3201125042L
-    private val linkSetEndPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_end_position", LINK_SET_END_POSITION_HASH)
-    }
-
-    private const val LINK_GET_END_POSITION_HASH = 2440833711L
-    private val linkGetEndPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_end_position", LINK_GET_END_POSITION_HASH)
-    }
-
-    private const val LINK_SET_ENTER_COST_HASH = 1794382983L
-    private val linkSetEnterCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_enter_cost", LINK_SET_ENTER_COST_HASH)
-    }
-
-    private const val LINK_GET_ENTER_COST_HASH = 866169185L
-    private val linkGetEnterCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_enter_cost", LINK_GET_ENTER_COST_HASH)
-    }
-
-    private const val LINK_SET_TRAVEL_COST_HASH = 1794382983L
-    private val linkSetTravelCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_travel_cost", LINK_SET_TRAVEL_COST_HASH)
-    }
-
-    private const val LINK_GET_TRAVEL_COST_HASH = 866169185L
-    private val linkGetTravelCostBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_travel_cost", LINK_GET_TRAVEL_COST_HASH)
-    }
-
-    private const val LINK_SET_OWNER_ID_HASH = 3411492887L
-    private val linkSetOwnerIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_set_owner_id", LINK_SET_OWNER_ID_HASH)
-    }
-
-    private const val LINK_GET_OWNER_ID_HASH = 2198884583L
-    private val linkGetOwnerIdBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "link_get_owner_id", LINK_GET_OWNER_ID_HASH)
-    }
-
-    private const val AGENT_CREATE_HASH = 529393457L
-    private val agentCreateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_create", AGENT_CREATE_HASH)
-    }
-
-    private const val AGENT_SET_AVOIDANCE_ENABLED_HASH = 1265174801L
-    private val agentSetAvoidanceEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_enabled", AGENT_SET_AVOIDANCE_ENABLED_HASH)
-    }
-
-    private const val AGENT_GET_AVOIDANCE_ENABLED_HASH = 4155700596L
-    private val agentGetAvoidanceEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_enabled", AGENT_GET_AVOIDANCE_ENABLED_HASH)
-    }
-
-    private const val AGENT_SET_MAP_HASH = 395945892L
-    private val agentSetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_map", AGENT_SET_MAP_HASH)
-    }
-
-    private const val AGENT_GET_MAP_HASH = 3814569979L
-    private val agentGetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_map", AGENT_GET_MAP_HASH)
-    }
-
-    private const val AGENT_SET_PAUSED_HASH = 1265174801L
-    private val agentSetPausedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_paused", AGENT_SET_PAUSED_HASH)
-    }
-
-    private const val AGENT_GET_PAUSED_HASH = 4155700596L
-    private val agentGetPausedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_paused", AGENT_GET_PAUSED_HASH)
-    }
-
-    private const val AGENT_SET_NEIGHBOR_DISTANCE_HASH = 1794382983L
-    private val agentSetNeighborDistanceBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_neighbor_distance", AGENT_SET_NEIGHBOR_DISTANCE_HASH)
-    }
-
-    private const val AGENT_GET_NEIGHBOR_DISTANCE_HASH = 866169185L
-    private val agentGetNeighborDistanceBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_neighbor_distance", AGENT_GET_NEIGHBOR_DISTANCE_HASH)
-    }
-
-    private const val AGENT_SET_MAX_NEIGHBORS_HASH = 3411492887L
-    private val agentSetMaxNeighborsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_max_neighbors", AGENT_SET_MAX_NEIGHBORS_HASH)
-    }
-
-    private const val AGENT_GET_MAX_NEIGHBORS_HASH = 2198884583L
-    private val agentGetMaxNeighborsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_max_neighbors", AGENT_GET_MAX_NEIGHBORS_HASH)
-    }
-
-    private const val AGENT_SET_TIME_HORIZON_AGENTS_HASH = 1794382983L
-    private val agentSetTimeHorizonAgentsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_time_horizon_agents", AGENT_SET_TIME_HORIZON_AGENTS_HASH)
-    }
-
-    private const val AGENT_GET_TIME_HORIZON_AGENTS_HASH = 866169185L
-    private val agentGetTimeHorizonAgentsBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_time_horizon_agents", AGENT_GET_TIME_HORIZON_AGENTS_HASH)
-    }
-
-    private const val AGENT_SET_TIME_HORIZON_OBSTACLES_HASH = 1794382983L
-    private val agentSetTimeHorizonObstaclesBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_time_horizon_obstacles", AGENT_SET_TIME_HORIZON_OBSTACLES_HASH)
-    }
-
-    private const val AGENT_GET_TIME_HORIZON_OBSTACLES_HASH = 866169185L
-    private val agentGetTimeHorizonObstaclesBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_time_horizon_obstacles", AGENT_GET_TIME_HORIZON_OBSTACLES_HASH)
-    }
-
-    private const val AGENT_SET_RADIUS_HASH = 1794382983L
-    private val agentSetRadiusBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_radius", AGENT_SET_RADIUS_HASH)
-    }
-
-    private const val AGENT_GET_RADIUS_HASH = 866169185L
-    private val agentGetRadiusBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_radius", AGENT_GET_RADIUS_HASH)
-    }
-
-    private const val AGENT_SET_MAX_SPEED_HASH = 1794382983L
-    private val agentSetMaxSpeedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_max_speed", AGENT_SET_MAX_SPEED_HASH)
-    }
-
-    private const val AGENT_GET_MAX_SPEED_HASH = 866169185L
-    private val agentGetMaxSpeedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_max_speed", AGENT_GET_MAX_SPEED_HASH)
-    }
-
-    private const val AGENT_SET_VELOCITY_FORCED_HASH = 3201125042L
-    private val agentSetVelocityForcedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_velocity_forced", AGENT_SET_VELOCITY_FORCED_HASH)
-    }
-
-    private const val AGENT_SET_VELOCITY_HASH = 3201125042L
-    private val agentSetVelocityBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_velocity", AGENT_SET_VELOCITY_HASH)
-    }
-
-    private const val AGENT_GET_VELOCITY_HASH = 2440833711L
-    private val agentGetVelocityBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_velocity", AGENT_GET_VELOCITY_HASH)
-    }
-
-    private const val AGENT_SET_POSITION_HASH = 3201125042L
-    private val agentSetPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_position", AGENT_SET_POSITION_HASH)
-    }
-
-    private const val AGENT_GET_POSITION_HASH = 2440833711L
-    private val agentGetPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_position", AGENT_GET_POSITION_HASH)
-    }
-
-    private const val AGENT_IS_MAP_CHANGED_HASH = 4155700596L
-    private val agentIsMapChangedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_is_map_changed", AGENT_IS_MAP_CHANGED_HASH)
-    }
-
-    private const val AGENT_SET_AVOIDANCE_CALLBACK_HASH = 3379118538L
-    private val agentSetAvoidanceCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_callback", AGENT_SET_AVOIDANCE_CALLBACK_HASH)
-    }
-
-    private const val AGENT_HAS_AVOIDANCE_CALLBACK_HASH = 4155700596L
-    private val agentHasAvoidanceCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_has_avoidance_callback", AGENT_HAS_AVOIDANCE_CALLBACK_HASH)
-    }
-
-    private const val AGENT_SET_AVOIDANCE_LAYERS_HASH = 3411492887L
-    private val agentSetAvoidanceLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_layers", AGENT_SET_AVOIDANCE_LAYERS_HASH)
-    }
-
-    private const val AGENT_GET_AVOIDANCE_LAYERS_HASH = 2198884583L
-    private val agentGetAvoidanceLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_layers", AGENT_GET_AVOIDANCE_LAYERS_HASH)
-    }
-
-    private const val AGENT_SET_AVOIDANCE_MASK_HASH = 3411492887L
-    private val agentSetAvoidanceMaskBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_mask", AGENT_SET_AVOIDANCE_MASK_HASH)
-    }
-
-    private const val AGENT_GET_AVOIDANCE_MASK_HASH = 2198884583L
-    private val agentGetAvoidanceMaskBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_mask", AGENT_GET_AVOIDANCE_MASK_HASH)
-    }
-
-    private const val AGENT_SET_AVOIDANCE_PRIORITY_HASH = 1794382983L
-    private val agentSetAvoidancePriorityBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_priority", AGENT_SET_AVOIDANCE_PRIORITY_HASH)
-    }
-
-    private const val AGENT_GET_AVOIDANCE_PRIORITY_HASH = 866169185L
-    private val agentGetAvoidancePriorityBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_priority", AGENT_GET_AVOIDANCE_PRIORITY_HASH)
-    }
-
-    private const val OBSTACLE_CREATE_HASH = 529393457L
-    private val obstacleCreateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_create", OBSTACLE_CREATE_HASH)
-    }
-
-    private const val OBSTACLE_SET_AVOIDANCE_ENABLED_HASH = 1265174801L
-    private val obstacleSetAvoidanceEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_avoidance_enabled", OBSTACLE_SET_AVOIDANCE_ENABLED_HASH)
-    }
-
-    private const val OBSTACLE_GET_AVOIDANCE_ENABLED_HASH = 4155700596L
-    private val obstacleGetAvoidanceEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_avoidance_enabled", OBSTACLE_GET_AVOIDANCE_ENABLED_HASH)
-    }
-
-    private const val OBSTACLE_SET_MAP_HASH = 395945892L
-    private val obstacleSetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_map", OBSTACLE_SET_MAP_HASH)
-    }
-
-    private const val OBSTACLE_GET_MAP_HASH = 3814569979L
-    private val obstacleGetMapBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_map", OBSTACLE_GET_MAP_HASH)
-    }
-
-    private const val OBSTACLE_SET_PAUSED_HASH = 1265174801L
-    private val obstacleSetPausedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_paused", OBSTACLE_SET_PAUSED_HASH)
-    }
-
-    private const val OBSTACLE_GET_PAUSED_HASH = 4155700596L
-    private val obstacleGetPausedBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_paused", OBSTACLE_GET_PAUSED_HASH)
-    }
-
-    private const val OBSTACLE_SET_RADIUS_HASH = 1794382983L
-    private val obstacleSetRadiusBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_radius", OBSTACLE_SET_RADIUS_HASH)
-    }
-
-    private const val OBSTACLE_GET_RADIUS_HASH = 866169185L
-    private val obstacleGetRadiusBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_radius", OBSTACLE_GET_RADIUS_HASH)
-    }
-
-    private const val OBSTACLE_SET_VELOCITY_HASH = 3201125042L
-    private val obstacleSetVelocityBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_velocity", OBSTACLE_SET_VELOCITY_HASH)
-    }
-
-    private const val OBSTACLE_GET_VELOCITY_HASH = 2440833711L
-    private val obstacleGetVelocityBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_velocity", OBSTACLE_GET_VELOCITY_HASH)
-    }
-
-    private const val OBSTACLE_SET_POSITION_HASH = 3201125042L
-    private val obstacleSetPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_position", OBSTACLE_SET_POSITION_HASH)
-    }
-
-    private const val OBSTACLE_GET_POSITION_HASH = 2440833711L
-    private val obstacleGetPositionBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_position", OBSTACLE_GET_POSITION_HASH)
-    }
-
-    private const val OBSTACLE_SET_VERTICES_HASH = 29476483L
-    private val obstacleSetVerticesBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_vertices", OBSTACLE_SET_VERTICES_HASH)
-    }
-
-    private const val OBSTACLE_GET_VERTICES_HASH = 2222557395L
-    private val obstacleGetVerticesBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_vertices", OBSTACLE_GET_VERTICES_HASH)
-    }
-
-    private const val OBSTACLE_SET_AVOIDANCE_LAYERS_HASH = 3411492887L
-    private val obstacleSetAvoidanceLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_avoidance_layers", OBSTACLE_SET_AVOIDANCE_LAYERS_HASH)
-    }
-
-    private const val OBSTACLE_GET_AVOIDANCE_LAYERS_HASH = 2198884583L
-    private val obstacleGetAvoidanceLayersBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_avoidance_layers", OBSTACLE_GET_AVOIDANCE_LAYERS_HASH)
-    }
-
-    private const val PARSE_SOURCE_GEOMETRY_DATA_HASH = 1766905497L
-    private val parseSourceGeometryDataBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "parse_source_geometry_data", PARSE_SOURCE_GEOMETRY_DATA_HASH)
-    }
-
-    private const val BAKE_FROM_SOURCE_GEOMETRY_DATA_HASH = 2179660022L
-    private val bakeFromSourceGeometryDataBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "bake_from_source_geometry_data", BAKE_FROM_SOURCE_GEOMETRY_DATA_HASH)
-    }
-
-    private const val BAKE_FROM_SOURCE_GEOMETRY_DATA_ASYNC_HASH = 2179660022L
-    private val bakeFromSourceGeometryDataAsyncBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "bake_from_source_geometry_data_async", BAKE_FROM_SOURCE_GEOMETRY_DATA_ASYNC_HASH)
-    }
-
-    private const val IS_BAKING_NAVIGATION_POLYGON_HASH = 3729405808L
-    private val isBakingNavigationPolygonBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "is_baking_navigation_polygon", IS_BAKING_NAVIGATION_POLYGON_HASH)
-    }
-
-    private const val SOURCE_GEOMETRY_PARSER_CREATE_HASH = 529393457L
-    private val sourceGeometryParserCreateBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "source_geometry_parser_create", SOURCE_GEOMETRY_PARSER_CREATE_HASH)
-    }
-
-    private const val SOURCE_GEOMETRY_PARSER_SET_CALLBACK_HASH = 3379118538L
-    private val sourceGeometryParserSetCallbackBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "source_geometry_parser_set_callback", SOURCE_GEOMETRY_PARSER_SET_CALLBACK_HASH)
-    }
-
-    private const val SIMPLIFY_PATH_HASH = 2457191505L
-    private val simplifyPathBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "simplify_path", SIMPLIFY_PATH_HASH)
-    }
-
-    private const val FREE_RID_HASH = 2722037293L
-    private val freeRidBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "free_rid", FREE_RID_HASH)
-    }
-
-    private const val SET_ACTIVE_HASH = 2586408642L
-    private val setActiveBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "set_active", SET_ACTIVE_HASH)
-    }
-
-    private const val SET_DEBUG_ENABLED_HASH = 2586408642L
-    private val setDebugEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "set_debug_enabled", SET_DEBUG_ENABLED_HASH)
-    }
-
-    private const val GET_DEBUG_ENABLED_HASH = 36873697L
-    private val getDebugEnabledBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "get_debug_enabled", GET_DEBUG_ENABLED_HASH)
-    }
-
-    private const val GET_PROCESS_INFO_HASH = 1640219858L
-    private val getProcessInfoBind by lazy {
-        ObjectCalls.getMethodBind("NavigationServer2D", "get_process_info", GET_PROCESS_INFO_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("NavigationServer2D")
+
+        private const val GET_MAPS_HASH = 3995934104L
+        @JvmField
+        val getMapsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "get_maps", GET_MAPS_HASH)
+
+        private const val MAP_CREATE_HASH = 529393457L
+        @JvmField
+        val mapCreateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_create", MAP_CREATE_HASH)
+
+        private const val MAP_SET_ACTIVE_HASH = 1265174801L
+        @JvmField
+        val mapSetActiveBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_active", MAP_SET_ACTIVE_HASH)
+
+        private const val MAP_IS_ACTIVE_HASH = 4155700596L
+        @JvmField
+        val mapIsActiveBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_is_active", MAP_IS_ACTIVE_HASH)
+
+        private const val MAP_SET_CELL_SIZE_HASH = 1794382983L
+        @JvmField
+        val mapSetCellSizeBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_cell_size", MAP_SET_CELL_SIZE_HASH)
+
+        private const val MAP_GET_CELL_SIZE_HASH = 866169185L
+        @JvmField
+        val mapGetCellSizeBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_cell_size", MAP_GET_CELL_SIZE_HASH)
+
+        private const val MAP_SET_MERGE_RASTERIZER_CELL_SCALE_HASH = 1794382983L
+        @JvmField
+        val mapSetMergeRasterizerCellScaleBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_merge_rasterizer_cell_scale", MAP_SET_MERGE_RASTERIZER_CELL_SCALE_HASH)
+
+        private const val MAP_GET_MERGE_RASTERIZER_CELL_SCALE_HASH = 866169185L
+        @JvmField
+        val mapGetMergeRasterizerCellScaleBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_merge_rasterizer_cell_scale", MAP_GET_MERGE_RASTERIZER_CELL_SCALE_HASH)
+
+        private const val MAP_SET_USE_EDGE_CONNECTIONS_HASH = 1265174801L
+        @JvmField
+        val mapSetUseEdgeConnectionsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_use_edge_connections", MAP_SET_USE_EDGE_CONNECTIONS_HASH)
+
+        private const val MAP_GET_USE_EDGE_CONNECTIONS_HASH = 4155700596L
+        @JvmField
+        val mapGetUseEdgeConnectionsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_use_edge_connections", MAP_GET_USE_EDGE_CONNECTIONS_HASH)
+
+        private const val MAP_SET_EDGE_CONNECTION_MARGIN_HASH = 1794382983L
+        @JvmField
+        val mapSetEdgeConnectionMarginBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_edge_connection_margin", MAP_SET_EDGE_CONNECTION_MARGIN_HASH)
+
+        private const val MAP_GET_EDGE_CONNECTION_MARGIN_HASH = 866169185L
+        @JvmField
+        val mapGetEdgeConnectionMarginBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_edge_connection_margin", MAP_GET_EDGE_CONNECTION_MARGIN_HASH)
+
+        private const val MAP_SET_LINK_CONNECTION_RADIUS_HASH = 1794382983L
+        @JvmField
+        val mapSetLinkConnectionRadiusBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_link_connection_radius", MAP_SET_LINK_CONNECTION_RADIUS_HASH)
+
+        private const val MAP_GET_LINK_CONNECTION_RADIUS_HASH = 866169185L
+        @JvmField
+        val mapGetLinkConnectionRadiusBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_link_connection_radius", MAP_GET_LINK_CONNECTION_RADIUS_HASH)
+
+        private const val MAP_GET_PATH_HASH = 1279824844L
+        @JvmField
+        val mapGetPathBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_path", MAP_GET_PATH_HASH)
+
+        private const val MAP_GET_CLOSEST_POINT_HASH = 1358334418L
+        @JvmField
+        val mapGetClosestPointBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_closest_point", MAP_GET_CLOSEST_POINT_HASH)
+
+        private const val MAP_GET_CLOSEST_POINT_OWNER_HASH = 1353467510L
+        @JvmField
+        val mapGetClosestPointOwnerBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_closest_point_owner", MAP_GET_CLOSEST_POINT_OWNER_HASH)
+
+        private const val MAP_GET_LINKS_HASH = 2684255073L
+        @JvmField
+        val mapGetLinksBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_links", MAP_GET_LINKS_HASH)
+
+        private const val MAP_GET_REGIONS_HASH = 2684255073L
+        @JvmField
+        val mapGetRegionsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_regions", MAP_GET_REGIONS_HASH)
+
+        private const val MAP_GET_AGENTS_HASH = 2684255073L
+        @JvmField
+        val mapGetAgentsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_agents", MAP_GET_AGENTS_HASH)
+
+        private const val MAP_GET_OBSTACLES_HASH = 2684255073L
+        @JvmField
+        val mapGetObstaclesBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_obstacles", MAP_GET_OBSTACLES_HASH)
+
+        private const val MAP_FORCE_UPDATE_HASH = 2722037293L
+        @JvmField
+        val mapForceUpdateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_force_update", MAP_FORCE_UPDATE_HASH)
+
+        private const val MAP_GET_ITERATION_ID_HASH = 2198884583L
+        @JvmField
+        val mapGetIterationIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_iteration_id", MAP_GET_ITERATION_ID_HASH)
+
+        private const val MAP_SET_USE_ASYNC_ITERATIONS_HASH = 1265174801L
+        @JvmField
+        val mapSetUseAsyncIterationsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_set_use_async_iterations", MAP_SET_USE_ASYNC_ITERATIONS_HASH)
+
+        private const val MAP_GET_USE_ASYNC_ITERATIONS_HASH = 4155700596L
+        @JvmField
+        val mapGetUseAsyncIterationsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_use_async_iterations", MAP_GET_USE_ASYNC_ITERATIONS_HASH)
+
+        private const val MAP_GET_RANDOM_POINT_HASH = 3271000763L
+        @JvmField
+        val mapGetRandomPointBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "map_get_random_point", MAP_GET_RANDOM_POINT_HASH)
+
+        private const val QUERY_PATH_HASH = 1254915886L
+        @JvmField
+        val queryPathBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "query_path", QUERY_PATH_HASH)
+
+        private const val REGION_CREATE_HASH = 529393457L
+        @JvmField
+        val regionCreateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_create", REGION_CREATE_HASH)
+
+        private const val REGION_GET_ITERATION_ID_HASH = 2198884583L
+        @JvmField
+        val regionGetIterationIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_iteration_id", REGION_GET_ITERATION_ID_HASH)
+
+        private const val REGION_SET_USE_ASYNC_ITERATIONS_HASH = 1265174801L
+        @JvmField
+        val regionSetUseAsyncIterationsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_use_async_iterations", REGION_SET_USE_ASYNC_ITERATIONS_HASH)
+
+        private const val REGION_GET_USE_ASYNC_ITERATIONS_HASH = 4155700596L
+        @JvmField
+        val regionGetUseAsyncIterationsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_use_async_iterations", REGION_GET_USE_ASYNC_ITERATIONS_HASH)
+
+        private const val REGION_SET_ENABLED_HASH = 1265174801L
+        @JvmField
+        val regionSetEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_enabled", REGION_SET_ENABLED_HASH)
+
+        private const val REGION_GET_ENABLED_HASH = 4155700596L
+        @JvmField
+        val regionGetEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_enabled", REGION_GET_ENABLED_HASH)
+
+        private const val REGION_SET_USE_EDGE_CONNECTIONS_HASH = 1265174801L
+        @JvmField
+        val regionSetUseEdgeConnectionsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_use_edge_connections", REGION_SET_USE_EDGE_CONNECTIONS_HASH)
+
+        private const val REGION_GET_USE_EDGE_CONNECTIONS_HASH = 4155700596L
+        @JvmField
+        val regionGetUseEdgeConnectionsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_use_edge_connections", REGION_GET_USE_EDGE_CONNECTIONS_HASH)
+
+        private const val REGION_SET_ENTER_COST_HASH = 1794382983L
+        @JvmField
+        val regionSetEnterCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_enter_cost", REGION_SET_ENTER_COST_HASH)
+
+        private const val REGION_GET_ENTER_COST_HASH = 866169185L
+        @JvmField
+        val regionGetEnterCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_enter_cost", REGION_GET_ENTER_COST_HASH)
+
+        private const val REGION_SET_TRAVEL_COST_HASH = 1794382983L
+        @JvmField
+        val regionSetTravelCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_travel_cost", REGION_SET_TRAVEL_COST_HASH)
+
+        private const val REGION_GET_TRAVEL_COST_HASH = 866169185L
+        @JvmField
+        val regionGetTravelCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_travel_cost", REGION_GET_TRAVEL_COST_HASH)
+
+        private const val REGION_SET_OWNER_ID_HASH = 3411492887L
+        @JvmField
+        val regionSetOwnerIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_owner_id", REGION_SET_OWNER_ID_HASH)
+
+        private const val REGION_GET_OWNER_ID_HASH = 2198884583L
+        @JvmField
+        val regionGetOwnerIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_owner_id", REGION_GET_OWNER_ID_HASH)
+
+        private const val REGION_OWNS_POINT_HASH = 219849798L
+        @JvmField
+        val regionOwnsPointBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_owns_point", REGION_OWNS_POINT_HASH)
+
+        private const val REGION_SET_MAP_HASH = 395945892L
+        @JvmField
+        val regionSetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_map", REGION_SET_MAP_HASH)
+
+        private const val REGION_GET_MAP_HASH = 3814569979L
+        @JvmField
+        val regionGetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_map", REGION_GET_MAP_HASH)
+
+        private const val REGION_SET_NAVIGATION_LAYERS_HASH = 3411492887L
+        @JvmField
+        val regionSetNavigationLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_navigation_layers", REGION_SET_NAVIGATION_LAYERS_HASH)
+
+        private const val REGION_GET_NAVIGATION_LAYERS_HASH = 2198884583L
+        @JvmField
+        val regionGetNavigationLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_navigation_layers", REGION_GET_NAVIGATION_LAYERS_HASH)
+
+        private const val REGION_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val regionSetTransformBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_transform", REGION_SET_TRANSFORM_HASH)
+
+        private const val REGION_GET_TRANSFORM_HASH = 213527486L
+        @JvmField
+        val regionGetTransformBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_transform", REGION_GET_TRANSFORM_HASH)
+
+        private const val REGION_SET_NAVIGATION_POLYGON_HASH = 3633623451L
+        @JvmField
+        val regionSetNavigationPolygonBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_set_navigation_polygon", REGION_SET_NAVIGATION_POLYGON_HASH)
+
+        private const val REGION_GET_CONNECTIONS_COUNT_HASH = 2198884583L
+        @JvmField
+        val regionGetConnectionsCountBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_connections_count", REGION_GET_CONNECTIONS_COUNT_HASH)
+
+        private const val REGION_GET_CONNECTION_PATHWAY_START_HASH = 2546185844L
+        @JvmField
+        val regionGetConnectionPathwayStartBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_connection_pathway_start", REGION_GET_CONNECTION_PATHWAY_START_HASH)
+
+        private const val REGION_GET_CONNECTION_PATHWAY_END_HASH = 2546185844L
+        @JvmField
+        val regionGetConnectionPathwayEndBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_connection_pathway_end", REGION_GET_CONNECTION_PATHWAY_END_HASH)
+
+        private const val REGION_GET_CLOSEST_POINT_HASH = 1358334418L
+        @JvmField
+        val regionGetClosestPointBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_closest_point", REGION_GET_CLOSEST_POINT_HASH)
+
+        private const val REGION_GET_RANDOM_POINT_HASH = 3271000763L
+        @JvmField
+        val regionGetRandomPointBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_random_point", REGION_GET_RANDOM_POINT_HASH)
+
+        private const val REGION_GET_BOUNDS_HASH = 1097232729L
+        @JvmField
+        val regionGetBoundsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "region_get_bounds", REGION_GET_BOUNDS_HASH)
+
+        private const val LINK_CREATE_HASH = 529393457L
+        @JvmField
+        val linkCreateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_create", LINK_CREATE_HASH)
+
+        private const val LINK_GET_ITERATION_ID_HASH = 2198884583L
+        @JvmField
+        val linkGetIterationIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_iteration_id", LINK_GET_ITERATION_ID_HASH)
+
+        private const val LINK_SET_MAP_HASH = 395945892L
+        @JvmField
+        val linkSetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_map", LINK_SET_MAP_HASH)
+
+        private const val LINK_GET_MAP_HASH = 3814569979L
+        @JvmField
+        val linkGetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_map", LINK_GET_MAP_HASH)
+
+        private const val LINK_SET_ENABLED_HASH = 1265174801L
+        @JvmField
+        val linkSetEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_enabled", LINK_SET_ENABLED_HASH)
+
+        private const val LINK_GET_ENABLED_HASH = 4155700596L
+        @JvmField
+        val linkGetEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_enabled", LINK_GET_ENABLED_HASH)
+
+        private const val LINK_SET_BIDIRECTIONAL_HASH = 1265174801L
+        @JvmField
+        val linkSetBidirectionalBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_bidirectional", LINK_SET_BIDIRECTIONAL_HASH)
+
+        private const val LINK_IS_BIDIRECTIONAL_HASH = 4155700596L
+        @JvmField
+        val linkIsBidirectionalBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_is_bidirectional", LINK_IS_BIDIRECTIONAL_HASH)
+
+        private const val LINK_SET_NAVIGATION_LAYERS_HASH = 3411492887L
+        @JvmField
+        val linkSetNavigationLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_navigation_layers", LINK_SET_NAVIGATION_LAYERS_HASH)
+
+        private const val LINK_GET_NAVIGATION_LAYERS_HASH = 2198884583L
+        @JvmField
+        val linkGetNavigationLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_navigation_layers", LINK_GET_NAVIGATION_LAYERS_HASH)
+
+        private const val LINK_SET_START_POSITION_HASH = 3201125042L
+        @JvmField
+        val linkSetStartPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_start_position", LINK_SET_START_POSITION_HASH)
+
+        private const val LINK_GET_START_POSITION_HASH = 2440833711L
+        @JvmField
+        val linkGetStartPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_start_position", LINK_GET_START_POSITION_HASH)
+
+        private const val LINK_SET_END_POSITION_HASH = 3201125042L
+        @JvmField
+        val linkSetEndPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_end_position", LINK_SET_END_POSITION_HASH)
+
+        private const val LINK_GET_END_POSITION_HASH = 2440833711L
+        @JvmField
+        val linkGetEndPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_end_position", LINK_GET_END_POSITION_HASH)
+
+        private const val LINK_SET_ENTER_COST_HASH = 1794382983L
+        @JvmField
+        val linkSetEnterCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_enter_cost", LINK_SET_ENTER_COST_HASH)
+
+        private const val LINK_GET_ENTER_COST_HASH = 866169185L
+        @JvmField
+        val linkGetEnterCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_enter_cost", LINK_GET_ENTER_COST_HASH)
+
+        private const val LINK_SET_TRAVEL_COST_HASH = 1794382983L
+        @JvmField
+        val linkSetTravelCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_travel_cost", LINK_SET_TRAVEL_COST_HASH)
+
+        private const val LINK_GET_TRAVEL_COST_HASH = 866169185L
+        @JvmField
+        val linkGetTravelCostBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_travel_cost", LINK_GET_TRAVEL_COST_HASH)
+
+        private const val LINK_SET_OWNER_ID_HASH = 3411492887L
+        @JvmField
+        val linkSetOwnerIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_set_owner_id", LINK_SET_OWNER_ID_HASH)
+
+        private const val LINK_GET_OWNER_ID_HASH = 2198884583L
+        @JvmField
+        val linkGetOwnerIdBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "link_get_owner_id", LINK_GET_OWNER_ID_HASH)
+
+        private const val AGENT_CREATE_HASH = 529393457L
+        @JvmField
+        val agentCreateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_create", AGENT_CREATE_HASH)
+
+        private const val AGENT_SET_AVOIDANCE_ENABLED_HASH = 1265174801L
+        @JvmField
+        val agentSetAvoidanceEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_enabled", AGENT_SET_AVOIDANCE_ENABLED_HASH)
+
+        private const val AGENT_GET_AVOIDANCE_ENABLED_HASH = 4155700596L
+        @JvmField
+        val agentGetAvoidanceEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_enabled", AGENT_GET_AVOIDANCE_ENABLED_HASH)
+
+        private const val AGENT_SET_MAP_HASH = 395945892L
+        @JvmField
+        val agentSetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_map", AGENT_SET_MAP_HASH)
+
+        private const val AGENT_GET_MAP_HASH = 3814569979L
+        @JvmField
+        val agentGetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_map", AGENT_GET_MAP_HASH)
+
+        private const val AGENT_SET_PAUSED_HASH = 1265174801L
+        @JvmField
+        val agentSetPausedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_paused", AGENT_SET_PAUSED_HASH)
+
+        private const val AGENT_GET_PAUSED_HASH = 4155700596L
+        @JvmField
+        val agentGetPausedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_paused", AGENT_GET_PAUSED_HASH)
+
+        private const val AGENT_SET_NEIGHBOR_DISTANCE_HASH = 1794382983L
+        @JvmField
+        val agentSetNeighborDistanceBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_neighbor_distance", AGENT_SET_NEIGHBOR_DISTANCE_HASH)
+
+        private const val AGENT_GET_NEIGHBOR_DISTANCE_HASH = 866169185L
+        @JvmField
+        val agentGetNeighborDistanceBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_neighbor_distance", AGENT_GET_NEIGHBOR_DISTANCE_HASH)
+
+        private const val AGENT_SET_MAX_NEIGHBORS_HASH = 3411492887L
+        @JvmField
+        val agentSetMaxNeighborsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_max_neighbors", AGENT_SET_MAX_NEIGHBORS_HASH)
+
+        private const val AGENT_GET_MAX_NEIGHBORS_HASH = 2198884583L
+        @JvmField
+        val agentGetMaxNeighborsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_max_neighbors", AGENT_GET_MAX_NEIGHBORS_HASH)
+
+        private const val AGENT_SET_TIME_HORIZON_AGENTS_HASH = 1794382983L
+        @JvmField
+        val agentSetTimeHorizonAgentsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_time_horizon_agents", AGENT_SET_TIME_HORIZON_AGENTS_HASH)
+
+        private const val AGENT_GET_TIME_HORIZON_AGENTS_HASH = 866169185L
+        @JvmField
+        val agentGetTimeHorizonAgentsBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_time_horizon_agents", AGENT_GET_TIME_HORIZON_AGENTS_HASH)
+
+        private const val AGENT_SET_TIME_HORIZON_OBSTACLES_HASH = 1794382983L
+        @JvmField
+        val agentSetTimeHorizonObstaclesBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_time_horizon_obstacles", AGENT_SET_TIME_HORIZON_OBSTACLES_HASH)
+
+        private const val AGENT_GET_TIME_HORIZON_OBSTACLES_HASH = 866169185L
+        @JvmField
+        val agentGetTimeHorizonObstaclesBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_time_horizon_obstacles", AGENT_GET_TIME_HORIZON_OBSTACLES_HASH)
+
+        private const val AGENT_SET_RADIUS_HASH = 1794382983L
+        @JvmField
+        val agentSetRadiusBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_radius", AGENT_SET_RADIUS_HASH)
+
+        private const val AGENT_GET_RADIUS_HASH = 866169185L
+        @JvmField
+        val agentGetRadiusBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_radius", AGENT_GET_RADIUS_HASH)
+
+        private const val AGENT_SET_MAX_SPEED_HASH = 1794382983L
+        @JvmField
+        val agentSetMaxSpeedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_max_speed", AGENT_SET_MAX_SPEED_HASH)
+
+        private const val AGENT_GET_MAX_SPEED_HASH = 866169185L
+        @JvmField
+        val agentGetMaxSpeedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_max_speed", AGENT_GET_MAX_SPEED_HASH)
+
+        private const val AGENT_SET_VELOCITY_FORCED_HASH = 3201125042L
+        @JvmField
+        val agentSetVelocityForcedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_velocity_forced", AGENT_SET_VELOCITY_FORCED_HASH)
+
+        private const val AGENT_SET_VELOCITY_HASH = 3201125042L
+        @JvmField
+        val agentSetVelocityBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_velocity", AGENT_SET_VELOCITY_HASH)
+
+        private const val AGENT_GET_VELOCITY_HASH = 2440833711L
+        @JvmField
+        val agentGetVelocityBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_velocity", AGENT_GET_VELOCITY_HASH)
+
+        private const val AGENT_SET_POSITION_HASH = 3201125042L
+        @JvmField
+        val agentSetPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_position", AGENT_SET_POSITION_HASH)
+
+        private const val AGENT_GET_POSITION_HASH = 2440833711L
+        @JvmField
+        val agentGetPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_position", AGENT_GET_POSITION_HASH)
+
+        private const val AGENT_IS_MAP_CHANGED_HASH = 4155700596L
+        @JvmField
+        val agentIsMapChangedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_is_map_changed", AGENT_IS_MAP_CHANGED_HASH)
+
+        private const val AGENT_SET_AVOIDANCE_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val agentSetAvoidanceCallbackBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_callback", AGENT_SET_AVOIDANCE_CALLBACK_HASH)
+
+        private const val AGENT_HAS_AVOIDANCE_CALLBACK_HASH = 4155700596L
+        @JvmField
+        val agentHasAvoidanceCallbackBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_has_avoidance_callback", AGENT_HAS_AVOIDANCE_CALLBACK_HASH)
+
+        private const val AGENT_SET_AVOIDANCE_LAYERS_HASH = 3411492887L
+        @JvmField
+        val agentSetAvoidanceLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_layers", AGENT_SET_AVOIDANCE_LAYERS_HASH)
+
+        private const val AGENT_GET_AVOIDANCE_LAYERS_HASH = 2198884583L
+        @JvmField
+        val agentGetAvoidanceLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_layers", AGENT_GET_AVOIDANCE_LAYERS_HASH)
+
+        private const val AGENT_SET_AVOIDANCE_MASK_HASH = 3411492887L
+        @JvmField
+        val agentSetAvoidanceMaskBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_mask", AGENT_SET_AVOIDANCE_MASK_HASH)
+
+        private const val AGENT_GET_AVOIDANCE_MASK_HASH = 2198884583L
+        @JvmField
+        val agentGetAvoidanceMaskBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_mask", AGENT_GET_AVOIDANCE_MASK_HASH)
+
+        private const val AGENT_SET_AVOIDANCE_PRIORITY_HASH = 1794382983L
+        @JvmField
+        val agentSetAvoidancePriorityBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_set_avoidance_priority", AGENT_SET_AVOIDANCE_PRIORITY_HASH)
+
+        private const val AGENT_GET_AVOIDANCE_PRIORITY_HASH = 866169185L
+        @JvmField
+        val agentGetAvoidancePriorityBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "agent_get_avoidance_priority", AGENT_GET_AVOIDANCE_PRIORITY_HASH)
+
+        private const val OBSTACLE_CREATE_HASH = 529393457L
+        @JvmField
+        val obstacleCreateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_create", OBSTACLE_CREATE_HASH)
+
+        private const val OBSTACLE_SET_AVOIDANCE_ENABLED_HASH = 1265174801L
+        @JvmField
+        val obstacleSetAvoidanceEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_avoidance_enabled", OBSTACLE_SET_AVOIDANCE_ENABLED_HASH)
+
+        private const val OBSTACLE_GET_AVOIDANCE_ENABLED_HASH = 4155700596L
+        @JvmField
+        val obstacleGetAvoidanceEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_avoidance_enabled", OBSTACLE_GET_AVOIDANCE_ENABLED_HASH)
+
+        private const val OBSTACLE_SET_MAP_HASH = 395945892L
+        @JvmField
+        val obstacleSetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_map", OBSTACLE_SET_MAP_HASH)
+
+        private const val OBSTACLE_GET_MAP_HASH = 3814569979L
+        @JvmField
+        val obstacleGetMapBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_map", OBSTACLE_GET_MAP_HASH)
+
+        private const val OBSTACLE_SET_PAUSED_HASH = 1265174801L
+        @JvmField
+        val obstacleSetPausedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_paused", OBSTACLE_SET_PAUSED_HASH)
+
+        private const val OBSTACLE_GET_PAUSED_HASH = 4155700596L
+        @JvmField
+        val obstacleGetPausedBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_paused", OBSTACLE_GET_PAUSED_HASH)
+
+        private const val OBSTACLE_SET_RADIUS_HASH = 1794382983L
+        @JvmField
+        val obstacleSetRadiusBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_radius", OBSTACLE_SET_RADIUS_HASH)
+
+        private const val OBSTACLE_GET_RADIUS_HASH = 866169185L
+        @JvmField
+        val obstacleGetRadiusBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_radius", OBSTACLE_GET_RADIUS_HASH)
+
+        private const val OBSTACLE_SET_VELOCITY_HASH = 3201125042L
+        @JvmField
+        val obstacleSetVelocityBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_velocity", OBSTACLE_SET_VELOCITY_HASH)
+
+        private const val OBSTACLE_GET_VELOCITY_HASH = 2440833711L
+        @JvmField
+        val obstacleGetVelocityBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_velocity", OBSTACLE_GET_VELOCITY_HASH)
+
+        private const val OBSTACLE_SET_POSITION_HASH = 3201125042L
+        @JvmField
+        val obstacleSetPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_position", OBSTACLE_SET_POSITION_HASH)
+
+        private const val OBSTACLE_GET_POSITION_HASH = 2440833711L
+        @JvmField
+        val obstacleGetPositionBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_position", OBSTACLE_GET_POSITION_HASH)
+
+        private const val OBSTACLE_SET_VERTICES_HASH = 29476483L
+        @JvmField
+        val obstacleSetVerticesBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_vertices", OBSTACLE_SET_VERTICES_HASH)
+
+        private const val OBSTACLE_GET_VERTICES_HASH = 2222557395L
+        @JvmField
+        val obstacleGetVerticesBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_vertices", OBSTACLE_GET_VERTICES_HASH)
+
+        private const val OBSTACLE_SET_AVOIDANCE_LAYERS_HASH = 3411492887L
+        @JvmField
+        val obstacleSetAvoidanceLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_set_avoidance_layers", OBSTACLE_SET_AVOIDANCE_LAYERS_HASH)
+
+        private const val OBSTACLE_GET_AVOIDANCE_LAYERS_HASH = 2198884583L
+        @JvmField
+        val obstacleGetAvoidanceLayersBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "obstacle_get_avoidance_layers", OBSTACLE_GET_AVOIDANCE_LAYERS_HASH)
+
+        private const val PARSE_SOURCE_GEOMETRY_DATA_HASH = 1766905497L
+        @JvmField
+        val parseSourceGeometryDataBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "parse_source_geometry_data", PARSE_SOURCE_GEOMETRY_DATA_HASH)
+
+        private const val BAKE_FROM_SOURCE_GEOMETRY_DATA_HASH = 2179660022L
+        @JvmField
+        val bakeFromSourceGeometryDataBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "bake_from_source_geometry_data", BAKE_FROM_SOURCE_GEOMETRY_DATA_HASH)
+
+        private const val BAKE_FROM_SOURCE_GEOMETRY_DATA_ASYNC_HASH = 2179660022L
+        @JvmField
+        val bakeFromSourceGeometryDataAsyncBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "bake_from_source_geometry_data_async", BAKE_FROM_SOURCE_GEOMETRY_DATA_ASYNC_HASH)
+
+        private const val IS_BAKING_NAVIGATION_POLYGON_HASH = 3729405808L
+        @JvmField
+        val isBakingNavigationPolygonBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "is_baking_navigation_polygon", IS_BAKING_NAVIGATION_POLYGON_HASH)
+
+        private const val SOURCE_GEOMETRY_PARSER_CREATE_HASH = 529393457L
+        @JvmField
+        val sourceGeometryParserCreateBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "source_geometry_parser_create", SOURCE_GEOMETRY_PARSER_CREATE_HASH)
+
+        private const val SOURCE_GEOMETRY_PARSER_SET_CALLBACK_HASH = 3379118538L
+        @JvmField
+        val sourceGeometryParserSetCallbackBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "source_geometry_parser_set_callback", SOURCE_GEOMETRY_PARSER_SET_CALLBACK_HASH)
+
+        private const val SIMPLIFY_PATH_HASH = 2457191505L
+        @JvmField
+        val simplifyPathBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "simplify_path", SIMPLIFY_PATH_HASH)
+
+        private const val FREE_RID_HASH = 2722037293L
+        @JvmField
+        val freeRidBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "free_rid", FREE_RID_HASH)
+
+        private const val SET_ACTIVE_HASH = 2586408642L
+        @JvmField
+        val setActiveBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "set_active", SET_ACTIVE_HASH)
+
+        private const val SET_DEBUG_ENABLED_HASH = 2586408642L
+        @JvmField
+        val setDebugEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "set_debug_enabled", SET_DEBUG_ENABLED_HASH)
+
+        private const val GET_DEBUG_ENABLED_HASH = 36873697L
+        @JvmField
+        val getDebugEnabledBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "get_debug_enabled", GET_DEBUG_ENABLED_HASH)
+
+        private const val GET_PROCESS_INFO_HASH = 1640219858L
+        @JvmField
+        val getProcessInfoBind =
+            ObjectCalls.getMethodBind("NavigationServer2D", "get_process_info", GET_PROCESS_INFO_HASH)
     }
 }

@@ -19,7 +19,5 @@ class Panel(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Panel? =
             if (handle.address() == 0L) null else Panel(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

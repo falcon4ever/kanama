@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -25,7 +26,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makeCurrentBind, segment)
     }
 
     /**
@@ -34,7 +35,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.clear_current
      */
     fun clearCurrent() {
-        ObjectCalls.ptrcallNoArgs(clearCurrentBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearCurrentBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCurrentBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.get_listener_transform
      */
     fun getListenerTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getListenerTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getListenerTransformBind, segment)
     }
 
     /**
@@ -67,7 +68,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.set_doppler_tracking
      */
     fun setDopplerTracking(mode: AudioListener3D.DopplerTracking) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDopplerTrackingBind, segment, mode.value)
     }
 
     /**
@@ -80,7 +81,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: AudioListener3D.get_doppler_tracking
      */
     fun getDopplerTracking(): AudioListener3D.DopplerTracking {
-        return AudioListener3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
+        return AudioListener3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDopplerTrackingBind, segment))
     }
 
     /**
@@ -126,35 +127,37 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): AudioListener3D? =
             if (handle.address() == 0L) null else AudioListener3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val MAKE_CURRENT_HASH = 3218959716L
-        private val makeCurrentBind by lazy {
+        @JvmField
+        val makeCurrentBind =
             ObjectCalls.getMethodBind("AudioListener3D", "make_current", MAKE_CURRENT_HASH)
-        }
 
         private const val CLEAR_CURRENT_HASH = 3218959716L
-        private val clearCurrentBind by lazy {
+        @JvmField
+        val clearCurrentBind =
             ObjectCalls.getMethodBind("AudioListener3D", "clear_current", CLEAR_CURRENT_HASH)
-        }
 
         private const val IS_CURRENT_HASH = 36873697L
-        private val isCurrentBind by lazy {
+        @JvmField
+        val isCurrentBind =
             ObjectCalls.getMethodBind("AudioListener3D", "is_current", IS_CURRENT_HASH)
-        }
 
         private const val GET_LISTENER_TRANSFORM_HASH = 3229777777L
-        private val getListenerTransformBind by lazy {
+        @JvmField
+        val getListenerTransformBind =
             ObjectCalls.getMethodBind("AudioListener3D", "get_listener_transform", GET_LISTENER_TRANSFORM_HASH)
-        }
 
         private const val SET_DOPPLER_TRACKING_HASH = 2365921740L
-        private val setDopplerTrackingBind by lazy {
+        @JvmField
+        val setDopplerTrackingBind =
             ObjectCalls.getMethodBind("AudioListener3D", "set_doppler_tracking", SET_DOPPLER_TRACKING_HASH)
-        }
 
         private const val GET_DOPPLER_TRACKING_HASH = 550229039L
-        private val getDopplerTrackingBind by lazy {
+        @JvmField
+        val getDopplerTrackingBind =
             ObjectCalls.getMethodBind("AudioListener3D", "get_doppler_tracking", GET_DOPPLER_TRACKING_HASH)
-        }
     }
 }

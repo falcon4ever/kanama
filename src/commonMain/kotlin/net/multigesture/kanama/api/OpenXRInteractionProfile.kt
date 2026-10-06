@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -29,52 +30,52 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
 
     fun setInteractionProfilePath(interactionProfilePath: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setInteractionProfilePathBind, segment, interactionProfilePath)
+        ObjectCalls.ptrcallWithStringArg(Binds.setInteractionProfilePathBind, segment, interactionProfilePath)
     }
 
     fun getInteractionProfilePath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInteractionProfilePathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInteractionProfilePathBind, segment)
     }
 
     fun getBindingCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingCountBind, segment)
     }
 
     fun getBinding(index: Int): OpenXRIPBinding? {
         checkOpen()
-        return OpenXRIPBinding.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, segment, index))
+        return OpenXRIPBinding.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingBind, segment, index))
     }
 
     fun setBindings(bindings: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBindingsBind, segment, bindings)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setBindingsBind, segment, bindings)
     }
 
     fun getBindings(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getBindingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingsBind, segment)
     }
 
     fun getBindingModifierCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingModifierCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
     }
 
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
         checkOpen()
-        return OpenXRIPBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
+        return OpenXRIPBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
     }
 
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBindingModifiersBind, segment, bindingModifiers)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setBindingModifiersBind, segment, bindingModifiers)
     }
 
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getBindingModifiersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)
     }
 
     companion object {
@@ -87,55 +88,57 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRInteractionProfile? =
             if (handle.address() == 0L) null else OpenXRInteractionProfile(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INTERACTION_PROFILE_PATH_HASH = 83702148L
-        private val setInteractionProfilePathBind by lazy {
+        @JvmField
+        val setInteractionProfilePathBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "set_interaction_profile_path", SET_INTERACTION_PROFILE_PATH_HASH)
-        }
 
         private const val GET_INTERACTION_PROFILE_PATH_HASH = 201670096L
-        private val getInteractionProfilePathBind by lazy {
+        @JvmField
+        val getInteractionProfilePathBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_interaction_profile_path", GET_INTERACTION_PROFILE_PATH_HASH)
-        }
 
         private const val GET_BINDING_COUNT_HASH = 3905245786L
-        private val getBindingCountBind by lazy {
+        @JvmField
+        val getBindingCountBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding_count", GET_BINDING_COUNT_HASH)
-        }
 
         private const val GET_BINDING_HASH = 3934429652L
-        private val getBindingBind by lazy {
+        @JvmField
+        val getBindingBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding", GET_BINDING_HASH)
-        }
 
         private const val SET_BINDINGS_HASH = 381264803L
-        private val setBindingsBind by lazy {
+        @JvmField
+        val setBindingsBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "set_bindings", SET_BINDINGS_HASH)
-        }
 
         private const val GET_BINDINGS_HASH = 3995934104L
-        private val getBindingsBind by lazy {
+        @JvmField
+        val getBindingsBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_bindings", GET_BINDINGS_HASH)
-        }
 
         private const val GET_BINDING_MODIFIER_COUNT_HASH = 3905245786L
-        private val getBindingModifierCountBind by lazy {
+        @JvmField
+        val getBindingModifierCountBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding_modifier_count", GET_BINDING_MODIFIER_COUNT_HASH)
-        }
 
         private const val GET_BINDING_MODIFIER_HASH = 2419896583L
-        private val getBindingModifierBind by lazy {
+        @JvmField
+        val getBindingModifierBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding_modifier", GET_BINDING_MODIFIER_HASH)
-        }
 
         private const val SET_BINDING_MODIFIERS_HASH = 381264803L
-        private val setBindingModifiersBind by lazy {
+        @JvmField
+        val setBindingModifiersBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "set_binding_modifiers", SET_BINDING_MODIFIERS_HASH)
-        }
 
         private const val GET_BINDING_MODIFIERS_HASH = 3995934104L
-        private val getBindingModifiersBind by lazy {
+        @JvmField
+        val getBindingModifiersBind =
             ObjectCalls.getMethodBind("OpenXRInteractionProfile", "get_binding_modifiers", GET_BINDING_MODIFIERS_HASH)
-        }
     }
 }

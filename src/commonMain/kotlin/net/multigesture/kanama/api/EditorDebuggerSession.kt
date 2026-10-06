@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sendMessage(message: String, data: List<Any?> = emptyList()) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndArrayArg(sendMessageBind, segment, message, data)
+        ObjectCalls.ptrcallWithStringAndArrayArg(Binds.sendMessageBind, segment, message, data)
     }
 
     /**
@@ -30,7 +31,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun toggleProfiler(profiler: String, enable: Boolean, data: List<Any?> = emptyList()) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringBoolArrayArgs(toggleProfilerBind, segment, profiler, enable, data)
+        ObjectCalls.ptrcallWithStringBoolArrayArgs(Binds.toggleProfilerBind, segment, profiler, enable, data)
     }
 
     /**
@@ -40,7 +41,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBreaked(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBreakedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBreakedBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDebuggable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDebuggableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebuggableBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addSessionTab(control: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addSessionTabBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addSessionTabBind, segment, listOf(control.segment))
     }
 
     /**
@@ -81,7 +82,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun removeSessionTab(control: Control) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeSessionTabBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeSessionTabBind, segment, listOf(control.segment))
     }
 
     /**
@@ -92,7 +93,7 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBreakpoint(path: String, line: Int, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, segment, path, line, enabled)
+        ObjectCalls.ptrcallWithStringIntAndBoolArgs(Binds.setBreakpointBind, segment, path, line, enabled)
     }
 
     /** Signal `started()`; see [TypedSignal]. */
@@ -132,45 +133,47 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorDebuggerSession? =
             if (handle.address() == 0L) null else EditorDebuggerSession(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SEND_MESSAGE_HASH = 85656714L
-        private val sendMessageBind by lazy {
+        @JvmField
+        val sendMessageBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "send_message", SEND_MESSAGE_HASH)
-        }
 
         private const val TOGGLE_PROFILER_HASH = 1198443697L
-        private val toggleProfilerBind by lazy {
+        @JvmField
+        val toggleProfilerBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "toggle_profiler", TOGGLE_PROFILER_HASH)
-        }
 
         private const val IS_BREAKED_HASH = 2240911060L
-        private val isBreakedBind by lazy {
+        @JvmField
+        val isBreakedBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "is_breaked", IS_BREAKED_HASH)
-        }
 
         private const val IS_DEBUGGABLE_HASH = 2240911060L
-        private val isDebuggableBind by lazy {
+        @JvmField
+        val isDebuggableBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "is_debuggable", IS_DEBUGGABLE_HASH)
-        }
 
         private const val IS_ACTIVE_HASH = 2240911060L
-        private val isActiveBind by lazy {
+        @JvmField
+        val isActiveBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "is_active", IS_ACTIVE_HASH)
-        }
 
         private const val ADD_SESSION_TAB_HASH = 1496901182L
-        private val addSessionTabBind by lazy {
+        @JvmField
+        val addSessionTabBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "add_session_tab", ADD_SESSION_TAB_HASH)
-        }
 
         private const val REMOVE_SESSION_TAB_HASH = 1496901182L
-        private val removeSessionTabBind by lazy {
+        @JvmField
+        val removeSessionTabBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "remove_session_tab", REMOVE_SESSION_TAB_HASH)
-        }
 
         private const val SET_BREAKPOINT_HASH = 4108344793L
-        private val setBreakpointBind by lazy {
+        @JvmField
+        val setBreakpointBind =
             ObjectCalls.getMethodBind("EditorDebuggerSession", "set_breakpoint", SET_BREAKPOINT_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -57,7 +58,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_polygon
      */
     fun setPolygon(polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPolygonBind, segment, polygon)
     }
 
     /**
@@ -68,7 +69,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_polygon
      */
     fun getPolygon(): List<Vector2> {
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_build_mode
      */
     fun setBuildMode(buildMode: CollisionPolygon2D.BuildMode) {
-        ObjectCalls.ptrcallWithLongArg(setBuildModeBind, segment, buildMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBuildModeBind, segment, buildMode.value)
     }
 
     /**
@@ -86,7 +87,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_build_mode
      */
     fun getBuildMode(): CollisionPolygon2D.BuildMode {
-        return CollisionPolygon2D.BuildMode(ObjectCalls.ptrcallNoArgsRetLong(getBuildModeBind, segment))
+        return CollisionPolygon2D.BuildMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBuildModeBind, segment))
     }
 
     /**
@@ -96,7 +97,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisabledBind, segment, disabled)
     }
 
     /**
@@ -106,7 +107,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDisabledBind, segment)
     }
 
     /**
@@ -118,7 +119,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision
      */
     fun setOneWayCollision(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOneWayCollisionBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOneWayCollisionBind, segment, enabled)
     }
 
     /**
@@ -130,7 +131,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.is_one_way_collision_enabled
      */
     fun isOneWayCollisionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOneWayCollisionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOneWayCollisionEnabledBind, segment)
     }
 
     /**
@@ -140,7 +141,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision_margin
      */
     fun setOneWayCollisionMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setOneWayCollisionMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOneWayCollisionMarginBind, segment, margin)
     }
 
     /**
@@ -150,7 +151,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_one_way_collision_margin
      */
     fun getOneWayCollisionMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOneWayCollisionMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOneWayCollisionMarginBind, segment)
     }
 
     /**
@@ -159,7 +160,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.set_one_way_collision_direction
      */
     fun setOneWayCollisionDirection(direction: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOneWayCollisionDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOneWayCollisionDirectionBind, segment, direction)
     }
 
     /**
@@ -168,7 +169,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionPolygon2D.get_one_way_collision_direction
      */
     fun getOneWayCollisionDirection(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOneWayCollisionDirectionBind, segment)
     }
 
     /**
@@ -207,65 +208,67 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionPolygon2D? =
             if (handle.address() == 0L) null else CollisionPolygon2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POLYGON_HASH = 1509147220L
-        private val setPolygonBind by lazy {
+        @JvmField
+        val setPolygonBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "set_polygon", SET_POLYGON_HASH)
-        }
 
         private const val GET_POLYGON_HASH = 2961356807L
-        private val getPolygonBind by lazy {
+        @JvmField
+        val getPolygonBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "get_polygon", GET_POLYGON_HASH)
-        }
 
         private const val SET_BUILD_MODE_HASH = 2780803135L
-        private val setBuildModeBind by lazy {
+        @JvmField
+        val setBuildModeBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "set_build_mode", SET_BUILD_MODE_HASH)
-        }
 
         private const val GET_BUILD_MODE_HASH = 3044948800L
-        private val getBuildModeBind by lazy {
+        @JvmField
+        val getBuildModeBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "get_build_mode", GET_BUILD_MODE_HASH)
-        }
 
         private const val SET_DISABLED_HASH = 2586408642L
-        private val setDisabledBind by lazy {
+        @JvmField
+        val setDisabledBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "set_disabled", SET_DISABLED_HASH)
-        }
 
         private const val IS_DISABLED_HASH = 36873697L
-        private val isDisabledBind by lazy {
+        @JvmField
+        val isDisabledBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "is_disabled", IS_DISABLED_HASH)
-        }
 
         private const val SET_ONE_WAY_COLLISION_HASH = 2586408642L
-        private val setOneWayCollisionBind by lazy {
+        @JvmField
+        val setOneWayCollisionBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "set_one_way_collision", SET_ONE_WAY_COLLISION_HASH)
-        }
 
         private const val IS_ONE_WAY_COLLISION_ENABLED_HASH = 36873697L
-        private val isOneWayCollisionEnabledBind by lazy {
+        @JvmField
+        val isOneWayCollisionEnabledBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "is_one_way_collision_enabled", IS_ONE_WAY_COLLISION_ENABLED_HASH)
-        }
 
         private const val SET_ONE_WAY_COLLISION_MARGIN_HASH = 373806689L
-        private val setOneWayCollisionMarginBind by lazy {
+        @JvmField
+        val setOneWayCollisionMarginBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "set_one_way_collision_margin", SET_ONE_WAY_COLLISION_MARGIN_HASH)
-        }
 
         private const val GET_ONE_WAY_COLLISION_MARGIN_HASH = 1740695150L
-        private val getOneWayCollisionMarginBind by lazy {
+        @JvmField
+        val getOneWayCollisionMarginBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "get_one_way_collision_margin", GET_ONE_WAY_COLLISION_MARGIN_HASH)
-        }
 
         private const val SET_ONE_WAY_COLLISION_DIRECTION_HASH = 743155724L
-        private val setOneWayCollisionDirectionBind by lazy {
+        @JvmField
+        val setOneWayCollisionDirectionBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "set_one_way_collision_direction", SET_ONE_WAY_COLLISION_DIRECTION_HASH)
-        }
 
         private const val GET_ONE_WAY_COLLISION_DIRECTION_HASH = 3341600327L
-        private val getOneWayCollisionDirectionBind by lazy {
+        @JvmField
+        val getOneWayCollisionDirectionBind =
             ObjectCalls.getMethodBind("CollisionPolygon2D", "get_one_way_collision_direction", GET_ONE_WAY_COLLISION_DIRECTION_HASH)
-        }
     }
 }

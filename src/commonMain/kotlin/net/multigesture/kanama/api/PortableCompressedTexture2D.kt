@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -36,7 +37,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun createFromImage(image: Image?, compressionMode: PortableCompressedTexture2D.CompressionMode, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, compressionMode.value, normalMap, lossyQuality)
+        ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(Binds.createFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, compressionMode.value, normalMap, lossyQuality)
     }
 
     /**
@@ -46,7 +47,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCompressionMode(): PortableCompressedTexture2D.CompressionMode {
         checkOpen()
-        return PortableCompressedTexture2D.CompressionMode(ObjectCalls.ptrcallNoArgsRetLong(getCompressionModeBind, segment))
+        return PortableCompressedTexture2D.CompressionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCompressionModeBind, segment))
     }
 
     /**
@@ -56,7 +57,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSizeOverride(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeOverrideBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeOverrideBind, segment, size)
     }
 
     /**
@@ -66,7 +67,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSizeOverride(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeOverrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeOverrideBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setKeepCompressedBuffer(keep: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepCompressedBufferBind, segment, keep)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepCompressedBufferBind, segment, keep)
     }
 
     /**
@@ -92,7 +93,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isKeepingCompressedBuffer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeepingCompressedBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepingCompressedBufferBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setBasisuCompressorParams(uastcLevel: Int, rdoQualityLoss: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setBasisuCompressorParamsBind, segment, uastcLevel, rdoQualityLoss)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setBasisuCompressorParamsBind, segment, uastcLevel, rdoQualityLoss)
     }
 
     /**
@@ -135,7 +136,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: PortableCompressedTexture2D.set_keep_all_compressed_buffers
          */
         fun setKeepAllCompressedBuffers(keep: Boolean) {
-            ObjectCalls.ptrcallWithBoolArg(setKeepAllCompressedBuffersBind, NULL_SEGMENT, keep)
+            ObjectCalls.ptrcallWithBoolArg(Binds.setKeepAllCompressedBuffersBind, NULL_SEGMENT, keep)
         }
 
         /**
@@ -144,7 +145,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: PortableCompressedTexture2D.is_keeping_all_compressed_buffers
          */
         fun isKeepingAllCompressedBuffers(): Boolean {
-            return ObjectCalls.ptrcallNoArgsRetBool(isKeepingAllCompressedBuffersBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepingAllCompressedBuffersBind, NULL_SEGMENT)
         }
 
         @JvmStatic
@@ -156,50 +157,52 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PortableCompressedTexture2D? =
             if (handle.address() == 0L) null else PortableCompressedTexture2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_FROM_IMAGE_HASH = 3679243433L
-        private val createFromImageBind by lazy {
+        @JvmField
+        val createFromImageBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "create_from_image", CREATE_FROM_IMAGE_HASH)
-        }
 
         private const val GET_COMPRESSION_MODE_HASH = 3265612739L
-        private val getCompressionModeBind by lazy {
+        @JvmField
+        val getCompressionModeBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "get_compression_mode", GET_COMPRESSION_MODE_HASH)
-        }
 
         private const val SET_SIZE_OVERRIDE_HASH = 743155724L
-        private val setSizeOverrideBind by lazy {
+        @JvmField
+        val setSizeOverrideBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "set_size_override", SET_SIZE_OVERRIDE_HASH)
-        }
 
         private const val GET_SIZE_OVERRIDE_HASH = 3341600327L
-        private val getSizeOverrideBind by lazy {
+        @JvmField
+        val getSizeOverrideBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "get_size_override", GET_SIZE_OVERRIDE_HASH)
-        }
 
         private const val SET_KEEP_COMPRESSED_BUFFER_HASH = 2586408642L
-        private val setKeepCompressedBufferBind by lazy {
+        @JvmField
+        val setKeepCompressedBufferBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "set_keep_compressed_buffer", SET_KEEP_COMPRESSED_BUFFER_HASH)
-        }
 
         private const val IS_KEEPING_COMPRESSED_BUFFER_HASH = 36873697L
-        private val isKeepingCompressedBufferBind by lazy {
+        @JvmField
+        val isKeepingCompressedBufferBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "is_keeping_compressed_buffer", IS_KEEPING_COMPRESSED_BUFFER_HASH)
-        }
 
         private const val SET_BASISU_COMPRESSOR_PARAMS_HASH = 1602489585L
-        private val setBasisuCompressorParamsBind by lazy {
+        @JvmField
+        val setBasisuCompressorParamsBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "set_basisu_compressor_params", SET_BASISU_COMPRESSOR_PARAMS_HASH)
-        }
 
         private const val SET_KEEP_ALL_COMPRESSED_BUFFERS_HASH = 2586408642L
-        private val setKeepAllCompressedBuffersBind by lazy {
+        @JvmField
+        val setKeepAllCompressedBuffersBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "set_keep_all_compressed_buffers", SET_KEEP_ALL_COMPRESSED_BUFFERS_HASH)
-        }
 
         private const val IS_KEEPING_ALL_COMPRESSED_BUFFERS_HASH = 2240911060L
-        private val isKeepingAllCompressedBuffersBind by lazy {
+        @JvmField
+        val isKeepingAllCompressedBuffersBind =
             ObjectCalls.getMethodBind("PortableCompressedTexture2D", "is_keeping_all_compressed_buffers", IS_KEEPING_ALL_COMPRESSED_BUFFERS_HASH)
-        }
     }
 }

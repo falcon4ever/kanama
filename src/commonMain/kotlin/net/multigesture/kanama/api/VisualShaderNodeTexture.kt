@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -31,32 +32,32 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setSource(value: VisualShaderNodeTexture.Source) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
     }
 
     fun getSource(): VisualShaderNodeTexture.Source {
         checkOpen()
-        return VisualShaderNodeTexture.Source(ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment))
+        return VisualShaderNodeTexture.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
     }
 
     fun setTexture(value: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     fun setTextureType(value: VisualShaderNodeTexture.TextureType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, value.value)
     }
 
     fun getTextureType(): VisualShaderNodeTexture.TextureType {
         checkOpen()
-        return VisualShaderNodeTexture.TextureType(ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment))
+        return VisualShaderNodeTexture.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
     }
 
     @JvmInline
@@ -94,35 +95,37 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SOURCE_HASH = 905262939L
-        private val setSourceBind by lazy {
+        @JvmField
+        val setSourceBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture", "set_source", SET_SOURCE_HASH)
-        }
 
         private const val GET_SOURCE_HASH = 2896297444L
-        private val getSourceBind by lazy {
+        @JvmField
+        val getSourceBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture", "get_source", GET_SOURCE_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_TEXTURE_TYPE_HASH = 986314081L
-        private val setTextureTypeBind by lazy {
+        @JvmField
+        val setTextureTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture", "set_texture_type", SET_TEXTURE_TYPE_HASH)
-        }
 
         private const val GET_TEXTURE_TYPE_HASH = 3290430153L
-        private val getTextureTypeBind by lazy {
+        @JvmField
+        val getTextureTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTexture", "get_texture_type", GET_TEXTURE_TYPE_HASH)
-        }
     }
 }

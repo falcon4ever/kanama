@@ -20,7 +20,5 @@ class VisualShaderNodeProximityFade(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeProximityFade? =
             if (handle.address() == 0L) null else VisualShaderNodeProximityFade(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -94,7 +95,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.open
      */
     fun open() {
-        ObjectCalls.ptrcallNoArgs(openBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.openBind, segment)
     }
 
     /**
@@ -104,11 +105,11 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.make_visible
      */
     fun makeVisible() {
-        ObjectCalls.ptrcallNoArgs(makeVisibleBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makeVisibleBind, segment)
     }
 
     fun closeDock() {
-        ObjectCalls.ptrcallNoArgs(closeDockBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.closeDockBind, segment)
     }
 
     /**
@@ -118,7 +119,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, title)
     }
 
     /**
@@ -128,7 +129,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_layout_key
      */
     fun setLayoutKey(layoutKey: String) {
-        ObjectCalls.ptrcallWithStringArg(setLayoutKeyBind, segment, layoutKey)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLayoutKeyBind, segment, layoutKey)
     }
 
     /**
@@ -148,7 +149,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_layout_key
      */
     fun getLayoutKey(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLayoutKeyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLayoutKeyBind, segment)
     }
 
     /**
@@ -158,7 +159,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_global
      */
     fun setGlobal(global: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setGlobalBind, segment, global)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGlobalBind, segment, global)
     }
 
     /**
@@ -168,7 +169,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.is_global
      */
     fun isGlobal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGlobalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGlobalBind, segment)
     }
 
     /**
@@ -179,7 +180,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_transient
      */
     fun setTransient(transient: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransientBind, segment, transient)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTransientBind, segment, transient)
     }
 
     /**
@@ -190,7 +191,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.is_transient
      */
     fun isTransient(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransientBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTransientBind, segment)
     }
 
     /**
@@ -200,7 +201,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_closable
      */
     fun setClosable(closable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setClosableBind, segment, closable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setClosableBind, segment, closable)
     }
 
     /**
@@ -210,7 +211,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.is_closable
      */
     fun isClosable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isClosableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isClosableBind, segment)
     }
 
     /**
@@ -220,7 +221,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_icon_name
      */
     fun setIconName(iconName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setIconNameBind, segment, iconName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setIconNameBind, segment, iconName)
     }
 
     /**
@@ -230,7 +231,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_icon_name
      */
     fun getIconName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getIconNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getIconNameBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_dock_icon
      */
     fun setDockIcon(icon: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setDockIconBind, segment, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setDockIconBind, segment, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -248,7 +249,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_dock_icon
      */
     fun getDockIcon(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDockIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDockIconBind, segment))
     }
 
     /**
@@ -259,7 +260,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_force_show_icon
      */
     fun setForceShowIcon(force: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setForceShowIconBind, segment, force)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setForceShowIconBind, segment, force)
     }
 
     /**
@@ -270,7 +271,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_force_show_icon
      */
     fun getForceShowIcon(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getForceShowIconBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getForceShowIconBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_title_color
      */
     fun setTitleColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTitleColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setTitleColorBind, segment, color)
     }
 
     /**
@@ -288,7 +289,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_title_color
      */
     fun getTitleColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTitleColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTitleColorBind, segment)
     }
 
     /**
@@ -297,7 +298,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_dock_shortcut
      */
     fun setDockShortcut(shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithObjectArgs(setDockShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setDockShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -306,7 +307,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_dock_shortcut
      */
     fun getDockShortcut(): Shortcut? {
-        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDockShortcutBind, segment))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDockShortcutBind, segment))
     }
 
     /**
@@ -317,7 +318,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_default_slot
      */
     fun setDefaultSlot(slot: EditorDock.DockSlot) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultSlotBind, segment, slot.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultSlotBind, segment, slot.value)
     }
 
     /**
@@ -328,7 +329,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_default_slot
      */
     fun getDefaultSlot(): EditorDock.DockSlot {
-        return EditorDock.DockSlot(ObjectCalls.ptrcallNoArgsRetLong(getDefaultSlotBind, segment))
+        return EditorDock.DockSlot(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultSlotBind, segment))
     }
 
     /**
@@ -338,7 +339,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_available_layouts
      */
     fun setAvailableLayouts(layouts: EditorDock.DockLayout) {
-        ObjectCalls.ptrcallWithLongArg(setAvailableLayoutsBind, segment, layouts.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAvailableLayoutsBind, segment, layouts.value)
     }
 
     /**
@@ -348,7 +349,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_available_layouts
      */
     fun getAvailableLayouts(): EditorDock.DockLayout {
-        return EditorDock.DockLayout(ObjectCalls.ptrcallNoArgsRetLong(getAvailableLayoutsBind, segment))
+        return EditorDock.DockLayout(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAvailableLayoutsBind, segment))
     }
 
     /** Signal `opened()`; see [TypedSignal]. */
@@ -510,140 +511,142 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorDock? =
             if (handle.address() == 0L) null else EditorDock(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val OPEN_HASH = 3218959716L
-        private val openBind by lazy {
+        @JvmField
+        val openBind =
             ObjectCalls.getMethodBind("EditorDock", "open", OPEN_HASH)
-        }
 
         private const val MAKE_VISIBLE_HASH = 3218959716L
-        private val makeVisibleBind by lazy {
+        @JvmField
+        val makeVisibleBind =
             ObjectCalls.getMethodBind("EditorDock", "make_visible", MAKE_VISIBLE_HASH)
-        }
 
         private const val CLOSE_HASH = 3218959716L
-        private val closeDockBind by lazy {
+        @JvmField
+        val closeDockBind =
             ObjectCalls.getMethodBind("EditorDock", "close", CLOSE_HASH)
-        }
 
         private const val SET_TITLE_HASH = 83702148L
-        private val setTitleBind by lazy {
+        @JvmField
+        val setTitleBind =
             ObjectCalls.getMethodBind("EditorDock", "set_title", SET_TITLE_HASH)
-        }
 
         private const val GET_TITLE_HASH = 201670096L
-        private val getTitleBind by lazy {
+        @JvmField
+        val getTitleBind =
             ObjectCalls.getMethodBind("EditorDock", "get_title", GET_TITLE_HASH)
-        }
 
         private const val SET_LAYOUT_KEY_HASH = 83702148L
-        private val setLayoutKeyBind by lazy {
+        @JvmField
+        val setLayoutKeyBind =
             ObjectCalls.getMethodBind("EditorDock", "set_layout_key", SET_LAYOUT_KEY_HASH)
-        }
 
         private const val GET_LAYOUT_KEY_HASH = 201670096L
-        private val getLayoutKeyBind by lazy {
+        @JvmField
+        val getLayoutKeyBind =
             ObjectCalls.getMethodBind("EditorDock", "get_layout_key", GET_LAYOUT_KEY_HASH)
-        }
 
         private const val SET_GLOBAL_HASH = 2586408642L
-        private val setGlobalBind by lazy {
+        @JvmField
+        val setGlobalBind =
             ObjectCalls.getMethodBind("EditorDock", "set_global", SET_GLOBAL_HASH)
-        }
 
         private const val IS_GLOBAL_HASH = 36873697L
-        private val isGlobalBind by lazy {
+        @JvmField
+        val isGlobalBind =
             ObjectCalls.getMethodBind("EditorDock", "is_global", IS_GLOBAL_HASH)
-        }
 
         private const val SET_TRANSIENT_HASH = 2586408642L
-        private val setTransientBind by lazy {
+        @JvmField
+        val setTransientBind =
             ObjectCalls.getMethodBind("EditorDock", "set_transient", SET_TRANSIENT_HASH)
-        }
 
         private const val IS_TRANSIENT_HASH = 36873697L
-        private val isTransientBind by lazy {
+        @JvmField
+        val isTransientBind =
             ObjectCalls.getMethodBind("EditorDock", "is_transient", IS_TRANSIENT_HASH)
-        }
 
         private const val SET_CLOSABLE_HASH = 2586408642L
-        private val setClosableBind by lazy {
+        @JvmField
+        val setClosableBind =
             ObjectCalls.getMethodBind("EditorDock", "set_closable", SET_CLOSABLE_HASH)
-        }
 
         private const val IS_CLOSABLE_HASH = 36873697L
-        private val isClosableBind by lazy {
+        @JvmField
+        val isClosableBind =
             ObjectCalls.getMethodBind("EditorDock", "is_closable", IS_CLOSABLE_HASH)
-        }
 
         private const val SET_ICON_NAME_HASH = 3304788590L
-        private val setIconNameBind by lazy {
+        @JvmField
+        val setIconNameBind =
             ObjectCalls.getMethodBind("EditorDock", "set_icon_name", SET_ICON_NAME_HASH)
-        }
 
         private const val GET_ICON_NAME_HASH = 2002593661L
-        private val getIconNameBind by lazy {
+        @JvmField
+        val getIconNameBind =
             ObjectCalls.getMethodBind("EditorDock", "get_icon_name", GET_ICON_NAME_HASH)
-        }
 
         private const val SET_DOCK_ICON_HASH = 4051416890L
-        private val setDockIconBind by lazy {
+        @JvmField
+        val setDockIconBind =
             ObjectCalls.getMethodBind("EditorDock", "set_dock_icon", SET_DOCK_ICON_HASH)
-        }
 
         private const val GET_DOCK_ICON_HASH = 3635182373L
-        private val getDockIconBind by lazy {
+        @JvmField
+        val getDockIconBind =
             ObjectCalls.getMethodBind("EditorDock", "get_dock_icon", GET_DOCK_ICON_HASH)
-        }
 
         private const val SET_FORCE_SHOW_ICON_HASH = 2586408642L
-        private val setForceShowIconBind by lazy {
+        @JvmField
+        val setForceShowIconBind =
             ObjectCalls.getMethodBind("EditorDock", "set_force_show_icon", SET_FORCE_SHOW_ICON_HASH)
-        }
 
         private const val GET_FORCE_SHOW_ICON_HASH = 36873697L
-        private val getForceShowIconBind by lazy {
+        @JvmField
+        val getForceShowIconBind =
             ObjectCalls.getMethodBind("EditorDock", "get_force_show_icon", GET_FORCE_SHOW_ICON_HASH)
-        }
 
         private const val SET_TITLE_COLOR_HASH = 2920490490L
-        private val setTitleColorBind by lazy {
+        @JvmField
+        val setTitleColorBind =
             ObjectCalls.getMethodBind("EditorDock", "set_title_color", SET_TITLE_COLOR_HASH)
-        }
 
         private const val GET_TITLE_COLOR_HASH = 3444240500L
-        private val getTitleColorBind by lazy {
+        @JvmField
+        val getTitleColorBind =
             ObjectCalls.getMethodBind("EditorDock", "get_title_color", GET_TITLE_COLOR_HASH)
-        }
 
         private const val SET_DOCK_SHORTCUT_HASH = 857163497L
-        private val setDockShortcutBind by lazy {
+        @JvmField
+        val setDockShortcutBind =
             ObjectCalls.getMethodBind("EditorDock", "set_dock_shortcut", SET_DOCK_SHORTCUT_HASH)
-        }
 
         private const val GET_DOCK_SHORTCUT_HASH = 3415666916L
-        private val getDockShortcutBind by lazy {
+        @JvmField
+        val getDockShortcutBind =
             ObjectCalls.getMethodBind("EditorDock", "get_dock_shortcut", GET_DOCK_SHORTCUT_HASH)
-        }
 
         private const val SET_DEFAULT_SLOT_HASH = 4142995464L
-        private val setDefaultSlotBind by lazy {
+        @JvmField
+        val setDefaultSlotBind =
             ObjectCalls.getMethodBind("EditorDock", "set_default_slot", SET_DEFAULT_SLOT_HASH)
-        }
 
         private const val GET_DEFAULT_SLOT_HASH = 3298961740L
-        private val getDefaultSlotBind by lazy {
+        @JvmField
+        val getDefaultSlotBind =
             ObjectCalls.getMethodBind("EditorDock", "get_default_slot", GET_DEFAULT_SLOT_HASH)
-        }
 
         private const val SET_AVAILABLE_LAYOUTS_HASH = 3440531249L
-        private val setAvailableLayoutsBind by lazy {
+        @JvmField
+        val setAvailableLayoutsBind =
             ObjectCalls.getMethodBind("EditorDock", "set_available_layouts", SET_AVAILABLE_LAYOUTS_HASH)
-        }
 
         private const val GET_AVAILABLE_LAYOUTS_HASH = 495015512L
-        private val getAvailableLayoutsBind by lazy {
+        @JvmField
+        val getAvailableLayoutsBind =
             ObjectCalls.getMethodBind("EditorDock", "get_available_layouts", GET_AVAILABLE_LAYOUTS_HASH)
-        }
     }
 }

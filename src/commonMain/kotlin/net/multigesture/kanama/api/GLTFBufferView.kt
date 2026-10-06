@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -48,77 +49,77 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
 
     fun loadBufferViewData(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(loadBufferViewDataBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.loadBufferViewDataBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
     fun getBuffer(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferBind, segment)
     }
 
     fun setBuffer(buffer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBufferBind, segment, buffer)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBufferBind, segment, buffer)
     }
 
     fun getByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
     }
 
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, segment, byteOffset)
+        ObjectCalls.ptrcallWithLongArg(Binds.setByteOffsetBind, segment, byteOffset)
     }
 
     fun getByteLength(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteLengthBind, segment)
     }
 
     fun setByteLength(byteLength: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteLengthBind, segment, byteLength)
+        ObjectCalls.ptrcallWithLongArg(Binds.setByteLengthBind, segment, byteLength)
     }
 
     fun getByteStride(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteStrideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteStrideBind, segment)
     }
 
     fun setByteStride(byteStride: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteStrideBind, segment, byteStride)
+        ObjectCalls.ptrcallWithLongArg(Binds.setByteStrideBind, segment, byteStride)
     }
 
     fun getIndices(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIndicesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIndicesBind, segment)
     }
 
     fun setIndices(indices: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIndicesBind, segment, indices)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIndicesBind, segment, indices)
     }
 
     fun getVertexAttributes(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getVertexAttributesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getVertexAttributesBind, segment)
     }
 
     fun setVertexAttributes(isAttributes: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVertexAttributesBind, segment, isAttributes)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVertexAttributesBind, segment, isAttributes)
     }
 
     companion object {
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFBufferView? {
-            return GLTFBufferView.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFBufferView.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
@@ -130,80 +131,82 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFBufferView? =
             if (handle.address() == 0L) null else GLTFBufferView(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LOAD_BUFFER_VIEW_DATA_HASH = 3945446907L
-        private val loadBufferViewDataBind by lazy {
+        @JvmField
+        val loadBufferViewDataBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "load_buffer_view_data", LOAD_BUFFER_VIEW_DATA_HASH)
-        }
 
         private const val FROM_DICTIONARY_HASH = 2594413512L
-        private val fromDictionaryBind by lazy {
+        @JvmField
+        val fromDictionaryBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "from_dictionary", FROM_DICTIONARY_HASH)
-        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
-        private val toDictionaryBind by lazy {
+        @JvmField
+        val toDictionaryBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "to_dictionary", TO_DICTIONARY_HASH)
-        }
 
         private const val GET_BUFFER_HASH = 3905245786L
-        private val getBufferBind by lazy {
+        @JvmField
+        val getBufferBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "get_buffer", GET_BUFFER_HASH)
-        }
 
         private const val SET_BUFFER_HASH = 1286410249L
-        private val setBufferBind by lazy {
+        @JvmField
+        val setBufferBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "set_buffer", SET_BUFFER_HASH)
-        }
 
         private const val GET_BYTE_OFFSET_HASH = 3905245786L
-        private val getByteOffsetBind by lazy {
+        @JvmField
+        val getByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "get_byte_offset", GET_BYTE_OFFSET_HASH)
-        }
 
         private const val SET_BYTE_OFFSET_HASH = 1286410249L
-        private val setByteOffsetBind by lazy {
+        @JvmField
+        val setByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "set_byte_offset", SET_BYTE_OFFSET_HASH)
-        }
 
         private const val GET_BYTE_LENGTH_HASH = 3905245786L
-        private val getByteLengthBind by lazy {
+        @JvmField
+        val getByteLengthBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "get_byte_length", GET_BYTE_LENGTH_HASH)
-        }
 
         private const val SET_BYTE_LENGTH_HASH = 1286410249L
-        private val setByteLengthBind by lazy {
+        @JvmField
+        val setByteLengthBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "set_byte_length", SET_BYTE_LENGTH_HASH)
-        }
 
         private const val GET_BYTE_STRIDE_HASH = 3905245786L
-        private val getByteStrideBind by lazy {
+        @JvmField
+        val getByteStrideBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "get_byte_stride", GET_BYTE_STRIDE_HASH)
-        }
 
         private const val SET_BYTE_STRIDE_HASH = 1286410249L
-        private val setByteStrideBind by lazy {
+        @JvmField
+        val setByteStrideBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "set_byte_stride", SET_BYTE_STRIDE_HASH)
-        }
 
         private const val GET_INDICES_HASH = 36873697L
-        private val getIndicesBind by lazy {
+        @JvmField
+        val getIndicesBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "get_indices", GET_INDICES_HASH)
-        }
 
         private const val SET_INDICES_HASH = 2586408642L
-        private val setIndicesBind by lazy {
+        @JvmField
+        val setIndicesBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "set_indices", SET_INDICES_HASH)
-        }
 
         private const val GET_VERTEX_ATTRIBUTES_HASH = 36873697L
-        private val getVertexAttributesBind by lazy {
+        @JvmField
+        val getVertexAttributesBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "get_vertex_attributes", GET_VERTEX_ATTRIBUTES_HASH)
-        }
 
         private const val SET_VERTEX_ATTRIBUTES_HASH = 2586408642L
-        private val setVertexAttributesBind by lazy {
+        @JvmField
+        val setVertexAttributesBind =
             ObjectCalls.getMethodBind("GLTFBufferView", "set_vertex_attributes", SET_VERTEX_ATTRIBUTES_HASH)
-        }
     }
 }

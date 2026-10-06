@@ -20,7 +20,5 @@ class EditorSceneFormatImporterUFBX(handle: GodotHandle) : EditorSceneFormatImpo
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterUFBX? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterUFBX(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

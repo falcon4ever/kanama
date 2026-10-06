@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTravel(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTravelBind, segment)
     }
 
     /**
@@ -29,7 +30,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemainder(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRemainderBind, segment)
     }
 
     /**
@@ -40,7 +41,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionSafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionSafeFractionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionSafeFractionBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionUnsafeFraction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionUnsafeFractionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionUnsafeFractionBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionCountBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionPoint(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionPointBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getCollisionPointBind, segment, collisionIndex)
     }
 
     /**
@@ -83,7 +84,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionNormal(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getCollisionNormalBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getCollisionNormalBind, segment, collisionIndex)
     }
 
     /**
@@ -94,7 +95,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getColliderVelocityBind, segment, collisionIndex)
     }
 
     /**
@@ -105,7 +106,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getColliderIdBind, segment, collisionIndex)
     }
 
     /**
@@ -116,7 +117,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getColliderRidBind, segment, collisionIndex)
     }
 
     /**
@@ -127,7 +128,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, segment, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getColliderBind, segment, collisionIndex))
     }
 
     /**
@@ -138,7 +139,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShape(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getColliderShapeBind, segment, collisionIndex)
     }
 
     /**
@@ -149,7 +150,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionLocalShape(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionLocalShapeBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCollisionLocalShapeBind, segment, collisionIndex)
     }
 
     /**
@@ -160,7 +161,7 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionDepth(collisionIndex: Int = 0): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getCollisionDepthBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getCollisionDepthBind, segment, collisionIndex)
     }
 
     companion object {
@@ -173,75 +174,77 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsTestMotionResult3D? =
             if (handle.address() == 0L) null else PhysicsTestMotionResult3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRAVEL_HASH = 3360562783L
-        private val getTravelBind by lazy {
+        @JvmField
+        val getTravelBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_travel", GET_TRAVEL_HASH)
-        }
 
         private const val GET_REMAINDER_HASH = 3360562783L
-        private val getRemainderBind by lazy {
+        @JvmField
+        val getRemainderBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_remainder", GET_REMAINDER_HASH)
-        }
 
         private const val GET_COLLISION_SAFE_FRACTION_HASH = 1740695150L
-        private val getCollisionSafeFractionBind by lazy {
+        @JvmField
+        val getCollisionSafeFractionBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_safe_fraction", GET_COLLISION_SAFE_FRACTION_HASH)
-        }
 
         private const val GET_COLLISION_UNSAFE_FRACTION_HASH = 1740695150L
-        private val getCollisionUnsafeFractionBind by lazy {
+        @JvmField
+        val getCollisionUnsafeFractionBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_unsafe_fraction", GET_COLLISION_UNSAFE_FRACTION_HASH)
-        }
 
         private const val GET_COLLISION_COUNT_HASH = 3905245786L
-        private val getCollisionCountBind by lazy {
+        @JvmField
+        val getCollisionCountBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_count", GET_COLLISION_COUNT_HASH)
-        }
 
         private const val GET_COLLISION_POINT_HASH = 1914908202L
-        private val getCollisionPointBind by lazy {
+        @JvmField
+        val getCollisionPointBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_point", GET_COLLISION_POINT_HASH)
-        }
 
         private const val GET_COLLISION_NORMAL_HASH = 1914908202L
-        private val getCollisionNormalBind by lazy {
+        @JvmField
+        val getCollisionNormalBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_normal", GET_COLLISION_NORMAL_HASH)
-        }
 
         private const val GET_COLLIDER_VELOCITY_HASH = 1914908202L
-        private val getColliderVelocityBind by lazy {
+        @JvmField
+        val getColliderVelocityBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collider_velocity", GET_COLLIDER_VELOCITY_HASH)
-        }
 
         private const val GET_COLLIDER_ID_HASH = 1591665591L
-        private val getColliderIdBind by lazy {
+        @JvmField
+        val getColliderIdBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collider_id", GET_COLLIDER_ID_HASH)
-        }
 
         private const val GET_COLLIDER_RID_HASH = 1231817359L
-        private val getColliderRidBind by lazy {
+        @JvmField
+        val getColliderRidBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collider_rid", GET_COLLIDER_RID_HASH)
-        }
 
         private const val GET_COLLIDER_HASH = 2639523548L
-        private val getColliderBind by lazy {
+        @JvmField
+        val getColliderBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collider", GET_COLLIDER_HASH)
-        }
 
         private const val GET_COLLIDER_SHAPE_HASH = 1591665591L
-        private val getColliderShapeBind by lazy {
+        @JvmField
+        val getColliderShapeBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collider_shape", GET_COLLIDER_SHAPE_HASH)
-        }
 
         private const val GET_COLLISION_LOCAL_SHAPE_HASH = 1591665591L
-        private val getCollisionLocalShapeBind by lazy {
+        @JvmField
+        val getCollisionLocalShapeBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_local_shape", GET_COLLISION_LOCAL_SHAPE_HASH)
-        }
 
         private const val GET_COLLISION_DEPTH_HASH = 218038398L
-        private val getCollisionDepthBind by lazy {
+        @JvmField
+        val getCollisionDepthBind =
             ObjectCalls.getMethodBind("PhysicsTestMotionResult3D", "get_collision_depth", GET_COLLISION_DEPTH_HASH)
-        }
     }
 }

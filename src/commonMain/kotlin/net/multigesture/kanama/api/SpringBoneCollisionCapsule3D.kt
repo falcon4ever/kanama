@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -43,7 +44,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -54,7 +55,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_height
      */
     fun setHeight(height: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -76,7 +77,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.get_height
      */
     fun getHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_mid_height
      */
     fun setMidHeight(midHeight: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMidHeightBind, segment, midHeight)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMidHeightBind, segment, midHeight)
     }
 
     /**
@@ -98,7 +99,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.get_mid_height
      */
     fun getMidHeight(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMidHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMidHeightBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.set_inside
      */
     fun setInside(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInsideBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setInsideBind, segment, enabled)
     }
 
     /**
@@ -116,7 +117,7 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
      * Generated from Godot docs: SpringBoneCollisionCapsule3D.is_inside
      */
     fun isInside(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInsideBind, segment)
     }
 
     companion object {
@@ -126,45 +127,47 @@ class SpringBoneCollisionCapsule3D(handle: GodotHandle) : SpringBoneCollision3D(
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionCapsule3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionCapsule3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val SET_MID_HEIGHT_HASH = 373806689L
-        private val setMidHeightBind by lazy {
+        @JvmField
+        val setMidHeightBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "set_mid_height", SET_MID_HEIGHT_HASH)
-        }
 
         private const val GET_MID_HEIGHT_HASH = 1740695150L
-        private val getMidHeightBind by lazy {
+        @JvmField
+        val getMidHeightBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "get_mid_height", GET_MID_HEIGHT_HASH)
-        }
 
         private const val SET_INSIDE_HASH = 2586408642L
-        private val setInsideBind by lazy {
+        @JvmField
+        val setInsideBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "set_inside", SET_INSIDE_HASH)
-        }
 
         private const val IS_INSIDE_HASH = 36873697L
-        private val isInsideBind by lazy {
+        @JvmField
+        val isInsideBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionCapsule3D", "is_inside", IS_INSIDE_HASH)
-        }
     }
 }

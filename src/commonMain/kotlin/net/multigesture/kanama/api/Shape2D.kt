@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setCustomSolverBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCustomSolverBiasBind, segment, bias)
     }
 
     /**
@@ -43,7 +44,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomSolverBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomSolverBiasBind, segment)
     }
 
     /**
@@ -55,7 +56,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collide(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(collideBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetBool(Binds.collideBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
     /**
@@ -69,7 +70,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collideWithMotion(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(collideWithMotionBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(Binds.collideWithMotionBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     /**
@@ -86,7 +87,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collideAndGetContacts(localXform: Transform2D, withShape: Shape2D, shapeXform: Transform2D): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(collideAndGetContactsBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
+        return ObjectCalls.ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(Binds.collideAndGetContactsBind, segment, localXform, withShape.requireOpenHandle(), shapeXform)
     }
 
     /**
@@ -105,7 +106,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun collideWithMotionAndGetContacts(localXform: Transform2D, localMotion: Vector2, withShape: Shape2D, shapeXform: Transform2D, shapeMotion: Vector2): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(collideWithMotionAndGetContactsBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
+        return ObjectCalls.ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(Binds.collideWithMotionAndGetContactsBind, segment, localXform, localMotion, withShape.requireOpenHandle(), shapeXform, shapeMotion)
     }
 
     /**
@@ -116,7 +117,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun draw(canvasItem: RID, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndColorArg(drawBind, segment, canvasItem, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.drawBind, segment, canvasItem, color)
     }
 
     /**
@@ -126,7 +127,7 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRectBind, segment)
     }
 
     companion object {
@@ -139,45 +140,47 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shape2D? =
             if (handle.address() == 0L) null else Shape2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L
-        private val setCustomSolverBiasBind by lazy {
+        @JvmField
+        val setCustomSolverBiasBind =
             ObjectCalls.getMethodBind("Shape2D", "set_custom_solver_bias", SET_CUSTOM_SOLVER_BIAS_HASH)
-        }
 
         private const val GET_CUSTOM_SOLVER_BIAS_HASH = 1740695150L
-        private val getCustomSolverBiasBind by lazy {
+        @JvmField
+        val getCustomSolverBiasBind =
             ObjectCalls.getMethodBind("Shape2D", "get_custom_solver_bias", GET_CUSTOM_SOLVER_BIAS_HASH)
-        }
 
         private const val COLLIDE_HASH = 3709843132L
-        private val collideBind by lazy {
+        @JvmField
+        val collideBind =
             ObjectCalls.getMethodBind("Shape2D", "collide", COLLIDE_HASH)
-        }
 
         private const val COLLIDE_WITH_MOTION_HASH = 2869556801L
-        private val collideWithMotionBind by lazy {
+        @JvmField
+        val collideWithMotionBind =
             ObjectCalls.getMethodBind("Shape2D", "collide_with_motion", COLLIDE_WITH_MOTION_HASH)
-        }
 
         private const val COLLIDE_AND_GET_CONTACTS_HASH = 3056932662L
-        private val collideAndGetContactsBind by lazy {
+        @JvmField
+        val collideAndGetContactsBind =
             ObjectCalls.getMethodBind("Shape2D", "collide_and_get_contacts", COLLIDE_AND_GET_CONTACTS_HASH)
-        }
 
         private const val COLLIDE_WITH_MOTION_AND_GET_CONTACTS_HASH = 3620351573L
-        private val collideWithMotionAndGetContactsBind by lazy {
+        @JvmField
+        val collideWithMotionAndGetContactsBind =
             ObjectCalls.getMethodBind("Shape2D", "collide_with_motion_and_get_contacts", COLLIDE_WITH_MOTION_AND_GET_CONTACTS_HASH)
-        }
 
         private const val DRAW_HASH = 2948539648L
-        private val drawBind by lazy {
+        @JvmField
+        val drawBind =
             ObjectCalls.getMethodBind("Shape2D", "draw", DRAW_HASH)
-        }
 
         private const val GET_RECT_HASH = 1639390495L
-        private val getRectBind by lazy {
+        @JvmField
+        val getRectBind =
             ObjectCalls.getMethodBind("Shape2D", "get_rect", GET_RECT_HASH)
-        }
     }
 }

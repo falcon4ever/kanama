@@ -17,7 +17,5 @@ class OpenXRExtensionWrapperExtension(handle: GodotHandle) : OpenXRExtensionWrap
 
         internal fun wrap(handle: RawSegment): OpenXRExtensionWrapperExtension? =
             if (handle.address() == 0L) null else OpenXRExtensionWrapperExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

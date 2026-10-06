@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addRootNode(node: Node) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addRootNodeBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addRootNodeBind, segment, listOf(node.segment))
     }
 
     /**
@@ -29,7 +30,7 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getScene(): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSceneBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSceneBind, segment))
     }
 
     /**
@@ -39,7 +40,7 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEditorInterface(): EditorInterface? {
         checkOpen()
-        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorInterfaceBind, segment))
+        return EditorInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorInterfaceBind, segment))
     }
 
     companion object {
@@ -52,20 +53,22 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScript? =
             if (handle.address() == 0L) null else EditorScript(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_ROOT_NODE_HASH = 1078189570L
-        private val addRootNodeBind by lazy {
+        @JvmField
+        val addRootNodeBind =
             ObjectCalls.getMethodBind("EditorScript", "add_root_node", ADD_ROOT_NODE_HASH)
-        }
 
         private const val GET_SCENE_HASH = 3160264692L
-        private val getSceneBind by lazy {
+        @JvmField
+        val getSceneBind =
             ObjectCalls.getMethodBind("EditorScript", "get_scene", GET_SCENE_HASH)
-        }
 
         private const val GET_EDITOR_INTERFACE_HASH = 1976662476L
-        private val getEditorInterfaceBind by lazy {
+        @JvmField
+        val getEditorInterfaceBind =
             ObjectCalls.getMethodBind("EditorScript", "get_editor_interface", GET_EDITOR_INTERFACE_HASH)
-        }
     }
 }

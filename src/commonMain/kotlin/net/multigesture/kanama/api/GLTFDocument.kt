@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -56,102 +57,102 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
     fun setImageFormat(imageFormat: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setImageFormatBind, segment, imageFormat)
+        ObjectCalls.ptrcallWithStringArg(Binds.setImageFormatBind, segment, imageFormat)
     }
 
     fun getImageFormat(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getImageFormatBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getImageFormatBind, segment)
     }
 
     fun setLossyQuality(lossyQuality: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLossyQualityBind, segment, lossyQuality)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLossyQualityBind, segment, lossyQuality)
     }
 
     fun getLossyQuality(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLossyQualityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLossyQualityBind, segment)
     }
 
     fun setFallbackImageFormat(fallbackImageFormat: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFallbackImageFormatBind, segment, fallbackImageFormat)
+        ObjectCalls.ptrcallWithStringArg(Binds.setFallbackImageFormatBind, segment, fallbackImageFormat)
     }
 
     fun getFallbackImageFormat(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFallbackImageFormatBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFallbackImageFormatBind, segment)
     }
 
     fun setFallbackImageQuality(fallbackImageQuality: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFallbackImageQualityBind, segment, fallbackImageQuality)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFallbackImageQualityBind, segment, fallbackImageQuality)
     }
 
     fun getFallbackImageQuality(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFallbackImageQualityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFallbackImageQualityBind, segment)
     }
 
     fun setRootNodeMode(rootNodeMode: GLTFDocument.RootNodeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRootNodeModeBind, segment, rootNodeMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRootNodeModeBind, segment, rootNodeMode.value)
     }
 
     fun getRootNodeMode(): GLTFDocument.RootNodeMode {
         checkOpen()
-        return GLTFDocument.RootNodeMode(ObjectCalls.ptrcallNoArgsRetLong(getRootNodeModeBind, segment))
+        return GLTFDocument.RootNodeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRootNodeModeBind, segment))
     }
 
     fun setTextureMapMode(textureMapMode: GLTFDocument.TextureMapMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureMapModeBind, segment, textureMapMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureMapModeBind, segment, textureMapMode.value)
     }
 
     fun getTextureMapMode(): GLTFDocument.TextureMapMode {
         checkOpen()
-        return GLTFDocument.TextureMapMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureMapModeBind, segment))
+        return GLTFDocument.TextureMapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureMapModeBind, segment))
     }
 
     fun setVisibilityMode(visibilityMode: GLTFDocument.VisibilityMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, visibilityMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityModeBind, segment, visibilityMode.value)
     }
 
     fun getVisibilityMode(): GLTFDocument.VisibilityMode {
         checkOpen()
-        return GLTFDocument.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
+        return GLTFDocument.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityModeBind, segment))
     }
 
     fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath))
+        return GodotError(ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(Binds.appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath))
     }
 
     fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        return GodotError(ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(Binds.appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
     }
 
     fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
+        return GodotError(ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(Binds.appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
     }
 
     fun generateScene(state: GLTFState?, bakeFps: Double = 30.0, trimming: Boolean = false, removeImmutableTracks: Boolean = true): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(generateSceneBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, bakeFps, trimming, removeImmutableTracks))
+        return Node.wrap(ObjectCalls.ptrcallWithObjectDoubleTwoBoolArgsRetObject(Binds.generateSceneBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, bakeFps, trimming, removeImmutableTracks))
     }
 
     fun generateBuffer(state: GLTFState?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.generateBufferBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun writeToFilesystem(state: GLTFState?, path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path))
+        return GodotError(ObjectCalls.ptrcallWithObjectAndStringArgRetLong(Binds.writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path))
     }
 
     @JvmInline
@@ -202,23 +203,23 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun importObjectModelProperty(state: GLTFState?, jsonPointer: String): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
+            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(Binds.importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
         }
 
         fun exportObjectModelProperty(state: GLTFState?, nodePath: NodePath, godotNode: Node, gltfNodeIndex: Int): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
+            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(Binds.exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
         }
 
         fun registerGltfDocumentExtension(extension: GLTFDocumentExtension?, firstPriority: Boolean = false) {
-            ObjectCalls.ptrcallWithObjectAndBoolArg(registerGltfDocumentExtensionBind, NULL_SEGMENT, extension?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+            ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.registerGltfDocumentExtensionBind, NULL_SEGMENT, extension?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
         }
 
         fun unregisterGltfDocumentExtension(extension: GLTFDocumentExtension?) {
-            ObjectCalls.ptrcallWithObjectArgs(unregisterGltfDocumentExtensionBind, NULL_SEGMENT, listOf(extension?.requireOpenHandle() ?: NULL_SEGMENT))
+            ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterGltfDocumentExtensionBind, NULL_SEGMENT, listOf(extension?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         fun getSupportedGltfExtensions(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedGltfExtensionsBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedGltfExtensionsBind, NULL_SEGMENT)
         }
 
         @JvmStatic
@@ -230,130 +231,132 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFDocument? =
             if (handle.address() == 0L) null else GLTFDocument(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_IMAGE_FORMAT_HASH = 83702148L
-        private val setImageFormatBind by lazy {
+        @JvmField
+        val setImageFormatBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_image_format", SET_IMAGE_FORMAT_HASH)
-        }
 
         private const val GET_IMAGE_FORMAT_HASH = 201670096L
-        private val getImageFormatBind by lazy {
+        @JvmField
+        val getImageFormatBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_image_format", GET_IMAGE_FORMAT_HASH)
-        }
 
         private const val SET_LOSSY_QUALITY_HASH = 373806689L
-        private val setLossyQualityBind by lazy {
+        @JvmField
+        val setLossyQualityBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_lossy_quality", SET_LOSSY_QUALITY_HASH)
-        }
 
         private const val GET_LOSSY_QUALITY_HASH = 1740695150L
-        private val getLossyQualityBind by lazy {
+        @JvmField
+        val getLossyQualityBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_lossy_quality", GET_LOSSY_QUALITY_HASH)
-        }
 
         private const val SET_FALLBACK_IMAGE_FORMAT_HASH = 83702148L
-        private val setFallbackImageFormatBind by lazy {
+        @JvmField
+        val setFallbackImageFormatBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_fallback_image_format", SET_FALLBACK_IMAGE_FORMAT_HASH)
-        }
 
         private const val GET_FALLBACK_IMAGE_FORMAT_HASH = 201670096L
-        private val getFallbackImageFormatBind by lazy {
+        @JvmField
+        val getFallbackImageFormatBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_fallback_image_format", GET_FALLBACK_IMAGE_FORMAT_HASH)
-        }
 
         private const val SET_FALLBACK_IMAGE_QUALITY_HASH = 373806689L
-        private val setFallbackImageQualityBind by lazy {
+        @JvmField
+        val setFallbackImageQualityBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_fallback_image_quality", SET_FALLBACK_IMAGE_QUALITY_HASH)
-        }
 
         private const val GET_FALLBACK_IMAGE_QUALITY_HASH = 1740695150L
-        private val getFallbackImageQualityBind by lazy {
+        @JvmField
+        val getFallbackImageQualityBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_fallback_image_quality", GET_FALLBACK_IMAGE_QUALITY_HASH)
-        }
 
         private const val SET_ROOT_NODE_MODE_HASH = 463633402L
-        private val setRootNodeModeBind by lazy {
+        @JvmField
+        val setRootNodeModeBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_root_node_mode", SET_ROOT_NODE_MODE_HASH)
-        }
 
         private const val GET_ROOT_NODE_MODE_HASH = 948057992L
-        private val getRootNodeModeBind by lazy {
+        @JvmField
+        val getRootNodeModeBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_root_node_mode", GET_ROOT_NODE_MODE_HASH)
-        }
 
         private const val SET_TEXTURE_MAP_MODE_HASH = 3144426102L
-        private val setTextureMapModeBind by lazy {
+        @JvmField
+        val setTextureMapModeBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_texture_map_mode", SET_TEXTURE_MAP_MODE_HASH)
-        }
 
         private const val GET_TEXTURE_MAP_MODE_HASH = 2113256994L
-        private val getTextureMapModeBind by lazy {
+        @JvmField
+        val getTextureMapModeBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_texture_map_mode", GET_TEXTURE_MAP_MODE_HASH)
-        }
 
         private const val SET_VISIBILITY_MODE_HASH = 2803579218L
-        private val setVisibilityModeBind by lazy {
+        @JvmField
+        val setVisibilityModeBind =
             ObjectCalls.getMethodBind("GLTFDocument", "set_visibility_mode", SET_VISIBILITY_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_MODE_HASH = 3885445962L
-        private val getVisibilityModeBind by lazy {
+        @JvmField
+        val getVisibilityModeBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_visibility_mode", GET_VISIBILITY_MODE_HASH)
-        }
 
         private const val APPEND_FROM_FILE_HASH = 866380864L
-        private val appendFromFileBind by lazy {
+        @JvmField
+        val appendFromFileBind =
             ObjectCalls.getMethodBind("GLTFDocument", "append_from_file", APPEND_FROM_FILE_HASH)
-        }
 
         private const val APPEND_FROM_BUFFER_HASH = 1616081266L
-        private val appendFromBufferBind by lazy {
+        @JvmField
+        val appendFromBufferBind =
             ObjectCalls.getMethodBind("GLTFDocument", "append_from_buffer", APPEND_FROM_BUFFER_HASH)
-        }
 
         private const val APPEND_FROM_SCENE_HASH = 1622574258L
-        private val appendFromSceneBind by lazy {
+        @JvmField
+        val appendFromSceneBind =
             ObjectCalls.getMethodBind("GLTFDocument", "append_from_scene", APPEND_FROM_SCENE_HASH)
-        }
 
         private const val GENERATE_SCENE_HASH = 596118388L
-        private val generateSceneBind by lazy {
+        @JvmField
+        val generateSceneBind =
             ObjectCalls.getMethodBind("GLTFDocument", "generate_scene", GENERATE_SCENE_HASH)
-        }
 
         private const val GENERATE_BUFFER_HASH = 741783455L
-        private val generateBufferBind by lazy {
+        @JvmField
+        val generateBufferBind =
             ObjectCalls.getMethodBind("GLTFDocument", "generate_buffer", GENERATE_BUFFER_HASH)
-        }
 
         private const val WRITE_TO_FILESYSTEM_HASH = 1784551478L
-        private val writeToFilesystemBind by lazy {
+        @JvmField
+        val writeToFilesystemBind =
             ObjectCalls.getMethodBind("GLTFDocument", "write_to_filesystem", WRITE_TO_FILESYSTEM_HASH)
-        }
 
         private const val IMPORT_OBJECT_MODEL_PROPERTY_HASH = 1206708632L
-        private val importObjectModelPropertyBind by lazy {
+        @JvmField
+        val importObjectModelPropertyBind =
             ObjectCalls.getMethodBind("GLTFDocument", "import_object_model_property", IMPORT_OBJECT_MODEL_PROPERTY_HASH)
-        }
 
         private const val EXPORT_OBJECT_MODEL_PROPERTY_HASH = 314209806L
-        private val exportObjectModelPropertyBind by lazy {
+        @JvmField
+        val exportObjectModelPropertyBind =
             ObjectCalls.getMethodBind("GLTFDocument", "export_object_model_property", EXPORT_OBJECT_MODEL_PROPERTY_HASH)
-        }
 
         private const val REGISTER_GLTF_DOCUMENT_EXTENSION_HASH = 3752678331L
-        private val registerGltfDocumentExtensionBind by lazy {
+        @JvmField
+        val registerGltfDocumentExtensionBind =
             ObjectCalls.getMethodBind("GLTFDocument", "register_gltf_document_extension", REGISTER_GLTF_DOCUMENT_EXTENSION_HASH)
-        }
 
         private const val UNREGISTER_GLTF_DOCUMENT_EXTENSION_HASH = 2684415758L
-        private val unregisterGltfDocumentExtensionBind by lazy {
+        @JvmField
+        val unregisterGltfDocumentExtensionBind =
             ObjectCalls.getMethodBind("GLTFDocument", "unregister_gltf_document_extension", UNREGISTER_GLTF_DOCUMENT_EXTENSION_HASH)
-        }
 
         private const val GET_SUPPORTED_GLTF_EXTENSIONS_HASH = 2981934095L
-        private val getSupportedGltfExtensionsBind by lazy {
+        @JvmField
+        val getSupportedGltfExtensionsBind =
             ObjectCalls.getMethodBind("GLTFDocument", "get_supported_gltf_extensions", GET_SUPPORTED_GLTF_EXTENSIONS_HASH)
-        }
     }
 }

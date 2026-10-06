@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -43,7 +44,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_ratio
      */
     fun setRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRatioBind, segment, ratio)
     }
 
     /**
@@ -53,7 +54,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_ratio
      */
     fun getRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRatioBind, segment)
     }
 
     /**
@@ -62,7 +63,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_stretch_mode
      */
     fun setStretchMode(stretchMode: AspectRatioContainer.StretchMode) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStretchModeBind, segment, stretchMode.value)
     }
 
     /**
@@ -71,7 +72,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_stretch_mode
      */
     fun getStretchMode(): AspectRatioContainer.StretchMode {
-        return AspectRatioContainer.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
+        return AspectRatioContainer.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStretchModeBind, segment))
     }
 
     /**
@@ -80,7 +81,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_alignment_horizontal
      */
     fun setAlignmentHorizontal(alignmentHorizontal: AspectRatioContainer.AlignmentMode) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentHorizontalBind, segment, alignmentHorizontal.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlignmentHorizontalBind, segment, alignmentHorizontal.value)
     }
 
     /**
@@ -89,7 +90,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_alignment_horizontal
      */
     fun getAlignmentHorizontal(): AspectRatioContainer.AlignmentMode {
-        return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentHorizontalBind, segment))
+        return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentHorizontalBind, segment))
     }
 
     /**
@@ -98,7 +99,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.set_alignment_vertical
      */
     fun setAlignmentVertical(alignmentVertical: AspectRatioContainer.AlignmentMode) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentVerticalBind, segment, alignmentVertical.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlignmentVerticalBind, segment, alignmentVertical.value)
     }
 
     /**
@@ -107,7 +108,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: AspectRatioContainer.get_alignment_vertical
      */
     fun getAlignmentVertical(): AspectRatioContainer.AlignmentMode {
-        return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, segment))
+        return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentVerticalBind, segment))
     }
 
     /**
@@ -189,45 +190,47 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): AspectRatioContainer? =
             if (handle.address() == 0L) null else AspectRatioContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RATIO_HASH = 373806689L
-        private val setRatioBind by lazy {
+        @JvmField
+        val setRatioBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "set_ratio", SET_RATIO_HASH)
-        }
 
         private const val GET_RATIO_HASH = 1740695150L
-        private val getRatioBind by lazy {
+        @JvmField
+        val getRatioBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "get_ratio", GET_RATIO_HASH)
-        }
 
         private const val SET_STRETCH_MODE_HASH = 1876743467L
-        private val setStretchModeBind by lazy {
+        @JvmField
+        val setStretchModeBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "set_stretch_mode", SET_STRETCH_MODE_HASH)
-        }
 
         private const val GET_STRETCH_MODE_HASH = 3416449033L
-        private val getStretchModeBind by lazy {
+        @JvmField
+        val getStretchModeBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "get_stretch_mode", GET_STRETCH_MODE_HASH)
-        }
 
         private const val SET_ALIGNMENT_HORIZONTAL_HASH = 2147829016L
-        private val setAlignmentHorizontalBind by lazy {
+        @JvmField
+        val setAlignmentHorizontalBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "set_alignment_horizontal", SET_ALIGNMENT_HORIZONTAL_HASH)
-        }
 
         private const val GET_ALIGNMENT_HORIZONTAL_HASH = 3838875429L
-        private val getAlignmentHorizontalBind by lazy {
+        @JvmField
+        val getAlignmentHorizontalBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "get_alignment_horizontal", GET_ALIGNMENT_HORIZONTAL_HASH)
-        }
 
         private const val SET_ALIGNMENT_VERTICAL_HASH = 2147829016L
-        private val setAlignmentVerticalBind by lazy {
+        @JvmField
+        val setAlignmentVerticalBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "set_alignment_vertical", SET_ALIGNMENT_VERTICAL_HASH)
-        }
 
         private const val GET_ALIGNMENT_VERTICAL_HASH = 3838875429L
-        private val getAlignmentVerticalBind by lazy {
+        @JvmField
+        val getAlignmentVerticalBind =
             ObjectCalls.getMethodBind("AspectRatioContainer", "get_alignment_vertical", GET_ALIGNMENT_VERTICAL_HASH)
-        }
     }
 }

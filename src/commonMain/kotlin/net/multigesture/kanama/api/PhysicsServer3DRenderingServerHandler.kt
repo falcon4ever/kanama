@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class PhysicsServer3DRenderingServerHandler(handle: GodotHandle) : GodotObject(h
      * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_vertex
      */
     fun setVertex(vertexId: Int, vertex: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setVertexBind, segment, vertexId, vertex)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setVertexBind, segment, vertexId, vertex)
     }
 
     /**
@@ -28,7 +29,7 @@ class PhysicsServer3DRenderingServerHandler(handle: GodotHandle) : GodotObject(h
      * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_normal
      */
     fun setNormal(vertexId: Int, normal: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setNormalBind, segment, vertexId, normal)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setNormalBind, segment, vertexId, normal)
     }
 
     /**
@@ -37,7 +38,7 @@ class PhysicsServer3DRenderingServerHandler(handle: GodotHandle) : GodotObject(h
      * Generated from Godot docs: PhysicsServer3DRenderingServerHandler.set_aabb
      */
     fun setAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setAabbBind, segment, aabb)
     }
 
     companion object {
@@ -47,20 +48,22 @@ class PhysicsServer3DRenderingServerHandler(handle: GodotHandle) : GodotObject(h
 
         internal fun wrap(handle: RawSegment): PhysicsServer3DRenderingServerHandler? =
             if (handle.address() == 0L) null else PhysicsServer3DRenderingServerHandler(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VERTEX_HASH = 1530502735L
-        private val setVertexBind by lazy {
+        @JvmField
+        val setVertexBind =
             ObjectCalls.getMethodBind("PhysicsServer3DRenderingServerHandler", "set_vertex", SET_VERTEX_HASH)
-        }
 
         private const val SET_NORMAL_HASH = 1530502735L
-        private val setNormalBind by lazy {
+        @JvmField
+        val setNormalBind =
             ObjectCalls.getMethodBind("PhysicsServer3DRenderingServerHandler", "set_normal", SET_NORMAL_HASH)
-        }
 
         private const val SET_AABB_HASH = 259215842L
-        private val setAabbBind by lazy {
+        @JvmField
+        val setAabbBind =
             ObjectCalls.getMethodBind("PhysicsServer3DRenderingServerHandler", "set_aabb", SET_AABB_HASH)
-        }
     }
 }

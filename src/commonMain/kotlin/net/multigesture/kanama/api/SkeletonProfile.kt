@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -47,7 +48,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setRootBone(boneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setRootBoneBind, segment, boneName)
     }
 
     /**
@@ -58,7 +59,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getRootBone(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getRootBoneBind, segment)
     }
 
     /**
@@ -69,7 +70,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setScaleBaseBone(boneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setScaleBaseBoneBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setScaleBaseBoneBind, segment, boneName)
     }
 
     /**
@@ -80,7 +81,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getScaleBaseBone(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getScaleBaseBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getScaleBaseBoneBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setGroupSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setGroupSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setGroupSizeBind, segment, size)
     }
 
     /**
@@ -104,7 +105,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getGroupSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getGroupSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupSizeBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getGroupName(groupIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupNameBind, segment, groupIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getGroupNameBind, segment, groupIdx)
     }
 
     /**
@@ -126,7 +127,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setGroupName(groupIdx: Int, groupName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupNameBind, segment, groupIdx, groupName)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setGroupNameBind, segment, groupIdx, groupName)
     }
 
     /**
@@ -137,7 +138,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getTexture(groupIdx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, segment, groupIdx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getTextureBind, segment, groupIdx))
     }
 
     /**
@@ -148,7 +149,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, segment, groupIdx, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setTextureBind, segment, groupIdx, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -160,7 +161,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBoneSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBoneSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBoneSizeBind, segment, size)
     }
 
     /**
@@ -172,7 +173,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneSizeBind, segment)
     }
 
     /**
@@ -182,7 +183,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun findBone(boneName: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(findBoneBind, segment, boneName)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.findBoneBind, segment, boneName)
     }
 
     /**
@@ -193,7 +194,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneName(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneNameBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneNameBind, segment, boneIdx)
     }
 
     /**
@@ -204,7 +205,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBoneName(boneIdx: Int, boneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneNameBind, segment, boneIdx, boneName)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBoneNameBind, segment, boneIdx, boneName)
     }
 
     /**
@@ -215,7 +216,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneParent(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneParentBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneParentBind, segment, boneIdx)
     }
 
     /**
@@ -226,7 +227,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBoneParent(boneIdx: Int, boneParent: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneParentBind, segment, boneIdx, boneParent)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBoneParentBind, segment, boneIdx, boneParent)
     }
 
     /**
@@ -236,7 +237,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getTailDirection(boneIdx: Int): SkeletonProfile.TailDirection {
         checkOpen()
-        return SkeletonProfile.TailDirection(ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, segment, boneIdx))
+        return SkeletonProfile.TailDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTailDirectionBind, segment, boneIdx))
     }
 
     /**
@@ -248,7 +249,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setTailDirection(boneIdx: Int, tailDirection: SkeletonProfile.TailDirection) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, segment, boneIdx, tailDirection.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTailDirectionBind, segment, boneIdx, tailDirection.value)
     }
 
     /**
@@ -258,7 +259,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBoneTail(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getBoneTailBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBoneTailBind, segment, boneIdx)
     }
 
     /**
@@ -268,7 +269,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBoneTail(boneIdx: Int, boneTail: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setBoneTailBind, segment, boneIdx, boneTail)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBoneTailBind, segment, boneIdx, boneTail)
     }
 
     /**
@@ -278,7 +279,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getReferencePose(boneIdx: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getReferencePoseBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getReferencePoseBind, segment, boneIdx)
     }
 
     /**
@@ -288,7 +289,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setReferencePose(boneIdx: Int, boneName: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setReferencePoseBind, segment, boneIdx, boneName)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setReferencePoseBind, segment, boneIdx, boneName)
     }
 
     /**
@@ -299,7 +300,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getHandleOffset(boneIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getHandleOffsetBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getHandleOffsetBind, segment, boneIdx)
     }
 
     /**
@@ -310,7 +311,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setHandleOffset(boneIdx: Int, handleOffset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setHandleOffsetBind, segment, boneIdx, handleOffset)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setHandleOffsetBind, segment, boneIdx, handleOffset)
     }
 
     /**
@@ -320,7 +321,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getGroup(boneIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getGroupBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getGroupBind, segment, boneIdx)
     }
 
     /**
@@ -330,7 +331,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setGroup(boneIdx: Int, group: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setGroupBind, segment, boneIdx, group)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setGroupBind, segment, boneIdx, group)
     }
 
     /**
@@ -342,7 +343,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun isRequired(boneIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRequiredBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRequiredBind, segment, boneIdx)
     }
 
     /**
@@ -352,7 +353,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setRequired(boneIdx: Int, required: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, segment, boneIdx, required)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setRequiredBind, segment, boneIdx, required)
     }
 
     /** Signal `profile_updated()`; see [TypedSignal]. */
@@ -404,150 +405,152 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonProfile? =
             if (handle.address() == 0L) null else SkeletonProfile(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ROOT_BONE_HASH = 3304788590L
-        private val setRootBoneBind by lazy {
+        @JvmField
+        val setRootBoneBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_root_bone", SET_ROOT_BONE_HASH)
-        }
 
         private const val GET_ROOT_BONE_HASH = 2737447660L
-        private val getRootBoneBind by lazy {
+        @JvmField
+        val getRootBoneBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_root_bone", GET_ROOT_BONE_HASH)
-        }
 
         private const val SET_SCALE_BASE_BONE_HASH = 3304788590L
-        private val setScaleBaseBoneBind by lazy {
+        @JvmField
+        val setScaleBaseBoneBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_scale_base_bone", SET_SCALE_BASE_BONE_HASH)
-        }
 
         private const val GET_SCALE_BASE_BONE_HASH = 2737447660L
-        private val getScaleBaseBoneBind by lazy {
+        @JvmField
+        val getScaleBaseBoneBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_scale_base_bone", GET_SCALE_BASE_BONE_HASH)
-        }
 
         private const val SET_GROUP_SIZE_HASH = 1286410249L
-        private val setGroupSizeBind by lazy {
+        @JvmField
+        val setGroupSizeBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_group_size", SET_GROUP_SIZE_HASH)
-        }
 
         private const val GET_GROUP_SIZE_HASH = 2455072627L
-        private val getGroupSizeBind by lazy {
+        @JvmField
+        val getGroupSizeBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_group_size", GET_GROUP_SIZE_HASH)
-        }
 
         private const val GET_GROUP_NAME_HASH = 659327637L
-        private val getGroupNameBind by lazy {
+        @JvmField
+        val getGroupNameBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_group_name", GET_GROUP_NAME_HASH)
-        }
 
         private const val SET_GROUP_NAME_HASH = 3780747571L
-        private val setGroupNameBind by lazy {
+        @JvmField
+        val setGroupNameBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_group_name", SET_GROUP_NAME_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3536238170L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 666127730L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val SET_BONE_SIZE_HASH = 1286410249L
-        private val setBoneSizeBind by lazy {
+        @JvmField
+        val setBoneSizeBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_bone_size", SET_BONE_SIZE_HASH)
-        }
 
         private const val GET_BONE_SIZE_HASH = 2455072627L
-        private val getBoneSizeBind by lazy {
+        @JvmField
+        val getBoneSizeBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_size", GET_BONE_SIZE_HASH)
-        }
 
         private const val FIND_BONE_HASH = 2458036349L
-        private val findBoneBind by lazy {
+        @JvmField
+        val findBoneBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "find_bone", FIND_BONE_HASH)
-        }
 
         private const val GET_BONE_NAME_HASH = 659327637L
-        private val getBoneNameBind by lazy {
+        @JvmField
+        val getBoneNameBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_name", GET_BONE_NAME_HASH)
-        }
 
         private const val SET_BONE_NAME_HASH = 3780747571L
-        private val setBoneNameBind by lazy {
+        @JvmField
+        val setBoneNameBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_bone_name", SET_BONE_NAME_HASH)
-        }
 
         private const val GET_BONE_PARENT_HASH = 659327637L
-        private val getBoneParentBind by lazy {
+        @JvmField
+        val getBoneParentBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_parent", GET_BONE_PARENT_HASH)
-        }
 
         private const val SET_BONE_PARENT_HASH = 3780747571L
-        private val setBoneParentBind by lazy {
+        @JvmField
+        val setBoneParentBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_bone_parent", SET_BONE_PARENT_HASH)
-        }
 
         private const val GET_TAIL_DIRECTION_HASH = 2675997574L
-        private val getTailDirectionBind by lazy {
+        @JvmField
+        val getTailDirectionBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_tail_direction", GET_TAIL_DIRECTION_HASH)
-        }
 
         private const val SET_TAIL_DIRECTION_HASH = 1231951015L
-        private val setTailDirectionBind by lazy {
+        @JvmField
+        val setTailDirectionBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_tail_direction", SET_TAIL_DIRECTION_HASH)
-        }
 
         private const val GET_BONE_TAIL_HASH = 659327637L
-        private val getBoneTailBind by lazy {
+        @JvmField
+        val getBoneTailBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_bone_tail", GET_BONE_TAIL_HASH)
-        }
 
         private const val SET_BONE_TAIL_HASH = 3780747571L
-        private val setBoneTailBind by lazy {
+        @JvmField
+        val setBoneTailBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_bone_tail", SET_BONE_TAIL_HASH)
-        }
 
         private const val GET_REFERENCE_POSE_HASH = 1965739696L
-        private val getReferencePoseBind by lazy {
+        @JvmField
+        val getReferencePoseBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_reference_pose", GET_REFERENCE_POSE_HASH)
-        }
 
         private const val SET_REFERENCE_POSE_HASH = 3616898986L
-        private val setReferencePoseBind by lazy {
+        @JvmField
+        val setReferencePoseBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_reference_pose", SET_REFERENCE_POSE_HASH)
-        }
 
         private const val GET_HANDLE_OFFSET_HASH = 2299179447L
-        private val getHandleOffsetBind by lazy {
+        @JvmField
+        val getHandleOffsetBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_handle_offset", GET_HANDLE_OFFSET_HASH)
-        }
 
         private const val SET_HANDLE_OFFSET_HASH = 163021252L
-        private val setHandleOffsetBind by lazy {
+        @JvmField
+        val setHandleOffsetBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_handle_offset", SET_HANDLE_OFFSET_HASH)
-        }
 
         private const val GET_GROUP_HASH = 659327637L
-        private val getGroupBind by lazy {
+        @JvmField
+        val getGroupBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "get_group", GET_GROUP_HASH)
-        }
 
         private const val SET_GROUP_HASH = 3780747571L
-        private val setGroupBind by lazy {
+        @JvmField
+        val setGroupBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_group", SET_GROUP_HASH)
-        }
 
         private const val IS_REQUIRED_HASH = 1116898809L
-        private val isRequiredBind by lazy {
+        @JvmField
+        val isRequiredBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "is_required", IS_REQUIRED_HASH)
-        }
 
         private const val SET_REQUIRED_HASH = 300928843L
-        private val setRequiredBind by lazy {
+        @JvmField
+        val setRequiredBind =
             ObjectCalls.getMethodBind("SkeletonProfile", "set_required", SET_REQUIRED_HASH)
-        }
     }
 }

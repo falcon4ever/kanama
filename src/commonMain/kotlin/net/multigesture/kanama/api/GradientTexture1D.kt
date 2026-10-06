@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -31,7 +32,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setGradient(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -41,7 +42,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getGradient(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
     }
 
     /**
@@ -51,7 +52,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -64,7 +65,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setUseHdr(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseHdrBind, segment, enabled)
     }
 
     /**
@@ -77,7 +78,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isUsingHdr(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdrBind, segment)
     }
 
     companion object {
@@ -90,30 +91,32 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GradientTexture1D? =
             if (handle.address() == 0L) null else GradientTexture1D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_GRADIENT_HASH = 2756054477L
-        private val setGradientBind by lazy {
+        @JvmField
+        val setGradientBind =
             ObjectCalls.getMethodBind("GradientTexture1D", "set_gradient", SET_GRADIENT_HASH)
-        }
 
         private const val GET_GRADIENT_HASH = 132272999L
-        private val getGradientBind by lazy {
+        @JvmField
+        val getGradientBind =
             ObjectCalls.getMethodBind("GradientTexture1D", "get_gradient", GET_GRADIENT_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("GradientTexture1D", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val SET_USE_HDR_HASH = 2586408642L
-        private val setUseHdrBind by lazy {
+        @JvmField
+        val setUseHdrBind =
             ObjectCalls.getMethodBind("GradientTexture1D", "set_use_hdr", SET_USE_HDR_HASH)
-        }
 
         private const val IS_USING_HDR_HASH = 36873697L
-        private val isUsingHdrBind by lazy {
+        @JvmField
+        val isUsingHdrBind =
             ObjectCalls.getMethodBind("GradientTexture1D", "is_using_hdr", IS_USING_HDR_HASH)
-        }
     }
 }

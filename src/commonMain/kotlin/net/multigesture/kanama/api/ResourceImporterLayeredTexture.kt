@@ -23,7 +23,5 @@ class ResourceImporterLayeredTexture(handle: GodotHandle) : ResourceImporter(han
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterLayeredTexture? =
             if (handle.address() == 0L) null else ResourceImporterLayeredTexture(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

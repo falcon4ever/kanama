@@ -22,7 +22,5 @@ class ResourceImporterScene(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterScene? =
             if (handle.address() == 0L) null else ResourceImporterScene(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

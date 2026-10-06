@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -44,7 +45,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun addPoint(offset: Double, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleAndColorArg(addPointBind, segment, offset, color)
+        ObjectCalls.ptrcallWithDoubleAndColorArg(Binds.addPointBind, segment, offset, color)
     }
 
     /**
@@ -54,7 +55,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun removePoint(point: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePointBind, segment, point)
+        ObjectCalls.ptrcallWithIntArg(Binds.removePointBind, segment, point)
     }
 
     /**
@@ -64,7 +65,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun setOffset(point: Int, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setOffsetBind, segment, point, offset)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setOffsetBind, segment, point, offset)
     }
 
     /**
@@ -74,7 +75,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getOffset(point: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getOffsetBind, segment, point)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getOffsetBind, segment, point)
     }
 
     /**
@@ -86,7 +87,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun reverse() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(reverseBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.reverseBind, segment)
     }
 
     /**
@@ -96,7 +97,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun setColor(point: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setColorBind, segment, point, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setColorBind, segment, point, color)
     }
 
     /**
@@ -106,7 +107,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getColor(point: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getColorBind, segment, point)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getColorBind, segment, point)
     }
 
     /**
@@ -120,7 +121,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun sample(offset: Double): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetColor(sampleBind, segment, offset)
+        return ObjectCalls.ptrcallWithDoubleArgRetColor(Binds.sampleBind, segment, offset)
     }
 
     /**
@@ -130,7 +131,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getPointCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun setOffsets(offsets: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setOffsetsBind, segment, offsets)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setOffsetsBind, segment, offsets)
     }
 
     /**
@@ -152,7 +153,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getOffsets(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getOffsetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getOffsetsBind, segment)
     }
 
     /**
@@ -163,7 +164,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun setColors(colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, segment, colors)
+        ObjectCalls.ptrcallWithPackedColorListArg(Binds.setColorsBind, segment, colors)
     }
 
     /**
@@ -174,7 +175,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getColorsBind, segment)
     }
 
     /**
@@ -184,7 +185,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun setInterpolationMode(interpolationMode: Gradient.InterpolationMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, segment, interpolationMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setInterpolationModeBind, segment, interpolationMode.value)
     }
 
     /**
@@ -194,7 +195,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getInterpolationMode(): Gradient.InterpolationMode {
         checkOpen()
-        return Gradient.InterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, segment))
+        return Gradient.InterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInterpolationModeBind, segment))
     }
 
     /**
@@ -206,7 +207,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun setInterpolationColorSpace(interpolationColorSpace: Gradient.ColorSpace) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, segment, interpolationColorSpace.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setInterpolationColorSpaceBind, segment, interpolationColorSpace.value)
     }
 
     /**
@@ -218,7 +219,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      */
     fun getInterpolationColorSpace(): Gradient.ColorSpace {
         checkOpen()
-        return Gradient.ColorSpace(ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, segment))
+        return Gradient.ColorSpace(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInterpolationColorSpaceBind, segment))
     }
 
     /**
@@ -293,90 +294,92 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Gradient? =
             if (handle.address() == 0L) null else Gradient(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_POINT_HASH = 3629403827L
-        private val addPointBind by lazy {
+        @JvmField
+        val addPointBind =
             ObjectCalls.getMethodBind("Gradient", "add_point", ADD_POINT_HASH)
-        }
 
         private const val REMOVE_POINT_HASH = 1286410249L
-        private val removePointBind by lazy {
+        @JvmField
+        val removePointBind =
             ObjectCalls.getMethodBind("Gradient", "remove_point", REMOVE_POINT_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 1602489585L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("Gradient", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 4025615559L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("Gradient", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val REVERSE_HASH = 3218959716L
-        private val reverseBind by lazy {
+        @JvmField
+        val reverseBind =
             ObjectCalls.getMethodBind("Gradient", "reverse", REVERSE_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2878471219L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("Gradient", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 2624840992L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("Gradient", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SAMPLE_HASH = 1250405064L
-        private val sampleBind by lazy {
+        @JvmField
+        val sampleBind =
             ObjectCalls.getMethodBind("Gradient", "sample", SAMPLE_HASH)
-        }
 
         private const val GET_POINT_COUNT_HASH = 3905245786L
-        private val getPointCountBind by lazy {
+        @JvmField
+        val getPointCountBind =
             ObjectCalls.getMethodBind("Gradient", "get_point_count", GET_POINT_COUNT_HASH)
-        }
 
         private const val SET_OFFSETS_HASH = 2899603908L
-        private val setOffsetsBind by lazy {
+        @JvmField
+        val setOffsetsBind =
             ObjectCalls.getMethodBind("Gradient", "set_offsets", SET_OFFSETS_HASH)
-        }
 
         private const val GET_OFFSETS_HASH = 675695659L
-        private val getOffsetsBind by lazy {
+        @JvmField
+        val getOffsetsBind =
             ObjectCalls.getMethodBind("Gradient", "get_offsets", GET_OFFSETS_HASH)
-        }
 
         private const val SET_COLORS_HASH = 3546319833L
-        private val setColorsBind by lazy {
+        @JvmField
+        val setColorsBind =
             ObjectCalls.getMethodBind("Gradient", "set_colors", SET_COLORS_HASH)
-        }
 
         private const val GET_COLORS_HASH = 1392750486L
-        private val getColorsBind by lazy {
+        @JvmField
+        val getColorsBind =
             ObjectCalls.getMethodBind("Gradient", "get_colors", GET_COLORS_HASH)
-        }
 
         private const val SET_INTERPOLATION_MODE_HASH = 1971444490L
-        private val setInterpolationModeBind by lazy {
+        @JvmField
+        val setInterpolationModeBind =
             ObjectCalls.getMethodBind("Gradient", "set_interpolation_mode", SET_INTERPOLATION_MODE_HASH)
-        }
 
         private const val GET_INTERPOLATION_MODE_HASH = 3674172981L
-        private val getInterpolationModeBind by lazy {
+        @JvmField
+        val getInterpolationModeBind =
             ObjectCalls.getMethodBind("Gradient", "get_interpolation_mode", GET_INTERPOLATION_MODE_HASH)
-        }
 
         private const val SET_INTERPOLATION_COLOR_SPACE_HASH = 3685995981L
-        private val setInterpolationColorSpaceBind by lazy {
+        @JvmField
+        val setInterpolationColorSpaceBind =
             ObjectCalls.getMethodBind("Gradient", "set_interpolation_color_space", SET_INTERPOLATION_COLOR_SPACE_HASH)
-        }
 
         private const val GET_INTERPOLATION_COLOR_SPACE_HASH = 1538296000L
-        private val getInterpolationColorSpaceBind by lazy {
+        @JvmField
+        val getInterpolationColorSpaceBind =
             ObjectCalls.getMethodBind("Gradient", "get_interpolation_color_space", GET_INTERPOLATION_COLOR_SPACE_HASH)
-        }
     }
 }

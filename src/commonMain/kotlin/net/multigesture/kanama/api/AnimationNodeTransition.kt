@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setInputCount(inputCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInputCountBind, segment, inputCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInputCountBind, segment, inputCount)
     }
 
     /**
@@ -49,7 +50,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setInputAsAutoAdvance(input: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputAsAutoAdvanceBind, segment, input, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setInputAsAutoAdvanceBind, segment, input, enable)
     }
 
     /**
@@ -59,7 +60,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isInputSetAsAutoAdvance(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputSetAsAutoAdvanceBind, segment, input)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputSetAsAutoAdvanceBind, segment, input)
     }
 
     /**
@@ -70,7 +71,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setInputBreakLoopAtEnd(input: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputBreakLoopAtEndBind, segment, input, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setInputBreakLoopAtEndBind, segment, input, enable)
     }
 
     /**
@@ -80,7 +81,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isInputLoopBrokenAtEnd(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputLoopBrokenAtEndBind, segment, input)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputLoopBrokenAtEndBind, segment, input)
     }
 
     /**
@@ -90,7 +91,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setInputReset(input: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setInputResetBind, segment, input, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setInputResetBind, segment, input, enable)
     }
 
     /**
@@ -100,7 +101,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isInputReset(input: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isInputResetBind, segment, input)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isInputResetBind, segment, input)
     }
 
     /**
@@ -114,7 +115,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setXfadeTime(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setXfadeTimeBind, segment, time)
     }
 
     /**
@@ -128,7 +129,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getXfadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getXfadeTimeBind, segment)
     }
 
     /**
@@ -139,7 +140,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -150,7 +151,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getXfadeCurveBind, segment))
     }
 
     /**
@@ -161,7 +162,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setAllowTransitionToSelf(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowTransitionToSelfBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowTransitionToSelfBind, segment, enable)
     }
 
     /**
@@ -172,7 +173,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun isAllowTransitionToSelf(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowTransitionToSelfBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowTransitionToSelfBind, segment)
     }
 
     companion object {
@@ -185,70 +186,72 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTransition? =
             if (handle.address() == 0L) null else AnimationNodeTransition(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INPUT_COUNT_HASH = 1286410249L
-        private val setInputCountBind by lazy {
+        @JvmField
+        val setInputCountBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_input_count", SET_INPUT_COUNT_HASH)
-        }
 
         private const val SET_INPUT_AS_AUTO_ADVANCE_HASH = 300928843L
-        private val setInputAsAutoAdvanceBind by lazy {
+        @JvmField
+        val setInputAsAutoAdvanceBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_input_as_auto_advance", SET_INPUT_AS_AUTO_ADVANCE_HASH)
-        }
 
         private const val IS_INPUT_SET_AS_AUTO_ADVANCE_HASH = 1116898809L
-        private val isInputSetAsAutoAdvanceBind by lazy {
+        @JvmField
+        val isInputSetAsAutoAdvanceBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "is_input_set_as_auto_advance", IS_INPUT_SET_AS_AUTO_ADVANCE_HASH)
-        }
 
         private const val SET_INPUT_BREAK_LOOP_AT_END_HASH = 300928843L
-        private val setInputBreakLoopAtEndBind by lazy {
+        @JvmField
+        val setInputBreakLoopAtEndBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_input_break_loop_at_end", SET_INPUT_BREAK_LOOP_AT_END_HASH)
-        }
 
         private const val IS_INPUT_LOOP_BROKEN_AT_END_HASH = 1116898809L
-        private val isInputLoopBrokenAtEndBind by lazy {
+        @JvmField
+        val isInputLoopBrokenAtEndBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "is_input_loop_broken_at_end", IS_INPUT_LOOP_BROKEN_AT_END_HASH)
-        }
 
         private const val SET_INPUT_RESET_HASH = 300928843L
-        private val setInputResetBind by lazy {
+        @JvmField
+        val setInputResetBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_input_reset", SET_INPUT_RESET_HASH)
-        }
 
         private const val IS_INPUT_RESET_HASH = 1116898809L
-        private val isInputResetBind by lazy {
+        @JvmField
+        val isInputResetBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "is_input_reset", IS_INPUT_RESET_HASH)
-        }
 
         private const val SET_XFADE_TIME_HASH = 373806689L
-        private val setXfadeTimeBind by lazy {
+        @JvmField
+        val setXfadeTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_xfade_time", SET_XFADE_TIME_HASH)
-        }
 
         private const val GET_XFADE_TIME_HASH = 1740695150L
-        private val getXfadeTimeBind by lazy {
+        @JvmField
+        val getXfadeTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "get_xfade_time", GET_XFADE_TIME_HASH)
-        }
 
         private const val SET_XFADE_CURVE_HASH = 270443179L
-        private val setXfadeCurveBind by lazy {
+        @JvmField
+        val setXfadeCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_xfade_curve", SET_XFADE_CURVE_HASH)
-        }
 
         private const val GET_XFADE_CURVE_HASH = 2460114913L
-        private val getXfadeCurveBind by lazy {
+        @JvmField
+        val getXfadeCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "get_xfade_curve", GET_XFADE_CURVE_HASH)
-        }
 
         private const val SET_ALLOW_TRANSITION_TO_SELF_HASH = 2586408642L
-        private val setAllowTransitionToSelfBind by lazy {
+        @JvmField
+        val setAllowTransitionToSelfBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "set_allow_transition_to_self", SET_ALLOW_TRANSITION_TO_SELF_HASH)
-        }
 
         private const val IS_ALLOW_TRANSITION_TO_SELF_HASH = 36873697L
-        private val isAllowTransitionToSelfBind by lazy {
+        @JvmField
+        val isAllowTransitionToSelfBind =
             ObjectCalls.getMethodBind("AnimationNodeTransition", "is_allow_transition_to_self", IS_ALLOW_TRANSITION_TO_SELF_HASH)
-        }
     }
 }

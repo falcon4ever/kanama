@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -48,7 +49,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -58,7 +59,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -68,7 +69,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -78,7 +79,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     /**
@@ -88,7 +89,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadialSegments(radialSegments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, radialSegments)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, radialSegments)
     }
 
     /**
@@ -98,7 +99,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
     }
 
     /**
@@ -118,7 +119,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setIsHemisphere(isHemisphere: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIsHemisphereBind, segment, isHemisphere)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIsHemisphereBind, segment, isHemisphere)
     }
 
     /**
@@ -140,7 +141,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getIsHemisphere(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsHemisphereBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsHemisphereBind, segment)
     }
 
     companion object {
@@ -158,55 +159,57 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =
             if (value.isClass("SphereMesh")) RefCounted.retained(SphereMesh(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("SphereMesh", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("SphereMesh", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("SphereMesh", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("SphereMesh", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val SET_RADIAL_SEGMENTS_HASH = 1286410249L
-        private val setRadialSegmentsBind by lazy {
+        @JvmField
+        val setRadialSegmentsBind =
             ObjectCalls.getMethodBind("SphereMesh", "set_radial_segments", SET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val GET_RADIAL_SEGMENTS_HASH = 3905245786L
-        private val getRadialSegmentsBind by lazy {
+        @JvmField
+        val getRadialSegmentsBind =
             ObjectCalls.getMethodBind("SphereMesh", "get_radial_segments", GET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val SET_RINGS_HASH = 1286410249L
-        private val setRingsBind by lazy {
+        @JvmField
+        val setRingsBind =
             ObjectCalls.getMethodBind("SphereMesh", "set_rings", SET_RINGS_HASH)
-        }
 
         private const val GET_RINGS_HASH = 3905245786L
-        private val getRingsBind by lazy {
+        @JvmField
+        val getRingsBind =
             ObjectCalls.getMethodBind("SphereMesh", "get_rings", GET_RINGS_HASH)
-        }
 
         private const val SET_IS_HEMISPHERE_HASH = 2586408642L
-        private val setIsHemisphereBind by lazy {
+        @JvmField
+        val setIsHemisphereBind =
             ObjectCalls.getMethodBind("SphereMesh", "set_is_hemisphere", SET_IS_HEMISPHERE_HASH)
-        }
 
         private const val GET_IS_HEMISPHERE_HASH = 36873697L
-        private val getIsHemisphereBind by lazy {
+        @JvmField
+        val getIsHemisphereBind =
             ObjectCalls.getMethodBind("SphereMesh", "get_is_hemisphere", GET_IS_HEMISPHERE_HASH)
-        }
     }
 }

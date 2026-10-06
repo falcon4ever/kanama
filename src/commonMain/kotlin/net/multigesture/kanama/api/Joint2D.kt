@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -43,7 +44,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_node_a
      */
     fun setNodeA(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setNodeABind, segment, node)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setNodeABind, segment, node)
     }
 
     /**
@@ -52,7 +53,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_node_a
      */
     fun getNodeA(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeABind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getNodeABind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_node_b
      */
     fun setNodeB(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setNodeBBind, segment, node)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setNodeBBind, segment, node)
     }
 
     /**
@@ -70,7 +71,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_node_b
      */
     fun getNodeB(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getNodeBBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getNodeBBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_bias
      */
     fun setBias(bias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBiasBind, segment, bias)
     }
 
     /**
@@ -94,7 +95,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_bias
      */
     fun getBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBiasBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.set_exclude_nodes_from_collision
      */
     fun setExcludeNodesFromCollision(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeNodesFromCollisionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExcludeNodesFromCollisionBind, segment, enable)
     }
 
     /**
@@ -112,7 +113,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_exclude_nodes_from_collision
      */
     fun getExcludeNodesFromCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeNodesFromCollisionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getExcludeNodesFromCollisionBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Joint2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     companion object {
@@ -131,50 +132,52 @@ open class Joint2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Joint2D? =
             if (handle.address() == 0L) null else Joint2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_NODE_A_HASH = 1348162250L
-        private val setNodeABind by lazy {
+        @JvmField
+        val setNodeABind =
             ObjectCalls.getMethodBind("Joint2D", "set_node_a", SET_NODE_A_HASH)
-        }
 
         private const val GET_NODE_A_HASH = 4075236667L
-        private val getNodeABind by lazy {
+        @JvmField
+        val getNodeABind =
             ObjectCalls.getMethodBind("Joint2D", "get_node_a", GET_NODE_A_HASH)
-        }
 
         private const val SET_NODE_B_HASH = 1348162250L
-        private val setNodeBBind by lazy {
+        @JvmField
+        val setNodeBBind =
             ObjectCalls.getMethodBind("Joint2D", "set_node_b", SET_NODE_B_HASH)
-        }
 
         private const val GET_NODE_B_HASH = 4075236667L
-        private val getNodeBBind by lazy {
+        @JvmField
+        val getNodeBBind =
             ObjectCalls.getMethodBind("Joint2D", "get_node_b", GET_NODE_B_HASH)
-        }
 
         private const val SET_BIAS_HASH = 373806689L
-        private val setBiasBind by lazy {
+        @JvmField
+        val setBiasBind =
             ObjectCalls.getMethodBind("Joint2D", "set_bias", SET_BIAS_HASH)
-        }
 
         private const val GET_BIAS_HASH = 1740695150L
-        private val getBiasBind by lazy {
+        @JvmField
+        val getBiasBind =
             ObjectCalls.getMethodBind("Joint2D", "get_bias", GET_BIAS_HASH)
-        }
 
         private const val SET_EXCLUDE_NODES_FROM_COLLISION_HASH = 2586408642L
-        private val setExcludeNodesFromCollisionBind by lazy {
+        @JvmField
+        val setExcludeNodesFromCollisionBind =
             ObjectCalls.getMethodBind("Joint2D", "set_exclude_nodes_from_collision", SET_EXCLUDE_NODES_FROM_COLLISION_HASH)
-        }
 
         private const val GET_EXCLUDE_NODES_FROM_COLLISION_HASH = 36873697L
-        private val getExcludeNodesFromCollisionBind by lazy {
+        @JvmField
+        val getExcludeNodesFromCollisionBind =
             ObjectCalls.getMethodBind("Joint2D", "get_exclude_nodes_from_collision", GET_EXCLUDE_NODES_FROM_COLLISION_HASH)
-        }
 
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("Joint2D", "get_rid", GET_RID_HASH)
-        }
     }
 }

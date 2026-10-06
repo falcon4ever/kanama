@@ -19,7 +19,5 @@ class VScrollBar(handle: GodotHandle) : ScrollBar(handle) {
 
         internal fun wrap(handle: RawSegment): VScrollBar? =
             if (handle.address() == 0L) null else VScrollBar(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

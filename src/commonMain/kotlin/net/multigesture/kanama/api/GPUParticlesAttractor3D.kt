@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -47,7 +48,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCullMaskBind, segment, mask)
     }
 
     /**
@@ -62,7 +63,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCullMaskBind, segment)
     }
 
     /**
@@ -73,7 +74,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.set_strength
      */
     fun setStrength(strength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStrengthBind, segment, strength)
     }
 
     /**
@@ -84,7 +85,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.get_strength
      */
     fun getStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStrengthBind, segment)
     }
 
     /**
@@ -95,7 +96,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.set_attenuation
      */
     fun setAttenuation(attenuation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAttenuationBind, segment, attenuation)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAttenuationBind, segment, attenuation)
     }
 
     /**
@@ -106,7 +107,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.get_attenuation
      */
     fun getAttenuation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAttenuationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAttenuationBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.set_directionality
      */
     fun setDirectionality(amount: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDirectionalityBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDirectionalityBind, segment, amount)
     }
 
     /**
@@ -132,7 +133,7 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesAttractor3D.get_directionality
      */
     fun getDirectionality(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDirectionalityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDirectionalityBind, segment)
     }
 
     companion object {
@@ -142,45 +143,47 @@ open class GPUParticlesAttractor3D(handle: GodotHandle) : VisualInstance3D(handl
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractor3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractor3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CULL_MASK_HASH = 1286410249L
-        private val setCullMaskBind by lazy {
+        @JvmField
+        val setCullMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "set_cull_mask", SET_CULL_MASK_HASH)
-        }
 
         private const val GET_CULL_MASK_HASH = 3905245786L
-        private val getCullMaskBind by lazy {
+        @JvmField
+        val getCullMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "get_cull_mask", GET_CULL_MASK_HASH)
-        }
 
         private const val SET_STRENGTH_HASH = 373806689L
-        private val setStrengthBind by lazy {
+        @JvmField
+        val setStrengthBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "set_strength", SET_STRENGTH_HASH)
-        }
 
         private const val GET_STRENGTH_HASH = 1740695150L
-        private val getStrengthBind by lazy {
+        @JvmField
+        val getStrengthBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "get_strength", GET_STRENGTH_HASH)
-        }
 
         private const val SET_ATTENUATION_HASH = 373806689L
-        private val setAttenuationBind by lazy {
+        @JvmField
+        val setAttenuationBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "set_attenuation", SET_ATTENUATION_HASH)
-        }
 
         private const val GET_ATTENUATION_HASH = 1740695150L
-        private val getAttenuationBind by lazy {
+        @JvmField
+        val getAttenuationBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "get_attenuation", GET_ATTENUATION_HASH)
-        }
 
         private const val SET_DIRECTIONALITY_HASH = 373806689L
-        private val setDirectionalityBind by lazy {
+        @JvmField
+        val setDirectionalityBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "set_directionality", SET_DIRECTIONALITY_HASH)
-        }
 
         private const val GET_DIRECTIONALITY_HASH = 1740695150L
-        private val getDirectionalityBind by lazy {
+        @JvmField
+        val getDirectionalityBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractor3D", "get_directionality", GET_DIRECTIONALITY_HASH)
-        }
     }
 }

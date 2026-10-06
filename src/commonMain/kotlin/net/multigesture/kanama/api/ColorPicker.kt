@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -91,7 +92,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_pick_color
      */
     fun setPickColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setPickColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setPickColorBind, segment, color)
     }
 
     /**
@@ -100,7 +101,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_pick_color
      */
     fun getPickColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getPickColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getPickColorBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_deferred_mode
      */
     fun setDeferredMode(mode: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeferredModeBind, segment, mode)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeferredModeBind, segment, mode)
     }
 
     /**
@@ -120,7 +121,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_deferred_mode
      */
     fun isDeferredMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeferredModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeferredModeBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_color_mode
      */
     fun setColorMode(colorMode: ColorPicker.ColorModeType) {
-        ObjectCalls.ptrcallWithLongArg(setColorModeBind, segment, colorMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setColorModeBind, segment, colorMode.value)
     }
 
     /**
@@ -138,7 +139,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_color_mode
      */
     fun getColorMode(): ColorPicker.ColorModeType {
-        return ColorPicker.ColorModeType(ObjectCalls.ptrcallNoArgsRetLong(getColorModeBind, segment))
+        return ColorPicker.ColorModeType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorModeBind, segment))
     }
 
     /**
@@ -147,7 +148,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_edit_alpha
      */
     fun setEditAlpha(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditAlphaBind, segment, show)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditAlphaBind, segment, show)
     }
 
     /**
@@ -156,7 +157,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_editing_alpha
      */
     fun isEditingAlpha(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingAlphaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditingAlphaBind, segment)
     }
 
     /**
@@ -167,7 +168,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_edit_intensity
      */
     fun setEditIntensity(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditIntensityBind, segment, show)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditIntensityBind, segment, show)
     }
 
     /**
@@ -178,7 +179,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_editing_intensity
      */
     fun isEditingIntensity(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditingIntensityBind, segment)
     }
 
     /**
@@ -188,7 +189,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_can_add_swatches
      */
     fun setCanAddSwatches(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCanAddSwatchesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCanAddSwatchesBind, segment, enabled)
     }
 
     /**
@@ -198,7 +199,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_swatches_enabled
      */
     fun areSwatchesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areSwatchesEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areSwatchesEnabledBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_presets_visible
      */
     fun setPresetsVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPresetsVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPresetsVisibleBind, segment, visible)
     }
 
     /**
@@ -216,7 +217,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_presets_visible
      */
     fun arePresetsVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(arePresetsVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.arePresetsVisibleBind, segment)
     }
 
     /**
@@ -225,7 +226,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_modes_visible
      */
     fun setModesVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setModesVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setModesVisibleBind, segment, visible)
     }
 
     /**
@@ -234,7 +235,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_modes_visible
      */
     fun areModesVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areModesVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areModesVisibleBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_sampler_visible
      */
     fun setSamplerVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSamplerVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSamplerVisibleBind, segment, visible)
     }
 
     /**
@@ -252,7 +253,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_sampler_visible
      */
     fun isSamplerVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSamplerVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSamplerVisibleBind, segment)
     }
 
     /**
@@ -261,7 +262,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_sliders_visible
      */
     fun setSlidersVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSlidersVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSlidersVisibleBind, segment, visible)
     }
 
     /**
@@ -270,7 +271,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.are_sliders_visible
      */
     fun areSlidersVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areSlidersVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areSlidersVisibleBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_hex_visible
      */
     fun setHexVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHexVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHexVisibleBind, segment, visible)
     }
 
     /**
@@ -288,7 +289,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.is_hex_visible
      */
     fun isHexVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHexVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHexVisibleBind, segment)
     }
 
     /**
@@ -298,7 +299,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.add_preset
      */
     fun addPreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(addPresetBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.addPresetBind, segment, color)
     }
 
     /**
@@ -307,7 +308,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.erase_preset
      */
     fun erasePreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(erasePresetBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.erasePresetBind, segment, color)
     }
 
     /**
@@ -316,7 +317,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_presets
      */
     fun getPresets(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getPresetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getPresetsBind, segment)
     }
 
     /**
@@ -328,7 +329,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.add_recent_preset
      */
     fun addRecentPreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(addRecentPresetBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.addRecentPresetBind, segment, color)
     }
 
     /**
@@ -337,7 +338,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.erase_recent_preset
      */
     fun eraseRecentPreset(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(eraseRecentPresetBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.eraseRecentPresetBind, segment, color)
     }
 
     /**
@@ -346,7 +347,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_recent_presets
      */
     fun getRecentPresets(): List<Color> {
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getRecentPresetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getRecentPresetsBind, segment)
     }
 
     /**
@@ -355,7 +356,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.set_picker_shape
      */
     fun setPickerShape(shape: ColorPicker.PickerShapeType) {
-        ObjectCalls.ptrcallWithLongArg(setPickerShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPickerShapeBind, segment, shape.value)
     }
 
     /**
@@ -364,7 +365,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ColorPicker.get_picker_shape
      */
     fun getPickerShape(): ColorPicker.PickerShapeType {
-        return ColorPicker.PickerShapeType(ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, segment))
+        return ColorPicker.PickerShapeType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPickerShapeBind, segment))
     }
 
     /** Signal `color_changed(color: Color)`; see [TypedSignal]. */
@@ -490,155 +491,157 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): ColorPicker? =
             if (handle.address() == 0L) null else ColorPicker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PICK_COLOR_HASH = 2920490490L
-        private val setPickColorBind by lazy {
+        @JvmField
+        val setPickColorBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_pick_color", SET_PICK_COLOR_HASH)
-        }
 
         private const val GET_PICK_COLOR_HASH = 3444240500L
-        private val getPickColorBind by lazy {
+        @JvmField
+        val getPickColorBind =
             ObjectCalls.getMethodBind("ColorPicker", "get_pick_color", GET_PICK_COLOR_HASH)
-        }
 
         private const val SET_DEFERRED_MODE_HASH = 2586408642L
-        private val setDeferredModeBind by lazy {
+        @JvmField
+        val setDeferredModeBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_deferred_mode", SET_DEFERRED_MODE_HASH)
-        }
 
         private const val IS_DEFERRED_MODE_HASH = 36873697L
-        private val isDeferredModeBind by lazy {
+        @JvmField
+        val isDeferredModeBind =
             ObjectCalls.getMethodBind("ColorPicker", "is_deferred_mode", IS_DEFERRED_MODE_HASH)
-        }
 
         private const val SET_COLOR_MODE_HASH = 1579114136L
-        private val setColorModeBind by lazy {
+        @JvmField
+        val setColorModeBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_color_mode", SET_COLOR_MODE_HASH)
-        }
 
         private const val GET_COLOR_MODE_HASH = 392907674L
-        private val getColorModeBind by lazy {
+        @JvmField
+        val getColorModeBind =
             ObjectCalls.getMethodBind("ColorPicker", "get_color_mode", GET_COLOR_MODE_HASH)
-        }
 
         private const val SET_EDIT_ALPHA_HASH = 2586408642L
-        private val setEditAlphaBind by lazy {
+        @JvmField
+        val setEditAlphaBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_edit_alpha", SET_EDIT_ALPHA_HASH)
-        }
 
         private const val IS_EDITING_ALPHA_HASH = 36873697L
-        private val isEditingAlphaBind by lazy {
+        @JvmField
+        val isEditingAlphaBind =
             ObjectCalls.getMethodBind("ColorPicker", "is_editing_alpha", IS_EDITING_ALPHA_HASH)
-        }
 
         private const val SET_EDIT_INTENSITY_HASH = 2586408642L
-        private val setEditIntensityBind by lazy {
+        @JvmField
+        val setEditIntensityBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_edit_intensity", SET_EDIT_INTENSITY_HASH)
-        }
 
         private const val IS_EDITING_INTENSITY_HASH = 36873697L
-        private val isEditingIntensityBind by lazy {
+        @JvmField
+        val isEditingIntensityBind =
             ObjectCalls.getMethodBind("ColorPicker", "is_editing_intensity", IS_EDITING_INTENSITY_HASH)
-        }
 
         private const val SET_CAN_ADD_SWATCHES_HASH = 2586408642L
-        private val setCanAddSwatchesBind by lazy {
+        @JvmField
+        val setCanAddSwatchesBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_can_add_swatches", SET_CAN_ADD_SWATCHES_HASH)
-        }
 
         private const val ARE_SWATCHES_ENABLED_HASH = 36873697L
-        private val areSwatchesEnabledBind by lazy {
+        @JvmField
+        val areSwatchesEnabledBind =
             ObjectCalls.getMethodBind("ColorPicker", "are_swatches_enabled", ARE_SWATCHES_ENABLED_HASH)
-        }
 
         private const val SET_PRESETS_VISIBLE_HASH = 2586408642L
-        private val setPresetsVisibleBind by lazy {
+        @JvmField
+        val setPresetsVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_presets_visible", SET_PRESETS_VISIBLE_HASH)
-        }
 
         private const val ARE_PRESETS_VISIBLE_HASH = 36873697L
-        private val arePresetsVisibleBind by lazy {
+        @JvmField
+        val arePresetsVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "are_presets_visible", ARE_PRESETS_VISIBLE_HASH)
-        }
 
         private const val SET_MODES_VISIBLE_HASH = 2586408642L
-        private val setModesVisibleBind by lazy {
+        @JvmField
+        val setModesVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_modes_visible", SET_MODES_VISIBLE_HASH)
-        }
 
         private const val ARE_MODES_VISIBLE_HASH = 36873697L
-        private val areModesVisibleBind by lazy {
+        @JvmField
+        val areModesVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "are_modes_visible", ARE_MODES_VISIBLE_HASH)
-        }
 
         private const val SET_SAMPLER_VISIBLE_HASH = 2586408642L
-        private val setSamplerVisibleBind by lazy {
+        @JvmField
+        val setSamplerVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_sampler_visible", SET_SAMPLER_VISIBLE_HASH)
-        }
 
         private const val IS_SAMPLER_VISIBLE_HASH = 36873697L
-        private val isSamplerVisibleBind by lazy {
+        @JvmField
+        val isSamplerVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "is_sampler_visible", IS_SAMPLER_VISIBLE_HASH)
-        }
 
         private const val SET_SLIDERS_VISIBLE_HASH = 2586408642L
-        private val setSlidersVisibleBind by lazy {
+        @JvmField
+        val setSlidersVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_sliders_visible", SET_SLIDERS_VISIBLE_HASH)
-        }
 
         private const val ARE_SLIDERS_VISIBLE_HASH = 36873697L
-        private val areSlidersVisibleBind by lazy {
+        @JvmField
+        val areSlidersVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "are_sliders_visible", ARE_SLIDERS_VISIBLE_HASH)
-        }
 
         private const val SET_HEX_VISIBLE_HASH = 2586408642L
-        private val setHexVisibleBind by lazy {
+        @JvmField
+        val setHexVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_hex_visible", SET_HEX_VISIBLE_HASH)
-        }
 
         private const val IS_HEX_VISIBLE_HASH = 36873697L
-        private val isHexVisibleBind by lazy {
+        @JvmField
+        val isHexVisibleBind =
             ObjectCalls.getMethodBind("ColorPicker", "is_hex_visible", IS_HEX_VISIBLE_HASH)
-        }
 
         private const val ADD_PRESET_HASH = 2920490490L
-        private val addPresetBind by lazy {
+        @JvmField
+        val addPresetBind =
             ObjectCalls.getMethodBind("ColorPicker", "add_preset", ADD_PRESET_HASH)
-        }
 
         private const val ERASE_PRESET_HASH = 2920490490L
-        private val erasePresetBind by lazy {
+        @JvmField
+        val erasePresetBind =
             ObjectCalls.getMethodBind("ColorPicker", "erase_preset", ERASE_PRESET_HASH)
-        }
 
         private const val GET_PRESETS_HASH = 1392750486L
-        private val getPresetsBind by lazy {
+        @JvmField
+        val getPresetsBind =
             ObjectCalls.getMethodBind("ColorPicker", "get_presets", GET_PRESETS_HASH)
-        }
 
         private const val ADD_RECENT_PRESET_HASH = 2920490490L
-        private val addRecentPresetBind by lazy {
+        @JvmField
+        val addRecentPresetBind =
             ObjectCalls.getMethodBind("ColorPicker", "add_recent_preset", ADD_RECENT_PRESET_HASH)
-        }
 
         private const val ERASE_RECENT_PRESET_HASH = 2920490490L
-        private val eraseRecentPresetBind by lazy {
+        @JvmField
+        val eraseRecentPresetBind =
             ObjectCalls.getMethodBind("ColorPicker", "erase_recent_preset", ERASE_RECENT_PRESET_HASH)
-        }
 
         private const val GET_RECENT_PRESETS_HASH = 1392750486L
-        private val getRecentPresetsBind by lazy {
+        @JvmField
+        val getRecentPresetsBind =
             ObjectCalls.getMethodBind("ColorPicker", "get_recent_presets", GET_RECENT_PRESETS_HASH)
-        }
 
         private const val SET_PICKER_SHAPE_HASH = 3981373861L
-        private val setPickerShapeBind by lazy {
+        @JvmField
+        val setPickerShapeBind =
             ObjectCalls.getMethodBind("ColorPicker", "set_picker_shape", SET_PICKER_SHAPE_HASH)
-        }
 
         private const val GET_PICKER_SHAPE_HASH = 1143229889L
-        private val getPickerShapeBind by lazy {
+        @JvmField
+        val getPickerShapeBind =
             ObjectCalls.getMethodBind("ColorPicker", "get_picker_shape", GET_PICKER_SHAPE_HASH)
-        }
     }
 }

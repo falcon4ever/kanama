@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -25,7 +26,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getBlendShape(blendShape: XRFaceTracker.BlendShapeEntry): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, segment, blendShape.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getBlendShapeBind, segment, blendShape.value)
     }
 
     /**
@@ -35,7 +36,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun setBlendShape(blendShape: XRFaceTracker.BlendShapeEntry, weight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, segment, blendShape.value, weight)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setBlendShapeBind, segment, blendShape.value, weight)
     }
 
     /**
@@ -45,7 +46,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getBlendShapes(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendShapesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBlendShapesBind, segment)
     }
 
     /**
@@ -55,7 +56,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun setBlendShapes(weights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, segment, weights)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setBlendShapesBind, segment, weights)
     }
 
     /**
@@ -944,25 +945,27 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRFaceTracker? =
             if (handle.address() == 0L) null else XRFaceTracker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_BLEND_SHAPE_HASH = 330010046L
-        private val getBlendShapeBind by lazy {
+        @JvmField
+        val getBlendShapeBind =
             ObjectCalls.getMethodBind("XRFaceTracker", "get_blend_shape", GET_BLEND_SHAPE_HASH)
-        }
 
         private const val SET_BLEND_SHAPE_HASH = 2352588791L
-        private val setBlendShapeBind by lazy {
+        @JvmField
+        val setBlendShapeBind =
             ObjectCalls.getMethodBind("XRFaceTracker", "set_blend_shape", SET_BLEND_SHAPE_HASH)
-        }
 
         private const val GET_BLEND_SHAPES_HASH = 675695659L
-        private val getBlendShapesBind by lazy {
+        @JvmField
+        val getBlendShapesBind =
             ObjectCalls.getMethodBind("XRFaceTracker", "get_blend_shapes", GET_BLEND_SHAPES_HASH)
-        }
 
         private const val SET_BLEND_SHAPES_HASH = 2899603908L
-        private val setBlendShapesBind by lazy {
+        @JvmField
+        val setBlendShapesBind =
             ObjectCalls.getMethodBind("XRFaceTracker", "set_blend_shapes", SET_BLEND_SHAPES_HASH)
-        }
     }
 }

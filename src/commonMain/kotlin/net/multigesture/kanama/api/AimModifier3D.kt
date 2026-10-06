@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_forward_axis
      */
     fun setForwardAxis(index: Int, axis: SkeletonModifier3D.BoneAxis) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setForwardAxisBind, segment, index, axis.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setForwardAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -26,7 +27,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.get_forward_axis
      */
     fun getForwardAxis(index: Int): SkeletonModifier3D.BoneAxis {
-        return SkeletonModifier3D.BoneAxis(ObjectCalls.ptrcallWithIntArgRetLong(getForwardAxisBind, segment, index))
+        return SkeletonModifier3D.BoneAxis(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getForwardAxisBind, segment, index))
     }
 
     /**
@@ -37,7 +38,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_use_euler
      */
     fun setUseEuler(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseEulerBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setUseEulerBind, segment, index, enabled)
     }
 
     /**
@@ -46,7 +47,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.is_using_euler
      */
     fun isUsingEuler(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingEulerBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isUsingEulerBind, segment, index)
     }
 
     /**
@@ -55,7 +56,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_primary_rotation_axis
      */
     fun setPrimaryRotationAxis(index: Int, axis: Vector3.Axis) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPrimaryRotationAxisBind, segment, index, axis.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setPrimaryRotationAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -64,7 +65,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.get_primary_rotation_axis
      */
     fun getPrimaryRotationAxis(index: Int): Vector3.Axis {
-        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(getPrimaryRotationAxisBind, segment, index))
+        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getPrimaryRotationAxisBind, segment, index))
     }
 
     /**
@@ -74,7 +75,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_use_secondary_rotation
      */
     fun setUseSecondaryRotation(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setUseSecondaryRotationBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setUseSecondaryRotationBind, segment, index, enabled)
     }
 
     /**
@@ -84,7 +85,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.is_using_secondary_rotation
      */
     fun isUsingSecondaryRotation(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isUsingSecondaryRotationBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isUsingSecondaryRotationBind, segment, index)
     }
 
     /**
@@ -95,7 +96,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.set_relative
      */
     fun setRelative(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setRelativeBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setRelativeBind, segment, index, enabled)
     }
 
     /**
@@ -104,7 +105,7 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      * Generated from Godot docs: AimModifier3D.is_relative
      */
     fun isRelative(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isRelativeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isRelativeBind, segment, index)
     }
 
     companion object {
@@ -114,55 +115,57 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
 
         internal fun wrap(handle: RawSegment): AimModifier3D? =
             if (handle.address() == 0L) null else AimModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FORWARD_AXIS_HASH = 2496831085L
-        private val setForwardAxisBind by lazy {
+        @JvmField
+        val setForwardAxisBind =
             ObjectCalls.getMethodBind("AimModifier3D", "set_forward_axis", SET_FORWARD_AXIS_HASH)
-        }
 
         private const val GET_FORWARD_AXIS_HASH = 3949866735L
-        private val getForwardAxisBind by lazy {
+        @JvmField
+        val getForwardAxisBind =
             ObjectCalls.getMethodBind("AimModifier3D", "get_forward_axis", GET_FORWARD_AXIS_HASH)
-        }
 
         private const val SET_USE_EULER_HASH = 300928843L
-        private val setUseEulerBind by lazy {
+        @JvmField
+        val setUseEulerBind =
             ObjectCalls.getMethodBind("AimModifier3D", "set_use_euler", SET_USE_EULER_HASH)
-        }
 
         private const val IS_USING_EULER_HASH = 1116898809L
-        private val isUsingEulerBind by lazy {
+        @JvmField
+        val isUsingEulerBind =
             ObjectCalls.getMethodBind("AimModifier3D", "is_using_euler", IS_USING_EULER_HASH)
-        }
 
         private const val SET_PRIMARY_ROTATION_AXIS_HASH = 776736805L
-        private val setPrimaryRotationAxisBind by lazy {
+        @JvmField
+        val setPrimaryRotationAxisBind =
             ObjectCalls.getMethodBind("AimModifier3D", "set_primary_rotation_axis", SET_PRIMARY_ROTATION_AXIS_HASH)
-        }
 
         private const val GET_PRIMARY_ROTATION_AXIS_HASH = 4131134770L
-        private val getPrimaryRotationAxisBind by lazy {
+        @JvmField
+        val getPrimaryRotationAxisBind =
             ObjectCalls.getMethodBind("AimModifier3D", "get_primary_rotation_axis", GET_PRIMARY_ROTATION_AXIS_HASH)
-        }
 
         private const val SET_USE_SECONDARY_ROTATION_HASH = 300928843L
-        private val setUseSecondaryRotationBind by lazy {
+        @JvmField
+        val setUseSecondaryRotationBind =
             ObjectCalls.getMethodBind("AimModifier3D", "set_use_secondary_rotation", SET_USE_SECONDARY_ROTATION_HASH)
-        }
 
         private const val IS_USING_SECONDARY_ROTATION_HASH = 1116898809L
-        private val isUsingSecondaryRotationBind by lazy {
+        @JvmField
+        val isUsingSecondaryRotationBind =
             ObjectCalls.getMethodBind("AimModifier3D", "is_using_secondary_rotation", IS_USING_SECONDARY_ROTATION_HASH)
-        }
 
         private const val SET_RELATIVE_HASH = 300928843L
-        private val setRelativeBind by lazy {
+        @JvmField
+        val setRelativeBind =
             ObjectCalls.getMethodBind("AimModifier3D", "set_relative", SET_RELATIVE_HASH)
-        }
 
         private const val IS_RELATIVE_HASH = 1116898809L
-        private val isRelativeBind by lazy {
+        @JvmField
+        val isRelativeBind =
             ObjectCalls.getMethodBind("AimModifier3D", "is_relative", IS_RELATIVE_HASH)
-        }
     }
 }

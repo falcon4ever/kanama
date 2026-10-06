@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.get_popup
      */
     fun getPopup(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPopupBind, segment))
     }
 
     /**
@@ -41,7 +42,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.show_popup
      */
     fun showPopup() {
-        ObjectCalls.ptrcallNoArgs(showPopupBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.showPopupBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.set_switch_on_hover
      */
     fun setSwitchOnHover(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSwitchOnHoverBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSwitchOnHoverBind, segment, enable)
     }
 
     /**
@@ -61,7 +62,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.is_switch_on_hover
      */
     fun isSwitchOnHover(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSwitchOnHoverBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSwitchOnHoverBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.set_disable_shortcuts
      */
     fun setDisableShortcuts(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableShortcutsBind, segment, disabled)
     }
 
     /**
@@ -79,7 +80,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.set_item_count
      */
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setItemCountBind, segment, count)
     }
 
     /**
@@ -88,7 +89,7 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: MenuButton.get_item_count
      */
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
     }
 
     /** Signal `about_to_popup()`; see [TypedSignal]. */
@@ -107,40 +108,42 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: RawSegment): MenuButton? =
             if (handle.address() == 0L) null else MenuButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_POPUP_HASH = 229722558L
-        private val getPopupBind by lazy {
+        @JvmField
+        val getPopupBind =
             ObjectCalls.getMethodBind("MenuButton", "get_popup", GET_POPUP_HASH)
-        }
 
         private const val SHOW_POPUP_HASH = 3218959716L
-        private val showPopupBind by lazy {
+        @JvmField
+        val showPopupBind =
             ObjectCalls.getMethodBind("MenuButton", "show_popup", SHOW_POPUP_HASH)
-        }
 
         private const val SET_SWITCH_ON_HOVER_HASH = 2586408642L
-        private val setSwitchOnHoverBind by lazy {
+        @JvmField
+        val setSwitchOnHoverBind =
             ObjectCalls.getMethodBind("MenuButton", "set_switch_on_hover", SET_SWITCH_ON_HOVER_HASH)
-        }
 
         private const val IS_SWITCH_ON_HOVER_HASH = 2240911060L
-        private val isSwitchOnHoverBind by lazy {
+        @JvmField
+        val isSwitchOnHoverBind =
             ObjectCalls.getMethodBind("MenuButton", "is_switch_on_hover", IS_SWITCH_ON_HOVER_HASH)
-        }
 
         private const val SET_DISABLE_SHORTCUTS_HASH = 2586408642L
-        private val setDisableShortcutsBind by lazy {
+        @JvmField
+        val setDisableShortcutsBind =
             ObjectCalls.getMethodBind("MenuButton", "set_disable_shortcuts", SET_DISABLE_SHORTCUTS_HASH)
-        }
 
         private const val SET_ITEM_COUNT_HASH = 1286410249L
-        private val setItemCountBind by lazy {
+        @JvmField
+        val setItemCountBind =
             ObjectCalls.getMethodBind("MenuButton", "set_item_count", SET_ITEM_COUNT_HASH)
-        }
 
         private const val GET_ITEM_COUNT_HASH = 3905245786L
-        private val getItemCountBind by lazy {
+        @JvmField
+        val getItemCountBind =
             ObjectCalls.getMethodBind("MenuButton", "get_item_count", GET_ITEM_COUNT_HASH)
-        }
     }
 }

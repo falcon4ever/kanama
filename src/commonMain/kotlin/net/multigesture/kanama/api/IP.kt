@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,9 +12,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: IP
  */
 object IP {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("IP")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     const val RESOLVER_MAX_QUERIES: Long = 256L
     const val RESOLVER_INVALID_ID: Long = -1L
@@ -26,7 +26,7 @@ object IP {
      */
     @JvmStatic
     fun resolveHostname(host: String, ipType: IP.Type = IP.Type.ANY): String {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetString(resolveHostnameBind, singleton, host, ipType.value)
+        return ObjectCalls.ptrcallWithStringAndLongArgRetString(Binds.resolveHostnameBind, singleton, host, ipType.value)
     }
 
     /**
@@ -37,7 +37,7 @@ object IP {
      */
     @JvmStatic
     fun resolveHostnameAddresses(host: String, ipType: IP.Type = IP.Type.ANY): List<String> {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetPackedStringList(resolveHostnameAddressesBind, singleton, host, ipType.value)
+        return ObjectCalls.ptrcallWithStringAndLongArgRetPackedStringList(Binds.resolveHostnameAddressesBind, singleton, host, ipType.value)
     }
 
     /**
@@ -49,7 +49,7 @@ object IP {
      */
     @JvmStatic
     fun resolveHostnameQueueItem(host: String, ipType: IP.Type = IP.Type.ANY): Int {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetInt(resolveHostnameQueueItemBind, singleton, host, ipType.value)
+        return ObjectCalls.ptrcallWithStringAndLongArgRetInt(Binds.resolveHostnameQueueItemBind, singleton, host, ipType.value)
     }
 
     /**
@@ -59,7 +59,7 @@ object IP {
      */
     @JvmStatic
     fun getResolveItemStatus(id: Int): IP.ResolverStatus {
-        return IP.ResolverStatus(ObjectCalls.ptrcallWithIntArgRetLong(getResolveItemStatusBind, singleton, id))
+        return IP.ResolverStatus(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getResolveItemStatusBind, singleton, id))
     }
 
     /**
@@ -70,7 +70,7 @@ object IP {
      */
     @JvmStatic
     fun getResolveItemAddress(id: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getResolveItemAddressBind, singleton, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getResolveItemAddressBind, singleton, id)
     }
 
     /**
@@ -81,7 +81,7 @@ object IP {
      */
     @JvmStatic
     fun getResolveItemAddresses(id: Int): List<Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetArray(getResolveItemAddressesBind, singleton, id)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getResolveItemAddressesBind, singleton, id)
     }
 
     /**
@@ -92,7 +92,7 @@ object IP {
      */
     @JvmStatic
     fun eraseResolveItem(id: Int) {
-        ObjectCalls.ptrcallWithIntArg(eraseResolveItemBind, singleton, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.eraseResolveItemBind, singleton, id)
     }
 
     /**
@@ -102,7 +102,7 @@ object IP {
      */
     @JvmStatic
     fun getLocalAddresses(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLocalAddressesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getLocalAddressesBind, singleton)
     }
 
     /**
@@ -112,7 +112,7 @@ object IP {
      */
     @JvmStatic
     fun getLocalInterfaces(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getLocalInterfacesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getLocalInterfacesBind, singleton)
     }
 
     /**
@@ -123,7 +123,7 @@ object IP {
      */
     @JvmStatic
     fun clearCache(hostname: String = "") {
-        ObjectCalls.ptrcallWithStringArg(clearCacheBind, singleton, hostname)
+        ObjectCalls.ptrcallWithStringArg(Binds.clearCacheBind, singleton, hostname)
     }
 
     /**
@@ -205,53 +205,58 @@ object IP {
     internal fun wrap(handle: RawSegment): IP? =
         if (handle.address() == 0L) null else this
 
-    private const val RESOLVE_HOSTNAME_HASH = 4283295457L
-    private val resolveHostnameBind by lazy {
-        ObjectCalls.getMethodBind("IP", "resolve_hostname", RESOLVE_HOSTNAME_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("IP")
 
-    private const val RESOLVE_HOSTNAME_ADDRESSES_HASH = 773767525L
-    private val resolveHostnameAddressesBind by lazy {
-        ObjectCalls.getMethodBind("IP", "resolve_hostname_addresses", RESOLVE_HOSTNAME_ADDRESSES_HASH)
-    }
+        private const val RESOLVE_HOSTNAME_HASH = 4283295457L
+        @JvmField
+        val resolveHostnameBind =
+            ObjectCalls.getMethodBind("IP", "resolve_hostname", RESOLVE_HOSTNAME_HASH)
 
-    private const val RESOLVE_HOSTNAME_QUEUE_ITEM_HASH = 1749894742L
-    private val resolveHostnameQueueItemBind by lazy {
-        ObjectCalls.getMethodBind("IP", "resolve_hostname_queue_item", RESOLVE_HOSTNAME_QUEUE_ITEM_HASH)
-    }
+        private const val RESOLVE_HOSTNAME_ADDRESSES_HASH = 773767525L
+        @JvmField
+        val resolveHostnameAddressesBind =
+            ObjectCalls.getMethodBind("IP", "resolve_hostname_addresses", RESOLVE_HOSTNAME_ADDRESSES_HASH)
 
-    private const val GET_RESOLVE_ITEM_STATUS_HASH = 3812250196L
-    private val getResolveItemStatusBind by lazy {
-        ObjectCalls.getMethodBind("IP", "get_resolve_item_status", GET_RESOLVE_ITEM_STATUS_HASH)
-    }
+        private const val RESOLVE_HOSTNAME_QUEUE_ITEM_HASH = 1749894742L
+        @JvmField
+        val resolveHostnameQueueItemBind =
+            ObjectCalls.getMethodBind("IP", "resolve_hostname_queue_item", RESOLVE_HOSTNAME_QUEUE_ITEM_HASH)
 
-    private const val GET_RESOLVE_ITEM_ADDRESS_HASH = 844755477L
-    private val getResolveItemAddressBind by lazy {
-        ObjectCalls.getMethodBind("IP", "get_resolve_item_address", GET_RESOLVE_ITEM_ADDRESS_HASH)
-    }
+        private const val GET_RESOLVE_ITEM_STATUS_HASH = 3812250196L
+        @JvmField
+        val getResolveItemStatusBind =
+            ObjectCalls.getMethodBind("IP", "get_resolve_item_status", GET_RESOLVE_ITEM_STATUS_HASH)
 
-    private const val GET_RESOLVE_ITEM_ADDRESSES_HASH = 663333327L
-    private val getResolveItemAddressesBind by lazy {
-        ObjectCalls.getMethodBind("IP", "get_resolve_item_addresses", GET_RESOLVE_ITEM_ADDRESSES_HASH)
-    }
+        private const val GET_RESOLVE_ITEM_ADDRESS_HASH = 844755477L
+        @JvmField
+        val getResolveItemAddressBind =
+            ObjectCalls.getMethodBind("IP", "get_resolve_item_address", GET_RESOLVE_ITEM_ADDRESS_HASH)
 
-    private const val ERASE_RESOLVE_ITEM_HASH = 1286410249L
-    private val eraseResolveItemBind by lazy {
-        ObjectCalls.getMethodBind("IP", "erase_resolve_item", ERASE_RESOLVE_ITEM_HASH)
-    }
+        private const val GET_RESOLVE_ITEM_ADDRESSES_HASH = 663333327L
+        @JvmField
+        val getResolveItemAddressesBind =
+            ObjectCalls.getMethodBind("IP", "get_resolve_item_addresses", GET_RESOLVE_ITEM_ADDRESSES_HASH)
 
-    private const val GET_LOCAL_ADDRESSES_HASH = 1139954409L
-    private val getLocalAddressesBind by lazy {
-        ObjectCalls.getMethodBind("IP", "get_local_addresses", GET_LOCAL_ADDRESSES_HASH)
-    }
+        private const val ERASE_RESOLVE_ITEM_HASH = 1286410249L
+        @JvmField
+        val eraseResolveItemBind =
+            ObjectCalls.getMethodBind("IP", "erase_resolve_item", ERASE_RESOLVE_ITEM_HASH)
 
-    private const val GET_LOCAL_INTERFACES_HASH = 3995934104L
-    private val getLocalInterfacesBind by lazy {
-        ObjectCalls.getMethodBind("IP", "get_local_interfaces", GET_LOCAL_INTERFACES_HASH)
-    }
+        private const val GET_LOCAL_ADDRESSES_HASH = 1139954409L
+        @JvmField
+        val getLocalAddressesBind =
+            ObjectCalls.getMethodBind("IP", "get_local_addresses", GET_LOCAL_ADDRESSES_HASH)
 
-    private const val CLEAR_CACHE_HASH = 3005725572L
-    private val clearCacheBind by lazy {
-        ObjectCalls.getMethodBind("IP", "clear_cache", CLEAR_CACHE_HASH)
+        private const val GET_LOCAL_INTERFACES_HASH = 3995934104L
+        @JvmField
+        val getLocalInterfacesBind =
+            ObjectCalls.getMethodBind("IP", "get_local_interfaces", GET_LOCAL_INTERFACES_HASH)
+
+        private const val CLEAR_CACHE_HASH = 3005725572L
+        @JvmField
+        val clearCacheBind =
+            ObjectCalls.getMethodBind("IP", "clear_cache", CLEAR_CACHE_HASH)
     }
 }

@@ -22,7 +22,5 @@ open class Node3DGizmo(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Node3DGizmo? =
             if (handle.address() == 0L) null else Node3DGizmo(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

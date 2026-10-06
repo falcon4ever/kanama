@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -101,7 +102,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_split_offsets
      */
     fun setSplitOffsets(offsets: List<Int>) {
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setSplitOffsetsBind, segment, offsets)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setSplitOffsetsBind, segment, offsets)
     }
 
     /**
@@ -120,7 +121,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_split_offsets
      */
     fun getSplitOffsets(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getSplitOffsetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getSplitOffsetsBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.clamp_split_offset
      */
     fun clampSplitOffset(priorityIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(clampSplitOffsetBind, segment, priorityIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.clampSplitOffsetBind, segment, priorityIndex)
     }
 
     /**
@@ -141,7 +142,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_collapsed
      */
     fun setCollapsed(collapsed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollapsedBind, segment, collapsed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollapsedBind, segment, collapsed)
     }
 
     /**
@@ -151,7 +152,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_collapsed
      */
     fun isCollapsed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollapsedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollapsedBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_dragger_visibility
      */
     fun setDraggerVisibility(mode: SplitContainer.DraggerVisibility) {
-        ObjectCalls.ptrcallWithLongArg(setDraggerVisibilityBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDraggerVisibilityBind, segment, mode.value)
     }
 
     /**
@@ -171,7 +172,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_dragger_visibility
      */
     fun getDraggerVisibility(): SplitContainer.DraggerVisibility {
-        return SplitContainer.DraggerVisibility(ObjectCalls.ptrcallNoArgsRetLong(getDraggerVisibilityBind, segment))
+        return SplitContainer.DraggerVisibility(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDraggerVisibilityBind, segment))
     }
 
     /**
@@ -181,7 +182,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_vertical
      */
     fun setVertical(vertical: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVerticalBind, segment, vertical)
     }
 
     /**
@@ -191,7 +192,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_vertical
      */
     fun isVertical(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
     }
 
     /**
@@ -200,7 +201,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_dragging_enabled
      */
     fun setDraggingEnabled(draggingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDraggingEnabledBind, segment, draggingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDraggingEnabledBind, segment, draggingEnabled)
     }
 
     /**
@@ -209,7 +210,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_dragging_enabled
      */
     fun isDraggingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDraggingEnabledBind, segment)
     }
 
     /**
@@ -219,7 +220,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_margin_begin
      */
     fun setDragAreaMarginBegin(margin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragAreaMarginBeginBind, segment, margin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDragAreaMarginBeginBind, segment, margin)
     }
 
     /**
@@ -229,7 +230,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_margin_begin
      */
     fun getDragAreaMarginBegin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaMarginBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDragAreaMarginBeginBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_margin_end
      */
     fun setDragAreaMarginEnd(margin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragAreaMarginEndBind, segment, margin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDragAreaMarginEndBind, segment, margin)
     }
 
     /**
@@ -249,7 +250,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_margin_end
      */
     fun getDragAreaMarginEnd(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaMarginEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDragAreaMarginEndBind, segment)
     }
 
     /**
@@ -259,7 +260,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_offset
      */
     fun setDragAreaOffset(offset: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragAreaOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDragAreaOffsetBind, segment, offset)
     }
 
     /**
@@ -269,7 +270,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_offset
      */
     fun getDragAreaOffset(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragAreaOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDragAreaOffsetBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_area_highlight_in_editor
      */
     fun setDragAreaHighlightInEditor(dragAreaHighlightInEditor: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAreaHighlightInEditorBind, segment, dragAreaHighlightInEditor)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragAreaHighlightInEditorBind, segment, dragAreaHighlightInEditor)
     }
 
     /**
@@ -289,7 +290,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_drag_area_highlight_in_editor_enabled
      */
     fun isDragAreaHighlightInEditorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAreaHighlightInEditorEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragAreaHighlightInEditorEnabledBind, segment)
     }
 
     /**
@@ -301,7 +302,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_controls
      */
     fun getDragAreaControls(): List<Control> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDragAreaControlsBind, segment, Control::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getDragAreaControlsBind, segment, Control::wrap)
     }
 
     /**
@@ -313,7 +314,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_touch_dragger_enabled
      */
     fun setTouchDraggerEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTouchDraggerEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTouchDraggerEnabledBind, segment, enabled)
     }
 
     /**
@@ -325,7 +326,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_touch_dragger_enabled
      */
     fun isTouchDraggerEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTouchDraggerEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTouchDraggerEnabledBind, segment)
     }
 
     /**
@@ -338,7 +339,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_drag_nested_intersections
      */
     fun setDragNestedIntersections(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragNestedIntersectionsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragNestedIntersectionsBind, segment, enabled)
     }
 
     /**
@@ -351,7 +352,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.is_dragging_nested_intersections
      */
     fun isDraggingNestedIntersections(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingNestedIntersectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDraggingNestedIntersectionsBind, segment)
     }
 
     /**
@@ -362,7 +363,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_drag_area_control
      */
     fun getDragAreaControl(): Control? {
-        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDragAreaControlBind, segment))
+        return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDragAreaControlBind, segment))
     }
 
     /**
@@ -371,7 +372,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.set_split_offset
      */
     fun setSplitOffset(offset: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSplitOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSplitOffsetBind, segment, offset)
     }
 
     /**
@@ -380,7 +381,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: SplitContainer.get_split_offset
      */
     fun getSplitOffset(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSplitOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSplitOffsetBind, segment)
     }
 
     /** Signal `dragged(offset: int)`; see [TypedSignal]. */
@@ -446,140 +447,142 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): SplitContainer? =
             if (handle.address() == 0L) null else SplitContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SPLIT_OFFSETS_HASH = 3614634198L
-        private val setSplitOffsetsBind by lazy {
+        @JvmField
+        val setSplitOffsetsBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_split_offsets", SET_SPLIT_OFFSETS_HASH)
-        }
 
         private const val GET_SPLIT_OFFSETS_HASH = 1930428628L
-        private val getSplitOffsetsBind by lazy {
+        @JvmField
+        val getSplitOffsetsBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_split_offsets", GET_SPLIT_OFFSETS_HASH)
-        }
 
         private const val CLAMP_SPLIT_OFFSET_HASH = 1995695955L
-        private val clampSplitOffsetBind by lazy {
+        @JvmField
+        val clampSplitOffsetBind =
             ObjectCalls.getMethodBind("SplitContainer", "clamp_split_offset", CLAMP_SPLIT_OFFSET_HASH)
-        }
 
         private const val SET_COLLAPSED_HASH = 2586408642L
-        private val setCollapsedBind by lazy {
+        @JvmField
+        val setCollapsedBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_collapsed", SET_COLLAPSED_HASH)
-        }
 
         private const val IS_COLLAPSED_HASH = 36873697L
-        private val isCollapsedBind by lazy {
+        @JvmField
+        val isCollapsedBind =
             ObjectCalls.getMethodBind("SplitContainer", "is_collapsed", IS_COLLAPSED_HASH)
-        }
 
         private const val SET_DRAGGER_VISIBILITY_HASH = 1168273952L
-        private val setDraggerVisibilityBind by lazy {
+        @JvmField
+        val setDraggerVisibilityBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_dragger_visibility", SET_DRAGGER_VISIBILITY_HASH)
-        }
 
         private const val GET_DRAGGER_VISIBILITY_HASH = 967297479L
-        private val getDraggerVisibilityBind by lazy {
+        @JvmField
+        val getDraggerVisibilityBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_dragger_visibility", GET_DRAGGER_VISIBILITY_HASH)
-        }
 
         private const val SET_VERTICAL_HASH = 2586408642L
-        private val setVerticalBind by lazy {
+        @JvmField
+        val setVerticalBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_vertical", SET_VERTICAL_HASH)
-        }
 
         private const val IS_VERTICAL_HASH = 36873697L
-        private val isVerticalBind by lazy {
+        @JvmField
+        val isVerticalBind =
             ObjectCalls.getMethodBind("SplitContainer", "is_vertical", IS_VERTICAL_HASH)
-        }
 
         private const val SET_DRAGGING_ENABLED_HASH = 2586408642L
-        private val setDraggingEnabledBind by lazy {
+        @JvmField
+        val setDraggingEnabledBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_dragging_enabled", SET_DRAGGING_ENABLED_HASH)
-        }
 
         private const val IS_DRAGGING_ENABLED_HASH = 36873697L
-        private val isDraggingEnabledBind by lazy {
+        @JvmField
+        val isDraggingEnabledBind =
             ObjectCalls.getMethodBind("SplitContainer", "is_dragging_enabled", IS_DRAGGING_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_AREA_MARGIN_BEGIN_HASH = 1286410249L
-        private val setDragAreaMarginBeginBind by lazy {
+        @JvmField
+        val setDragAreaMarginBeginBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_drag_area_margin_begin", SET_DRAG_AREA_MARGIN_BEGIN_HASH)
-        }
 
         private const val GET_DRAG_AREA_MARGIN_BEGIN_HASH = 3905245786L
-        private val getDragAreaMarginBeginBind by lazy {
+        @JvmField
+        val getDragAreaMarginBeginBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_drag_area_margin_begin", GET_DRAG_AREA_MARGIN_BEGIN_HASH)
-        }
 
         private const val SET_DRAG_AREA_MARGIN_END_HASH = 1286410249L
-        private val setDragAreaMarginEndBind by lazy {
+        @JvmField
+        val setDragAreaMarginEndBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_drag_area_margin_end", SET_DRAG_AREA_MARGIN_END_HASH)
-        }
 
         private const val GET_DRAG_AREA_MARGIN_END_HASH = 3905245786L
-        private val getDragAreaMarginEndBind by lazy {
+        @JvmField
+        val getDragAreaMarginEndBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_drag_area_margin_end", GET_DRAG_AREA_MARGIN_END_HASH)
-        }
 
         private const val SET_DRAG_AREA_OFFSET_HASH = 1286410249L
-        private val setDragAreaOffsetBind by lazy {
+        @JvmField
+        val setDragAreaOffsetBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_drag_area_offset", SET_DRAG_AREA_OFFSET_HASH)
-        }
 
         private const val GET_DRAG_AREA_OFFSET_HASH = 3905245786L
-        private val getDragAreaOffsetBind by lazy {
+        @JvmField
+        val getDragAreaOffsetBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_drag_area_offset", GET_DRAG_AREA_OFFSET_HASH)
-        }
 
         private const val SET_DRAG_AREA_HIGHLIGHT_IN_EDITOR_HASH = 2586408642L
-        private val setDragAreaHighlightInEditorBind by lazy {
+        @JvmField
+        val setDragAreaHighlightInEditorBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_drag_area_highlight_in_editor", SET_DRAG_AREA_HIGHLIGHT_IN_EDITOR_HASH)
-        }
 
         private const val IS_DRAG_AREA_HIGHLIGHT_IN_EDITOR_ENABLED_HASH = 36873697L
-        private val isDragAreaHighlightInEditorEnabledBind by lazy {
+        @JvmField
+        val isDragAreaHighlightInEditorEnabledBind =
             ObjectCalls.getMethodBind("SplitContainer", "is_drag_area_highlight_in_editor_enabled", IS_DRAG_AREA_HIGHLIGHT_IN_EDITOR_ENABLED_HASH)
-        }
 
         private const val GET_DRAG_AREA_CONTROLS_HASH = 2915620761L
-        private val getDragAreaControlsBind by lazy {
+        @JvmField
+        val getDragAreaControlsBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_drag_area_controls", GET_DRAG_AREA_CONTROLS_HASH)
-        }
 
         private const val SET_TOUCH_DRAGGER_ENABLED_HASH = 2586408642L
-        private val setTouchDraggerEnabledBind by lazy {
+        @JvmField
+        val setTouchDraggerEnabledBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_touch_dragger_enabled", SET_TOUCH_DRAGGER_ENABLED_HASH)
-        }
 
         private const val IS_TOUCH_DRAGGER_ENABLED_HASH = 36873697L
-        private val isTouchDraggerEnabledBind by lazy {
+        @JvmField
+        val isTouchDraggerEnabledBind =
             ObjectCalls.getMethodBind("SplitContainer", "is_touch_dragger_enabled", IS_TOUCH_DRAGGER_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_NESTED_INTERSECTIONS_HASH = 2586408642L
-        private val setDragNestedIntersectionsBind by lazy {
+        @JvmField
+        val setDragNestedIntersectionsBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_drag_nested_intersections", SET_DRAG_NESTED_INTERSECTIONS_HASH)
-        }
 
         private const val IS_DRAGGING_NESTED_INTERSECTIONS_HASH = 36873697L
-        private val isDraggingNestedIntersectionsBind by lazy {
+        @JvmField
+        val isDraggingNestedIntersectionsBind =
             ObjectCalls.getMethodBind("SplitContainer", "is_dragging_nested_intersections", IS_DRAGGING_NESTED_INTERSECTIONS_HASH)
-        }
 
         private const val GET_DRAG_AREA_CONTROL_HASH = 829782337L
-        private val getDragAreaControlBind by lazy {
+        @JvmField
+        val getDragAreaControlBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_drag_area_control", GET_DRAG_AREA_CONTROL_HASH)
-        }
 
         private const val SET_SPLIT_OFFSET_HASH = 1286410249L
-        private val setSplitOffsetBind by lazy {
+        @JvmField
+        val setSplitOffsetBind =
             ObjectCalls.getMethodBind("SplitContainer", "set_split_offset", SET_SPLIT_OFFSET_HASH)
-        }
 
         private const val GET_SPLIT_OFFSET_HASH = 3905245786L
-        private val getSplitOffsetBind by lazy {
+        @JvmField
+        val getSplitOffsetBind =
             ObjectCalls.getMethodBind("SplitContainer", "get_split_offset", GET_SPLIT_OFFSET_HASH)
-        }
     }
 }

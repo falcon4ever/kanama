@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -39,7 +40,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun hasData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDataBind, segment)
     }
 
     /**
@@ -59,7 +60,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun setTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(setTraversableOutlinesBind, segment, traversableOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.setTraversableOutlinesBind, segment, traversableOutlines)
     }
 
     /**
@@ -69,7 +70,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getTraversableOutlines(): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getTraversableOutlinesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(Binds.getTraversableOutlinesBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun setObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(setObstructionOutlinesBind, segment, obstructionOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.setObstructionOutlinesBind, segment, obstructionOutlines)
     }
 
     /**
@@ -89,7 +90,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getObstructionOutlines(): List<List<Vector2>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(getObstructionOutlinesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2ListList(Binds.getObstructionOutlinesBind, segment)
     }
 
     /**
@@ -100,7 +101,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun appendTraversableOutlines(traversableOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendTraversableOutlinesBind, segment, traversableOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.appendTraversableOutlinesBind, segment, traversableOutlines)
     }
 
     /**
@@ -111,7 +112,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun appendObstructionOutlines(obstructionOutlines: List<List<Vector2>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListListArg(appendObstructionOutlinesBind, segment, obstructionOutlines)
+        ObjectCalls.ptrcallWithPackedVector2ListListArg(Binds.appendObstructionOutlinesBind, segment, obstructionOutlines)
     }
 
     /**
@@ -121,7 +122,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun addTraversableOutline(shapeOutline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(addTraversableOutlineBind, segment, shapeOutline)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.addTraversableOutlineBind, segment, shapeOutline)
     }
 
     /**
@@ -131,7 +132,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun addObstructionOutline(shapeOutline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(addObstructionOutlineBind, segment, shapeOutline)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.addObstructionOutlineBind, segment, shapeOutline)
     }
 
     /**
@@ -142,7 +143,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun merge(otherGeometry: NavigationMeshSourceGeometryData2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -154,7 +155,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun addProjectedObstruction(vertices: List<Vector2>, carve: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(addProjectedObstructionBind, segment, vertices, carve)
+        ObjectCalls.ptrcallWithPackedVector2ListAndBoolArg(Binds.addProjectedObstructionBind, segment, vertices, carve)
     }
 
     /**
@@ -164,7 +165,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun clearProjectedObstructions() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearProjectedObstructionsBind, segment)
     }
 
     /**
@@ -175,7 +176,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, segment, projectedObstructions)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setProjectedObstructionsBind, segment, projectedObstructions)
     }
 
     /**
@@ -189,7 +190,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getProjectedObstructions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getProjectedObstructionsBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
      */
     fun getBounds(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBoundsBind, segment)
     }
 
     companion object {
@@ -214,85 +215,87 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "clear", CLEAR_HASH)
-        }
 
         private const val HAS_DATA_HASH = 2240911060L
-        private val hasDataBind by lazy {
+        @JvmField
+        val hasDataBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "has_data", HAS_DATA_HASH)
-        }
 
         private const val SET_TRAVERSABLE_OUTLINES_HASH = 381264803L
-        private val setTraversableOutlinesBind by lazy {
+        @JvmField
+        val setTraversableOutlinesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "set_traversable_outlines", SET_TRAVERSABLE_OUTLINES_HASH)
-        }
 
         private const val GET_TRAVERSABLE_OUTLINES_HASH = 3995934104L
-        private val getTraversableOutlinesBind by lazy {
+        @JvmField
+        val getTraversableOutlinesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_traversable_outlines", GET_TRAVERSABLE_OUTLINES_HASH)
-        }
 
         private const val SET_OBSTRUCTION_OUTLINES_HASH = 381264803L
-        private val setObstructionOutlinesBind by lazy {
+        @JvmField
+        val setObstructionOutlinesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "set_obstruction_outlines", SET_OBSTRUCTION_OUTLINES_HASH)
-        }
 
         private const val GET_OBSTRUCTION_OUTLINES_HASH = 3995934104L
-        private val getObstructionOutlinesBind by lazy {
+        @JvmField
+        val getObstructionOutlinesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_obstruction_outlines", GET_OBSTRUCTION_OUTLINES_HASH)
-        }
 
         private const val APPEND_TRAVERSABLE_OUTLINES_HASH = 381264803L
-        private val appendTraversableOutlinesBind by lazy {
+        @JvmField
+        val appendTraversableOutlinesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "append_traversable_outlines", APPEND_TRAVERSABLE_OUTLINES_HASH)
-        }
 
         private const val APPEND_OBSTRUCTION_OUTLINES_HASH = 381264803L
-        private val appendObstructionOutlinesBind by lazy {
+        @JvmField
+        val appendObstructionOutlinesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "append_obstruction_outlines", APPEND_OBSTRUCTION_OUTLINES_HASH)
-        }
 
         private const val ADD_TRAVERSABLE_OUTLINE_HASH = 1509147220L
-        private val addTraversableOutlineBind by lazy {
+        @JvmField
+        val addTraversableOutlineBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_traversable_outline", ADD_TRAVERSABLE_OUTLINE_HASH)
-        }
 
         private const val ADD_OBSTRUCTION_OUTLINE_HASH = 1509147220L
-        private val addObstructionOutlineBind by lazy {
+        @JvmField
+        val addObstructionOutlineBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_obstruction_outline", ADD_OBSTRUCTION_OUTLINE_HASH)
-        }
 
         private const val MERGE_HASH = 742424872L
-        private val mergeBind by lazy {
+        @JvmField
+        val mergeBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "merge", MERGE_HASH)
-        }
 
         private const val ADD_PROJECTED_OBSTRUCTION_HASH = 3882407395L
-        private val addProjectedObstructionBind by lazy {
+        @JvmField
+        val addProjectedObstructionBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "add_projected_obstruction", ADD_PROJECTED_OBSTRUCTION_HASH)
-        }
 
         private const val CLEAR_PROJECTED_OBSTRUCTIONS_HASH = 3218959716L
-        private val clearProjectedObstructionsBind by lazy {
+        @JvmField
+        val clearProjectedObstructionsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "clear_projected_obstructions", CLEAR_PROJECTED_OBSTRUCTIONS_HASH)
-        }
 
         private const val SET_PROJECTED_OBSTRUCTIONS_HASH = 381264803L
-        private val setProjectedObstructionsBind by lazy {
+        @JvmField
+        val setProjectedObstructionsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "set_projected_obstructions", SET_PROJECTED_OBSTRUCTIONS_HASH)
-        }
 
         private const val GET_PROJECTED_OBSTRUCTIONS_HASH = 3995934104L
-        private val getProjectedObstructionsBind by lazy {
+        @JvmField
+        val getProjectedObstructionsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_projected_obstructions", GET_PROJECTED_OBSTRUCTIONS_HASH)
-        }
 
         private const val GET_BOUNDS_HASH = 3248174L
-        private val getBoundsBind by lazy {
+        @JvmField
+        val getBoundsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData2D", "get_bounds", GET_BOUNDS_HASH)
-        }
     }
 }

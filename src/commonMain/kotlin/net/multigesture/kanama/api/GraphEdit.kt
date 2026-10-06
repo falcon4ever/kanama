@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -173,7 +174,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.connect_node
      */
     fun connectNode(fromNode: String, fromPort: Int, toNode: String, toPort: Int, keepAlive: Boolean = false): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(connectNodeBind, segment, fromNode, fromPort, toNode, toPort, keepAlive))
+        return GodotError(ObjectCalls.ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(Binds.connectNodeBind, segment, fromNode, fromPort, toNode, toPort, keepAlive))
     }
 
     /**
@@ -183,7 +184,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_node_connected
      */
     fun isNodeConnected(fromNode: String, fromPort: Int, toNode: String, toPort: Int): Boolean {
-        return ObjectCalls.ptrcallWithStringNameIntStringNameIntArgsRetBool(isNodeConnectedBind, segment, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithStringNameIntStringNameIntArgsRetBool(Binds.isNodeConnectedBind, segment, fromNode, fromPort, toNode, toPort)
     }
 
     /**
@@ -193,7 +194,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.disconnect_node
      */
     fun disconnectNode(fromNode: String, fromPort: Int, toNode: String, toPort: Int) {
-        ObjectCalls.ptrcallWithStringNameIntStringNameIntArgs(disconnectNodeBind, segment, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.ptrcallWithStringNameIntStringNameIntArgs(Binds.disconnectNodeBind, segment, fromNode, fromPort, toNode, toPort)
     }
 
     /**
@@ -204,7 +205,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_activity
      */
     fun setConnectionActivity(fromNode: String, fromPort: Int, toNode: String, toPort: Int, amount: Double) {
-        ObjectCalls.ptrcallWithStringNameIntStringNameIntDoubleArgs(setConnectionActivityBind, segment, fromNode, fromPort, toNode, toPort, amount)
+        ObjectCalls.ptrcallWithStringNameIntStringNameIntDoubleArgs(Binds.setConnectionActivityBind, segment, fromNode, fromPort, toNode, toPort, amount)
     }
 
     /**
@@ -213,7 +214,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connections
      */
     fun setConnections(connections: List<Map<String, Any?>>) {
-        ObjectCalls.ptrcallWithDictionaryListArg(setConnectionsBind, segment, connections)
+        ObjectCalls.ptrcallWithDictionaryListArg(Binds.setConnectionsBind, segment, connections)
     }
 
     /**
@@ -222,7 +223,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_list
      */
     fun getConnectionList(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getConnectionListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getConnectionListBind, segment)
     }
 
     /**
@@ -231,7 +232,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_count
      */
     fun getConnectionCount(fromNode: String, fromPort: Int): Int {
-        return ObjectCalls.ptrcallWithStringNameAndIntArgRetInt(getConnectionCountBind, segment, fromNode, fromPort)
+        return ObjectCalls.ptrcallWithStringNameAndIntArgRetInt(Binds.getConnectionCountBind, segment, fromNode, fromPort)
     }
 
     /**
@@ -241,7 +242,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_closest_connection_at_point
      */
     fun getClosestConnectionAtPoint(point: Vector2, maxDistance: Double = 4.0): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetDictionary(getClosestConnectionAtPointBind, segment, point, maxDistance)
+        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetDictionary(Binds.getClosestConnectionAtPointBind, segment, point, maxDistance)
     }
 
     /**
@@ -250,7 +251,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_list_from_node
      */
     fun getConnectionListFromNode(node: String): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getConnectionListFromNodeBind, segment, node)
+        return ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(Binds.getConnectionListFromNodeBind, segment, node)
     }
 
     /**
@@ -259,7 +260,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connections_intersecting_with_rect
      */
     fun getConnectionsIntersectingWithRect(rect: Rect2): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallWithRect2ArgRetDictionaryList(getConnectionsIntersectingWithRectBind, segment, rect)
+        return ObjectCalls.ptrcallWithRect2ArgRetDictionaryList(Binds.getConnectionsIntersectingWithRectBind, segment, rect)
     }
 
     /**
@@ -268,7 +269,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.clear_connections
      */
     fun clearConnections() {
-        ObjectCalls.ptrcallNoArgs(clearConnectionsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearConnectionsBind, segment)
     }
 
     /**
@@ -281,7 +282,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.force_connection_drag_end
      */
     fun forceConnectionDragEnd() {
-        ObjectCalls.ptrcallNoArgs(forceConnectionDragEndBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceConnectionDragEndBind, segment)
     }
 
     /**
@@ -290,7 +291,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_scroll_offset
      */
     fun getScrollOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScrollOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScrollOffsetBind, segment)
     }
 
     /**
@@ -299,7 +300,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_scroll_offset
      */
     fun setScrollOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScrollOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScrollOffsetBind, segment, offset)
     }
 
     /**
@@ -309,7 +310,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.add_valid_right_disconnect_type
      */
     fun addValidRightDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(addValidRightDisconnectTypeBind, segment, type)
+        ObjectCalls.ptrcallWithIntArg(Binds.addValidRightDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -320,7 +321,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.remove_valid_right_disconnect_type
      */
     fun removeValidRightDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeValidRightDisconnectTypeBind, segment, type)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeValidRightDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -330,7 +331,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.add_valid_left_disconnect_type
      */
     fun addValidLeftDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(addValidLeftDisconnectTypeBind, segment, type)
+        ObjectCalls.ptrcallWithIntArg(Binds.addValidLeftDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -341,7 +342,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.remove_valid_left_disconnect_type
      */
     fun removeValidLeftDisconnectType(type: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeValidLeftDisconnectTypeBind, segment, type)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeValidLeftDisconnectTypeBind, segment, type)
     }
 
     /**
@@ -352,7 +353,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.add_valid_connection_type
      */
     fun addValidConnectionType(fromType: Int, toType: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(addValidConnectionTypeBind, segment, fromType, toType)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.addValidConnectionTypeBind, segment, fromType, toType)
     }
 
     /**
@@ -363,7 +364,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.remove_valid_connection_type
      */
     fun removeValidConnectionType(fromType: Int, toType: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(removeValidConnectionTypeBind, segment, fromType, toType)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.removeValidConnectionTypeBind, segment, fromType, toType)
     }
 
     /**
@@ -375,7 +376,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_valid_connection_type
      */
     fun isValidConnectionType(fromType: Int, toType: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isValidConnectionTypeBind, segment, fromType, toType)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isValidConnectionTypeBind, segment, fromType, toType)
     }
 
     /**
@@ -384,7 +385,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_line
      */
     fun getConnectionLine(fromNode: Vector2, toNode: Vector2): List<Vector2> {
-        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(getConnectionLineBind, segment, fromNode, toNode)
+        return ObjectCalls.ptrcallWithTwoVector2ArgsRetPackedVector2List(Binds.getConnectionLineBind, segment, fromNode, toNode)
     }
 
     /**
@@ -393,7 +394,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.attach_graph_element_to_frame
      */
     fun attachGraphElementToFrame(element: String, frame: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(attachGraphElementToFrameBind, segment, element, frame)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.attachGraphElementToFrameBind, segment, element, frame)
     }
 
     /**
@@ -402,7 +403,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.detach_graph_element_from_frame
      */
     fun detachGraphElementFromFrame(element: String) {
-        ObjectCalls.ptrcallWithStringNameArg(detachGraphElementFromFrameBind, segment, element)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.detachGraphElementFromFrameBind, segment, element)
     }
 
     /**
@@ -411,7 +412,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_element_frame
      */
     fun getElementFrame(element: String): GraphFrame? {
-        return GraphFrame.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getElementFrameBind, segment, element))
+        return GraphFrame.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getElementFrameBind, segment, element))
     }
 
     /**
@@ -420,7 +421,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_attached_nodes_of_frame
      */
     fun getAttachedNodesOfFrame(frame: String): List<String> {
-        return ObjectCalls.ptrcallWithStringNameArgRetStringNameList(getAttachedNodesOfFrameBind, segment, frame)
+        return ObjectCalls.ptrcallWithStringNameArgRetStringNameList(Binds.getAttachedNodesOfFrameBind, segment, frame)
     }
 
     /**
@@ -429,7 +430,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_panning_scheme
      */
     fun setPanningScheme(scheme: GraphEdit.PanningScheme) {
-        ObjectCalls.ptrcallWithLongArg(setPanningSchemeBind, segment, scheme.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPanningSchemeBind, segment, scheme.value)
     }
 
     /**
@@ -438,7 +439,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_panning_scheme
      */
     fun getPanningScheme(): GraphEdit.PanningScheme {
-        return GraphEdit.PanningScheme(ObjectCalls.ptrcallNoArgsRetLong(getPanningSchemeBind, segment))
+        return GraphEdit.PanningScheme(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPanningSchemeBind, segment))
     }
 
     /**
@@ -447,7 +448,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom
      */
     fun setZoom(zoom: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomBind, segment, zoom)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setZoomBind, segment, zoom)
     }
 
     /**
@@ -456,7 +457,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom
      */
     fun getZoom(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZoomBind, segment)
     }
 
     /**
@@ -465,7 +466,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom_min
      */
     fun setZoomMin(zoomMin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomMinBind, segment, zoomMin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setZoomMinBind, segment, zoomMin)
     }
 
     /**
@@ -474,7 +475,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom_min
      */
     fun getZoomMin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZoomMinBind, segment)
     }
 
     /**
@@ -483,7 +484,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom_max
      */
     fun setZoomMax(zoomMax: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomMaxBind, segment, zoomMax)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setZoomMaxBind, segment, zoomMax)
     }
 
     /**
@@ -492,7 +493,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom_max
      */
     fun getZoomMax(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZoomMaxBind, segment)
     }
 
     /**
@@ -501,7 +502,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_zoom_step
      */
     fun setZoomStep(zoomStep: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setZoomStepBind, segment, zoomStep)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setZoomStepBind, segment, zoomStep)
     }
 
     /**
@@ -510,7 +511,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_zoom_step
      */
     fun getZoomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getZoomStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getZoomStepBind, segment)
     }
 
     /**
@@ -519,7 +520,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_grid
      */
     fun setShowGrid(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowGridBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowGridBind, segment, enable)
     }
 
     /**
@@ -528,7 +529,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_grid
      */
     fun isShowingGrid(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingGridBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingGridBind, segment)
     }
 
     /**
@@ -537,7 +538,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_grid_pattern
      */
     fun setGridPattern(pattern: GraphEdit.GridPattern) {
-        ObjectCalls.ptrcallWithLongArg(setGridPatternBind, segment, pattern.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGridPatternBind, segment, pattern.value)
     }
 
     /**
@@ -546,7 +547,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_grid_pattern
      */
     fun getGridPattern(): GraphEdit.GridPattern {
-        return GraphEdit.GridPattern(ObjectCalls.ptrcallNoArgsRetLong(getGridPatternBind, segment))
+        return GraphEdit.GridPattern(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGridPatternBind, segment))
     }
 
     /**
@@ -555,7 +556,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_snapping_enabled
      */
     fun setSnappingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSnappingEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSnappingEnabledBind, segment, enable)
     }
 
     /**
@@ -564,7 +565,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_snapping_enabled
      */
     fun isSnappingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSnappingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSnappingEnabledBind, segment)
     }
 
     /**
@@ -573,7 +574,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_snapping_distance
      */
     fun setSnappingDistance(pixels: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSnappingDistanceBind, segment, pixels)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSnappingDistanceBind, segment, pixels)
     }
 
     /**
@@ -582,7 +583,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_snapping_distance
      */
     fun getSnappingDistance(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSnappingDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSnappingDistanceBind, segment)
     }
 
     /**
@@ -591,7 +592,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_lines_curvature
      */
     fun setConnectionLinesCurvature(curvature: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConnectionLinesCurvatureBind, segment, curvature)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setConnectionLinesCurvatureBind, segment, curvature)
     }
 
     /**
@@ -600,7 +601,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_lines_curvature
      */
     fun getConnectionLinesCurvature(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConnectionLinesCurvatureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConnectionLinesCurvatureBind, segment)
     }
 
     /**
@@ -609,7 +610,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_lines_thickness
      */
     fun setConnectionLinesThickness(pixels: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setConnectionLinesThicknessBind, segment, pixels)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setConnectionLinesThicknessBind, segment, pixels)
     }
 
     /**
@@ -618,7 +619,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_connection_lines_thickness
      */
     fun getConnectionLinesThickness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getConnectionLinesThicknessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getConnectionLinesThicknessBind, segment)
     }
 
     /**
@@ -627,7 +628,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_connection_lines_antialiased
      */
     fun setConnectionLinesAntialiased(pixels: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setConnectionLinesAntialiasedBind, segment, pixels)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setConnectionLinesAntialiasedBind, segment, pixels)
     }
 
     /**
@@ -636,7 +637,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_connection_lines_antialiased
      */
     fun isConnectionLinesAntialiased(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionLinesAntialiasedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isConnectionLinesAntialiasedBind, segment)
     }
 
     /**
@@ -646,7 +647,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_minimap_size
      */
     fun setMinimapSize(size: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setMinimapSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setMinimapSizeBind, segment, size)
     }
 
     /**
@@ -656,7 +657,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_minimap_size
      */
     fun getMinimapSize(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimapSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinimapSizeBind, segment)
     }
 
     /**
@@ -665,7 +666,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_minimap_opacity
      */
     fun setMinimapOpacity(opacity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinimapOpacityBind, segment, opacity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinimapOpacityBind, segment, opacity)
     }
 
     /**
@@ -674,7 +675,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_minimap_opacity
      */
     fun getMinimapOpacity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinimapOpacityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinimapOpacityBind, segment)
     }
 
     /**
@@ -683,7 +684,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_minimap_enabled
      */
     fun setMinimapEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMinimapEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMinimapEnabledBind, segment, enable)
     }
 
     /**
@@ -692,7 +693,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_minimap_enabled
      */
     fun isMinimapEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMinimapEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMinimapEnabledBind, segment)
     }
 
     /**
@@ -701,7 +702,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_menu
      */
     fun setShowMenu(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowMenuBind, segment, hidden)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowMenuBind, segment, hidden)
     }
 
     /**
@@ -710,7 +711,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_menu
      */
     fun isShowingMenu(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingMenuBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingMenuBind, segment)
     }
 
     /**
@@ -720,7 +721,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_zoom_label
      */
     fun setShowZoomLabel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowZoomLabelBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowZoomLabelBind, segment, enable)
     }
 
     /**
@@ -730,7 +731,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_zoom_label
      */
     fun isShowingZoomLabel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingZoomLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingZoomLabelBind, segment)
     }
 
     /**
@@ -739,7 +740,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_grid_buttons
      */
     fun setShowGridButtons(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowGridButtonsBind, segment, hidden)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowGridButtonsBind, segment, hidden)
     }
 
     /**
@@ -748,7 +749,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_grid_buttons
      */
     fun isShowingGridButtons(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingGridButtonsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingGridButtonsBind, segment)
     }
 
     /**
@@ -757,7 +758,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_zoom_buttons
      */
     fun setShowZoomButtons(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowZoomButtonsBind, segment, hidden)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowZoomButtonsBind, segment, hidden)
     }
 
     /**
@@ -766,7 +767,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_zoom_buttons
      */
     fun isShowingZoomButtons(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingZoomButtonsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingZoomButtonsBind, segment)
     }
 
     /**
@@ -775,7 +776,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_minimap_button
      */
     fun setShowMinimapButton(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowMinimapButtonBind, segment, hidden)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowMinimapButtonBind, segment, hidden)
     }
 
     /**
@@ -784,7 +785,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_minimap_button
      */
     fun isShowingMinimapButton(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingMinimapButtonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingMinimapButtonBind, segment)
     }
 
     /**
@@ -793,7 +794,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_show_arrange_button
      */
     fun setShowArrangeButton(hidden: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowArrangeButtonBind, segment, hidden)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowArrangeButtonBind, segment, hidden)
     }
 
     /**
@@ -802,7 +803,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_showing_arrange_button
      */
     fun isShowingArrangeButton(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowingArrangeButtonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowingArrangeButtonBind, segment)
     }
 
     /**
@@ -812,7 +813,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_right_disconnects
      */
     fun setRightDisconnects(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRightDisconnectsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRightDisconnectsBind, segment, enable)
     }
 
     /**
@@ -822,7 +823,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.is_right_disconnects_enabled
      */
     fun isRightDisconnectsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRightDisconnectsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRightDisconnectsEnabledBind, segment)
     }
 
     /**
@@ -831,7 +832,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_type_names
      */
     fun setTypeNames(typeNames: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithDictionaryArg(setTypeNamesBind, segment, typeNames)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setTypeNamesBind, segment, typeNames)
     }
 
     /**
@@ -840,7 +841,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_type_names
      */
     fun getTypeNames(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getTypeNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTypeNamesBind, segment)
     }
 
     /**
@@ -852,7 +853,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.get_menu_hbox
      */
     fun getMenuHbox(): HBoxContainer? {
-        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuHboxBind, segment))
+        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMenuHboxBind, segment))
     }
 
     /**
@@ -862,7 +863,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.arrange_nodes
      */
     fun arrangeNodes() {
-        ObjectCalls.ptrcallNoArgs(arrangeNodesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.arrangeNodesBind, segment)
     }
 
     /**
@@ -871,7 +872,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: GraphEdit.set_selected
      */
     fun setSelected(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setSelectedBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSelectedBind, segment, listOf(node.segment))
     }
 
     /** Signal `connection_request(from_node: StringName, from_port: int, to_node: StringName, to_port: int)`; see [TypedSignal]. */
@@ -1046,380 +1047,382 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): GraphEdit? =
             if (handle.address() == 0L) null else GraphEdit(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CONNECT_NODE_HASH = 1376144231L
-        private val connectNodeBind by lazy {
+        @JvmField
+        val connectNodeBind =
             ObjectCalls.getMethodBind("GraphEdit", "connect_node", CONNECT_NODE_HASH)
-        }
 
         private const val IS_NODE_CONNECTED_HASH = 4216241294L
-        private val isNodeConnectedBind by lazy {
+        @JvmField
+        val isNodeConnectedBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_node_connected", IS_NODE_CONNECTED_HASH)
-        }
 
         private const val DISCONNECT_NODE_HASH = 1933654315L
-        private val disconnectNodeBind by lazy {
+        @JvmField
+        val disconnectNodeBind =
             ObjectCalls.getMethodBind("GraphEdit", "disconnect_node", DISCONNECT_NODE_HASH)
-        }
 
         private const val SET_CONNECTION_ACTIVITY_HASH = 1141899943L
-        private val setConnectionActivityBind by lazy {
+        @JvmField
+        val setConnectionActivityBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_connection_activity", SET_CONNECTION_ACTIVITY_HASH)
-        }
 
         private const val SET_CONNECTIONS_HASH = 381264803L
-        private val setConnectionsBind by lazy {
+        @JvmField
+        val setConnectionsBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_connections", SET_CONNECTIONS_HASH)
-        }
 
         private const val GET_CONNECTION_LIST_HASH = 3995934104L
-        private val getConnectionListBind by lazy {
+        @JvmField
+        val getConnectionListBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_list", GET_CONNECTION_LIST_HASH)
-        }
 
         private const val GET_CONNECTION_COUNT_HASH = 861718734L
-        private val getConnectionCountBind by lazy {
+        @JvmField
+        val getConnectionCountBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_count", GET_CONNECTION_COUNT_HASH)
-        }
 
         private const val GET_CLOSEST_CONNECTION_AT_POINT_HASH = 453879819L
-        private val getClosestConnectionAtPointBind by lazy {
+        @JvmField
+        val getClosestConnectionAtPointBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_closest_connection_at_point", GET_CLOSEST_CONNECTION_AT_POINT_HASH)
-        }
 
         private const val GET_CONNECTION_LIST_FROM_NODE_HASH = 3147814860L
-        private val getConnectionListFromNodeBind by lazy {
+        @JvmField
+        val getConnectionListFromNodeBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_list_from_node", GET_CONNECTION_LIST_FROM_NODE_HASH)
-        }
 
         private const val GET_CONNECTIONS_INTERSECTING_WITH_RECT_HASH = 2709748719L
-        private val getConnectionsIntersectingWithRectBind by lazy {
+        @JvmField
+        val getConnectionsIntersectingWithRectBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connections_intersecting_with_rect", GET_CONNECTIONS_INTERSECTING_WITH_RECT_HASH)
-        }
 
         private const val CLEAR_CONNECTIONS_HASH = 3218959716L
-        private val clearConnectionsBind by lazy {
+        @JvmField
+        val clearConnectionsBind =
             ObjectCalls.getMethodBind("GraphEdit", "clear_connections", CLEAR_CONNECTIONS_HASH)
-        }
 
         private const val FORCE_CONNECTION_DRAG_END_HASH = 3218959716L
-        private val forceConnectionDragEndBind by lazy {
+        @JvmField
+        val forceConnectionDragEndBind =
             ObjectCalls.getMethodBind("GraphEdit", "force_connection_drag_end", FORCE_CONNECTION_DRAG_END_HASH)
-        }
 
         private const val GET_SCROLL_OFFSET_HASH = 3341600327L
-        private val getScrollOffsetBind by lazy {
+        @JvmField
+        val getScrollOffsetBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_scroll_offset", GET_SCROLL_OFFSET_HASH)
-        }
 
         private const val SET_SCROLL_OFFSET_HASH = 743155724L
-        private val setScrollOffsetBind by lazy {
+        @JvmField
+        val setScrollOffsetBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_scroll_offset", SET_SCROLL_OFFSET_HASH)
-        }
 
         private const val ADD_VALID_RIGHT_DISCONNECT_TYPE_HASH = 1286410249L
-        private val addValidRightDisconnectTypeBind by lazy {
+        @JvmField
+        val addValidRightDisconnectTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "add_valid_right_disconnect_type", ADD_VALID_RIGHT_DISCONNECT_TYPE_HASH)
-        }
 
         private const val REMOVE_VALID_RIGHT_DISCONNECT_TYPE_HASH = 1286410249L
-        private val removeValidRightDisconnectTypeBind by lazy {
+        @JvmField
+        val removeValidRightDisconnectTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "remove_valid_right_disconnect_type", REMOVE_VALID_RIGHT_DISCONNECT_TYPE_HASH)
-        }
 
         private const val ADD_VALID_LEFT_DISCONNECT_TYPE_HASH = 1286410249L
-        private val addValidLeftDisconnectTypeBind by lazy {
+        @JvmField
+        val addValidLeftDisconnectTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "add_valid_left_disconnect_type", ADD_VALID_LEFT_DISCONNECT_TYPE_HASH)
-        }
 
         private const val REMOVE_VALID_LEFT_DISCONNECT_TYPE_HASH = 1286410249L
-        private val removeValidLeftDisconnectTypeBind by lazy {
+        @JvmField
+        val removeValidLeftDisconnectTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "remove_valid_left_disconnect_type", REMOVE_VALID_LEFT_DISCONNECT_TYPE_HASH)
-        }
 
         private const val ADD_VALID_CONNECTION_TYPE_HASH = 3937882851L
-        private val addValidConnectionTypeBind by lazy {
+        @JvmField
+        val addValidConnectionTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "add_valid_connection_type", ADD_VALID_CONNECTION_TYPE_HASH)
-        }
 
         private const val REMOVE_VALID_CONNECTION_TYPE_HASH = 3937882851L
-        private val removeValidConnectionTypeBind by lazy {
+        @JvmField
+        val removeValidConnectionTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "remove_valid_connection_type", REMOVE_VALID_CONNECTION_TYPE_HASH)
-        }
 
         private const val IS_VALID_CONNECTION_TYPE_HASH = 2522259332L
-        private val isValidConnectionTypeBind by lazy {
+        @JvmField
+        val isValidConnectionTypeBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_valid_connection_type", IS_VALID_CONNECTION_TYPE_HASH)
-        }
 
         private const val GET_CONNECTION_LINE_HASH = 3932192302L
-        private val getConnectionLineBind by lazy {
+        @JvmField
+        val getConnectionLineBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_line", GET_CONNECTION_LINE_HASH)
-        }
 
         private const val ATTACH_GRAPH_ELEMENT_TO_FRAME_HASH = 3740211285L
-        private val attachGraphElementToFrameBind by lazy {
+        @JvmField
+        val attachGraphElementToFrameBind =
             ObjectCalls.getMethodBind("GraphEdit", "attach_graph_element_to_frame", ATTACH_GRAPH_ELEMENT_TO_FRAME_HASH)
-        }
 
         private const val DETACH_GRAPH_ELEMENT_FROM_FRAME_HASH = 3304788590L
-        private val detachGraphElementFromFrameBind by lazy {
+        @JvmField
+        val detachGraphElementFromFrameBind =
             ObjectCalls.getMethodBind("GraphEdit", "detach_graph_element_from_frame", DETACH_GRAPH_ELEMENT_FROM_FRAME_HASH)
-        }
 
         private const val GET_ELEMENT_FRAME_HASH = 988084372L
-        private val getElementFrameBind by lazy {
+        @JvmField
+        val getElementFrameBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_element_frame", GET_ELEMENT_FRAME_HASH)
-        }
 
         private const val GET_ATTACHED_NODES_OF_FRAME_HASH = 689397652L
-        private val getAttachedNodesOfFrameBind by lazy {
+        @JvmField
+        val getAttachedNodesOfFrameBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_attached_nodes_of_frame", GET_ATTACHED_NODES_OF_FRAME_HASH)
-        }
 
         private const val SET_PANNING_SCHEME_HASH = 18893313L
-        private val setPanningSchemeBind by lazy {
+        @JvmField
+        val setPanningSchemeBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_panning_scheme", SET_PANNING_SCHEME_HASH)
-        }
 
         private const val GET_PANNING_SCHEME_HASH = 549924446L
-        private val getPanningSchemeBind by lazy {
+        @JvmField
+        val getPanningSchemeBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_panning_scheme", GET_PANNING_SCHEME_HASH)
-        }
 
         private const val SET_ZOOM_HASH = 373806689L
-        private val setZoomBind by lazy {
+        @JvmField
+        val setZoomBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_zoom", SET_ZOOM_HASH)
-        }
 
         private const val GET_ZOOM_HASH = 1740695150L
-        private val getZoomBind by lazy {
+        @JvmField
+        val getZoomBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_zoom", GET_ZOOM_HASH)
-        }
 
         private const val SET_ZOOM_MIN_HASH = 373806689L
-        private val setZoomMinBind by lazy {
+        @JvmField
+        val setZoomMinBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_zoom_min", SET_ZOOM_MIN_HASH)
-        }
 
         private const val GET_ZOOM_MIN_HASH = 1740695150L
-        private val getZoomMinBind by lazy {
+        @JvmField
+        val getZoomMinBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_zoom_min", GET_ZOOM_MIN_HASH)
-        }
 
         private const val SET_ZOOM_MAX_HASH = 373806689L
-        private val setZoomMaxBind by lazy {
+        @JvmField
+        val setZoomMaxBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_zoom_max", SET_ZOOM_MAX_HASH)
-        }
 
         private const val GET_ZOOM_MAX_HASH = 1740695150L
-        private val getZoomMaxBind by lazy {
+        @JvmField
+        val getZoomMaxBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_zoom_max", GET_ZOOM_MAX_HASH)
-        }
 
         private const val SET_ZOOM_STEP_HASH = 373806689L
-        private val setZoomStepBind by lazy {
+        @JvmField
+        val setZoomStepBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_zoom_step", SET_ZOOM_STEP_HASH)
-        }
 
         private const val GET_ZOOM_STEP_HASH = 1740695150L
-        private val getZoomStepBind by lazy {
+        @JvmField
+        val getZoomStepBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_zoom_step", GET_ZOOM_STEP_HASH)
-        }
 
         private const val SET_SHOW_GRID_HASH = 2586408642L
-        private val setShowGridBind by lazy {
+        @JvmField
+        val setShowGridBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_grid", SET_SHOW_GRID_HASH)
-        }
 
         private const val IS_SHOWING_GRID_HASH = 36873697L
-        private val isShowingGridBind by lazy {
+        @JvmField
+        val isShowingGridBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_grid", IS_SHOWING_GRID_HASH)
-        }
 
         private const val SET_GRID_PATTERN_HASH = 1074098205L
-        private val setGridPatternBind by lazy {
+        @JvmField
+        val setGridPatternBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_grid_pattern", SET_GRID_PATTERN_HASH)
-        }
 
         private const val GET_GRID_PATTERN_HASH = 1286127528L
-        private val getGridPatternBind by lazy {
+        @JvmField
+        val getGridPatternBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_grid_pattern", GET_GRID_PATTERN_HASH)
-        }
 
         private const val SET_SNAPPING_ENABLED_HASH = 2586408642L
-        private val setSnappingEnabledBind by lazy {
+        @JvmField
+        val setSnappingEnabledBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_snapping_enabled", SET_SNAPPING_ENABLED_HASH)
-        }
 
         private const val IS_SNAPPING_ENABLED_HASH = 36873697L
-        private val isSnappingEnabledBind by lazy {
+        @JvmField
+        val isSnappingEnabledBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_snapping_enabled", IS_SNAPPING_ENABLED_HASH)
-        }
 
         private const val SET_SNAPPING_DISTANCE_HASH = 1286410249L
-        private val setSnappingDistanceBind by lazy {
+        @JvmField
+        val setSnappingDistanceBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_snapping_distance", SET_SNAPPING_DISTANCE_HASH)
-        }
 
         private const val GET_SNAPPING_DISTANCE_HASH = 3905245786L
-        private val getSnappingDistanceBind by lazy {
+        @JvmField
+        val getSnappingDistanceBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_snapping_distance", GET_SNAPPING_DISTANCE_HASH)
-        }
 
         private const val SET_CONNECTION_LINES_CURVATURE_HASH = 373806689L
-        private val setConnectionLinesCurvatureBind by lazy {
+        @JvmField
+        val setConnectionLinesCurvatureBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_connection_lines_curvature", SET_CONNECTION_LINES_CURVATURE_HASH)
-        }
 
         private const val GET_CONNECTION_LINES_CURVATURE_HASH = 1740695150L
-        private val getConnectionLinesCurvatureBind by lazy {
+        @JvmField
+        val getConnectionLinesCurvatureBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_lines_curvature", GET_CONNECTION_LINES_CURVATURE_HASH)
-        }
 
         private const val SET_CONNECTION_LINES_THICKNESS_HASH = 373806689L
-        private val setConnectionLinesThicknessBind by lazy {
+        @JvmField
+        val setConnectionLinesThicknessBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_connection_lines_thickness", SET_CONNECTION_LINES_THICKNESS_HASH)
-        }
 
         private const val GET_CONNECTION_LINES_THICKNESS_HASH = 1740695150L
-        private val getConnectionLinesThicknessBind by lazy {
+        @JvmField
+        val getConnectionLinesThicknessBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_connection_lines_thickness", GET_CONNECTION_LINES_THICKNESS_HASH)
-        }
 
         private const val SET_CONNECTION_LINES_ANTIALIASED_HASH = 2586408642L
-        private val setConnectionLinesAntialiasedBind by lazy {
+        @JvmField
+        val setConnectionLinesAntialiasedBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_connection_lines_antialiased", SET_CONNECTION_LINES_ANTIALIASED_HASH)
-        }
 
         private const val IS_CONNECTION_LINES_ANTIALIASED_HASH = 36873697L
-        private val isConnectionLinesAntialiasedBind by lazy {
+        @JvmField
+        val isConnectionLinesAntialiasedBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_connection_lines_antialiased", IS_CONNECTION_LINES_ANTIALIASED_HASH)
-        }
 
         private const val SET_MINIMAP_SIZE_HASH = 743155724L
-        private val setMinimapSizeBind by lazy {
+        @JvmField
+        val setMinimapSizeBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_minimap_size", SET_MINIMAP_SIZE_HASH)
-        }
 
         private const val GET_MINIMAP_SIZE_HASH = 3341600327L
-        private val getMinimapSizeBind by lazy {
+        @JvmField
+        val getMinimapSizeBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_minimap_size", GET_MINIMAP_SIZE_HASH)
-        }
 
         private const val SET_MINIMAP_OPACITY_HASH = 373806689L
-        private val setMinimapOpacityBind by lazy {
+        @JvmField
+        val setMinimapOpacityBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_minimap_opacity", SET_MINIMAP_OPACITY_HASH)
-        }
 
         private const val GET_MINIMAP_OPACITY_HASH = 1740695150L
-        private val getMinimapOpacityBind by lazy {
+        @JvmField
+        val getMinimapOpacityBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_minimap_opacity", GET_MINIMAP_OPACITY_HASH)
-        }
 
         private const val SET_MINIMAP_ENABLED_HASH = 2586408642L
-        private val setMinimapEnabledBind by lazy {
+        @JvmField
+        val setMinimapEnabledBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_minimap_enabled", SET_MINIMAP_ENABLED_HASH)
-        }
 
         private const val IS_MINIMAP_ENABLED_HASH = 36873697L
-        private val isMinimapEnabledBind by lazy {
+        @JvmField
+        val isMinimapEnabledBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_minimap_enabled", IS_MINIMAP_ENABLED_HASH)
-        }
 
         private const val SET_SHOW_MENU_HASH = 2586408642L
-        private val setShowMenuBind by lazy {
+        @JvmField
+        val setShowMenuBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_menu", SET_SHOW_MENU_HASH)
-        }
 
         private const val IS_SHOWING_MENU_HASH = 36873697L
-        private val isShowingMenuBind by lazy {
+        @JvmField
+        val isShowingMenuBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_menu", IS_SHOWING_MENU_HASH)
-        }
 
         private const val SET_SHOW_ZOOM_LABEL_HASH = 2586408642L
-        private val setShowZoomLabelBind by lazy {
+        @JvmField
+        val setShowZoomLabelBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_zoom_label", SET_SHOW_ZOOM_LABEL_HASH)
-        }
 
         private const val IS_SHOWING_ZOOM_LABEL_HASH = 36873697L
-        private val isShowingZoomLabelBind by lazy {
+        @JvmField
+        val isShowingZoomLabelBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_zoom_label", IS_SHOWING_ZOOM_LABEL_HASH)
-        }
 
         private const val SET_SHOW_GRID_BUTTONS_HASH = 2586408642L
-        private val setShowGridButtonsBind by lazy {
+        @JvmField
+        val setShowGridButtonsBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_grid_buttons", SET_SHOW_GRID_BUTTONS_HASH)
-        }
 
         private const val IS_SHOWING_GRID_BUTTONS_HASH = 36873697L
-        private val isShowingGridButtonsBind by lazy {
+        @JvmField
+        val isShowingGridButtonsBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_grid_buttons", IS_SHOWING_GRID_BUTTONS_HASH)
-        }
 
         private const val SET_SHOW_ZOOM_BUTTONS_HASH = 2586408642L
-        private val setShowZoomButtonsBind by lazy {
+        @JvmField
+        val setShowZoomButtonsBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_zoom_buttons", SET_SHOW_ZOOM_BUTTONS_HASH)
-        }
 
         private const val IS_SHOWING_ZOOM_BUTTONS_HASH = 36873697L
-        private val isShowingZoomButtonsBind by lazy {
+        @JvmField
+        val isShowingZoomButtonsBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_zoom_buttons", IS_SHOWING_ZOOM_BUTTONS_HASH)
-        }
 
         private const val SET_SHOW_MINIMAP_BUTTON_HASH = 2586408642L
-        private val setShowMinimapButtonBind by lazy {
+        @JvmField
+        val setShowMinimapButtonBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_minimap_button", SET_SHOW_MINIMAP_BUTTON_HASH)
-        }
 
         private const val IS_SHOWING_MINIMAP_BUTTON_HASH = 36873697L
-        private val isShowingMinimapButtonBind by lazy {
+        @JvmField
+        val isShowingMinimapButtonBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_minimap_button", IS_SHOWING_MINIMAP_BUTTON_HASH)
-        }
 
         private const val SET_SHOW_ARRANGE_BUTTON_HASH = 2586408642L
-        private val setShowArrangeButtonBind by lazy {
+        @JvmField
+        val setShowArrangeButtonBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_show_arrange_button", SET_SHOW_ARRANGE_BUTTON_HASH)
-        }
 
         private const val IS_SHOWING_ARRANGE_BUTTON_HASH = 36873697L
-        private val isShowingArrangeButtonBind by lazy {
+        @JvmField
+        val isShowingArrangeButtonBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_showing_arrange_button", IS_SHOWING_ARRANGE_BUTTON_HASH)
-        }
 
         private const val SET_RIGHT_DISCONNECTS_HASH = 2586408642L
-        private val setRightDisconnectsBind by lazy {
+        @JvmField
+        val setRightDisconnectsBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_right_disconnects", SET_RIGHT_DISCONNECTS_HASH)
-        }
 
         private const val IS_RIGHT_DISCONNECTS_ENABLED_HASH = 36873697L
-        private val isRightDisconnectsEnabledBind by lazy {
+        @JvmField
+        val isRightDisconnectsEnabledBind =
             ObjectCalls.getMethodBind("GraphEdit", "is_right_disconnects_enabled", IS_RIGHT_DISCONNECTS_ENABLED_HASH)
-        }
 
         private const val SET_TYPE_NAMES_HASH = 4155329257L
-        private val setTypeNamesBind by lazy {
+        @JvmField
+        val setTypeNamesBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_type_names", SET_TYPE_NAMES_HASH)
-        }
 
         private const val GET_TYPE_NAMES_HASH = 3102165223L
-        private val getTypeNamesBind by lazy {
+        @JvmField
+        val getTypeNamesBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_type_names", GET_TYPE_NAMES_HASH)
-        }
 
         private const val GET_MENU_HBOX_HASH = 3590609951L
-        private val getMenuHboxBind by lazy {
+        @JvmField
+        val getMenuHboxBind =
             ObjectCalls.getMethodBind("GraphEdit", "get_menu_hbox", GET_MENU_HBOX_HASH)
-        }
 
         private const val ARRANGE_NODES_HASH = 3218959716L
-        private val arrangeNodesBind by lazy {
+        @JvmField
+        val arrangeNodesBind =
             ObjectCalls.getMethodBind("GraphEdit", "arrange_nodes", ARRANGE_NODES_HASH)
-        }
 
         private const val SET_SELECTED_HASH = 1078189570L
-        private val setSelectedBind by lazy {
+        @JvmField
+        val setSelectedBind =
             ObjectCalls.getMethodBind("GraphEdit", "set_selected", SET_SELECTED_HASH)
-        }
     }
 }

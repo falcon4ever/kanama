@@ -22,7 +22,5 @@ class ORMMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ORMMaterial3D? =
             if (handle.address() == 0L) null else ORMMaterial3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun save(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveBind, segment, path))
     }
 
     /**
@@ -27,7 +28,7 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
     }
 
     /**
@@ -38,7 +39,7 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun saveToString(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(saveToStringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.saveToStringBind, segment)
     }
 
     /**
@@ -48,7 +49,7 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      */
     fun loadFromString(string: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, segment, string))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadFromStringBind, segment, string))
     }
 
     companion object {
@@ -61,25 +62,27 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): X509Certificate? =
             if (handle.address() == 0L) null else X509Certificate(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SAVE_HASH = 166001499L
-        private val saveBind by lazy {
+        @JvmField
+        val saveBind =
             ObjectCalls.getMethodBind("X509Certificate", "save", SAVE_HASH)
-        }
 
         private const val LOAD_HASH = 166001499L
-        private val loadBind by lazy {
+        @JvmField
+        val loadBind =
             ObjectCalls.getMethodBind("X509Certificate", "load", LOAD_HASH)
-        }
 
         private const val SAVE_TO_STRING_HASH = 2841200299L
-        private val saveToStringBind by lazy {
+        @JvmField
+        val saveToStringBind =
             ObjectCalls.getMethodBind("X509Certificate", "save_to_string", SAVE_TO_STRING_HASH)
-        }
 
         private const val LOAD_FROM_STRING_HASH = 166001499L
-        private val loadFromStringBind by lazy {
+        @JvmField
+        val loadFromStringBind =
             ObjectCalls.getMethodBind("X509Certificate", "load_from_string", LOAD_FROM_STRING_HASH)
-        }
     }
 }

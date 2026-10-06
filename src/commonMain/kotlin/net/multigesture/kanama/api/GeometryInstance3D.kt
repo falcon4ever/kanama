@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -117,7 +118,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_material_override
      */
     fun setMaterialOverride(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialOverrideBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialOverrideBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -127,7 +128,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_material_override
      */
     fun getMaterialOverride(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverrideBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialOverrideBind, segment))
     }
 
     /**
@@ -137,7 +138,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_material_overlay
      */
     fun setMaterialOverlay(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialOverlayBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialOverlayBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -147,7 +148,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_material_overlay
      */
     fun getMaterialOverlay(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverlayBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialOverlayBind, segment))
     }
 
     /**
@@ -156,7 +157,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_cast_shadows_setting
      */
     fun setCastShadowsSetting(shadowCastingSetting: GeometryInstance3D.ShadowCastingSetting) {
-        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCastShadowsSettingBind, segment, shadowCastingSetting.value)
     }
 
     /**
@@ -165,7 +166,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_cast_shadows_setting
      */
     fun getCastShadowsSetting(): GeometryInstance3D.ShadowCastingSetting {
-        return GeometryInstance3D.ShadowCastingSetting(ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment))
+        return GeometryInstance3D.ShadowCastingSetting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCastShadowsSettingBind, segment))
     }
 
     /**
@@ -177,7 +178,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_lod_bias
      */
     fun setLodBias(bias: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLodBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLodBiasBind, segment, bias)
     }
 
     /**
@@ -189,7 +190,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_lod_bias
      */
     fun getLodBias(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLodBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLodBiasBind, segment)
     }
 
     /**
@@ -208,7 +209,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_transparency
      */
     fun setTransparency(transparency: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTransparencyBind, segment, transparency)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTransparencyBind, segment, transparency)
     }
 
     /**
@@ -227,7 +228,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_transparency
      */
     fun getTransparency(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTransparencyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTransparencyBind, segment)
     }
 
     /**
@@ -241,7 +242,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_end_margin
      */
     fun setVisibilityRangeEndMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndMarginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeEndMarginBind, segment, distance)
     }
 
     /**
@@ -255,7 +256,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_end_margin
      */
     fun getVisibilityRangeEndMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeEndMarginBind, segment)
     }
 
     /**
@@ -265,7 +266,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_end
      */
     fun setVisibilityRangeEnd(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeEndBind, segment, distance)
     }
 
     /**
@@ -275,7 +276,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_end
      */
     fun getVisibilityRangeEnd(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeEndBind, segment)
     }
 
     /**
@@ -289,7 +290,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_begin_margin
      */
     fun setVisibilityRangeBeginMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginMarginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeBeginMarginBind, segment, distance)
     }
 
     /**
@@ -303,7 +304,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_begin_margin
      */
     fun getVisibilityRangeBeginMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeBeginMarginBind, segment)
     }
 
     /**
@@ -314,7 +315,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_begin
      */
     fun setVisibilityRangeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeBeginBind, segment, distance)
     }
 
     /**
@@ -325,7 +326,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_begin
      */
     fun getVisibilityRangeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeBeginBind, segment)
     }
 
     /**
@@ -334,7 +335,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_fade_mode
      */
     fun setVisibilityRangeFadeMode(mode: GeometryInstance3D.VisibilityRangeFadeMode) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityRangeFadeModeBind, segment, mode.value)
     }
 
     /**
@@ -343,7 +344,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_fade_mode
      */
     fun getVisibilityRangeFadeMode(): GeometryInstance3D.VisibilityRangeFadeMode {
-        return GeometryInstance3D.VisibilityRangeFadeMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment))
+        return GeometryInstance3D.VisibilityRangeFadeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityRangeFadeModeBind, segment))
     }
 
     /**
@@ -359,7 +360,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_instance_shader_parameter
      */
     fun setInstanceShaderParameter(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, segment, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setInstanceShaderParameterBind, segment, name, value)
     }
 
     /**
@@ -368,7 +369,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_instance_shader_parameter
      */
     fun getInstanceShaderParameter(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInstanceShaderParameterBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getInstanceShaderParameterBind, segment, name)
     }
 
     /**
@@ -378,7 +379,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_extra_cull_margin
      */
     fun setExtraCullMargin(margin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setExtraCullMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setExtraCullMarginBind, segment, margin)
     }
 
     /**
@@ -388,7 +389,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_extra_cull_margin
      */
     fun getExtraCullMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getExtraCullMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getExtraCullMarginBind, segment)
     }
 
     /**
@@ -404,7 +405,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_lightmap_texel_scale
      */
     fun setLightmapTexelScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLightmapTexelScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLightmapTexelScaleBind, segment, scale)
     }
 
     /**
@@ -420,7 +421,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_lightmap_texel_scale
      */
     fun getLightmapTexelScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLightmapTexelScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLightmapTexelScaleBind, segment)
     }
 
     /**
@@ -429,7 +430,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_lightmap_scale
      */
     fun setLightmapScale(scale: GeometryInstance3D.LightmapScale) {
-        ObjectCalls.ptrcallWithLongArg(setLightmapScaleBind, segment, scale.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLightmapScaleBind, segment, scale.value)
     }
 
     /**
@@ -438,7 +439,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_lightmap_scale
      */
     fun getLightmapScale(): GeometryInstance3D.LightmapScale {
-        return GeometryInstance3D.LightmapScale(ObjectCalls.ptrcallNoArgsRetLong(getLightmapScaleBind, segment))
+        return GeometryInstance3D.LightmapScale(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLightmapScaleBind, segment))
     }
 
     /**
@@ -449,7 +450,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_gi_mode
      */
     fun setGiMode(mode: GeometryInstance3D.GIMode) {
-        ObjectCalls.ptrcallWithLongArg(setGiModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGiModeBind, segment, mode.value)
     }
 
     /**
@@ -460,7 +461,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_gi_mode
      */
     fun getGiMode(): GeometryInstance3D.GIMode {
-        return GeometryInstance3D.GIMode(ObjectCalls.ptrcallNoArgsRetLong(getGiModeBind, segment))
+        return GeometryInstance3D.GIMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGiModeBind, segment))
     }
 
     /**
@@ -473,7 +474,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_ignore_occlusion_culling
      */
     fun setIgnoreOcclusionCulling(ignoreCulling: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreOcclusionCullingBind, segment, ignoreCulling)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreOcclusionCullingBind, segment, ignoreCulling)
     }
 
     /**
@@ -486,7 +487,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.is_ignoring_occlusion_culling
      */
     fun isIgnoringOcclusionCulling(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringOcclusionCullingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIgnoringOcclusionCullingBind, segment)
     }
 
     /**
@@ -501,7 +502,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.set_custom_aabb
      */
     fun setCustomAabb(aabb: AABB) {
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -516,7 +517,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_custom_aabb
      */
     fun getCustomAabb(): AABB {
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
     }
 
     /**
@@ -695,175 +696,177 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): GeometryInstance3D? =
             if (handle.address() == 0L) null else GeometryInstance3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MATERIAL_OVERRIDE_HASH = 2757459619L
-        private val setMaterialOverrideBind by lazy {
+        @JvmField
+        val setMaterialOverrideBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_material_override", SET_MATERIAL_OVERRIDE_HASH)
-        }
 
         private const val GET_MATERIAL_OVERRIDE_HASH = 5934680L
-        private val getMaterialOverrideBind by lazy {
+        @JvmField
+        val getMaterialOverrideBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_material_override", GET_MATERIAL_OVERRIDE_HASH)
-        }
 
         private const val SET_MATERIAL_OVERLAY_HASH = 2757459619L
-        private val setMaterialOverlayBind by lazy {
+        @JvmField
+        val setMaterialOverlayBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_material_overlay", SET_MATERIAL_OVERLAY_HASH)
-        }
 
         private const val GET_MATERIAL_OVERLAY_HASH = 5934680L
-        private val getMaterialOverlayBind by lazy {
+        @JvmField
+        val getMaterialOverlayBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_material_overlay", GET_MATERIAL_OVERLAY_HASH)
-        }
 
         private const val SET_CAST_SHADOWS_SETTING_HASH = 856677339L
-        private val setCastShadowsSettingBind by lazy {
+        @JvmField
+        val setCastShadowsSettingBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_cast_shadows_setting", SET_CAST_SHADOWS_SETTING_HASH)
-        }
 
         private const val GET_CAST_SHADOWS_SETTING_HASH = 3383019359L
-        private val getCastShadowsSettingBind by lazy {
+        @JvmField
+        val getCastShadowsSettingBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_cast_shadows_setting", GET_CAST_SHADOWS_SETTING_HASH)
-        }
 
         private const val SET_LOD_BIAS_HASH = 373806689L
-        private val setLodBiasBind by lazy {
+        @JvmField
+        val setLodBiasBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_lod_bias", SET_LOD_BIAS_HASH)
-        }
 
         private const val GET_LOD_BIAS_HASH = 1740695150L
-        private val getLodBiasBind by lazy {
+        @JvmField
+        val getLodBiasBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_lod_bias", GET_LOD_BIAS_HASH)
-        }
 
         private const val SET_TRANSPARENCY_HASH = 373806689L
-        private val setTransparencyBind by lazy {
+        @JvmField
+        val setTransparencyBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_transparency", SET_TRANSPARENCY_HASH)
-        }
 
         private const val GET_TRANSPARENCY_HASH = 1740695150L
-        private val getTransparencyBind by lazy {
+        @JvmField
+        val getTransparencyBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_transparency", GET_TRANSPARENCY_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_END_MARGIN_HASH = 373806689L
-        private val setVisibilityRangeEndMarginBind by lazy {
+        @JvmField
+        val setVisibilityRangeEndMarginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_visibility_range_end_margin", SET_VISIBILITY_RANGE_END_MARGIN_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_END_MARGIN_HASH = 1740695150L
-        private val getVisibilityRangeEndMarginBind by lazy {
+        @JvmField
+        val getVisibilityRangeEndMarginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_visibility_range_end_margin", GET_VISIBILITY_RANGE_END_MARGIN_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_END_HASH = 373806689L
-        private val setVisibilityRangeEndBind by lazy {
+        @JvmField
+        val setVisibilityRangeEndBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_visibility_range_end", SET_VISIBILITY_RANGE_END_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_END_HASH = 1740695150L
-        private val getVisibilityRangeEndBind by lazy {
+        @JvmField
+        val getVisibilityRangeEndBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_visibility_range_end", GET_VISIBILITY_RANGE_END_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH = 373806689L
-        private val setVisibilityRangeBeginMarginBind by lazy {
+        @JvmField
+        val setVisibilityRangeBeginMarginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_visibility_range_begin_margin", SET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH = 1740695150L
-        private val getVisibilityRangeBeginMarginBind by lazy {
+        @JvmField
+        val getVisibilityRangeBeginMarginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_visibility_range_begin_margin", GET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_BEGIN_HASH = 373806689L
-        private val setVisibilityRangeBeginBind by lazy {
+        @JvmField
+        val setVisibilityRangeBeginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_visibility_range_begin", SET_VISIBILITY_RANGE_BEGIN_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_BEGIN_HASH = 1740695150L
-        private val getVisibilityRangeBeginBind by lazy {
+        @JvmField
+        val getVisibilityRangeBeginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_visibility_range_begin", GET_VISIBILITY_RANGE_BEGIN_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_FADE_MODE_HASH = 1440117808L
-        private val setVisibilityRangeFadeModeBind by lazy {
+        @JvmField
+        val setVisibilityRangeFadeModeBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_visibility_range_fade_mode", SET_VISIBILITY_RANGE_FADE_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_FADE_MODE_HASH = 2067221882L
-        private val getVisibilityRangeFadeModeBind by lazy {
+        @JvmField
+        val getVisibilityRangeFadeModeBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_visibility_range_fade_mode", GET_VISIBILITY_RANGE_FADE_MODE_HASH)
-        }
 
         private const val SET_INSTANCE_SHADER_PARAMETER_HASH = 3776071444L
-        private val setInstanceShaderParameterBind by lazy {
+        @JvmField
+        val setInstanceShaderParameterBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_instance_shader_parameter", SET_INSTANCE_SHADER_PARAMETER_HASH)
-        }
 
         private const val GET_INSTANCE_SHADER_PARAMETER_HASH = 2760726917L
-        private val getInstanceShaderParameterBind by lazy {
+        @JvmField
+        val getInstanceShaderParameterBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_instance_shader_parameter", GET_INSTANCE_SHADER_PARAMETER_HASH)
-        }
 
         private const val SET_EXTRA_CULL_MARGIN_HASH = 373806689L
-        private val setExtraCullMarginBind by lazy {
+        @JvmField
+        val setExtraCullMarginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_extra_cull_margin", SET_EXTRA_CULL_MARGIN_HASH)
-        }
 
         private const val GET_EXTRA_CULL_MARGIN_HASH = 1740695150L
-        private val getExtraCullMarginBind by lazy {
+        @JvmField
+        val getExtraCullMarginBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_extra_cull_margin", GET_EXTRA_CULL_MARGIN_HASH)
-        }
 
         private const val SET_LIGHTMAP_TEXEL_SCALE_HASH = 373806689L
-        private val setLightmapTexelScaleBind by lazy {
+        @JvmField
+        val setLightmapTexelScaleBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_lightmap_texel_scale", SET_LIGHTMAP_TEXEL_SCALE_HASH)
-        }
 
         private const val GET_LIGHTMAP_TEXEL_SCALE_HASH = 1740695150L
-        private val getLightmapTexelScaleBind by lazy {
+        @JvmField
+        val getLightmapTexelScaleBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_lightmap_texel_scale", GET_LIGHTMAP_TEXEL_SCALE_HASH)
-        }
 
         private const val SET_LIGHTMAP_SCALE_HASH = 2462696582L
-        private val setLightmapScaleBind by lazy {
+        @JvmField
+        val setLightmapScaleBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_lightmap_scale", SET_LIGHTMAP_SCALE_HASH)
-        }
 
         private const val GET_LIGHTMAP_SCALE_HASH = 798767852L
-        private val getLightmapScaleBind by lazy {
+        @JvmField
+        val getLightmapScaleBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_lightmap_scale", GET_LIGHTMAP_SCALE_HASH)
-        }
 
         private const val SET_GI_MODE_HASH = 2548557163L
-        private val setGiModeBind by lazy {
+        @JvmField
+        val setGiModeBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_gi_mode", SET_GI_MODE_HASH)
-        }
 
         private const val GET_GI_MODE_HASH = 2188566509L
-        private val getGiModeBind by lazy {
+        @JvmField
+        val getGiModeBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_gi_mode", GET_GI_MODE_HASH)
-        }
 
         private const val SET_IGNORE_OCCLUSION_CULLING_HASH = 2586408642L
-        private val setIgnoreOcclusionCullingBind by lazy {
+        @JvmField
+        val setIgnoreOcclusionCullingBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_ignore_occlusion_culling", SET_IGNORE_OCCLUSION_CULLING_HASH)
-        }
 
         private const val IS_IGNORING_OCCLUSION_CULLING_HASH = 2240911060L
-        private val isIgnoringOcclusionCullingBind by lazy {
+        @JvmField
+        val isIgnoringOcclusionCullingBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "is_ignoring_occlusion_culling", IS_IGNORING_OCCLUSION_CULLING_HASH)
-        }
 
         private const val SET_CUSTOM_AABB_HASH = 259215842L
-        private val setCustomAabbBind by lazy {
+        @JvmField
+        val setCustomAabbBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "set_custom_aabb", SET_CUSTOM_AABB_HASH)
-        }
 
         private const val GET_CUSTOM_AABB_HASH = 1068685055L
-        private val getCustomAabbBind by lazy {
+        @JvmField
+        val getCustomAabbBind =
             ObjectCalls.getMethodBind("GeometryInstance3D", "get_custom_aabb", GET_CUSTOM_AABB_HASH)
-        }
     }
 }

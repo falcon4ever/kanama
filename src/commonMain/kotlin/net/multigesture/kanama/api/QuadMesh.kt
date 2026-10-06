@@ -22,7 +22,5 @@ class QuadMesh(handle: GodotHandle) : PlaneMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): QuadMesh? =
             if (handle.address() == 0L) null else QuadMesh(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

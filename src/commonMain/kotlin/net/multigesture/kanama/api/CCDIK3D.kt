@@ -19,7 +19,5 @@ class CCDIK3D(handle: GodotHandle) : IterateIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): CCDIK3D? =
             if (handle.address() == 0L) null else CCDIK3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

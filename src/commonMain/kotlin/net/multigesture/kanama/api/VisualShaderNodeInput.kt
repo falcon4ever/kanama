@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,17 +18,17 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setInputName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setInputNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setInputNameBind, segment, name)
     }
 
     fun getInputName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInputNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputNameBind, segment)
     }
 
     fun getInputRealName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getInputRealNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputRealNameBind, segment)
     }
 
     /** Signal `input_type_changed()`; see [TypedSignal]. */
@@ -49,20 +50,22 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeInput? =
             if (handle.address() == 0L) null else VisualShaderNodeInput(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INPUT_NAME_HASH = 83702148L
-        private val setInputNameBind by lazy {
+        @JvmField
+        val setInputNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeInput", "set_input_name", SET_INPUT_NAME_HASH)
-        }
 
         private const val GET_INPUT_NAME_HASH = 201670096L
-        private val getInputNameBind by lazy {
+        @JvmField
+        val getInputNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeInput", "get_input_name", GET_INPUT_NAME_HASH)
-        }
 
         private const val GET_INPUT_REAL_NAME_HASH = 201670096L
-        private val getInputRealNameBind by lazy {
+        @JvmField
+        val getInputRealNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeInput", "get_input_real_name", GET_INPUT_REAL_NAME_HASH)
-        }
     }
 }

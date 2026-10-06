@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -220,7 +221,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -230,7 +231,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -239,7 +240,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_vertical_alignment
      */
     fun setVerticalAlignment(alignment: VerticalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -248,7 +249,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_vertical_alignment
      */
     fun getVerticalAlignment(): VerticalAlignment {
-        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -257,7 +258,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
+        ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, modulate)
     }
 
     /**
@@ -266,7 +267,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
     }
 
     /**
@@ -275,7 +276,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_outline_modulate
      */
     fun setOutlineModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setOutlineModulateBind, segment, modulate)
+        ObjectCalls.ptrcallWithColorArg(Binds.setOutlineModulateBind, segment, modulate)
     }
 
     /**
@@ -284,7 +285,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_outline_modulate
      */
     fun getOutlineModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getOutlineModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getOutlineModulateBind, segment)
     }
 
     /**
@@ -293,7 +294,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -302,7 +303,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_text_direction
      */
     fun setTextDirection(direction: TextServer.Direction) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -320,7 +321,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_text_direction
      */
     fun getTextDirection(): TextServer.Direction {
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
     }
 
     /**
@@ -330,7 +331,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -340,7 +341,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -349,7 +350,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -358,7 +359,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -367,7 +368,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -376,7 +377,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -385,7 +386,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_uppercase
      */
     fun setUppercase(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUppercaseBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUppercaseBind, segment, enable)
     }
 
     /**
@@ -394,7 +395,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.is_uppercase
      */
     fun isUppercase(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUppercaseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUppercaseBind, segment)
     }
 
     /**
@@ -407,7 +408,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_render_priority
      */
     fun setRenderPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -420,7 +421,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_render_priority
      */
     fun getRenderPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderPriorityBind, segment)
     }
 
     /**
@@ -434,7 +435,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_outline_render_priority
      */
     fun setOutlineRenderPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOutlineRenderPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOutlineRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -448,7 +449,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_outline_render_priority
      */
     fun getOutlineRenderPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineRenderPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineRenderPriorityBind, segment)
     }
 
     /**
@@ -457,7 +458,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_font
      */
     fun setFont(font: Font?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -466,7 +467,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_font
      */
     fun getFont(): Font? {
-        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFontBind, segment))
     }
 
     /**
@@ -477,7 +478,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_font_size
      */
     fun setFontSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFontSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontSizeBind, segment, size)
     }
 
     /**
@@ -488,7 +489,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_font_size
      */
     fun getFontSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFontSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFontSizeBind, segment)
     }
 
     /**
@@ -497,7 +498,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_outline_size
      */
     fun setOutlineSize(outlineSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOutlineSizeBind, segment, outlineSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOutlineSizeBind, segment, outlineSize)
     }
 
     /**
@@ -506,7 +507,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_outline_size
      */
     fun getOutlineSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineSizeBind, segment)
     }
 
     /**
@@ -516,7 +517,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_line_spacing
      */
     fun setLineSpacing(lineSpacing: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, lineSpacing)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, lineSpacing)
     }
 
     /**
@@ -526,7 +527,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_line_spacing
      */
     fun getLineSpacing(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
     }
 
     /**
@@ -537,7 +538,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -548,7 +549,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_autowrap_mode
      */
     fun getAutowrapMode(): TextServer.AutowrapMode {
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
     }
 
     /**
@@ -558,7 +559,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
@@ -568,7 +569,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
-        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -577,7 +578,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_justification_flags
      */
     fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -586,7 +587,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_justification_flags
      */
     fun getJustificationFlags(): TextServer.JustificationFlag {
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
     }
 
     /**
@@ -595,7 +596,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_width
      */
     fun setWidth(width: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -604,7 +605,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_width
      */
     fun getWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
     }
 
     /**
@@ -614,7 +615,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_pixel_size
      */
     fun setPixelSize(pixelSize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, segment, pixelSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPixelSizeBind, segment, pixelSize)
     }
 
     /**
@@ -624,7 +625,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_pixel_size
      */
     fun getPixelSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPixelSizeBind, segment)
     }
 
     /**
@@ -633,7 +634,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -642,7 +643,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -651,7 +652,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_draw_flag
      */
     fun setDrawFlag(flag: Label3D.DrawFlags, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag.value, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setDrawFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -660,7 +661,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_draw_flag
      */
     fun getDrawFlag(flag: Label3D.DrawFlags): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getDrawFlagBind, segment, flag.value)
     }
 
     /**
@@ -669,7 +670,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_billboard_mode
      */
     fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBillboardModeBind, segment, mode.value)
     }
 
     /**
@@ -678,7 +679,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_billboard_mode
      */
     fun getBillboardMode(): BaseMaterial3D.BillboardMode {
-        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment))
+        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardModeBind, segment))
     }
 
     /**
@@ -687,7 +688,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_cut_mode
      */
     fun setAlphaCutMode(mode: Label3D.AlphaCutMode) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaCutModeBind, segment, mode.value)
     }
 
     /**
@@ -696,7 +697,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_cut_mode
      */
     fun getAlphaCutMode(): Label3D.AlphaCutMode {
-        return Label3D.AlphaCutMode(ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment))
+        return Label3D.AlphaCutMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaCutModeBind, segment))
     }
 
     /**
@@ -705,7 +706,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_scissor_threshold
      */
     fun setAlphaScissorThreshold(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaScissorThresholdBind, segment, threshold)
     }
 
     /**
@@ -714,7 +715,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_scissor_threshold
      */
     fun getAlphaScissorThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaScissorThresholdBind, segment)
     }
 
     /**
@@ -723,7 +724,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_hash_scale
      */
     fun setAlphaHashScale(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaHashScaleBind, segment, threshold)
     }
 
     /**
@@ -732,7 +733,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_hash_scale
      */
     fun getAlphaHashScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaHashScaleBind, segment)
     }
 
     /**
@@ -741,7 +742,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_antialiasing
      */
     fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaAntialiasingBind, segment, alphaAa.value)
     }
 
     /**
@@ -750,7 +751,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_antialiasing
      */
     fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
-        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment))
+        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaAntialiasingBind, segment))
     }
 
     /**
@@ -759,7 +760,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_alpha_antialiasing_edge
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, segment, edge)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaAntialiasingEdgeBind, segment, edge)
     }
 
     /**
@@ -768,7 +769,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_alpha_antialiasing_edge
      */
     fun getAlphaAntialiasingEdge(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaAntialiasingEdgeBind, segment)
     }
 
     /**
@@ -777,7 +778,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.set_texture_filter
      */
     fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -786,7 +787,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_texture_filter
      */
     fun getTextureFilter(): BaseMaterial3D.TextureFilter {
-        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
+        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
     }
 
     /**
@@ -796,7 +797,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.generate_triangle_mesh
      */
     fun generateTriangleMesh(): TriangleMesh? {
-        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
+        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateTriangleMeshBind, segment))
     }
 
     /**
@@ -900,310 +901,312 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): Label3D? =
             if (handle.address() == 0L) null else Label3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
-        private val setHorizontalAlignmentBind by lazy {
+        @JvmField
+        val setHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("Label3D", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_HORIZONTAL_ALIGNMENT_HASH = 341400642L
-        private val getHorizontalAlignmentBind by lazy {
+        @JvmField
+        val getHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("Label3D", "get_horizontal_alignment", GET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_VERTICAL_ALIGNMENT_HASH = 1796458609L
-        private val setVerticalAlignmentBind by lazy {
+        @JvmField
+        val setVerticalAlignmentBind =
             ObjectCalls.getMethodBind("Label3D", "set_vertical_alignment", SET_VERTICAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_VERTICAL_ALIGNMENT_HASH = 3274884059L
-        private val getVerticalAlignmentBind by lazy {
+        @JvmField
+        val getVerticalAlignmentBind =
             ObjectCalls.getMethodBind("Label3D", "get_vertical_alignment", GET_VERTICAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_MODULATE_HASH = 2920490490L
-        private val setModulateBind by lazy {
+        @JvmField
+        val setModulateBind =
             ObjectCalls.getMethodBind("Label3D", "set_modulate", SET_MODULATE_HASH)
-        }
 
         private const val GET_MODULATE_HASH = 3444240500L
-        private val getModulateBind by lazy {
+        @JvmField
+        val getModulateBind =
             ObjectCalls.getMethodBind("Label3D", "get_modulate", GET_MODULATE_HASH)
-        }
 
         private const val SET_OUTLINE_MODULATE_HASH = 2920490490L
-        private val setOutlineModulateBind by lazy {
+        @JvmField
+        val setOutlineModulateBind =
             ObjectCalls.getMethodBind("Label3D", "set_outline_modulate", SET_OUTLINE_MODULATE_HASH)
-        }
 
         private const val GET_OUTLINE_MODULATE_HASH = 3444240500L
-        private val getOutlineModulateBind by lazy {
+        @JvmField
+        val getOutlineModulateBind =
             ObjectCalls.getMethodBind("Label3D", "get_outline_modulate", GET_OUTLINE_MODULATE_HASH)
-        }
 
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("Label3D", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("Label3D", "get_text", GET_TEXT_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 1418190634L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("Label3D", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 2516697328L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("Label3D", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("Label3D", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("Label3D", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 55961453L
-        private val setStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("Label3D", "set_structured_text_bidi_override", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
-        private val getStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("Label3D", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
-        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("Label3D", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L
-        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("Label3D", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val SET_UPPERCASE_HASH = 2586408642L
-        private val setUppercaseBind by lazy {
+        @JvmField
+        val setUppercaseBind =
             ObjectCalls.getMethodBind("Label3D", "set_uppercase", SET_UPPERCASE_HASH)
-        }
 
         private const val IS_UPPERCASE_HASH = 36873697L
-        private val isUppercaseBind by lazy {
+        @JvmField
+        val isUppercaseBind =
             ObjectCalls.getMethodBind("Label3D", "is_uppercase", IS_UPPERCASE_HASH)
-        }
 
         private const val SET_RENDER_PRIORITY_HASH = 1286410249L
-        private val setRenderPriorityBind by lazy {
+        @JvmField
+        val setRenderPriorityBind =
             ObjectCalls.getMethodBind("Label3D", "set_render_priority", SET_RENDER_PRIORITY_HASH)
-        }
 
         private const val GET_RENDER_PRIORITY_HASH = 3905245786L
-        private val getRenderPriorityBind by lazy {
+        @JvmField
+        val getRenderPriorityBind =
             ObjectCalls.getMethodBind("Label3D", "get_render_priority", GET_RENDER_PRIORITY_HASH)
-        }
 
         private const val SET_OUTLINE_RENDER_PRIORITY_HASH = 1286410249L
-        private val setOutlineRenderPriorityBind by lazy {
+        @JvmField
+        val setOutlineRenderPriorityBind =
             ObjectCalls.getMethodBind("Label3D", "set_outline_render_priority", SET_OUTLINE_RENDER_PRIORITY_HASH)
-        }
 
         private const val GET_OUTLINE_RENDER_PRIORITY_HASH = 3905245786L
-        private val getOutlineRenderPriorityBind by lazy {
+        @JvmField
+        val getOutlineRenderPriorityBind =
             ObjectCalls.getMethodBind("Label3D", "get_outline_render_priority", GET_OUTLINE_RENDER_PRIORITY_HASH)
-        }
 
         private const val SET_FONT_HASH = 1262170328L
-        private val setFontBind by lazy {
+        @JvmField
+        val setFontBind =
             ObjectCalls.getMethodBind("Label3D", "set_font", SET_FONT_HASH)
-        }
 
         private const val GET_FONT_HASH = 3229501585L
-        private val getFontBind by lazy {
+        @JvmField
+        val getFontBind =
             ObjectCalls.getMethodBind("Label3D", "get_font", GET_FONT_HASH)
-        }
 
         private const val SET_FONT_SIZE_HASH = 1286410249L
-        private val setFontSizeBind by lazy {
+        @JvmField
+        val setFontSizeBind =
             ObjectCalls.getMethodBind("Label3D", "set_font_size", SET_FONT_SIZE_HASH)
-        }
 
         private const val GET_FONT_SIZE_HASH = 3905245786L
-        private val getFontSizeBind by lazy {
+        @JvmField
+        val getFontSizeBind =
             ObjectCalls.getMethodBind("Label3D", "get_font_size", GET_FONT_SIZE_HASH)
-        }
 
         private const val SET_OUTLINE_SIZE_HASH = 1286410249L
-        private val setOutlineSizeBind by lazy {
+        @JvmField
+        val setOutlineSizeBind =
             ObjectCalls.getMethodBind("Label3D", "set_outline_size", SET_OUTLINE_SIZE_HASH)
-        }
 
         private const val GET_OUTLINE_SIZE_HASH = 3905245786L
-        private val getOutlineSizeBind by lazy {
+        @JvmField
+        val getOutlineSizeBind =
             ObjectCalls.getMethodBind("Label3D", "get_outline_size", GET_OUTLINE_SIZE_HASH)
-        }
 
         private const val SET_LINE_SPACING_HASH = 373806689L
-        private val setLineSpacingBind by lazy {
+        @JvmField
+        val setLineSpacingBind =
             ObjectCalls.getMethodBind("Label3D", "set_line_spacing", SET_LINE_SPACING_HASH)
-        }
 
         private const val GET_LINE_SPACING_HASH = 1740695150L
-        private val getLineSpacingBind by lazy {
+        @JvmField
+        val getLineSpacingBind =
             ObjectCalls.getMethodBind("Label3D", "get_line_spacing", GET_LINE_SPACING_HASH)
-        }
 
         private const val SET_AUTOWRAP_MODE_HASH = 3289138044L
-        private val setAutowrapModeBind by lazy {
+        @JvmField
+        val setAutowrapModeBind =
             ObjectCalls.getMethodBind("Label3D", "set_autowrap_mode", SET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val GET_AUTOWRAP_MODE_HASH = 1549071663L
-        private val getAutowrapModeBind by lazy {
+        @JvmField
+        val getAutowrapModeBind =
             ObjectCalls.getMethodBind("Label3D", "get_autowrap_mode", GET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val SET_AUTOWRAP_TRIM_FLAGS_HASH = 2809697122L
-        private val setAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val setAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("Label3D", "set_autowrap_trim_flags", SET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val GET_AUTOWRAP_TRIM_FLAGS_HASH = 2340632602L
-        private val getAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val getAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("Label3D", "get_autowrap_trim_flags", GET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val SET_JUSTIFICATION_FLAGS_HASH = 2877345813L
-        private val setJustificationFlagsBind by lazy {
+        @JvmField
+        val setJustificationFlagsBind =
             ObjectCalls.getMethodBind("Label3D", "set_justification_flags", SET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val GET_JUSTIFICATION_FLAGS_HASH = 1583363614L
-        private val getJustificationFlagsBind by lazy {
+        @JvmField
+        val getJustificationFlagsBind =
             ObjectCalls.getMethodBind("Label3D", "get_justification_flags", GET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 373806689L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("Label3D", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 1740695150L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("Label3D", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val SET_PIXEL_SIZE_HASH = 373806689L
-        private val setPixelSizeBind by lazy {
+        @JvmField
+        val setPixelSizeBind =
             ObjectCalls.getMethodBind("Label3D", "set_pixel_size", SET_PIXEL_SIZE_HASH)
-        }
 
         private const val GET_PIXEL_SIZE_HASH = 1740695150L
-        private val getPixelSizeBind by lazy {
+        @JvmField
+        val getPixelSizeBind =
             ObjectCalls.getMethodBind("Label3D", "get_pixel_size", GET_PIXEL_SIZE_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("Label3D", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("Label3D", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_DRAW_FLAG_HASH = 1285833066L
-        private val setDrawFlagBind by lazy {
+        @JvmField
+        val setDrawFlagBind =
             ObjectCalls.getMethodBind("Label3D", "set_draw_flag", SET_DRAW_FLAG_HASH)
-        }
 
         private const val GET_DRAW_FLAG_HASH = 259226453L
-        private val getDrawFlagBind by lazy {
+        @JvmField
+        val getDrawFlagBind =
             ObjectCalls.getMethodBind("Label3D", "get_draw_flag", GET_DRAW_FLAG_HASH)
-        }
 
         private const val SET_BILLBOARD_MODE_HASH = 4202036497L
-        private val setBillboardModeBind by lazy {
+        @JvmField
+        val setBillboardModeBind =
             ObjectCalls.getMethodBind("Label3D", "set_billboard_mode", SET_BILLBOARD_MODE_HASH)
-        }
 
         private const val GET_BILLBOARD_MODE_HASH = 1283840139L
-        private val getBillboardModeBind by lazy {
+        @JvmField
+        val getBillboardModeBind =
             ObjectCalls.getMethodBind("Label3D", "get_billboard_mode", GET_BILLBOARD_MODE_HASH)
-        }
 
         private const val SET_ALPHA_CUT_MODE_HASH = 2549142916L
-        private val setAlphaCutModeBind by lazy {
+        @JvmField
+        val setAlphaCutModeBind =
             ObjectCalls.getMethodBind("Label3D", "set_alpha_cut_mode", SET_ALPHA_CUT_MODE_HASH)
-        }
 
         private const val GET_ALPHA_CUT_MODE_HASH = 219468601L
-        private val getAlphaCutModeBind by lazy {
+        @JvmField
+        val getAlphaCutModeBind =
             ObjectCalls.getMethodBind("Label3D", "get_alpha_cut_mode", GET_ALPHA_CUT_MODE_HASH)
-        }
 
         private const val SET_ALPHA_SCISSOR_THRESHOLD_HASH = 373806689L
-        private val setAlphaScissorThresholdBind by lazy {
+        @JvmField
+        val setAlphaScissorThresholdBind =
             ObjectCalls.getMethodBind("Label3D", "set_alpha_scissor_threshold", SET_ALPHA_SCISSOR_THRESHOLD_HASH)
-        }
 
         private const val GET_ALPHA_SCISSOR_THRESHOLD_HASH = 1740695150L
-        private val getAlphaScissorThresholdBind by lazy {
+        @JvmField
+        val getAlphaScissorThresholdBind =
             ObjectCalls.getMethodBind("Label3D", "get_alpha_scissor_threshold", GET_ALPHA_SCISSOR_THRESHOLD_HASH)
-        }
 
         private const val SET_ALPHA_HASH_SCALE_HASH = 373806689L
-        private val setAlphaHashScaleBind by lazy {
+        @JvmField
+        val setAlphaHashScaleBind =
             ObjectCalls.getMethodBind("Label3D", "set_alpha_hash_scale", SET_ALPHA_HASH_SCALE_HASH)
-        }
 
         private const val GET_ALPHA_HASH_SCALE_HASH = 1740695150L
-        private val getAlphaHashScaleBind by lazy {
+        @JvmField
+        val getAlphaHashScaleBind =
             ObjectCalls.getMethodBind("Label3D", "get_alpha_hash_scale", GET_ALPHA_HASH_SCALE_HASH)
-        }
 
         private const val SET_ALPHA_ANTIALIASING_HASH = 3212649852L
-        private val setAlphaAntialiasingBind by lazy {
+        @JvmField
+        val setAlphaAntialiasingBind =
             ObjectCalls.getMethodBind("Label3D", "set_alpha_antialiasing", SET_ALPHA_ANTIALIASING_HASH)
-        }
 
         private const val GET_ALPHA_ANTIALIASING_HASH = 2889939400L
-        private val getAlphaAntialiasingBind by lazy {
+        @JvmField
+        val getAlphaAntialiasingBind =
             ObjectCalls.getMethodBind("Label3D", "get_alpha_antialiasing", GET_ALPHA_ANTIALIASING_HASH)
-        }
 
         private const val SET_ALPHA_ANTIALIASING_EDGE_HASH = 373806689L
-        private val setAlphaAntialiasingEdgeBind by lazy {
+        @JvmField
+        val setAlphaAntialiasingEdgeBind =
             ObjectCalls.getMethodBind("Label3D", "set_alpha_antialiasing_edge", SET_ALPHA_ANTIALIASING_EDGE_HASH)
-        }
 
         private const val GET_ALPHA_ANTIALIASING_EDGE_HASH = 1740695150L
-        private val getAlphaAntialiasingEdgeBind by lazy {
+        @JvmField
+        val getAlphaAntialiasingEdgeBind =
             ObjectCalls.getMethodBind("Label3D", "get_alpha_antialiasing_edge", GET_ALPHA_ANTIALIASING_EDGE_HASH)
-        }
 
         private const val SET_TEXTURE_FILTER_HASH = 22904437L
-        private val setTextureFilterBind by lazy {
+        @JvmField
+        val setTextureFilterBind =
             ObjectCalls.getMethodBind("Label3D", "set_texture_filter", SET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_TEXTURE_FILTER_HASH = 3289213076L
-        private val getTextureFilterBind by lazy {
+        @JvmField
+        val getTextureFilterBind =
             ObjectCalls.getMethodBind("Label3D", "get_texture_filter", GET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GENERATE_TRIANGLE_MESH_HASH = 3476533166L
-        private val generateTriangleMeshBind by lazy {
+        @JvmField
+        val generateTriangleMeshBind =
             ObjectCalls.getMethodBind("Label3D", "generate_triangle_mesh", GENERATE_TRIANGLE_MESH_HASH)
-        }
     }
 }

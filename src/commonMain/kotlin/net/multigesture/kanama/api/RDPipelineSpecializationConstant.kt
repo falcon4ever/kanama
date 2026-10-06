@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
      */
     fun setValue(value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setValueBind, segment, value)
+        ObjectCalls.ptrcallWithVariantArg(Binds.setValueBind, segment, value)
     }
 
     /**
@@ -42,7 +43,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
      */
     fun getValue(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getValueBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
      */
     fun setConstantId(constantId: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setConstantIdBind, segment, constantId)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setConstantIdBind, segment, constantId)
     }
 
     /**
@@ -64,7 +65,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
      */
     fun getConstantId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getConstantIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getConstantIdBind, segment)
     }
 
     companion object {
@@ -77,25 +78,27 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineSpecializationConstant? =
             if (handle.address() == 0L) null else RDPipelineSpecializationConstant(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VALUE_HASH = 1114965689L
-        private val setValueBind by lazy {
+        @JvmField
+        val setValueBind =
             ObjectCalls.getMethodBind("RDPipelineSpecializationConstant", "set_value", SET_VALUE_HASH)
-        }
 
         private const val GET_VALUE_HASH = 1214101251L
-        private val getValueBind by lazy {
+        @JvmField
+        val getValueBind =
             ObjectCalls.getMethodBind("RDPipelineSpecializationConstant", "get_value", GET_VALUE_HASH)
-        }
 
         private const val SET_CONSTANT_ID_HASH = 1286410249L
-        private val setConstantIdBind by lazy {
+        @JvmField
+        val setConstantIdBind =
             ObjectCalls.getMethodBind("RDPipelineSpecializationConstant", "set_constant_id", SET_CONSTANT_ID_HASH)
-        }
 
         private const val GET_CONSTANT_ID_HASH = 3905245786L
-        private val getConstantIdBind by lazy {
+        @JvmField
+        val getConstantIdBind =
             ObjectCalls.getMethodBind("RDPipelineSpecializationConstant", "get_constant_id", GET_CONSTANT_ID_HASH)
-        }
     }
 }

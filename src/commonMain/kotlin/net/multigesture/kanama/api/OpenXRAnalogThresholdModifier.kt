@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -36,42 +37,42 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
     fun setOnThreshold(onThreshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOnThresholdBind, segment, onThreshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOnThresholdBind, segment, onThreshold)
     }
 
     fun getOnThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOnThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOnThresholdBind, segment)
     }
 
     fun setOffThreshold(offThreshold: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOffThresholdBind, segment, offThreshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOffThresholdBind, segment, offThreshold)
     }
 
     fun getOffThreshold(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOffThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOffThresholdBind, segment)
     }
 
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, segment))
+        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
     }
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, segment))
+        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))
     }
 
     companion object {
@@ -84,45 +85,47 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAnalogThresholdModifier? =
             if (handle.address() == 0L) null else OpenXRAnalogThresholdModifier(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ON_THRESHOLD_HASH = 373806689L
-        private val setOnThresholdBind by lazy {
+        @JvmField
+        val setOnThresholdBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "set_on_threshold", SET_ON_THRESHOLD_HASH)
-        }
 
         private const val GET_ON_THRESHOLD_HASH = 1740695150L
-        private val getOnThresholdBind by lazy {
+        @JvmField
+        val getOnThresholdBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "get_on_threshold", GET_ON_THRESHOLD_HASH)
-        }
 
         private const val SET_OFF_THRESHOLD_HASH = 373806689L
-        private val setOffThresholdBind by lazy {
+        @JvmField
+        val setOffThresholdBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "set_off_threshold", SET_OFF_THRESHOLD_HASH)
-        }
 
         private const val GET_OFF_THRESHOLD_HASH = 1740695150L
-        private val getOffThresholdBind by lazy {
+        @JvmField
+        val getOffThresholdBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "get_off_threshold", GET_OFF_THRESHOLD_HASH)
-        }
 
         private const val SET_ON_HAPTIC_HASH = 2998020150L
-        private val setOnHapticBind by lazy {
+        @JvmField
+        val setOnHapticBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "set_on_haptic", SET_ON_HAPTIC_HASH)
-        }
 
         private const val GET_ON_HAPTIC_HASH = 922310751L
-        private val getOnHapticBind by lazy {
+        @JvmField
+        val getOnHapticBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "get_on_haptic", GET_ON_HAPTIC_HASH)
-        }
 
         private const val SET_OFF_HAPTIC_HASH = 2998020150L
-        private val setOffHapticBind by lazy {
+        @JvmField
+        val setOffHapticBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "set_off_haptic", SET_OFF_HAPTIC_HASH)
-        }
 
         private const val GET_OFF_HAPTIC_HASH = 922310751L
-        private val getOffHapticBind by lazy {
+        @JvmField
+        val getOffHapticBind =
             ObjectCalls.getMethodBind("OpenXRAnalogThresholdModifier", "get_off_haptic", GET_OFF_HAPTIC_HASH)
-        }
     }
 }

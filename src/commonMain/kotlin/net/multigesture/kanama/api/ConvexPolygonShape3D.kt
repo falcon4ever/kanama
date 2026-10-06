@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setPoints(points: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setPointsBind, segment, points)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setPointsBind, segment, points)
     }
 
     /**
@@ -35,7 +36,7 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getPoints(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPointsBind, segment)
     }
 
     companion object {
@@ -48,15 +49,17 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConvexPolygonShape3D? =
             if (handle.address() == 0L) null else ConvexPolygonShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POINTS_HASH = 334873810L
-        private val setPointsBind by lazy {
+        @JvmField
+        val setPointsBind =
             ObjectCalls.getMethodBind("ConvexPolygonShape3D", "set_points", SET_POINTS_HASH)
-        }
 
         private const val GET_POINTS_HASH = 497664490L
-        private val getPointsBind by lazy {
+        @JvmField
+        val getPointsBind =
             ObjectCalls.getMethodBind("ConvexPolygonShape3D", "get_points", GET_POINTS_HASH)
-        }
     }
 }

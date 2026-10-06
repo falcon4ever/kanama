@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -44,7 +45,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_probe_data
      */
     fun setProbeData(data: VoxelGIData?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProbeDataBind, segment, listOf(data?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setProbeDataBind, segment, listOf(data?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -53,7 +54,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_probe_data
      */
     fun getProbeData(): VoxelGIData? {
-        return VoxelGIData.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProbeDataBind, segment))
+        return VoxelGIData.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProbeDataBind, segment))
     }
 
     /**
@@ -63,7 +64,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_subdiv
      */
     fun setSubdiv(subdiv: VoxelGI.Subdiv) {
-        ObjectCalls.ptrcallWithLongArg(setSubdivBind, segment, subdiv.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSubdivBind, segment, subdiv.value)
     }
 
     /**
@@ -73,7 +74,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_subdiv
      */
     fun getSubdiv(): VoxelGI.Subdiv {
-        return VoxelGI.Subdiv(ObjectCalls.ptrcallNoArgsRetLong(getSubdivBind, segment))
+        return VoxelGI.Subdiv(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubdivBind, segment))
     }
 
     /**
@@ -84,7 +85,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -95,7 +96,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.set_camera_attributes
      */
     fun setCameraAttributes(cameraAttributes: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCameraAttributesBind, segment, listOf(cameraAttributes?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -119,7 +120,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCameraAttributesBind, segment))
     }
 
     /**
@@ -138,7 +139,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.bake
      */
     fun bake(fromNode: Node, createVisualDebug: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(bakeBind, segment, fromNode.segment, createVisualDebug)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.bakeBind, segment, fromNode.segment, createVisualDebug)
     }
 
     /**
@@ -147,7 +148,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.debug_bake
      */
     fun debugBake() {
-        ObjectCalls.ptrcallNoArgs(debugBakeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.debugBakeBind, segment)
     }
 
     /**
@@ -201,55 +202,57 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): VoxelGI? =
             if (handle.address() == 0L) null else VoxelGI(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PROBE_DATA_HASH = 1637849675L
-        private val setProbeDataBind by lazy {
+        @JvmField
+        val setProbeDataBind =
             ObjectCalls.getMethodBind("VoxelGI", "set_probe_data", SET_PROBE_DATA_HASH)
-        }
 
         private const val GET_PROBE_DATA_HASH = 1730645405L
-        private val getProbeDataBind by lazy {
+        @JvmField
+        val getProbeDataBind =
             ObjectCalls.getMethodBind("VoxelGI", "get_probe_data", GET_PROBE_DATA_HASH)
-        }
 
         private const val SET_SUBDIV_HASH = 2240898472L
-        private val setSubdivBind by lazy {
+        @JvmField
+        val setSubdivBind =
             ObjectCalls.getMethodBind("VoxelGI", "set_subdiv", SET_SUBDIV_HASH)
-        }
 
         private const val GET_SUBDIV_HASH = 4261647950L
-        private val getSubdivBind by lazy {
+        @JvmField
+        val getSubdivBind =
             ObjectCalls.getMethodBind("VoxelGI", "get_subdiv", GET_SUBDIV_HASH)
-        }
 
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("VoxelGI", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("VoxelGI", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_CAMERA_ATTRIBUTES_HASH = 2817810567L
-        private val setCameraAttributesBind by lazy {
+        @JvmField
+        val setCameraAttributesBind =
             ObjectCalls.getMethodBind("VoxelGI", "set_camera_attributes", SET_CAMERA_ATTRIBUTES_HASH)
-        }
 
         private const val GET_CAMERA_ATTRIBUTES_HASH = 3921283215L
-        private val getCameraAttributesBind by lazy {
+        @JvmField
+        val getCameraAttributesBind =
             ObjectCalls.getMethodBind("VoxelGI", "get_camera_attributes", GET_CAMERA_ATTRIBUTES_HASH)
-        }
 
         private const val BAKE_HASH = 2781551026L
-        private val bakeBind by lazy {
+        @JvmField
+        val bakeBind =
             ObjectCalls.getMethodBind("VoxelGI", "bake", BAKE_HASH)
-        }
 
         private const val DEBUG_BAKE_HASH = 3218959716L
-        private val debugBakeBind by lazy {
+        @JvmField
+        val debugBakeBind =
             ObjectCalls.getMethodBind("VoxelGI", "debug_bake", DEBUG_BAKE_HASH)
-        }
     }
 }

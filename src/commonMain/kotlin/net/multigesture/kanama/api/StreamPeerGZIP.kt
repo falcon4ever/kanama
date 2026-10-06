@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, segment, useDeflate, bufferSize))
+        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(Binds.startCompressionBind, segment, useDeflate, bufferSize))
     }
 
     /**
@@ -29,7 +30,7 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, segment, useDeflate, bufferSize))
+        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(Binds.startDecompressionBind, segment, useDeflate, bufferSize))
     }
 
     /**
@@ -40,7 +41,7 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun finish(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(finishBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.finishBind, segment))
     }
 
     /**
@@ -50,7 +51,7 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     companion object {
@@ -63,25 +64,27 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerGZIP? =
             if (handle.address() == 0L) null else StreamPeerGZIP(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val START_COMPRESSION_HASH = 781582770L
-        private val startCompressionBind by lazy {
+        @JvmField
+        val startCompressionBind =
             ObjectCalls.getMethodBind("StreamPeerGZIP", "start_compression", START_COMPRESSION_HASH)
-        }
 
         private const val START_DECOMPRESSION_HASH = 781582770L
-        private val startDecompressionBind by lazy {
+        @JvmField
+        val startDecompressionBind =
             ObjectCalls.getMethodBind("StreamPeerGZIP", "start_decompression", START_DECOMPRESSION_HASH)
-        }
 
         private const val FINISH_HASH = 166280745L
-        private val finishBind by lazy {
+        @JvmField
+        val finishBind =
             ObjectCalls.getMethodBind("StreamPeerGZIP", "finish", FINISH_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("StreamPeerGZIP", "clear", CLEAR_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -67,7 +68,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.fold
      */
     fun fold() {
-        ObjectCalls.ptrcallNoArgs(foldBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.foldBind, segment)
     }
 
     /**
@@ -76,7 +77,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.expand
      */
     fun expand() {
-        ObjectCalls.ptrcallNoArgs(expandBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.expandBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_folded
      */
     fun setFolded(folded: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFoldedBind, segment, folded)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFoldedBind, segment, folded)
     }
 
     /**
@@ -94,7 +95,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.is_folded
      */
     fun isFolded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFoldedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFoldedBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_foldable_group
      */
     fun setFoldableGroup(buttonGroup: FoldableGroup?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFoldableGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFoldableGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -114,7 +115,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_foldable_group
      */
     fun getFoldableGroup(): FoldableGroup? {
-        return FoldableGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFoldableGroupBind, segment))
+        return FoldableGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFoldableGroupBind, segment))
     }
 
     /**
@@ -123,7 +124,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title
      */
     fun setTitle(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, text)
     }
 
     /**
@@ -132,7 +133,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_alignment
      */
     fun setTitleAlignment(alignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setTitleAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTitleAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -150,7 +151,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_alignment
      */
     fun getTitleAlignment(): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getTitleAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTitleAlignmentBind, segment))
     }
 
     /**
@@ -160,7 +161,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -170,7 +171,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -179,7 +180,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_text_direction
      */
     fun setTitleTextDirection(textDirection: Control.TextDirection) {
-        ObjectCalls.ptrcallWithLongArg(setTitleTextDirectionBind, segment, textDirection.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTitleTextDirectionBind, segment, textDirection.value)
     }
 
     /**
@@ -188,7 +189,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_text_direction
      */
     fun getTitleTextDirection(): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTitleTextDirectionBind, segment))
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTitleTextDirectionBind, segment))
     }
 
     /**
@@ -197,7 +198,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_text_overrun_behavior
      */
     fun setTitleTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
-        ObjectCalls.ptrcallWithLongArg(setTitleTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTitleTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -206,7 +207,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_text_overrun_behavior
      */
     fun getTitleTextOverrunBehavior(): TextServer.OverrunBehavior {
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTitleTextOverrunBehaviorBind, segment))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTitleTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -215,7 +216,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_title_position
      */
     fun setTitlePosition(titlePosition: FoldableContainer.TitlePosition) {
-        ObjectCalls.ptrcallWithLongArg(setTitlePositionBind, segment, titlePosition.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTitlePositionBind, segment, titlePosition.value)
     }
 
     /**
@@ -224,7 +225,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_title_position
      */
     fun getTitlePosition(): FoldableContainer.TitlePosition {
-        return FoldableContainer.TitlePosition(ObjectCalls.ptrcallNoArgsRetLong(getTitlePositionBind, segment))
+        return FoldableContainer.TitlePosition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTitlePositionBind, segment))
     }
 
     /**
@@ -236,7 +237,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.add_title_bar_control
      */
     fun addTitleBarControl(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(addTitleBarControlBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addTitleBarControlBind, segment, listOf(control.segment))
     }
 
     /**
@@ -246,7 +247,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.remove_title_bar_control
      */
     fun removeTitleBarControl(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTitleBarControlBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeTitleBarControlBind, segment, listOf(control.segment))
     }
 
     /** Signal `folding_changed(is_folded: bool)`; see [TypedSignal]. */
@@ -290,105 +291,107 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): FoldableContainer? =
             if (handle.address() == 0L) null else FoldableContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FOLD_HASH = 3218959716L
-        private val foldBind by lazy {
+        @JvmField
+        val foldBind =
             ObjectCalls.getMethodBind("FoldableContainer", "fold", FOLD_HASH)
-        }
 
         private const val EXPAND_HASH = 3218959716L
-        private val expandBind by lazy {
+        @JvmField
+        val expandBind =
             ObjectCalls.getMethodBind("FoldableContainer", "expand", EXPAND_HASH)
-        }
 
         private const val SET_FOLDED_HASH = 2586408642L
-        private val setFoldedBind by lazy {
+        @JvmField
+        val setFoldedBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_folded", SET_FOLDED_HASH)
-        }
 
         private const val IS_FOLDED_HASH = 36873697L
-        private val isFoldedBind by lazy {
+        @JvmField
+        val isFoldedBind =
             ObjectCalls.getMethodBind("FoldableContainer", "is_folded", IS_FOLDED_HASH)
-        }
 
         private const val SET_FOLDABLE_GROUP_HASH = 3001390597L
-        private val setFoldableGroupBind by lazy {
+        @JvmField
+        val setFoldableGroupBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_foldable_group", SET_FOLDABLE_GROUP_HASH)
-        }
 
         private const val GET_FOLDABLE_GROUP_HASH = 66499518L
-        private val getFoldableGroupBind by lazy {
+        @JvmField
+        val getFoldableGroupBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_foldable_group", GET_FOLDABLE_GROUP_HASH)
-        }
 
         private const val SET_TITLE_HASH = 83702148L
-        private val setTitleBind by lazy {
+        @JvmField
+        val setTitleBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_title", SET_TITLE_HASH)
-        }
 
         private const val GET_TITLE_HASH = 201670096L
-        private val getTitleBind by lazy {
+        @JvmField
+        val getTitleBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_title", GET_TITLE_HASH)
-        }
 
         private const val SET_TITLE_ALIGNMENT_HASH = 2312603777L
-        private val setTitleAlignmentBind by lazy {
+        @JvmField
+        val setTitleAlignmentBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_title_alignment", SET_TITLE_ALIGNMENT_HASH)
-        }
 
         private const val GET_TITLE_ALIGNMENT_HASH = 341400642L
-        private val getTitleAlignmentBind by lazy {
+        @JvmField
+        val getTitleAlignmentBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_title_alignment", GET_TITLE_ALIGNMENT_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_TITLE_TEXT_DIRECTION_HASH = 119160795L
-        private val setTitleTextDirectionBind by lazy {
+        @JvmField
+        val setTitleTextDirectionBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_title_text_direction", SET_TITLE_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TITLE_TEXT_DIRECTION_HASH = 797257663L
-        private val getTitleTextDirectionBind by lazy {
+        @JvmField
+        val getTitleTextDirectionBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_title_text_direction", GET_TITLE_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_TITLE_TEXT_OVERRUN_BEHAVIOR_HASH = 1008890932L
-        private val setTitleTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTitleTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_title_text_overrun_behavior", SET_TITLE_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TITLE_TEXT_OVERRUN_BEHAVIOR_HASH = 3779142101L
-        private val getTitleTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTitleTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_title_text_overrun_behavior", GET_TITLE_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_TITLE_POSITION_HASH = 2276829442L
-        private val setTitlePositionBind by lazy {
+        @JvmField
+        val setTitlePositionBind =
             ObjectCalls.getMethodBind("FoldableContainer", "set_title_position", SET_TITLE_POSITION_HASH)
-        }
 
         private const val GET_TITLE_POSITION_HASH = 3028840207L
-        private val getTitlePositionBind by lazy {
+        @JvmField
+        val getTitlePositionBind =
             ObjectCalls.getMethodBind("FoldableContainer", "get_title_position", GET_TITLE_POSITION_HASH)
-        }
 
         private const val ADD_TITLE_BAR_CONTROL_HASH = 1496901182L
-        private val addTitleBarControlBind by lazy {
+        @JvmField
+        val addTitleBarControlBind =
             ObjectCalls.getMethodBind("FoldableContainer", "add_title_bar_control", ADD_TITLE_BAR_CONTROL_HASH)
-        }
 
         private const val REMOVE_TITLE_BAR_CONTROL_HASH = 1496901182L
-        private val removeTitleBarControlBind by lazy {
+        @JvmField
+        val removeTitleBarControlBind =
             ObjectCalls.getMethodBind("FoldableContainer", "remove_title_bar_control", REMOVE_TITLE_BAR_CONTROL_HASH)
-        }
     }
 }

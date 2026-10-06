@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,17 +19,17 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
 
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
     }
 
     fun setArucoDict(arucoDict: OpenXRSpatialCapabilityConfigurationAruco.ArucoDict) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setArucoDictBind, segment, arucoDict.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setArucoDictBind, segment, arucoDict.value)
     }
 
     fun getArucoDict(): OpenXRSpatialCapabilityConfigurationAruco.ArucoDict {
         checkOpen()
-        return OpenXRSpatialCapabilityConfigurationAruco.ArucoDict(ObjectCalls.ptrcallNoArgsRetLong(getArucoDictBind, segment))
+        return OpenXRSpatialCapabilityConfigurationAruco.ArucoDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getArucoDictBind, segment))
     }
 
     @JvmInline
@@ -63,20 +64,22 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAruco? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
-        private val getEnabledComponentsBind by lazy {
+        @JvmField
+        val getEnabledComponentsBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAruco", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
-        }
 
         private const val SET_ARUCO_DICT_HASH = 2268055963L
-        private val setArucoDictBind by lazy {
+        @JvmField
+        val setArucoDictBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAruco", "set_aruco_dict", SET_ARUCO_DICT_HASH)
-        }
 
         private const val GET_ARUCO_DICT_HASH = 1080386209L
-        private val getArucoDictBind by lazy {
+        @JvmField
+        val getArucoDictBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAruco", "get_aruco_dict", GET_ARUCO_DICT_HASH)
-        }
     }
 }

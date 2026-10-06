@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -31,7 +32,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun parse(jsonText: String, keepText: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, segment, jsonText, keepText))
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.parseBind, segment, jsonText, keepText))
     }
 
     /**
@@ -41,7 +42,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getData(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getDataBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun setData(data: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setDataBind, segment, data)
+        ObjectCalls.ptrcallWithVariantArg(Binds.setDataBind, segment, data)
     }
 
     /**
@@ -61,7 +62,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParsedTextBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getErrorLine(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getErrorLineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getErrorLineBind, segment)
     }
 
     /**
@@ -83,7 +84,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      */
     fun getErrorMessage(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getErrorMessageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getErrorMessageBind, segment)
     }
 
     companion object {
@@ -106,7 +107,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.stringify
          */
         fun stringify(data: Any?, indent: String = "", sortKeys: Boolean = true, fullPrecision: Boolean = false): String {
-            return ObjectCalls.ptrcallWithVariantStringTwoBoolArgsRetString(stringifyBind, NULL_SEGMENT, data, indent, sortKeys, fullPrecision)
+            return ObjectCalls.ptrcallWithVariantStringTwoBoolArgsRetString(Binds.stringifyBind, NULL_SEGMENT, data, indent, sortKeys, fullPrecision)
         }
 
         /**
@@ -116,7 +117,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.parse_string
          */
         fun parseString(jsonString: String): Any? {
-            return ObjectCalls.ptrcallWithStringArgRetVariantScalar(parseStringBind, NULL_SEGMENT, jsonString)
+            return ObjectCalls.ptrcallWithStringArgRetVariantScalar(Binds.parseStringBind, NULL_SEGMENT, jsonString)
         }
 
         /**
@@ -126,7 +127,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.from_native
          */
         fun fromNative(variant: Any?, fullObjects: Boolean = false): Any? {
-            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(fromNativeBind, NULL_SEGMENT, variant, fullObjects)
+            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(Binds.fromNativeBind, NULL_SEGMENT, variant, fullObjects)
         }
 
         /**
@@ -136,7 +137,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.to_native
          */
         fun toNative(json: Any?, allowObjects: Boolean = false): Any? {
-            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(toNativeBind, NULL_SEGMENT, json, allowObjects)
+            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(Binds.toNativeBind, NULL_SEGMENT, json, allowObjects)
         }
 
         @JvmStatic
@@ -148,55 +149,57 @@ class JSON(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JSON? =
             if (handle.address() == 0L) null else JSON(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val STRINGIFY_HASH = 462733549L
-        private val stringifyBind by lazy {
+        @JvmField
+        val stringifyBind =
             ObjectCalls.getMethodBind("JSON", "stringify", STRINGIFY_HASH)
-        }
 
         private const val PARSE_STRING_HASH = 309047738L
-        private val parseStringBind by lazy {
+        @JvmField
+        val parseStringBind =
             ObjectCalls.getMethodBind("JSON", "parse_string", PARSE_STRING_HASH)
-        }
 
         private const val PARSE_HASH = 885841341L
-        private val parseBind by lazy {
+        @JvmField
+        val parseBind =
             ObjectCalls.getMethodBind("JSON", "parse", PARSE_HASH)
-        }
 
         private const val GET_DATA_HASH = 1214101251L
-        private val getDataBind by lazy {
+        @JvmField
+        val getDataBind =
             ObjectCalls.getMethodBind("JSON", "get_data", GET_DATA_HASH)
-        }
 
         private const val SET_DATA_HASH = 1114965689L
-        private val setDataBind by lazy {
+        @JvmField
+        val setDataBind =
             ObjectCalls.getMethodBind("JSON", "set_data", SET_DATA_HASH)
-        }
 
         private const val GET_PARSED_TEXT_HASH = 201670096L
-        private val getParsedTextBind by lazy {
+        @JvmField
+        val getParsedTextBind =
             ObjectCalls.getMethodBind("JSON", "get_parsed_text", GET_PARSED_TEXT_HASH)
-        }
 
         private const val GET_ERROR_LINE_HASH = 3905245786L
-        private val getErrorLineBind by lazy {
+        @JvmField
+        val getErrorLineBind =
             ObjectCalls.getMethodBind("JSON", "get_error_line", GET_ERROR_LINE_HASH)
-        }
 
         private const val GET_ERROR_MESSAGE_HASH = 201670096L
-        private val getErrorMessageBind by lazy {
+        @JvmField
+        val getErrorMessageBind =
             ObjectCalls.getMethodBind("JSON", "get_error_message", GET_ERROR_MESSAGE_HASH)
-        }
 
         private const val FROM_NATIVE_HASH = 2963479484L
-        private val fromNativeBind by lazy {
+        @JvmField
+        val fromNativeBind =
             ObjectCalls.getMethodBind("JSON", "from_native", FROM_NATIVE_HASH)
-        }
 
         private const val TO_NATIVE_HASH = 2963479484L
-        private val toNativeBind by lazy {
+        @JvmField
+        val toNativeBind =
             ObjectCalls.getMethodBind("JSON", "to_native", TO_NATIVE_HASH)
-        }
     }
 }

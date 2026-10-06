@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class FramebufferCacheRD(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: FramebufferCacheRD.get_cache_multipass
          */
         fun getCacheMultipass(textures: List<RID>, passes: List<RDFramebufferPass>, views: Long): RID {
-            return ObjectCalls.ptrcallWithRIDListObjectListUInt32ArgsRetRID(getCacheMultipassBind, NULL_SEGMENT, textures, passes, views)
+            return ObjectCalls.ptrcallWithRIDListObjectListUInt32ArgsRetRID(Binds.getCacheMultipassBind, NULL_SEGMENT, textures, passes, views)
         }
 
         @JvmStatic
@@ -33,10 +34,12 @@ class FramebufferCacheRD(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): FramebufferCacheRD? =
             if (handle.address() == 0L) null else FramebufferCacheRD(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CACHE_MULTIPASS_HASH = 3437881813L
-        private val getCacheMultipassBind by lazy {
+        @JvmField
+        val getCacheMultipassBind =
             ObjectCalls.getMethodBind("FramebufferCacheRD", "get_cache_multipass", GET_CACHE_MULTIPASS_HASH)
-        }
     }
 }

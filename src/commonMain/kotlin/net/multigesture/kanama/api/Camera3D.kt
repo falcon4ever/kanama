@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -117,7 +118,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_ray_normal
      */
     fun projectRayNormal(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayNormalBind, segment, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(Binds.projectRayNormalBind, segment, screenPoint)
     }
 
     /**
@@ -127,7 +128,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_local_ray_normal
      */
     fun projectLocalRayNormal(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectLocalRayNormalBind, segment, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(Binds.projectLocalRayNormalBind, segment, screenPoint)
     }
 
     /**
@@ -138,7 +139,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_ray_origin
      */
     fun projectRayOrigin(screenPoint: Vector2): Vector3 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector3(projectRayOriginBind, segment, screenPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector3(Binds.projectRayOriginBind, segment, screenPoint)
     }
 
     /**
@@ -148,7 +149,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.unproject_position
      */
     fun unprojectPosition(worldPoint: Vector3): Vector2 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector2(unprojectPositionBind, segment, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector2(Binds.unprojectPositionBind, segment, worldPoint)
     }
 
     /**
@@ -161,7 +162,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.is_position_behind
      */
     fun isPositionBehind(worldPoint: Vector3): Boolean {
-        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionBehindBind, segment, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetBool(Binds.isPositionBehindBind, segment, worldPoint)
     }
 
     /**
@@ -171,7 +172,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.project_position
      */
     fun projectPosition(screenPoint: Vector2, zDepth: Double): Vector3 {
-        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetVector3(projectPositionBind, segment, screenPoint, zDepth)
+        return ObjectCalls.ptrcallWithVector2AndDoubleArgRetVector3(Binds.projectPositionBind, segment, screenPoint, zDepth)
     }
 
     /**
@@ -182,7 +183,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_perspective
      */
     fun setPerspective(fov: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithThreeDoubleArgs(setPerspectiveBind, segment, fov, zNear, zFar)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(Binds.setPerspectiveBind, segment, fov, zNear, zFar)
     }
 
     /**
@@ -193,7 +194,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_orthogonal
      */
     fun setOrthogonal(size: Double, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithThreeDoubleArgs(setOrthogonalBind, segment, size, zNear, zFar)
+        ObjectCalls.ptrcallWithThreeDoubleArgs(Binds.setOrthogonalBind, segment, size, zNear, zFar)
     }
 
     /**
@@ -205,7 +206,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_frustum
      */
     fun setFrustum(size: Double, offset: Vector2, zNear: Double, zFar: Double) {
-        ObjectCalls.ptrcallWithDoubleVector2TwoDoubleArgs(setFrustumBind, segment, size, offset, zNear, zFar)
+        ObjectCalls.ptrcallWithDoubleVector2TwoDoubleArgs(Binds.setFrustumBind, segment, size, offset, zNear, zFar)
     }
 
     /**
@@ -215,7 +216,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makeCurrentBind, segment)
     }
 
     /**
@@ -225,7 +226,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.clear_current
      */
     fun clearCurrent(enableNext: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(clearCurrentBind, segment, enableNext)
+        ObjectCalls.ptrcallWithBoolArg(Binds.clearCurrentBind, segment, enableNext)
     }
 
     /**
@@ -237,7 +238,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_current
      */
     fun setCurrent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCurrentBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCurrentBind, segment, enabled)
     }
 
     /**
@@ -249,7 +250,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCurrentBind, segment)
     }
 
     /**
@@ -260,7 +261,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_camera_transform
      */
     fun getCameraTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getCameraTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getCameraTransformBind, segment)
     }
 
     /**
@@ -270,7 +271,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_camera_projection
      */
     fun getCameraProjection(): Projection {
-        return ObjectCalls.ptrcallNoArgsRetProjection(getCameraProjectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetProjection(Binds.getCameraProjectionBind, segment)
     }
 
     /**
@@ -283,7 +284,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_fov
      */
     fun getFov(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
     }
 
     /**
@@ -294,7 +295,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_frustum_offset
      */
     fun getFrustumOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFrustumOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFrustumOffsetBind, segment)
     }
 
     /**
@@ -304,7 +305,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_size
      */
     fun getSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeBind, segment)
     }
 
     /**
@@ -315,7 +316,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_far
      */
     fun getFar(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFarBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFarBind, segment)
     }
 
     /**
@@ -327,7 +328,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_near
      */
     fun getNear(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNearBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNearBind, segment)
     }
 
     /**
@@ -340,7 +341,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_fov
      */
     fun setFov(fov: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFovBind, segment, fov)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFovBind, segment, fov)
     }
 
     /**
@@ -351,7 +352,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_frustum_offset
      */
     fun setFrustumOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setFrustumOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setFrustumOffsetBind, segment, offset)
     }
 
     /**
@@ -361,7 +362,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_size
      */
     fun setSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -372,7 +373,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_far
      */
     fun setFar(far: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFarBind, segment, far)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFarBind, segment, far)
     }
 
     /**
@@ -384,7 +385,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_near
      */
     fun setNear(near: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setNearBind, segment, near)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNearBind, segment, near)
     }
 
     /**
@@ -394,7 +395,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_projection
      */
     fun getProjection(): Camera3D.ProjectionType {
-        return Camera3D.ProjectionType(ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment))
+        return Camera3D.ProjectionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProjectionBind, segment))
     }
 
     /**
@@ -404,7 +405,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_projection
      */
     fun setProjection(mode: Camera3D.ProjectionType) {
-        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProjectionBind, segment, mode.value)
     }
 
     /**
@@ -413,7 +414,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_h_offset
      */
     fun setHOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHOffsetBind, segment, offset)
     }
 
     /**
@@ -422,7 +423,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_h_offset
      */
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHOffsetBind, segment)
     }
 
     /**
@@ -431,7 +432,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_v_offset
      */
     fun setVOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVOffsetBind, segment, offset)
     }
 
     /**
@@ -440,7 +441,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_v_offset
      */
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVOffsetBind, segment)
     }
 
     /**
@@ -458,7 +459,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCullMaskBind, segment, mask)
     }
 
     /**
@@ -476,7 +477,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCullMaskBind, segment)
     }
 
     /**
@@ -485,7 +486,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_environment
      */
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -494,7 +495,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_environment
      */
     fun getEnvironment(): Environment? {
-        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEnvironmentBind, segment))
     }
 
     /**
@@ -503,7 +504,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_attributes
      */
     fun setAttributes(env: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -512,7 +513,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_attributes
      */
     fun getAttributes(): CameraAttributes? {
-        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAttributesBind, segment))
     }
 
     /**
@@ -521,7 +522,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_compositor
      */
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -530,7 +531,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_compositor
      */
     fun getCompositor(): Compositor? {
-        return Compositor.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
+        return Compositor.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCompositorBind, segment))
     }
 
     /**
@@ -540,7 +541,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_keep_aspect_mode
      */
     fun setKeepAspectMode(mode: Camera3D.KeepAspect) {
-        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setKeepAspectModeBind, segment, mode.value)
     }
 
     /**
@@ -550,7 +551,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_keep_aspect_mode
      */
     fun getKeepAspectMode(): Camera3D.KeepAspect {
-        return Camera3D.KeepAspect(ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment))
+        return Camera3D.KeepAspect(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeepAspectModeBind, segment))
     }
 
     /**
@@ -563,7 +564,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_doppler_tracking
      */
     fun setDopplerTracking(mode: Camera3D.DopplerTracking) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDopplerTrackingBind, segment, mode.value)
     }
 
     /**
@@ -576,7 +577,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_doppler_tracking
      */
     fun getDopplerTracking(): Camera3D.DopplerTracking {
-        return Camera3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
+        return Camera3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDopplerTrackingBind, segment))
     }
 
     /**
@@ -586,7 +587,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_frustum
      */
     fun getFrustum(): List<Plane> {
-        return ObjectCalls.ptrcallNoArgsRetPlaneList(getFrustumBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPlaneList(Binds.getFrustumBind, segment)
     }
 
     /**
@@ -598,7 +599,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.is_position_in_frustum
      */
     fun isPositionInFrustum(worldPoint: Vector3): Boolean {
-        return ObjectCalls.ptrcallWithVector3ArgRetBool(isPositionInFrustumBind, segment, worldPoint)
+        return ObjectCalls.ptrcallWithVector3ArgRetBool(Binds.isPositionInFrustumBind, segment, worldPoint)
     }
 
     /**
@@ -607,7 +608,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_camera_rid
      */
     fun getCameraRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCameraRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCameraRidBind, segment)
     }
 
     /**
@@ -617,7 +618,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_pyramid_shape_rid
      */
     fun getPyramidShapeRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getPyramidShapeRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getPyramidShapeRidBind, segment)
     }
 
     /**
@@ -627,7 +628,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_cull_mask_value
      */
     fun setCullMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCullMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCullMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -637,7 +638,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_cull_mask_value
      */
     fun getCullMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCullMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -748,250 +749,252 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         @JvmStatic
         fun create(): Camera3D =
             Camera3D(GodotHandle(ObjectCalls.constructObject("Camera3D")))
+    }
 
+    private object Binds {
         private const val PROJECT_RAY_NORMAL_HASH = 1718073306L
-        private val projectRayNormalBind by lazy {
+        @JvmField
+        val projectRayNormalBind =
             ObjectCalls.getMethodBind("Camera3D", "project_ray_normal", PROJECT_RAY_NORMAL_HASH)
-        }
 
         private const val PROJECT_LOCAL_RAY_NORMAL_HASH = 1718073306L
-        private val projectLocalRayNormalBind by lazy {
+        @JvmField
+        val projectLocalRayNormalBind =
             ObjectCalls.getMethodBind("Camera3D", "project_local_ray_normal", PROJECT_LOCAL_RAY_NORMAL_HASH)
-        }
 
         private const val PROJECT_RAY_ORIGIN_HASH = 1718073306L
-        private val projectRayOriginBind by lazy {
+        @JvmField
+        val projectRayOriginBind =
             ObjectCalls.getMethodBind("Camera3D", "project_ray_origin", PROJECT_RAY_ORIGIN_HASH)
-        }
 
         private const val UNPROJECT_POSITION_HASH = 3758901831L
-        private val unprojectPositionBind by lazy {
+        @JvmField
+        val unprojectPositionBind =
             ObjectCalls.getMethodBind("Camera3D", "unproject_position", UNPROJECT_POSITION_HASH)
-        }
 
         private const val IS_POSITION_BEHIND_HASH = 3108956480L
-        private val isPositionBehindBind by lazy {
+        @JvmField
+        val isPositionBehindBind =
             ObjectCalls.getMethodBind("Camera3D", "is_position_behind", IS_POSITION_BEHIND_HASH)
-        }
 
         private const val PROJECT_POSITION_HASH = 2171975744L
-        private val projectPositionBind by lazy {
+        @JvmField
+        val projectPositionBind =
             ObjectCalls.getMethodBind("Camera3D", "project_position", PROJECT_POSITION_HASH)
-        }
 
         private const val SET_PERSPECTIVE_HASH = 2385087082L
-        private val setPerspectiveBind by lazy {
+        @JvmField
+        val setPerspectiveBind =
             ObjectCalls.getMethodBind("Camera3D", "set_perspective", SET_PERSPECTIVE_HASH)
-        }
 
         private const val SET_ORTHOGONAL_HASH = 2385087082L
-        private val setOrthogonalBind by lazy {
+        @JvmField
+        val setOrthogonalBind =
             ObjectCalls.getMethodBind("Camera3D", "set_orthogonal", SET_ORTHOGONAL_HASH)
-        }
 
         private const val SET_FRUSTUM_HASH = 354890663L
-        private val setFrustumBind by lazy {
+        @JvmField
+        val setFrustumBind =
             ObjectCalls.getMethodBind("Camera3D", "set_frustum", SET_FRUSTUM_HASH)
-        }
 
         private const val MAKE_CURRENT_HASH = 3218959716L
-        private val makeCurrentBind by lazy {
+        @JvmField
+        val makeCurrentBind =
             ObjectCalls.getMethodBind("Camera3D", "make_current", MAKE_CURRENT_HASH)
-        }
 
         private const val CLEAR_CURRENT_HASH = 3216645846L
-        private val clearCurrentBind by lazy {
+        @JvmField
+        val clearCurrentBind =
             ObjectCalls.getMethodBind("Camera3D", "clear_current", CLEAR_CURRENT_HASH)
-        }
 
         private const val SET_CURRENT_HASH = 2586408642L
-        private val setCurrentBind by lazy {
+        @JvmField
+        val setCurrentBind =
             ObjectCalls.getMethodBind("Camera3D", "set_current", SET_CURRENT_HASH)
-        }
 
         private const val IS_CURRENT_HASH = 36873697L
-        private val isCurrentBind by lazy {
+        @JvmField
+        val isCurrentBind =
             ObjectCalls.getMethodBind("Camera3D", "is_current", IS_CURRENT_HASH)
-        }
 
         private const val GET_CAMERA_TRANSFORM_HASH = 3229777777L
-        private val getCameraTransformBind by lazy {
+        @JvmField
+        val getCameraTransformBind =
             ObjectCalls.getMethodBind("Camera3D", "get_camera_transform", GET_CAMERA_TRANSFORM_HASH)
-        }
 
         private const val GET_CAMERA_PROJECTION_HASH = 2910717950L
-        private val getCameraProjectionBind by lazy {
+        @JvmField
+        val getCameraProjectionBind =
             ObjectCalls.getMethodBind("Camera3D", "get_camera_projection", GET_CAMERA_PROJECTION_HASH)
-        }
 
         private const val GET_FOV_HASH = 1740695150L
-        private val getFovBind by lazy {
+        @JvmField
+        val getFovBind =
             ObjectCalls.getMethodBind("Camera3D", "get_fov", GET_FOV_HASH)
-        }
 
         private const val GET_FRUSTUM_OFFSET_HASH = 3341600327L
-        private val getFrustumOffsetBind by lazy {
+        @JvmField
+        val getFrustumOffsetBind =
             ObjectCalls.getMethodBind("Camera3D", "get_frustum_offset", GET_FRUSTUM_OFFSET_HASH)
-        }
 
         private const val GET_SIZE_HASH = 1740695150L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("Camera3D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val GET_FAR_HASH = 1740695150L
-        private val getFarBind by lazy {
+        @JvmField
+        val getFarBind =
             ObjectCalls.getMethodBind("Camera3D", "get_far", GET_FAR_HASH)
-        }
 
         private const val GET_NEAR_HASH = 1740695150L
-        private val getNearBind by lazy {
+        @JvmField
+        val getNearBind =
             ObjectCalls.getMethodBind("Camera3D", "get_near", GET_NEAR_HASH)
-        }
 
         private const val SET_FOV_HASH = 373806689L
-        private val setFovBind by lazy {
+        @JvmField
+        val setFovBind =
             ObjectCalls.getMethodBind("Camera3D", "set_fov", SET_FOV_HASH)
-        }
 
         private const val SET_FRUSTUM_OFFSET_HASH = 743155724L
-        private val setFrustumOffsetBind by lazy {
+        @JvmField
+        val setFrustumOffsetBind =
             ObjectCalls.getMethodBind("Camera3D", "set_frustum_offset", SET_FRUSTUM_OFFSET_HASH)
-        }
 
         private const val SET_SIZE_HASH = 373806689L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("Camera3D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val SET_FAR_HASH = 373806689L
-        private val setFarBind by lazy {
+        @JvmField
+        val setFarBind =
             ObjectCalls.getMethodBind("Camera3D", "set_far", SET_FAR_HASH)
-        }
 
         private const val SET_NEAR_HASH = 373806689L
-        private val setNearBind by lazy {
+        @JvmField
+        val setNearBind =
             ObjectCalls.getMethodBind("Camera3D", "set_near", SET_NEAR_HASH)
-        }
 
         private const val GET_PROJECTION_HASH = 2624185235L
-        private val getProjectionBind by lazy {
+        @JvmField
+        val getProjectionBind =
             ObjectCalls.getMethodBind("Camera3D", "get_projection", GET_PROJECTION_HASH)
-        }
 
         private const val SET_PROJECTION_HASH = 4218540108L
-        private val setProjectionBind by lazy {
+        @JvmField
+        val setProjectionBind =
             ObjectCalls.getMethodBind("Camera3D", "set_projection", SET_PROJECTION_HASH)
-        }
 
         private const val SET_H_OFFSET_HASH = 373806689L
-        private val setHOffsetBind by lazy {
+        @JvmField
+        val setHOffsetBind =
             ObjectCalls.getMethodBind("Camera3D", "set_h_offset", SET_H_OFFSET_HASH)
-        }
 
         private const val GET_H_OFFSET_HASH = 1740695150L
-        private val getHOffsetBind by lazy {
+        @JvmField
+        val getHOffsetBind =
             ObjectCalls.getMethodBind("Camera3D", "get_h_offset", GET_H_OFFSET_HASH)
-        }
 
         private const val SET_V_OFFSET_HASH = 373806689L
-        private val setVOffsetBind by lazy {
+        @JvmField
+        val setVOffsetBind =
             ObjectCalls.getMethodBind("Camera3D", "set_v_offset", SET_V_OFFSET_HASH)
-        }
 
         private const val GET_V_OFFSET_HASH = 1740695150L
-        private val getVOffsetBind by lazy {
+        @JvmField
+        val getVOffsetBind =
             ObjectCalls.getMethodBind("Camera3D", "get_v_offset", GET_V_OFFSET_HASH)
-        }
 
         private const val SET_CULL_MASK_HASH = 1286410249L
-        private val setCullMaskBind by lazy {
+        @JvmField
+        val setCullMaskBind =
             ObjectCalls.getMethodBind("Camera3D", "set_cull_mask", SET_CULL_MASK_HASH)
-        }
 
         private const val GET_CULL_MASK_HASH = 3905245786L
-        private val getCullMaskBind by lazy {
+        @JvmField
+        val getCullMaskBind =
             ObjectCalls.getMethodBind("Camera3D", "get_cull_mask", GET_CULL_MASK_HASH)
-        }
 
         private const val SET_ENVIRONMENT_HASH = 4143518816L
-        private val setEnvironmentBind by lazy {
+        @JvmField
+        val setEnvironmentBind =
             ObjectCalls.getMethodBind("Camera3D", "set_environment", SET_ENVIRONMENT_HASH)
-        }
 
         private const val GET_ENVIRONMENT_HASH = 3082064660L
-        private val getEnvironmentBind by lazy {
+        @JvmField
+        val getEnvironmentBind =
             ObjectCalls.getMethodBind("Camera3D", "get_environment", GET_ENVIRONMENT_HASH)
-        }
 
         private const val SET_ATTRIBUTES_HASH = 2817810567L
-        private val setAttributesBind by lazy {
+        @JvmField
+        val setAttributesBind =
             ObjectCalls.getMethodBind("Camera3D", "set_attributes", SET_ATTRIBUTES_HASH)
-        }
 
         private const val GET_ATTRIBUTES_HASH = 3921283215L
-        private val getAttributesBind by lazy {
+        @JvmField
+        val getAttributesBind =
             ObjectCalls.getMethodBind("Camera3D", "get_attributes", GET_ATTRIBUTES_HASH)
-        }
 
         private const val SET_COMPOSITOR_HASH = 1586754307L
-        private val setCompositorBind by lazy {
+        @JvmField
+        val setCompositorBind =
             ObjectCalls.getMethodBind("Camera3D", "set_compositor", SET_COMPOSITOR_HASH)
-        }
 
         private const val GET_COMPOSITOR_HASH = 3647707413L
-        private val getCompositorBind by lazy {
+        @JvmField
+        val getCompositorBind =
             ObjectCalls.getMethodBind("Camera3D", "get_compositor", GET_COMPOSITOR_HASH)
-        }
 
         private const val SET_KEEP_ASPECT_MODE_HASH = 1740651252L
-        private val setKeepAspectModeBind by lazy {
+        @JvmField
+        val setKeepAspectModeBind =
             ObjectCalls.getMethodBind("Camera3D", "set_keep_aspect_mode", SET_KEEP_ASPECT_MODE_HASH)
-        }
 
         private const val GET_KEEP_ASPECT_MODE_HASH = 2790278316L
-        private val getKeepAspectModeBind by lazy {
+        @JvmField
+        val getKeepAspectModeBind =
             ObjectCalls.getMethodBind("Camera3D", "get_keep_aspect_mode", GET_KEEP_ASPECT_MODE_HASH)
-        }
 
         private const val SET_DOPPLER_TRACKING_HASH = 3109431270L
-        private val setDopplerTrackingBind by lazy {
+        @JvmField
+        val setDopplerTrackingBind =
             ObjectCalls.getMethodBind("Camera3D", "set_doppler_tracking", SET_DOPPLER_TRACKING_HASH)
-        }
 
         private const val GET_DOPPLER_TRACKING_HASH = 1584483649L
-        private val getDopplerTrackingBind by lazy {
+        @JvmField
+        val getDopplerTrackingBind =
             ObjectCalls.getMethodBind("Camera3D", "get_doppler_tracking", GET_DOPPLER_TRACKING_HASH)
-        }
 
         private const val GET_FRUSTUM_HASH = 3995934104L
-        private val getFrustumBind by lazy {
+        @JvmField
+        val getFrustumBind =
             ObjectCalls.getMethodBind("Camera3D", "get_frustum", GET_FRUSTUM_HASH)
-        }
 
         private const val IS_POSITION_IN_FRUSTUM_HASH = 3108956480L
-        private val isPositionInFrustumBind by lazy {
+        @JvmField
+        val isPositionInFrustumBind =
             ObjectCalls.getMethodBind("Camera3D", "is_position_in_frustum", IS_POSITION_IN_FRUSTUM_HASH)
-        }
 
         private const val GET_CAMERA_RID_HASH = 2944877500L
-        private val getCameraRidBind by lazy {
+        @JvmField
+        val getCameraRidBind =
             ObjectCalls.getMethodBind("Camera3D", "get_camera_rid", GET_CAMERA_RID_HASH)
-        }
 
         private const val GET_PYRAMID_SHAPE_RID_HASH = 529393457L
-        private val getPyramidShapeRidBind by lazy {
+        @JvmField
+        val getPyramidShapeRidBind =
             ObjectCalls.getMethodBind("Camera3D", "get_pyramid_shape_rid", GET_PYRAMID_SHAPE_RID_HASH)
-        }
 
         private const val SET_CULL_MASK_VALUE_HASH = 300928843L
-        private val setCullMaskValueBind by lazy {
+        @JvmField
+        val setCullMaskValueBind =
             ObjectCalls.getMethodBind("Camera3D", "set_cull_mask_value", SET_CULL_MASK_VALUE_HASH)
-        }
 
         private const val GET_CULL_MASK_VALUE_HASH = 1116898809L
-        private val getCullMaskValueBind by lazy {
+        @JvmField
+        val getCullMaskValueBind =
             ObjectCalls.getMethodBind("Camera3D", "get_cull_mask_value", GET_CULL_MASK_VALUE_HASH)
-        }
     }
 }

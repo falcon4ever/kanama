@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, pMember.value)
     }
 
     /**
@@ -46,7 +47,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -56,7 +57,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSamples(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSamplesBind, segment, pMember.value)
     }
 
     /**
@@ -66,7 +67,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment))
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplesBind, segment))
     }
 
     /**
@@ -76,7 +77,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setUsageFlags(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setUsageFlagsBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setUsageFlagsBind, segment, pMember)
     }
 
     /**
@@ -86,7 +87,7 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUsageFlags(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getUsageFlagsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getUsageFlagsBind, segment)
     }
 
     companion object {
@@ -99,35 +100,37 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDAttachmentFormat? =
             if (handle.address() == 0L) null else RDAttachmentFormat(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FORMAT_HASH = 565531219L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("RDAttachmentFormat", "set_format", SET_FORMAT_HASH)
-        }
 
         private const val GET_FORMAT_HASH = 2235804183L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("RDAttachmentFormat", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val SET_SAMPLES_HASH = 3774171498L
-        private val setSamplesBind by lazy {
+        @JvmField
+        val setSamplesBind =
             ObjectCalls.getMethodBind("RDAttachmentFormat", "set_samples", SET_SAMPLES_HASH)
-        }
 
         private const val GET_SAMPLES_HASH = 407791724L
-        private val getSamplesBind by lazy {
+        @JvmField
+        val getSamplesBind =
             ObjectCalls.getMethodBind("RDAttachmentFormat", "get_samples", GET_SAMPLES_HASH)
-        }
 
         private const val SET_USAGE_FLAGS_HASH = 1286410249L
-        private val setUsageFlagsBind by lazy {
+        @JvmField
+        val setUsageFlagsBind =
             ObjectCalls.getMethodBind("RDAttachmentFormat", "set_usage_flags", SET_USAGE_FLAGS_HASH)
-        }
 
         private const val GET_USAGE_FLAGS_HASH = 3905245786L
-        private val getUsageFlagsBind by lazy {
+        @JvmField
+        val getUsageFlagsBind =
             ObjectCalls.getMethodBind("RDAttachmentFormat", "get_usage_flags", GET_USAGE_FLAGS_HASH)
-        }
     }
 }

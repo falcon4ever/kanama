@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -33,7 +34,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -44,7 +45,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun setFabrikDataChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFabrikDataChainLengthBind, segment, length)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFabrikDataChainLengthBind, segment, length)
     }
 
     /**
@@ -64,7 +65,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun getFabrikDataChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFabrikDataChainLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFabrikDataChainLengthBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun setFabrikJointBone2dNode(jointIdx: Int, bone2dNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setFabrikJointBone2dNodeBind, segment, jointIdx, bone2dNodepath)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setFabrikJointBone2dNodeBind, segment, jointIdx, bone2dNodepath)
     }
 
     /**
@@ -84,7 +85,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun getFabrikJointBone2dNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getFabrikJointBone2dNodeBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getFabrikJointBone2dNodeBind, segment, jointIdx)
     }
 
     /**
@@ -95,7 +96,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun setFabrikJointBoneIndex(jointIdx: Int, boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setFabrikJointBoneIndexBind, segment, jointIdx, boneIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setFabrikJointBoneIndexBind, segment, jointIdx, boneIdx)
     }
 
     /**
@@ -105,7 +106,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun getFabrikJointBoneIndex(jointIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getFabrikJointBoneIndexBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getFabrikJointBoneIndexBind, segment, jointIdx)
     }
 
     /**
@@ -115,7 +116,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun setFabrikJointMagnetPosition(jointIdx: Int, magnetPosition: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setFabrikJointMagnetPositionBind, segment, jointIdx, magnetPosition)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setFabrikJointMagnetPositionBind, segment, jointIdx, magnetPosition)
     }
 
     /**
@@ -125,7 +126,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun getFabrikJointMagnetPosition(jointIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getFabrikJointMagnetPositionBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getFabrikJointMagnetPositionBind, segment, jointIdx)
     }
 
     /**
@@ -137,7 +138,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun setFabrikJointUseTargetRotation(jointIdx: Int, useTargetRotation: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setFabrikJointUseTargetRotationBind, segment, jointIdx, useTargetRotation)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setFabrikJointUseTargetRotationBind, segment, jointIdx, useTargetRotation)
     }
 
     /**
@@ -148,7 +149,7 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
      */
     fun getFabrikJointUseTargetRotation(jointIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getFabrikJointUseTargetRotationBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getFabrikJointUseTargetRotationBind, segment, jointIdx)
     }
 
     companion object {
@@ -161,65 +162,67 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DFABRIK? =
             if (handle.address() == 0L) null else SkeletonModification2DFABRIK(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TARGET_NODE_HASH = 1348162250L
-        private val setTargetNodeBind by lazy {
+        @JvmField
+        val setTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_target_node", SET_TARGET_NODE_HASH)
-        }
 
         private const val GET_TARGET_NODE_HASH = 4075236667L
-        private val getTargetNodeBind by lazy {
+        @JvmField
+        val getTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_target_node", GET_TARGET_NODE_HASH)
-        }
 
         private const val SET_FABRIK_DATA_CHAIN_LENGTH_HASH = 1286410249L
-        private val setFabrikDataChainLengthBind by lazy {
+        @JvmField
+        val setFabrikDataChainLengthBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_fabrik_data_chain_length", SET_FABRIK_DATA_CHAIN_LENGTH_HASH)
-        }
 
         private const val GET_FABRIK_DATA_CHAIN_LENGTH_HASH = 2455072627L
-        private val getFabrikDataChainLengthBind by lazy {
+        @JvmField
+        val getFabrikDataChainLengthBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_fabrik_data_chain_length", GET_FABRIK_DATA_CHAIN_LENGTH_HASH)
-        }
 
         private const val SET_FABRIK_JOINT_BONE2D_NODE_HASH = 2761262315L
-        private val setFabrikJointBone2dNodeBind by lazy {
+        @JvmField
+        val setFabrikJointBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_fabrik_joint_bone2d_node", SET_FABRIK_JOINT_BONE2D_NODE_HASH)
-        }
 
         private const val GET_FABRIK_JOINT_BONE2D_NODE_HASH = 408788394L
-        private val getFabrikJointBone2dNodeBind by lazy {
+        @JvmField
+        val getFabrikJointBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_fabrik_joint_bone2d_node", GET_FABRIK_JOINT_BONE2D_NODE_HASH)
-        }
 
         private const val SET_FABRIK_JOINT_BONE_INDEX_HASH = 3937882851L
-        private val setFabrikJointBoneIndexBind by lazy {
+        @JvmField
+        val setFabrikJointBoneIndexBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_fabrik_joint_bone_index", SET_FABRIK_JOINT_BONE_INDEX_HASH)
-        }
 
         private const val GET_FABRIK_JOINT_BONE_INDEX_HASH = 923996154L
-        private val getFabrikJointBoneIndexBind by lazy {
+        @JvmField
+        val getFabrikJointBoneIndexBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_fabrik_joint_bone_index", GET_FABRIK_JOINT_BONE_INDEX_HASH)
-        }
 
         private const val SET_FABRIK_JOINT_MAGNET_POSITION_HASH = 163021252L
-        private val setFabrikJointMagnetPositionBind by lazy {
+        @JvmField
+        val setFabrikJointMagnetPositionBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_fabrik_joint_magnet_position", SET_FABRIK_JOINT_MAGNET_POSITION_HASH)
-        }
 
         private const val GET_FABRIK_JOINT_MAGNET_POSITION_HASH = 2299179447L
-        private val getFabrikJointMagnetPositionBind by lazy {
+        @JvmField
+        val getFabrikJointMagnetPositionBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_fabrik_joint_magnet_position", GET_FABRIK_JOINT_MAGNET_POSITION_HASH)
-        }
 
         private const val SET_FABRIK_JOINT_USE_TARGET_ROTATION_HASH = 300928843L
-        private val setFabrikJointUseTargetRotationBind by lazy {
+        @JvmField
+        val setFabrikJointUseTargetRotationBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "set_fabrik_joint_use_target_rotation", SET_FABRIK_JOINT_USE_TARGET_ROTATION_HASH)
-        }
 
         private const val GET_FABRIK_JOINT_USE_TARGET_ROTATION_HASH = 1116898809L
-        private val getFabrikJointUseTargetRotationBind by lazy {
+        @JvmField
+        val getFabrikJointUseTargetRotationBind =
             ObjectCalls.getMethodBind("SkeletonModification2DFABRIK", "get_fabrik_joint_use_target_rotation", GET_FABRIK_JOINT_USE_TARGET_ROTATION_HASH)
-        }
     }
 }

@@ -22,7 +22,5 @@ class SkeletonProfileHumanoid(handle: GodotHandle) : SkeletonProfile(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonProfileHumanoid? =
             if (handle.address() == 0L) null else SkeletonProfileHumanoid(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

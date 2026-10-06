@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSourceFile(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSourceFileBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSourceFileBind, segment)
     }
 
     companion object {
@@ -30,10 +31,12 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorScenePostImport? =
             if (handle.address() == 0L) null else EditorScenePostImport(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SOURCE_FILE_HASH = 201670096L
-        private val getSourceFileBind by lazy {
+        @JvmField
+        val getSourceFileBind =
             ObjectCalls.getMethodBind("EditorScenePostImport", "get_source_file", GET_SOURCE_FILE_HASH)
-        }
     }
 }

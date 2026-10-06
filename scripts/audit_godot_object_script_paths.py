@@ -51,13 +51,13 @@ def main() -> int:
     get_body = function_body(source, "get")
     if "ClassDB.classGetProperty" in get_body:
         errors.append("GodotObject.get must use Object.get, not ClassDB.classGetProperty")
-    if "ptrcallWithStringNameArgRetVariantScalar(objectGetBind" not in get_body:
+    if "ptrcallWithStringNameArgRetVariantScalar(Binds.objectGetBind" not in get_body:
         errors.append("GodotObject.get must call the Object.get MethodBind")
 
     set_body = function_body(source, "set")
     if "ClassDB.classSetProperty" in set_body:
         errors.append("GodotObject.set must use Object.set, not ClassDB.classSetProperty")
-    if "ptrcallWithStringNameAndVariantArg(objectSetBind" not in set_body:
+    if "ptrcallWithStringNameAndVariantArg(Binds.objectSetBind" not in set_body:
         errors.append("GodotObject.set must call the Object.set MethodBind")
     if "ObjectRuntime.onPropertySet" not in set_body:
         errors.append("GodotObject.set must preserve pending Kanama script property replay (ObjectRuntime.onPropertySet)")

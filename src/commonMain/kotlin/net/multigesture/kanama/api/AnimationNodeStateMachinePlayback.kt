@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun travel(toNode: String, resetOnTeleport: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(travelBind, segment, toNode, resetOnTeleport)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.travelBind, segment, toNode, resetOnTeleport)
     }
 
     /**
@@ -32,7 +33,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun start(node: String, reset: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(startBind, segment, node, reset)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.startBind, segment, node, reset)
     }
 
     /**
@@ -43,7 +44,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun next() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(nextBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.nextBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -63,7 +64,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun isPlaying(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getCurrentNode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getCurrentNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getCurrentNodeBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getCurrentPlayPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentPlayPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentPlayPositionBind, segment)
     }
 
     /**
@@ -97,7 +98,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getCurrentLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCurrentLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCurrentLengthBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingFromNode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getFadingFromNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getFadingFromNodeBind, segment)
     }
 
     /**
@@ -118,7 +119,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingFromPlayPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromPlayPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingFromPlayPositionBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingFromLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingFromLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingFromLengthBind, segment)
     }
 
     /**
@@ -140,7 +141,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingPosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingPositionBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getFadingLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFadingLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadingLengthBind, segment)
     }
 
     /**
@@ -160,7 +161,7 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
      */
     fun getTravelPath(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getTravelPathBind, segment)
     }
 
     /** Signal `state_started(state: StringName)`; see [TypedSignal]. */
@@ -188,75 +189,77 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachinePlayback? =
             if (handle.address() == 0L) null else AnimationNodeStateMachinePlayback(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val TRAVEL_HASH = 3823612587L
-        private val travelBind by lazy {
+        @JvmField
+        val travelBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "travel", TRAVEL_HASH)
-        }
 
         private const val START_HASH = 3823612587L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "start", START_HASH)
-        }
 
         private const val NEXT_HASH = 3218959716L
-        private val nextBind by lazy {
+        @JvmField
+        val nextBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "next", NEXT_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "stop", STOP_HASH)
-        }
 
         private const val IS_PLAYING_HASH = 36873697L
-        private val isPlayingBind by lazy {
+        @JvmField
+        val isPlayingBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "is_playing", IS_PLAYING_HASH)
-        }
 
         private const val GET_CURRENT_NODE_HASH = 2002593661L
-        private val getCurrentNodeBind by lazy {
+        @JvmField
+        val getCurrentNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_current_node", GET_CURRENT_NODE_HASH)
-        }
 
         private const val GET_CURRENT_PLAY_POSITION_HASH = 1740695150L
-        private val getCurrentPlayPositionBind by lazy {
+        @JvmField
+        val getCurrentPlayPositionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_current_play_position", GET_CURRENT_PLAY_POSITION_HASH)
-        }
 
         private const val GET_CURRENT_LENGTH_HASH = 1740695150L
-        private val getCurrentLengthBind by lazy {
+        @JvmField
+        val getCurrentLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_current_length", GET_CURRENT_LENGTH_HASH)
-        }
 
         private const val GET_FADING_FROM_NODE_HASH = 2002593661L
-        private val getFadingFromNodeBind by lazy {
+        @JvmField
+        val getFadingFromNodeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_fading_from_node", GET_FADING_FROM_NODE_HASH)
-        }
 
         private const val GET_FADING_FROM_PLAY_POSITION_HASH = 1740695150L
-        private val getFadingFromPlayPositionBind by lazy {
+        @JvmField
+        val getFadingFromPlayPositionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_fading_from_play_position", GET_FADING_FROM_PLAY_POSITION_HASH)
-        }
 
         private const val GET_FADING_FROM_LENGTH_HASH = 1740695150L
-        private val getFadingFromLengthBind by lazy {
+        @JvmField
+        val getFadingFromLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_fading_from_length", GET_FADING_FROM_LENGTH_HASH)
-        }
 
         private const val GET_FADING_POSITION_HASH = 1740695150L
-        private val getFadingPositionBind by lazy {
+        @JvmField
+        val getFadingPositionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_fading_position", GET_FADING_POSITION_HASH)
-        }
 
         private const val GET_FADING_LENGTH_HASH = 1740695150L
-        private val getFadingLengthBind by lazy {
+        @JvmField
+        val getFadingLengthBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_fading_length", GET_FADING_LENGTH_HASH)
-        }
 
         private const val GET_TRAVEL_PATH_HASH = 3995934104L
-        private val getTravelPathBind by lazy {
+        @JvmField
+        val getTravelPathBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachinePlayback", "get_travel_path", GET_TRAVEL_PATH_HASH)
-        }
     }
 }

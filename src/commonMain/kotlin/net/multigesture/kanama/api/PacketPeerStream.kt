@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setStreamPeer(peer: StreamPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setStreamPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setStreamPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -47,27 +48,27 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getStreamPeer(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, segment))
+        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamPeerBind, segment))
     }
 
     fun setInputBufferMaxSize(maxSizeBytes: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInputBufferMaxSizeBind, segment, maxSizeBytes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInputBufferMaxSizeBind, segment, maxSizeBytes)
     }
 
     fun setOutputBufferMaxSize(maxSizeBytes: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutputBufferMaxSizeBind, segment, maxSizeBytes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOutputBufferMaxSizeBind, segment, maxSizeBytes)
     }
 
     fun getInputBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputBufferMaxSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputBufferMaxSizeBind, segment)
     }
 
     fun getOutputBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutputBufferMaxSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputBufferMaxSizeBind, segment)
     }
 
     companion object {
@@ -80,35 +81,37 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerStream? =
             if (handle.address() == 0L) null else PacketPeerStream(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STREAM_PEER_HASH = 3281897016L
-        private val setStreamPeerBind by lazy {
+        @JvmField
+        val setStreamPeerBind =
             ObjectCalls.getMethodBind("PacketPeerStream", "set_stream_peer", SET_STREAM_PEER_HASH)
-        }
 
         private const val GET_STREAM_PEER_HASH = 2741655269L
-        private val getStreamPeerBind by lazy {
+        @JvmField
+        val getStreamPeerBind =
             ObjectCalls.getMethodBind("PacketPeerStream", "get_stream_peer", GET_STREAM_PEER_HASH)
-        }
 
         private const val SET_INPUT_BUFFER_MAX_SIZE_HASH = 1286410249L
-        private val setInputBufferMaxSizeBind by lazy {
+        @JvmField
+        val setInputBufferMaxSizeBind =
             ObjectCalls.getMethodBind("PacketPeerStream", "set_input_buffer_max_size", SET_INPUT_BUFFER_MAX_SIZE_HASH)
-        }
 
         private const val SET_OUTPUT_BUFFER_MAX_SIZE_HASH = 1286410249L
-        private val setOutputBufferMaxSizeBind by lazy {
+        @JvmField
+        val setOutputBufferMaxSizeBind =
             ObjectCalls.getMethodBind("PacketPeerStream", "set_output_buffer_max_size", SET_OUTPUT_BUFFER_MAX_SIZE_HASH)
-        }
 
         private const val GET_INPUT_BUFFER_MAX_SIZE_HASH = 3905245786L
-        private val getInputBufferMaxSizeBind by lazy {
+        @JvmField
+        val getInputBufferMaxSizeBind =
             ObjectCalls.getMethodBind("PacketPeerStream", "get_input_buffer_max_size", GET_INPUT_BUFFER_MAX_SIZE_HASH)
-        }
 
         private const val GET_OUTPUT_BUFFER_MAX_SIZE_HASH = 3905245786L
-        private val getOutputBufferMaxSizeBind by lazy {
+        @JvmField
+        val getOutputBufferMaxSizeBind =
             ObjectCalls.getMethodBind("PacketPeerStream", "get_output_buffer_max_size", GET_OUTPUT_BUFFER_MAX_SIZE_HASH)
-        }
     }
 }

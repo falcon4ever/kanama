@@ -22,7 +22,5 @@ class XRControllerTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRControllerTracker? =
             if (handle.address() == 0L) null else XRControllerTracker(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

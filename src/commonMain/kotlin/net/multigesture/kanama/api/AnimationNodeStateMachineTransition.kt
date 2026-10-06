@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -74,7 +75,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setSwitchMode(mode: AnimationNodeStateMachineTransition.SwitchMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSwitchModeBind, segment, mode.value)
     }
 
     /**
@@ -84,7 +85,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getSwitchMode(): AnimationNodeStateMachineTransition.SwitchMode {
         checkOpen()
-        return AnimationNodeStateMachineTransition.SwitchMode(ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, segment))
+        return AnimationNodeStateMachineTransition.SwitchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSwitchModeBind, segment))
     }
 
     /**
@@ -96,7 +97,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setAdvanceMode(mode: AnimationNodeStateMachineTransition.AdvanceMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAdvanceModeBind, segment, mode.value)
     }
 
     /**
@@ -108,7 +109,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getAdvanceMode(): AnimationNodeStateMachineTransition.AdvanceMode {
         checkOpen()
-        return AnimationNodeStateMachineTransition.AdvanceMode(ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, segment))
+        return AnimationNodeStateMachineTransition.AdvanceMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAdvanceModeBind, segment))
     }
 
     /**
@@ -120,7 +121,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setAdvanceCondition(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setAdvanceConditionBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setAdvanceConditionBind, segment, name)
     }
 
     /**
@@ -132,7 +133,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getAdvanceCondition(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getAdvanceConditionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getAdvanceConditionBind, segment)
     }
 
     /**
@@ -146,7 +147,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setXfadeTime(secs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setXfadeTimeBind, segment, secs)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setXfadeTimeBind, segment, secs)
     }
 
     /**
@@ -160,7 +161,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getXfadeTime(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getXfadeTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getXfadeTimeBind, segment)
     }
 
     /**
@@ -171,7 +172,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setXfadeCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setXfadeCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -182,7 +183,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getXfadeCurveBind, segment))
     }
 
     /**
@@ -193,7 +194,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setBreakLoopAtEnd(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBreakLoopAtEndBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBreakLoopAtEndBind, segment, enable)
     }
 
     /**
@@ -204,7 +205,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun isLoopBrokenAtEnd(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLoopBrokenAtEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLoopBrokenAtEndBind, segment)
     }
 
     /**
@@ -214,7 +215,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setReset(reset: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setResetBind, segment, reset)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setResetBind, segment, reset)
     }
 
     /**
@@ -224,7 +225,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun isReset(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isResetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResetBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setPriority(priority: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
     }
 
     /**
@@ -246,7 +247,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getPriority(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
     }
 
     /**
@@ -258,7 +259,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun setAdvanceExpression(text: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setAdvanceExpressionBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setAdvanceExpressionBind, segment, text)
     }
 
     /**
@@ -270,7 +271,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getAdvanceExpression(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getAdvanceExpressionBind, segment)
     }
 
     /** Signal `advance_condition_changed()`; see [TypedSignal]. */
@@ -358,95 +359,97 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachineTransition? =
             if (handle.address() == 0L) null else AnimationNodeStateMachineTransition(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SWITCH_MODE_HASH = 2074906633L
-        private val setSwitchModeBind by lazy {
+        @JvmField
+        val setSwitchModeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_switch_mode", SET_SWITCH_MODE_HASH)
-        }
 
         private const val GET_SWITCH_MODE_HASH = 2138562085L
-        private val getSwitchModeBind by lazy {
+        @JvmField
+        val getSwitchModeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_switch_mode", GET_SWITCH_MODE_HASH)
-        }
 
         private const val SET_ADVANCE_MODE_HASH = 1210869868L
-        private val setAdvanceModeBind by lazy {
+        @JvmField
+        val setAdvanceModeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_advance_mode", SET_ADVANCE_MODE_HASH)
-        }
 
         private const val GET_ADVANCE_MODE_HASH = 61101689L
-        private val getAdvanceModeBind by lazy {
+        @JvmField
+        val getAdvanceModeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_advance_mode", GET_ADVANCE_MODE_HASH)
-        }
 
         private const val SET_ADVANCE_CONDITION_HASH = 3304788590L
-        private val setAdvanceConditionBind by lazy {
+        @JvmField
+        val setAdvanceConditionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_advance_condition", SET_ADVANCE_CONDITION_HASH)
-        }
 
         private const val GET_ADVANCE_CONDITION_HASH = 2002593661L
-        private val getAdvanceConditionBind by lazy {
+        @JvmField
+        val getAdvanceConditionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_advance_condition", GET_ADVANCE_CONDITION_HASH)
-        }
 
         private const val SET_XFADE_TIME_HASH = 373806689L
-        private val setXfadeTimeBind by lazy {
+        @JvmField
+        val setXfadeTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_xfade_time", SET_XFADE_TIME_HASH)
-        }
 
         private const val GET_XFADE_TIME_HASH = 1740695150L
-        private val getXfadeTimeBind by lazy {
+        @JvmField
+        val getXfadeTimeBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_xfade_time", GET_XFADE_TIME_HASH)
-        }
 
         private const val SET_XFADE_CURVE_HASH = 270443179L
-        private val setXfadeCurveBind by lazy {
+        @JvmField
+        val setXfadeCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_xfade_curve", SET_XFADE_CURVE_HASH)
-        }
 
         private const val GET_XFADE_CURVE_HASH = 2460114913L
-        private val getXfadeCurveBind by lazy {
+        @JvmField
+        val getXfadeCurveBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_xfade_curve", GET_XFADE_CURVE_HASH)
-        }
 
         private const val SET_BREAK_LOOP_AT_END_HASH = 2586408642L
-        private val setBreakLoopAtEndBind by lazy {
+        @JvmField
+        val setBreakLoopAtEndBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_break_loop_at_end", SET_BREAK_LOOP_AT_END_HASH)
-        }
 
         private const val IS_LOOP_BROKEN_AT_END_HASH = 36873697L
-        private val isLoopBrokenAtEndBind by lazy {
+        @JvmField
+        val isLoopBrokenAtEndBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "is_loop_broken_at_end", IS_LOOP_BROKEN_AT_END_HASH)
-        }
 
         private const val SET_RESET_HASH = 2586408642L
-        private val setResetBind by lazy {
+        @JvmField
+        val setResetBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_reset", SET_RESET_HASH)
-        }
 
         private const val IS_RESET_HASH = 36873697L
-        private val isResetBind by lazy {
+        @JvmField
+        val isResetBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "is_reset", IS_RESET_HASH)
-        }
 
         private const val SET_PRIORITY_HASH = 1286410249L
-        private val setPriorityBind by lazy {
+        @JvmField
+        val setPriorityBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_priority", SET_PRIORITY_HASH)
-        }
 
         private const val GET_PRIORITY_HASH = 3905245786L
-        private val getPriorityBind by lazy {
+        @JvmField
+        val getPriorityBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_priority", GET_PRIORITY_HASH)
-        }
 
         private const val SET_ADVANCE_EXPRESSION_HASH = 83702148L
-        private val setAdvanceExpressionBind by lazy {
+        @JvmField
+        val setAdvanceExpressionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "set_advance_expression", SET_ADVANCE_EXPRESSION_HASH)
-        }
 
         private const val GET_ADVANCE_EXPRESSION_HASH = 201670096L
-        private val getAdvanceExpressionBind by lazy {
+        @JvmField
+        val getAdvanceExpressionBind =
             ObjectCalls.getMethodBind("AnimationNodeStateMachineTransition", "get_advance_expression", GET_ADVANCE_EXPRESSION_HASH)
-        }
     }
 }

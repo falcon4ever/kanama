@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -39,7 +40,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.set_fit_margin
      */
     fun setFitMargin(fitMargin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFitMarginBind, segment, fitMargin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFitMarginBind, segment, fitMargin)
     }
 
     /**
@@ -52,7 +53,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.get_fit_margin
      */
     fun getFitMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFitMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFitMarginBind, segment)
     }
 
     /**
@@ -66,7 +67,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.set_clear_margin
      */
     fun setClearMargin(clearMargin: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setClearMarginBind, segment, clearMargin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setClearMarginBind, segment, clearMargin)
     }
 
     /**
@@ -80,7 +81,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.get_clear_margin
      */
     fun getClearMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClearMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClearMarginBind, segment)
     }
 
     /**
@@ -91,7 +92,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.set_use_mipmaps
      */
     fun setUseMipmaps(useMipmaps: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseMipmapsBind, segment, useMipmaps)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseMipmapsBind, segment, useMipmaps)
     }
 
     /**
@@ -102,7 +103,7 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CanvasGroup.is_using_mipmaps
      */
     fun isUsingMipmaps(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingMipmapsBind, segment)
     }
 
     companion object {
@@ -112,35 +113,37 @@ class CanvasGroup(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasGroup? =
             if (handle.address() == 0L) null else CanvasGroup(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FIT_MARGIN_HASH = 373806689L
-        private val setFitMarginBind by lazy {
+        @JvmField
+        val setFitMarginBind =
             ObjectCalls.getMethodBind("CanvasGroup", "set_fit_margin", SET_FIT_MARGIN_HASH)
-        }
 
         private const val GET_FIT_MARGIN_HASH = 1740695150L
-        private val getFitMarginBind by lazy {
+        @JvmField
+        val getFitMarginBind =
             ObjectCalls.getMethodBind("CanvasGroup", "get_fit_margin", GET_FIT_MARGIN_HASH)
-        }
 
         private const val SET_CLEAR_MARGIN_HASH = 373806689L
-        private val setClearMarginBind by lazy {
+        @JvmField
+        val setClearMarginBind =
             ObjectCalls.getMethodBind("CanvasGroup", "set_clear_margin", SET_CLEAR_MARGIN_HASH)
-        }
 
         private const val GET_CLEAR_MARGIN_HASH = 1740695150L
-        private val getClearMarginBind by lazy {
+        @JvmField
+        val getClearMarginBind =
             ObjectCalls.getMethodBind("CanvasGroup", "get_clear_margin", GET_CLEAR_MARGIN_HASH)
-        }
 
         private const val SET_USE_MIPMAPS_HASH = 2586408642L
-        private val setUseMipmapsBind by lazy {
+        @JvmField
+        val setUseMipmapsBind =
             ObjectCalls.getMethodBind("CanvasGroup", "set_use_mipmaps", SET_USE_MIPMAPS_HASH)
-        }
 
         private const val IS_USING_MIPMAPS_HASH = 36873697L
-        private val isUsingMipmapsBind by lazy {
+        @JvmField
+        val isUsingMipmapsBind =
             ObjectCalls.getMethodBind("CanvasGroup", "is_using_mipmaps", IS_USING_MIPMAPS_HASH)
-        }
     }
 }

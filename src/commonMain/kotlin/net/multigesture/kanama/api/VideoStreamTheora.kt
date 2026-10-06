@@ -20,7 +20,5 @@ class VideoStreamTheora(handle: GodotHandle) : VideoStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VideoStreamTheora? =
             if (handle.address() == 0L) null else VideoStreamTheora(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

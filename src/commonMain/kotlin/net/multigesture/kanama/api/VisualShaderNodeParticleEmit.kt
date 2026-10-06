@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,12 +19,12 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
 
     fun setFlags(flags: VisualShaderNodeParticleEmit.EmitFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, flags.value)
     }
 
     fun getFlags(): VisualShaderNodeParticleEmit.EmitFlags {
         checkOpen()
-        return VisualShaderNodeParticleEmit.EmitFlags(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
+        return VisualShaderNodeParticleEmit.EmitFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
     }
 
     @JvmInline
@@ -47,15 +48,17 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleEmit? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleEmit(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FLAGS_HASH = 3960756792L
-        private val setFlagsBind by lazy {
+        @JvmField
+        val setFlagsBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleEmit", "set_flags", SET_FLAGS_HASH)
-        }
 
         private const val GET_FLAGS_HASH = 171277835L
-        private val getFlagsBind by lazy {
+        @JvmField
+        val getFlagsBind =
             ObjectCalls.getMethodBind("VisualShaderNodeParticleEmit", "get_flags", GET_FLAGS_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -63,7 +64,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -73,7 +74,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -82,7 +83,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_region_enabled
      */
     fun setRegionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRegionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRegionEnabledBind, segment, enabled)
     }
 
     /**
@@ -91,7 +92,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.is_region_enabled
      */
     fun isRegionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRegionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRegionEnabledBind, segment)
     }
 
     /**
@@ -100,7 +101,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_region_rect
      */
     fun setRegionRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, rect)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setRegionRectBind, segment, rect)
     }
 
     /**
@@ -109,7 +110,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_region_rect
      */
     fun getRegionRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionRectBind, segment)
     }
 
     /**
@@ -120,7 +121,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_frame
      */
     fun setFrame(frame: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFrameBind, segment, frame)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFrameBind, segment, frame)
     }
 
     /**
@@ -131,7 +132,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_frame
      */
     fun getFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFrameBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_frame_coords
      */
     fun setFrameCoords(coords: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setFrameCoordsBind, segment, coords)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setFrameCoordsBind, segment, coords)
     }
 
     /**
@@ -151,7 +152,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_frame_coords
      */
     fun getFrameCoords(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getFrameCoordsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getFrameCoordsBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_vframes
      */
     fun setVframes(vframes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVframesBind, segment, vframes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVframesBind, segment, vframes)
     }
 
     /**
@@ -173,7 +174,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_vframes
      */
     fun getVframes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVframesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVframesBind, segment)
     }
 
     /**
@@ -184,7 +185,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.set_hframes
      */
     fun setHframes(hframes: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHframesBind, segment, hframes)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHframesBind, segment, hframes)
     }
 
     /**
@@ -195,7 +196,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_hframes
      */
     fun getHframes(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHframesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHframesBind, segment)
     }
 
     /** Signal `frame_changed()`; see [TypedSignal]. */
@@ -220,75 +221,77 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
 
         internal fun wrap(handle: RawSegment): Sprite3D? =
             if (handle.address() == 0L) null else Sprite3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("Sprite3D", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_REGION_ENABLED_HASH = 2586408642L
-        private val setRegionEnabledBind by lazy {
+        @JvmField
+        val setRegionEnabledBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_region_enabled", SET_REGION_ENABLED_HASH)
-        }
 
         private const val IS_REGION_ENABLED_HASH = 36873697L
-        private val isRegionEnabledBind by lazy {
+        @JvmField
+        val isRegionEnabledBind =
             ObjectCalls.getMethodBind("Sprite3D", "is_region_enabled", IS_REGION_ENABLED_HASH)
-        }
 
         private const val SET_REGION_RECT_HASH = 2046264180L
-        private val setRegionRectBind by lazy {
+        @JvmField
+        val setRegionRectBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_region_rect", SET_REGION_RECT_HASH)
-        }
 
         private const val GET_REGION_RECT_HASH = 1639390495L
-        private val getRegionRectBind by lazy {
+        @JvmField
+        val getRegionRectBind =
             ObjectCalls.getMethodBind("Sprite3D", "get_region_rect", GET_REGION_RECT_HASH)
-        }
 
         private const val SET_FRAME_HASH = 1286410249L
-        private val setFrameBind by lazy {
+        @JvmField
+        val setFrameBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_frame", SET_FRAME_HASH)
-        }
 
         private const val GET_FRAME_HASH = 3905245786L
-        private val getFrameBind by lazy {
+        @JvmField
+        val getFrameBind =
             ObjectCalls.getMethodBind("Sprite3D", "get_frame", GET_FRAME_HASH)
-        }
 
         private const val SET_FRAME_COORDS_HASH = 1130785943L
-        private val setFrameCoordsBind by lazy {
+        @JvmField
+        val setFrameCoordsBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_frame_coords", SET_FRAME_COORDS_HASH)
-        }
 
         private const val GET_FRAME_COORDS_HASH = 3690982128L
-        private val getFrameCoordsBind by lazy {
+        @JvmField
+        val getFrameCoordsBind =
             ObjectCalls.getMethodBind("Sprite3D", "get_frame_coords", GET_FRAME_COORDS_HASH)
-        }
 
         private const val SET_VFRAMES_HASH = 1286410249L
-        private val setVframesBind by lazy {
+        @JvmField
+        val setVframesBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_vframes", SET_VFRAMES_HASH)
-        }
 
         private const val GET_VFRAMES_HASH = 3905245786L
-        private val getVframesBind by lazy {
+        @JvmField
+        val getVframesBind =
             ObjectCalls.getMethodBind("Sprite3D", "get_vframes", GET_VFRAMES_HASH)
-        }
 
         private const val SET_HFRAMES_HASH = 1286410249L
-        private val setHframesBind by lazy {
+        @JvmField
+        val setHframesBind =
             ObjectCalls.getMethodBind("Sprite3D", "set_hframes", SET_HFRAMES_HASH)
-        }
 
         private const val GET_HFRAMES_HASH = 3905245786L
-        private val getHframesBind by lazy {
+        @JvmField
+        val getHframesBind =
             ObjectCalls.getMethodBind("Sprite3D", "get_hframes", GET_HFRAMES_HASH)
-        }
     }
 }

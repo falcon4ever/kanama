@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -12,9 +13,8 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Geometry3D
  */
 object Geometry3D {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("Geometry3D")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Calculates and returns all the vertex points of a convex shape defined by an array of `planes`.
@@ -23,7 +23,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun computeConvexMeshPoints(planes: List<Plane>): List<Vector3> {
-        return ObjectCalls.ptrcallWithPlaneListArgRetPackedVector3List(computeConvexMeshPointsBind, singleton, planes)
+        return ObjectCalls.ptrcallWithPlaneListArgRetPackedVector3List(Binds.computeConvexMeshPointsBind, singleton, planes)
     }
 
     /**
@@ -35,7 +35,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun buildBoxPlanes(extents: Vector3): List<Plane> {
-        return ObjectCalls.ptrcallWithVector3ArgRetPlaneList(buildBoxPlanesBind, singleton, extents)
+        return ObjectCalls.ptrcallWithVector3ArgRetPlaneList(Binds.buildBoxPlanesBind, singleton, extents)
     }
 
     /**
@@ -48,7 +48,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun buildCylinderPlanes(radius: Double, height: Double, sides: Int, axis: Vector3.Axis = Vector3.Axis.Z): List<Plane> {
-        return ObjectCalls.ptrcallWithTwoDoubleIntLongArgsRetPlaneList(buildCylinderPlanesBind, singleton, radius, height, sides, axis.value)
+        return ObjectCalls.ptrcallWithTwoDoubleIntLongArgsRetPlaneList(Binds.buildCylinderPlanesBind, singleton, radius, height, sides, axis.value)
     }
 
     /**
@@ -62,7 +62,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun buildCapsulePlanes(radius: Double, height: Double, sides: Int, lats: Int, axis: Vector3.Axis = Vector3.Axis.Z): List<Plane> {
-        return ObjectCalls.ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(buildCapsulePlanesBind, singleton, radius, height, sides, lats, axis.value)
+        return ObjectCalls.ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(Binds.buildCapsulePlanesBind, singleton, radius, height, sides, lats, axis.value)
     }
 
     /**
@@ -74,7 +74,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun getClosestPointsBetweenSegments(p1: Vector3, p2: Vector3, q1: Vector3, q2: Vector3): List<Vector3> {
-        return ObjectCalls.ptrcallWithFourVector3ArgsRetPackedVector3List(getClosestPointsBetweenSegmentsBind, singleton, p1, p2, q1, q2)
+        return ObjectCalls.ptrcallWithFourVector3ArgsRetPackedVector3List(Binds.getClosestPointsBetweenSegmentsBind, singleton, p1, p2, q1, q2)
     }
 
     /**
@@ -85,7 +85,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun getClosestPointToSegment(point: Vector3, s1: Vector3, s2: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithThreeVector3ArgsRetVector3(getClosestPointToSegmentBind, singleton, point, s1, s2)
+        return ObjectCalls.ptrcallWithThreeVector3ArgsRetVector3(Binds.getClosestPointToSegmentBind, singleton, point, s1, s2)
     }
 
     /**
@@ -97,7 +97,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun getClosestPointToSegmentUncapped(point: Vector3, s1: Vector3, s2: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithThreeVector3ArgsRetVector3(getClosestPointToSegmentUncappedBind, singleton, point, s1, s2)
+        return ObjectCalls.ptrcallWithThreeVector3ArgsRetVector3(Binds.getClosestPointToSegmentUncappedBind, singleton, point, s1, s2)
     }
 
     /**
@@ -111,7 +111,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun getTriangleBarycentricCoords(point: Vector3, a: Vector3, b: Vector3, c: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithFourVector3ArgsRetVector3(getTriangleBarycentricCoordsBind, singleton, point, a, b, c)
+        return ObjectCalls.ptrcallWithFourVector3ArgsRetVector3(Binds.getTriangleBarycentricCoordsBind, singleton, point, a, b, c)
     }
 
     /**
@@ -123,7 +123,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun rayIntersectsTriangle(from: Vector3, dir: Vector3, a: Vector3, b: Vector3, c: Vector3): Any? {
-        return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(rayIntersectsTriangleBind, singleton, from, dir, a, b, c)
+        return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(Binds.rayIntersectsTriangleBind, singleton, from, dir, a, b, c)
     }
 
     /**
@@ -134,7 +134,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun segmentIntersectsTriangle(from: Vector3, to: Vector3, a: Vector3, b: Vector3, c: Vector3): Any? {
-        return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(segmentIntersectsTriangleBind, singleton, from, to, a, b, c)
+        return ObjectCalls.ptrcallWithFiveVector3ArgsRetVariantScalar(Binds.segmentIntersectsTriangleBind, singleton, from, to, a, b, c)
     }
 
     /**
@@ -147,7 +147,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun segmentIntersectsSphere(from: Vector3, to: Vector3, spherePosition: Vector3, sphereRadius: Double): List<Vector3> {
-        return ObjectCalls.ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(segmentIntersectsSphereBind, singleton, from, to, spherePosition, sphereRadius)
+        return ObjectCalls.ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(Binds.segmentIntersectsSphereBind, singleton, from, to, spherePosition, sphereRadius)
     }
 
     /**
@@ -160,7 +160,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun segmentIntersectsCylinder(from: Vector3, to: Vector3, height: Double, radius: Double): List<Vector3> {
-        return ObjectCalls.ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(segmentIntersectsCylinderBind, singleton, from, to, height, radius)
+        return ObjectCalls.ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(Binds.segmentIntersectsCylinderBind, singleton, from, to, height, radius)
     }
 
     /**
@@ -173,7 +173,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun segmentIntersectsConvex(from: Vector3, to: Vector3, planes: List<Plane>): List<Vector3> {
-        return ObjectCalls.ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List(segmentIntersectsConvexBind, singleton, from, to, planes)
+        return ObjectCalls.ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List(Binds.segmentIntersectsConvexBind, singleton, from, to, planes)
     }
 
     /**
@@ -184,7 +184,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun clipPolygon(points: List<Vector3>, plane: Plane): List<Vector3> {
-        return ObjectCalls.ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List(clipPolygonBind, singleton, points, plane)
+        return ObjectCalls.ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List(Binds.clipPolygonBind, singleton, points, plane)
     }
 
     /**
@@ -199,7 +199,7 @@ object Geometry3D {
      */
     @JvmStatic
     fun tetrahedralizeDelaunay(points: List<Vector3>): List<Int> {
-        return ObjectCalls.ptrcallWithPackedVector3ListArgRetPackedInt32List(tetrahedralizeDelaunayBind, singleton, points)
+        return ObjectCalls.ptrcallWithPackedVector3ListArgRetPackedInt32List(Binds.tetrahedralizeDelaunayBind, singleton, points)
     }
 
     @JvmStatic
@@ -209,78 +209,83 @@ object Geometry3D {
     internal fun wrap(handle: RawSegment): Geometry3D? =
         if (handle.address() == 0L) null else this
 
-    private const val COMPUTE_CONVEX_MESH_POINTS_HASH = 1936902142L
-    private val computeConvexMeshPointsBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "compute_convex_mesh_points", COMPUTE_CONVEX_MESH_POINTS_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("Geometry3D")
 
-    private const val BUILD_BOX_PLANES_HASH = 3622277145L
-    private val buildBoxPlanesBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", BUILD_BOX_PLANES_HASH)
-    }
+        private const val COMPUTE_CONVEX_MESH_POINTS_HASH = 1936902142L
+        @JvmField
+        val computeConvexMeshPointsBind =
+            ObjectCalls.getMethodBind("Geometry3D", "compute_convex_mesh_points", COMPUTE_CONVEX_MESH_POINTS_HASH)
 
-    private const val BUILD_CYLINDER_PLANES_HASH = 449920067L
-    private val buildCylinderPlanesBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "build_cylinder_planes", BUILD_CYLINDER_PLANES_HASH)
-    }
+        private const val BUILD_BOX_PLANES_HASH = 3622277145L
+        @JvmField
+        val buildBoxPlanesBind =
+            ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", BUILD_BOX_PLANES_HASH)
 
-    private const val BUILD_CAPSULE_PLANES_HASH = 2113592876L
-    private val buildCapsulePlanesBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "build_capsule_planes", BUILD_CAPSULE_PLANES_HASH)
-    }
+        private const val BUILD_CYLINDER_PLANES_HASH = 449920067L
+        @JvmField
+        val buildCylinderPlanesBind =
+            ObjectCalls.getMethodBind("Geometry3D", "build_cylinder_planes", BUILD_CYLINDER_PLANES_HASH)
 
-    private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 1056373962L
-    private val getClosestPointsBetweenSegmentsBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
-    }
+        private const val BUILD_CAPSULE_PLANES_HASH = 2113592876L
+        @JvmField
+        val buildCapsulePlanesBind =
+            ObjectCalls.getMethodBind("Geometry3D", "build_capsule_planes", BUILD_CAPSULE_PLANES_HASH)
 
-    private const val GET_CLOSEST_POINT_TO_SEGMENT_HASH = 2168193209L
-    private val getClosestPointToSegmentBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "get_closest_point_to_segment", GET_CLOSEST_POINT_TO_SEGMENT_HASH)
-    }
+        private const val GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH = 1056373962L
+        @JvmField
+        val getClosestPointsBetweenSegmentsBind =
+            ObjectCalls.getMethodBind("Geometry3D", "get_closest_points_between_segments", GET_CLOSEST_POINTS_BETWEEN_SEGMENTS_HASH)
 
-    private const val GET_CLOSEST_POINT_TO_SEGMENT_UNCAPPED_HASH = 2168193209L
-    private val getClosestPointToSegmentUncappedBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "get_closest_point_to_segment_uncapped", GET_CLOSEST_POINT_TO_SEGMENT_UNCAPPED_HASH)
-    }
+        private const val GET_CLOSEST_POINT_TO_SEGMENT_HASH = 2168193209L
+        @JvmField
+        val getClosestPointToSegmentBind =
+            ObjectCalls.getMethodBind("Geometry3D", "get_closest_point_to_segment", GET_CLOSEST_POINT_TO_SEGMENT_HASH)
 
-    private const val GET_TRIANGLE_BARYCENTRIC_COORDS_HASH = 1362048029L
-    private val getTriangleBarycentricCoordsBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "get_triangle_barycentric_coords", GET_TRIANGLE_BARYCENTRIC_COORDS_HASH)
-    }
+        private const val GET_CLOSEST_POINT_TO_SEGMENT_UNCAPPED_HASH = 2168193209L
+        @JvmField
+        val getClosestPointToSegmentUncappedBind =
+            ObjectCalls.getMethodBind("Geometry3D", "get_closest_point_to_segment_uncapped", GET_CLOSEST_POINT_TO_SEGMENT_UNCAPPED_HASH)
 
-    private const val RAY_INTERSECTS_TRIANGLE_HASH = 1718655448L
-    private val rayIntersectsTriangleBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "ray_intersects_triangle", RAY_INTERSECTS_TRIANGLE_HASH)
-    }
+        private const val GET_TRIANGLE_BARYCENTRIC_COORDS_HASH = 1362048029L
+        @JvmField
+        val getTriangleBarycentricCoordsBind =
+            ObjectCalls.getMethodBind("Geometry3D", "get_triangle_barycentric_coords", GET_TRIANGLE_BARYCENTRIC_COORDS_HASH)
 
-    private const val SEGMENT_INTERSECTS_TRIANGLE_HASH = 1718655448L
-    private val segmentIntersectsTriangleBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_triangle", SEGMENT_INTERSECTS_TRIANGLE_HASH)
-    }
+        private const val RAY_INTERSECTS_TRIANGLE_HASH = 1718655448L
+        @JvmField
+        val rayIntersectsTriangleBind =
+            ObjectCalls.getMethodBind("Geometry3D", "ray_intersects_triangle", RAY_INTERSECTS_TRIANGLE_HASH)
 
-    private const val SEGMENT_INTERSECTS_SPHERE_HASH = 4080141172L
-    private val segmentIntersectsSphereBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_sphere", SEGMENT_INTERSECTS_SPHERE_HASH)
-    }
+        private const val SEGMENT_INTERSECTS_TRIANGLE_HASH = 1718655448L
+        @JvmField
+        val segmentIntersectsTriangleBind =
+            ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_triangle", SEGMENT_INTERSECTS_TRIANGLE_HASH)
 
-    private const val SEGMENT_INTERSECTS_CYLINDER_HASH = 2361316491L
-    private val segmentIntersectsCylinderBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_cylinder", SEGMENT_INTERSECTS_CYLINDER_HASH)
-    }
+        private const val SEGMENT_INTERSECTS_SPHERE_HASH = 4080141172L
+        @JvmField
+        val segmentIntersectsSphereBind =
+            ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_sphere", SEGMENT_INTERSECTS_SPHERE_HASH)
 
-    private const val SEGMENT_INTERSECTS_CONVEX_HASH = 537425332L
-    private val segmentIntersectsConvexBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_convex", SEGMENT_INTERSECTS_CONVEX_HASH)
-    }
+        private const val SEGMENT_INTERSECTS_CYLINDER_HASH = 2361316491L
+        @JvmField
+        val segmentIntersectsCylinderBind =
+            ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_cylinder", SEGMENT_INTERSECTS_CYLINDER_HASH)
 
-    private const val CLIP_POLYGON_HASH = 2603188319L
-    private val clipPolygonBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "clip_polygon", CLIP_POLYGON_HASH)
-    }
+        private const val SEGMENT_INTERSECTS_CONVEX_HASH = 537425332L
+        @JvmField
+        val segmentIntersectsConvexBind =
+            ObjectCalls.getMethodBind("Geometry3D", "segment_intersects_convex", SEGMENT_INTERSECTS_CONVEX_HASH)
 
-    private const val TETRAHEDRALIZE_DELAUNAY_HASH = 1230191221L
-    private val tetrahedralizeDelaunayBind by lazy {
-        ObjectCalls.getMethodBind("Geometry3D", "tetrahedralize_delaunay", TETRAHEDRALIZE_DELAUNAY_HASH)
+        private const val CLIP_POLYGON_HASH = 2603188319L
+        @JvmField
+        val clipPolygonBind =
+            ObjectCalls.getMethodBind("Geometry3D", "clip_polygon", CLIP_POLYGON_HASH)
+
+        private const val TETRAHEDRALIZE_DELAUNAY_HASH = 1230191221L
+        @JvmField
+        val tetrahedralizeDelaunayBind =
+            ObjectCalls.getMethodBind("Geometry3D", "tetrahedralize_delaunay", TETRAHEDRALIZE_DELAUNAY_HASH)
     }
 }

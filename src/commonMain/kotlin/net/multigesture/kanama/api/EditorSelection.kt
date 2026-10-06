@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -27,7 +28,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.add_node
      */
     fun addNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addNodeBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addNodeBind, segment, listOf(node.segment))
     }
 
     /**
@@ -36,7 +37,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.remove_node
      */
     fun removeNode(node: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeNodeBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeNodeBind, segment, listOf(node.segment))
     }
 
     /**
@@ -45,7 +46,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.get_selected_nodes
      */
     fun getSelectedNodes(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSelectedNodesBind, segment, Node::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSelectedNodesBind, segment, Node::wrap)
     }
 
     /**
@@ -58,7 +59,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.get_top_selected_nodes
      */
     fun getTopSelectedNodes(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTopSelectedNodesBind, segment, Node::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTopSelectedNodesBind, segment, Node::wrap)
     }
 
     /**
@@ -68,7 +69,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorSelection.get_transformable_selected_nodes
      */
     fun getTransformableSelectedNodes(): List<Node> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTransformableSelectedNodesBind, segment, Node::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTransformableSelectedNodesBind, segment, Node::wrap)
     }
 
     /** Signal `selection_changed()`; see [TypedSignal]. */
@@ -87,35 +88,37 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): EditorSelection? =
             if (handle.address() == 0L) null else EditorSelection(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("EditorSelection", "clear", CLEAR_HASH)
-        }
 
         private const val ADD_NODE_HASH = 1078189570L
-        private val addNodeBind by lazy {
+        @JvmField
+        val addNodeBind =
             ObjectCalls.getMethodBind("EditorSelection", "add_node", ADD_NODE_HASH)
-        }
 
         private const val REMOVE_NODE_HASH = 1078189570L
-        private val removeNodeBind by lazy {
+        @JvmField
+        val removeNodeBind =
             ObjectCalls.getMethodBind("EditorSelection", "remove_node", REMOVE_NODE_HASH)
-        }
 
         private const val GET_SELECTED_NODES_HASH = 2915620761L
-        private val getSelectedNodesBind by lazy {
+        @JvmField
+        val getSelectedNodesBind =
             ObjectCalls.getMethodBind("EditorSelection", "get_selected_nodes", GET_SELECTED_NODES_HASH)
-        }
 
         private const val GET_TOP_SELECTED_NODES_HASH = 2915620761L
-        private val getTopSelectedNodesBind by lazy {
+        @JvmField
+        val getTopSelectedNodesBind =
             ObjectCalls.getMethodBind("EditorSelection", "get_top_selected_nodes", GET_TOP_SELECTED_NODES_HASH)
-        }
 
         private const val GET_TRANSFORMABLE_SELECTED_NODES_HASH = 2915620761L
-        private val getTransformableSelectedNodesBind by lazy {
+        @JvmField
+        val getTransformableSelectedNodesBind =
             ObjectCalls.getMethodBind("EditorSelection", "get_transformable_selected_nodes", GET_TRANSFORMABLE_SELECTED_NODES_HASH)
-        }
     }
 }

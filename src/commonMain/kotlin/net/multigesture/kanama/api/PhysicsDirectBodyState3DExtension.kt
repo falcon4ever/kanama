@@ -20,7 +20,5 @@ class PhysicsDirectBodyState3DExtension(handle: GodotHandle) : PhysicsDirectBody
 
         internal fun wrap(handle: RawSegment): PhysicsDirectBodyState3DExtension? =
             if (handle.address() == 0L) null else PhysicsDirectBodyState3DExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

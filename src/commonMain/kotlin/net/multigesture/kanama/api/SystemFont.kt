@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -109,7 +110,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setAntialiasing(antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAntialiasingBind, segment, antialiasing.value)
     }
 
     /**
@@ -119,7 +120,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getAntialiasing(): TextServer.FontAntialiasing {
         checkOpen()
-        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment))
+        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAntialiasingBind, segment))
     }
 
     /**
@@ -130,7 +131,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
     }
 
     /**
@@ -141,7 +142,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableEmbeddedBitmapsBind, segment)
     }
 
     /**
@@ -151,7 +152,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, segment, generateMipmaps)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGenerateMipmapsBind, segment, generateMipmaps)
     }
 
     /**
@@ -161,7 +162,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getGenerateMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getGenerateMipmapsBind, segment)
     }
 
     /**
@@ -171,7 +172,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, segment, allowSystemFallback)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSystemFallbackBind, segment, allowSystemFallback)
     }
 
     /**
@@ -181,7 +182,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isAllowSystemFallback(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSystemFallbackBind, segment)
     }
 
     /**
@@ -191,7 +192,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setForceAutohinter(forceAutohinter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, segment, forceAutohinter)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setForceAutohinterBind, segment, forceAutohinter)
     }
 
     /**
@@ -201,7 +202,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isForceAutohinter(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isForceAutohinterBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setModulateColorGlyphs(modulate: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, segment, modulate)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setModulateColorGlyphsBind, segment, modulate)
     }
 
     /**
@@ -223,7 +224,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isModulateColorGlyphs(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModulateColorGlyphsBind, segment)
     }
 
     /**
@@ -233,7 +234,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setHinting(hinting: TextServer.Hinting) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHintingBind, segment, hinting.value)
     }
 
     /**
@@ -243,7 +244,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getHinting(): TextServer.Hinting {
         checkOpen()
-        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment))
+        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintingBind, segment))
     }
 
     /**
@@ -255,7 +256,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setSubpixelPositioning(subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSubpixelPositioningBind, segment, subpixelPositioning.value)
     }
 
     /**
@@ -267,7 +268,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getSubpixelPositioning(): TextServer.SubpixelPositioning {
         checkOpen()
-        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment))
+        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubpixelPositioningBind, segment))
     }
 
     /**
@@ -279,7 +280,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
     }
 
     /**
@@ -291,7 +292,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getKeepRoundingRemainders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepRoundingRemaindersBind, segment)
     }
 
     /**
@@ -302,7 +303,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, segment, msdf)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMultichannelSignedDistanceFieldBind, segment, msdf)
     }
 
     /**
@@ -313,7 +314,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun isMultichannelSignedDistanceField(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultichannelSignedDistanceFieldBind, segment)
     }
 
     /**
@@ -326,7 +327,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, segment, msdfPixelRange)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMsdfPixelRangeBind, segment, msdfPixelRange)
     }
 
     /**
@@ -339,7 +340,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfPixelRange(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfPixelRangeBind, segment)
     }
 
     /**
@@ -351,7 +352,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setMsdfSize(msdfSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, segment, msdfSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMsdfSizeBind, segment, msdfSize)
     }
 
     /**
@@ -363,7 +364,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfSizeBind, segment)
     }
 
     /**
@@ -375,7 +376,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setOversampling(oversampling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, segment, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOversamplingBind, segment, oversampling)
     }
 
     /**
@@ -387,7 +388,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
     }
 
     /**
@@ -397,7 +398,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getFontNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getFontNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFontNamesBind, segment)
     }
 
     /**
@@ -407,7 +408,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setFontNames(names: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setFontNamesBind, segment, names)
+        ObjectCalls.ptrcallWithPackedStringListArg(Binds.setFontNamesBind, segment, names)
     }
 
     /**
@@ -417,7 +418,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun getFontItalic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFontItalicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFontItalicBind, segment)
     }
 
     /**
@@ -427,7 +428,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setFontItalic(italic: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFontItalicBind, segment, italic)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFontItalicBind, segment, italic)
     }
 
     /**
@@ -438,7 +439,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setFontWeight(weight: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontWeightBind, segment, weight)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontWeightBind, segment, weight)
     }
 
     /**
@@ -449,7 +450,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      */
     fun setFontStretch(stretch: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontStretchBind, segment, stretch)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontStretchBind, segment, stretch)
     }
 
     companion object {
@@ -462,165 +463,167 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SystemFont? =
             if (handle.address() == 0L) null else SystemFont(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ANTIALIASING_HASH = 1669900L
-        private val setAntialiasingBind by lazy {
+        @JvmField
+        val setAntialiasingBind =
             ObjectCalls.getMethodBind("SystemFont", "set_antialiasing", SET_ANTIALIASING_HASH)
-        }
 
         private const val GET_ANTIALIASING_HASH = 4262718649L
-        private val getAntialiasingBind by lazy {
+        @JvmField
+        val getAntialiasingBind =
             ObjectCalls.getMethodBind("SystemFont", "get_antialiasing", GET_ANTIALIASING_HASH)
-        }
 
         private const val SET_DISABLE_EMBEDDED_BITMAPS_HASH = 2586408642L
-        private val setDisableEmbeddedBitmapsBind by lazy {
+        @JvmField
+        val setDisableEmbeddedBitmapsBind =
             ObjectCalls.getMethodBind("SystemFont", "set_disable_embedded_bitmaps", SET_DISABLE_EMBEDDED_BITMAPS_HASH)
-        }
 
         private const val GET_DISABLE_EMBEDDED_BITMAPS_HASH = 36873697L
-        private val getDisableEmbeddedBitmapsBind by lazy {
+        @JvmField
+        val getDisableEmbeddedBitmapsBind =
             ObjectCalls.getMethodBind("SystemFont", "get_disable_embedded_bitmaps", GET_DISABLE_EMBEDDED_BITMAPS_HASH)
-        }
 
         private const val SET_GENERATE_MIPMAPS_HASH = 2586408642L
-        private val setGenerateMipmapsBind by lazy {
+        @JvmField
+        val setGenerateMipmapsBind =
             ObjectCalls.getMethodBind("SystemFont", "set_generate_mipmaps", SET_GENERATE_MIPMAPS_HASH)
-        }
 
         private const val GET_GENERATE_MIPMAPS_HASH = 36873697L
-        private val getGenerateMipmapsBind by lazy {
+        @JvmField
+        val getGenerateMipmapsBind =
             ObjectCalls.getMethodBind("SystemFont", "get_generate_mipmaps", GET_GENERATE_MIPMAPS_HASH)
-        }
 
         private const val SET_ALLOW_SYSTEM_FALLBACK_HASH = 2586408642L
-        private val setAllowSystemFallbackBind by lazy {
+        @JvmField
+        val setAllowSystemFallbackBind =
             ObjectCalls.getMethodBind("SystemFont", "set_allow_system_fallback", SET_ALLOW_SYSTEM_FALLBACK_HASH)
-        }
 
         private const val IS_ALLOW_SYSTEM_FALLBACK_HASH = 36873697L
-        private val isAllowSystemFallbackBind by lazy {
+        @JvmField
+        val isAllowSystemFallbackBind =
             ObjectCalls.getMethodBind("SystemFont", "is_allow_system_fallback", IS_ALLOW_SYSTEM_FALLBACK_HASH)
-        }
 
         private const val SET_FORCE_AUTOHINTER_HASH = 2586408642L
-        private val setForceAutohinterBind by lazy {
+        @JvmField
+        val setForceAutohinterBind =
             ObjectCalls.getMethodBind("SystemFont", "set_force_autohinter", SET_FORCE_AUTOHINTER_HASH)
-        }
 
         private const val IS_FORCE_AUTOHINTER_HASH = 36873697L
-        private val isForceAutohinterBind by lazy {
+        @JvmField
+        val isForceAutohinterBind =
             ObjectCalls.getMethodBind("SystemFont", "is_force_autohinter", IS_FORCE_AUTOHINTER_HASH)
-        }
 
         private const val SET_MODULATE_COLOR_GLYPHS_HASH = 2586408642L
-        private val setModulateColorGlyphsBind by lazy {
+        @JvmField
+        val setModulateColorGlyphsBind =
             ObjectCalls.getMethodBind("SystemFont", "set_modulate_color_glyphs", SET_MODULATE_COLOR_GLYPHS_HASH)
-        }
 
         private const val IS_MODULATE_COLOR_GLYPHS_HASH = 36873697L
-        private val isModulateColorGlyphsBind by lazy {
+        @JvmField
+        val isModulateColorGlyphsBind =
             ObjectCalls.getMethodBind("SystemFont", "is_modulate_color_glyphs", IS_MODULATE_COLOR_GLYPHS_HASH)
-        }
 
         private const val SET_HINTING_HASH = 1827459492L
-        private val setHintingBind by lazy {
+        @JvmField
+        val setHintingBind =
             ObjectCalls.getMethodBind("SystemFont", "set_hinting", SET_HINTING_HASH)
-        }
 
         private const val GET_HINTING_HASH = 3683214614L
-        private val getHintingBind by lazy {
+        @JvmField
+        val getHintingBind =
             ObjectCalls.getMethodBind("SystemFont", "get_hinting", GET_HINTING_HASH)
-        }
 
         private const val SET_SUBPIXEL_POSITIONING_HASH = 4225742182L
-        private val setSubpixelPositioningBind by lazy {
+        @JvmField
+        val setSubpixelPositioningBind =
             ObjectCalls.getMethodBind("SystemFont", "set_subpixel_positioning", SET_SUBPIXEL_POSITIONING_HASH)
-        }
 
         private const val GET_SUBPIXEL_POSITIONING_HASH = 1069238588L
-        private val getSubpixelPositioningBind by lazy {
+        @JvmField
+        val getSubpixelPositioningBind =
             ObjectCalls.getMethodBind("SystemFont", "get_subpixel_positioning", GET_SUBPIXEL_POSITIONING_HASH)
-        }
 
         private const val SET_KEEP_ROUNDING_REMAINDERS_HASH = 2586408642L
-        private val setKeepRoundingRemaindersBind by lazy {
+        @JvmField
+        val setKeepRoundingRemaindersBind =
             ObjectCalls.getMethodBind("SystemFont", "set_keep_rounding_remainders", SET_KEEP_ROUNDING_REMAINDERS_HASH)
-        }
 
         private const val GET_KEEP_ROUNDING_REMAINDERS_HASH = 36873697L
-        private val getKeepRoundingRemaindersBind by lazy {
+        @JvmField
+        val getKeepRoundingRemaindersBind =
             ObjectCalls.getMethodBind("SystemFont", "get_keep_rounding_remainders", GET_KEEP_ROUNDING_REMAINDERS_HASH)
-        }
 
         private const val SET_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH = 2586408642L
-        private val setMultichannelSignedDistanceFieldBind by lazy {
+        @JvmField
+        val setMultichannelSignedDistanceFieldBind =
             ObjectCalls.getMethodBind("SystemFont", "set_multichannel_signed_distance_field", SET_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH)
-        }
 
         private const val IS_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH = 36873697L
-        private val isMultichannelSignedDistanceFieldBind by lazy {
+        @JvmField
+        val isMultichannelSignedDistanceFieldBind =
             ObjectCalls.getMethodBind("SystemFont", "is_multichannel_signed_distance_field", IS_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH)
-        }
 
         private const val SET_MSDF_PIXEL_RANGE_HASH = 1286410249L
-        private val setMsdfPixelRangeBind by lazy {
+        @JvmField
+        val setMsdfPixelRangeBind =
             ObjectCalls.getMethodBind("SystemFont", "set_msdf_pixel_range", SET_MSDF_PIXEL_RANGE_HASH)
-        }
 
         private const val GET_MSDF_PIXEL_RANGE_HASH = 3905245786L
-        private val getMsdfPixelRangeBind by lazy {
+        @JvmField
+        val getMsdfPixelRangeBind =
             ObjectCalls.getMethodBind("SystemFont", "get_msdf_pixel_range", GET_MSDF_PIXEL_RANGE_HASH)
-        }
 
         private const val SET_MSDF_SIZE_HASH = 1286410249L
-        private val setMsdfSizeBind by lazy {
+        @JvmField
+        val setMsdfSizeBind =
             ObjectCalls.getMethodBind("SystemFont", "set_msdf_size", SET_MSDF_SIZE_HASH)
-        }
 
         private const val GET_MSDF_SIZE_HASH = 3905245786L
-        private val getMsdfSizeBind by lazy {
+        @JvmField
+        val getMsdfSizeBind =
             ObjectCalls.getMethodBind("SystemFont", "get_msdf_size", GET_MSDF_SIZE_HASH)
-        }
 
         private const val SET_OVERSAMPLING_HASH = 373806689L
-        private val setOversamplingBind by lazy {
+        @JvmField
+        val setOversamplingBind =
             ObjectCalls.getMethodBind("SystemFont", "set_oversampling", SET_OVERSAMPLING_HASH)
-        }
 
         private const val GET_OVERSAMPLING_HASH = 1740695150L
-        private val getOversamplingBind by lazy {
+        @JvmField
+        val getOversamplingBind =
             ObjectCalls.getMethodBind("SystemFont", "get_oversampling", GET_OVERSAMPLING_HASH)
-        }
 
         private const val GET_FONT_NAMES_HASH = 1139954409L
-        private val getFontNamesBind by lazy {
+        @JvmField
+        val getFontNamesBind =
             ObjectCalls.getMethodBind("SystemFont", "get_font_names", GET_FONT_NAMES_HASH)
-        }
 
         private const val SET_FONT_NAMES_HASH = 4015028928L
-        private val setFontNamesBind by lazy {
+        @JvmField
+        val setFontNamesBind =
             ObjectCalls.getMethodBind("SystemFont", "set_font_names", SET_FONT_NAMES_HASH)
-        }
 
         private const val GET_FONT_ITALIC_HASH = 36873697L
-        private val getFontItalicBind by lazy {
+        @JvmField
+        val getFontItalicBind =
             ObjectCalls.getMethodBind("SystemFont", "get_font_italic", GET_FONT_ITALIC_HASH)
-        }
 
         private const val SET_FONT_ITALIC_HASH = 2586408642L
-        private val setFontItalicBind by lazy {
+        @JvmField
+        val setFontItalicBind =
             ObjectCalls.getMethodBind("SystemFont", "set_font_italic", SET_FONT_ITALIC_HASH)
-        }
 
         private const val SET_FONT_WEIGHT_HASH = 1286410249L
-        private val setFontWeightBind by lazy {
+        @JvmField
+        val setFontWeightBind =
             ObjectCalls.getMethodBind("SystemFont", "set_font_weight", SET_FONT_WEIGHT_HASH)
-        }
 
         private const val SET_FONT_STRETCH_HASH = 1286410249L
-        private val setFontStretchBind by lazy {
+        @JvmField
+        val setFontStretchBind =
             ObjectCalls.getMethodBind("SystemFont", "set_font_stretch", SET_FONT_STRETCH_HASH)
-        }
     }
 }

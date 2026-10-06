@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -19,7 +20,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun addAnimation(name: String, animation: Animation?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, segment, name, animation?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(Binds.addAnimationBind, segment, name, animation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -29,7 +30,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun removeAnimation(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeAnimationBind, segment, name)
     }
 
     /**
@@ -39,7 +40,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun renameAnimation(name: String, newname: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, segment, name, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameAnimationBind, segment, name, newname)
     }
 
     /**
@@ -49,7 +50,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAnimation(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, name)
     }
 
     /**
@@ -60,7 +61,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimation(name: String): Animation? {
         checkOpen()
-        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
+        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getAnimationBind, segment, name))
     }
 
     /**
@@ -70,7 +71,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getAnimationListBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationListSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAnimationListSizeBind, segment)
     }
 
     /** Signal `animation_added(anim_name: StringName)`; see [TypedSignal]. */
@@ -120,40 +121,42 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationLibrary? =
             if (handle.address() == 0L) null else AnimationLibrary(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_ANIMATION_HASH = 1811855551L
-        private val addAnimationBind by lazy {
+        @JvmField
+        val addAnimationBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "add_animation", ADD_ANIMATION_HASH)
-        }
 
         private const val REMOVE_ANIMATION_HASH = 3304788590L
-        private val removeAnimationBind by lazy {
+        @JvmField
+        val removeAnimationBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "remove_animation", REMOVE_ANIMATION_HASH)
-        }
 
         private const val RENAME_ANIMATION_HASH = 3740211285L
-        private val renameAnimationBind by lazy {
+        @JvmField
+        val renameAnimationBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "rename_animation", RENAME_ANIMATION_HASH)
-        }
 
         private const val HAS_ANIMATION_HASH = 2619796661L
-        private val hasAnimationBind by lazy {
+        @JvmField
+        val hasAnimationBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "has_animation", HAS_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_HASH = 2933122410L
-        private val getAnimationBind by lazy {
+        @JvmField
+        val getAnimationBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "get_animation", GET_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_LIST_HASH = 3995934104L
-        private val getAnimationListBind by lazy {
+        @JvmField
+        val getAnimationListBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "get_animation_list", GET_ANIMATION_LIST_HASH)
-        }
 
         private const val GET_ANIMATION_LIST_SIZE_HASH = 3905245786L
-        private val getAnimationListSizeBind by lazy {
+        @JvmField
+        val getAnimationListSizeBind =
             ObjectCalls.getMethodBind("AnimationLibrary", "get_animation_list_size", GET_ANIMATION_LIST_SIZE_HASH)
-        }
     }
 }

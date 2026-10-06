@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -103,157 +104,157 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
     fun getBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferViewBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferViewBind, segment)
     }
 
     fun setBufferView(bufferView: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBufferViewBind, segment, bufferView)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBufferViewBind, segment, bufferView)
     }
 
     fun getByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getByteOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
     }
 
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, segment, byteOffset)
+        ObjectCalls.ptrcallWithLongArg(Binds.setByteOffsetBind, segment, byteOffset)
     }
 
     fun getComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
-        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, segment))
+        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment))
     }
 
     fun setComponentType(componentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setComponentTypeBind, segment, componentType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setComponentTypeBind, segment, componentType.value)
     }
 
     fun getNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNormalizedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizedBind, segment)
     }
 
     fun setNormalized(normalized: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizedBind, segment, normalized)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizedBind, segment, normalized)
     }
 
     fun getCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCountBind, segment)
     }
 
     fun setCount(count: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCountBind, segment, count)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCountBind, segment, count)
     }
 
     fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
-        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment))
+        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
     }
 
     fun setAccessorType(accessorType: GLTFAccessor.GLTFAccessorType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAccessorTypeBind, segment, accessorType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAccessorTypeBind, segment, accessorType.value)
     }
 
     fun getType(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTypeBind, segment)
     }
 
     fun setType(type: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setTypeBind, segment, type)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTypeBind, segment, type)
     }
 
     fun getMin(): List<Double> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMinBind, segment)
     }
 
     fun setMin(min: List<Double>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMinBind, segment, min)
+        ObjectCalls.ptrcallWithPackedFloat64ListArg(Binds.setMinBind, segment, min)
     }
 
     fun getMax(): List<Double> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(getMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMaxBind, segment)
     }
 
     fun setMax(max: List<Double>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat64ListArg(setMaxBind, segment, max)
+        ObjectCalls.ptrcallWithPackedFloat64ListArg(Binds.setMaxBind, segment, max)
     }
 
     fun getSparseCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseCountBind, segment)
     }
 
     fun setSparseCount(sparseCount: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseCountBind, segment, sparseCount)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSparseCountBind, segment, sparseCount)
     }
 
     fun getSparseIndicesBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSparseIndicesBufferViewBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseIndicesBufferViewBind, segment)
     }
 
     fun setSparseIndicesBufferView(sparseIndicesBufferView: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSparseIndicesBufferViewBind, segment, sparseIndicesBufferView)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSparseIndicesBufferViewBind, segment, sparseIndicesBufferView)
     }
 
     fun getSparseIndicesByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesByteOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesByteOffsetBind, segment)
     }
 
     fun setSparseIndicesByteOffset(sparseIndicesByteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseIndicesByteOffsetBind, segment, sparseIndicesByteOffset)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSparseIndicesByteOffsetBind, segment, sparseIndicesByteOffset)
     }
 
     fun getSparseIndicesComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
-        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesComponentTypeBind, segment))
+        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesComponentTypeBind, segment))
     }
 
     fun setSparseIndicesComponentType(sparseIndicesComponentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType.value)
     }
 
     fun getSparseValuesBufferView(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSparseValuesBufferViewBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseValuesBufferViewBind, segment)
     }
 
     fun setSparseValuesBufferView(sparseValuesBufferView: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSparseValuesBufferViewBind, segment, sparseValuesBufferView)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSparseValuesBufferViewBind, segment, sparseValuesBufferView)
     }
 
     fun getSparseValuesByteOffset(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseValuesByteOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseValuesByteOffsetBind, segment)
     }
 
     fun setSparseValuesByteOffset(sparseValuesByteOffset: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseValuesByteOffsetBind, segment, sparseValuesByteOffset)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSparseValuesByteOffsetBind, segment, sparseValuesByteOffset)
     }
 
     @JvmInline
@@ -289,7 +290,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
-            return GLTFAccessor.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFAccessor.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
@@ -301,165 +302,167 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFAccessor? =
             if (handle.address() == 0L) null else GLTFAccessor(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FROM_DICTIONARY_HASH = 3495091019L
-        private val fromDictionaryBind by lazy {
+        @JvmField
+        val fromDictionaryBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "from_dictionary", FROM_DICTIONARY_HASH)
-        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
-        private val toDictionaryBind by lazy {
+        @JvmField
+        val toDictionaryBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "to_dictionary", TO_DICTIONARY_HASH)
-        }
 
         private const val GET_BUFFER_VIEW_HASH = 3905245786L
-        private val getBufferViewBind by lazy {
+        @JvmField
+        val getBufferViewBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_buffer_view", GET_BUFFER_VIEW_HASH)
-        }
 
         private const val SET_BUFFER_VIEW_HASH = 1286410249L
-        private val setBufferViewBind by lazy {
+        @JvmField
+        val setBufferViewBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_buffer_view", SET_BUFFER_VIEW_HASH)
-        }
 
         private const val GET_BYTE_OFFSET_HASH = 3905245786L
-        private val getByteOffsetBind by lazy {
+        @JvmField
+        val getByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_byte_offset", GET_BYTE_OFFSET_HASH)
-        }
 
         private const val SET_BYTE_OFFSET_HASH = 1286410249L
-        private val setByteOffsetBind by lazy {
+        @JvmField
+        val setByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_byte_offset", SET_BYTE_OFFSET_HASH)
-        }
 
         private const val GET_COMPONENT_TYPE_HASH = 852227802L
-        private val getComponentTypeBind by lazy {
+        @JvmField
+        val getComponentTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_component_type", GET_COMPONENT_TYPE_HASH)
-        }
 
         private const val SET_COMPONENT_TYPE_HASH = 1780020221L
-        private val setComponentTypeBind by lazy {
+        @JvmField
+        val setComponentTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_component_type", SET_COMPONENT_TYPE_HASH)
-        }
 
         private const val GET_NORMALIZED_HASH = 36873697L
-        private val getNormalizedBind by lazy {
+        @JvmField
+        val getNormalizedBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_normalized", GET_NORMALIZED_HASH)
-        }
 
         private const val SET_NORMALIZED_HASH = 2586408642L
-        private val setNormalizedBind by lazy {
+        @JvmField
+        val setNormalizedBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_normalized", SET_NORMALIZED_HASH)
-        }
 
         private const val GET_COUNT_HASH = 3905245786L
-        private val getCountBind by lazy {
+        @JvmField
+        val getCountBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_count", GET_COUNT_HASH)
-        }
 
         private const val SET_COUNT_HASH = 1286410249L
-        private val setCountBind by lazy {
+        @JvmField
+        val setCountBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_count", SET_COUNT_HASH)
-        }
 
         private const val GET_ACCESSOR_TYPE_HASH = 1998183368L
-        private val getAccessorTypeBind by lazy {
+        @JvmField
+        val getAccessorTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_accessor_type", GET_ACCESSOR_TYPE_HASH)
-        }
 
         private const val SET_ACCESSOR_TYPE_HASH = 2347728198L
-        private val setAccessorTypeBind by lazy {
+        @JvmField
+        val setAccessorTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_accessor_type", SET_ACCESSOR_TYPE_HASH)
-        }
 
         private const val GET_TYPE_HASH = 3905245786L
-        private val getTypeBind by lazy {
+        @JvmField
+        val getTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_type", GET_TYPE_HASH)
-        }
 
         private const val SET_TYPE_HASH = 1286410249L
-        private val setTypeBind by lazy {
+        @JvmField
+        val setTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_type", SET_TYPE_HASH)
-        }
 
         private const val GET_MIN_HASH = 547233126L
-        private val getMinBind by lazy {
+        @JvmField
+        val getMinBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_min", GET_MIN_HASH)
-        }
 
         private const val SET_MIN_HASH = 2576592201L
-        private val setMinBind by lazy {
+        @JvmField
+        val setMinBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_min", SET_MIN_HASH)
-        }
 
         private const val GET_MAX_HASH = 547233126L
-        private val getMaxBind by lazy {
+        @JvmField
+        val getMaxBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_max", GET_MAX_HASH)
-        }
 
         private const val SET_MAX_HASH = 2576592201L
-        private val setMaxBind by lazy {
+        @JvmField
+        val setMaxBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_max", SET_MAX_HASH)
-        }
 
         private const val GET_SPARSE_COUNT_HASH = 3905245786L
-        private val getSparseCountBind by lazy {
+        @JvmField
+        val getSparseCountBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_sparse_count", GET_SPARSE_COUNT_HASH)
-        }
 
         private const val SET_SPARSE_COUNT_HASH = 1286410249L
-        private val setSparseCountBind by lazy {
+        @JvmField
+        val setSparseCountBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_sparse_count", SET_SPARSE_COUNT_HASH)
-        }
 
         private const val GET_SPARSE_INDICES_BUFFER_VIEW_HASH = 3905245786L
-        private val getSparseIndicesBufferViewBind by lazy {
+        @JvmField
+        val getSparseIndicesBufferViewBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_sparse_indices_buffer_view", GET_SPARSE_INDICES_BUFFER_VIEW_HASH)
-        }
 
         private const val SET_SPARSE_INDICES_BUFFER_VIEW_HASH = 1286410249L
-        private val setSparseIndicesBufferViewBind by lazy {
+        @JvmField
+        val setSparseIndicesBufferViewBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_sparse_indices_buffer_view", SET_SPARSE_INDICES_BUFFER_VIEW_HASH)
-        }
 
         private const val GET_SPARSE_INDICES_BYTE_OFFSET_HASH = 3905245786L
-        private val getSparseIndicesByteOffsetBind by lazy {
+        @JvmField
+        val getSparseIndicesByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_sparse_indices_byte_offset", GET_SPARSE_INDICES_BYTE_OFFSET_HASH)
-        }
 
         private const val SET_SPARSE_INDICES_BYTE_OFFSET_HASH = 1286410249L
-        private val setSparseIndicesByteOffsetBind by lazy {
+        @JvmField
+        val setSparseIndicesByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_sparse_indices_byte_offset", SET_SPARSE_INDICES_BYTE_OFFSET_HASH)
-        }
 
         private const val GET_SPARSE_INDICES_COMPONENT_TYPE_HASH = 852227802L
-        private val getSparseIndicesComponentTypeBind by lazy {
+        @JvmField
+        val getSparseIndicesComponentTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_sparse_indices_component_type", GET_SPARSE_INDICES_COMPONENT_TYPE_HASH)
-        }
 
         private const val SET_SPARSE_INDICES_COMPONENT_TYPE_HASH = 1780020221L
-        private val setSparseIndicesComponentTypeBind by lazy {
+        @JvmField
+        val setSparseIndicesComponentTypeBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_sparse_indices_component_type", SET_SPARSE_INDICES_COMPONENT_TYPE_HASH)
-        }
 
         private const val GET_SPARSE_VALUES_BUFFER_VIEW_HASH = 3905245786L
-        private val getSparseValuesBufferViewBind by lazy {
+        @JvmField
+        val getSparseValuesBufferViewBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_sparse_values_buffer_view", GET_SPARSE_VALUES_BUFFER_VIEW_HASH)
-        }
 
         private const val SET_SPARSE_VALUES_BUFFER_VIEW_HASH = 1286410249L
-        private val setSparseValuesBufferViewBind by lazy {
+        @JvmField
+        val setSparseValuesBufferViewBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_sparse_values_buffer_view", SET_SPARSE_VALUES_BUFFER_VIEW_HASH)
-        }
 
         private const val GET_SPARSE_VALUES_BYTE_OFFSET_HASH = 3905245786L
-        private val getSparseValuesByteOffsetBind by lazy {
+        @JvmField
+        val getSparseValuesByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "get_sparse_values_byte_offset", GET_SPARSE_VALUES_BYTE_OFFSET_HASH)
-        }
 
         private const val SET_SPARSE_VALUES_BYTE_OFFSET_HASH = 1286410249L
-        private val setSparseValuesByteOffsetBind by lazy {
+        @JvmField
+        val setSparseValuesByteOffsetBind =
             ObjectCalls.getMethodBind("GLTFAccessor", "set_sparse_values_byte_offset", SET_SPARSE_VALUES_BYTE_OFFSET_HASH)
-        }
     }
 }

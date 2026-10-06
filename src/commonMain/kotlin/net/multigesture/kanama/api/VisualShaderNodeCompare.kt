@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -30,32 +31,32 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setComparisonType(type: VisualShaderNodeCompare.ComparisonType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setComparisonTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setComparisonTypeBind, segment, type.value)
     }
 
     fun getComparisonType(): VisualShaderNodeCompare.ComparisonType {
         checkOpen()
-        return VisualShaderNodeCompare.ComparisonType(ObjectCalls.ptrcallNoArgsRetLong(getComparisonTypeBind, segment))
+        return VisualShaderNodeCompare.ComparisonType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComparisonTypeBind, segment))
     }
 
     fun setFunction(func: VisualShaderNodeCompare.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
     fun getFunction(): VisualShaderNodeCompare.Function {
         checkOpen()
-        return VisualShaderNodeCompare.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+        return VisualShaderNodeCompare.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
     fun setCondition(condition: VisualShaderNodeCompare.Condition) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setConditionBind, segment, condition.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setConditionBind, segment, condition.value)
     }
 
     fun getCondition(): VisualShaderNodeCompare.Condition {
         checkOpen()
-        return VisualShaderNodeCompare.Condition(ObjectCalls.ptrcallNoArgsRetLong(getConditionBind, segment))
+        return VisualShaderNodeCompare.Condition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getConditionBind, segment))
     }
 
     @JvmInline
@@ -105,35 +106,37 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCompare? =
             if (handle.address() == 0L) null else VisualShaderNodeCompare(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COMPARISON_TYPE_HASH = 516558320L
-        private val setComparisonTypeBind by lazy {
+        @JvmField
+        val setComparisonTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "set_comparison_type", SET_COMPARISON_TYPE_HASH)
-        }
 
         private const val GET_COMPARISON_TYPE_HASH = 3495315961L
-        private val getComparisonTypeBind by lazy {
+        @JvmField
+        val getComparisonTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "get_comparison_type", GET_COMPARISON_TYPE_HASH)
-        }
 
         private const val SET_FUNCTION_HASH = 2370951349L
-        private val setFunctionBind by lazy {
+        @JvmField
+        val setFunctionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "set_function", SET_FUNCTION_HASH)
-        }
 
         private const val GET_FUNCTION_HASH = 4089164265L
-        private val getFunctionBind by lazy {
+        @JvmField
+        val getFunctionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "get_function", GET_FUNCTION_HASH)
-        }
 
         private const val SET_CONDITION_HASH = 918742392L
-        private val setConditionBind by lazy {
+        @JvmField
+        val setConditionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "set_condition", SET_CONDITION_HASH)
-        }
 
         private const val GET_CONDITION_HASH = 3281078941L
-        private val getConditionBind by lazy {
+        @JvmField
+        val getConditionBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCompare", "get_condition", GET_CONDITION_HASH)
-        }
     }
 }

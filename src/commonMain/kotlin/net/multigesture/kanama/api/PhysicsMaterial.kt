@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -42,7 +43,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun setFriction(friction: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFrictionBind, segment, friction)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrictionBind, segment, friction)
     }
 
     /**
@@ -52,7 +53,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun getFriction(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrictionBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun setRough(rough: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRoughBind, segment, rough)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRoughBind, segment, rough)
     }
 
     /**
@@ -78,7 +79,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun isRough(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRoughBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRoughBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun setBounce(bounce: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBounceBind, segment, bounce)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBounceBind, segment, bounce)
     }
 
     /**
@@ -106,7 +107,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun getBounce(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBounceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBounceBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun setAbsorbent(absorbent: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAbsorbentBind, segment, absorbent)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAbsorbentBind, segment, absorbent)
     }
 
     /**
@@ -126,7 +127,7 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
      */
     fun isAbsorbent(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAbsorbentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAbsorbentBind, segment)
     }
 
     companion object {
@@ -139,45 +140,47 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PhysicsMaterial? =
             if (handle.address() == 0L) null else PhysicsMaterial(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FRICTION_HASH = 373806689L
-        private val setFrictionBind by lazy {
+        @JvmField
+        val setFrictionBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "set_friction", SET_FRICTION_HASH)
-        }
 
         private const val GET_FRICTION_HASH = 1740695150L
-        private val getFrictionBind by lazy {
+        @JvmField
+        val getFrictionBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "get_friction", GET_FRICTION_HASH)
-        }
 
         private const val SET_ROUGH_HASH = 2586408642L
-        private val setRoughBind by lazy {
+        @JvmField
+        val setRoughBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "set_rough", SET_ROUGH_HASH)
-        }
 
         private const val IS_ROUGH_HASH = 36873697L
-        private val isRoughBind by lazy {
+        @JvmField
+        val isRoughBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "is_rough", IS_ROUGH_HASH)
-        }
 
         private const val SET_BOUNCE_HASH = 373806689L
-        private val setBounceBind by lazy {
+        @JvmField
+        val setBounceBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "set_bounce", SET_BOUNCE_HASH)
-        }
 
         private const val GET_BOUNCE_HASH = 1740695150L
-        private val getBounceBind by lazy {
+        @JvmField
+        val getBounceBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "get_bounce", GET_BOUNCE_HASH)
-        }
 
         private const val SET_ABSORBENT_HASH = 2586408642L
-        private val setAbsorbentBind by lazy {
+        @JvmField
+        val setAbsorbentBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "set_absorbent", SET_ABSORBENT_HASH)
-        }
 
         private const val IS_ABSORBENT_HASH = 36873697L
-        private val isAbsorbentBind by lazy {
+        @JvmField
+        val isAbsorbentBind =
             ObjectCalls.getMethodBind("PhysicsMaterial", "is_absorbent", IS_ABSORBENT_HASH)
-        }
     }
 }

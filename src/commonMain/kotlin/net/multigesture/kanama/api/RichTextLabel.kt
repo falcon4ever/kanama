@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -205,7 +206,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_parsed_text
      */
     fun getParsedText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getParsedTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getParsedTextBind, segment)
     }
 
     /**
@@ -214,7 +215,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_text
      */
     fun addText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(addTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.addTextBind, segment, text)
     }
 
     /**
@@ -228,7 +229,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -239,7 +240,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_hr
      */
     fun addHr(width: Int = 90, height: Int = 2, color: Color, alignment: HorizontalAlignment = HorizontalAlignment.CENTER, widthInPercent: Boolean = true, heightInPercent: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, segment, width, height, color, alignment.value, widthInPercent, heightInPercent)
+        ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(Binds.addHrBind, segment, width, height, color, alignment.value, widthInPercent, heightInPercent)
     }
 
     /**
@@ -256,7 +257,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_image
      */
     fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: InlineAlignment = InlineAlignment.CENTER, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, heightUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, altText: String = "") {
-        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, key, pad, tooltip, widthUnit.value, heightUnit.value, altText)
+        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(Binds.addImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, key, pad, tooltip, widthUnit.value, heightUnit.value, altText)
     }
 
     /**
@@ -266,7 +267,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.update_image
      */
     fun updateImage(key: Any?, mask: RichTextLabel.ImageUpdateMask, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: InlineAlignment = InlineAlignment.CENTER, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, heightUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL) {
-        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, segment, key, mask.value, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, pad, tooltip, widthUnit.value, heightUnit.value)
+        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(Binds.updateImageBind, segment, key, mask.value, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, pad, tooltip, widthUnit.value, heightUnit.value)
     }
 
     /**
@@ -275,7 +276,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.newline
      */
     fun newline() {
-        ObjectCalls.ptrcallNoArgs(newlineBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.newlineBind, segment)
     }
 
     /**
@@ -289,7 +290,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.remove_paragraph
      */
     fun removeParagraph(paragraph: Int, noInvalidate: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithIntAndBoolArgsRetBool(removeParagraphBind, segment, paragraph, noInvalidate)
+        return ObjectCalls.ptrcallWithIntAndBoolArgsRetBool(Binds.removeParagraphBind, segment, paragraph, noInvalidate)
     }
 
     /**
@@ -298,7 +299,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.invalidate_paragraph
      */
     fun invalidateParagraph(paragraph: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(invalidateParagraphBind, segment, paragraph)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.invalidateParagraphBind, segment, paragraph)
     }
 
     /**
@@ -308,7 +309,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_font
      */
     fun pushFont(font: Font?, fontSize: Int = 0) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(pushFontBind, segment, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize)
+        ObjectCalls.ptrcallWithObjectAndIntArg(Binds.pushFontBind, segment, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize)
     }
 
     /**
@@ -317,7 +318,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_font_size
      */
     fun pushFontSize(fontSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(pushFontSizeBind, segment, fontSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.pushFontSizeBind, segment, fontSize)
     }
 
     /**
@@ -326,7 +327,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_normal
      */
     fun pushNormal() {
-        ObjectCalls.ptrcallNoArgs(pushNormalBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushNormalBind, segment)
     }
 
     /**
@@ -336,7 +337,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_bold
      */
     fun pushBold() {
-        ObjectCalls.ptrcallNoArgs(pushBoldBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushBoldBind, segment)
     }
 
     /**
@@ -345,7 +346,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_bold_italics
      */
     fun pushBoldItalics() {
-        ObjectCalls.ptrcallNoArgs(pushBoldItalicsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushBoldItalicsBind, segment)
     }
 
     /**
@@ -355,7 +356,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_italics
      */
     fun pushItalics() {
-        ObjectCalls.ptrcallNoArgs(pushItalicsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushItalicsBind, segment)
     }
 
     /**
@@ -364,7 +365,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_mono
      */
     fun pushMono() {
-        ObjectCalls.ptrcallNoArgs(pushMonoBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushMonoBind, segment)
     }
 
     /**
@@ -373,7 +374,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_color
      */
     fun pushColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.pushColorBind, segment, color)
     }
 
     /**
@@ -383,7 +384,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_outline_size
      */
     fun pushOutlineSize(outlineSize: Int) {
-        ObjectCalls.ptrcallWithIntArg(pushOutlineSizeBind, segment, outlineSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.pushOutlineSizeBind, segment, outlineSize)
     }
 
     /**
@@ -392,7 +393,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_outline_color
      */
     fun pushOutlineColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushOutlineColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.pushOutlineColorBind, segment, color)
     }
 
     /**
@@ -401,7 +402,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_paragraph
      */
     fun pushParagraph(alignment: HorizontalAlignment, baseDirection: Control.TextDirection = Control.TextDirection.AUTO, language: String = "", stParser: TextServer.StructuredTextParser = TextServer.StructuredTextParser.DEFAULT, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(163L), tabStops: List<Float>) {
-        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, segment, alignment.value, baseDirection.value, language, stParser.value, justificationFlags.value, tabStops)
+        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(Binds.pushParagraphBind, segment, alignment.value, baseDirection.value, language, stParser.value, justificationFlags.value, tabStops)
     }
 
     /**
@@ -411,7 +412,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_indent
      */
     fun pushIndent(level: Int) {
-        ObjectCalls.ptrcallWithIntArg(pushIndentBind, segment, level)
+        ObjectCalls.ptrcallWithIntArg(Binds.pushIndentBind, segment, level)
     }
 
     /**
@@ -421,7 +422,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_list
      */
     fun pushList(level: Int, type: RichTextLabel.ListType, capitalize: Boolean, bullet: String = "•") {
-        ObjectCalls.ptrcallWithIntLongBoolStringArgs(pushListBind, segment, level, type.value, capitalize, bullet)
+        ObjectCalls.ptrcallWithIntLongBoolStringArgs(Binds.pushListBind, segment, level, type.value, capitalize, bullet)
     }
 
     /**
@@ -434,7 +435,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_meta
      */
     fun pushMeta(data: Any?, underlineMode: RichTextLabel.MetaUnderline = RichTextLabel.MetaUnderline.ALWAYS, tooltip: String = "") {
-        ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, segment, data, underlineMode.value, tooltip)
+        ObjectCalls.ptrcallWithVariantLongStringArgs(Binds.pushMetaBind, segment, data, underlineMode.value, tooltip)
     }
 
     /**
@@ -443,7 +444,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_hint
      */
     fun pushHint(description: String) {
-        ObjectCalls.ptrcallWithStringArg(pushHintBind, segment, description)
+        ObjectCalls.ptrcallWithStringArg(Binds.pushHintBind, segment, description)
     }
 
     /**
@@ -452,7 +453,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_language
      */
     fun pushLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(pushLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.pushLanguageBind, segment, language)
     }
 
     /**
@@ -462,7 +463,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_underline
      */
     fun pushUnderline(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushUnderlineBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.pushUnderlineBind, segment, color)
     }
 
     /**
@@ -472,7 +473,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_strikethrough
      */
     fun pushStrikethrough(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushStrikethroughBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.pushStrikethroughBind, segment, color)
     }
 
     /**
@@ -483,7 +484,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_table
      */
     fun pushTable(columns: Int, inlineAlign: InlineAlignment = InlineAlignment.TOP_TO, alignToRow: Int = -1, name: String = "") {
-        ObjectCalls.ptrcallWithIntLongIntStringArgs(pushTableBind, segment, columns, inlineAlign.value, alignToRow, name)
+        ObjectCalls.ptrcallWithIntLongIntStringArgs(Binds.pushTableBind, segment, columns, inlineAlign.value, alignToRow, name)
     }
 
     /**
@@ -493,7 +494,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_dropcap
      */
     fun pushDropcap(string: String, font: Font?, size: Int, dropcapMargins: Rect2, color: Color, outlineSize: Int = 0, outlineColor: Color) {
-        ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(pushDropcapBind, segment, string, font?.requireOpenHandle() ?: NULL_SEGMENT, size, dropcapMargins, color, outlineSize, outlineColor)
+        ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(Binds.pushDropcapBind, segment, string, font?.requireOpenHandle() ?: NULL_SEGMENT, size, dropcapMargins, color, outlineSize, outlineColor)
     }
 
     /**
@@ -505,7 +506,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_table_column_expand
      */
     fun setTableColumnExpand(column: Int, expand: Boolean, ratio: Int = 1, shrink: Boolean = true) {
-        ObjectCalls.ptrcallWithIntBoolIntBoolArgs(setTableColumnExpandBind, segment, column, expand, ratio, shrink)
+        ObjectCalls.ptrcallWithIntBoolIntBoolArgs(Binds.setTableColumnExpandBind, segment, column, expand, ratio, shrink)
     }
 
     /**
@@ -514,7 +515,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_table_column_name
      */
     fun setTableColumnName(column: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setTableColumnNameBind, segment, column, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setTableColumnNameBind, segment, column, name)
     }
 
     /**
@@ -523,7 +524,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_row_background_color
      */
     fun setCellRowBackgroundColor(oddRowBg: Color, evenRowBg: Color) {
-        ObjectCalls.ptrcallWithTwoColorArgs(setCellRowBackgroundColorBind, segment, oddRowBg, evenRowBg)
+        ObjectCalls.ptrcallWithTwoColorArgs(Binds.setCellRowBackgroundColorBind, segment, oddRowBg, evenRowBg)
     }
 
     /**
@@ -532,7 +533,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_border_color
      */
     fun setCellBorderColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setCellBorderColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setCellBorderColorBind, segment, color)
     }
 
     /**
@@ -541,7 +542,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_size_override
      */
     fun setCellSizeOverride(minSize: Vector2, maxSize: Vector2) {
-        ObjectCalls.ptrcallWithTwoVector2Args(setCellSizeOverrideBind, segment, minSize, maxSize)
+        ObjectCalls.ptrcallWithTwoVector2Args(Binds.setCellSizeOverrideBind, segment, minSize, maxSize)
     }
 
     /**
@@ -550,7 +551,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_cell_padding
      */
     fun setCellPadding(padding: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setCellPaddingBind, segment, padding)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setCellPaddingBind, segment, padding)
     }
 
     /**
@@ -562,7 +563,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_cell
      */
     fun pushCell() {
-        ObjectCalls.ptrcallNoArgs(pushCellBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushCellBind, segment)
     }
 
     /**
@@ -574,7 +575,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_fgcolor
      */
     fun pushFgcolor(fgcolor: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushFgcolorBind, segment, fgcolor)
+        ObjectCalls.ptrcallWithColorArg(Binds.pushFgcolorBind, segment, fgcolor)
     }
 
     /**
@@ -586,7 +587,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_bgcolor
      */
     fun pushBgcolor(bgcolor: Color) {
-        ObjectCalls.ptrcallWithColorArg(pushBgcolorBind, segment, bgcolor)
+        ObjectCalls.ptrcallWithColorArg(Binds.pushBgcolorBind, segment, bgcolor)
     }
 
     /**
@@ -596,7 +597,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_customfx
      */
     fun pushCustomfx(effect: RichTextEffect?, env: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, segment, effect?.requireOpenHandle() ?: NULL_SEGMENT, env)
+        ObjectCalls.ptrcallWithObjectAndDictionaryArg(Binds.pushCustomfxBind, segment, effect?.requireOpenHandle() ?: NULL_SEGMENT, env)
     }
 
     /**
@@ -605,7 +606,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_context
      */
     fun pushContext() {
-        ObjectCalls.ptrcallNoArgs(pushContextBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pushContextBind, segment)
     }
 
     /**
@@ -615,7 +616,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.pop_context
      */
     fun popContext() {
-        ObjectCalls.ptrcallNoArgs(popContextBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.popContextBind, segment)
     }
 
     /**
@@ -625,7 +626,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.pop
      */
     fun pop() {
-        ObjectCalls.ptrcallNoArgs(popBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.popBind, segment)
     }
 
     /**
@@ -634,7 +635,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.pop_all
      */
     fun popAll() {
-        ObjectCalls.ptrcallNoArgs(popAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.popAllBind, segment)
     }
 
     /**
@@ -645,7 +646,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -654,7 +655,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -663,7 +664,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -672,7 +673,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -681,7 +682,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -690,7 +691,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_text_direction
      */
     fun setTextDirection(direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -699,7 +700,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_text_direction
      */
     fun getTextDirection(): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
     }
 
     /**
@@ -709,7 +710,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -719,7 +720,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -729,7 +730,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -739,7 +740,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -748,7 +749,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_vertical_alignment
      */
     fun setVerticalAlignment(alignment: VerticalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -757,7 +758,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_vertical_alignment
      */
     fun getVerticalAlignment(): VerticalAlignment {
-        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -766,7 +767,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_justification_flags
      */
     fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -775,7 +776,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_justification_flags
      */
     fun getJustificationFlags(): TextServer.JustificationFlag {
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
     }
 
     /**
@@ -784,7 +785,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_tab_stops
      */
     fun setTabStops(tabStops: List<Float>) {
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setTabStopsBind, segment, tabStops)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setTabStopsBind, segment, tabStops)
     }
 
     /**
@@ -793,7 +794,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_tab_stops
      */
     fun getTabStops(): List<Float> {
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getTabStopsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getTabStopsBind, segment)
     }
 
     /**
@@ -806,7 +807,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -819,7 +820,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_autowrap_mode
      */
     fun getAutowrapMode(): TextServer.AutowrapMode {
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
     }
 
     /**
@@ -829,7 +830,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_autowrap_trim_flags
      */
     fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
@@ -839,7 +840,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_autowrap_trim_flags
      */
     fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
-        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -849,7 +850,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_meta_underline
      */
     fun setMetaUnderline(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMetaUnderlineBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMetaUnderlineBind, segment, enable)
     }
 
     /**
@@ -859,7 +860,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_meta_underlined
      */
     fun isMetaUnderlined(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMetaUnderlinedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaUnderlinedBind, segment)
     }
 
     /**
@@ -868,7 +869,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_hint_underline
      */
     fun setHintUnderline(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHintUnderlineBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHintUnderlineBind, segment, enable)
     }
 
     /**
@@ -877,7 +878,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_hint_underlined
      */
     fun isHintUnderlined(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHintUnderlinedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHintUnderlinedBind, segment)
     }
 
     /**
@@ -887,7 +888,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_scroll_active
      */
     fun setScrollActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollActiveBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollActiveBind, segment, active)
     }
 
     /**
@@ -897,7 +898,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_scroll_active
      */
     fun isScrollActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollActiveBind, segment)
     }
 
     /**
@@ -907,7 +908,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_scroll_follow_visible_characters
      */
     fun setScrollFollowVisibleCharacters(follow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollFollowVisibleCharactersBind, segment, follow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollFollowVisibleCharactersBind, segment, follow)
     }
 
     /**
@@ -917,7 +918,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_scroll_following_visible_characters
      */
     fun isScrollFollowingVisibleCharacters(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingVisibleCharactersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollFollowingVisibleCharactersBind, segment)
     }
 
     /**
@@ -926,7 +927,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_scroll_follow
      */
     fun setScrollFollow(follow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollFollowBind, segment, follow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollFollowBind, segment, follow)
     }
 
     /**
@@ -935,7 +936,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_scroll_following
      */
     fun isScrollFollowing(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollFollowingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollFollowingBind, segment)
     }
 
     /**
@@ -946,7 +947,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVScrollBarBind, segment))
     }
 
     /**
@@ -955,7 +956,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.scroll_to_line
      */
     fun scrollToLine(line: Int) {
-        ObjectCalls.ptrcallWithIntArg(scrollToLineBind, segment, line)
+        ObjectCalls.ptrcallWithIntArg(Binds.scrollToLineBind, segment, line)
     }
 
     /**
@@ -964,7 +965,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.scroll_to_paragraph
      */
     fun scrollToParagraph(paragraph: Int) {
-        ObjectCalls.ptrcallWithIntArg(scrollToParagraphBind, segment, paragraph)
+        ObjectCalls.ptrcallWithIntArg(Binds.scrollToParagraphBind, segment, paragraph)
     }
 
     /**
@@ -973,7 +974,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.scroll_to_selection
      */
     fun scrollToSelection() {
-        ObjectCalls.ptrcallNoArgs(scrollToSelectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.scrollToSelectionBind, segment)
     }
 
     /**
@@ -983,7 +984,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_tab_size
      */
     fun setTabSize(spaces: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabSizeBind, segment, spaces)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTabSizeBind, segment, spaces)
     }
 
     /**
@@ -993,7 +994,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_tab_size
      */
     fun getTabSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTabSizeBind, segment)
     }
 
     /**
@@ -1006,7 +1007,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_fit_content
      */
     fun setFitContent(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitContentBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFitContentBind, segment, enabled)
     }
 
     /**
@@ -1019,7 +1020,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_fit_content_enabled
      */
     fun isFitContentEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFitContentEnabledBind, segment)
     }
 
     /**
@@ -1028,7 +1029,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_selection_enabled
      */
     fun setSelectionEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectionEnabledBind, segment, enabled)
     }
 
     /**
@@ -1037,7 +1038,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_selection_enabled
      */
     fun isSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectionEnabledBind, segment)
     }
 
     /**
@@ -1046,7 +1047,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_context_menu_enabled
      */
     fun setContextMenuEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setContextMenuEnabledBind, segment, enabled)
     }
 
     /**
@@ -1055,7 +1056,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_context_menu_enabled
      */
     fun isContextMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isContextMenuEnabledBind, segment)
     }
 
     /**
@@ -1065,7 +1066,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_shortcut_keys_enabled
      */
     fun setShortcutKeysEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShortcutKeysEnabledBind, segment, enabled)
     }
 
     /**
@@ -1075,7 +1076,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_shortcut_keys_enabled
      */
     fun isShortcutKeysEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShortcutKeysEnabledBind, segment)
     }
 
     /**
@@ -1084,7 +1085,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_deselect_on_focus_loss_enabled
      */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeselectOnFocusLossEnabledBind, segment, enable)
     }
 
     /**
@@ -1093,7 +1094,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_deselect_on_focus_loss_enabled
      */
     fun isDeselectOnFocusLossEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeselectOnFocusLossEnabledBind, segment)
     }
 
     /**
@@ -1102,7 +1103,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_drag_and_drop_selection_enabled
      */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragAndDropSelectionEnabledBind, segment, enable)
     }
 
     /**
@@ -1111,7 +1112,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_drag_and_drop_selection_enabled
      */
     fun isDragAndDropSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragAndDropSelectionEnabledBind, segment)
     }
 
     /**
@@ -1121,7 +1122,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selection_from
      */
     fun getSelectionFrom(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionFromBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSelectionFromBind, segment)
     }
 
     /**
@@ -1131,7 +1132,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selection_to
      */
     fun getSelectionTo(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectionToBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSelectionToBind, segment)
     }
 
     /**
@@ -1140,7 +1141,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selection_line_offset
      */
     fun getSelectionLineOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSelectionLineOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSelectionLineOffsetBind, segment)
     }
 
     /**
@@ -1149,7 +1150,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.select_all
      */
     fun selectAll() {
-        ObjectCalls.ptrcallNoArgs(selectAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.selectAllBind, segment)
     }
 
     /**
@@ -1158,7 +1159,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_selected_text
      */
     fun getSelectedText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelectedTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSelectedTextBind, segment)
     }
 
     /**
@@ -1167,7 +1168,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.deselect
      */
     fun deselect() {
-        ObjectCalls.ptrcallNoArgs(deselectBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.deselectBind, segment)
     }
 
     /**
@@ -1176,7 +1177,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.parse_bbcode
      */
     fun parseBbcode(bbcode: String) {
-        ObjectCalls.ptrcallWithStringArg(parseBbcodeBind, segment, bbcode)
+        ObjectCalls.ptrcallWithStringArg(Binds.parseBbcodeBind, segment, bbcode)
     }
 
     /**
@@ -1189,7 +1190,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.append_text
      */
     fun appendText(bbcode: String) {
-        ObjectCalls.ptrcallWithStringArg(appendTextBind, segment, bbcode)
+        ObjectCalls.ptrcallWithStringArg(Binds.appendTextBind, segment, bbcode)
     }
 
     /**
@@ -1203,7 +1204,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -1213,7 +1214,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_ready
      */
     fun isReady(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReadyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReadyBind, segment)
     }
 
     /**
@@ -1223,7 +1224,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_finished
      */
     fun isFinished(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFinishedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFinishedBind, segment)
     }
 
     /**
@@ -1232,7 +1233,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_threaded
      */
     fun setThreaded(threaded: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setThreadedBind, segment, threaded)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setThreadedBind, segment, threaded)
     }
 
     /**
@@ -1241,7 +1242,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_threaded
      */
     fun isThreaded(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isThreadedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isThreadedBind, segment)
     }
 
     /**
@@ -1251,7 +1252,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_progress_bar_delay
      */
     fun setProgressBarDelay(delayMs: Int) {
-        ObjectCalls.ptrcallWithIntArg(setProgressBarDelayBind, segment, delayMs)
+        ObjectCalls.ptrcallWithIntArg(Binds.setProgressBarDelayBind, segment, delayMs)
     }
 
     /**
@@ -1261,7 +1262,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_progress_bar_delay
      */
     fun getProgressBarDelay(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProgressBarDelayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getProgressBarDelayBind, segment)
     }
 
     /**
@@ -1274,7 +1275,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_visible_characters
      */
     fun setVisibleCharacters(amount: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVisibleCharactersBind, segment, amount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVisibleCharactersBind, segment, amount)
     }
 
     /**
@@ -1287,7 +1288,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_characters
      */
     fun getVisibleCharacters(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleCharactersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleCharactersBind, segment)
     }
 
     /**
@@ -1296,7 +1297,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_characters_behavior
      */
     fun getVisibleCharactersBehavior(): TextServer.VisibleCharactersBehavior {
-        return TextServer.VisibleCharactersBehavior(ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment))
+        return TextServer.VisibleCharactersBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibleCharactersBehaviorBind, segment))
     }
 
     /**
@@ -1305,7 +1306,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_visible_characters_behavior
      */
     fun setVisibleCharactersBehavior(behavior: TextServer.VisibleCharactersBehavior) {
-        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibleCharactersBehaviorBind, segment, behavior.value)
     }
 
     /**
@@ -1317,7 +1318,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_visible_ratio
      */
     fun setVisibleRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibleRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibleRatioBind, segment, ratio)
     }
 
     /**
@@ -1329,7 +1330,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_ratio
      */
     fun getVisibleRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibleRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibleRatioBind, segment)
     }
 
     /**
@@ -1340,7 +1341,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_character_line
      */
     fun getCharacterLine(character: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterLineBind, segment, character)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCharacterLineBind, segment, character)
     }
 
     /**
@@ -1352,7 +1353,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_character_paragraph
      */
     fun getCharacterParagraph(character: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCharacterParagraphBind, segment, character)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCharacterParagraphBind, segment, character)
     }
 
     /**
@@ -1361,7 +1362,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_total_character_count
      */
     fun getTotalCharacterCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalCharacterCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTotalCharacterCountBind, segment)
     }
 
     /**
@@ -1371,7 +1372,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_use_bbcode
      */
     fun setUseBbcode(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseBbcodeBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseBbcodeBind, segment, enable)
     }
 
     /**
@@ -1381,7 +1382,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_using_bbcode
      */
     fun isUsingBbcode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingBbcodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingBbcodeBind, segment)
     }
 
     /**
@@ -1392,7 +1393,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineCountBind, segment)
     }
 
     /**
@@ -1405,7 +1406,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_range
      */
     fun getLineRange(line: Int): Vector2i {
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getLineRangeBind, segment, line)
     }
 
     /**
@@ -1417,7 +1418,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_line_count
      */
     fun getVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleLineCountBind, segment)
     }
 
     /**
@@ -1427,7 +1428,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_paragraph_count
      */
     fun getParagraphCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getParagraphCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParagraphCountBind, segment)
     }
 
     /**
@@ -1439,7 +1440,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_paragraph_count
      */
     fun getVisibleParagraphCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleParagraphCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleParagraphCountBind, segment)
     }
 
     /**
@@ -1452,7 +1453,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_content_height
      */
     fun getContentHeight(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContentHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getContentHeightBind, segment)
     }
 
     /**
@@ -1465,7 +1466,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_content_width
      */
     fun getContentWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContentWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getContentWidthBind, segment)
     }
 
     /**
@@ -1476,7 +1477,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_height
      */
     fun getLineHeight(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineHeightBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getLineHeightBind, segment, line)
     }
 
     /**
@@ -1487,7 +1488,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_width
      */
     fun getLineWidth(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineWidthBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getLineWidthBind, segment, line)
     }
 
     /**
@@ -1497,7 +1498,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_visible_content_rect
      */
     fun getVisibleContentRect(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getVisibleContentRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getVisibleContentRectBind, segment)
     }
 
     /**
@@ -1508,7 +1509,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_line_offset
      */
     fun getLineOffset(line: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineOffsetBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineOffsetBind, segment, line)
     }
 
     /**
@@ -1519,7 +1520,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_paragraph_offset
      */
     fun getParagraphOffset(paragraph: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getParagraphOffsetBind, segment, paragraph)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getParagraphOffsetBind, segment, paragraph)
     }
 
     /**
@@ -1528,7 +1529,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.parse_expressions_for_values
      */
     fun parseExpressionsForValues(expressions: List<String>): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(parseExpressionsForValuesBind, segment, expressions)
+        return ObjectCalls.ptrcallWithPackedStringListArgRetDictionary(Binds.parseExpressionsForValuesBind, segment, expressions)
     }
 
     /**
@@ -1538,7 +1539,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.set_effects
      */
     fun setEffects(effects: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setEffectsBind, segment, effects)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setEffectsBind, segment, effects)
     }
 
     /**
@@ -1548,7 +1549,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_effects
      */
     fun getEffects(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getEffectsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getEffectsBind, segment)
     }
 
     /**
@@ -1558,7 +1559,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.install_effect
      */
     fun installEffect(effect: Any?) {
-        ObjectCalls.ptrcallWithVariantArg(installEffectBind, segment, effect)
+        ObjectCalls.ptrcallWithVariantArg(Binds.installEffectBind, segment, effect)
     }
 
     /**
@@ -1567,7 +1568,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.reload_effects
      */
     fun reloadEffects() {
-        ObjectCalls.ptrcallNoArgs(reloadEffectsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.reloadEffectsBind, segment)
     }
 
     /**
@@ -1578,7 +1579,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.get_menu
      */
     fun getMenu(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, segment))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMenuBind, segment))
     }
 
     /**
@@ -1588,7 +1589,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.is_menu_visible
      */
     fun isMenuVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMenuVisibleBind, segment)
     }
 
     /**
@@ -1597,7 +1598,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.menu_option
      */
     fun menuOption(option: Int) {
-        ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
+        ObjectCalls.ptrcallWithIntArg(Binds.menuOptionBind, segment, option)
     }
 
     /** Signal `meta_clicked(meta: Variant)`; see [TypedSignal]. */
@@ -1830,695 +1831,697 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): RichTextLabel? =
             if (handle.address() == 0L) null else RichTextLabel(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PARSED_TEXT_HASH = 201670096L
-        private val getParsedTextBind by lazy {
+        @JvmField
+        val getParsedTextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_parsed_text", GET_PARSED_TEXT_HASH)
-        }
 
         private const val ADD_TEXT_HASH = 83702148L
-        private val addTextBind by lazy {
+        @JvmField
+        val addTextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "add_text", ADD_TEXT_HASH)
-        }
 
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_text", SET_TEXT_HASH)
-        }
 
         private const val ADD_HR_HASH = 16816895L
-        private val addHrBind by lazy {
+        @JvmField
+        val addHrBind =
             ObjectCalls.getMethodBind("RichTextLabel", "add_hr", ADD_HR_HASH)
-        }
 
         private const val ADD_IMAGE_HASH = 1980227702L
-        private val addImageBind by lazy {
+        @JvmField
+        val addImageBind =
             ObjectCalls.getMethodBind("RichTextLabel", "add_image", ADD_IMAGE_HASH)
-        }
 
         private const val UPDATE_IMAGE_HASH = 202998225L
-        private val updateImageBind by lazy {
+        @JvmField
+        val updateImageBind =
             ObjectCalls.getMethodBind("RichTextLabel", "update_image", UPDATE_IMAGE_HASH)
-        }
 
         private const val NEWLINE_HASH = 3218959716L
-        private val newlineBind by lazy {
+        @JvmField
+        val newlineBind =
             ObjectCalls.getMethodBind("RichTextLabel", "newline", NEWLINE_HASH)
-        }
 
         private const val REMOVE_PARAGRAPH_HASH = 3262369265L
-        private val removeParagraphBind by lazy {
+        @JvmField
+        val removeParagraphBind =
             ObjectCalls.getMethodBind("RichTextLabel", "remove_paragraph", REMOVE_PARAGRAPH_HASH)
-        }
 
         private const val INVALIDATE_PARAGRAPH_HASH = 3067735520L
-        private val invalidateParagraphBind by lazy {
+        @JvmField
+        val invalidateParagraphBind =
             ObjectCalls.getMethodBind("RichTextLabel", "invalidate_paragraph", INVALIDATE_PARAGRAPH_HASH)
-        }
 
         private const val PUSH_FONT_HASH = 2347424842L
-        private val pushFontBind by lazy {
+        @JvmField
+        val pushFontBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_font", PUSH_FONT_HASH)
-        }
 
         private const val PUSH_FONT_SIZE_HASH = 1286410249L
-        private val pushFontSizeBind by lazy {
+        @JvmField
+        val pushFontSizeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_font_size", PUSH_FONT_SIZE_HASH)
-        }
 
         private const val PUSH_NORMAL_HASH = 3218959716L
-        private val pushNormalBind by lazy {
+        @JvmField
+        val pushNormalBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_normal", PUSH_NORMAL_HASH)
-        }
 
         private const val PUSH_BOLD_HASH = 3218959716L
-        private val pushBoldBind by lazy {
+        @JvmField
+        val pushBoldBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_bold", PUSH_BOLD_HASH)
-        }
 
         private const val PUSH_BOLD_ITALICS_HASH = 3218959716L
-        private val pushBoldItalicsBind by lazy {
+        @JvmField
+        val pushBoldItalicsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_bold_italics", PUSH_BOLD_ITALICS_HASH)
-        }
 
         private const val PUSH_ITALICS_HASH = 3218959716L
-        private val pushItalicsBind by lazy {
+        @JvmField
+        val pushItalicsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_italics", PUSH_ITALICS_HASH)
-        }
 
         private const val PUSH_MONO_HASH = 3218959716L
-        private val pushMonoBind by lazy {
+        @JvmField
+        val pushMonoBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_mono", PUSH_MONO_HASH)
-        }
 
         private const val PUSH_COLOR_HASH = 2920490490L
-        private val pushColorBind by lazy {
+        @JvmField
+        val pushColorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_color", PUSH_COLOR_HASH)
-        }
 
         private const val PUSH_OUTLINE_SIZE_HASH = 1286410249L
-        private val pushOutlineSizeBind by lazy {
+        @JvmField
+        val pushOutlineSizeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_outline_size", PUSH_OUTLINE_SIZE_HASH)
-        }
 
         private const val PUSH_OUTLINE_COLOR_HASH = 2920490490L
-        private val pushOutlineColorBind by lazy {
+        @JvmField
+        val pushOutlineColorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_outline_color", PUSH_OUTLINE_COLOR_HASH)
-        }
 
         private const val PUSH_PARAGRAPH_HASH = 3089306873L
-        private val pushParagraphBind by lazy {
+        @JvmField
+        val pushParagraphBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_paragraph", PUSH_PARAGRAPH_HASH)
-        }
 
         private const val PUSH_INDENT_HASH = 1286410249L
-        private val pushIndentBind by lazy {
+        @JvmField
+        val pushIndentBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_indent", PUSH_INDENT_HASH)
-        }
 
         private const val PUSH_LIST_HASH = 3017143144L
-        private val pushListBind by lazy {
+        @JvmField
+        val pushListBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_list", PUSH_LIST_HASH)
-        }
 
         private const val PUSH_META_HASH = 3765356747L
-        private val pushMetaBind by lazy {
+        @JvmField
+        val pushMetaBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_meta", PUSH_META_HASH)
-        }
 
         private const val PUSH_HINT_HASH = 83702148L
-        private val pushHintBind by lazy {
+        @JvmField
+        val pushHintBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_hint", PUSH_HINT_HASH)
-        }
 
         private const val PUSH_LANGUAGE_HASH = 83702148L
-        private val pushLanguageBind by lazy {
+        @JvmField
+        val pushLanguageBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_language", PUSH_LANGUAGE_HASH)
-        }
 
         private const val PUSH_UNDERLINE_HASH = 1458098034L
-        private val pushUnderlineBind by lazy {
+        @JvmField
+        val pushUnderlineBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_underline", PUSH_UNDERLINE_HASH)
-        }
 
         private const val PUSH_STRIKETHROUGH_HASH = 1458098034L
-        private val pushStrikethroughBind by lazy {
+        @JvmField
+        val pushStrikethroughBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_strikethrough", PUSH_STRIKETHROUGH_HASH)
-        }
 
         private const val PUSH_TABLE_HASH = 3426862026L
-        private val pushTableBind by lazy {
+        @JvmField
+        val pushTableBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_table", PUSH_TABLE_HASH)
-        }
 
         private const val PUSH_DROPCAP_HASH = 4061635501L
-        private val pushDropcapBind by lazy {
+        @JvmField
+        val pushDropcapBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_dropcap", PUSH_DROPCAP_HASH)
-        }
 
         private const val SET_TABLE_COLUMN_EXPAND_HASH = 117236061L
-        private val setTableColumnExpandBind by lazy {
+        @JvmField
+        val setTableColumnExpandBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_table_column_expand", SET_TABLE_COLUMN_EXPAND_HASH)
-        }
 
         private const val SET_TABLE_COLUMN_NAME_HASH = 501894301L
-        private val setTableColumnNameBind by lazy {
+        @JvmField
+        val setTableColumnNameBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_table_column_name", SET_TABLE_COLUMN_NAME_HASH)
-        }
 
         private const val SET_CELL_ROW_BACKGROUND_COLOR_HASH = 3465483165L
-        private val setCellRowBackgroundColorBind by lazy {
+        @JvmField
+        val setCellRowBackgroundColorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_cell_row_background_color", SET_CELL_ROW_BACKGROUND_COLOR_HASH)
-        }
 
         private const val SET_CELL_BORDER_COLOR_HASH = 2920490490L
-        private val setCellBorderColorBind by lazy {
+        @JvmField
+        val setCellBorderColorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_cell_border_color", SET_CELL_BORDER_COLOR_HASH)
-        }
 
         private const val SET_CELL_SIZE_OVERRIDE_HASH = 3108078480L
-        private val setCellSizeOverrideBind by lazy {
+        @JvmField
+        val setCellSizeOverrideBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_cell_size_override", SET_CELL_SIZE_OVERRIDE_HASH)
-        }
 
         private const val SET_CELL_PADDING_HASH = 2046264180L
-        private val setCellPaddingBind by lazy {
+        @JvmField
+        val setCellPaddingBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_cell_padding", SET_CELL_PADDING_HASH)
-        }
 
         private const val PUSH_CELL_HASH = 3218959716L
-        private val pushCellBind by lazy {
+        @JvmField
+        val pushCellBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_cell", PUSH_CELL_HASH)
-        }
 
         private const val PUSH_FGCOLOR_HASH = 2920490490L
-        private val pushFgcolorBind by lazy {
+        @JvmField
+        val pushFgcolorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_fgcolor", PUSH_FGCOLOR_HASH)
-        }
 
         private const val PUSH_BGCOLOR_HASH = 2920490490L
-        private val pushBgcolorBind by lazy {
+        @JvmField
+        val pushBgcolorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_bgcolor", PUSH_BGCOLOR_HASH)
-        }
 
         private const val PUSH_CUSTOMFX_HASH = 2337942958L
-        private val pushCustomfxBind by lazy {
+        @JvmField
+        val pushCustomfxBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_customfx", PUSH_CUSTOMFX_HASH)
-        }
 
         private const val PUSH_CONTEXT_HASH = 3218959716L
-        private val pushContextBind by lazy {
+        @JvmField
+        val pushContextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "push_context", PUSH_CONTEXT_HASH)
-        }
 
         private const val POP_CONTEXT_HASH = 3218959716L
-        private val popContextBind by lazy {
+        @JvmField
+        val popContextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "pop_context", POP_CONTEXT_HASH)
-        }
 
         private const val POP_HASH = 3218959716L
-        private val popBind by lazy {
+        @JvmField
+        val popBind =
             ObjectCalls.getMethodBind("RichTextLabel", "pop", POP_HASH)
-        }
 
         private const val POP_ALL_HASH = 3218959716L
-        private val popAllBind by lazy {
+        @JvmField
+        val popAllBind =
             ObjectCalls.getMethodBind("RichTextLabel", "pop_all", POP_ALL_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("RichTextLabel", "clear", CLEAR_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 55961453L
-        private val setStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_structured_text_bidi_override", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
-        private val getStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
-        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L
-        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 119160795L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 797257663L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
-        private val setHorizontalAlignmentBind by lazy {
+        @JvmField
+        val setHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_HORIZONTAL_ALIGNMENT_HASH = 341400642L
-        private val getHorizontalAlignmentBind by lazy {
+        @JvmField
+        val getHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_horizontal_alignment", GET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_VERTICAL_ALIGNMENT_HASH = 1796458609L
-        private val setVerticalAlignmentBind by lazy {
+        @JvmField
+        val setVerticalAlignmentBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_vertical_alignment", SET_VERTICAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_VERTICAL_ALIGNMENT_HASH = 3274884059L
-        private val getVerticalAlignmentBind by lazy {
+        @JvmField
+        val getVerticalAlignmentBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_vertical_alignment", GET_VERTICAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_JUSTIFICATION_FLAGS_HASH = 2877345813L
-        private val setJustificationFlagsBind by lazy {
+        @JvmField
+        val setJustificationFlagsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_justification_flags", SET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val GET_JUSTIFICATION_FLAGS_HASH = 1583363614L
-        private val getJustificationFlagsBind by lazy {
+        @JvmField
+        val getJustificationFlagsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_justification_flags", GET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val SET_TAB_STOPS_HASH = 2899603908L
-        private val setTabStopsBind by lazy {
+        @JvmField
+        val setTabStopsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_tab_stops", SET_TAB_STOPS_HASH)
-        }
 
         private const val GET_TAB_STOPS_HASH = 675695659L
-        private val getTabStopsBind by lazy {
+        @JvmField
+        val getTabStopsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_tab_stops", GET_TAB_STOPS_HASH)
-        }
 
         private const val SET_AUTOWRAP_MODE_HASH = 3289138044L
-        private val setAutowrapModeBind by lazy {
+        @JvmField
+        val setAutowrapModeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_autowrap_mode", SET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val GET_AUTOWRAP_MODE_HASH = 1549071663L
-        private val getAutowrapModeBind by lazy {
+        @JvmField
+        val getAutowrapModeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_autowrap_mode", GET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val SET_AUTOWRAP_TRIM_FLAGS_HASH = 2809697122L
-        private val setAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val setAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_autowrap_trim_flags", SET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val GET_AUTOWRAP_TRIM_FLAGS_HASH = 2340632602L
-        private val getAutowrapTrimFlagsBind by lazy {
+        @JvmField
+        val getAutowrapTrimFlagsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_autowrap_trim_flags", GET_AUTOWRAP_TRIM_FLAGS_HASH)
-        }
 
         private const val SET_META_UNDERLINE_HASH = 2586408642L
-        private val setMetaUnderlineBind by lazy {
+        @JvmField
+        val setMetaUnderlineBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_meta_underline", SET_META_UNDERLINE_HASH)
-        }
 
         private const val IS_META_UNDERLINED_HASH = 36873697L
-        private val isMetaUnderlinedBind by lazy {
+        @JvmField
+        val isMetaUnderlinedBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_meta_underlined", IS_META_UNDERLINED_HASH)
-        }
 
         private const val SET_HINT_UNDERLINE_HASH = 2586408642L
-        private val setHintUnderlineBind by lazy {
+        @JvmField
+        val setHintUnderlineBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_hint_underline", SET_HINT_UNDERLINE_HASH)
-        }
 
         private const val IS_HINT_UNDERLINED_HASH = 36873697L
-        private val isHintUnderlinedBind by lazy {
+        @JvmField
+        val isHintUnderlinedBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_hint_underlined", IS_HINT_UNDERLINED_HASH)
-        }
 
         private const val SET_SCROLL_ACTIVE_HASH = 2586408642L
-        private val setScrollActiveBind by lazy {
+        @JvmField
+        val setScrollActiveBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_scroll_active", SET_SCROLL_ACTIVE_HASH)
-        }
 
         private const val IS_SCROLL_ACTIVE_HASH = 36873697L
-        private val isScrollActiveBind by lazy {
+        @JvmField
+        val isScrollActiveBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_scroll_active", IS_SCROLL_ACTIVE_HASH)
-        }
 
         private const val SET_SCROLL_FOLLOW_VISIBLE_CHARACTERS_HASH = 2586408642L
-        private val setScrollFollowVisibleCharactersBind by lazy {
+        @JvmField
+        val setScrollFollowVisibleCharactersBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_scroll_follow_visible_characters", SET_SCROLL_FOLLOW_VISIBLE_CHARACTERS_HASH)
-        }
 
         private const val IS_SCROLL_FOLLOWING_VISIBLE_CHARACTERS_HASH = 36873697L
-        private val isScrollFollowingVisibleCharactersBind by lazy {
+        @JvmField
+        val isScrollFollowingVisibleCharactersBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_scroll_following_visible_characters", IS_SCROLL_FOLLOWING_VISIBLE_CHARACTERS_HASH)
-        }
 
         private const val SET_SCROLL_FOLLOW_HASH = 2586408642L
-        private val setScrollFollowBind by lazy {
+        @JvmField
+        val setScrollFollowBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_scroll_follow", SET_SCROLL_FOLLOW_HASH)
-        }
 
         private const val IS_SCROLL_FOLLOWING_HASH = 36873697L
-        private val isScrollFollowingBind by lazy {
+        @JvmField
+        val isScrollFollowingBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_scroll_following", IS_SCROLL_FOLLOWING_HASH)
-        }
 
         private const val GET_V_SCROLL_BAR_HASH = 2630340773L
-        private val getVScrollBarBind by lazy {
+        @JvmField
+        val getVScrollBarBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_v_scroll_bar", GET_V_SCROLL_BAR_HASH)
-        }
 
         private const val SCROLL_TO_LINE_HASH = 1286410249L
-        private val scrollToLineBind by lazy {
+        @JvmField
+        val scrollToLineBind =
             ObjectCalls.getMethodBind("RichTextLabel", "scroll_to_line", SCROLL_TO_LINE_HASH)
-        }
 
         private const val SCROLL_TO_PARAGRAPH_HASH = 1286410249L
-        private val scrollToParagraphBind by lazy {
+        @JvmField
+        val scrollToParagraphBind =
             ObjectCalls.getMethodBind("RichTextLabel", "scroll_to_paragraph", SCROLL_TO_PARAGRAPH_HASH)
-        }
 
         private const val SCROLL_TO_SELECTION_HASH = 3218959716L
-        private val scrollToSelectionBind by lazy {
+        @JvmField
+        val scrollToSelectionBind =
             ObjectCalls.getMethodBind("RichTextLabel", "scroll_to_selection", SCROLL_TO_SELECTION_HASH)
-        }
 
         private const val SET_TAB_SIZE_HASH = 1286410249L
-        private val setTabSizeBind by lazy {
+        @JvmField
+        val setTabSizeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_tab_size", SET_TAB_SIZE_HASH)
-        }
 
         private const val GET_TAB_SIZE_HASH = 3905245786L
-        private val getTabSizeBind by lazy {
+        @JvmField
+        val getTabSizeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_tab_size", GET_TAB_SIZE_HASH)
-        }
 
         private const val SET_FIT_CONTENT_HASH = 2586408642L
-        private val setFitContentBind by lazy {
+        @JvmField
+        val setFitContentBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_fit_content", SET_FIT_CONTENT_HASH)
-        }
 
         private const val IS_FIT_CONTENT_ENABLED_HASH = 36873697L
-        private val isFitContentEnabledBind by lazy {
+        @JvmField
+        val isFitContentEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_fit_content_enabled", IS_FIT_CONTENT_ENABLED_HASH)
-        }
 
         private const val SET_SELECTION_ENABLED_HASH = 2586408642L
-        private val setSelectionEnabledBind by lazy {
+        @JvmField
+        val setSelectionEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_selection_enabled", SET_SELECTION_ENABLED_HASH)
-        }
 
         private const val IS_SELECTION_ENABLED_HASH = 36873697L
-        private val isSelectionEnabledBind by lazy {
+        @JvmField
+        val isSelectionEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_selection_enabled", IS_SELECTION_ENABLED_HASH)
-        }
 
         private const val SET_CONTEXT_MENU_ENABLED_HASH = 2586408642L
-        private val setContextMenuEnabledBind by lazy {
+        @JvmField
+        val setContextMenuEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_context_menu_enabled", SET_CONTEXT_MENU_ENABLED_HASH)
-        }
 
         private const val IS_CONTEXT_MENU_ENABLED_HASH = 36873697L
-        private val isContextMenuEnabledBind by lazy {
+        @JvmField
+        val isContextMenuEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_context_menu_enabled", IS_CONTEXT_MENU_ENABLED_HASH)
-        }
 
         private const val SET_SHORTCUT_KEYS_ENABLED_HASH = 2586408642L
-        private val setShortcutKeysEnabledBind by lazy {
+        @JvmField
+        val setShortcutKeysEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_shortcut_keys_enabled", SET_SHORTCUT_KEYS_ENABLED_HASH)
-        }
 
         private const val IS_SHORTCUT_KEYS_ENABLED_HASH = 36873697L
-        private val isShortcutKeysEnabledBind by lazy {
+        @JvmField
+        val isShortcutKeysEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_shortcut_keys_enabled", IS_SHORTCUT_KEYS_ENABLED_HASH)
-        }
 
         private const val SET_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH = 2586408642L
-        private val setDeselectOnFocusLossEnabledBind by lazy {
+        @JvmField
+        val setDeselectOnFocusLossEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_deselect_on_focus_loss_enabled", SET_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH)
-        }
 
         private const val IS_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH = 36873697L
-        private val isDeselectOnFocusLossEnabledBind by lazy {
+        @JvmField
+        val isDeselectOnFocusLossEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_deselect_on_focus_loss_enabled", IS_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_AND_DROP_SELECTION_ENABLED_HASH = 2586408642L
-        private val setDragAndDropSelectionEnabledBind by lazy {
+        @JvmField
+        val setDragAndDropSelectionEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_drag_and_drop_selection_enabled", SET_DRAG_AND_DROP_SELECTION_ENABLED_HASH)
-        }
 
         private const val IS_DRAG_AND_DROP_SELECTION_ENABLED_HASH = 36873697L
-        private val isDragAndDropSelectionEnabledBind by lazy {
+        @JvmField
+        val isDragAndDropSelectionEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_drag_and_drop_selection_enabled", IS_DRAG_AND_DROP_SELECTION_ENABLED_HASH)
-        }
 
         private const val GET_SELECTION_FROM_HASH = 3905245786L
-        private val getSelectionFromBind by lazy {
+        @JvmField
+        val getSelectionFromBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_selection_from", GET_SELECTION_FROM_HASH)
-        }
 
         private const val GET_SELECTION_TO_HASH = 3905245786L
-        private val getSelectionToBind by lazy {
+        @JvmField
+        val getSelectionToBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_selection_to", GET_SELECTION_TO_HASH)
-        }
 
         private const val GET_SELECTION_LINE_OFFSET_HASH = 1740695150L
-        private val getSelectionLineOffsetBind by lazy {
+        @JvmField
+        val getSelectionLineOffsetBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_selection_line_offset", GET_SELECTION_LINE_OFFSET_HASH)
-        }
 
         private const val SELECT_ALL_HASH = 3218959716L
-        private val selectAllBind by lazy {
+        @JvmField
+        val selectAllBind =
             ObjectCalls.getMethodBind("RichTextLabel", "select_all", SELECT_ALL_HASH)
-        }
 
         private const val GET_SELECTED_TEXT_HASH = 201670096L
-        private val getSelectedTextBind by lazy {
+        @JvmField
+        val getSelectedTextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_selected_text", GET_SELECTED_TEXT_HASH)
-        }
 
         private const val DESELECT_HASH = 3218959716L
-        private val deselectBind by lazy {
+        @JvmField
+        val deselectBind =
             ObjectCalls.getMethodBind("RichTextLabel", "deselect", DESELECT_HASH)
-        }
 
         private const val PARSE_BBCODE_HASH = 83702148L
-        private val parseBbcodeBind by lazy {
+        @JvmField
+        val parseBbcodeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "parse_bbcode", PARSE_BBCODE_HASH)
-        }
 
         private const val APPEND_TEXT_HASH = 83702148L
-        private val appendTextBind by lazy {
+        @JvmField
+        val appendTextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "append_text", APPEND_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_text", GET_TEXT_HASH)
-        }
 
         private const val IS_READY_HASH = 36873697L
-        private val isReadyBind by lazy {
+        @JvmField
+        val isReadyBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_ready", IS_READY_HASH)
-        }
 
         private const val IS_FINISHED_HASH = 36873697L
-        private val isFinishedBind by lazy {
+        @JvmField
+        val isFinishedBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_finished", IS_FINISHED_HASH)
-        }
 
         private const val SET_THREADED_HASH = 2586408642L
-        private val setThreadedBind by lazy {
+        @JvmField
+        val setThreadedBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_threaded", SET_THREADED_HASH)
-        }
 
         private const val IS_THREADED_HASH = 36873697L
-        private val isThreadedBind by lazy {
+        @JvmField
+        val isThreadedBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_threaded", IS_THREADED_HASH)
-        }
 
         private const val SET_PROGRESS_BAR_DELAY_HASH = 1286410249L
-        private val setProgressBarDelayBind by lazy {
+        @JvmField
+        val setProgressBarDelayBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_progress_bar_delay", SET_PROGRESS_BAR_DELAY_HASH)
-        }
 
         private const val GET_PROGRESS_BAR_DELAY_HASH = 3905245786L
-        private val getProgressBarDelayBind by lazy {
+        @JvmField
+        val getProgressBarDelayBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_progress_bar_delay", GET_PROGRESS_BAR_DELAY_HASH)
-        }
 
         private const val SET_VISIBLE_CHARACTERS_HASH = 1286410249L
-        private val setVisibleCharactersBind by lazy {
+        @JvmField
+        val setVisibleCharactersBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_visible_characters", SET_VISIBLE_CHARACTERS_HASH)
-        }
 
         private const val GET_VISIBLE_CHARACTERS_HASH = 3905245786L
-        private val getVisibleCharactersBind by lazy {
+        @JvmField
+        val getVisibleCharactersBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_visible_characters", GET_VISIBLE_CHARACTERS_HASH)
-        }
 
         private const val GET_VISIBLE_CHARACTERS_BEHAVIOR_HASH = 258789322L
-        private val getVisibleCharactersBehaviorBind by lazy {
+        @JvmField
+        val getVisibleCharactersBehaviorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_visible_characters_behavior", GET_VISIBLE_CHARACTERS_BEHAVIOR_HASH)
-        }
 
         private const val SET_VISIBLE_CHARACTERS_BEHAVIOR_HASH = 3383839701L
-        private val setVisibleCharactersBehaviorBind by lazy {
+        @JvmField
+        val setVisibleCharactersBehaviorBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_visible_characters_behavior", SET_VISIBLE_CHARACTERS_BEHAVIOR_HASH)
-        }
 
         private const val SET_VISIBLE_RATIO_HASH = 373806689L
-        private val setVisibleRatioBind by lazy {
+        @JvmField
+        val setVisibleRatioBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_visible_ratio", SET_VISIBLE_RATIO_HASH)
-        }
 
         private const val GET_VISIBLE_RATIO_HASH = 1740695150L
-        private val getVisibleRatioBind by lazy {
+        @JvmField
+        val getVisibleRatioBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_visible_ratio", GET_VISIBLE_RATIO_HASH)
-        }
 
         private const val GET_CHARACTER_LINE_HASH = 3744713108L
-        private val getCharacterLineBind by lazy {
+        @JvmField
+        val getCharacterLineBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_character_line", GET_CHARACTER_LINE_HASH)
-        }
 
         private const val GET_CHARACTER_PARAGRAPH_HASH = 3744713108L
-        private val getCharacterParagraphBind by lazy {
+        @JvmField
+        val getCharacterParagraphBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_character_paragraph", GET_CHARACTER_PARAGRAPH_HASH)
-        }
 
         private const val GET_TOTAL_CHARACTER_COUNT_HASH = 3905245786L
-        private val getTotalCharacterCountBind by lazy {
+        @JvmField
+        val getTotalCharacterCountBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_total_character_count", GET_TOTAL_CHARACTER_COUNT_HASH)
-        }
 
         private const val SET_USE_BBCODE_HASH = 2586408642L
-        private val setUseBbcodeBind by lazy {
+        @JvmField
+        val setUseBbcodeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_use_bbcode", SET_USE_BBCODE_HASH)
-        }
 
         private const val IS_USING_BBCODE_HASH = 36873697L
-        private val isUsingBbcodeBind by lazy {
+        @JvmField
+        val isUsingBbcodeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_using_bbcode", IS_USING_BBCODE_HASH)
-        }
 
         private const val GET_LINE_COUNT_HASH = 3905245786L
-        private val getLineCountBind by lazy {
+        @JvmField
+        val getLineCountBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_line_count", GET_LINE_COUNT_HASH)
-        }
 
         private const val GET_LINE_RANGE_HASH = 3665014314L
-        private val getLineRangeBind by lazy {
+        @JvmField
+        val getLineRangeBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_line_range", GET_LINE_RANGE_HASH)
-        }
 
         private const val GET_VISIBLE_LINE_COUNT_HASH = 3905245786L
-        private val getVisibleLineCountBind by lazy {
+        @JvmField
+        val getVisibleLineCountBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_visible_line_count", GET_VISIBLE_LINE_COUNT_HASH)
-        }
 
         private const val GET_PARAGRAPH_COUNT_HASH = 3905245786L
-        private val getParagraphCountBind by lazy {
+        @JvmField
+        val getParagraphCountBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_paragraph_count", GET_PARAGRAPH_COUNT_HASH)
-        }
 
         private const val GET_VISIBLE_PARAGRAPH_COUNT_HASH = 3905245786L
-        private val getVisibleParagraphCountBind by lazy {
+        @JvmField
+        val getVisibleParagraphCountBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_visible_paragraph_count", GET_VISIBLE_PARAGRAPH_COUNT_HASH)
-        }
 
         private const val GET_CONTENT_HEIGHT_HASH = 3905245786L
-        private val getContentHeightBind by lazy {
+        @JvmField
+        val getContentHeightBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_content_height", GET_CONTENT_HEIGHT_HASH)
-        }
 
         private const val GET_CONTENT_WIDTH_HASH = 3905245786L
-        private val getContentWidthBind by lazy {
+        @JvmField
+        val getContentWidthBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_content_width", GET_CONTENT_WIDTH_HASH)
-        }
 
         private const val GET_LINE_HEIGHT_HASH = 923996154L
-        private val getLineHeightBind by lazy {
+        @JvmField
+        val getLineHeightBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_line_height", GET_LINE_HEIGHT_HASH)
-        }
 
         private const val GET_LINE_WIDTH_HASH = 923996154L
-        private val getLineWidthBind by lazy {
+        @JvmField
+        val getLineWidthBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_line_width", GET_LINE_WIDTH_HASH)
-        }
 
         private const val GET_VISIBLE_CONTENT_RECT_HASH = 410525958L
-        private val getVisibleContentRectBind by lazy {
+        @JvmField
+        val getVisibleContentRectBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_visible_content_rect", GET_VISIBLE_CONTENT_RECT_HASH)
-        }
 
         private const val GET_LINE_OFFSET_HASH = 4025615559L
-        private val getLineOffsetBind by lazy {
+        @JvmField
+        val getLineOffsetBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_line_offset", GET_LINE_OFFSET_HASH)
-        }
 
         private const val GET_PARAGRAPH_OFFSET_HASH = 4025615559L
-        private val getParagraphOffsetBind by lazy {
+        @JvmField
+        val getParagraphOffsetBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_paragraph_offset", GET_PARAGRAPH_OFFSET_HASH)
-        }
 
         private const val PARSE_EXPRESSIONS_FOR_VALUES_HASH = 1522900837L
-        private val parseExpressionsForValuesBind by lazy {
+        @JvmField
+        val parseExpressionsForValuesBind =
             ObjectCalls.getMethodBind("RichTextLabel", "parse_expressions_for_values", PARSE_EXPRESSIONS_FOR_VALUES_HASH)
-        }
 
         private const val SET_EFFECTS_HASH = 381264803L
-        private val setEffectsBind by lazy {
+        @JvmField
+        val setEffectsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "set_effects", SET_EFFECTS_HASH)
-        }
 
         private const val GET_EFFECTS_HASH = 2915620761L
-        private val getEffectsBind by lazy {
+        @JvmField
+        val getEffectsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_effects", GET_EFFECTS_HASH)
-        }
 
         private const val INSTALL_EFFECT_HASH = 1114965689L
-        private val installEffectBind by lazy {
+        @JvmField
+        val installEffectBind =
             ObjectCalls.getMethodBind("RichTextLabel", "install_effect", INSTALL_EFFECT_HASH)
-        }
 
         private const val RELOAD_EFFECTS_HASH = 3218959716L
-        private val reloadEffectsBind by lazy {
+        @JvmField
+        val reloadEffectsBind =
             ObjectCalls.getMethodBind("RichTextLabel", "reload_effects", RELOAD_EFFECTS_HASH)
-        }
 
         private const val GET_MENU_HASH = 229722558L
-        private val getMenuBind by lazy {
+        @JvmField
+        val getMenuBind =
             ObjectCalls.getMethodBind("RichTextLabel", "get_menu", GET_MENU_HASH)
-        }
 
         private const val IS_MENU_VISIBLE_HASH = 36873697L
-        private val isMenuVisibleBind by lazy {
+        @JvmField
+        val isMenuVisibleBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_menu_visible", IS_MENU_VISIBLE_HASH)
-        }
 
         private const val MENU_OPTION_HASH = 1286410249L
-        private val menuOptionBind by lazy {
+        @JvmField
+        val menuOptionBind =
             ObjectCalls.getMethodBind("RichTextLabel", "menu_option", MENU_OPTION_HASH)
-        }
     }
 }

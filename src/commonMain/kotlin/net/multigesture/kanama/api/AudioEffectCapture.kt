@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun canGetBuffer(frames: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(canGetBufferBind, segment, frames)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.canGetBufferBind, segment, frames)
     }
 
     /**
@@ -39,7 +40,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBuffer(frames: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getBufferBind, segment, frames)
+        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(Binds.getBufferBind, segment, frames)
     }
 
     /**
@@ -50,7 +51,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun clearBuffer() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBufferBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBufferBind, segment)
     }
 
     /**
@@ -62,7 +63,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setBufferLength(bufferLengthSeconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, segment, bufferLengthSeconds)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBufferLengthBind, segment, bufferLengthSeconds)
     }
 
     /**
@@ -74,7 +75,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFramesAvailable(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesAvailableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesAvailableBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDiscardedFrames(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDiscardedFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiscardedFramesBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getBufferLengthFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferLengthFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferLengthFramesBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPushedFrames(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPushedFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPushedFramesBind, segment)
     }
 
     companion object {
@@ -127,50 +128,52 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectCapture? =
             if (handle.address() == 0L) null else AudioEffectCapture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CAN_GET_BUFFER_HASH = 1116898809L
-        private val canGetBufferBind by lazy {
+        @JvmField
+        val canGetBufferBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "can_get_buffer", CAN_GET_BUFFER_HASH)
-        }
 
         private const val GET_BUFFER_HASH = 2649534757L
-        private val getBufferBind by lazy {
+        @JvmField
+        val getBufferBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "get_buffer", GET_BUFFER_HASH)
-        }
 
         private const val CLEAR_BUFFER_HASH = 3218959716L
-        private val clearBufferBind by lazy {
+        @JvmField
+        val clearBufferBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "clear_buffer", CLEAR_BUFFER_HASH)
-        }
 
         private const val SET_BUFFER_LENGTH_HASH = 373806689L
-        private val setBufferLengthBind by lazy {
+        @JvmField
+        val setBufferLengthBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "set_buffer_length", SET_BUFFER_LENGTH_HASH)
-        }
 
         private const val GET_BUFFER_LENGTH_HASH = 191475506L
-        private val getBufferLengthBind by lazy {
+        @JvmField
+        val getBufferLengthBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "get_buffer_length", GET_BUFFER_LENGTH_HASH)
-        }
 
         private const val GET_FRAMES_AVAILABLE_HASH = 3905245786L
-        private val getFramesAvailableBind by lazy {
+        @JvmField
+        val getFramesAvailableBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "get_frames_available", GET_FRAMES_AVAILABLE_HASH)
-        }
 
         private const val GET_DISCARDED_FRAMES_HASH = 3905245786L
-        private val getDiscardedFramesBind by lazy {
+        @JvmField
+        val getDiscardedFramesBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "get_discarded_frames", GET_DISCARDED_FRAMES_HASH)
-        }
 
         private const val GET_BUFFER_LENGTH_FRAMES_HASH = 3905245786L
-        private val getBufferLengthFramesBind by lazy {
+        @JvmField
+        val getBufferLengthFramesBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "get_buffer_length_frames", GET_BUFFER_LENGTH_FRAMES_HASH)
-        }
 
         private const val GET_PUSHED_FRAMES_HASH = 3905245786L
-        private val getPushedFramesBind by lazy {
+        @JvmField
+        val getPushedFramesBind =
             ObjectCalls.getMethodBind("AudioEffectCapture", "get_pushed_frames", GET_PUSHED_FRAMES_HASH)
-        }
     }
 }

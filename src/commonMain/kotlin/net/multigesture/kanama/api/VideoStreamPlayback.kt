@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class VideoStreamPlayback(handle: GodotHandle) : Resource(handle) {
      */
     fun mixAudio(numFrames: Int, buffer: List<Float>, offset: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(mixAudioBind, segment, numFrames, buffer, offset)
+        return ObjectCalls.ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(Binds.mixAudioBind, segment, numFrames, buffer, offset)
     }
 
     companion object {
@@ -32,10 +33,12 @@ class VideoStreamPlayback(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VideoStreamPlayback? =
             if (handle.address() == 0L) null else VideoStreamPlayback(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val MIX_AUDIO_HASH = 93876830L
-        private val mixAudioBind by lazy {
+        @JvmField
+        val mixAudioBind =
             ObjectCalls.getMethodBind("VideoStreamPlayback", "mix_audio", MIX_AUDIO_HASH)
-        }
     }
 }

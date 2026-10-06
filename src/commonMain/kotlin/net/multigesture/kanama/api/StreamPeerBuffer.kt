@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun seek(position: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(seekBind, segment, position)
+        ObjectCalls.ptrcallWithIntArg(Binds.seekBind, segment, position)
     }
 
     /**
@@ -34,7 +35,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSizeBind, segment)
     }
 
     /**
@@ -44,7 +45,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getPosition(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPositionBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun resize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(resizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.resizeBind, segment, size)
     }
 
     /**
@@ -64,7 +65,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun setDataArray(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataArrayBind, segment, data)
+        ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataArrayBind, segment, data)
     }
 
     /**
@@ -74,7 +75,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun getDataArray(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataArrayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataArrayBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
      */
     fun duplicate(): StreamPeerBuffer? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.duplicateBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -112,45 +113,47 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerBuffer? =
             if (handle.address() == 0L) null else StreamPeerBuffer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SEEK_HASH = 1286410249L
-        private val seekBind by lazy {
+        @JvmField
+        val seekBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "seek", SEEK_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3905245786L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "get_size", GET_SIZE_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3905245786L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "get_position", GET_POSITION_HASH)
-        }
 
         private const val RESIZE_HASH = 1286410249L
-        private val resizeBind by lazy {
+        @JvmField
+        val resizeBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "resize", RESIZE_HASH)
-        }
 
         private const val SET_DATA_ARRAY_HASH = 2971499966L
-        private val setDataArrayBind by lazy {
+        @JvmField
+        val setDataArrayBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "set_data_array", SET_DATA_ARRAY_HASH)
-        }
 
         private const val GET_DATA_ARRAY_HASH = 2362200018L
-        private val getDataArrayBind by lazy {
+        @JvmField
+        val getDataArrayBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "get_data_array", GET_DATA_ARRAY_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "clear", CLEAR_HASH)
-        }
 
         private const val DUPLICATE_HASH = 2474064677L
-        private val duplicateBind by lazy {
+        @JvmField
+        val duplicateBind =
             ObjectCalls.getMethodBind("StreamPeerBuffer", "duplicate", DUPLICATE_HASH)
-        }
     }
 }

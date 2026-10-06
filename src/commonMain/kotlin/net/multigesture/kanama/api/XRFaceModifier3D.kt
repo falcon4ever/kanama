@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.set_face_tracker
      */
     fun setFaceTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setFaceTrackerBind, segment, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setFaceTrackerBind, segment, trackerName)
     }
 
     /**
@@ -39,7 +40,7 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.get_face_tracker
      */
     fun getFaceTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getFaceTrackerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getFaceTrackerBind, segment)
     }
 
     /**
@@ -48,7 +49,7 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.set_target
      */
     fun setTarget(target: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setTargetBind, segment, target)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetBind, segment, target)
     }
 
     /**
@@ -57,7 +58,7 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRFaceModifier3D.get_target
      */
     fun getTarget(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetBind, segment)
     }
 
     companion object {
@@ -67,25 +68,27 @@ class XRFaceModifier3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRFaceModifier3D? =
             if (handle.address() == 0L) null else XRFaceModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FACE_TRACKER_HASH = 3304788590L
-        private val setFaceTrackerBind by lazy {
+        @JvmField
+        val setFaceTrackerBind =
             ObjectCalls.getMethodBind("XRFaceModifier3D", "set_face_tracker", SET_FACE_TRACKER_HASH)
-        }
 
         private const val GET_FACE_TRACKER_HASH = 2002593661L
-        private val getFaceTrackerBind by lazy {
+        @JvmField
+        val getFaceTrackerBind =
             ObjectCalls.getMethodBind("XRFaceModifier3D", "get_face_tracker", GET_FACE_TRACKER_HASH)
-        }
 
         private const val SET_TARGET_HASH = 1348162250L
-        private val setTargetBind by lazy {
+        @JvmField
+        val setTargetBind =
             ObjectCalls.getMethodBind("XRFaceModifier3D", "set_target", SET_TARGET_HASH)
-        }
 
         private const val GET_TARGET_HASH = 4075236667L
-        private val getTargetBind by lazy {
+        @JvmField
+        val getTargetBind =
             ObjectCalls.getMethodBind("XRFaceModifier3D", "get_target", GET_TARGET_HASH)
-        }
     }
 }

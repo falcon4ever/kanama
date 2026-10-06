@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_filesystem
      */
     fun getFilesystem(): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFilesystemBind, segment))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFilesystemBind, segment))
     }
 
     /**
@@ -26,7 +27,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.is_scanning
      */
     fun isScanning(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScanningBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScanningBind, segment)
     }
 
     /**
@@ -35,7 +36,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.is_importing
      */
     fun isImporting(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isImportingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isImportingBind, segment)
     }
 
     /**
@@ -44,7 +45,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_scanning_progress
      */
     fun getScanningProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScanningProgressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getScanningProgressBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.scan
      */
     fun scan() {
-        ObjectCalls.ptrcallNoArgs(scanBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.scanBind, segment)
     }
 
     /**
@@ -62,7 +63,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.scan_sources
      */
     fun scanSources() {
-        ObjectCalls.ptrcallNoArgs(scanSourcesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.scanSourcesBind, segment)
     }
 
     /**
@@ -73,7 +74,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.update_file
      */
     fun updateFile(path: String) {
-        ObjectCalls.ptrcallWithStringArg(updateFileBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.updateFileBind, segment, path)
     }
 
     /**
@@ -82,7 +83,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_filesystem_path
      */
     fun getFilesystemPath(path: String): EditorFileSystemDirectory? {
-        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getFilesystemPathBind, segment, path))
+        return EditorFileSystemDirectory.wrap(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getFilesystemPathBind, segment, path))
     }
 
     /**
@@ -92,7 +93,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.get_file_type
      */
     fun getFileType(path: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(getFileTypeBind, segment, path)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getFileTypeBind, segment, path)
     }
 
     /**
@@ -106,7 +107,7 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorFileSystem.reimport_files
      */
     fun reimportFiles(files: List<String>) {
-        ObjectCalls.ptrcallWithPackedStringListArg(reimportFilesBind, segment, files)
+        ObjectCalls.ptrcallWithPackedStringListArg(Binds.reimportFilesBind, segment, files)
     }
 
     /** Signal `filesystem_changed()`; see [TypedSignal]. */
@@ -155,55 +156,57 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): EditorFileSystem? =
             if (handle.address() == 0L) null else EditorFileSystem(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_FILESYSTEM_HASH = 842323275L
-        private val getFilesystemBind by lazy {
+        @JvmField
+        val getFilesystemBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "get_filesystem", GET_FILESYSTEM_HASH)
-        }
 
         private const val IS_SCANNING_HASH = 36873697L
-        private val isScanningBind by lazy {
+        @JvmField
+        val isScanningBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "is_scanning", IS_SCANNING_HASH)
-        }
 
         private const val IS_IMPORTING_HASH = 36873697L
-        private val isImportingBind by lazy {
+        @JvmField
+        val isImportingBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "is_importing", IS_IMPORTING_HASH)
-        }
 
         private const val GET_SCANNING_PROGRESS_HASH = 1740695150L
-        private val getScanningProgressBind by lazy {
+        @JvmField
+        val getScanningProgressBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "get_scanning_progress", GET_SCANNING_PROGRESS_HASH)
-        }
 
         private const val SCAN_HASH = 3218959716L
-        private val scanBind by lazy {
+        @JvmField
+        val scanBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "scan", SCAN_HASH)
-        }
 
         private const val SCAN_SOURCES_HASH = 3218959716L
-        private val scanSourcesBind by lazy {
+        @JvmField
+        val scanSourcesBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "scan_sources", SCAN_SOURCES_HASH)
-        }
 
         private const val UPDATE_FILE_HASH = 83702148L
-        private val updateFileBind by lazy {
+        @JvmField
+        val updateFileBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "update_file", UPDATE_FILE_HASH)
-        }
 
         private const val GET_FILESYSTEM_PATH_HASH = 3188521125L
-        private val getFilesystemPathBind by lazy {
+        @JvmField
+        val getFilesystemPathBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "get_filesystem_path", GET_FILESYSTEM_PATH_HASH)
-        }
 
         private const val GET_FILE_TYPE_HASH = 3135753539L
-        private val getFileTypeBind by lazy {
+        @JvmField
+        val getFileTypeBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "get_file_type", GET_FILE_TYPE_HASH)
-        }
 
         private const val REIMPORT_FILES_HASH = 4015028928L
-        private val reimportFilesBind by lazy {
+        @JvmField
+        val reimportFilesBind =
             ObjectCalls.getMethodBind("EditorFileSystem", "reimport_files", REIMPORT_FILES_HASH)
-        }
     }
 }

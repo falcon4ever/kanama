@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -25,42 +26,42 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
 
     fun setClipCount(clipCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setClipCountBind, segment, clipCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setClipCountBind, segment, clipCount)
     }
 
     fun getClipCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getClipCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getClipCountBind, segment)
     }
 
     fun setInitialClip(clipIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInitialClipBind, segment, clipIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInitialClipBind, segment, clipIndex)
     }
 
     fun getInitialClip(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInitialClipBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInitialClipBind, segment)
     }
 
     fun setClipName(clipIndex: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringNameArg(setClipNameBind, segment, clipIndex, name)
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setClipNameBind, segment, clipIndex, name)
     }
 
     fun getClipName(clipIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getClipNameBind, segment, clipIndex)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getClipNameBind, segment, clipIndex)
     }
 
     fun setClipStream(clipIndex: Int, stream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setClipStreamBind, segment, clipIndex, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setClipStreamBind, segment, clipIndex, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun getClipStream(clipIndex: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getClipStreamBind, segment, clipIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getClipStreamBind, segment, clipIndex)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -70,77 +71,77 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
 
     fun setClipAutoAdvance(clipIndex: Int, mode: AudioStreamInteractive.AutoAdvanceMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setClipAutoAdvanceBind, segment, clipIndex, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setClipAutoAdvanceBind, segment, clipIndex, mode.value)
     }
 
     fun getClipAutoAdvance(clipIndex: Int): AudioStreamInteractive.AutoAdvanceMode {
         checkOpen()
-        return AudioStreamInteractive.AutoAdvanceMode(ObjectCalls.ptrcallWithIntArgRetLong(getClipAutoAdvanceBind, segment, clipIndex))
+        return AudioStreamInteractive.AutoAdvanceMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getClipAutoAdvanceBind, segment, clipIndex))
     }
 
     fun setClipAutoAdvanceNextClip(clipIndex: Int, autoAdvanceNextClip: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setClipAutoAdvanceNextClipBind, segment, clipIndex, autoAdvanceNextClip)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setClipAutoAdvanceNextClipBind, segment, clipIndex, autoAdvanceNextClip)
     }
 
     fun getClipAutoAdvanceNextClip(clipIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getClipAutoAdvanceNextClipBind, segment, clipIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getClipAutoAdvanceNextClipBind, segment, clipIndex)
     }
 
     fun addTransition(fromClip: Int, toClip: Int, fromTime: AudioStreamInteractive.TransitionFromTime, toTime: AudioStreamInteractive.TransitionToTime, fadeMode: AudioStreamInteractive.FadeMode, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(addTransitionBind, segment, fromClip, toClip, fromTime.value, toTime.value, fadeMode.value, fadeBeats, useFillerClip, fillerClip, holdPrevious)
+        ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(Binds.addTransitionBind, segment, fromClip, toClip, fromTime.value, toTime.value, fadeMode.value, fadeBeats, useFillerClip, fillerClip, holdPrevious)
     }
 
     fun hasTransition(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(hasTransitionBind, segment, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.hasTransitionBind, segment, fromClip, toClip)
     }
 
     fun eraseTransition(fromClip: Int, toClip: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(eraseTransitionBind, segment, fromClip, toClip)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.eraseTransitionBind, segment, fromClip, toClip)
     }
 
     fun getTransitionList(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getTransitionListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getTransitionListBind, segment)
     }
 
     fun getTransitionFromTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionFromTime {
         checkOpen()
-        return AudioStreamInteractive.TransitionFromTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFromTimeBind, segment, fromClip, toClip))
+        return AudioStreamInteractive.TransitionFromTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFromTimeBind, segment, fromClip, toClip))
     }
 
     fun getTransitionToTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionToTime {
         checkOpen()
-        return AudioStreamInteractive.TransitionToTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionToTimeBind, segment, fromClip, toClip))
+        return AudioStreamInteractive.TransitionToTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionToTimeBind, segment, fromClip, toClip))
     }
 
     fun getTransitionFadeMode(fromClip: Int, toClip: Int): AudioStreamInteractive.FadeMode {
         checkOpen()
-        return AudioStreamInteractive.FadeMode(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFadeModeBind, segment, fromClip, toClip))
+        return AudioStreamInteractive.FadeMode(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFadeModeBind, segment, fromClip, toClip))
     }
 
     fun getTransitionFadeBeats(fromClip: Int, toClip: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getTransitionFadeBeatsBind, segment, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getTransitionFadeBeatsBind, segment, fromClip, toClip)
     }
 
     fun isTransitionUsingFillerClip(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionUsingFillerClipBind, segment, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionUsingFillerClipBind, segment, fromClip, toClip)
     }
 
     fun getTransitionFillerClip(fromClip: Int, toClip: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getTransitionFillerClipBind, segment, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getTransitionFillerClipBind, segment, fromClip, toClip)
     }
 
     fun isTransitionHoldingPrevious(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionHoldingPreviousBind, segment, fromClip, toClip)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionHoldingPreviousBind, segment, fromClip, toClip)
     }
 
     @JvmInline
@@ -194,120 +195,122 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamInteractive? =
             if (handle.address() == 0L) null else AudioStreamInteractive(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CLIP_COUNT_HASH = 1286410249L
-        private val setClipCountBind by lazy {
+        @JvmField
+        val setClipCountBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_count", SET_CLIP_COUNT_HASH)
-        }
 
         private const val GET_CLIP_COUNT_HASH = 3905245786L
-        private val getClipCountBind by lazy {
+        @JvmField
+        val getClipCountBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_clip_count", GET_CLIP_COUNT_HASH)
-        }
 
         private const val SET_INITIAL_CLIP_HASH = 1286410249L
-        private val setInitialClipBind by lazy {
+        @JvmField
+        val setInitialClipBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_initial_clip", SET_INITIAL_CLIP_HASH)
-        }
 
         private const val GET_INITIAL_CLIP_HASH = 3905245786L
-        private val getInitialClipBind by lazy {
+        @JvmField
+        val getInitialClipBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_initial_clip", GET_INITIAL_CLIP_HASH)
-        }
 
         private const val SET_CLIP_NAME_HASH = 3780747571L
-        private val setClipNameBind by lazy {
+        @JvmField
+        val setClipNameBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_name", SET_CLIP_NAME_HASH)
-        }
 
         private const val GET_CLIP_NAME_HASH = 659327637L
-        private val getClipNameBind by lazy {
+        @JvmField
+        val getClipNameBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_clip_name", GET_CLIP_NAME_HASH)
-        }
 
         private const val SET_CLIP_STREAM_HASH = 111075094L
-        private val setClipStreamBind by lazy {
+        @JvmField
+        val setClipStreamBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_stream", SET_CLIP_STREAM_HASH)
-        }
 
         private const val GET_CLIP_STREAM_HASH = 2739380747L
-        private val getClipStreamBind by lazy {
+        @JvmField
+        val getClipStreamBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_clip_stream", GET_CLIP_STREAM_HASH)
-        }
 
         private const val SET_CLIP_AUTO_ADVANCE_HASH = 57217598L
-        private val setClipAutoAdvanceBind by lazy {
+        @JvmField
+        val setClipAutoAdvanceBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_auto_advance", SET_CLIP_AUTO_ADVANCE_HASH)
-        }
 
         private const val GET_CLIP_AUTO_ADVANCE_HASH = 1778634807L
-        private val getClipAutoAdvanceBind by lazy {
+        @JvmField
+        val getClipAutoAdvanceBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_clip_auto_advance", GET_CLIP_AUTO_ADVANCE_HASH)
-        }
 
         private const val SET_CLIP_AUTO_ADVANCE_NEXT_CLIP_HASH = 3937882851L
-        private val setClipAutoAdvanceNextClipBind by lazy {
+        @JvmField
+        val setClipAutoAdvanceNextClipBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "set_clip_auto_advance_next_clip", SET_CLIP_AUTO_ADVANCE_NEXT_CLIP_HASH)
-        }
 
         private const val GET_CLIP_AUTO_ADVANCE_NEXT_CLIP_HASH = 923996154L
-        private val getClipAutoAdvanceNextClipBind by lazy {
+        @JvmField
+        val getClipAutoAdvanceNextClipBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_clip_auto_advance_next_clip", GET_CLIP_AUTO_ADVANCE_NEXT_CLIP_HASH)
-        }
 
         private const val ADD_TRANSITION_HASH = 1630280552L
-        private val addTransitionBind by lazy {
+        @JvmField
+        val addTransitionBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "add_transition", ADD_TRANSITION_HASH)
-        }
 
         private const val HAS_TRANSITION_HASH = 2522259332L
-        private val hasTransitionBind by lazy {
+        @JvmField
+        val hasTransitionBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "has_transition", HAS_TRANSITION_HASH)
-        }
 
         private const val ERASE_TRANSITION_HASH = 3937882851L
-        private val eraseTransitionBind by lazy {
+        @JvmField
+        val eraseTransitionBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "erase_transition", ERASE_TRANSITION_HASH)
-        }
 
         private const val GET_TRANSITION_LIST_HASH = 1930428628L
-        private val getTransitionListBind by lazy {
+        @JvmField
+        val getTransitionListBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_transition_list", GET_TRANSITION_LIST_HASH)
-        }
 
         private const val GET_TRANSITION_FROM_TIME_HASH = 3453338158L
-        private val getTransitionFromTimeBind by lazy {
+        @JvmField
+        val getTransitionFromTimeBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_transition_from_time", GET_TRANSITION_FROM_TIME_HASH)
-        }
 
         private const val GET_TRANSITION_TO_TIME_HASH = 1369651373L
-        private val getTransitionToTimeBind by lazy {
+        @JvmField
+        val getTransitionToTimeBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_transition_to_time", GET_TRANSITION_TO_TIME_HASH)
-        }
 
         private const val GET_TRANSITION_FADE_MODE_HASH = 4065396087L
-        private val getTransitionFadeModeBind by lazy {
+        @JvmField
+        val getTransitionFadeModeBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_transition_fade_mode", GET_TRANSITION_FADE_MODE_HASH)
-        }
 
         private const val GET_TRANSITION_FADE_BEATS_HASH = 3085491603L
-        private val getTransitionFadeBeatsBind by lazy {
+        @JvmField
+        val getTransitionFadeBeatsBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_transition_fade_beats", GET_TRANSITION_FADE_BEATS_HASH)
-        }
 
         private const val IS_TRANSITION_USING_FILLER_CLIP_HASH = 2522259332L
-        private val isTransitionUsingFillerClipBind by lazy {
+        @JvmField
+        val isTransitionUsingFillerClipBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "is_transition_using_filler_clip", IS_TRANSITION_USING_FILLER_CLIP_HASH)
-        }
 
         private const val GET_TRANSITION_FILLER_CLIP_HASH = 3175239445L
-        private val getTransitionFillerClipBind by lazy {
+        @JvmField
+        val getTransitionFillerClipBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "get_transition_filler_clip", GET_TRANSITION_FILLER_CLIP_HASH)
-        }
 
         private const val IS_TRANSITION_HOLDING_PREVIOUS_HASH = 2522259332L
-        private val isTransitionHoldingPreviousBind by lazy {
+        @JvmField
+        val isTransitionHoldingPreviousBind =
             ObjectCalls.getMethodBind("AudioStreamInteractive", "is_transition_holding_previous", IS_TRANSITION_HOLDING_PREVIOUS_HASH)
-        }
     }
 }

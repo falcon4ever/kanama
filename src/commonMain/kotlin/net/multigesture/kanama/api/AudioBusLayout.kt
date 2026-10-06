@@ -22,7 +22,5 @@ class AudioBusLayout(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioBusLayout? =
             if (handle.address() == 0L) null else AudioBusLayout(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

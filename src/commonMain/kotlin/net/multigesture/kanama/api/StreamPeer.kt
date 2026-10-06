@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putData(data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, segment, data))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.putDataBind, segment, data))
     }
 
     /**
@@ -37,7 +38,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putPartialData(data: ByteArray): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetArray(putPartialDataBind, segment, data)
+        return ObjectCalls.ptrcallWithByteArrayArgRetArray(Binds.putPartialDataBind, segment, data)
     }
 
     /**
@@ -49,7 +50,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getData(bytes: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getDataBind, segment, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getDataBind, segment, bytes)
     }
 
     /**
@@ -61,7 +62,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPartialData(bytes: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getPartialDataBind, segment, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getPartialDataBind, segment, bytes)
     }
 
     /**
@@ -71,7 +72,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAvailableBytes(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAvailableBytesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAvailableBytesBind, segment)
     }
 
     /**
@@ -81,7 +82,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBigEndian(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBigEndianBind, segment, enable)
     }
 
     /**
@@ -91,7 +92,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isBigEndianEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBigEndianEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBigEndianEnabledBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun put8(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(put8Bind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.put8Bind, segment, value)
     }
 
     /**
@@ -111,7 +112,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putU8(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(putU8Bind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.putU8Bind, segment, value)
     }
 
     /**
@@ -121,7 +122,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun put16(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(put16Bind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.put16Bind, segment, value)
     }
 
     /**
@@ -131,7 +132,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putU16(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(putU16Bind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.putU16Bind, segment, value)
     }
 
     /**
@@ -141,7 +142,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun put32(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(put32Bind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.put32Bind, segment, value)
     }
 
     /**
@@ -151,7 +152,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putU32(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(putU32Bind, segment, value)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.putU32Bind, segment, value)
     }
 
     /**
@@ -161,7 +162,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun put64(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(put64Bind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(Binds.put64Bind, segment, value)
     }
 
     /**
@@ -171,7 +172,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putU64(value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(putU64Bind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(Binds.putU64Bind, segment, value)
     }
 
     /**
@@ -181,7 +182,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putHalf(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(putHalfBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.putHalfBind, segment, value)
     }
 
     /**
@@ -191,7 +192,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putFloat(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(putFloatBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.putFloatBind, segment, value)
     }
 
     /**
@@ -201,7 +202,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putDouble(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(putDoubleBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.putDoubleBind, segment, value)
     }
 
     /**
@@ -212,7 +213,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putString(value: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(putStringBind, segment, value)
+        ObjectCalls.ptrcallWithStringArg(Binds.putStringBind, segment, value)
     }
 
     /**
@@ -223,7 +224,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putUtf8String(value: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(putUtf8StringBind, segment, value)
+        ObjectCalls.ptrcallWithStringArg(Binds.putUtf8StringBind, segment, value)
     }
 
     /**
@@ -235,7 +236,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putVar(value: Any?, fullObjects: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantAndBoolArg(putVarBind, segment, value, fullObjects)
+        ObjectCalls.ptrcallWithVariantAndBoolArg(Binds.putVarBind, segment, value, fullObjects)
     }
 
     /**
@@ -245,7 +246,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(get8Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get8Bind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU8(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getU8Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getU8Bind, segment)
     }
 
     /**
@@ -265,7 +266,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(get16Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get16Bind, segment)
     }
 
     /**
@@ -275,7 +276,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU16(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getU16Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getU16Bind, segment)
     }
 
     /**
@@ -285,7 +286,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get32(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(get32Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.get32Bind, segment)
     }
 
     /**
@@ -295,7 +296,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU32(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getU32Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getU32Bind, segment)
     }
 
     /**
@@ -305,7 +306,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun get64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(get64Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.get64Bind, segment)
     }
 
     /**
@@ -315,7 +316,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getU64(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getU64Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getU64Bind, segment)
     }
 
     /**
@@ -325,7 +326,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHalf(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHalfBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHalfBind, segment)
     }
 
     /**
@@ -335,7 +336,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFloat(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFloatBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFloatBind, segment)
     }
 
     /**
@@ -345,7 +346,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDouble(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDoubleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDoubleBind, segment)
     }
 
     /**
@@ -356,7 +357,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getString(bytes: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getStringBind, segment, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getStringBind, segment, bytes)
     }
 
     /**
@@ -368,7 +369,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUtf8String(bytes: Int = -1): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getUtf8StringBind, segment, bytes)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getUtf8StringBind, segment, bytes)
     }
 
     /**
@@ -382,7 +383,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, segment, allowObjects)
+        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
     }
 
     companion object {
@@ -395,180 +396,182 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeer? =
             if (handle.address() == 0L) null else StreamPeer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PUT_DATA_HASH = 680677267L
-        private val putDataBind by lazy {
+        @JvmField
+        val putDataBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_data", PUT_DATA_HASH)
-        }
 
         private const val PUT_PARTIAL_DATA_HASH = 2934048347L
-        private val putPartialDataBind by lazy {
+        @JvmField
+        val putPartialDataBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_partial_data", PUT_PARTIAL_DATA_HASH)
-        }
 
         private const val GET_DATA_HASH = 1171824711L
-        private val getDataBind by lazy {
+        @JvmField
+        val getDataBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_data", GET_DATA_HASH)
-        }
 
         private const val GET_PARTIAL_DATA_HASH = 1171824711L
-        private val getPartialDataBind by lazy {
+        @JvmField
+        val getPartialDataBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_partial_data", GET_PARTIAL_DATA_HASH)
-        }
 
         private const val GET_AVAILABLE_BYTES_HASH = 3905245786L
-        private val getAvailableBytesBind by lazy {
+        @JvmField
+        val getAvailableBytesBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_available_bytes", GET_AVAILABLE_BYTES_HASH)
-        }
 
         private const val SET_BIG_ENDIAN_HASH = 2586408642L
-        private val setBigEndianBind by lazy {
+        @JvmField
+        val setBigEndianBind =
             ObjectCalls.getMethodBind("StreamPeer", "set_big_endian", SET_BIG_ENDIAN_HASH)
-        }
 
         private const val IS_BIG_ENDIAN_ENABLED_HASH = 36873697L
-        private val isBigEndianEnabledBind by lazy {
+        @JvmField
+        val isBigEndianEnabledBind =
             ObjectCalls.getMethodBind("StreamPeer", "is_big_endian_enabled", IS_BIG_ENDIAN_ENABLED_HASH)
-        }
 
         private const val PUT_8_HASH = 1286410249L
-        private val put8Bind by lazy {
+        @JvmField
+        val put8Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_8", PUT_8_HASH)
-        }
 
         private const val PUT_U8_HASH = 1286410249L
-        private val putU8Bind by lazy {
+        @JvmField
+        val putU8Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_u8", PUT_U8_HASH)
-        }
 
         private const val PUT_16_HASH = 1286410249L
-        private val put16Bind by lazy {
+        @JvmField
+        val put16Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_16", PUT_16_HASH)
-        }
 
         private const val PUT_U16_HASH = 1286410249L
-        private val putU16Bind by lazy {
+        @JvmField
+        val putU16Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_u16", PUT_U16_HASH)
-        }
 
         private const val PUT_32_HASH = 1286410249L
-        private val put32Bind by lazy {
+        @JvmField
+        val put32Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_32", PUT_32_HASH)
-        }
 
         private const val PUT_U32_HASH = 1286410249L
-        private val putU32Bind by lazy {
+        @JvmField
+        val putU32Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_u32", PUT_U32_HASH)
-        }
 
         private const val PUT_64_HASH = 1286410249L
-        private val put64Bind by lazy {
+        @JvmField
+        val put64Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_64", PUT_64_HASH)
-        }
 
         private const val PUT_U64_HASH = 1286410249L
-        private val putU64Bind by lazy {
+        @JvmField
+        val putU64Bind =
             ObjectCalls.getMethodBind("StreamPeer", "put_u64", PUT_U64_HASH)
-        }
 
         private const val PUT_HALF_HASH = 373806689L
-        private val putHalfBind by lazy {
+        @JvmField
+        val putHalfBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_half", PUT_HALF_HASH)
-        }
 
         private const val PUT_FLOAT_HASH = 373806689L
-        private val putFloatBind by lazy {
+        @JvmField
+        val putFloatBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_float", PUT_FLOAT_HASH)
-        }
 
         private const val PUT_DOUBLE_HASH = 373806689L
-        private val putDoubleBind by lazy {
+        @JvmField
+        val putDoubleBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_double", PUT_DOUBLE_HASH)
-        }
 
         private const val PUT_STRING_HASH = 83702148L
-        private val putStringBind by lazy {
+        @JvmField
+        val putStringBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_string", PUT_STRING_HASH)
-        }
 
         private const val PUT_UTF8_STRING_HASH = 83702148L
-        private val putUtf8StringBind by lazy {
+        @JvmField
+        val putUtf8StringBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_utf8_string", PUT_UTF8_STRING_HASH)
-        }
 
         private const val PUT_VAR_HASH = 738511890L
-        private val putVarBind by lazy {
+        @JvmField
+        val putVarBind =
             ObjectCalls.getMethodBind("StreamPeer", "put_var", PUT_VAR_HASH)
-        }
 
         private const val GET_8_HASH = 2455072627L
-        private val get8Bind by lazy {
+        @JvmField
+        val get8Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_8", GET_8_HASH)
-        }
 
         private const val GET_U8_HASH = 2455072627L
-        private val getU8Bind by lazy {
+        @JvmField
+        val getU8Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_u8", GET_U8_HASH)
-        }
 
         private const val GET_16_HASH = 2455072627L
-        private val get16Bind by lazy {
+        @JvmField
+        val get16Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_16", GET_16_HASH)
-        }
 
         private const val GET_U16_HASH = 2455072627L
-        private val getU16Bind by lazy {
+        @JvmField
+        val getU16Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_u16", GET_U16_HASH)
-        }
 
         private const val GET_32_HASH = 2455072627L
-        private val get32Bind by lazy {
+        @JvmField
+        val get32Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_32", GET_32_HASH)
-        }
 
         private const val GET_U32_HASH = 2455072627L
-        private val getU32Bind by lazy {
+        @JvmField
+        val getU32Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_u32", GET_U32_HASH)
-        }
 
         private const val GET_64_HASH = 2455072627L
-        private val get64Bind by lazy {
+        @JvmField
+        val get64Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_64", GET_64_HASH)
-        }
 
         private const val GET_U64_HASH = 2455072627L
-        private val getU64Bind by lazy {
+        @JvmField
+        val getU64Bind =
             ObjectCalls.getMethodBind("StreamPeer", "get_u64", GET_U64_HASH)
-        }
 
         private const val GET_HALF_HASH = 191475506L
-        private val getHalfBind by lazy {
+        @JvmField
+        val getHalfBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_half", GET_HALF_HASH)
-        }
 
         private const val GET_FLOAT_HASH = 191475506L
-        private val getFloatBind by lazy {
+        @JvmField
+        val getFloatBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_float", GET_FLOAT_HASH)
-        }
 
         private const val GET_DOUBLE_HASH = 191475506L
-        private val getDoubleBind by lazy {
+        @JvmField
+        val getDoubleBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_double", GET_DOUBLE_HASH)
-        }
 
         private const val GET_STRING_HASH = 2309358862L
-        private val getStringBind by lazy {
+        @JvmField
+        val getStringBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_string", GET_STRING_HASH)
-        }
 
         private const val GET_UTF8_STRING_HASH = 2309358862L
-        private val getUtf8StringBind by lazy {
+        @JvmField
+        val getUtf8StringBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_utf8_string", GET_UTF8_STRING_HASH)
-        }
 
         private const val GET_VAR_HASH = 3442865206L
-        private val getVarBind by lazy {
+        @JvmField
+        val getVarBind =
             ObjectCalls.getMethodBind("StreamPeer", "get_var", GET_VAR_HASH)
-        }
     }
 }

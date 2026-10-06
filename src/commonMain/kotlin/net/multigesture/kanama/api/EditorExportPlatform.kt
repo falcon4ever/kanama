@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,7 +23,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOsName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOsNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOsNameBind, segment)
     }
 
     /**
@@ -32,7 +33,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, segment))
+        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createPresetBind, segment))
     }
 
     /**
@@ -45,7 +46,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun findExportTemplate(templateFileName: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetDictionary(findExportTemplateBind, segment, templateFileName)
+        return ObjectCalls.ptrcallWithStringArgRetDictionary(Binds.findExportTemplateBind, segment, templateFileName)
     }
 
     /**
@@ -55,7 +56,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCurrentPresets(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getCurrentPresetsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getCurrentPresetsBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun savePack(preset: EditorExportPreset?, debug: Boolean, path: String, embed: Boolean = false): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, embed)
+        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(Binds.savePackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, embed)
     }
 
     /**
@@ -82,7 +83,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveZip(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.saveZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
     }
 
     /**
@@ -94,7 +95,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun savePackPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.savePackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
     }
 
     /**
@@ -106,7 +107,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(Binds.saveZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
     }
 
     /**
@@ -117,7 +118,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun genExportFlags(flags: EditorExportPlatform.DebugFlags): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, segment, flags.value)
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(Binds.genExportFlagsBind, segment, flags.value)
     }
 
     /**
@@ -135,7 +136,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method))
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(Binds.exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method))
     }
 
     /**
@@ -146,7 +147,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L), notify: Boolean = true): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value, notify))
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(Binds.exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value, notify))
     }
 
     /**
@@ -156,7 +157,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(Binds.exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
     }
 
     /**
@@ -166,7 +167,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(Binds.exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
     }
 
     /**
@@ -179,7 +180,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(Binds.exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
     }
 
     /**
@@ -192,7 +193,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(Binds.exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
     }
 
     /**
@@ -202,7 +203,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clearMessages() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearMessagesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearMessagesBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addMessage(type: EditorExportPlatform.ExportMessageType, category: String, message: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, segment, type.value, category, message)
+        ObjectCalls.ptrcallWithLongAndTwoStringArgs(Binds.addMessageBind, segment, type.value, category, message)
     }
 
     /**
@@ -222,7 +223,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMessageCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMessageCountBind, segment)
     }
 
     /**
@@ -232,7 +233,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageType(index: Int): EditorExportPlatform.ExportMessageType {
         checkOpen()
-        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, segment, index))
+        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getMessageTypeBind, segment, index))
     }
 
     /**
@@ -242,7 +243,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageCategory(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getMessageCategoryBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getMessageCategoryBind, segment, index)
     }
 
     /**
@@ -252,7 +253,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMessageText(index: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getMessageTextBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getMessageTextBind, segment, index)
     }
 
     /**
@@ -262,7 +263,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWorstMessageType(): EditorExportPlatform.ExportMessageType {
         checkOpen()
-        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, segment))
+        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWorstMessageTypeBind, segment))
     }
 
     /**
@@ -273,7 +274,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sshRunOnRemote(host: String, port: String, sshArg: List<String>, cmdArgs: String, output: List<Any?> = emptyList(), portFwd: Int = -1): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(Binds.sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd))
     }
 
     /**
@@ -284,7 +285,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sshRunOnRemoteNoWait(host: String, port: String, sshArgs: List<String>, cmdArgs: String, portFwd: Int = -1): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(sshRunOnRemoteNoWaitBind, segment, host, port, sshArgs, cmdArgs, portFwd)
+        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(Binds.sshRunOnRemoteNoWaitBind, segment, host, port, sshArgs, cmdArgs, portFwd)
     }
 
     /**
@@ -294,7 +295,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(Binds.sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile))
     }
 
     /**
@@ -306,7 +307,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(Binds.getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
     }
 
     /**
@@ -417,7 +418,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: EditorExportPlatform.get_forced_export_files
          */
         fun getForcedExportFiles(preset: EditorExportPreset?): List<String> {
-            return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
+            return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(Binds.getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
         }
 
         @JvmStatic
@@ -429,140 +430,142 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatform? =
             if (handle.address() == 0L) null else EditorExportPlatform(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_OS_NAME_HASH = 201670096L
-        private val getOsNameBind by lazy {
+        @JvmField
+        val getOsNameBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_os_name", GET_OS_NAME_HASH)
-        }
 
         private const val CREATE_PRESET_HASH = 2572397818L
-        private val createPresetBind by lazy {
+        @JvmField
+        val createPresetBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "create_preset", CREATE_PRESET_HASH)
-        }
 
         private const val FIND_EXPORT_TEMPLATE_HASH = 2248993622L
-        private val findExportTemplateBind by lazy {
+        @JvmField
+        val findExportTemplateBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "find_export_template", FIND_EXPORT_TEMPLATE_HASH)
-        }
 
         private const val GET_CURRENT_PRESETS_HASH = 3995934104L
-        private val getCurrentPresetsBind by lazy {
+        @JvmField
+        val getCurrentPresetsBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_current_presets", GET_CURRENT_PRESETS_HASH)
-        }
 
         private const val SAVE_PACK_HASH = 3420080977L
-        private val savePackBind by lazy {
+        @JvmField
+        val savePackBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "save_pack", SAVE_PACK_HASH)
-        }
 
         private const val SAVE_ZIP_HASH = 1485052307L
-        private val saveZipBind by lazy {
+        @JvmField
+        val saveZipBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "save_zip", SAVE_ZIP_HASH)
-        }
 
         private const val SAVE_PACK_PATCH_HASH = 1485052307L
-        private val savePackPatchBind by lazy {
+        @JvmField
+        val savePackPatchBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "save_pack_patch", SAVE_PACK_PATCH_HASH)
-        }
 
         private const val SAVE_ZIP_PATCH_HASH = 1485052307L
-        private val saveZipPatchBind by lazy {
+        @JvmField
+        val saveZipPatchBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "save_zip_patch", SAVE_ZIP_PATCH_HASH)
-        }
 
         private const val GEN_EXPORT_FLAGS_HASH = 2976483270L
-        private val genExportFlagsBind by lazy {
+        @JvmField
+        val genExportFlagsBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "gen_export_flags", GEN_EXPORT_FLAGS_HASH)
-        }
 
         private const val EXPORT_PROJECT_FILES_HASH = 1063735070L
-        private val exportProjectFilesBind by lazy {
+        @JvmField
+        val exportProjectFilesBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_project_files", EXPORT_PROJECT_FILES_HASH)
-        }
 
         private const val EXPORT_PROJECT_HASH = 1201906210L
-        private val exportProjectBind by lazy {
+        @JvmField
+        val exportProjectBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_project", EXPORT_PROJECT_HASH)
-        }
 
         private const val EXPORT_PACK_HASH = 3879521245L
-        private val exportPackBind by lazy {
+        @JvmField
+        val exportPackBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_pack", EXPORT_PACK_HASH)
-        }
 
         private const val EXPORT_ZIP_HASH = 3879521245L
-        private val exportZipBind by lazy {
+        @JvmField
+        val exportZipBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_zip", EXPORT_ZIP_HASH)
-        }
 
         private const val EXPORT_PACK_PATCH_HASH = 608021658L
-        private val exportPackPatchBind by lazy {
+        @JvmField
+        val exportPackPatchBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_pack_patch", EXPORT_PACK_PATCH_HASH)
-        }
 
         private const val EXPORT_ZIP_PATCH_HASH = 608021658L
-        private val exportZipPatchBind by lazy {
+        @JvmField
+        val exportZipPatchBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "export_zip_patch", EXPORT_ZIP_PATCH_HASH)
-        }
 
         private const val CLEAR_MESSAGES_HASH = 3218959716L
-        private val clearMessagesBind by lazy {
+        @JvmField
+        val clearMessagesBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "clear_messages", CLEAR_MESSAGES_HASH)
-        }
 
         private const val ADD_MESSAGE_HASH = 782767225L
-        private val addMessageBind by lazy {
+        @JvmField
+        val addMessageBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "add_message", ADD_MESSAGE_HASH)
-        }
 
         private const val GET_MESSAGE_COUNT_HASH = 3905245786L
-        private val getMessageCountBind by lazy {
+        @JvmField
+        val getMessageCountBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_count", GET_MESSAGE_COUNT_HASH)
-        }
 
         private const val GET_MESSAGE_TYPE_HASH = 2667287293L
-        private val getMessageTypeBind by lazy {
+        @JvmField
+        val getMessageTypeBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_type", GET_MESSAGE_TYPE_HASH)
-        }
 
         private const val GET_MESSAGE_CATEGORY_HASH = 844755477L
-        private val getMessageCategoryBind by lazy {
+        @JvmField
+        val getMessageCategoryBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_category", GET_MESSAGE_CATEGORY_HASH)
-        }
 
         private const val GET_MESSAGE_TEXT_HASH = 844755477L
-        private val getMessageTextBind by lazy {
+        @JvmField
+        val getMessageTextBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_message_text", GET_MESSAGE_TEXT_HASH)
-        }
 
         private const val GET_WORST_MESSAGE_TYPE_HASH = 2580557466L
-        private val getWorstMessageTypeBind by lazy {
+        @JvmField
+        val getWorstMessageTypeBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_worst_message_type", GET_WORST_MESSAGE_TYPE_HASH)
-        }
 
         private const val SSH_RUN_ON_REMOTE_HASH = 3163734797L
-        private val sshRunOnRemoteBind by lazy {
+        @JvmField
+        val sshRunOnRemoteBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_run_on_remote", SSH_RUN_ON_REMOTE_HASH)
-        }
 
         private const val SSH_RUN_ON_REMOTE_NO_WAIT_HASH = 3606362233L
-        private val sshRunOnRemoteNoWaitBind by lazy {
+        @JvmField
+        val sshRunOnRemoteNoWaitBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_run_on_remote_no_wait", SSH_RUN_ON_REMOTE_NO_WAIT_HASH)
-        }
 
         private const val SSH_PUSH_TO_REMOTE_HASH = 218756989L
-        private val sshPushToRemoteBind by lazy {
+        @JvmField
+        val sshPushToRemoteBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "ssh_push_to_remote", SSH_PUSH_TO_REMOTE_HASH)
-        }
 
         private const val GET_INTERNAL_EXPORT_FILES_HASH = 89550086L
-        private val getInternalExportFilesBind by lazy {
+        @JvmField
+        val getInternalExportFilesBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_internal_export_files", GET_INTERNAL_EXPORT_FILES_HASH)
-        }
 
         private const val GET_FORCED_EXPORT_FILES_HASH = 1939331020L
-        private val getForcedExportFilesBind by lazy {
+        @JvmField
+        val getForcedExportFilesBind =
             ObjectCalls.getMethodBind("EditorExportPlatform", "get_forced_export_files", GET_FORCED_EXPORT_FILES_HASH)
-        }
     }
 }

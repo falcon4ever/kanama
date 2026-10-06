@@ -19,7 +19,5 @@ class XRCamera3D(handle: GodotHandle) : Camera3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRCamera3D? =
             if (handle.address() == 0L) null else XRCamera3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

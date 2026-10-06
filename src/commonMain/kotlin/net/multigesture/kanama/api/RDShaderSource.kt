@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -84,7 +85,7 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setStageSource(stage: RenderingDevice.ShaderStage, source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, segment, stage.value, source)
+        ObjectCalls.ptrcallWithLongAndStringArg(Binds.setStageSourceBind, segment, stage.value, source)
     }
 
     /**
@@ -94,7 +95,7 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getStageSource(stage: RenderingDevice.ShaderStage): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, segment, stage.value)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getStageSourceBind, segment, stage.value)
     }
 
     /**
@@ -104,7 +105,7 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLanguage(language: RenderingDevice.ShaderLanguage) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLanguageBind, segment, language.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLanguageBind, segment, language.value)
     }
 
     /**
@@ -114,7 +115,7 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLanguage(): RenderingDevice.ShaderLanguage {
         checkOpen()
-        return RenderingDevice.ShaderLanguage(ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, segment))
+        return RenderingDevice.ShaderLanguage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLanguageBind, segment))
     }
 
     companion object {
@@ -127,25 +128,27 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderSource? =
             if (handle.address() == 0L) null else RDShaderSource(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STAGE_SOURCE_HASH = 620821314L
-        private val setStageSourceBind by lazy {
+        @JvmField
+        val setStageSourceBind =
             ObjectCalls.getMethodBind("RDShaderSource", "set_stage_source", SET_STAGE_SOURCE_HASH)
-        }
 
         private const val GET_STAGE_SOURCE_HASH = 3354920045L
-        private val getStageSourceBind by lazy {
+        @JvmField
+        val getStageSourceBind =
             ObjectCalls.getMethodBind("RDShaderSource", "get_stage_source", GET_STAGE_SOURCE_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 3422186742L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("RDShaderSource", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 1063538261L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("RDShaderSource", "get_language", GET_LANGUAGE_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -41,7 +42,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_bake_mask
      */
     fun setBakeMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setBakeMaskBind, segment, mask)
     }
 
     /**
@@ -55,7 +56,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_bake_mask
      */
     fun getBakeMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBakeMaskBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_bake_mask_value
      */
     fun setBakeMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setBakeMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -75,7 +76,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_bake_mask_value
      */
     fun getBakeMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getBakeMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -96,7 +97,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_bake_simplification_distance
      */
     fun setBakeSimplificationDistance(simplificationDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBakeSimplificationDistanceBind, segment, simplificationDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeSimplificationDistanceBind, segment, simplificationDistance)
     }
 
     /**
@@ -117,7 +118,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_bake_simplification_distance
      */
     fun getBakeSimplificationDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeSimplificationDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeSimplificationDistanceBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_occluder
      */
     fun setOccluder(occluder: Occluder3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOccluderBind, segment, listOf(occluder?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setOccluderBind, segment, listOf(occluder?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -143,7 +144,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_occluder
      */
     fun getOccluder(): Occluder3D? {
-        return Occluder3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOccluderBind, segment))
+        return Occluder3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOccluderBind, segment))
     }
 
     companion object {
@@ -153,45 +154,47 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): OccluderInstance3D? =
             if (handle.address() == 0L) null else OccluderInstance3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BAKE_MASK_HASH = 1286410249L
-        private val setBakeMaskBind by lazy {
+        @JvmField
+        val setBakeMaskBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "set_bake_mask", SET_BAKE_MASK_HASH)
-        }
 
         private const val GET_BAKE_MASK_HASH = 3905245786L
-        private val getBakeMaskBind by lazy {
+        @JvmField
+        val getBakeMaskBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "get_bake_mask", GET_BAKE_MASK_HASH)
-        }
 
         private const val SET_BAKE_MASK_VALUE_HASH = 300928843L
-        private val setBakeMaskValueBind by lazy {
+        @JvmField
+        val setBakeMaskValueBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "set_bake_mask_value", SET_BAKE_MASK_VALUE_HASH)
-        }
 
         private const val GET_BAKE_MASK_VALUE_HASH = 1116898809L
-        private val getBakeMaskValueBind by lazy {
+        @JvmField
+        val getBakeMaskValueBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "get_bake_mask_value", GET_BAKE_MASK_VALUE_HASH)
-        }
 
         private const val SET_BAKE_SIMPLIFICATION_DISTANCE_HASH = 373806689L
-        private val setBakeSimplificationDistanceBind by lazy {
+        @JvmField
+        val setBakeSimplificationDistanceBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "set_bake_simplification_distance", SET_BAKE_SIMPLIFICATION_DISTANCE_HASH)
-        }
 
         private const val GET_BAKE_SIMPLIFICATION_DISTANCE_HASH = 1740695150L
-        private val getBakeSimplificationDistanceBind by lazy {
+        @JvmField
+        val getBakeSimplificationDistanceBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "get_bake_simplification_distance", GET_BAKE_SIMPLIFICATION_DISTANCE_HASH)
-        }
 
         private const val SET_OCCLUDER_HASH = 1664878165L
-        private val setOccluderBind by lazy {
+        @JvmField
+        val setOccluderBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "set_occluder", SET_OCCLUDER_HASH)
-        }
 
         private const val GET_OCCLUDER_HASH = 1696836198L
-        private val getOccluderBind by lazy {
+        @JvmField
+        val getOccluderBind =
             ObjectCalls.getMethodBind("OccluderInstance3D", "get_occluder", GET_OCCLUDER_HASH)
-        }
     }
 }

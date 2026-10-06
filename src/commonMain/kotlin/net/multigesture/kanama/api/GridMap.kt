@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -95,227 +96,227 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         set(value) = setBakeNavigation(value)
 
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionLayerBind, segment, layer)
     }
 
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionLayerBind, segment)
     }
 
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
     }
 
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
     }
 
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionLayerValueBind, segment, layerNumber)
     }
 
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionPriorityBind, segment, priority)
     }
 
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionPriorityBind, segment)
     }
 
     fun setCollisionVisibilityMode(visibilityMode: GridMap.DebugVisibilityMode) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCollisionVisibilityModeBind, segment, visibilityMode.value)
     }
 
     fun getCollisionVisibilityMode(): GridMap.DebugVisibilityMode {
-        return GridMap.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment))
+        return GridMap.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCollisionVisibilityModeBind, segment))
     }
 
     fun setPhysicsMaterial(material: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setPhysicsMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getPhysicsMaterial(): PhysicsMaterial? {
-        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialBind, segment))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPhysicsMaterialBind, segment))
     }
 
     fun setBakeNavigation(bakeNavigation: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBakeNavigationBind, segment, bakeNavigation)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBakeNavigationBind, segment, bakeNavigation)
     }
 
     fun isBakingNavigation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBakingNavigationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBakingNavigationBind, segment)
     }
 
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setNavigationMapBind, segment, navigationMap)
     }
 
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     fun setMeshLibrary(meshLibrary: MeshLibrary?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshLibraryBind, segment, listOf(meshLibrary?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshLibraryBind, segment, listOf(meshLibrary?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMeshLibrary(): MeshLibrary? {
-        return MeshLibrary.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshLibraryBind, segment))
+        return MeshLibrary.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshLibraryBind, segment))
     }
 
     fun setCellSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setCellSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setCellSizeBind, segment, size)
     }
 
     fun getCellSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCellSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCellSizeBind, segment)
     }
 
     fun setCellScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCellScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCellScaleBind, segment, scale)
     }
 
     fun getCellScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellScaleBind, segment)
     }
 
     fun setOctantSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOctantSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOctantSizeBind, segment, size)
     }
 
     fun getOctantSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOctantSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOctantSizeBind, segment)
     }
 
     fun setCellItem(position: Vector3i, item: Int, orientation: Int = 0) {
-        ObjectCalls.ptrcallWithVector3iIntIntArgs(setCellItemBind, segment, position, item, orientation)
+        ObjectCalls.ptrcallWithVector3iIntIntArgs(Binds.setCellItemBind, segment, position, item, orientation)
     }
 
     fun getCellItem(position: Vector3i): Int {
-        return ObjectCalls.ptrcallWithVector3iArgRetInt(getCellItemBind, segment, position)
+        return ObjectCalls.ptrcallWithVector3iArgRetInt(Binds.getCellItemBind, segment, position)
     }
 
     fun getCellItemOrientation(position: Vector3i): Int {
-        return ObjectCalls.ptrcallWithVector3iArgRetInt(getCellItemOrientationBind, segment, position)
+        return ObjectCalls.ptrcallWithVector3iArgRetInt(Binds.getCellItemOrientationBind, segment, position)
     }
 
     fun getCellItemBasis(position: Vector3i): Basis {
-        return ObjectCalls.ptrcallWithVector3iArgRetBasis(getCellItemBasisBind, segment, position)
+        return ObjectCalls.ptrcallWithVector3iArgRetBasis(Binds.getCellItemBasisBind, segment, position)
     }
 
     fun getBasisWithOrthogonalIndex(index: Int): Basis {
-        return ObjectCalls.ptrcallWithIntArgRetBasis(getBasisWithOrthogonalIndexBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBasis(Binds.getBasisWithOrthogonalIndexBind, segment, index)
     }
 
     fun getOrthogonalIndexFromBasis(basis: Basis): Int {
-        return ObjectCalls.ptrcallWithBasisArgRetInt(getOrthogonalIndexFromBasisBind, segment, basis)
+        return ObjectCalls.ptrcallWithBasisArgRetInt(Binds.getOrthogonalIndexFromBasisBind, segment, basis)
     }
 
     fun localToMap(localPosition: Vector3): Vector3i {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3i(localToMapBind, segment, localPosition)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3i(Binds.localToMapBind, segment, localPosition)
     }
 
     fun mapToLocal(mapPosition: Vector3i): Vector3 {
-        return ObjectCalls.ptrcallWithVector3iArgRetVector3(mapToLocalBind, segment, mapPosition)
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3(Binds.mapToLocalBind, segment, mapPosition)
     }
 
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun setCenterX(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenterXBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCenterXBind, segment, enable)
     }
 
     fun getCenterX(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCenterXBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCenterXBind, segment)
     }
 
     fun setCenterY(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenterYBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCenterYBind, segment, enable)
     }
 
     fun getCenterY(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCenterYBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCenterYBind, segment)
     }
 
     fun setCenterZ(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenterZBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCenterZBind, segment, enable)
     }
 
     fun getCenterZ(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCenterZBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCenterZBind, segment)
     }
 
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     fun getUsedCells(): List<Vector3i> {
-        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedCellsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(Binds.getUsedCellsBind, segment)
     }
 
     fun getUsedCellsByItem(item: Int): List<Vector3i> {
-        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedCellsByItemBind, segment, item)
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(Binds.getUsedCellsByItemBind, segment, item)
     }
 
     fun getUsedOctants(): List<Vector3i> {
-        return ObjectCalls.ptrcallNoArgsRetVector3iList(getUsedOctantsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3iList(Binds.getUsedOctantsBind, segment)
     }
 
     fun getUsedOctantsByItem(item: Int): List<Vector3i> {
-        return ObjectCalls.ptrcallWithIntArgRetVector3iList(getUsedOctantsByItemBind, segment, item)
+        return ObjectCalls.ptrcallWithIntArgRetVector3iList(Binds.getUsedOctantsByItemBind, segment, item)
     }
 
     fun getUsedCellsInOctant(octantCoords: Vector3i): List<Vector3i> {
-        return ObjectCalls.ptrcallWithVector3iArgRetVector3iList(getUsedCellsInOctantBind, segment, octantCoords)
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3iList(Binds.getUsedCellsInOctantBind, segment, octantCoords)
     }
 
     fun getUsedCellsInOctantByItem(octantCoords: Vector3i, item: Int): List<Vector3i> {
-        return ObjectCalls.ptrcallWithVector3iAndIntArgRetVector3iList(getUsedCellsInOctantByItemBind, segment, octantCoords, item)
+        return ObjectCalls.ptrcallWithVector3iAndIntArgRetVector3iList(Binds.getUsedCellsInOctantByItemBind, segment, octantCoords, item)
     }
 
     fun getOctantsInBounds(bounds: AABB): List<Vector3i> {
-        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getOctantsInBoundsBind, segment, bounds)
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(Binds.getOctantsInBoundsBind, segment, bounds)
     }
 
     fun getUsedOctantsInBounds(bounds: AABB): List<Vector3i> {
-        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(getUsedOctantsInBoundsBind, segment, bounds)
+        return ObjectCalls.ptrcallWithAABBArgRetVector3iList(Binds.getUsedOctantsInBoundsBind, segment, bounds)
     }
 
     fun getOctantCoordsFromCellCoords(cellCoords: Vector3i): Vector3i {
-        return ObjectCalls.ptrcallWithVector3iArgRetVector3i(getOctantCoordsFromCellCoordsBind, segment, cellCoords)
+        return ObjectCalls.ptrcallWithVector3iArgRetVector3i(Binds.getOctantCoordsFromCellCoordsBind, segment, cellCoords)
     }
 
     fun getMeshes(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getMeshesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getMeshesBind, segment)
     }
 
     fun getBakeMeshes(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getBakeMeshesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBakeMeshesBind, segment)
     }
 
     fun getBakeMeshInstance(idx: Int): RID {
-        return ObjectCalls.ptrcallWithIntArgRetRID(getBakeMeshInstanceBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getBakeMeshInstanceBind, segment, idx)
     }
 
     fun clearBakedMeshes() {
-        ObjectCalls.ptrcallNoArgs(clearBakedMeshesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBakedMeshesBind, segment)
     }
 
     fun makeBakedMeshes(genLightmapUv: Boolean = false, lightmapUvTexelSize: Double = 0.1) {
-        ObjectCalls.ptrcallWithBoolAndDoubleArgs(makeBakedMeshesBind, segment, genLightmapUv, lightmapUvTexelSize)
+        ObjectCalls.ptrcallWithBoolAndDoubleArgs(Binds.makeBakedMeshesBind, segment, genLightmapUv, lightmapUvTexelSize)
     }
 
     /** Signal `cell_size_changed(cell_size: Vector3)`; see [TypedSignal]. */
@@ -351,285 +352,287 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): GridMap? =
             if (handle.address() == 0L) null else GridMap(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COLLISION_LAYER_HASH = 1286410249L
-        private val setCollisionLayerBind by lazy {
+        @JvmField
+        val setCollisionLayerBind =
             ObjectCalls.getMethodBind("GridMap", "set_collision_layer", SET_COLLISION_LAYER_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_HASH = 3905245786L
-        private val getCollisionLayerBind by lazy {
+        @JvmField
+        val getCollisionLayerBind =
             ObjectCalls.getMethodBind("GridMap", "get_collision_layer", GET_COLLISION_LAYER_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("GridMap", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("GridMap", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val SET_COLLISION_MASK_VALUE_HASH = 300928843L
-        private val setCollisionMaskValueBind by lazy {
+        @JvmField
+        val setCollisionMaskValueBind =
             ObjectCalls.getMethodBind("GridMap", "set_collision_mask_value", SET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_MASK_VALUE_HASH = 1116898809L
-        private val getCollisionMaskValueBind by lazy {
+        @JvmField
+        val getCollisionMaskValueBind =
             ObjectCalls.getMethodBind("GridMap", "get_collision_mask_value", GET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val SET_COLLISION_LAYER_VALUE_HASH = 300928843L
-        private val setCollisionLayerValueBind by lazy {
+        @JvmField
+        val setCollisionLayerValueBind =
             ObjectCalls.getMethodBind("GridMap", "set_collision_layer_value", SET_COLLISION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_VALUE_HASH = 1116898809L
-        private val getCollisionLayerValueBind by lazy {
+        @JvmField
+        val getCollisionLayerValueBind =
             ObjectCalls.getMethodBind("GridMap", "get_collision_layer_value", GET_COLLISION_LAYER_VALUE_HASH)
-        }
 
         private const val SET_COLLISION_PRIORITY_HASH = 373806689L
-        private val setCollisionPriorityBind by lazy {
+        @JvmField
+        val setCollisionPriorityBind =
             ObjectCalls.getMethodBind("GridMap", "set_collision_priority", SET_COLLISION_PRIORITY_HASH)
-        }
 
         private const val GET_COLLISION_PRIORITY_HASH = 1740695150L
-        private val getCollisionPriorityBind by lazy {
+        @JvmField
+        val getCollisionPriorityBind =
             ObjectCalls.getMethodBind("GridMap", "get_collision_priority", GET_COLLISION_PRIORITY_HASH)
-        }
 
         private const val SET_COLLISION_VISIBILITY_MODE_HASH = 4160694578L
-        private val setCollisionVisibilityModeBind by lazy {
+        @JvmField
+        val setCollisionVisibilityModeBind =
             ObjectCalls.getMethodBind("GridMap", "set_collision_visibility_mode", SET_COLLISION_VISIBILITY_MODE_HASH)
-        }
 
         private const val GET_COLLISION_VISIBILITY_MODE_HASH = 3729798365L
-        private val getCollisionVisibilityModeBind by lazy {
+        @JvmField
+        val getCollisionVisibilityModeBind =
             ObjectCalls.getMethodBind("GridMap", "get_collision_visibility_mode", GET_COLLISION_VISIBILITY_MODE_HASH)
-        }
 
         private const val SET_PHYSICS_MATERIAL_HASH = 1784508650L
-        private val setPhysicsMaterialBind by lazy {
+        @JvmField
+        val setPhysicsMaterialBind =
             ObjectCalls.getMethodBind("GridMap", "set_physics_material", SET_PHYSICS_MATERIAL_HASH)
-        }
 
         private const val GET_PHYSICS_MATERIAL_HASH = 2521850424L
-        private val getPhysicsMaterialBind by lazy {
+        @JvmField
+        val getPhysicsMaterialBind =
             ObjectCalls.getMethodBind("GridMap", "get_physics_material", GET_PHYSICS_MATERIAL_HASH)
-        }
 
         private const val SET_BAKE_NAVIGATION_HASH = 2586408642L
-        private val setBakeNavigationBind by lazy {
+        @JvmField
+        val setBakeNavigationBind =
             ObjectCalls.getMethodBind("GridMap", "set_bake_navigation", SET_BAKE_NAVIGATION_HASH)
-        }
 
         private const val IS_BAKING_NAVIGATION_HASH = 2240911060L
-        private val isBakingNavigationBind by lazy {
+        @JvmField
+        val isBakingNavigationBind =
             ObjectCalls.getMethodBind("GridMap", "is_baking_navigation", IS_BAKING_NAVIGATION_HASH)
-        }
 
         private const val SET_NAVIGATION_MAP_HASH = 2722037293L
-        private val setNavigationMapBind by lazy {
+        @JvmField
+        val setNavigationMapBind =
             ObjectCalls.getMethodBind("GridMap", "set_navigation_map", SET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("GridMap", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val SET_MESH_LIBRARY_HASH = 1488083439L
-        private val setMeshLibraryBind by lazy {
+        @JvmField
+        val setMeshLibraryBind =
             ObjectCalls.getMethodBind("GridMap", "set_mesh_library", SET_MESH_LIBRARY_HASH)
-        }
 
         private const val GET_MESH_LIBRARY_HASH = 3350993772L
-        private val getMeshLibraryBind by lazy {
+        @JvmField
+        val getMeshLibraryBind =
             ObjectCalls.getMethodBind("GridMap", "get_mesh_library", GET_MESH_LIBRARY_HASH)
-        }
 
         private const val SET_CELL_SIZE_HASH = 3460891852L
-        private val setCellSizeBind by lazy {
+        @JvmField
+        val setCellSizeBind =
             ObjectCalls.getMethodBind("GridMap", "set_cell_size", SET_CELL_SIZE_HASH)
-        }
 
         private const val GET_CELL_SIZE_HASH = 3360562783L
-        private val getCellSizeBind by lazy {
+        @JvmField
+        val getCellSizeBind =
             ObjectCalls.getMethodBind("GridMap", "get_cell_size", GET_CELL_SIZE_HASH)
-        }
 
         private const val SET_CELL_SCALE_HASH = 373806689L
-        private val setCellScaleBind by lazy {
+        @JvmField
+        val setCellScaleBind =
             ObjectCalls.getMethodBind("GridMap", "set_cell_scale", SET_CELL_SCALE_HASH)
-        }
 
         private const val GET_CELL_SCALE_HASH = 1740695150L
-        private val getCellScaleBind by lazy {
+        @JvmField
+        val getCellScaleBind =
             ObjectCalls.getMethodBind("GridMap", "get_cell_scale", GET_CELL_SCALE_HASH)
-        }
 
         private const val SET_OCTANT_SIZE_HASH = 1286410249L
-        private val setOctantSizeBind by lazy {
+        @JvmField
+        val setOctantSizeBind =
             ObjectCalls.getMethodBind("GridMap", "set_octant_size", SET_OCTANT_SIZE_HASH)
-        }
 
         private const val GET_OCTANT_SIZE_HASH = 3905245786L
-        private val getOctantSizeBind by lazy {
+        @JvmField
+        val getOctantSizeBind =
             ObjectCalls.getMethodBind("GridMap", "get_octant_size", GET_OCTANT_SIZE_HASH)
-        }
 
         private const val SET_CELL_ITEM_HASH = 3449088946L
-        private val setCellItemBind by lazy {
+        @JvmField
+        val setCellItemBind =
             ObjectCalls.getMethodBind("GridMap", "set_cell_item", SET_CELL_ITEM_HASH)
-        }
 
         private const val GET_CELL_ITEM_HASH = 3724960147L
-        private val getCellItemBind by lazy {
+        @JvmField
+        val getCellItemBind =
             ObjectCalls.getMethodBind("GridMap", "get_cell_item", GET_CELL_ITEM_HASH)
-        }
 
         private const val GET_CELL_ITEM_ORIENTATION_HASH = 3724960147L
-        private val getCellItemOrientationBind by lazy {
+        @JvmField
+        val getCellItemOrientationBind =
             ObjectCalls.getMethodBind("GridMap", "get_cell_item_orientation", GET_CELL_ITEM_ORIENTATION_HASH)
-        }
 
         private const val GET_CELL_ITEM_BASIS_HASH = 3493604918L
-        private val getCellItemBasisBind by lazy {
+        @JvmField
+        val getCellItemBasisBind =
             ObjectCalls.getMethodBind("GridMap", "get_cell_item_basis", GET_CELL_ITEM_BASIS_HASH)
-        }
 
         private const val GET_BASIS_WITH_ORTHOGONAL_INDEX_HASH = 2816196998L
-        private val getBasisWithOrthogonalIndexBind by lazy {
+        @JvmField
+        val getBasisWithOrthogonalIndexBind =
             ObjectCalls.getMethodBind("GridMap", "get_basis_with_orthogonal_index", GET_BASIS_WITH_ORTHOGONAL_INDEX_HASH)
-        }
 
         private const val GET_ORTHOGONAL_INDEX_FROM_BASIS_HASH = 4210359952L
-        private val getOrthogonalIndexFromBasisBind by lazy {
+        @JvmField
+        val getOrthogonalIndexFromBasisBind =
             ObjectCalls.getMethodBind("GridMap", "get_orthogonal_index_from_basis", GET_ORTHOGONAL_INDEX_FROM_BASIS_HASH)
-        }
 
         private const val LOCAL_TO_MAP_HASH = 1257687843L
-        private val localToMapBind by lazy {
+        @JvmField
+        val localToMapBind =
             ObjectCalls.getMethodBind("GridMap", "local_to_map", LOCAL_TO_MAP_HASH)
-        }
 
         private const val MAP_TO_LOCAL_HASH = 1088329196L
-        private val mapToLocalBind by lazy {
+        @JvmField
+        val mapToLocalBind =
             ObjectCalls.getMethodBind("GridMap", "map_to_local", MAP_TO_LOCAL_HASH)
-        }
 
         private const val RESOURCE_CHANGED_HASH = 968641751L
-        private val resourceChangedBind by lazy {
+        @JvmField
+        val resourceChangedBind =
             ObjectCalls.getMethodBind("GridMap", "resource_changed", RESOURCE_CHANGED_HASH)
-        }
 
         private const val SET_CENTER_X_HASH = 2586408642L
-        private val setCenterXBind by lazy {
+        @JvmField
+        val setCenterXBind =
             ObjectCalls.getMethodBind("GridMap", "set_center_x", SET_CENTER_X_HASH)
-        }
 
         private const val GET_CENTER_X_HASH = 36873697L
-        private val getCenterXBind by lazy {
+        @JvmField
+        val getCenterXBind =
             ObjectCalls.getMethodBind("GridMap", "get_center_x", GET_CENTER_X_HASH)
-        }
 
         private const val SET_CENTER_Y_HASH = 2586408642L
-        private val setCenterYBind by lazy {
+        @JvmField
+        val setCenterYBind =
             ObjectCalls.getMethodBind("GridMap", "set_center_y", SET_CENTER_Y_HASH)
-        }
 
         private const val GET_CENTER_Y_HASH = 36873697L
-        private val getCenterYBind by lazy {
+        @JvmField
+        val getCenterYBind =
             ObjectCalls.getMethodBind("GridMap", "get_center_y", GET_CENTER_Y_HASH)
-        }
 
         private const val SET_CENTER_Z_HASH = 2586408642L
-        private val setCenterZBind by lazy {
+        @JvmField
+        val setCenterZBind =
             ObjectCalls.getMethodBind("GridMap", "set_center_z", SET_CENTER_Z_HASH)
-        }
 
         private const val GET_CENTER_Z_HASH = 36873697L
-        private val getCenterZBind by lazy {
+        @JvmField
+        val getCenterZBind =
             ObjectCalls.getMethodBind("GridMap", "get_center_z", GET_CENTER_Z_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("GridMap", "clear", CLEAR_HASH)
-        }
 
         private const val GET_USED_CELLS_HASH = 3995934104L
-        private val getUsedCellsBind by lazy {
+        @JvmField
+        val getUsedCellsBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_cells", GET_USED_CELLS_HASH)
-        }
 
         private const val GET_USED_CELLS_BY_ITEM_HASH = 663333327L
-        private val getUsedCellsByItemBind by lazy {
+        @JvmField
+        val getUsedCellsByItemBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_cells_by_item", GET_USED_CELLS_BY_ITEM_HASH)
-        }
 
         private const val GET_USED_OCTANTS_HASH = 3995934104L
-        private val getUsedOctantsBind by lazy {
+        @JvmField
+        val getUsedOctantsBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_octants", GET_USED_OCTANTS_HASH)
-        }
 
         private const val GET_USED_OCTANTS_BY_ITEM_HASH = 663333327L
-        private val getUsedOctantsByItemBind by lazy {
+        @JvmField
+        val getUsedOctantsByItemBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_octants_by_item", GET_USED_OCTANTS_BY_ITEM_HASH)
-        }
 
         private const val GET_USED_CELLS_IN_OCTANT_HASH = 2658725580L
-        private val getUsedCellsInOctantBind by lazy {
+        @JvmField
+        val getUsedCellsInOctantBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", GET_USED_CELLS_IN_OCTANT_HASH)
-        }
 
         private const val GET_USED_CELLS_IN_OCTANT_BY_ITEM_HASH = 2384667821L
-        private val getUsedCellsInOctantByItemBind by lazy {
+        @JvmField
+        val getUsedCellsInOctantByItemBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant_by_item", GET_USED_CELLS_IN_OCTANT_BY_ITEM_HASH)
-        }
 
         private const val GET_OCTANTS_IN_BOUNDS_HASH = 2489849902L
-        private val getOctantsInBoundsBind by lazy {
+        @JvmField
+        val getOctantsInBoundsBind =
             ObjectCalls.getMethodBind("GridMap", "get_octants_in_bounds", GET_OCTANTS_IN_BOUNDS_HASH)
-        }
 
         private const val GET_USED_OCTANTS_IN_BOUNDS_HASH = 2489849902L
-        private val getUsedOctantsInBoundsBind by lazy {
+        @JvmField
+        val getUsedOctantsInBoundsBind =
             ObjectCalls.getMethodBind("GridMap", "get_used_octants_in_bounds", GET_USED_OCTANTS_IN_BOUNDS_HASH)
-        }
 
         private const val GET_OCTANT_COORDS_FROM_CELL_COORDS_HASH = 2075501597L
-        private val getOctantCoordsFromCellCoordsBind by lazy {
+        @JvmField
+        val getOctantCoordsFromCellCoordsBind =
             ObjectCalls.getMethodBind("GridMap", "get_octant_coords_from_cell_coords", GET_OCTANT_COORDS_FROM_CELL_COORDS_HASH)
-        }
 
         private const val GET_MESHES_HASH = 3995934104L
-        private val getMeshesBind by lazy {
+        @JvmField
+        val getMeshesBind =
             ObjectCalls.getMethodBind("GridMap", "get_meshes", GET_MESHES_HASH)
-        }
 
         private const val GET_BAKE_MESHES_HASH = 2915620761L
-        private val getBakeMeshesBind by lazy {
+        @JvmField
+        val getBakeMeshesBind =
             ObjectCalls.getMethodBind("GridMap", "get_bake_meshes", GET_BAKE_MESHES_HASH)
-        }
 
         private const val GET_BAKE_MESH_INSTANCE_HASH = 937000113L
-        private val getBakeMeshInstanceBind by lazy {
+        @JvmField
+        val getBakeMeshInstanceBind =
             ObjectCalls.getMethodBind("GridMap", "get_bake_mesh_instance", GET_BAKE_MESH_INSTANCE_HASH)
-        }
 
         private const val CLEAR_BAKED_MESHES_HASH = 3218959716L
-        private val clearBakedMeshesBind by lazy {
+        @JvmField
+        val clearBakedMeshesBind =
             ObjectCalls.getMethodBind("GridMap", "clear_baked_meshes", CLEAR_BAKED_MESHES_HASH)
-        }
 
         private const val MAKE_BAKED_MESHES_HASH = 3609286057L
-        private val makeBakedMeshesBind by lazy {
+        @JvmField
+        val makeBakedMeshesBind =
             ObjectCalls.getMethodBind("GridMap", "make_baked_meshes", MAKE_BAKED_MESHES_HASH)
-        }
     }
 }

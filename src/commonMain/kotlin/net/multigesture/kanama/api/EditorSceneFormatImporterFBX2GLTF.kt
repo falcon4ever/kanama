@@ -20,7 +20,5 @@ class EditorSceneFormatImporterFBX2GLTF(handle: GodotHandle) : EditorSceneFormat
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterFBX2GLTF? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterFBX2GLTF(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_path_3d
      */
     fun setPath3d(index: Int, path3d: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setPath3dBind, segment, index, path3d)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setPath3dBind, segment, index, path3d)
     }
 
     /**
@@ -26,7 +27,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.get_path_3d
      */
     fun getPath3d(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPath3dBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getPath3dBind, segment, index)
     }
 
     /**
@@ -35,7 +36,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_tilt_enabled
      */
     fun setTiltEnabled(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setTiltEnabledBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setTiltEnabledBind, segment, index, enabled)
     }
 
     /**
@@ -44,7 +45,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.is_tilt_enabled
      */
     fun isTiltEnabled(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isTiltEnabledBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isTiltEnabledBind, segment, index)
     }
 
     /**
@@ -57,7 +58,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_tilt_fade_in
      */
     fun setTiltFadeIn(index: Int, size: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeInBind, segment, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setTiltFadeInBind, segment, index, size)
     }
 
     /**
@@ -67,7 +68,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.get_tilt_fade_in
      */
     fun getTiltFadeIn(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeInBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getTiltFadeInBind, segment, index)
     }
 
     /**
@@ -80,7 +81,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.set_tilt_fade_out
      */
     fun setTiltFadeOut(index: Int, size: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setTiltFadeOutBind, segment, index, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setTiltFadeOutBind, segment, index, size)
     }
 
     /**
@@ -90,7 +91,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: SplineIK3D.get_tilt_fade_out
      */
     fun getTiltFadeOut(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTiltFadeOutBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getTiltFadeOutBind, segment, index)
     }
 
     companion object {
@@ -100,45 +101,47 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): SplineIK3D? =
             if (handle.address() == 0L) null else SplineIK3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PATH_3D_HASH = 2761262315L
-        private val setPath3dBind by lazy {
+        @JvmField
+        val setPath3dBind =
             ObjectCalls.getMethodBind("SplineIK3D", "set_path_3d", SET_PATH_3D_HASH)
-        }
 
         private const val GET_PATH_3D_HASH = 408788394L
-        private val getPath3dBind by lazy {
+        @JvmField
+        val getPath3dBind =
             ObjectCalls.getMethodBind("SplineIK3D", "get_path_3d", GET_PATH_3D_HASH)
-        }
 
         private const val SET_TILT_ENABLED_HASH = 300928843L
-        private val setTiltEnabledBind by lazy {
+        @JvmField
+        val setTiltEnabledBind =
             ObjectCalls.getMethodBind("SplineIK3D", "set_tilt_enabled", SET_TILT_ENABLED_HASH)
-        }
 
         private const val IS_TILT_ENABLED_HASH = 1116898809L
-        private val isTiltEnabledBind by lazy {
+        @JvmField
+        val isTiltEnabledBind =
             ObjectCalls.getMethodBind("SplineIK3D", "is_tilt_enabled", IS_TILT_ENABLED_HASH)
-        }
 
         private const val SET_TILT_FADE_IN_HASH = 3937882851L
-        private val setTiltFadeInBind by lazy {
+        @JvmField
+        val setTiltFadeInBind =
             ObjectCalls.getMethodBind("SplineIK3D", "set_tilt_fade_in", SET_TILT_FADE_IN_HASH)
-        }
 
         private const val GET_TILT_FADE_IN_HASH = 923996154L
-        private val getTiltFadeInBind by lazy {
+        @JvmField
+        val getTiltFadeInBind =
             ObjectCalls.getMethodBind("SplineIK3D", "get_tilt_fade_in", GET_TILT_FADE_IN_HASH)
-        }
 
         private const val SET_TILT_FADE_OUT_HASH = 3937882851L
-        private val setTiltFadeOutBind by lazy {
+        @JvmField
+        val setTiltFadeOutBind =
             ObjectCalls.getMethodBind("SplineIK3D", "set_tilt_fade_out", SET_TILT_FADE_OUT_HASH)
-        }
 
         private const val GET_TILT_FADE_OUT_HASH = 923996154L
-        private val getTiltFadeOutBind by lazy {
+        @JvmField
+        val getTiltFadeOutBind =
             ObjectCalls.getMethodBind("SplineIK3D", "get_tilt_fade_out", GET_TILT_FADE_OUT_HASH)
-        }
     }
 }

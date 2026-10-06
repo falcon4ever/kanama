@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -103,7 +104,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyTopColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyTopColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setSkyTopColorBind, segment, color)
     }
 
     /**
@@ -113,7 +114,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyTopColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyTopColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyTopColorBind, segment)
     }
 
     /**
@@ -123,7 +124,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyHorizonColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyHorizonColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setSkyHorizonColorBind, segment, color)
     }
 
     /**
@@ -133,7 +134,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyHorizonColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyHorizonColorBind, segment)
     }
 
     /**
@@ -143,7 +144,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyCurveBind, segment, curve)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSkyCurveBind, segment, curve)
     }
 
     /**
@@ -153,7 +154,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyCurveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyCurveBind, segment)
     }
 
     /**
@@ -163,7 +164,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSkyEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSkyEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -173,7 +174,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkyEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkyEnergyMultiplierBind, segment)
     }
 
     /**
@@ -187,7 +188,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyCover(skyCover: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSkyCoverBind, segment, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkyCoverBind, segment, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -201,7 +202,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCover(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkyCoverBind, segment))
     }
 
     /**
@@ -213,7 +214,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyCoverModulate(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSkyCoverModulateBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setSkyCoverModulateBind, segment, color)
     }
 
     /**
@@ -225,7 +226,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCoverModulate(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSkyCoverModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSkyCoverModulateBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setGroundBottomColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundBottomColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setGroundBottomColorBind, segment, color)
     }
 
     /**
@@ -245,7 +246,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundBottomColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundBottomColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundBottomColorBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setGroundHorizonColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setGroundHorizonColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setGroundHorizonColorBind, segment, color)
     }
 
     /**
@@ -265,7 +266,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundHorizonColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getGroundHorizonColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getGroundHorizonColorBind, segment)
     }
 
     /**
@@ -275,7 +276,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setGroundCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGroundCurveBind, segment, curve)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGroundCurveBind, segment, curve)
     }
 
     /**
@@ -285,7 +286,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundCurveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGroundCurveBind, segment)
     }
 
     /**
@@ -295,7 +296,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setGroundEnergyMultiplier(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGroundEnergyMultiplierBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGroundEnergyMultiplierBind, segment, energy)
     }
 
     /**
@@ -305,7 +306,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getGroundEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGroundEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGroundEnergyMultiplierBind, segment)
     }
 
     /**
@@ -315,7 +316,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSunAngleMax(degrees: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunAngleMaxBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSunAngleMaxBind, segment, degrees)
     }
 
     /**
@@ -325,7 +326,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSunAngleMax(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunAngleMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunAngleMaxBind, segment)
     }
 
     /**
@@ -335,7 +336,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSunCurve(curve: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSunCurveBind, segment, curve)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSunCurveBind, segment, curve)
     }
 
     /**
@@ -345,7 +346,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSunCurve(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSunCurveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSunCurveBind, segment)
     }
 
     /**
@@ -356,7 +357,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setUseDebanding(useDebanding: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, useDebanding)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseDebandingBind, segment, useDebanding)
     }
 
     /**
@@ -367,7 +368,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getUseDebanding(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseDebandingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseDebandingBind, segment)
     }
 
     /**
@@ -377,7 +378,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -387,7 +388,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
     }
 
     companion object {
@@ -405,145 +406,147 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         @JvmStatic
         fun fromResource(value: Resource): ProceduralSkyMaterial? =
             if (value.isClass("ProceduralSkyMaterial")) RefCounted.retained(ProceduralSkyMaterial(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_SKY_TOP_COLOR_HASH = 2920490490L
-        private val setSkyTopColorBind by lazy {
+        @JvmField
+        val setSkyTopColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_top_color", SET_SKY_TOP_COLOR_HASH)
-        }
 
         private const val GET_SKY_TOP_COLOR_HASH = 3444240500L
-        private val getSkyTopColorBind by lazy {
+        @JvmField
+        val getSkyTopColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sky_top_color", GET_SKY_TOP_COLOR_HASH)
-        }
 
         private const val SET_SKY_HORIZON_COLOR_HASH = 2920490490L
-        private val setSkyHorizonColorBind by lazy {
+        @JvmField
+        val setSkyHorizonColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_horizon_color", SET_SKY_HORIZON_COLOR_HASH)
-        }
 
         private const val GET_SKY_HORIZON_COLOR_HASH = 3444240500L
-        private val getSkyHorizonColorBind by lazy {
+        @JvmField
+        val getSkyHorizonColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sky_horizon_color", GET_SKY_HORIZON_COLOR_HASH)
-        }
 
         private const val SET_SKY_CURVE_HASH = 373806689L
-        private val setSkyCurveBind by lazy {
+        @JvmField
+        val setSkyCurveBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_curve", SET_SKY_CURVE_HASH)
-        }
 
         private const val GET_SKY_CURVE_HASH = 1740695150L
-        private val getSkyCurveBind by lazy {
+        @JvmField
+        val getSkyCurveBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sky_curve", GET_SKY_CURVE_HASH)
-        }
 
         private const val SET_SKY_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setSkyEnergyMultiplierBind by lazy {
+        @JvmField
+        val setSkyEnergyMultiplierBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_energy_multiplier", SET_SKY_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_SKY_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getSkyEnergyMultiplierBind by lazy {
+        @JvmField
+        val getSkyEnergyMultiplierBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sky_energy_multiplier", GET_SKY_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val SET_SKY_COVER_HASH = 4051416890L
-        private val setSkyCoverBind by lazy {
+        @JvmField
+        val setSkyCoverBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_cover", SET_SKY_COVER_HASH)
-        }
 
         private const val GET_SKY_COVER_HASH = 3635182373L
-        private val getSkyCoverBind by lazy {
+        @JvmField
+        val getSkyCoverBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sky_cover", GET_SKY_COVER_HASH)
-        }
 
         private const val SET_SKY_COVER_MODULATE_HASH = 2920490490L
-        private val setSkyCoverModulateBind by lazy {
+        @JvmField
+        val setSkyCoverModulateBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sky_cover_modulate", SET_SKY_COVER_MODULATE_HASH)
-        }
 
         private const val GET_SKY_COVER_MODULATE_HASH = 3444240500L
-        private val getSkyCoverModulateBind by lazy {
+        @JvmField
+        val getSkyCoverModulateBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sky_cover_modulate", GET_SKY_COVER_MODULATE_HASH)
-        }
 
         private const val SET_GROUND_BOTTOM_COLOR_HASH = 2920490490L
-        private val setGroundBottomColorBind by lazy {
+        @JvmField
+        val setGroundBottomColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_ground_bottom_color", SET_GROUND_BOTTOM_COLOR_HASH)
-        }
 
         private const val GET_GROUND_BOTTOM_COLOR_HASH = 3444240500L
-        private val getGroundBottomColorBind by lazy {
+        @JvmField
+        val getGroundBottomColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_ground_bottom_color", GET_GROUND_BOTTOM_COLOR_HASH)
-        }
 
         private const val SET_GROUND_HORIZON_COLOR_HASH = 2920490490L
-        private val setGroundHorizonColorBind by lazy {
+        @JvmField
+        val setGroundHorizonColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_ground_horizon_color", SET_GROUND_HORIZON_COLOR_HASH)
-        }
 
         private const val GET_GROUND_HORIZON_COLOR_HASH = 3444240500L
-        private val getGroundHorizonColorBind by lazy {
+        @JvmField
+        val getGroundHorizonColorBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_ground_horizon_color", GET_GROUND_HORIZON_COLOR_HASH)
-        }
 
         private const val SET_GROUND_CURVE_HASH = 373806689L
-        private val setGroundCurveBind by lazy {
+        @JvmField
+        val setGroundCurveBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_ground_curve", SET_GROUND_CURVE_HASH)
-        }
 
         private const val GET_GROUND_CURVE_HASH = 1740695150L
-        private val getGroundCurveBind by lazy {
+        @JvmField
+        val getGroundCurveBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_ground_curve", GET_GROUND_CURVE_HASH)
-        }
 
         private const val SET_GROUND_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setGroundEnergyMultiplierBind by lazy {
+        @JvmField
+        val setGroundEnergyMultiplierBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_ground_energy_multiplier", SET_GROUND_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_GROUND_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getGroundEnergyMultiplierBind by lazy {
+        @JvmField
+        val getGroundEnergyMultiplierBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_ground_energy_multiplier", GET_GROUND_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val SET_SUN_ANGLE_MAX_HASH = 373806689L
-        private val setSunAngleMaxBind by lazy {
+        @JvmField
+        val setSunAngleMaxBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sun_angle_max", SET_SUN_ANGLE_MAX_HASH)
-        }
 
         private const val GET_SUN_ANGLE_MAX_HASH = 1740695150L
-        private val getSunAngleMaxBind by lazy {
+        @JvmField
+        val getSunAngleMaxBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sun_angle_max", GET_SUN_ANGLE_MAX_HASH)
-        }
 
         private const val SET_SUN_CURVE_HASH = 373806689L
-        private val setSunCurveBind by lazy {
+        @JvmField
+        val setSunCurveBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_sun_curve", SET_SUN_CURVE_HASH)
-        }
 
         private const val GET_SUN_CURVE_HASH = 1740695150L
-        private val getSunCurveBind by lazy {
+        @JvmField
+        val getSunCurveBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_sun_curve", GET_SUN_CURVE_HASH)
-        }
 
         private const val SET_USE_DEBANDING_HASH = 2586408642L
-        private val setUseDebandingBind by lazy {
+        @JvmField
+        val setUseDebandingBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_use_debanding", SET_USE_DEBANDING_HASH)
-        }
 
         private const val GET_USE_DEBANDING_HASH = 36873697L
-        private val getUseDebandingBind by lazy {
+        @JvmField
+        val getUseDebandingBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_use_debanding", GET_USE_DEBANDING_HASH)
-        }
 
         private const val SET_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setEnergyMultiplierBind by lazy {
+        @JvmField
+        val setEnergyMultiplierBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "set_energy_multiplier", SET_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getEnergyMultiplierBind by lazy {
+        @JvmField
+        val getEnergyMultiplierBind =
             ObjectCalls.getMethodBind("ProceduralSkyMaterial", "get_energy_multiplier", GET_ENERGY_MULTIPLIER_HASH)
-        }
     }
 }

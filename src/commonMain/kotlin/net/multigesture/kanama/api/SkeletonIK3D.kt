@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -81,7 +82,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_root_bone
      */
     fun setRootBone(rootBone: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setRootBoneBind, segment, rootBone)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setRootBoneBind, segment, rootBone)
     }
 
     /**
@@ -90,7 +91,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_root_bone
      */
     fun getRootBone(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getRootBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getRootBoneBind, segment)
     }
 
     /**
@@ -100,7 +101,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_tip_bone
      */
     fun setTipBone(tipBone: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTipBoneBind, segment, tipBone)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setTipBoneBind, segment, tipBone)
     }
 
     /**
@@ -110,7 +111,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_tip_bone
      */
     fun getTipBone(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTipBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTipBoneBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_target_transform
      */
     fun setTargetTransform(target: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTargetTransformBind, segment, target)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setTargetTransformBind, segment, target)
     }
 
     /**
@@ -132,7 +133,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_target_transform
      */
     fun getTargetTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTargetTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTargetTransformBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_target_node
      */
     fun setTargetNode(node: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, node)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, node)
     }
 
     /**
@@ -152,7 +153,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_target_node
      */
     fun getTargetNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_override_tip_basis
      */
     fun setOverrideTipBasis(override: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOverrideTipBasisBind, segment, override)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOverrideTipBasisBind, segment, override)
     }
 
     /**
@@ -172,7 +173,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.is_override_tip_basis
      */
     fun isOverrideTipBasis(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOverrideTipBasisBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOverrideTipBasisBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_use_magnet
      */
     fun setUseMagnet(use: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseMagnetBind, segment, use)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseMagnetBind, segment, use)
     }
 
     /**
@@ -194,7 +195,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.is_using_magnet
      */
     fun isUsingMagnet(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingMagnetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingMagnetBind, segment)
     }
 
     /**
@@ -206,7 +207,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_magnet_position
      */
     fun setMagnetPosition(localPosition: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setMagnetPositionBind, segment, localPosition)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setMagnetPositionBind, segment, localPosition)
     }
 
     /**
@@ -218,7 +219,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_magnet_position
      */
     fun getMagnetPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getMagnetPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getMagnetPositionBind, segment)
     }
 
     /**
@@ -229,7 +230,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_parent_skeleton
      */
     fun getParentSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getParentSkeletonBind, segment))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getParentSkeletonBind, segment))
     }
 
     /**
@@ -240,7 +241,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.is_running
      */
     fun isRunning(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
     }
 
     /**
@@ -250,7 +251,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_min_distance
      */
     fun setMinDistance(minDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinDistanceBind, segment, minDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinDistanceBind, segment, minDistance)
     }
 
     /**
@@ -260,7 +261,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_min_distance
      */
     fun getMinDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinDistanceBind, segment)
     }
 
     /**
@@ -270,7 +271,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_max_iterations
      */
     fun setMaxIterations(iterations: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxIterationsBind, segment, iterations)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxIterationsBind, segment, iterations)
     }
 
     /**
@@ -280,7 +281,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_max_iterations
      */
     fun getMaxIterations(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxIterationsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxIterationsBind, segment)
     }
 
     /**
@@ -291,7 +292,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.start
      */
     fun start(oneTime: Boolean = false) {
-        ObjectCalls.ptrcallWithBoolArg(startBind, segment, oneTime)
+        ObjectCalls.ptrcallWithBoolArg(Binds.startBind, segment, oneTime)
     }
 
     /**
@@ -301,7 +302,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -312,7 +313,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.set_interpolation
      */
     fun setInterpolation(interpolation: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInterpolationBind, segment, interpolation)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInterpolationBind, segment, interpolation)
     }
 
     /**
@@ -323,7 +324,7 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SkeletonIK3D.get_interpolation
      */
     fun getInterpolation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInterpolationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInterpolationBind, segment)
     }
 
     companion object {
@@ -333,125 +334,127 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): SkeletonIK3D? =
             if (handle.address() == 0L) null else SkeletonIK3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ROOT_BONE_HASH = 3304788590L
-        private val setRootBoneBind by lazy {
+        @JvmField
+        val setRootBoneBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_root_bone", SET_ROOT_BONE_HASH)
-        }
 
         private const val GET_ROOT_BONE_HASH = 2002593661L
-        private val getRootBoneBind by lazy {
+        @JvmField
+        val getRootBoneBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_root_bone", GET_ROOT_BONE_HASH)
-        }
 
         private const val SET_TIP_BONE_HASH = 3304788590L
-        private val setTipBoneBind by lazy {
+        @JvmField
+        val setTipBoneBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_tip_bone", SET_TIP_BONE_HASH)
-        }
 
         private const val GET_TIP_BONE_HASH = 2002593661L
-        private val getTipBoneBind by lazy {
+        @JvmField
+        val getTipBoneBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_tip_bone", GET_TIP_BONE_HASH)
-        }
 
         private const val SET_TARGET_TRANSFORM_HASH = 2952846383L
-        private val setTargetTransformBind by lazy {
+        @JvmField
+        val setTargetTransformBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_target_transform", SET_TARGET_TRANSFORM_HASH)
-        }
 
         private const val GET_TARGET_TRANSFORM_HASH = 3229777777L
-        private val getTargetTransformBind by lazy {
+        @JvmField
+        val getTargetTransformBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_target_transform", GET_TARGET_TRANSFORM_HASH)
-        }
 
         private const val SET_TARGET_NODE_HASH = 1348162250L
-        private val setTargetNodeBind by lazy {
+        @JvmField
+        val setTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_target_node", SET_TARGET_NODE_HASH)
-        }
 
         private const val GET_TARGET_NODE_HASH = 277076166L
-        private val getTargetNodeBind by lazy {
+        @JvmField
+        val getTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_target_node", GET_TARGET_NODE_HASH)
-        }
 
         private const val SET_OVERRIDE_TIP_BASIS_HASH = 2586408642L
-        private val setOverrideTipBasisBind by lazy {
+        @JvmField
+        val setOverrideTipBasisBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_override_tip_basis", SET_OVERRIDE_TIP_BASIS_HASH)
-        }
 
         private const val IS_OVERRIDE_TIP_BASIS_HASH = 36873697L
-        private val isOverrideTipBasisBind by lazy {
+        @JvmField
+        val isOverrideTipBasisBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "is_override_tip_basis", IS_OVERRIDE_TIP_BASIS_HASH)
-        }
 
         private const val SET_USE_MAGNET_HASH = 2586408642L
-        private val setUseMagnetBind by lazy {
+        @JvmField
+        val setUseMagnetBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_use_magnet", SET_USE_MAGNET_HASH)
-        }
 
         private const val IS_USING_MAGNET_HASH = 36873697L
-        private val isUsingMagnetBind by lazy {
+        @JvmField
+        val isUsingMagnetBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "is_using_magnet", IS_USING_MAGNET_HASH)
-        }
 
         private const val SET_MAGNET_POSITION_HASH = 3460891852L
-        private val setMagnetPositionBind by lazy {
+        @JvmField
+        val setMagnetPositionBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_magnet_position", SET_MAGNET_POSITION_HASH)
-        }
 
         private const val GET_MAGNET_POSITION_HASH = 3360562783L
-        private val getMagnetPositionBind by lazy {
+        @JvmField
+        val getMagnetPositionBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_magnet_position", GET_MAGNET_POSITION_HASH)
-        }
 
         private const val GET_PARENT_SKELETON_HASH = 1488626673L
-        private val getParentSkeletonBind by lazy {
+        @JvmField
+        val getParentSkeletonBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_parent_skeleton", GET_PARENT_SKELETON_HASH)
-        }
 
         private const val IS_RUNNING_HASH = 2240911060L
-        private val isRunningBind by lazy {
+        @JvmField
+        val isRunningBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "is_running", IS_RUNNING_HASH)
-        }
 
         private const val SET_MIN_DISTANCE_HASH = 373806689L
-        private val setMinDistanceBind by lazy {
+        @JvmField
+        val setMinDistanceBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_min_distance", SET_MIN_DISTANCE_HASH)
-        }
 
         private const val GET_MIN_DISTANCE_HASH = 1740695150L
-        private val getMinDistanceBind by lazy {
+        @JvmField
+        val getMinDistanceBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_min_distance", GET_MIN_DISTANCE_HASH)
-        }
 
         private const val SET_MAX_ITERATIONS_HASH = 1286410249L
-        private val setMaxIterationsBind by lazy {
+        @JvmField
+        val setMaxIterationsBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_max_iterations", SET_MAX_ITERATIONS_HASH)
-        }
 
         private const val GET_MAX_ITERATIONS_HASH = 3905245786L
-        private val getMaxIterationsBind by lazy {
+        @JvmField
+        val getMaxIterationsBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_max_iterations", GET_MAX_ITERATIONS_HASH)
-        }
 
         private const val START_HASH = 107499316L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "start", START_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "stop", STOP_HASH)
-        }
 
         private const val SET_INTERPOLATION_HASH = 373806689L
-        private val setInterpolationBind by lazy {
+        @JvmField
+        val setInterpolationBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "set_interpolation", SET_INTERPOLATION_HASH)
-        }
 
         private const val GET_INTERPOLATION_HASH = 1740695150L
-        private val getInterpolationBind by lazy {
+        @JvmField
+        val getInterpolationBind =
             ObjectCalls.getMethodBind("SkeletonIK3D", "get_interpolation", GET_INTERPOLATION_HASH)
-        }
     }
 }

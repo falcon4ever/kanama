@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -44,7 +45,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -56,7 +57,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -68,7 +69,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -80,7 +81,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadialSegments(segments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, segments)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, segments)
     }
 
     /**
@@ -100,7 +101,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
     }
 
     /**
@@ -120,7 +121,7 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
     }
 
     companion object {
@@ -133,45 +134,47 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CapsuleMesh? =
             if (handle.address() == 0L) null else CapsuleMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val SET_RADIAL_SEGMENTS_HASH = 1286410249L
-        private val setRadialSegmentsBind by lazy {
+        @JvmField
+        val setRadialSegmentsBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "set_radial_segments", SET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val GET_RADIAL_SEGMENTS_HASH = 3905245786L
-        private val getRadialSegmentsBind by lazy {
+        @JvmField
+        val getRadialSegmentsBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "get_radial_segments", GET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val SET_RINGS_HASH = 1286410249L
-        private val setRingsBind by lazy {
+        @JvmField
+        val setRingsBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "set_rings", SET_RINGS_HASH)
-        }
 
         private const val GET_RINGS_HASH = 3905245786L
-        private val getRingsBind by lazy {
+        @JvmField
+        val getRingsBind =
             ObjectCalls.getMethodBind("CapsuleMesh", "get_rings", GET_RINGS_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,82 +12,82 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     fun peerDisconnect(data: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(peerDisconnectBind, segment, data)
+        ObjectCalls.ptrcallWithIntArg(Binds.peerDisconnectBind, segment, data)
     }
 
     fun peerDisconnectLater(data: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(peerDisconnectLaterBind, segment, data)
+        ObjectCalls.ptrcallWithIntArg(Binds.peerDisconnectLaterBind, segment, data)
     }
 
     fun peerDisconnectNow(data: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(peerDisconnectNowBind, segment, data)
+        ObjectCalls.ptrcallWithIntArg(Binds.peerDisconnectNowBind, segment, data)
     }
 
     fun ping() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pingBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pingBind, segment)
     }
 
     fun pingInterval(pingInterval: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(pingIntervalBind, segment, pingInterval)
+        ObjectCalls.ptrcallWithIntArg(Binds.pingIntervalBind, segment, pingInterval)
     }
 
     fun reset() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetBind, segment)
     }
 
     fun send(channel: Int, packet: ByteArray, flags: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, segment, channel, packet, flags))
+        return GodotError(ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(Binds.sendBind, segment, channel, packet, flags))
     }
 
     fun throttleConfigure(interval: Int, acceleration: Int, deceleration: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntArgs(throttleConfigureBind, segment, interval, acceleration, deceleration)
+        ObjectCalls.ptrcallWithThreeIntArgs(Binds.throttleConfigureBind, segment, interval, acceleration, deceleration)
     }
 
     fun setTimeout(timeout: Int, timeoutMin: Int, timeoutMax: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntArgs(setTimeoutBind, segment, timeout, timeoutMin, timeoutMax)
+        ObjectCalls.ptrcallWithThreeIntArgs(Binds.setTimeoutBind, segment, timeout, timeoutMin, timeoutMax)
     }
 
     fun getPacketFlags(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketFlagsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketFlagsBind, segment)
     }
 
     fun getRemoteAddress(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getRemoteAddressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getRemoteAddressBind, segment)
     }
 
     fun getRemotePort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRemotePortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRemotePortBind, segment)
     }
 
     fun getStatistic(statistic: ENetPacketPeer.PeerStatistic): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getStatisticBind, segment, statistic.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getStatisticBind, segment, statistic.value)
     }
 
     fun getState(): ENetPacketPeer.PeerState {
         checkOpen()
-        return ENetPacketPeer.PeerState(ObjectCalls.ptrcallNoArgsRetLong(getStateBind, segment))
+        return ENetPacketPeer.PeerState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStateBind, segment))
     }
 
     fun getChannels(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getChannelsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getChannelsBind, segment)
     }
 
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
     @JvmInline
@@ -141,85 +142,87 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ENetPacketPeer? =
             if (handle.address() == 0L) null else ENetPacketPeer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PEER_DISCONNECT_HASH = 1995695955L
-        private val peerDisconnectBind by lazy {
+        @JvmField
+        val peerDisconnectBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "peer_disconnect", PEER_DISCONNECT_HASH)
-        }
 
         private const val PEER_DISCONNECT_LATER_HASH = 1995695955L
-        private val peerDisconnectLaterBind by lazy {
+        @JvmField
+        val peerDisconnectLaterBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "peer_disconnect_later", PEER_DISCONNECT_LATER_HASH)
-        }
 
         private const val PEER_DISCONNECT_NOW_HASH = 1995695955L
-        private val peerDisconnectNowBind by lazy {
+        @JvmField
+        val peerDisconnectNowBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "peer_disconnect_now", PEER_DISCONNECT_NOW_HASH)
-        }
 
         private const val PING_HASH = 3218959716L
-        private val pingBind by lazy {
+        @JvmField
+        val pingBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "ping", PING_HASH)
-        }
 
         private const val PING_INTERVAL_HASH = 1286410249L
-        private val pingIntervalBind by lazy {
+        @JvmField
+        val pingIntervalBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "ping_interval", PING_INTERVAL_HASH)
-        }
 
         private const val RESET_HASH = 3218959716L
-        private val resetBind by lazy {
+        @JvmField
+        val resetBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "reset", RESET_HASH)
-        }
 
         private const val SEND_HASH = 120522849L
-        private val sendBind by lazy {
+        @JvmField
+        val sendBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "send", SEND_HASH)
-        }
 
         private const val THROTTLE_CONFIGURE_HASH = 1649997291L
-        private val throttleConfigureBind by lazy {
+        @JvmField
+        val throttleConfigureBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "throttle_configure", THROTTLE_CONFIGURE_HASH)
-        }
 
         private const val SET_TIMEOUT_HASH = 1649997291L
-        private val setTimeoutBind by lazy {
+        @JvmField
+        val setTimeoutBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "set_timeout", SET_TIMEOUT_HASH)
-        }
 
         private const val GET_PACKET_FLAGS_HASH = 3905245786L
-        private val getPacketFlagsBind by lazy {
+        @JvmField
+        val getPacketFlagsBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "get_packet_flags", GET_PACKET_FLAGS_HASH)
-        }
 
         private const val GET_REMOTE_ADDRESS_HASH = 201670096L
-        private val getRemoteAddressBind by lazy {
+        @JvmField
+        val getRemoteAddressBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "get_remote_address", GET_REMOTE_ADDRESS_HASH)
-        }
 
         private const val GET_REMOTE_PORT_HASH = 3905245786L
-        private val getRemotePortBind by lazy {
+        @JvmField
+        val getRemotePortBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "get_remote_port", GET_REMOTE_PORT_HASH)
-        }
 
         private const val GET_STATISTIC_HASH = 1642578323L
-        private val getStatisticBind by lazy {
+        @JvmField
+        val getStatisticBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "get_statistic", GET_STATISTIC_HASH)
-        }
 
         private const val GET_STATE_HASH = 711068532L
-        private val getStateBind by lazy {
+        @JvmField
+        val getStateBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "get_state", GET_STATE_HASH)
-        }
 
         private const val GET_CHANNELS_HASH = 3905245786L
-        private val getChannelsBind by lazy {
+        @JvmField
+        val getChannelsBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "get_channels", GET_CHANNELS_HASH)
-        }
 
         private const val IS_ACTIVE_HASH = 36873697L
-        private val isActiveBind by lazy {
+        @JvmField
+        val isActiveBind =
             ObjectCalls.getMethodBind("ENetPacketPeer", "is_active", IS_ACTIVE_HASH)
-        }
     }
 }

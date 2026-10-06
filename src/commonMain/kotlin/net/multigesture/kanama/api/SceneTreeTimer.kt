@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTimeLeft(time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimeLeftBind, segment, time)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimeLeftBind, segment, time)
     }
 
     /**
@@ -34,7 +35,7 @@ class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTimeLeft(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeLeftBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeLeftBind, segment)
     }
 
     /** Signal `timeout()`; see [TypedSignal]. */
@@ -56,15 +57,17 @@ class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SceneTreeTimer? =
             if (handle.address() == 0L) null else SceneTreeTimer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TIME_LEFT_HASH = 373806689L
-        private val setTimeLeftBind by lazy {
+        @JvmField
+        val setTimeLeftBind =
             ObjectCalls.getMethodBind("SceneTreeTimer", "set_time_left", SET_TIME_LEFT_HASH)
-        }
 
         private const val GET_TIME_LEFT_HASH = 1740695150L
-        private val getTimeLeftBind by lazy {
+        @JvmField
+        val getTimeLeftBind =
             ObjectCalls.getMethodBind("SceneTreeTimer", "get_time_left", GET_TIME_LEFT_HASH)
-        }
     }
 }

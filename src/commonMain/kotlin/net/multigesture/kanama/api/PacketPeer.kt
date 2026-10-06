@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,7 +28,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getVar(allowObjects: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(getVarBind, segment, allowObjects)
+        return ObjectCalls.ptrcallWithBoolArgRetVariantScalar(Binds.getVarBind, segment, allowObjects)
     }
 
     /**
@@ -39,7 +40,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putVar(varValue: Any?, fullObjects: Boolean = false): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, segment, varValue, fullObjects))
+        return GodotError(ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(Binds.putVarBind, segment, varValue, fullObjects))
     }
 
     /**
@@ -49,7 +50,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPacket(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getPacketBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getPacketBind, segment)
     }
 
     /**
@@ -59,7 +60,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun putPacket(buffer: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, segment, buffer))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.putPacketBind, segment, buffer))
     }
 
     /**
@@ -69,7 +70,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPacketError(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPacketErrorBind, segment))
     }
 
     /**
@@ -79,7 +80,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAvailablePacketCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getAvailablePacketCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAvailablePacketCountBind, segment)
     }
 
     /**
@@ -93,7 +94,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEncodeBufferMaxSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getEncodeBufferMaxSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getEncodeBufferMaxSizeBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEncodeBufferMaxSize(maxSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setEncodeBufferMaxSizeBind, segment, maxSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setEncodeBufferMaxSizeBind, segment, maxSize)
     }
 
     companion object {
@@ -120,45 +121,47 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeer? =
             if (handle.address() == 0L) null else PacketPeer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_VAR_HASH = 3442865206L
-        private val getVarBind by lazy {
+        @JvmField
+        val getVarBind =
             ObjectCalls.getMethodBind("PacketPeer", "get_var", GET_VAR_HASH)
-        }
 
         private const val PUT_VAR_HASH = 2436251611L
-        private val putVarBind by lazy {
+        @JvmField
+        val putVarBind =
             ObjectCalls.getMethodBind("PacketPeer", "put_var", PUT_VAR_HASH)
-        }
 
         private const val GET_PACKET_HASH = 2115431945L
-        private val getPacketBind by lazy {
+        @JvmField
+        val getPacketBind =
             ObjectCalls.getMethodBind("PacketPeer", "get_packet", GET_PACKET_HASH)
-        }
 
         private const val PUT_PACKET_HASH = 680677267L
-        private val putPacketBind by lazy {
+        @JvmField
+        val putPacketBind =
             ObjectCalls.getMethodBind("PacketPeer", "put_packet", PUT_PACKET_HASH)
-        }
 
         private const val GET_PACKET_ERROR_HASH = 3185525595L
-        private val getPacketErrorBind by lazy {
+        @JvmField
+        val getPacketErrorBind =
             ObjectCalls.getMethodBind("PacketPeer", "get_packet_error", GET_PACKET_ERROR_HASH)
-        }
 
         private const val GET_AVAILABLE_PACKET_COUNT_HASH = 3905245786L
-        private val getAvailablePacketCountBind by lazy {
+        @JvmField
+        val getAvailablePacketCountBind =
             ObjectCalls.getMethodBind("PacketPeer", "get_available_packet_count", GET_AVAILABLE_PACKET_COUNT_HASH)
-        }
 
         private const val GET_ENCODE_BUFFER_MAX_SIZE_HASH = 3905245786L
-        private val getEncodeBufferMaxSizeBind by lazy {
+        @JvmField
+        val getEncodeBufferMaxSizeBind =
             ObjectCalls.getMethodBind("PacketPeer", "get_encode_buffer_max_size", GET_ENCODE_BUFFER_MAX_SIZE_HASH)
-        }
 
         private const val SET_ENCODE_BUFFER_MAX_SIZE_HASH = 1286410249L
-        private val setEncodeBufferMaxSizeBind by lazy {
+        @JvmField
+        val setEncodeBufferMaxSizeBind =
             ObjectCalls.getMethodBind("PacketPeer", "set_encode_buffer_max_size", SET_ENCODE_BUFFER_MAX_SIZE_HASH)
-        }
     }
 }

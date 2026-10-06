@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -22,7 +23,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, segment, primitive.value, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.surfaceBeginBind, segment, primitive.value, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -32,7 +33,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceSetColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(surfaceSetColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.surfaceSetColorBind, segment, color)
     }
 
     /**
@@ -42,7 +43,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceSetNormal(normal: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(surfaceSetNormalBind, segment, normal)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.surfaceSetNormalBind, segment, normal)
     }
 
     /**
@@ -55,7 +56,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceSetTangent(tangent: Plane) {
         checkOpen()
-        ObjectCalls.ptrcallWithPlaneArg(surfaceSetTangentBind, segment, tangent)
+        ObjectCalls.ptrcallWithPlaneArg(Binds.surfaceSetTangentBind, segment, tangent)
     }
 
     /**
@@ -65,7 +66,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceSetUv(uv: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(surfaceSetUvBind, segment, uv)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.surfaceSetUvBind, segment, uv)
     }
 
     /**
@@ -75,7 +76,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceSetUv2(uv2: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(surfaceSetUv2Bind, segment, uv2)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.surfaceSetUv2Bind, segment, uv2)
     }
 
     /**
@@ -85,7 +86,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceAddVertex(vertex: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(surfaceAddVertexBind, segment, vertex)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.surfaceAddVertexBind, segment, vertex)
     }
 
     /**
@@ -95,7 +96,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceAddVertex2d(vertex: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(surfaceAddVertex2dBind, segment, vertex)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.surfaceAddVertex2dBind, segment, vertex)
     }
 
     /**
@@ -106,7 +107,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceEnd() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(surfaceEndBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.surfaceEndBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun clearSurfaces() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearSurfacesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearSurfacesBind, segment)
     }
 
     companion object {
@@ -129,55 +130,57 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImmediateMesh? =
             if (handle.address() == 0L) null else ImmediateMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SURFACE_BEGIN_HASH = 2794442543L
-        private val surfaceBeginBind by lazy {
+        @JvmField
+        val surfaceBeginBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_begin", SURFACE_BEGIN_HASH)
-        }
 
         private const val SURFACE_SET_COLOR_HASH = 2920490490L
-        private val surfaceSetColorBind by lazy {
+        @JvmField
+        val surfaceSetColorBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_color", SURFACE_SET_COLOR_HASH)
-        }
 
         private const val SURFACE_SET_NORMAL_HASH = 3460891852L
-        private val surfaceSetNormalBind by lazy {
+        @JvmField
+        val surfaceSetNormalBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_normal", SURFACE_SET_NORMAL_HASH)
-        }
 
         private const val SURFACE_SET_TANGENT_HASH = 3505987427L
-        private val surfaceSetTangentBind by lazy {
+        @JvmField
+        val surfaceSetTangentBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_tangent", SURFACE_SET_TANGENT_HASH)
-        }
 
         private const val SURFACE_SET_UV_HASH = 743155724L
-        private val surfaceSetUvBind by lazy {
+        @JvmField
+        val surfaceSetUvBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_uv", SURFACE_SET_UV_HASH)
-        }
 
         private const val SURFACE_SET_UV2_HASH = 743155724L
-        private val surfaceSetUv2Bind by lazy {
+        @JvmField
+        val surfaceSetUv2Bind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_set_uv2", SURFACE_SET_UV2_HASH)
-        }
 
         private const val SURFACE_ADD_VERTEX_HASH = 3460891852L
-        private val surfaceAddVertexBind by lazy {
+        @JvmField
+        val surfaceAddVertexBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_add_vertex", SURFACE_ADD_VERTEX_HASH)
-        }
 
         private const val SURFACE_ADD_VERTEX_2D_HASH = 743155724L
-        private val surfaceAddVertex2dBind by lazy {
+        @JvmField
+        val surfaceAddVertex2dBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_add_vertex_2d", SURFACE_ADD_VERTEX_2D_HASH)
-        }
 
         private const val SURFACE_END_HASH = 3218959716L
-        private val surfaceEndBind by lazy {
+        @JvmField
+        val surfaceEndBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "surface_end", SURFACE_END_HASH)
-        }
 
         private const val CLEAR_SURFACES_HASH = 3218959716L
-        private val clearSurfacesBind by lazy {
+        @JvmField
+        val clearSurfacesBind =
             ObjectCalls.getMethodBind("ImmediateMesh", "clear_surfaces", CLEAR_SURFACES_HASH)
-        }
     }
 }

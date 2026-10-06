@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -26,7 +27,7 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun setPointCloud(pointCloud: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointCloudBind, segment, pointCloud)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPointCloudBind, segment, pointCloud)
     }
 
     /**
@@ -38,7 +39,7 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun setPoints(points: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPointsBind, segment, points)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPointsBind, segment, points)
     }
 
     /**
@@ -50,7 +51,7 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
      */
     fun getPoints(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPointsBind, segment)
     }
 
     companion object {
@@ -63,20 +64,22 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConvexPolygonShape2D? =
             if (handle.address() == 0L) null else ConvexPolygonShape2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POINT_CLOUD_HASH = 1509147220L
-        private val setPointCloudBind by lazy {
+        @JvmField
+        val setPointCloudBind =
             ObjectCalls.getMethodBind("ConvexPolygonShape2D", "set_point_cloud", SET_POINT_CLOUD_HASH)
-        }
 
         private const val SET_POINTS_HASH = 1509147220L
-        private val setPointsBind by lazy {
+        @JvmField
+        val setPointsBind =
             ObjectCalls.getMethodBind("ConvexPolygonShape2D", "set_points", SET_POINTS_HASH)
-        }
 
         private const val GET_POINTS_HASH = 2961356807L
-        private val getPointsBind by lazy {
+        @JvmField
+        val getPointsBind =
             ObjectCalls.getMethodBind("ConvexPolygonShape2D", "get_points", GET_POINTS_HASH)
-        }
     }
 }

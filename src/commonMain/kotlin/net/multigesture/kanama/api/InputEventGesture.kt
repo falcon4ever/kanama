@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -26,7 +27,7 @@ open class InputEventGesture(handle: GodotHandle) : InputEventWithModifiers(hand
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -37,7 +38,7 @@ open class InputEventGesture(handle: GodotHandle) : InputEventWithModifiers(hand
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     companion object {
@@ -50,15 +51,17 @@ open class InputEventGesture(handle: GodotHandle) : InputEventWithModifiers(hand
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventGesture? =
             if (handle.address() == 0L) null else InputEventGesture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POSITION_HASH = 743155724L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("InputEventGesture", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("InputEventGesture", "get_position", GET_POSITION_HASH)
-        }
     }
 }

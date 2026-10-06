@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -183,7 +184,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_editor_only
      */
     fun setEditorOnly(editorOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, editorOnly)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditorOnlyBind, segment, editorOnly)
     }
 
     /**
@@ -193,7 +194,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.is_editor_only
      */
     fun isEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditorOnlyBind, segment)
     }
 
     /**
@@ -203,7 +204,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_param
      */
     fun setParam(param: Light3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamBind, segment, param.value, value)
     }
 
     /**
@@ -213,7 +214,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_param
      */
     fun getParam(param: Light3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamBind, segment, param.value)
     }
 
     /**
@@ -224,7 +225,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_shadow
      */
     fun setShadow(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShadowBind, segment, enabled)
     }
 
     /**
@@ -235,7 +236,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.has_shadow
      */
     fun hasShadow(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasShadowBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasShadowBind, segment)
     }
 
     /**
@@ -244,7 +245,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_negative
      */
     fun setNegative(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNegativeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNegativeBind, segment, enabled)
     }
 
     /**
@@ -253,7 +254,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.is_negative
      */
     fun isNegative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNegativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNegativeBind, segment)
     }
 
     /**
@@ -264,7 +265,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_cull_mask
      */
     fun setCullMask(cullMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, cullMask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCullMaskBind, segment, cullMask)
     }
 
     /**
@@ -275,7 +276,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCullMaskBind, segment)
     }
 
     /**
@@ -288,7 +289,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_enable_distance_fade
      */
     fun setEnableDistanceFade(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDistanceFadeBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDistanceFadeBind, segment, enable)
     }
 
     /**
@@ -301,7 +302,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.is_distance_fade_enabled
      */
     fun isDistanceFadeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDistanceFadeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDistanceFadeEnabledBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_distance_fade_begin
      */
     fun setDistanceFadeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeBeginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeBeginBind, segment, distance)
     }
 
     /**
@@ -321,7 +322,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_distance_fade_begin
      */
     fun getDistanceFadeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeBeginBind, segment)
     }
 
     /**
@@ -333,7 +334,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_distance_fade_shadow
      */
     fun setDistanceFadeShadow(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeShadowBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeShadowBind, segment, distance)
     }
 
     /**
@@ -345,7 +346,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_distance_fade_shadow
      */
     fun getDistanceFadeShadow(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeShadowBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeShadowBind, segment)
     }
 
     /**
@@ -356,7 +357,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_distance_fade_length
      */
     fun setDistanceFadeLength(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDistanceFadeLengthBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDistanceFadeLengthBind, segment, distance)
     }
 
     /**
@@ -367,7 +368,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_distance_fade_length
      */
     fun getDistanceFadeLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDistanceFadeLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDistanceFadeLengthBind, segment)
     }
 
     /**
@@ -377,7 +378,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -387,7 +388,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -398,7 +399,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_shadow_reverse_cull_face
      */
     fun setShadowReverseCullFace(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShadowReverseCullFaceBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShadowReverseCullFaceBind, segment, enable)
     }
 
     /**
@@ -409,7 +410,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_shadow_reverse_cull_face
      */
     fun getShadowReverseCullFace(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShadowReverseCullFaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShadowReverseCullFaceBind, segment)
     }
 
     /**
@@ -418,7 +419,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_shadow_caster_mask
      */
     fun setShadowCasterMask(casterMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setShadowCasterMaskBind, segment, casterMask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setShadowCasterMaskBind, segment, casterMask)
     }
 
     /**
@@ -427,7 +428,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_shadow_caster_mask
      */
     fun getShadowCasterMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getShadowCasterMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getShadowCasterMaskBind, segment)
     }
 
     /**
@@ -438,7 +439,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_bake_mode
      */
     fun setBakeMode(bakeMode: Light3D.BakeMode) {
-        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, segment, bakeMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBakeModeBind, segment, bakeMode.value)
     }
 
     /**
@@ -449,7 +450,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_bake_mode
      */
     fun getBakeMode(): Light3D.BakeMode {
-        return Light3D.BakeMode(ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, segment))
+        return Light3D.BakeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBakeModeBind, segment))
     }
 
     /**
@@ -464,7 +465,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_projector
      */
     fun setProjector(projector: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -479,7 +480,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_projector
      */
     fun getProjector(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProjectorBind, segment))
     }
 
     /**
@@ -491,7 +492,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_temperature
      */
     fun setTemperature(temperature: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTemperatureBind, segment, temperature)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTemperatureBind, segment, temperature)
     }
 
     /**
@@ -503,7 +504,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_temperature
      */
     fun getTemperature(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTemperatureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTemperatureBind, segment)
     }
 
     /**
@@ -514,7 +515,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_correlated_color
      */
     fun getCorrelatedColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getCorrelatedColorBind, segment)
     }
 
     /**
@@ -720,160 +721,162 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): Light3D? =
             if (handle.address() == 0L) null else Light3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EDITOR_ONLY_HASH = 2586408642L
-        private val setEditorOnlyBind by lazy {
+        @JvmField
+        val setEditorOnlyBind =
             ObjectCalls.getMethodBind("Light3D", "set_editor_only", SET_EDITOR_ONLY_HASH)
-        }
 
         private const val IS_EDITOR_ONLY_HASH = 36873697L
-        private val isEditorOnlyBind by lazy {
+        @JvmField
+        val isEditorOnlyBind =
             ObjectCalls.getMethodBind("Light3D", "is_editor_only", IS_EDITOR_ONLY_HASH)
-        }
 
         private const val SET_PARAM_HASH = 1722734213L
-        private val setParamBind by lazy {
+        @JvmField
+        val setParamBind =
             ObjectCalls.getMethodBind("Light3D", "set_param", SET_PARAM_HASH)
-        }
 
         private const val GET_PARAM_HASH = 1844084987L
-        private val getParamBind by lazy {
+        @JvmField
+        val getParamBind =
             ObjectCalls.getMethodBind("Light3D", "get_param", GET_PARAM_HASH)
-        }
 
         private const val SET_SHADOW_HASH = 2586408642L
-        private val setShadowBind by lazy {
+        @JvmField
+        val setShadowBind =
             ObjectCalls.getMethodBind("Light3D", "set_shadow", SET_SHADOW_HASH)
-        }
 
         private const val HAS_SHADOW_HASH = 36873697L
-        private val hasShadowBind by lazy {
+        @JvmField
+        val hasShadowBind =
             ObjectCalls.getMethodBind("Light3D", "has_shadow", HAS_SHADOW_HASH)
-        }
 
         private const val SET_NEGATIVE_HASH = 2586408642L
-        private val setNegativeBind by lazy {
+        @JvmField
+        val setNegativeBind =
             ObjectCalls.getMethodBind("Light3D", "set_negative", SET_NEGATIVE_HASH)
-        }
 
         private const val IS_NEGATIVE_HASH = 36873697L
-        private val isNegativeBind by lazy {
+        @JvmField
+        val isNegativeBind =
             ObjectCalls.getMethodBind("Light3D", "is_negative", IS_NEGATIVE_HASH)
-        }
 
         private const val SET_CULL_MASK_HASH = 1286410249L
-        private val setCullMaskBind by lazy {
+        @JvmField
+        val setCullMaskBind =
             ObjectCalls.getMethodBind("Light3D", "set_cull_mask", SET_CULL_MASK_HASH)
-        }
 
         private const val GET_CULL_MASK_HASH = 3905245786L
-        private val getCullMaskBind by lazy {
+        @JvmField
+        val getCullMaskBind =
             ObjectCalls.getMethodBind("Light3D", "get_cull_mask", GET_CULL_MASK_HASH)
-        }
 
         private const val SET_ENABLE_DISTANCE_FADE_HASH = 2586408642L
-        private val setEnableDistanceFadeBind by lazy {
+        @JvmField
+        val setEnableDistanceFadeBind =
             ObjectCalls.getMethodBind("Light3D", "set_enable_distance_fade", SET_ENABLE_DISTANCE_FADE_HASH)
-        }
 
         private const val IS_DISTANCE_FADE_ENABLED_HASH = 36873697L
-        private val isDistanceFadeEnabledBind by lazy {
+        @JvmField
+        val isDistanceFadeEnabledBind =
             ObjectCalls.getMethodBind("Light3D", "is_distance_fade_enabled", IS_DISTANCE_FADE_ENABLED_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_BEGIN_HASH = 373806689L
-        private val setDistanceFadeBeginBind by lazy {
+        @JvmField
+        val setDistanceFadeBeginBind =
             ObjectCalls.getMethodBind("Light3D", "set_distance_fade_begin", SET_DISTANCE_FADE_BEGIN_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_BEGIN_HASH = 1740695150L
-        private val getDistanceFadeBeginBind by lazy {
+        @JvmField
+        val getDistanceFadeBeginBind =
             ObjectCalls.getMethodBind("Light3D", "get_distance_fade_begin", GET_DISTANCE_FADE_BEGIN_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_SHADOW_HASH = 373806689L
-        private val setDistanceFadeShadowBind by lazy {
+        @JvmField
+        val setDistanceFadeShadowBind =
             ObjectCalls.getMethodBind("Light3D", "set_distance_fade_shadow", SET_DISTANCE_FADE_SHADOW_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_SHADOW_HASH = 1740695150L
-        private val getDistanceFadeShadowBind by lazy {
+        @JvmField
+        val getDistanceFadeShadowBind =
             ObjectCalls.getMethodBind("Light3D", "get_distance_fade_shadow", GET_DISTANCE_FADE_SHADOW_HASH)
-        }
 
         private const val SET_DISTANCE_FADE_LENGTH_HASH = 373806689L
-        private val setDistanceFadeLengthBind by lazy {
+        @JvmField
+        val setDistanceFadeLengthBind =
             ObjectCalls.getMethodBind("Light3D", "set_distance_fade_length", SET_DISTANCE_FADE_LENGTH_HASH)
-        }
 
         private const val GET_DISTANCE_FADE_LENGTH_HASH = 1740695150L
-        private val getDistanceFadeLengthBind by lazy {
+        @JvmField
+        val getDistanceFadeLengthBind =
             ObjectCalls.getMethodBind("Light3D", "get_distance_fade_length", GET_DISTANCE_FADE_LENGTH_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("Light3D", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("Light3D", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_SHADOW_REVERSE_CULL_FACE_HASH = 2586408642L
-        private val setShadowReverseCullFaceBind by lazy {
+        @JvmField
+        val setShadowReverseCullFaceBind =
             ObjectCalls.getMethodBind("Light3D", "set_shadow_reverse_cull_face", SET_SHADOW_REVERSE_CULL_FACE_HASH)
-        }
 
         private const val GET_SHADOW_REVERSE_CULL_FACE_HASH = 36873697L
-        private val getShadowReverseCullFaceBind by lazy {
+        @JvmField
+        val getShadowReverseCullFaceBind =
             ObjectCalls.getMethodBind("Light3D", "get_shadow_reverse_cull_face", GET_SHADOW_REVERSE_CULL_FACE_HASH)
-        }
 
         private const val SET_SHADOW_CASTER_MASK_HASH = 1286410249L
-        private val setShadowCasterMaskBind by lazy {
+        @JvmField
+        val setShadowCasterMaskBind =
             ObjectCalls.getMethodBind("Light3D", "set_shadow_caster_mask", SET_SHADOW_CASTER_MASK_HASH)
-        }
 
         private const val GET_SHADOW_CASTER_MASK_HASH = 3905245786L
-        private val getShadowCasterMaskBind by lazy {
+        @JvmField
+        val getShadowCasterMaskBind =
             ObjectCalls.getMethodBind("Light3D", "get_shadow_caster_mask", GET_SHADOW_CASTER_MASK_HASH)
-        }
 
         private const val SET_BAKE_MODE_HASH = 37739303L
-        private val setBakeModeBind by lazy {
+        @JvmField
+        val setBakeModeBind =
             ObjectCalls.getMethodBind("Light3D", "set_bake_mode", SET_BAKE_MODE_HASH)
-        }
 
         private const val GET_BAKE_MODE_HASH = 371737608L
-        private val getBakeModeBind by lazy {
+        @JvmField
+        val getBakeModeBind =
             ObjectCalls.getMethodBind("Light3D", "get_bake_mode", GET_BAKE_MODE_HASH)
-        }
 
         private const val SET_PROJECTOR_HASH = 4051416890L
-        private val setProjectorBind by lazy {
+        @JvmField
+        val setProjectorBind =
             ObjectCalls.getMethodBind("Light3D", "set_projector", SET_PROJECTOR_HASH)
-        }
 
         private const val GET_PROJECTOR_HASH = 3635182373L
-        private val getProjectorBind by lazy {
+        @JvmField
+        val getProjectorBind =
             ObjectCalls.getMethodBind("Light3D", "get_projector", GET_PROJECTOR_HASH)
-        }
 
         private const val SET_TEMPERATURE_HASH = 373806689L
-        private val setTemperatureBind by lazy {
+        @JvmField
+        val setTemperatureBind =
             ObjectCalls.getMethodBind("Light3D", "set_temperature", SET_TEMPERATURE_HASH)
-        }
 
         private const val GET_TEMPERATURE_HASH = 1740695150L
-        private val getTemperatureBind by lazy {
+        @JvmField
+        val getTemperatureBind =
             ObjectCalls.getMethodBind("Light3D", "get_temperature", GET_TEMPERATURE_HASH)
-        }
 
         private const val GET_CORRELATED_COLOR_HASH = 3444240500L
-        private val getCorrelatedColorBind by lazy {
+        @JvmField
+        val getCorrelatedColorBind =
             ObjectCalls.getMethodBind("Light3D", "get_correlated_color", GET_CORRELATED_COLOR_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -14,9 +15,8 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: XRServer
  */
 object XRServer {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("XRServer")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var worldScale: Double
         @JvmName("worldScaleProperty")
@@ -50,7 +50,7 @@ object XRServer {
      */
     @JvmStatic
     fun getWorldScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWorldScaleBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWorldScaleBind, singleton)
     }
 
     /**
@@ -61,7 +61,7 @@ object XRServer {
      */
     @JvmStatic
     fun setWorldScale(scale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setWorldScaleBind, singleton, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWorldScaleBind, singleton, scale)
     }
 
     /**
@@ -73,7 +73,7 @@ object XRServer {
      */
     @JvmStatic
     fun getWorldOrigin(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getWorldOriginBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getWorldOriginBind, singleton)
     }
 
     /**
@@ -85,7 +85,7 @@ object XRServer {
      */
     @JvmStatic
     fun setWorldOrigin(worldOrigin: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setWorldOriginBind, singleton, worldOrigin)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setWorldOriginBind, singleton, worldOrigin)
     }
 
     /**
@@ -96,7 +96,7 @@ object XRServer {
      */
     @JvmStatic
     fun getReferenceFrame(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getReferenceFrameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getReferenceFrameBind, singleton)
     }
 
     /**
@@ -106,7 +106,7 @@ object XRServer {
      */
     @JvmStatic
     fun clearReferenceFrame() {
-        ObjectCalls.ptrcallNoArgs(clearReferenceFrameBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.clearReferenceFrameBind, singleton)
     }
 
     /**
@@ -128,7 +128,7 @@ object XRServer {
      */
     @JvmStatic
     fun centerOnHmd(rotationMode: XRServer.RotationMode, keepHeight: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(centerOnHmdBind, singleton, rotationMode.value, keepHeight)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.centerOnHmdBind, singleton, rotationMode.value, keepHeight)
     }
 
     /**
@@ -138,7 +138,7 @@ object XRServer {
      */
     @JvmStatic
     fun getHmdTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getHmdTransformBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getHmdTransformBind, singleton)
     }
 
     /**
@@ -150,7 +150,7 @@ object XRServer {
      */
     @JvmStatic
     fun setCameraLockedToOrigin(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCameraLockedToOriginBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCameraLockedToOriginBind, singleton, enabled)
     }
 
     /**
@@ -162,7 +162,7 @@ object XRServer {
      */
     @JvmStatic
     fun isCameraLockedToOrigin(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCameraLockedToOriginBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCameraLockedToOriginBind, singleton)
     }
 
     /**
@@ -172,7 +172,7 @@ object XRServer {
      */
     @JvmStatic
     fun addInterface(interfaceValue: XRInterface?) {
-        ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -185,7 +185,7 @@ object XRServer {
      */
     @JvmStatic
     fun getInterfaceCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getInterfaceCountBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInterfaceCountBind, singleton)
     }
 
     /**
@@ -195,7 +195,7 @@ object XRServer {
      */
     @JvmStatic
     fun removeInterface(interfaceValue: XRInterface?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -205,7 +205,7 @@ object XRServer {
      */
     @JvmStatic
     fun getInterface(idx: Int): XRInterface? {
-        return XRInterface.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
+        return XRInterface.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInterfaceBind, singleton, idx))
     }
 
     /**
@@ -215,7 +215,7 @@ object XRServer {
      */
     @JvmStatic
     fun getInterfaces(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getInterfacesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getInterfacesBind, singleton)
     }
 
     /**
@@ -226,7 +226,7 @@ object XRServer {
      */
     @JvmStatic
     fun findInterface(name: String): XRInterface? {
-        return XRInterface.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
+        return XRInterface.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findInterfaceBind, singleton, name))
     }
 
     /**
@@ -236,7 +236,7 @@ object XRServer {
      */
     @JvmStatic
     fun addTracker(tracker: XRTracker?) {
-        ObjectCalls.ptrcallWithObjectArgs(addTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -246,7 +246,7 @@ object XRServer {
      */
     @JvmStatic
     fun removeTracker(tracker: XRTracker?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -256,7 +256,7 @@ object XRServer {
      */
     @JvmStatic
     fun getTrackers(trackerTypes: Int): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getTrackersBind, singleton, trackerTypes)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getTrackersBind, singleton, trackerTypes)
     }
 
     /**
@@ -266,7 +266,7 @@ object XRServer {
      */
     @JvmStatic
     fun getTracker(trackerName: String): XRTracker? {
-        return XRTracker.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getTrackerBind, singleton, trackerName))
+        return XRTracker.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getTrackerBind, singleton, trackerName))
     }
 
     /**
@@ -276,7 +276,7 @@ object XRServer {
      */
     @JvmStatic
     fun getPrimaryInterface(): XRInterface? {
-        return XRInterface.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
+        return XRInterface.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPrimaryInterfaceBind, singleton))
     }
 
     /**
@@ -286,7 +286,7 @@ object XRServer {
      */
     @JvmStatic
     fun setPrimaryInterface(interfaceValue: XRInterface?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setPrimaryInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /** Signal `reference_frame_changed()`; see [TypedSignal]. */
@@ -447,113 +447,118 @@ object XRServer {
     internal fun wrap(handle: RawSegment): XRServer? =
         if (handle.address() == 0L) null else this
 
-    private const val GET_WORLD_SCALE_HASH = 1740695150L
-    private val getWorldScaleBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_world_scale", GET_WORLD_SCALE_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("XRServer")
 
-    private const val SET_WORLD_SCALE_HASH = 373806689L
-    private val setWorldScaleBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "set_world_scale", SET_WORLD_SCALE_HASH)
-    }
+        private const val GET_WORLD_SCALE_HASH = 1740695150L
+        @JvmField
+        val getWorldScaleBind =
+            ObjectCalls.getMethodBind("XRServer", "get_world_scale", GET_WORLD_SCALE_HASH)
 
-    private const val GET_WORLD_ORIGIN_HASH = 3229777777L
-    private val getWorldOriginBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_world_origin", GET_WORLD_ORIGIN_HASH)
-    }
+        private const val SET_WORLD_SCALE_HASH = 373806689L
+        @JvmField
+        val setWorldScaleBind =
+            ObjectCalls.getMethodBind("XRServer", "set_world_scale", SET_WORLD_SCALE_HASH)
 
-    private const val SET_WORLD_ORIGIN_HASH = 2952846383L
-    private val setWorldOriginBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "set_world_origin", SET_WORLD_ORIGIN_HASH)
-    }
+        private const val GET_WORLD_ORIGIN_HASH = 3229777777L
+        @JvmField
+        val getWorldOriginBind =
+            ObjectCalls.getMethodBind("XRServer", "get_world_origin", GET_WORLD_ORIGIN_HASH)
 
-    private const val GET_REFERENCE_FRAME_HASH = 3229777777L
-    private val getReferenceFrameBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_reference_frame", GET_REFERENCE_FRAME_HASH)
-    }
+        private const val SET_WORLD_ORIGIN_HASH = 2952846383L
+        @JvmField
+        val setWorldOriginBind =
+            ObjectCalls.getMethodBind("XRServer", "set_world_origin", SET_WORLD_ORIGIN_HASH)
 
-    private const val CLEAR_REFERENCE_FRAME_HASH = 3218959716L
-    private val clearReferenceFrameBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "clear_reference_frame", CLEAR_REFERENCE_FRAME_HASH)
-    }
+        private const val GET_REFERENCE_FRAME_HASH = 3229777777L
+        @JvmField
+        val getReferenceFrameBind =
+            ObjectCalls.getMethodBind("XRServer", "get_reference_frame", GET_REFERENCE_FRAME_HASH)
 
-    private const val CENTER_ON_HMD_HASH = 1450904707L
-    private val centerOnHmdBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "center_on_hmd", CENTER_ON_HMD_HASH)
-    }
+        private const val CLEAR_REFERENCE_FRAME_HASH = 3218959716L
+        @JvmField
+        val clearReferenceFrameBind =
+            ObjectCalls.getMethodBind("XRServer", "clear_reference_frame", CLEAR_REFERENCE_FRAME_HASH)
 
-    private const val GET_HMD_TRANSFORM_HASH = 4183770049L
-    private val getHmdTransformBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_hmd_transform", GET_HMD_TRANSFORM_HASH)
-    }
+        private const val CENTER_ON_HMD_HASH = 1450904707L
+        @JvmField
+        val centerOnHmdBind =
+            ObjectCalls.getMethodBind("XRServer", "center_on_hmd", CENTER_ON_HMD_HASH)
 
-    private const val SET_CAMERA_LOCKED_TO_ORIGIN_HASH = 2586408642L
-    private val setCameraLockedToOriginBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "set_camera_locked_to_origin", SET_CAMERA_LOCKED_TO_ORIGIN_HASH)
-    }
+        private const val GET_HMD_TRANSFORM_HASH = 4183770049L
+        @JvmField
+        val getHmdTransformBind =
+            ObjectCalls.getMethodBind("XRServer", "get_hmd_transform", GET_HMD_TRANSFORM_HASH)
 
-    private const val IS_CAMERA_LOCKED_TO_ORIGIN_HASH = 36873697L
-    private val isCameraLockedToOriginBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "is_camera_locked_to_origin", IS_CAMERA_LOCKED_TO_ORIGIN_HASH)
-    }
+        private const val SET_CAMERA_LOCKED_TO_ORIGIN_HASH = 2586408642L
+        @JvmField
+        val setCameraLockedToOriginBind =
+            ObjectCalls.getMethodBind("XRServer", "set_camera_locked_to_origin", SET_CAMERA_LOCKED_TO_ORIGIN_HASH)
 
-    private const val ADD_INTERFACE_HASH = 1898711491L
-    private val addInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "add_interface", ADD_INTERFACE_HASH)
-    }
+        private const val IS_CAMERA_LOCKED_TO_ORIGIN_HASH = 36873697L
+        @JvmField
+        val isCameraLockedToOriginBind =
+            ObjectCalls.getMethodBind("XRServer", "is_camera_locked_to_origin", IS_CAMERA_LOCKED_TO_ORIGIN_HASH)
 
-    private const val GET_INTERFACE_COUNT_HASH = 3905245786L
-    private val getInterfaceCountBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_interface_count", GET_INTERFACE_COUNT_HASH)
-    }
+        private const val ADD_INTERFACE_HASH = 1898711491L
+        @JvmField
+        val addInterfaceBind =
+            ObjectCalls.getMethodBind("XRServer", "add_interface", ADD_INTERFACE_HASH)
 
-    private const val REMOVE_INTERFACE_HASH = 1898711491L
-    private val removeInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "remove_interface", REMOVE_INTERFACE_HASH)
-    }
+        private const val GET_INTERFACE_COUNT_HASH = 3905245786L
+        @JvmField
+        val getInterfaceCountBind =
+            ObjectCalls.getMethodBind("XRServer", "get_interface_count", GET_INTERFACE_COUNT_HASH)
 
-    private const val GET_INTERFACE_HASH = 4237347919L
-    private val getInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_interface", GET_INTERFACE_HASH)
-    }
+        private const val REMOVE_INTERFACE_HASH = 1898711491L
+        @JvmField
+        val removeInterfaceBind =
+            ObjectCalls.getMethodBind("XRServer", "remove_interface", REMOVE_INTERFACE_HASH)
 
-    private const val GET_INTERFACES_HASH = 3995934104L
-    private val getInterfacesBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_interfaces", GET_INTERFACES_HASH)
-    }
+        private const val GET_INTERFACE_HASH = 4237347919L
+        @JvmField
+        val getInterfaceBind =
+            ObjectCalls.getMethodBind("XRServer", "get_interface", GET_INTERFACE_HASH)
 
-    private const val FIND_INTERFACE_HASH = 1395192955L
-    private val findInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "find_interface", FIND_INTERFACE_HASH)
-    }
+        private const val GET_INTERFACES_HASH = 3995934104L
+        @JvmField
+        val getInterfacesBind =
+            ObjectCalls.getMethodBind("XRServer", "get_interfaces", GET_INTERFACES_HASH)
 
-    private const val ADD_TRACKER_HASH = 684804553L
-    private val addTrackerBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "add_tracker", ADD_TRACKER_HASH)
-    }
+        private const val FIND_INTERFACE_HASH = 1395192955L
+        @JvmField
+        val findInterfaceBind =
+            ObjectCalls.getMethodBind("XRServer", "find_interface", FIND_INTERFACE_HASH)
 
-    private const val REMOVE_TRACKER_HASH = 684804553L
-    private val removeTrackerBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "remove_tracker", REMOVE_TRACKER_HASH)
-    }
+        private const val ADD_TRACKER_HASH = 684804553L
+        @JvmField
+        val addTrackerBind =
+            ObjectCalls.getMethodBind("XRServer", "add_tracker", ADD_TRACKER_HASH)
 
-    private const val GET_TRACKERS_HASH = 3554694381L
-    private val getTrackersBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_trackers", GET_TRACKERS_HASH)
-    }
+        private const val REMOVE_TRACKER_HASH = 684804553L
+        @JvmField
+        val removeTrackerBind =
+            ObjectCalls.getMethodBind("XRServer", "remove_tracker", REMOVE_TRACKER_HASH)
 
-    private const val GET_TRACKER_HASH = 147382240L
-    private val getTrackerBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_tracker", GET_TRACKER_HASH)
-    }
+        private const val GET_TRACKERS_HASH = 3554694381L
+        @JvmField
+        val getTrackersBind =
+            ObjectCalls.getMethodBind("XRServer", "get_trackers", GET_TRACKERS_HASH)
 
-    private const val GET_PRIMARY_INTERFACE_HASH = 2143545064L
-    private val getPrimaryInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "get_primary_interface", GET_PRIMARY_INTERFACE_HASH)
-    }
+        private const val GET_TRACKER_HASH = 147382240L
+        @JvmField
+        val getTrackerBind =
+            ObjectCalls.getMethodBind("XRServer", "get_tracker", GET_TRACKER_HASH)
 
-    private const val SET_PRIMARY_INTERFACE_HASH = 1898711491L
-    private val setPrimaryInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("XRServer", "set_primary_interface", SET_PRIMARY_INTERFACE_HASH)
+        private const val GET_PRIMARY_INTERFACE_HASH = 2143545064L
+        @JvmField
+        val getPrimaryInterfaceBind =
+            ObjectCalls.getMethodBind("XRServer", "get_primary_interface", GET_PRIMARY_INTERFACE_HASH)
+
+        private const val SET_PRIMARY_INTERFACE_HASH = 1898711491L
+        @JvmField
+        val setPrimaryInterfaceBind =
+            ObjectCalls.getMethodBind("XRServer", "set_primary_interface", SET_PRIMARY_INTERFACE_HASH)
     }
 }

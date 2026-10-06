@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -29,7 +30,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setLightmapSizeHintBind, segment, size)
     }
 
     /**
@@ -39,7 +40,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getLightmapSizeHintBind, segment)
     }
 
     /**
@@ -50,7 +51,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceCountBind, segment)
     }
 
     /**
@@ -83,7 +84,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetArrays(surfIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(surfaceGetArraysBind, segment, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.surfaceGetArraysBind, segment, surfIdx)
     }
 
     /**
@@ -93,7 +94,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetBlendShapeArrays(surfIdx: Int): List<List<Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArrayList(surfaceGetBlendShapeArraysBind, segment, surfIdx)
+        return ObjectCalls.ptrcallWithIntArgRetArrayList(Binds.surfaceGetBlendShapeArraysBind, segment, surfIdx)
     }
 
     /**
@@ -107,7 +108,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(surfaceSetMaterialBind, segment, surfIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.surfaceSetMaterialBind, segment, surfIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -121,7 +122,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetMaterial(surfIdx: Int): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, segment, surfIdx))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.surfaceGetMaterialBind, segment, surfIdx))
     }
 
     /**
@@ -131,7 +132,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -146,7 +147,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createTrimeshShape(): ConcavePolygonShape3D? {
         checkOpen()
-        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, segment))
+        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTrimeshShapeBind, segment))
     }
 
     /**
@@ -159,7 +160,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
         checkOpen()
-        return ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, segment, clean, simplify))
+        return ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(Binds.createConvexShapeBind, segment, clean, simplify))
     }
 
     /**
@@ -170,7 +171,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createOutline(margin: Double): Mesh? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(createOutlineBind, segment, margin)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.createOutlineBind, segment, margin)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -186,7 +187,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun generateTriangleMesh(): TriangleMesh? {
         checkOpen()
-        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
+        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateTriangleMeshBind, segment))
     }
 
     /**
@@ -658,75 +659,77 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         @JvmStatic
         fun fromObject(value: GodotObject): Mesh? =
             if (value.isClass("Mesh")) RefCounted.retained(Mesh(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L
-        private val setLightmapSizeHintBind by lazy {
+        @JvmField
+        val setLightmapSizeHintBind =
             ObjectCalls.getMethodBind("Mesh", "set_lightmap_size_hint", SET_LIGHTMAP_SIZE_HINT_HASH)
-        }
 
         private const val GET_LIGHTMAP_SIZE_HINT_HASH = 3690982128L
-        private val getLightmapSizeHintBind by lazy {
+        @JvmField
+        val getLightmapSizeHintBind =
             ObjectCalls.getMethodBind("Mesh", "get_lightmap_size_hint", GET_LIGHTMAP_SIZE_HINT_HASH)
-        }
 
         private const val GET_AABB_HASH = 1068685055L
-        private val getAabbBind by lazy {
+        @JvmField
+        val getAabbBind =
             ObjectCalls.getMethodBind("Mesh", "get_aabb", GET_AABB_HASH)
-        }
 
         private const val GET_FACES_HASH = 497664490L
-        private val getFacesBind by lazy {
+        @JvmField
+        val getFacesBind =
             ObjectCalls.getMethodBind("Mesh", "get_faces", GET_FACES_HASH)
-        }
 
         private const val GET_SURFACE_COUNT_HASH = 3905245786L
-        private val getSurfaceCountBind by lazy {
+        @JvmField
+        val getSurfaceCountBind =
             ObjectCalls.getMethodBind("Mesh", "get_surface_count", GET_SURFACE_COUNT_HASH)
-        }
 
         private const val SURFACE_GET_ARRAYS_HASH = 663333327L
-        private val surfaceGetArraysBind by lazy {
+        @JvmField
+        val surfaceGetArraysBind =
             ObjectCalls.getMethodBind("Mesh", "surface_get_arrays", SURFACE_GET_ARRAYS_HASH)
-        }
 
         private const val SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH = 663333327L
-        private val surfaceGetBlendShapeArraysBind by lazy {
+        @JvmField
+        val surfaceGetBlendShapeArraysBind =
             ObjectCalls.getMethodBind("Mesh", "surface_get_blend_shape_arrays", SURFACE_GET_BLEND_SHAPE_ARRAYS_HASH)
-        }
 
         private const val SURFACE_SET_MATERIAL_HASH = 3671737478L
-        private val surfaceSetMaterialBind by lazy {
+        @JvmField
+        val surfaceSetMaterialBind =
             ObjectCalls.getMethodBind("Mesh", "surface_set_material", SURFACE_SET_MATERIAL_HASH)
-        }
 
         private const val SURFACE_GET_MATERIAL_HASH = 2897466400L
-        private val surfaceGetMaterialBind by lazy {
+        @JvmField
+        val surfaceGetMaterialBind =
             ObjectCalls.getMethodBind("Mesh", "surface_get_material", SURFACE_GET_MATERIAL_HASH)
-        }
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
-        private val createPlaceholderBind by lazy {
+        @JvmField
+        val createPlaceholderBind =
             ObjectCalls.getMethodBind("Mesh", "create_placeholder", CREATE_PLACEHOLDER_HASH)
-        }
 
         private const val CREATE_TRIMESH_SHAPE_HASH = 4160111210L
-        private val createTrimeshShapeBind by lazy {
+        @JvmField
+        val createTrimeshShapeBind =
             ObjectCalls.getMethodBind("Mesh", "create_trimesh_shape", CREATE_TRIMESH_SHAPE_HASH)
-        }
 
         private const val CREATE_CONVEX_SHAPE_HASH = 2529984628L
-        private val createConvexShapeBind by lazy {
+        @JvmField
+        val createConvexShapeBind =
             ObjectCalls.getMethodBind("Mesh", "create_convex_shape", CREATE_CONVEX_SHAPE_HASH)
-        }
 
         private const val CREATE_OUTLINE_HASH = 1208642001L
-        private val createOutlineBind by lazy {
+        @JvmField
+        val createOutlineBind =
             ObjectCalls.getMethodBind("Mesh", "create_outline", CREATE_OUTLINE_HASH)
-        }
 
         private const val GENERATE_TRIANGLE_MESH_HASH = 3476533166L
-        private val generateTriangleMeshBind by lazy {
+        @JvmField
+        val generateTriangleMeshBind =
             ObjectCalls.getMethodBind("Mesh", "generate_triangle_mesh", GENERATE_TRIANGLE_MESH_HASH)
-        }
     }
 }

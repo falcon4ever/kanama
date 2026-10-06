@@ -19,7 +19,5 @@ open class MarginContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): MarginContainer? =
             if (handle.address() == 0L) null else MarginContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

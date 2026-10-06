@@ -20,7 +20,5 @@ class AudioStreamPlaybackOggVorbis(handle: GodotHandle) : AudioStreamPlaybackRes
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackOggVorbis? =
             if (handle.address() == 0L) null else AudioStreamPlaybackOggVorbis(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -58,7 +59,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHasTrackingData(hasTrackingData: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setHasTrackingDataBind, segment, hasTrackingData)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHasTrackingDataBind, segment, hasTrackingData)
     }
 
     /**
@@ -69,7 +70,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHasTrackingData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setNameBind, segment, name)
     }
 
     /**
@@ -101,7 +102,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getNameBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTransform(transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, transform)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, transform)
     }
 
     /**
@@ -121,7 +122,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAdjustedTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getAdjustedTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getAdjustedTransformBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLinearVelocity(velocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, velocity)
     }
 
     /**
@@ -152,7 +153,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLinearVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAngularVelocity(velocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, velocity)
     }
 
     /**
@@ -172,7 +173,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAngularVelocity(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTrackingConfidence(trackingConfidence: XRPose.TrackingConfidence) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, segment, trackingConfidence.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTrackingConfidenceBind, segment, trackingConfidence.value)
     }
 
     /**
@@ -194,7 +195,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackingConfidence(): XRPose.TrackingConfidence {
         checkOpen()
-        return XRPose.TrackingConfidence(ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, segment))
+        return XRPose.TrackingConfidence(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackingConfidenceBind, segment))
     }
 
     /**
@@ -238,70 +239,72 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRPose? =
             if (handle.address() == 0L) null else XRPose(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L
-        private val setHasTrackingDataBind by lazy {
+        @JvmField
+        val setHasTrackingDataBind =
             ObjectCalls.getMethodBind("XRPose", "set_has_tracking_data", SET_HAS_TRACKING_DATA_HASH)
-        }
 
         private const val GET_HAS_TRACKING_DATA_HASH = 36873697L
-        private val getHasTrackingDataBind by lazy {
+        @JvmField
+        val getHasTrackingDataBind =
             ObjectCalls.getMethodBind("XRPose", "get_has_tracking_data", GET_HAS_TRACKING_DATA_HASH)
-        }
 
         private const val SET_NAME_HASH = 3304788590L
-        private val setNameBind by lazy {
+        @JvmField
+        val setNameBind =
             ObjectCalls.getMethodBind("XRPose", "set_name", SET_NAME_HASH)
-        }
 
         private const val GET_NAME_HASH = 2002593661L
-        private val getNameBind by lazy {
+        @JvmField
+        val getNameBind =
             ObjectCalls.getMethodBind("XRPose", "get_name", GET_NAME_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 2952846383L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("XRPose", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3229777777L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("XRPose", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val GET_ADJUSTED_TRANSFORM_HASH = 3229777777L
-        private val getAdjustedTransformBind by lazy {
+        @JvmField
+        val getAdjustedTransformBind =
             ObjectCalls.getMethodBind("XRPose", "get_adjusted_transform", GET_ADJUSTED_TRANSFORM_HASH)
-        }
 
         private const val SET_LINEAR_VELOCITY_HASH = 3460891852L
-        private val setLinearVelocityBind by lazy {
+        @JvmField
+        val setLinearVelocityBind =
             ObjectCalls.getMethodBind("XRPose", "set_linear_velocity", SET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_LINEAR_VELOCITY_HASH = 3360562783L
-        private val getLinearVelocityBind by lazy {
+        @JvmField
+        val getLinearVelocityBind =
             ObjectCalls.getMethodBind("XRPose", "get_linear_velocity", GET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_ANGULAR_VELOCITY_HASH = 3460891852L
-        private val setAngularVelocityBind by lazy {
+        @JvmField
+        val setAngularVelocityBind =
             ObjectCalls.getMethodBind("XRPose", "set_angular_velocity", SET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_ANGULAR_VELOCITY_HASH = 3360562783L
-        private val getAngularVelocityBind by lazy {
+        @JvmField
+        val getAngularVelocityBind =
             ObjectCalls.getMethodBind("XRPose", "get_angular_velocity", GET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val SET_TRACKING_CONFIDENCE_HASH = 4171656666L
-        private val setTrackingConfidenceBind by lazy {
+        @JvmField
+        val setTrackingConfidenceBind =
             ObjectCalls.getMethodBind("XRPose", "set_tracking_confidence", SET_TRACKING_CONFIDENCE_HASH)
-        }
 
         private const val GET_TRACKING_CONFIDENCE_HASH = 2064923680L
-        private val getTrackingConfidenceBind by lazy {
+        @JvmField
+        val getTrackingConfidenceBind =
             ObjectCalls.getMethodBind("XRPose", "get_tracking_confidence", GET_TRACKING_CONFIDENCE_HASH)
-        }
     }
 }

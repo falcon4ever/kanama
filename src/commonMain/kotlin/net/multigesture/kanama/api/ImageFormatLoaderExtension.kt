@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
      */
     fun addFormatLoader() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(addFormatLoaderBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.addFormatLoaderBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
      */
     fun removeFormatLoader() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(removeFormatLoaderBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.removeFormatLoaderBind, segment)
     }
 
     companion object {
@@ -41,15 +42,17 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
 
         internal fun wrapBorrowed(handle: RawSegment): ImageFormatLoaderExtension? =
             if (handle.address() == 0L) null else ImageFormatLoaderExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_FORMAT_LOADER_HASH = 3218959716L
-        private val addFormatLoaderBind by lazy {
+        @JvmField
+        val addFormatLoaderBind =
             ObjectCalls.getMethodBind("ImageFormatLoaderExtension", "add_format_loader", ADD_FORMAT_LOADER_HASH)
-        }
 
         private const val REMOVE_FORMAT_LOADER_HASH = 3218959716L
-        private val removeFormatLoaderBind by lazy {
+        @JvmField
+        val removeFormatLoaderBind =
             ObjectCalls.getMethodBind("ImageFormatLoaderExtension", "remove_format_loader", REMOVE_FORMAT_LOADER_HASH)
-        }
     }
 }

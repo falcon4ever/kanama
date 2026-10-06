@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -50,7 +51,7 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: ConeTwistJoint3D.set_param
      */
     fun setParam(param: ConeTwistJoint3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamBind, segment, param.value, value)
     }
 
     /**
@@ -60,7 +61,7 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: ConeTwistJoint3D.get_param
      */
     fun getParam(param: ConeTwistJoint3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamBind, segment, param.value)
     }
 
     /**
@@ -122,15 +123,17 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): ConeTwistJoint3D? =
             if (handle.address() == 0L) null else ConeTwistJoint3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PARAM_HASH = 1062470226L
-        private val setParamBind by lazy {
+        @JvmField
+        val setParamBind =
             ObjectCalls.getMethodBind("ConeTwistJoint3D", "set_param", SET_PARAM_HASH)
-        }
 
         private const val GET_PARAM_HASH = 2928790850L
-        private val getParamBind by lazy {
+        @JvmField
+        val getParamBind =
             ObjectCalls.getMethodBind("ConeTwistJoint3D", "get_param", GET_PARAM_HASH)
-        }
     }
 }

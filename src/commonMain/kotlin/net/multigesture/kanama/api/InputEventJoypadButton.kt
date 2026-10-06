@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setButtonIndex(buttonIndex: JoyButton) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setButtonIndexBind, segment, buttonIndex.value)
     }
 
     /**
@@ -40,17 +41,17 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getButtonIndex(): JoyButton {
         checkOpen()
-        return JoyButton(ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment))
+        return JoyButton(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonIndexBind, segment))
     }
 
     fun setPressure(pressure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, segment, pressure)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPressureBind, segment, pressure)
     }
 
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
     }
 
     companion object {
@@ -73,30 +74,32 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventJoypadButton? =
             if (handle.address() == 0L) null else InputEventJoypadButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BUTTON_INDEX_HASH = 1466368136L
-        private val setButtonIndexBind by lazy {
+        @JvmField
+        val setButtonIndexBind =
             ObjectCalls.getMethodBind("InputEventJoypadButton", "set_button_index", SET_BUTTON_INDEX_HASH)
-        }
 
         private const val GET_BUTTON_INDEX_HASH = 595588182L
-        private val getButtonIndexBind by lazy {
+        @JvmField
+        val getButtonIndexBind =
             ObjectCalls.getMethodBind("InputEventJoypadButton", "get_button_index", GET_BUTTON_INDEX_HASH)
-        }
 
         private const val SET_PRESSURE_HASH = 373806689L
-        private val setPressureBind by lazy {
+        @JvmField
+        val setPressureBind =
             ObjectCalls.getMethodBind("InputEventJoypadButton", "set_pressure", SET_PRESSURE_HASH)
-        }
 
         private const val GET_PRESSURE_HASH = 1740695150L
-        private val getPressureBind by lazy {
+        @JvmField
+        val getPressureBind =
             ObjectCalls.getMethodBind("InputEventJoypadButton", "get_pressure", GET_PRESSURE_HASH)
-        }
 
         private const val SET_PRESSED_HASH = 2586408642L
-        private val setPressedBind by lazy {
+        @JvmField
+        val setPressedBind =
             ObjectCalls.getMethodBind("InputEventJoypadButton", "set_pressed", SET_PRESSED_HASH)
-        }
     }
 }

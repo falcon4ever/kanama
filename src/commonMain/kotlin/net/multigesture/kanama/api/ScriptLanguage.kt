@@ -35,7 +35,5 @@ open class ScriptLanguage(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): ScriptLanguage? =
             if (handle.address() == 0L) null else ScriptLanguage(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -45,7 +46,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinimumSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getMinimumSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getMinimumSizeBind, segment)
     }
 
     /**
@@ -57,7 +58,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun setContentMargin(margin: Side, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, segment, margin.value, offset)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setContentMarginBind, segment, margin.value, offset)
     }
 
     /**
@@ -67,7 +68,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun setContentMarginAll(offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setContentMarginAllBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setContentMarginAllBind, segment, offset)
     }
 
     /**
@@ -79,7 +80,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getContentMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getContentMarginBind, segment, margin.value)
     }
 
     /**
@@ -90,7 +91,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getMarginBind, segment, margin.value)
     }
 
     /**
@@ -101,7 +102,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun draw(canvasItem: RID, rect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndRect2Arg(drawBind, segment, canvasItem, rect)
+        ObjectCalls.ptrcallWithRIDAndRect2Arg(Binds.drawBind, segment, canvasItem, rect)
     }
 
     /**
@@ -125,7 +126,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun getCurrentItemDrawn(): CanvasItem? {
         checkOpen()
-        return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentItemDrawnBind, segment))
+        return CanvasItem.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentItemDrawnBind, segment))
     }
 
     /**
@@ -135,7 +136,7 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      */
     fun testMask(point: Vector2, rect: Rect2): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(testMaskBind, segment, point, rect)
+        return ObjectCalls.ptrcallWithVector2Rect2ArgsRetBool(Binds.testMaskBind, segment, point, rect)
     }
 
     companion object {
@@ -148,50 +149,52 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBox? =
             if (handle.address() == 0L) null else StyleBox(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_MINIMUM_SIZE_HASH = 3341600327L
-        private val getMinimumSizeBind by lazy {
+        @JvmField
+        val getMinimumSizeBind =
             ObjectCalls.getMethodBind("StyleBox", "get_minimum_size", GET_MINIMUM_SIZE_HASH)
-        }
 
         private const val SET_CONTENT_MARGIN_HASH = 4290182280L
-        private val setContentMarginBind by lazy {
+        @JvmField
+        val setContentMarginBind =
             ObjectCalls.getMethodBind("StyleBox", "set_content_margin", SET_CONTENT_MARGIN_HASH)
-        }
 
         private const val SET_CONTENT_MARGIN_ALL_HASH = 373806689L
-        private val setContentMarginAllBind by lazy {
+        @JvmField
+        val setContentMarginAllBind =
             ObjectCalls.getMethodBind("StyleBox", "set_content_margin_all", SET_CONTENT_MARGIN_ALL_HASH)
-        }
 
         private const val GET_CONTENT_MARGIN_HASH = 2869120046L
-        private val getContentMarginBind by lazy {
+        @JvmField
+        val getContentMarginBind =
             ObjectCalls.getMethodBind("StyleBox", "get_content_margin", GET_CONTENT_MARGIN_HASH)
-        }
 
         private const val GET_MARGIN_HASH = 2869120046L
-        private val getMarginBind by lazy {
+        @JvmField
+        val getMarginBind =
             ObjectCalls.getMethodBind("StyleBox", "get_margin", GET_MARGIN_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("StyleBox", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val DRAW_HASH = 2275962004L
-        private val drawBind by lazy {
+        @JvmField
+        val drawBind =
             ObjectCalls.getMethodBind("StyleBox", "draw", DRAW_HASH)
-        }
 
         private const val GET_CURRENT_ITEM_DRAWN_HASH = 3213695180L
-        private val getCurrentItemDrawnBind by lazy {
+        @JvmField
+        val getCurrentItemDrawnBind =
             ObjectCalls.getMethodBind("StyleBox", "get_current_item_drawn", GET_CURRENT_ITEM_DRAWN_HASH)
-        }
 
         private const val TEST_MASK_HASH = 3735564539L
-        private val testMaskBind by lazy {
+        @JvmField
+        val testMaskBind =
             ObjectCalls.getMethodBind("StyleBox", "test_mask", TEST_MASK_HASH)
-        }
     }
 }

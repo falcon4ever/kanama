@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,7 +12,7 @@ import net.multigesture.kanama.types.Transform3D
 class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getEntityPose(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getEntityPoseBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getEntityPoseBind, segment, index)
     }
 
     companion object {
@@ -24,10 +25,12 @@ class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentAnchorList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentAnchorList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_ENTITY_POSE_HASH = 1965739696L
-        private val getEntityPoseBind by lazy {
+        @JvmField
+        val getEntityPoseBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentAnchorList", "get_entity_pose", GET_ENTITY_POSE_HASH)
-        }
     }
 }

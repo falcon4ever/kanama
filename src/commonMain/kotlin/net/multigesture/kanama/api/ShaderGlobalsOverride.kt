@@ -19,7 +19,5 @@ class ShaderGlobalsOverride(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): ShaderGlobalsOverride? =
             if (handle.address() == 0L) null else ShaderGlobalsOverride(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

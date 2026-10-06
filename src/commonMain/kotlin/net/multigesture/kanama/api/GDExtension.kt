@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
      */
     fun isLibraryOpen(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isLibraryOpenBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLibraryOpenBind, segment)
     }
 
     /**
@@ -29,7 +30,7 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
      */
     fun getMinimumLibraryInitializationLevel(): GDExtension.InitializationLevel {
         checkOpen()
-        return GDExtension.InitializationLevel(ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, segment))
+        return GDExtension.InitializationLevel(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinimumLibraryInitializationLevelBind, segment))
     }
 
     /**
@@ -80,15 +81,17 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GDExtension? =
             if (handle.address() == 0L) null else GDExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_LIBRARY_OPEN_HASH = 36873697L
-        private val isLibraryOpenBind by lazy {
+        @JvmField
+        val isLibraryOpenBind =
             ObjectCalls.getMethodBind("GDExtension", "is_library_open", IS_LIBRARY_OPEN_HASH)
-        }
 
         private const val GET_MINIMUM_LIBRARY_INITIALIZATION_LEVEL_HASH = 964858755L
-        private val getMinimumLibraryInitializationLevelBind by lazy {
+        @JvmField
+        val getMinimumLibraryInitializationLevelBind =
             ObjectCalls.getMethodBind("GDExtension", "get_minimum_library_initialization_level", GET_MINIMUM_LIBRARY_INITIALIZATION_LEVEL_HASH)
-        }
     }
 }

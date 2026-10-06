@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -127,167 +128,167 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
         set(value) = setBorderColor(value)
 
     fun setLayerViewport(viewport: SubViewport) {
-        ObjectCalls.ptrcallWithObjectArgs(setLayerViewportBind, segment, listOf(viewport.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setLayerViewportBind, segment, listOf(viewport.segment))
     }
 
     fun getLayerViewport(): SubViewport? {
-        return SubViewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLayerViewportBind, segment))
+        return SubViewport.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLayerViewportBind, segment))
     }
 
     fun setUseAndroidSurface(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAndroidSurfaceBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseAndroidSurfaceBind, segment, enable)
     }
 
     fun getUseAndroidSurface(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseAndroidSurfaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseAndroidSurfaceBind, segment)
     }
 
     fun setAndroidSurfaceSize(size: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setAndroidSurfaceSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setAndroidSurfaceSizeBind, segment, size)
     }
 
     fun getAndroidSurfaceSize(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getAndroidSurfaceSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getAndroidSurfaceSizeBind, segment)
     }
 
     fun setEnableHolePunch(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableHolePunchBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableHolePunchBind, segment, enable)
     }
 
     fun getEnableHolePunch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableHolePunchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableHolePunchBind, segment)
     }
 
     fun setSortOrder(order: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSortOrderBind, segment, order)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSortOrderBind, segment, order)
     }
 
     fun getSortOrder(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSortOrderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSortOrderBind, segment)
     }
 
     fun setAlphaBlend(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAlphaBlendBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAlphaBlendBind, segment, enabled)
     }
 
     fun getAlphaBlend(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAlphaBlendBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAlphaBlendBind, segment)
     }
 
     fun getAndroidSurface(): JavaObject? {
-        return JavaObject.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAndroidSurfaceBind, segment))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getAndroidSurfaceBind, segment))
     }
 
     fun isNativelySupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isNativelySupportedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNativelySupportedBind, segment)
     }
 
     fun isProtectedContent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isProtectedContentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isProtectedContentBind, segment)
     }
 
     fun setProtectedContent(protectedContent: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setProtectedContentBind, segment, protectedContent)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProtectedContentBind, segment, protectedContent)
     }
 
     fun setMinFilter(mode: OpenXRCompositionLayer.Filter) {
-        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMinFilterBind, segment, mode.value)
     }
 
     fun getMinFilter(): OpenXRCompositionLayer.Filter {
-        return OpenXRCompositionLayer.Filter(ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment))
+        return OpenXRCompositionLayer.Filter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMinFilterBind, segment))
     }
 
     fun setMagFilter(mode: OpenXRCompositionLayer.Filter) {
-        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMagFilterBind, segment, mode.value)
     }
 
     fun getMagFilter(): OpenXRCompositionLayer.Filter {
-        return OpenXRCompositionLayer.Filter(ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment))
+        return OpenXRCompositionLayer.Filter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMagFilterBind, segment))
     }
 
     fun setMipmapMode(mode: OpenXRCompositionLayer.MipmapMode) {
-        ObjectCalls.ptrcallWithLongArg(setMipmapModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMipmapModeBind, segment, mode.value)
     }
 
     fun getMipmapMode(): OpenXRCompositionLayer.MipmapMode {
-        return OpenXRCompositionLayer.MipmapMode(ObjectCalls.ptrcallNoArgsRetLong(getMipmapModeBind, segment))
+        return OpenXRCompositionLayer.MipmapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMipmapModeBind, segment))
     }
 
     fun setHorizontalWrap(mode: OpenXRCompositionLayer.Wrap) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalWrapBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalWrapBind, segment, mode.value)
     }
 
     fun getHorizontalWrap(): OpenXRCompositionLayer.Wrap {
-        return OpenXRCompositionLayer.Wrap(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalWrapBind, segment))
+        return OpenXRCompositionLayer.Wrap(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalWrapBind, segment))
     }
 
     fun setVerticalWrap(mode: OpenXRCompositionLayer.Wrap) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalWrapBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVerticalWrapBind, segment, mode.value)
     }
 
     fun getVerticalWrap(): OpenXRCompositionLayer.Wrap {
-        return OpenXRCompositionLayer.Wrap(ObjectCalls.ptrcallNoArgsRetLong(getVerticalWrapBind, segment))
+        return OpenXRCompositionLayer.Wrap(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalWrapBind, segment))
     }
 
     fun setRedSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
-        ObjectCalls.ptrcallWithLongArg(setRedSwizzleBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRedSwizzleBind, segment, mode.value)
     }
 
     fun getRedSwizzle(): OpenXRCompositionLayer.Swizzle {
-        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getRedSwizzleBind, segment))
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRedSwizzleBind, segment))
     }
 
     fun setGreenSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
-        ObjectCalls.ptrcallWithLongArg(setGreenSwizzleBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setGreenSwizzleBind, segment, mode.value)
     }
 
     fun getGreenSwizzle(): OpenXRCompositionLayer.Swizzle {
-        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getGreenSwizzleBind, segment))
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getGreenSwizzleBind, segment))
     }
 
     fun setBlueSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
-        ObjectCalls.ptrcallWithLongArg(setBlueSwizzleBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlueSwizzleBind, segment, mode.value)
     }
 
     fun getBlueSwizzle(): OpenXRCompositionLayer.Swizzle {
-        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getBlueSwizzleBind, segment))
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlueSwizzleBind, segment))
     }
 
     fun setAlphaSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaSwizzleBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaSwizzleBind, segment, mode.value)
     }
 
     fun getAlphaSwizzle(): OpenXRCompositionLayer.Swizzle {
-        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getAlphaSwizzleBind, segment))
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaSwizzleBind, segment))
     }
 
     fun setMaxAnisotropy(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxAnisotropyBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxAnisotropyBind, segment, value)
     }
 
     fun getMaxAnisotropy(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxAnisotropyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxAnisotropyBind, segment)
     }
 
     fun setBorderColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBorderColorBind, segment, color)
     }
 
     fun getBorderColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBorderColorBind, segment)
     }
 
     fun setEyeVisibility(eyeVisibility: OpenXRCompositionLayer.EyeVisibility) {
-        ObjectCalls.ptrcallWithLongArg(setEyeVisibilityBind, segment, eyeVisibility.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEyeVisibilityBind, segment, eyeVisibility.value)
     }
 
     fun getEyeVisibility(): OpenXRCompositionLayer.EyeVisibility {
-        return OpenXRCompositionLayer.EyeVisibility(ObjectCalls.ptrcallNoArgsRetLong(getEyeVisibilityBind, segment))
+        return OpenXRCompositionLayer.EyeVisibility(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEyeVisibilityBind, segment))
     }
 
     fun intersectsRay(origin: Vector3, direction: Vector3): Vector2 {
-        return ObjectCalls.ptrcallWithTwoVector3ArgsRetVector2(intersectsRayBind, segment, origin, direction)
+        return ObjectCalls.ptrcallWithTwoVector3ArgsRetVector2(Binds.intersectsRayBind, segment, origin, direction)
     }
 
     @JvmInline
@@ -347,210 +348,212 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRCompositionLayer? =
             if (handle.address() == 0L) null else OpenXRCompositionLayer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LAYER_VIEWPORT_HASH = 3888077664L
-        private val setLayerViewportBind by lazy {
+        @JvmField
+        val setLayerViewportBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_layer_viewport", SET_LAYER_VIEWPORT_HASH)
-        }
 
         private const val GET_LAYER_VIEWPORT_HASH = 3750751911L
-        private val getLayerViewportBind by lazy {
+        @JvmField
+        val getLayerViewportBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_layer_viewport", GET_LAYER_VIEWPORT_HASH)
-        }
 
         private const val SET_USE_ANDROID_SURFACE_HASH = 2586408642L
-        private val setUseAndroidSurfaceBind by lazy {
+        @JvmField
+        val setUseAndroidSurfaceBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_use_android_surface", SET_USE_ANDROID_SURFACE_HASH)
-        }
 
         private const val GET_USE_ANDROID_SURFACE_HASH = 36873697L
-        private val getUseAndroidSurfaceBind by lazy {
+        @JvmField
+        val getUseAndroidSurfaceBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_use_android_surface", GET_USE_ANDROID_SURFACE_HASH)
-        }
 
         private const val SET_ANDROID_SURFACE_SIZE_HASH = 1130785943L
-        private val setAndroidSurfaceSizeBind by lazy {
+        @JvmField
+        val setAndroidSurfaceSizeBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_android_surface_size", SET_ANDROID_SURFACE_SIZE_HASH)
-        }
 
         private const val GET_ANDROID_SURFACE_SIZE_HASH = 3690982128L
-        private val getAndroidSurfaceSizeBind by lazy {
+        @JvmField
+        val getAndroidSurfaceSizeBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_android_surface_size", GET_ANDROID_SURFACE_SIZE_HASH)
-        }
 
         private const val SET_ENABLE_HOLE_PUNCH_HASH = 2586408642L
-        private val setEnableHolePunchBind by lazy {
+        @JvmField
+        val setEnableHolePunchBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_enable_hole_punch", SET_ENABLE_HOLE_PUNCH_HASH)
-        }
 
         private const val GET_ENABLE_HOLE_PUNCH_HASH = 36873697L
-        private val getEnableHolePunchBind by lazy {
+        @JvmField
+        val getEnableHolePunchBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_enable_hole_punch", GET_ENABLE_HOLE_PUNCH_HASH)
-        }
 
         private const val SET_SORT_ORDER_HASH = 1286410249L
-        private val setSortOrderBind by lazy {
+        @JvmField
+        val setSortOrderBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_sort_order", SET_SORT_ORDER_HASH)
-        }
 
         private const val GET_SORT_ORDER_HASH = 3905245786L
-        private val getSortOrderBind by lazy {
+        @JvmField
+        val getSortOrderBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_sort_order", GET_SORT_ORDER_HASH)
-        }
 
         private const val SET_ALPHA_BLEND_HASH = 2586408642L
-        private val setAlphaBlendBind by lazy {
+        @JvmField
+        val setAlphaBlendBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_alpha_blend", SET_ALPHA_BLEND_HASH)
-        }
 
         private const val GET_ALPHA_BLEND_HASH = 36873697L
-        private val getAlphaBlendBind by lazy {
+        @JvmField
+        val getAlphaBlendBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_alpha_blend", GET_ALPHA_BLEND_HASH)
-        }
 
         private const val GET_ANDROID_SURFACE_HASH = 3277089691L
-        private val getAndroidSurfaceBind by lazy {
+        @JvmField
+        val getAndroidSurfaceBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_android_surface", GET_ANDROID_SURFACE_HASH)
-        }
 
         private const val IS_NATIVELY_SUPPORTED_HASH = 36873697L
-        private val isNativelySupportedBind by lazy {
+        @JvmField
+        val isNativelySupportedBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "is_natively_supported", IS_NATIVELY_SUPPORTED_HASH)
-        }
 
         private const val IS_PROTECTED_CONTENT_HASH = 36873697L
-        private val isProtectedContentBind by lazy {
+        @JvmField
+        val isProtectedContentBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "is_protected_content", IS_PROTECTED_CONTENT_HASH)
-        }
 
         private const val SET_PROTECTED_CONTENT_HASH = 2586408642L
-        private val setProtectedContentBind by lazy {
+        @JvmField
+        val setProtectedContentBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_protected_content", SET_PROTECTED_CONTENT_HASH)
-        }
 
         private const val SET_MIN_FILTER_HASH = 3653437593L
-        private val setMinFilterBind by lazy {
+        @JvmField
+        val setMinFilterBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_min_filter", SET_MIN_FILTER_HASH)
-        }
 
         private const val GET_MIN_FILTER_HASH = 845677307L
-        private val getMinFilterBind by lazy {
+        @JvmField
+        val getMinFilterBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_min_filter", GET_MIN_FILTER_HASH)
-        }
 
         private const val SET_MAG_FILTER_HASH = 3653437593L
-        private val setMagFilterBind by lazy {
+        @JvmField
+        val setMagFilterBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_mag_filter", SET_MAG_FILTER_HASH)
-        }
 
         private const val GET_MAG_FILTER_HASH = 845677307L
-        private val getMagFilterBind by lazy {
+        @JvmField
+        val getMagFilterBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_mag_filter", GET_MAG_FILTER_HASH)
-        }
 
         private const val SET_MIPMAP_MODE_HASH = 3271133183L
-        private val setMipmapModeBind by lazy {
+        @JvmField
+        val setMipmapModeBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_mipmap_mode", SET_MIPMAP_MODE_HASH)
-        }
 
         private const val GET_MIPMAP_MODE_HASH = 3962697095L
-        private val getMipmapModeBind by lazy {
+        @JvmField
+        val getMipmapModeBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_mipmap_mode", GET_MIPMAP_MODE_HASH)
-        }
 
         private const val SET_HORIZONTAL_WRAP_HASH = 15634990L
-        private val setHorizontalWrapBind by lazy {
+        @JvmField
+        val setHorizontalWrapBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_horizontal_wrap", SET_HORIZONTAL_WRAP_HASH)
-        }
 
         private const val GET_HORIZONTAL_WRAP_HASH = 2798816834L
-        private val getHorizontalWrapBind by lazy {
+        @JvmField
+        val getHorizontalWrapBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_horizontal_wrap", GET_HORIZONTAL_WRAP_HASH)
-        }
 
         private const val SET_VERTICAL_WRAP_HASH = 15634990L
-        private val setVerticalWrapBind by lazy {
+        @JvmField
+        val setVerticalWrapBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_vertical_wrap", SET_VERTICAL_WRAP_HASH)
-        }
 
         private const val GET_VERTICAL_WRAP_HASH = 2798816834L
-        private val getVerticalWrapBind by lazy {
+        @JvmField
+        val getVerticalWrapBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_vertical_wrap", GET_VERTICAL_WRAP_HASH)
-        }
 
         private const val SET_RED_SWIZZLE_HASH = 741598951L
-        private val setRedSwizzleBind by lazy {
+        @JvmField
+        val setRedSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_red_swizzle", SET_RED_SWIZZLE_HASH)
-        }
 
         private const val GET_RED_SWIZZLE_HASH = 2334776767L
-        private val getRedSwizzleBind by lazy {
+        @JvmField
+        val getRedSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_red_swizzle", GET_RED_SWIZZLE_HASH)
-        }
 
         private const val SET_GREEN_SWIZZLE_HASH = 741598951L
-        private val setGreenSwizzleBind by lazy {
+        @JvmField
+        val setGreenSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_green_swizzle", SET_GREEN_SWIZZLE_HASH)
-        }
 
         private const val GET_GREEN_SWIZZLE_HASH = 2334776767L
-        private val getGreenSwizzleBind by lazy {
+        @JvmField
+        val getGreenSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_green_swizzle", GET_GREEN_SWIZZLE_HASH)
-        }
 
         private const val SET_BLUE_SWIZZLE_HASH = 741598951L
-        private val setBlueSwizzleBind by lazy {
+        @JvmField
+        val setBlueSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_blue_swizzle", SET_BLUE_SWIZZLE_HASH)
-        }
 
         private const val GET_BLUE_SWIZZLE_HASH = 2334776767L
-        private val getBlueSwizzleBind by lazy {
+        @JvmField
+        val getBlueSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_blue_swizzle", GET_BLUE_SWIZZLE_HASH)
-        }
 
         private const val SET_ALPHA_SWIZZLE_HASH = 741598951L
-        private val setAlphaSwizzleBind by lazy {
+        @JvmField
+        val setAlphaSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_alpha_swizzle", SET_ALPHA_SWIZZLE_HASH)
-        }
 
         private const val GET_ALPHA_SWIZZLE_HASH = 2334776767L
-        private val getAlphaSwizzleBind by lazy {
+        @JvmField
+        val getAlphaSwizzleBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_alpha_swizzle", GET_ALPHA_SWIZZLE_HASH)
-        }
 
         private const val SET_MAX_ANISOTROPY_HASH = 373806689L
-        private val setMaxAnisotropyBind by lazy {
+        @JvmField
+        val setMaxAnisotropyBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_max_anisotropy", SET_MAX_ANISOTROPY_HASH)
-        }
 
         private const val GET_MAX_ANISOTROPY_HASH = 1740695150L
-        private val getMaxAnisotropyBind by lazy {
+        @JvmField
+        val getMaxAnisotropyBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_max_anisotropy", GET_MAX_ANISOTROPY_HASH)
-        }
 
         private const val SET_BORDER_COLOR_HASH = 2920490490L
-        private val setBorderColorBind by lazy {
+        @JvmField
+        val setBorderColorBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_border_color", SET_BORDER_COLOR_HASH)
-        }
 
         private const val GET_BORDER_COLOR_HASH = 3444240500L
-        private val getBorderColorBind by lazy {
+        @JvmField
+        val getBorderColorBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_border_color", GET_BORDER_COLOR_HASH)
-        }
 
         private const val SET_EYE_VISIBILITY_HASH = 156391336L
-        private val setEyeVisibilityBind by lazy {
+        @JvmField
+        val setEyeVisibilityBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "set_eye_visibility", SET_EYE_VISIBILITY_HASH)
-        }
 
         private const val GET_EYE_VISIBILITY_HASH = 467669000L
-        private val getEyeVisibilityBind by lazy {
+        @JvmField
+        val getEyeVisibilityBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "get_eye_visibility", GET_EYE_VISIBILITY_HASH)
-        }
 
         private const val INTERSECTS_RAY_HASH = 1091262597L
-        private val intersectsRayBind by lazy {
+        @JvmField
+        val intersectsRayBind =
             ObjectCalls.getMethodBind("OpenXRCompositionLayer", "intersects_ray", INTERSECTS_RAY_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -20,7 +21,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun bind(port: Int, host: String = "*"): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, segment, port, host))
+        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.bindBind, segment, port, host))
     }
 
     /**
@@ -31,7 +32,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun connectToHost(host: String, port: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port))
+        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.connectToHostBind, segment, host, port))
     }
 
     /**
@@ -41,7 +42,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getConnectedHost(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getConnectedHostBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConnectedHostBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getConnectedPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getConnectedPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectedPortBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      */
     fun setNoDelay(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNoDelayBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNoDelayBind, segment, enabled)
     }
 
     companion object {
@@ -88,35 +89,37 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StreamPeerTCP? =
             if (handle.address() == 0L) null else StreamPeerTCP(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val BIND_HASH = 3167955072L
-        private val bindBind by lazy {
+        @JvmField
+        val bindBind =
             ObjectCalls.getMethodBind("StreamPeerTCP", "bind", BIND_HASH)
-        }
 
         private const val CONNECT_TO_HOST_HASH = 993915709L
-        private val connectToHostBind by lazy {
+        @JvmField
+        val connectToHostBind =
             ObjectCalls.getMethodBind("StreamPeerTCP", "connect_to_host", CONNECT_TO_HOST_HASH)
-        }
 
         private const val GET_CONNECTED_HOST_HASH = 201670096L
-        private val getConnectedHostBind by lazy {
+        @JvmField
+        val getConnectedHostBind =
             ObjectCalls.getMethodBind("StreamPeerTCP", "get_connected_host", GET_CONNECTED_HOST_HASH)
-        }
 
         private const val GET_CONNECTED_PORT_HASH = 3905245786L
-        private val getConnectedPortBind by lazy {
+        @JvmField
+        val getConnectedPortBind =
             ObjectCalls.getMethodBind("StreamPeerTCP", "get_connected_port", GET_CONNECTED_PORT_HASH)
-        }
 
         private const val GET_LOCAL_PORT_HASH = 3905245786L
-        private val getLocalPortBind by lazy {
+        @JvmField
+        val getLocalPortBind =
             ObjectCalls.getMethodBind("StreamPeerTCP", "get_local_port", GET_LOCAL_PORT_HASH)
-        }
 
         private const val SET_NO_DELAY_HASH = 2586408642L
-        private val setNoDelayBind by lazy {
+        @JvmField
+        val setNoDelayBind =
             ObjectCalls.getMethodBind("StreamPeerTCP", "set_no_delay", SET_NO_DELAY_HASH)
-        }
     }
 }

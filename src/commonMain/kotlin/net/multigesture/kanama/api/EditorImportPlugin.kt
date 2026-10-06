@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -25,7 +26,7 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
      */
     fun appendImportExternalResource(path: String, customOptions: Map<String, Any?> = emptyMap(), customImporter: String = "", generatorParameters: Any? = null): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(appendImportExternalResourceBind, segment, path, customOptions, customImporter, generatorParameters))
+        return GodotError(ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(Binds.appendImportExternalResourceBind, segment, path, customOptions, customImporter, generatorParameters))
     }
 
     companion object {
@@ -38,10 +39,12 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorImportPlugin? =
             if (handle.address() == 0L) null else EditorImportPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val APPEND_IMPORT_EXTERNAL_RESOURCE_HASH = 320493106L
-        private val appendImportExternalResourceBind by lazy {
+        @JvmField
+        val appendImportExternalResourceBind =
             ObjectCalls.getMethodBind("EditorImportPlugin", "append_import_external_resource", APPEND_IMPORT_EXTERNAL_RESOURCE_HASH)
-        }
     }
 }

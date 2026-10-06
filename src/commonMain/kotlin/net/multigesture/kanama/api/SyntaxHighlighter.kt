@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -21,7 +22,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
      */
     fun getLineSyntaxHighlighting(line: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getLineSyntaxHighlightingBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getLineSyntaxHighlightingBind, segment, line)
     }
 
     /**
@@ -32,7 +33,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
      */
     fun updateCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(updateCacheBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateCacheBind, segment)
     }
 
     /**
@@ -43,7 +44,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
      */
     fun clearHighlightingCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearHighlightingCacheBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearHighlightingCacheBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
      */
     fun getTextEdit(): TextEdit? {
         checkOpen()
-        return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextEditBind, segment))
+        return TextEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextEditBind, segment))
     }
 
     companion object {
@@ -66,25 +67,27 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SyntaxHighlighter? =
             if (handle.address() == 0L) null else SyntaxHighlighter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_LINE_SYNTAX_HIGHLIGHTING_HASH = 3554694381L
-        private val getLineSyntaxHighlightingBind by lazy {
+        @JvmField
+        val getLineSyntaxHighlightingBind =
             ObjectCalls.getMethodBind("SyntaxHighlighter", "get_line_syntax_highlighting", GET_LINE_SYNTAX_HIGHLIGHTING_HASH)
-        }
 
         private const val UPDATE_CACHE_HASH = 3218959716L
-        private val updateCacheBind by lazy {
+        @JvmField
+        val updateCacheBind =
             ObjectCalls.getMethodBind("SyntaxHighlighter", "update_cache", UPDATE_CACHE_HASH)
-        }
 
         private const val CLEAR_HIGHLIGHTING_CACHE_HASH = 3218959716L
-        private val clearHighlightingCacheBind by lazy {
+        @JvmField
+        val clearHighlightingCacheBind =
             ObjectCalls.getMethodBind("SyntaxHighlighter", "clear_highlighting_cache", CLEAR_HIGHLIGHTING_CACHE_HASH)
-        }
 
         private const val GET_TEXT_EDIT_HASH = 1893027089L
-        private val getTextEditBind by lazy {
+        @JvmField
+        val getTextEditBind =
             ObjectCalls.getMethodBind("SyntaxHighlighter", "get_text_edit", GET_TEXT_EDIT_HASH)
-        }
     }
 }

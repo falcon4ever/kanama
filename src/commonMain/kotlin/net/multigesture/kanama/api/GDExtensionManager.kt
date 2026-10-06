@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -12,9 +13,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: GDExtensionManager
  */
 object GDExtensionManager {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("GDExtensionManager")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Loads an extension by absolute file path. The `path` needs to point to a valid `GDExtension`.
@@ -24,7 +24,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun loadExtension(path: String): GDExtensionManager.LoadStatus {
-        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(loadExtensionBind, singleton, path))
+        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadExtensionBind, singleton, path))
     }
 
     /**
@@ -37,7 +37,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun reloadExtension(path: String): GDExtensionManager.LoadStatus {
-        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(reloadExtensionBind, singleton, path))
+        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(Binds.reloadExtensionBind, singleton, path))
     }
 
     /**
@@ -48,7 +48,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun unloadExtension(path: String): GDExtensionManager.LoadStatus {
-        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(unloadExtensionBind, singleton, path))
+        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(Binds.unloadExtensionBind, singleton, path))
     }
 
     /**
@@ -59,7 +59,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun isExtensionLoaded(path: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(isExtensionLoadedBind, singleton, path)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isExtensionLoadedBind, singleton, path)
     }
 
     /**
@@ -69,7 +69,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun getLoadedExtensions(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLoadedExtensionsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getLoadedExtensionsBind, singleton)
     }
 
     /**
@@ -80,7 +80,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun getExtension(path: String): GDExtension? {
-        return GDExtension.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getExtensionBind, singleton, path))
+        return GDExtension.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getExtensionBind, singleton, path))
     }
 
     /** Signal `extensions_reloaded()`; see [TypedSignal]. */
@@ -154,33 +154,38 @@ object GDExtensionManager {
     internal fun wrap(handle: RawSegment): GDExtensionManager? =
         if (handle.address() == 0L) null else this
 
-    private const val LOAD_EXTENSION_HASH = 4024158731L
-    private val loadExtensionBind by lazy {
-        ObjectCalls.getMethodBind("GDExtensionManager", "load_extension", LOAD_EXTENSION_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("GDExtensionManager")
 
-    private const val RELOAD_EXTENSION_HASH = 4024158731L
-    private val reloadExtensionBind by lazy {
-        ObjectCalls.getMethodBind("GDExtensionManager", "reload_extension", RELOAD_EXTENSION_HASH)
-    }
+        private const val LOAD_EXTENSION_HASH = 4024158731L
+        @JvmField
+        val loadExtensionBind =
+            ObjectCalls.getMethodBind("GDExtensionManager", "load_extension", LOAD_EXTENSION_HASH)
 
-    private const val UNLOAD_EXTENSION_HASH = 4024158731L
-    private val unloadExtensionBind by lazy {
-        ObjectCalls.getMethodBind("GDExtensionManager", "unload_extension", UNLOAD_EXTENSION_HASH)
-    }
+        private const val RELOAD_EXTENSION_HASH = 4024158731L
+        @JvmField
+        val reloadExtensionBind =
+            ObjectCalls.getMethodBind("GDExtensionManager", "reload_extension", RELOAD_EXTENSION_HASH)
 
-    private const val IS_EXTENSION_LOADED_HASH = 3927539163L
-    private val isExtensionLoadedBind by lazy {
-        ObjectCalls.getMethodBind("GDExtensionManager", "is_extension_loaded", IS_EXTENSION_LOADED_HASH)
-    }
+        private const val UNLOAD_EXTENSION_HASH = 4024158731L
+        @JvmField
+        val unloadExtensionBind =
+            ObjectCalls.getMethodBind("GDExtensionManager", "unload_extension", UNLOAD_EXTENSION_HASH)
 
-    private const val GET_LOADED_EXTENSIONS_HASH = 1139954409L
-    private val getLoadedExtensionsBind by lazy {
-        ObjectCalls.getMethodBind("GDExtensionManager", "get_loaded_extensions", GET_LOADED_EXTENSIONS_HASH)
-    }
+        private const val IS_EXTENSION_LOADED_HASH = 3927539163L
+        @JvmField
+        val isExtensionLoadedBind =
+            ObjectCalls.getMethodBind("GDExtensionManager", "is_extension_loaded", IS_EXTENSION_LOADED_HASH)
 
-    private const val GET_EXTENSION_HASH = 49743343L
-    private val getExtensionBind by lazy {
-        ObjectCalls.getMethodBind("GDExtensionManager", "get_extension", GET_EXTENSION_HASH)
+        private const val GET_LOADED_EXTENSIONS_HASH = 1139954409L
+        @JvmField
+        val getLoadedExtensionsBind =
+            ObjectCalls.getMethodBind("GDExtensionManager", "get_loaded_extensions", GET_LOADED_EXTENSIONS_HASH)
+
+        private const val GET_EXTENSION_HASH = 49743343L
+        @JvmField
+        val getExtensionBind =
+            ObjectCalls.getMethodBind("GDExtensionManager", "get_extension", GET_EXTENSION_HASH)
     }
 }

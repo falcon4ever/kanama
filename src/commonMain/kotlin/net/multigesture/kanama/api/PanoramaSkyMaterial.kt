@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setPanorama(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setPanoramaBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -47,7 +48,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getPanorama(): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPanoramaBind, segment))
     }
 
     /**
@@ -57,7 +58,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setFilteringEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFilteringEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFilteringEnabledBind, segment, enabled)
     }
 
     /**
@@ -67,7 +68,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun isFilteringEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isFilteringEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFilteringEnabledBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEnergyMultiplier(multiplier: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyMultiplierBind, segment, multiplier)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyMultiplierBind, segment, multiplier)
     }
 
     /**
@@ -87,7 +88,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getEnergyMultiplier(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyMultiplierBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyMultiplierBind, segment)
     }
 
     companion object {
@@ -100,35 +101,37 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PanoramaSkyMaterial? =
             if (handle.address() == 0L) null else PanoramaSkyMaterial(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PANORAMA_HASH = 4051416890L
-        private val setPanoramaBind by lazy {
+        @JvmField
+        val setPanoramaBind =
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "set_panorama", SET_PANORAMA_HASH)
-        }
 
         private const val GET_PANORAMA_HASH = 3635182373L
-        private val getPanoramaBind by lazy {
+        @JvmField
+        val getPanoramaBind =
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "get_panorama", GET_PANORAMA_HASH)
-        }
 
         private const val SET_FILTERING_ENABLED_HASH = 2586408642L
-        private val setFilteringEnabledBind by lazy {
+        @JvmField
+        val setFilteringEnabledBind =
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "set_filtering_enabled", SET_FILTERING_ENABLED_HASH)
-        }
 
         private const val IS_FILTERING_ENABLED_HASH = 36873697L
-        private val isFilteringEnabledBind by lazy {
+        @JvmField
+        val isFilteringEnabledBind =
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "is_filtering_enabled", IS_FILTERING_ENABLED_HASH)
-        }
 
         private const val SET_ENERGY_MULTIPLIER_HASH = 373806689L
-        private val setEnergyMultiplierBind by lazy {
+        @JvmField
+        val setEnergyMultiplierBind =
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "set_energy_multiplier", SET_ENERGY_MULTIPLIER_HASH)
-        }
 
         private const val GET_ENERGY_MULTIPLIER_HASH = 1740695150L
-        private val getEnergyMultiplierBind by lazy {
+        @JvmField
+        val getEnergyMultiplierBind =
             ObjectCalls.getMethodBind("PanoramaSkyMaterial", "get_energy_multiplier", GET_ENERGY_MULTIPLIER_HASH)
-        }
     }
 }

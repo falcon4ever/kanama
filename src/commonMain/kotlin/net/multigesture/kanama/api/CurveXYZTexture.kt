@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -39,7 +40,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -49,7 +50,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurveX(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveXBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -59,7 +60,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveX(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveXBind, segment))
     }
 
     /**
@@ -69,7 +70,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurveY(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveYBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -79,7 +80,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveY(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveYBind, segment))
     }
 
     /**
@@ -89,7 +90,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurveZ(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveZBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -99,7 +100,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveZ(): Curve? {
         checkOpen()
-        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveZBind, segment))
     }
 
     companion object {
@@ -112,40 +113,42 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CurveXYZTexture? =
             if (handle.address() == 0L) null else CurveXYZTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val SET_CURVE_X_HASH = 270443179L
-        private val setCurveXBind by lazy {
+        @JvmField
+        val setCurveXBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "set_curve_x", SET_CURVE_X_HASH)
-        }
 
         private const val GET_CURVE_X_HASH = 2460114913L
-        private val getCurveXBind by lazy {
+        @JvmField
+        val getCurveXBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "get_curve_x", GET_CURVE_X_HASH)
-        }
 
         private const val SET_CURVE_Y_HASH = 270443179L
-        private val setCurveYBind by lazy {
+        @JvmField
+        val setCurveYBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "set_curve_y", SET_CURVE_Y_HASH)
-        }
 
         private const val GET_CURVE_Y_HASH = 2460114913L
-        private val getCurveYBind by lazy {
+        @JvmField
+        val getCurveYBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "get_curve_y", GET_CURVE_Y_HASH)
-        }
 
         private const val SET_CURVE_Z_HASH = 270443179L
-        private val setCurveZBind by lazy {
+        @JvmField
+        val setCurveZBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "set_curve_z", SET_CURVE_Z_HASH)
-        }
 
         private const val GET_CURVE_Z_HASH = 2460114913L
-        private val getCurveZBind by lazy {
+        @JvmField
+        val getCurveZBind =
             ObjectCalls.getMethodBind("CurveXYZTexture", "get_curve_z", GET_CURVE_Z_HASH)
-        }
     }
 }

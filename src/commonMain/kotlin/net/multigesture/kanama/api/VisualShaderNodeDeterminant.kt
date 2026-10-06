@@ -20,7 +20,5 @@ class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDeterminant? =
             if (handle.address() == 0L) null else VisualShaderNodeDeterminant(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

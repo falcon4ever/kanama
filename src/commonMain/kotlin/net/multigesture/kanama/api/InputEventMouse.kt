@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -38,7 +39,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun setButtonMask(buttonMask: MouseButtonMask) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, buttonMask.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setButtonMaskBind, segment, buttonMask.value)
     }
 
     /**
@@ -49,7 +50,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun getButtonMask(): MouseButtonMask {
         checkOpen()
-        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment))
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonMaskBind, segment))
     }
 
     /**
@@ -62,7 +63,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun setPosition(position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -75,7 +76,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun getPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     /**
@@ -88,7 +89,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun setGlobalPosition(globalPosition: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, segment, globalPosition)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGlobalPositionBind, segment, globalPosition)
     }
 
     /**
@@ -101,7 +102,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      */
     fun getGlobalPosition(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalPositionBind, segment)
     }
 
     companion object {
@@ -114,35 +115,37 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventMouse? =
             if (handle.address() == 0L) null else InputEventMouse(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BUTTON_MASK_HASH = 3950145251L
-        private val setButtonMaskBind by lazy {
+        @JvmField
+        val setButtonMaskBind =
             ObjectCalls.getMethodBind("InputEventMouse", "set_button_mask", SET_BUTTON_MASK_HASH)
-        }
 
         private const val GET_BUTTON_MASK_HASH = 2512161324L
-        private val getButtonMaskBind by lazy {
+        @JvmField
+        val getButtonMaskBind =
             ObjectCalls.getMethodBind("InputEventMouse", "get_button_mask", GET_BUTTON_MASK_HASH)
-        }
 
         private const val SET_POSITION_HASH = 743155724L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("InputEventMouse", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("InputEventMouse", "get_position", GET_POSITION_HASH)
-        }
 
         private const val SET_GLOBAL_POSITION_HASH = 743155724L
-        private val setGlobalPositionBind by lazy {
+        @JvmField
+        val setGlobalPositionBind =
             ObjectCalls.getMethodBind("InputEventMouse", "set_global_position", SET_GLOBAL_POSITION_HASH)
-        }
 
         private const val GET_GLOBAL_POSITION_HASH = 3341600327L
-        private val getGlobalPositionBind by lazy {
+        @JvmField
+        val getGlobalPositionBind =
             ObjectCalls.getMethodBind("InputEventMouse", "get_global_position", GET_GLOBAL_POSITION_HASH)
-        }
     }
 }

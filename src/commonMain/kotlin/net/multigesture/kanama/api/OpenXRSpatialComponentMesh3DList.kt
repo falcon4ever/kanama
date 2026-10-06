@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,12 +12,12 @@ import net.multigesture.kanama.types.Transform3D
 class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getTransform(index: Long): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getTransformBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
     }
 
     fun getMesh(index: Long): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getMeshBind, segment, index))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getMeshBind, segment, index))
     }
 
     companion object {
@@ -29,15 +30,17 @@ class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMesh3DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMesh3DList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRANSFORM_HASH = 1965739696L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMesh3DList", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val GET_MESH_HASH = 1576363275L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMesh3DList", "get_mesh", GET_MESH_HASH)
-        }
     }
 }

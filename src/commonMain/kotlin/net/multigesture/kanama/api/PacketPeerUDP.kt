@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -23,17 +24,17 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, segment, port, bindAddress, recvBufSize))
+        return GodotError(ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(Binds.bindBind, segment, port, bindAddress, recvBufSize))
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
     }
 
     fun waitBlocking(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.waitBlockingBind, segment))
     }
 
     /**
@@ -43,7 +44,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isBound(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBoundBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBoundBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun connectToHost(host: String, port: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port))
+        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.connectToHostBind, segment, host, port))
     }
 
     /**
@@ -71,7 +72,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun isSocketConnected(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isSocketConnectedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSocketConnectedBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketIp(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPacketIpBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPacketIpBind, segment)
     }
 
     /**
@@ -93,7 +94,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getPacketPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPacketPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPacketPortBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
     }
 
     /**
@@ -115,7 +116,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setDestAddress(host: String, port: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, segment, host, port))
+        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(Binds.setDestAddressBind, segment, host, port))
     }
 
     /**
@@ -128,7 +129,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun setBroadcastEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBroadcastEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBroadcastEnabledBind, segment, enabled)
     }
 
     /**
@@ -141,7 +142,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun joinMulticastGroup(multicastAddress: String, interfaceName: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, segment, multicastAddress, interfaceName))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.joinMulticastGroupBind, segment, multicastAddress, interfaceName))
     }
 
     /**
@@ -152,7 +153,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, segment, multicastAddress, interfaceName))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.leaveMulticastGroupBind, segment, multicastAddress, interfaceName))
     }
 
     companion object {
@@ -165,70 +166,72 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerUDP? =
             if (handle.address() == 0L) null else PacketPeerUDP(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val BIND_HASH = 4051239242L
-        private val bindBind by lazy {
+        @JvmField
+        val bindBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "bind", BIND_HASH)
-        }
 
         private const val CLOSE_HASH = 3218959716L
-        private val closeConnectionBind by lazy {
+        @JvmField
+        val closeConnectionBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "close", CLOSE_HASH)
-        }
 
         private const val WAIT_HASH = 166280745L
-        private val waitBlockingBind by lazy {
+        @JvmField
+        val waitBlockingBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "wait", WAIT_HASH)
-        }
 
         private const val IS_BOUND_HASH = 36873697L
-        private val isBoundBind by lazy {
+        @JvmField
+        val isBoundBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "is_bound", IS_BOUND_HASH)
-        }
 
         private const val CONNECT_TO_HOST_HASH = 993915709L
-        private val connectToHostBind by lazy {
+        @JvmField
+        val connectToHostBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "connect_to_host", CONNECT_TO_HOST_HASH)
-        }
 
         private const val IS_SOCKET_CONNECTED_HASH = 36873697L
-        private val isSocketConnectedBind by lazy {
+        @JvmField
+        val isSocketConnectedBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "is_socket_connected", IS_SOCKET_CONNECTED_HASH)
-        }
 
         private const val GET_PACKET_IP_HASH = 201670096L
-        private val getPacketIpBind by lazy {
+        @JvmField
+        val getPacketIpBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "get_packet_ip", GET_PACKET_IP_HASH)
-        }
 
         private const val GET_PACKET_PORT_HASH = 3905245786L
-        private val getPacketPortBind by lazy {
+        @JvmField
+        val getPacketPortBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "get_packet_port", GET_PACKET_PORT_HASH)
-        }
 
         private const val GET_LOCAL_PORT_HASH = 3905245786L
-        private val getLocalPortBind by lazy {
+        @JvmField
+        val getLocalPortBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "get_local_port", GET_LOCAL_PORT_HASH)
-        }
 
         private const val SET_DEST_ADDRESS_HASH = 993915709L
-        private val setDestAddressBind by lazy {
+        @JvmField
+        val setDestAddressBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "set_dest_address", SET_DEST_ADDRESS_HASH)
-        }
 
         private const val SET_BROADCAST_ENABLED_HASH = 2586408642L
-        private val setBroadcastEnabledBind by lazy {
+        @JvmField
+        val setBroadcastEnabledBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "set_broadcast_enabled", SET_BROADCAST_ENABLED_HASH)
-        }
 
         private const val JOIN_MULTICAST_GROUP_HASH = 852856452L
-        private val joinMulticastGroupBind by lazy {
+        @JvmField
+        val joinMulticastGroupBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "join_multicast_group", JOIN_MULTICAST_GROUP_HASH)
-        }
 
         private const val LEAVE_MULTICAST_GROUP_HASH = 852856452L
-        private val leaveMulticastGroupBind by lazy {
+        @JvmField
+        val leaveMulticastGroupBind =
             ObjectCalls.getMethodBind("PacketPeerUDP", "leave_multicast_group", LEAVE_MULTICAST_GROUP_HASH)
-        }
     }
 }

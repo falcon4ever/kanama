@@ -22,7 +22,5 @@ class AudioStreamMicrophone(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamMicrophone? =
             if (handle.address() == 0L) null else AudioStreamMicrophone(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

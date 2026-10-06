@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
      */
     fun pack(value: Any?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithVariantArgRetLong(packBind, segment, value))
+        return GodotError(ObjectCalls.ptrcallWithVariantArgRetLong(Binds.packBind, segment, value))
     }
 
     /**
@@ -29,7 +30,7 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
      */
     fun size(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(sizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.sizeBind, segment)
     }
 
     companion object {
@@ -42,15 +43,17 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PackedDataContainer? =
             if (handle.address() == 0L) null else PackedDataContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PACK_HASH = 966674026L
-        private val packBind by lazy {
+        @JvmField
+        val packBind =
             ObjectCalls.getMethodBind("PackedDataContainer", "pack", PACK_HASH)
-        }
 
         private const val SIZE_HASH = 3905245786L
-        private val sizeBind by lazy {
+        @JvmField
+        val sizeBind =
             ObjectCalls.getMethodBind("PackedDataContainer", "size", SIZE_HASH)
-        }
     }
 }

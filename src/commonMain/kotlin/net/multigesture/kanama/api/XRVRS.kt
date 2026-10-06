@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -39,7 +40,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.get_vrs_min_radius
      */
     fun getVrsMinRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsMinRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.set_vrs_min_radius
      */
     fun setVrsMinRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVrsMinRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsMinRadiusBind, segment, radius)
     }
 
     /**
@@ -59,7 +60,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.get_vrs_strength
      */
     fun getVrsStrength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVrsStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
     }
 
     /**
@@ -69,7 +70,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.set_vrs_strength
      */
     fun setVrsStrength(strength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, segment, strength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsStrengthBind, segment, strength)
     }
 
     /**
@@ -78,7 +79,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.get_vrs_render_region
      */
     fun getVrsRenderRegion(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getVrsRenderRegionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getVrsRenderRegionBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.set_vrs_render_region
      */
     fun setVrsRenderRegion(renderRegion: Rect2i) {
-        ObjectCalls.ptrcallWithRect2iArg(setVrsRenderRegionBind, segment, renderRegion)
+        ObjectCalls.ptrcallWithRect2iArg(Binds.setVrsRenderRegionBind, segment, renderRegion)
     }
 
     /**
@@ -99,7 +100,7 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: XRVRS.make_vrs_texture
      */
     fun makeVrsTexture(targetSize: Vector2, eyeFoci: List<Vector2>): RID {
-        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetRID(makeVrsTextureBind, segment, targetSize, eyeFoci)
+        return ObjectCalls.ptrcallWithVector2PackedVector2ListArgsRetRID(Binds.makeVrsTextureBind, segment, targetSize, eyeFoci)
     }
 
     companion object {
@@ -109,40 +110,42 @@ class XRVRS(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): XRVRS? =
             if (handle.address() == 0L) null else XRVRS(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_VRS_MIN_RADIUS_HASH = 1740695150L
-        private val getVrsMinRadiusBind by lazy {
+        @JvmField
+        val getVrsMinRadiusBind =
             ObjectCalls.getMethodBind("XRVRS", "get_vrs_min_radius", GET_VRS_MIN_RADIUS_HASH)
-        }
 
         private const val SET_VRS_MIN_RADIUS_HASH = 373806689L
-        private val setVrsMinRadiusBind by lazy {
+        @JvmField
+        val setVrsMinRadiusBind =
             ObjectCalls.getMethodBind("XRVRS", "set_vrs_min_radius", SET_VRS_MIN_RADIUS_HASH)
-        }
 
         private const val GET_VRS_STRENGTH_HASH = 1740695150L
-        private val getVrsStrengthBind by lazy {
+        @JvmField
+        val getVrsStrengthBind =
             ObjectCalls.getMethodBind("XRVRS", "get_vrs_strength", GET_VRS_STRENGTH_HASH)
-        }
 
         private const val SET_VRS_STRENGTH_HASH = 373806689L
-        private val setVrsStrengthBind by lazy {
+        @JvmField
+        val setVrsStrengthBind =
             ObjectCalls.getMethodBind("XRVRS", "set_vrs_strength", SET_VRS_STRENGTH_HASH)
-        }
 
         private const val GET_VRS_RENDER_REGION_HASH = 410525958L
-        private val getVrsRenderRegionBind by lazy {
+        @JvmField
+        val getVrsRenderRegionBind =
             ObjectCalls.getMethodBind("XRVRS", "get_vrs_render_region", GET_VRS_RENDER_REGION_HASH)
-        }
 
         private const val SET_VRS_RENDER_REGION_HASH = 1763793166L
-        private val setVrsRenderRegionBind by lazy {
+        @JvmField
+        val setVrsRenderRegionBind =
             ObjectCalls.getMethodBind("XRVRS", "set_vrs_render_region", SET_VRS_RENDER_REGION_HASH)
-        }
 
         private const val MAKE_VRS_TEXTURE_HASH = 3647044786L
-        private val makeVrsTextureBind by lazy {
+        @JvmField
+        val makeVrsTextureBind =
             ObjectCalls.getMethodBind("XRVRS", "make_vrs_texture", MAKE_VRS_TEXTURE_HASH)
-        }
     }
 }

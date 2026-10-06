@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class Semaphore(handle: GodotHandle) : RefCounted(handle) {
     fun waitBlocking() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(waitBlockingBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.waitBlockingBind, segment)
     }
 
     /**
@@ -23,7 +24,7 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tryWait(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(tryWaitBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.tryWaitBind, segment)
     }
 
     /**
@@ -33,7 +34,7 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
      */
     fun post(count: Int = 1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(postBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.postBind, segment, count)
     }
 
     companion object {
@@ -46,20 +47,22 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Semaphore? =
             if (handle.address() == 0L) null else Semaphore(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val WAIT_HASH = 3218959716L
-        private val waitBlockingBind by lazy {
+        @JvmField
+        val waitBlockingBind =
             ObjectCalls.getMethodBind("Semaphore", "wait", WAIT_HASH)
-        }
 
         private const val TRY_WAIT_HASH = 2240911060L
-        private val tryWaitBind by lazy {
+        @JvmField
+        val tryWaitBind =
             ObjectCalls.getMethodBind("Semaphore", "try_wait", TRY_WAIT_HASH)
-        }
 
         private const val POST_HASH = 1667783136L
-        private val postBind by lazy {
+        @JvmField
+        val postBind =
             ObjectCalls.getMethodBind("Semaphore", "post", POST_HASH)
-        }
     }
 }

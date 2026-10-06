@@ -17,7 +17,5 @@ class OpenXRInteractionProfileEditor(handle: GodotHandle) : OpenXRInteractionPro
 
         internal fun wrap(handle: RawSegment): OpenXRInteractionProfileEditor? =
             if (handle.address() == 0L) null else OpenXRInteractionProfileEditor(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

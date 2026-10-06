@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -29,7 +30,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun setDevice(device: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDeviceBind, segment, device)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDeviceBind, segment, device)
     }
 
     /**
@@ -40,7 +41,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun getDevice(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDeviceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeviceBind, segment)
     }
 
     /**
@@ -52,7 +53,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isAction(action: String, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionBind, segment, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionBind, segment, action, exactMatch)
     }
 
     /**
@@ -69,7 +70,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isActionPressed(action: String, allowEcho: Boolean = false, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(isActionPressedBind, segment, action, allowEcho, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndTwoBoolArgsRetBool(Binds.isActionPressedBind, segment, action, allowEcho, exactMatch)
     }
 
     /**
@@ -82,7 +83,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isActionReleased(action: String, exactMatch: Boolean = false): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(isActionReleasedBind, segment, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(Binds.isActionReleasedBind, segment, action, exactMatch)
     }
 
     /**
@@ -95,7 +96,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun getActionStrength(action: String, exactMatch: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(getActionStrengthBind, segment, action, exactMatch)
+        return ObjectCalls.ptrcallWithStringNameAndBoolArgRetDouble(Binds.getActionStrengthBind, segment, action, exactMatch)
     }
 
     /**
@@ -105,7 +106,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isCanceled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCanceledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCanceledBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isPressed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isReleased(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isReleasedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReleasedBind, segment)
     }
 
     /**
@@ -146,7 +147,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isEcho(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isEchoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEchoBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun asText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isMatch(event: InputEvent?, exactMatch: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(isMatchBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, exactMatch)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(Binds.isMatchBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, exactMatch)
     }
 
     /**
@@ -184,7 +185,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun isActionType(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActionTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActionTypeBind, segment)
     }
 
     /**
@@ -197,7 +198,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun accumulate(withEvent: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(accumulateBind, segment, withEvent?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(Binds.accumulateBind, segment, withEvent?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -210,7 +211,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      */
     fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0.0, 0.0)): InputEvent {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, segment, xform, localOfs)
+        val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(Binds.xformedByBind, segment, xform, localOfs)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -232,80 +233,82 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEvent? =
             if (handle.address() == 0L) null else InputEvent(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DEVICE_HASH = 1286410249L
-        private val setDeviceBind by lazy {
+        @JvmField
+        val setDeviceBind =
             ObjectCalls.getMethodBind("InputEvent", "set_device", SET_DEVICE_HASH)
-        }
 
         private const val GET_DEVICE_HASH = 3905245786L
-        private val getDeviceBind by lazy {
+        @JvmField
+        val getDeviceBind =
             ObjectCalls.getMethodBind("InputEvent", "get_device", GET_DEVICE_HASH)
-        }
 
         private const val IS_ACTION_HASH = 1558498928L
-        private val isActionBind by lazy {
+        @JvmField
+        val isActionBind =
             ObjectCalls.getMethodBind("InputEvent", "is_action", IS_ACTION_HASH)
-        }
 
         private const val IS_ACTION_PRESSED_HASH = 1631499404L
-        private val isActionPressedBind by lazy {
+        @JvmField
+        val isActionPressedBind =
             ObjectCalls.getMethodBind("InputEvent", "is_action_pressed", IS_ACTION_PRESSED_HASH)
-        }
 
         private const val IS_ACTION_RELEASED_HASH = 1558498928L
-        private val isActionReleasedBind by lazy {
+        @JvmField
+        val isActionReleasedBind =
             ObjectCalls.getMethodBind("InputEvent", "is_action_released", IS_ACTION_RELEASED_HASH)
-        }
 
         private const val GET_ACTION_STRENGTH_HASH = 801543509L
-        private val getActionStrengthBind by lazy {
+        @JvmField
+        val getActionStrengthBind =
             ObjectCalls.getMethodBind("InputEvent", "get_action_strength", GET_ACTION_STRENGTH_HASH)
-        }
 
         private const val IS_CANCELED_HASH = 36873697L
-        private val isCanceledBind by lazy {
+        @JvmField
+        val isCanceledBind =
             ObjectCalls.getMethodBind("InputEvent", "is_canceled", IS_CANCELED_HASH)
-        }
 
         private const val IS_PRESSED_HASH = 36873697L
-        private val isPressedBind by lazy {
+        @JvmField
+        val isPressedBind =
             ObjectCalls.getMethodBind("InputEvent", "is_pressed", IS_PRESSED_HASH)
-        }
 
         private const val IS_RELEASED_HASH = 36873697L
-        private val isReleasedBind by lazy {
+        @JvmField
+        val isReleasedBind =
             ObjectCalls.getMethodBind("InputEvent", "is_released", IS_RELEASED_HASH)
-        }
 
         private const val IS_ECHO_HASH = 36873697L
-        private val isEchoBind by lazy {
+        @JvmField
+        val isEchoBind =
             ObjectCalls.getMethodBind("InputEvent", "is_echo", IS_ECHO_HASH)
-        }
 
         private const val AS_TEXT_HASH = 201670096L
-        private val asTextBind by lazy {
+        @JvmField
+        val asTextBind =
             ObjectCalls.getMethodBind("InputEvent", "as_text", AS_TEXT_HASH)
-        }
 
         private const val IS_MATCH_HASH = 1754951977L
-        private val isMatchBind by lazy {
+        @JvmField
+        val isMatchBind =
             ObjectCalls.getMethodBind("InputEvent", "is_match", IS_MATCH_HASH)
-        }
 
         private const val IS_ACTION_TYPE_HASH = 36873697L
-        private val isActionTypeBind by lazy {
+        @JvmField
+        val isActionTypeBind =
             ObjectCalls.getMethodBind("InputEvent", "is_action_type", IS_ACTION_TYPE_HASH)
-        }
 
         private const val ACCUMULATE_HASH = 1062211774L
-        private val accumulateBind by lazy {
+        @JvmField
+        val accumulateBind =
             ObjectCalls.getMethodBind("InputEvent", "accumulate", ACCUMULATE_HASH)
-        }
 
         private const val XFORMED_BY_HASH = 1282766827L
-        private val xformedByBind by lazy {
+        @JvmField
+        val xformedByBind =
             ObjectCalls.getMethodBind("InputEvent", "xformed_by", XFORMED_BY_HASH)
-        }
     }
 }

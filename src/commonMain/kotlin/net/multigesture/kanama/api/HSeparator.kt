@@ -19,7 +19,5 @@ class HSeparator(handle: GodotHandle) : Separator(handle) {
 
         internal fun wrap(handle: RawSegment): HSeparator? =
             if (handle.address() == 0L) null else HSeparator(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

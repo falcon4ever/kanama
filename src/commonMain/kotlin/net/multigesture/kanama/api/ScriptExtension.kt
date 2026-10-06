@@ -20,7 +20,5 @@ class ScriptExtension(handle: GodotHandle) : Script(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ScriptExtension? =
             if (handle.address() == 0L) null else ScriptExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

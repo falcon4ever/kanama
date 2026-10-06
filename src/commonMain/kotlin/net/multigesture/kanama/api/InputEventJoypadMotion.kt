@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setAxis(axis: JoyAxis) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAxisBind, segment, axis.value)
     }
 
     /**
@@ -40,7 +41,7 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getAxis(): JoyAxis {
         checkOpen()
-        return JoyAxis(ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment))
+        return JoyAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAxisBind, segment))
     }
 
     /**
@@ -51,7 +52,7 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setAxisValue(axisValue: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAxisValueBind, segment, axisValue)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAxisValueBind, segment, axisValue)
     }
 
     /**
@@ -62,7 +63,7 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getAxisValue(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAxisValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAxisValueBind, segment)
     }
 
     companion object {
@@ -75,25 +76,27 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventJoypadMotion? =
             if (handle.address() == 0L) null else InputEventJoypadMotion(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_AXIS_HASH = 1332685170L
-        private val setAxisBind by lazy {
+        @JvmField
+        val setAxisBind =
             ObjectCalls.getMethodBind("InputEventJoypadMotion", "set_axis", SET_AXIS_HASH)
-        }
 
         private const val GET_AXIS_HASH = 4019121683L
-        private val getAxisBind by lazy {
+        @JvmField
+        val getAxisBind =
             ObjectCalls.getMethodBind("InputEventJoypadMotion", "get_axis", GET_AXIS_HASH)
-        }
 
         private const val SET_AXIS_VALUE_HASH = 373806689L
-        private val setAxisValueBind by lazy {
+        @JvmField
+        val setAxisValueBind =
             ObjectCalls.getMethodBind("InputEventJoypadMotion", "set_axis_value", SET_AXIS_VALUE_HASH)
-        }
 
         private const val GET_AXIS_VALUE_HASH = 1740695150L
-        private val getAxisValueBind by lazy {
+        @JvmField
+        val getAxisValueBind =
             ObjectCalls.getMethodBind("InputEventJoypadMotion", "get_axis_value", GET_AXIS_VALUE_HASH)
-        }
     }
 }

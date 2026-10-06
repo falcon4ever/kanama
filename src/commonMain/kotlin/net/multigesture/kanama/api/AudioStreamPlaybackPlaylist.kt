@@ -20,7 +20,5 @@ class AudioStreamPlaybackPlaylist(handle: GodotHandle) : AudioStreamPlayback(han
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackPlaylist? =
             if (handle.address() == 0L) null else AudioStreamPlaybackPlaylist(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

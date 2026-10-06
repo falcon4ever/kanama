@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
      */
     fun setDelay(delay: Double): SubtweenTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
+        val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -37,10 +38,12 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SubtweenTweener? =
             if (handle.address() == 0L) null else SubtweenTweener(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DELAY_HASH = 449181780L
-        private val setDelayBind by lazy {
+        @JvmField
+        val setDelayBind =
             ObjectCalls.getMethodBind("SubtweenTweener", "set_delay", SET_DELAY_HASH)
-        }
     }
 }

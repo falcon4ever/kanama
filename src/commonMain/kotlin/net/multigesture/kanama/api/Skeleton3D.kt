@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -48,7 +49,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.add_bone
      */
     fun addBone(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(addBoneBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.addBoneBind, segment, name)
     }
 
     /**
@@ -58,7 +59,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.find_bone
      */
     fun findBone(name: String): Int {
-        return ObjectCalls.ptrcallWithStringArgRetInt(findBoneBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.findBoneBind, segment, name)
     }
 
     /**
@@ -67,7 +68,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_name
      */
     fun getBoneName(boneIdx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getBoneNameBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getBoneNameBind, segment, boneIdx)
     }
 
     /**
@@ -76,7 +77,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_name
      */
     fun setBoneName(boneIdx: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setBoneNameBind, segment, boneIdx, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setBoneNameBind, segment, boneIdx, name)
     }
 
     /**
@@ -85,7 +86,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_meta
      */
     fun getBoneMeta(boneIdx: Int, key: String): Any? {
-        return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(getBoneMetaBind, segment, boneIdx, key)
+        return ObjectCalls.ptrcallWithIntAndStringNameArgRetVariantScalar(Binds.getBoneMetaBind, segment, boneIdx, key)
     }
 
     /**
@@ -94,7 +95,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_meta_list
      */
     fun getBoneMetaList(boneIdx: Int): List<String> {
-        return ObjectCalls.ptrcallWithIntArgRetStringNameList(getBoneMetaListBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetStringNameList(Binds.getBoneMetaListBind, segment, boneIdx)
     }
 
     /**
@@ -103,7 +104,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.has_bone_meta
      */
     fun hasBoneMeta(boneIdx: Int, key: String): Boolean {
-        return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(hasBoneMetaBind, segment, boneIdx, key)
+        return ObjectCalls.ptrcallWithIntAndStringNameArgRetBool(Binds.hasBoneMetaBind, segment, boneIdx, key)
     }
 
     /**
@@ -112,7 +113,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_meta
      */
     fun setBoneMeta(boneIdx: Int, key: String, value: Any?) {
-        ObjectCalls.ptrcallWithIntStringNameAndVariantArg(setBoneMetaBind, segment, boneIdx, key, value)
+        ObjectCalls.ptrcallWithIntStringNameAndVariantArg(Binds.setBoneMetaBind, segment, boneIdx, key, value)
     }
 
     /**
@@ -122,7 +123,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_concatenated_bone_names
      */
     fun getConcatenatedBoneNames(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getConcatenatedBoneNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getConcatenatedBoneNamesBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_parent
      */
     fun getBoneParent(boneIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getBoneParentBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getBoneParentBind, segment, boneIdx)
     }
 
     /**
@@ -142,7 +143,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_parent
      */
     fun setBoneParent(boneIdx: Int, parentIdx: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setBoneParentBind, segment, boneIdx, parentIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setBoneParentBind, segment, boneIdx, parentIdx)
     }
 
     /**
@@ -151,7 +152,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_count
      */
     fun getBoneCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneCountBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_version
      */
     fun getVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getVersionBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.unparent_bone_and_rest
      */
     fun unparentBoneAndRest(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(unparentBoneAndRestBind, segment, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.unparentBoneAndRestBind, segment, boneIdx)
     }
 
     /**
@@ -182,7 +183,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_children
      */
     fun getBoneChildren(boneIdx: Int): List<Int> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getBoneChildrenBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getBoneChildrenBind, segment, boneIdx)
     }
 
     /**
@@ -193,7 +194,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_parentless_bones
      */
     fun getParentlessBones(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getParentlessBonesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getParentlessBonesBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_rest
      */
     fun getBoneRest(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneRestBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBoneRestBind, segment, boneIdx)
     }
 
     /**
@@ -211,7 +212,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_rest
      */
     fun setBoneRest(boneIdx: Int, rest: Transform3D) {
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBoneRestBind, segment, boneIdx, rest)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setBoneRestBind, segment, boneIdx, rest)
     }
 
     /**
@@ -220,11 +221,11 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_rest
      */
     fun getBoneGlobalRest(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalRestBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBoneGlobalRestBind, segment, boneIdx)
     }
 
     fun createSkinFromRestTransforms(): Skin? {
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createSkinFromRestTransformsBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createSkinFromRestTransformsBind, segment))
     }
 
     /**
@@ -233,7 +234,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.register_skin
      */
     fun registerSkin(skin: Skin?): SkinReference? {
-        return SkinReference.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        return SkinReference.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -242,7 +243,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.localize_rests
      */
     fun localizeRests() {
-        ObjectCalls.ptrcallNoArgs(localizeRestsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.localizeRestsBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.clear_bones
      */
     fun clearBones() {
-        ObjectCalls.ptrcallNoArgs(clearBonesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBonesBind, segment)
     }
 
     /**
@@ -262,7 +263,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose
      */
     fun getBonePose(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBonePoseBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBonePoseBind, segment, boneIdx)
     }
 
     /**
@@ -271,7 +272,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose
      */
     fun setBonePose(boneIdx: Int, pose: Transform3D) {
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBonePoseBind, segment, boneIdx, pose)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setBonePoseBind, segment, boneIdx, pose)
     }
 
     /**
@@ -281,7 +282,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose_position
      */
     fun setBonePosePosition(boneIdx: Int, position: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setBonePosePositionBind, segment, boneIdx, position)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setBonePosePositionBind, segment, boneIdx, position)
     }
 
     /**
@@ -292,7 +293,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose_rotation
      */
     fun setBonePoseRotation(boneIdx: Int, rotation: Quaternion) {
-        ObjectCalls.ptrcallWithIntAndQuaternionArg(setBonePoseRotationBind, segment, boneIdx, rotation)
+        ObjectCalls.ptrcallWithIntAndQuaternionArg(Binds.setBonePoseRotationBind, segment, boneIdx, rotation)
     }
 
     /**
@@ -301,7 +302,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_pose_scale
      */
     fun setBonePoseScale(boneIdx: Int, scale: Vector3) {
-        ObjectCalls.ptrcallWithIntAndVector3Arg(setBonePoseScaleBind, segment, boneIdx, scale)
+        ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setBonePoseScaleBind, segment, boneIdx, scale)
     }
 
     /**
@@ -311,7 +312,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose_position
      */
     fun getBonePosePosition(boneIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getBonePosePositionBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getBonePosePositionBind, segment, boneIdx)
     }
 
     /**
@@ -321,7 +322,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose_rotation
      */
     fun getBonePoseRotation(boneIdx: Int): Quaternion {
-        return ObjectCalls.ptrcallWithIntArgRetQuaternion(getBonePoseRotationBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetQuaternion(Binds.getBonePoseRotationBind, segment, boneIdx)
     }
 
     /**
@@ -330,7 +331,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_pose_scale
      */
     fun getBonePoseScale(boneIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getBonePoseScaleBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getBonePoseScaleBind, segment, boneIdx)
     }
 
     /**
@@ -339,7 +340,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.reset_bone_pose
      */
     fun resetBonePose(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(resetBonePoseBind, segment, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.resetBonePoseBind, segment, boneIdx)
     }
 
     /**
@@ -348,7 +349,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.reset_bone_poses
      */
     fun resetBonePoses() {
-        ObjectCalls.ptrcallNoArgs(resetBonePosesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetBonePosesBind, segment)
     }
 
     /**
@@ -357,7 +358,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.is_bone_enabled
      */
     fun isBoneEnabled(boneIdx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isBoneEnabledBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isBoneEnabledBind, segment, boneIdx)
     }
 
     /**
@@ -366,7 +367,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_enabled
      */
     fun setBoneEnabled(boneIdx: Int, enabled: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setBoneEnabledBind, segment, boneIdx, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setBoneEnabledBind, segment, boneIdx, enabled)
     }
 
     /**
@@ -379,7 +380,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_pose
      */
     fun getBoneGlobalPose(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBoneGlobalPoseBind, segment, boneIdx)
     }
 
     /**
@@ -391,7 +392,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_global_pose
      */
     fun setBoneGlobalPose(boneIdx: Int, pose: Transform3D) {
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setBoneGlobalPoseBind, segment, boneIdx, pose)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setBoneGlobalPoseBind, segment, boneIdx, pose)
     }
 
     /**
@@ -400,7 +401,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.force_update_all_bone_transforms
      */
     fun forceUpdateAllBoneTransforms() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateAllBoneTransformsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceUpdateAllBoneTransformsBind, segment)
     }
 
     /**
@@ -409,7 +410,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.force_update_bone_child_transform
      */
     fun forceUpdateBoneChildTransform(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(forceUpdateBoneChildTransformBind, segment, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.forceUpdateBoneChildTransformBind, segment, boneIdx)
     }
 
     /**
@@ -419,7 +420,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_motion_scale
      */
     fun setMotionScale(motionScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMotionScaleBind, segment, motionScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMotionScaleBind, segment, motionScale)
     }
 
     /**
@@ -429,7 +430,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_motion_scale
      */
     fun getMotionScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMotionScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMotionScaleBind, segment)
     }
 
     /**
@@ -439,7 +440,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_show_rest_only
      */
     fun setShowRestOnly(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowRestOnlyBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowRestOnlyBind, segment, enabled)
     }
 
     /**
@@ -449,7 +450,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.is_show_rest_only
      */
     fun isShowRestOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShowRestOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShowRestOnlyBind, segment)
     }
 
     /**
@@ -458,7 +459,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_modifier_callback_mode_process
      */
     fun setModifierCallbackModeProcess(mode: Skeleton3D.ModifierCallbackModeProcess) {
-        ObjectCalls.ptrcallWithLongArg(setModifierCallbackModeProcessBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setModifierCallbackModeProcessBind, segment, mode.value)
     }
 
     /**
@@ -467,7 +468,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_modifier_callback_mode_process
      */
     fun getModifierCallbackModeProcess(): Skeleton3D.ModifierCallbackModeProcess {
-        return Skeleton3D.ModifierCallbackModeProcess(ObjectCalls.ptrcallNoArgsRetLong(getModifierCallbackModeProcessBind, segment))
+        return Skeleton3D.ModifierCallbackModeProcess(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModifierCallbackModeProcessBind, segment))
     }
 
     /**
@@ -478,7 +479,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.advance
      */
     fun advance(delta: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(advanceBind, segment, delta)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.advanceBind, segment, delta)
     }
 
     /**
@@ -487,7 +488,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.clear_bones_global_pose_override
      */
     fun clearBonesGlobalPoseOverride() {
-        ObjectCalls.ptrcallNoArgs(clearBonesGlobalPoseOverrideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBonesGlobalPoseOverrideBind, segment)
     }
 
     /**
@@ -500,7 +501,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_bone_global_pose_override
      */
     fun setBoneGlobalPoseOverride(boneIdx: Int, pose: Transform3D, amount: Double, persistent: Boolean = false) {
-        ObjectCalls.ptrcallWithIntTransform3DDoubleBoolArgs(setBoneGlobalPoseOverrideBind, segment, boneIdx, pose, amount, persistent)
+        ObjectCalls.ptrcallWithIntTransform3DDoubleBoolArgs(Binds.setBoneGlobalPoseOverrideBind, segment, boneIdx, pose, amount, persistent)
     }
 
     /**
@@ -509,7 +510,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_pose_override
      */
     fun getBoneGlobalPoseOverride(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseOverrideBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBoneGlobalPoseOverrideBind, segment, boneIdx)
     }
 
     /**
@@ -520,7 +521,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_bone_global_pose_no_override
      */
     fun getBoneGlobalPoseNoOverride(boneIdx: Int): Transform3D {
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getBoneGlobalPoseNoOverrideBind, segment, boneIdx)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBoneGlobalPoseNoOverrideBind, segment, boneIdx)
     }
 
     /**
@@ -534,7 +535,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.set_animate_physical_bones
      */
     fun setAnimatePhysicalBones(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAnimatePhysicalBonesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAnimatePhysicalBonesBind, segment, enabled)
     }
 
     /**
@@ -548,7 +549,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.get_animate_physical_bones
      */
     fun getAnimatePhysicalBones(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAnimatePhysicalBonesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAnimatePhysicalBonesBind, segment)
     }
 
     /**
@@ -557,7 +558,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_stop_simulation
      */
     fun physicalBonesStopSimulation() {
-        ObjectCalls.ptrcallNoArgs(physicalBonesStopSimulationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.physicalBonesStopSimulationBind, segment)
     }
 
     /**
@@ -568,7 +569,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_start_simulation
      */
     fun physicalBonesStartSimulation(bones: List<String>) {
-        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, segment, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(Binds.physicalBonesStartSimulationBind, segment, bones)
     }
 
     /**
@@ -577,7 +578,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_add_collision_exception
      */
     fun physicalBonesAddCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesAddCollisionExceptionBind, segment, exception)
+        ObjectCalls.ptrcallWithRIDArg(Binds.physicalBonesAddCollisionExceptionBind, segment, exception)
     }
 
     /**
@@ -586,7 +587,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.physical_bones_remove_collision_exception
      */
     fun physicalBonesRemoveCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, segment, exception)
+        ObjectCalls.ptrcallWithRIDArg(Binds.physicalBonesRemoveCollisionExceptionBind, segment, exception)
     }
 
     /** Signal `rest_updated()`; see [TypedSignal]. */
@@ -670,285 +671,287 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): Skeleton3D? =
             if (handle.address() == 0L) null else Skeleton3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_BONE_HASH = 1597066294L
-        private val addBoneBind by lazy {
+        @JvmField
+        val addBoneBind =
             ObjectCalls.getMethodBind("Skeleton3D", "add_bone", ADD_BONE_HASH)
-        }
 
         private const val FIND_BONE_HASH = 1321353865L
-        private val findBoneBind by lazy {
+        @JvmField
+        val findBoneBind =
             ObjectCalls.getMethodBind("Skeleton3D", "find_bone", FIND_BONE_HASH)
-        }
 
         private const val GET_BONE_NAME_HASH = 844755477L
-        private val getBoneNameBind by lazy {
+        @JvmField
+        val getBoneNameBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_name", GET_BONE_NAME_HASH)
-        }
 
         private const val SET_BONE_NAME_HASH = 501894301L
-        private val setBoneNameBind by lazy {
+        @JvmField
+        val setBoneNameBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_name", SET_BONE_NAME_HASH)
-        }
 
         private const val GET_BONE_META_HASH = 203112058L
-        private val getBoneMetaBind by lazy {
+        @JvmField
+        val getBoneMetaBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta", GET_BONE_META_HASH)
-        }
 
         private const val GET_BONE_META_LIST_HASH = 663333327L
-        private val getBoneMetaListBind by lazy {
+        @JvmField
+        val getBoneMetaListBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_meta_list", GET_BONE_META_LIST_HASH)
-        }
 
         private const val HAS_BONE_META_HASH = 921227809L
-        private val hasBoneMetaBind by lazy {
+        @JvmField
+        val hasBoneMetaBind =
             ObjectCalls.getMethodBind("Skeleton3D", "has_bone_meta", HAS_BONE_META_HASH)
-        }
 
         private const val SET_BONE_META_HASH = 702482756L
-        private val setBoneMetaBind by lazy {
+        @JvmField
+        val setBoneMetaBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_meta", SET_BONE_META_HASH)
-        }
 
         private const val GET_CONCATENATED_BONE_NAMES_HASH = 2002593661L
-        private val getConcatenatedBoneNamesBind by lazy {
+        @JvmField
+        val getConcatenatedBoneNamesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_concatenated_bone_names", GET_CONCATENATED_BONE_NAMES_HASH)
-        }
 
         private const val GET_BONE_PARENT_HASH = 923996154L
-        private val getBoneParentBind by lazy {
+        @JvmField
+        val getBoneParentBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_parent", GET_BONE_PARENT_HASH)
-        }
 
         private const val SET_BONE_PARENT_HASH = 3937882851L
-        private val setBoneParentBind by lazy {
+        @JvmField
+        val setBoneParentBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_parent", SET_BONE_PARENT_HASH)
-        }
 
         private const val GET_BONE_COUNT_HASH = 3905245786L
-        private val getBoneCountBind by lazy {
+        @JvmField
+        val getBoneCountBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_count", GET_BONE_COUNT_HASH)
-        }
 
         private const val GET_VERSION_HASH = 3905245786L
-        private val getVersionBind by lazy {
+        @JvmField
+        val getVersionBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_version", GET_VERSION_HASH)
-        }
 
         private const val UNPARENT_BONE_AND_REST_HASH = 1286410249L
-        private val unparentBoneAndRestBind by lazy {
+        @JvmField
+        val unparentBoneAndRestBind =
             ObjectCalls.getMethodBind("Skeleton3D", "unparent_bone_and_rest", UNPARENT_BONE_AND_REST_HASH)
-        }
 
         private const val GET_BONE_CHILDREN_HASH = 1706082319L
-        private val getBoneChildrenBind by lazy {
+        @JvmField
+        val getBoneChildrenBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_children", GET_BONE_CHILDREN_HASH)
-        }
 
         private const val GET_PARENTLESS_BONES_HASH = 1930428628L
-        private val getParentlessBonesBind by lazy {
+        @JvmField
+        val getParentlessBonesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_parentless_bones", GET_PARENTLESS_BONES_HASH)
-        }
 
         private const val GET_BONE_REST_HASH = 1965739696L
-        private val getBoneRestBind by lazy {
+        @JvmField
+        val getBoneRestBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_rest", GET_BONE_REST_HASH)
-        }
 
         private const val SET_BONE_REST_HASH = 3616898986L
-        private val setBoneRestBind by lazy {
+        @JvmField
+        val setBoneRestBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_rest", SET_BONE_REST_HASH)
-        }
 
         private const val GET_BONE_GLOBAL_REST_HASH = 1965739696L
-        private val getBoneGlobalRestBind by lazy {
+        @JvmField
+        val getBoneGlobalRestBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_global_rest", GET_BONE_GLOBAL_REST_HASH)
-        }
 
         private const val CREATE_SKIN_FROM_REST_TRANSFORMS_HASH = 1032037385L
-        private val createSkinFromRestTransformsBind by lazy {
+        @JvmField
+        val createSkinFromRestTransformsBind =
             ObjectCalls.getMethodBind("Skeleton3D", "create_skin_from_rest_transforms", CREATE_SKIN_FROM_REST_TRANSFORMS_HASH)
-        }
 
         private const val REGISTER_SKIN_HASH = 3405789568L
-        private val registerSkinBind by lazy {
+        @JvmField
+        val registerSkinBind =
             ObjectCalls.getMethodBind("Skeleton3D", "register_skin", REGISTER_SKIN_HASH)
-        }
 
         private const val LOCALIZE_RESTS_HASH = 3218959716L
-        private val localizeRestsBind by lazy {
+        @JvmField
+        val localizeRestsBind =
             ObjectCalls.getMethodBind("Skeleton3D", "localize_rests", LOCALIZE_RESTS_HASH)
-        }
 
         private const val CLEAR_BONES_HASH = 3218959716L
-        private val clearBonesBind by lazy {
+        @JvmField
+        val clearBonesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "clear_bones", CLEAR_BONES_HASH)
-        }
 
         private const val GET_BONE_POSE_HASH = 1965739696L
-        private val getBonePoseBind by lazy {
+        @JvmField
+        val getBonePoseBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_pose", GET_BONE_POSE_HASH)
-        }
 
         private const val SET_BONE_POSE_HASH = 3616898986L
-        private val setBonePoseBind by lazy {
+        @JvmField
+        val setBonePoseBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_pose", SET_BONE_POSE_HASH)
-        }
 
         private const val SET_BONE_POSE_POSITION_HASH = 1530502735L
-        private val setBonePosePositionBind by lazy {
+        @JvmField
+        val setBonePosePositionBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_pose_position", SET_BONE_POSE_POSITION_HASH)
-        }
 
         private const val SET_BONE_POSE_ROTATION_HASH = 2823819782L
-        private val setBonePoseRotationBind by lazy {
+        @JvmField
+        val setBonePoseRotationBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_pose_rotation", SET_BONE_POSE_ROTATION_HASH)
-        }
 
         private const val SET_BONE_POSE_SCALE_HASH = 1530502735L
-        private val setBonePoseScaleBind by lazy {
+        @JvmField
+        val setBonePoseScaleBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_pose_scale", SET_BONE_POSE_SCALE_HASH)
-        }
 
         private const val GET_BONE_POSE_POSITION_HASH = 711720468L
-        private val getBonePosePositionBind by lazy {
+        @JvmField
+        val getBonePosePositionBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_pose_position", GET_BONE_POSE_POSITION_HASH)
-        }
 
         private const val GET_BONE_POSE_ROTATION_HASH = 476865136L
-        private val getBonePoseRotationBind by lazy {
+        @JvmField
+        val getBonePoseRotationBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_pose_rotation", GET_BONE_POSE_ROTATION_HASH)
-        }
 
         private const val GET_BONE_POSE_SCALE_HASH = 711720468L
-        private val getBonePoseScaleBind by lazy {
+        @JvmField
+        val getBonePoseScaleBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_pose_scale", GET_BONE_POSE_SCALE_HASH)
-        }
 
         private const val RESET_BONE_POSE_HASH = 1286410249L
-        private val resetBonePoseBind by lazy {
+        @JvmField
+        val resetBonePoseBind =
             ObjectCalls.getMethodBind("Skeleton3D", "reset_bone_pose", RESET_BONE_POSE_HASH)
-        }
 
         private const val RESET_BONE_POSES_HASH = 3218959716L
-        private val resetBonePosesBind by lazy {
+        @JvmField
+        val resetBonePosesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "reset_bone_poses", RESET_BONE_POSES_HASH)
-        }
 
         private const val IS_BONE_ENABLED_HASH = 1116898809L
-        private val isBoneEnabledBind by lazy {
+        @JvmField
+        val isBoneEnabledBind =
             ObjectCalls.getMethodBind("Skeleton3D", "is_bone_enabled", IS_BONE_ENABLED_HASH)
-        }
 
         private const val SET_BONE_ENABLED_HASH = 972357352L
-        private val setBoneEnabledBind by lazy {
+        @JvmField
+        val setBoneEnabledBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_enabled", SET_BONE_ENABLED_HASH)
-        }
 
         private const val GET_BONE_GLOBAL_POSE_HASH = 1965739696L
-        private val getBoneGlobalPoseBind by lazy {
+        @JvmField
+        val getBoneGlobalPoseBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_global_pose", GET_BONE_GLOBAL_POSE_HASH)
-        }
 
         private const val SET_BONE_GLOBAL_POSE_HASH = 3616898986L
-        private val setBoneGlobalPoseBind by lazy {
+        @JvmField
+        val setBoneGlobalPoseBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_global_pose", SET_BONE_GLOBAL_POSE_HASH)
-        }
 
         private const val FORCE_UPDATE_ALL_BONE_TRANSFORMS_HASH = 3218959716L
-        private val forceUpdateAllBoneTransformsBind by lazy {
+        @JvmField
+        val forceUpdateAllBoneTransformsBind =
             ObjectCalls.getMethodBind("Skeleton3D", "force_update_all_bone_transforms", FORCE_UPDATE_ALL_BONE_TRANSFORMS_HASH)
-        }
 
         private const val FORCE_UPDATE_BONE_CHILD_TRANSFORM_HASH = 1286410249L
-        private val forceUpdateBoneChildTransformBind by lazy {
+        @JvmField
+        val forceUpdateBoneChildTransformBind =
             ObjectCalls.getMethodBind("Skeleton3D", "force_update_bone_child_transform", FORCE_UPDATE_BONE_CHILD_TRANSFORM_HASH)
-        }
 
         private const val SET_MOTION_SCALE_HASH = 373806689L
-        private val setMotionScaleBind by lazy {
+        @JvmField
+        val setMotionScaleBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_motion_scale", SET_MOTION_SCALE_HASH)
-        }
 
         private const val GET_MOTION_SCALE_HASH = 1740695150L
-        private val getMotionScaleBind by lazy {
+        @JvmField
+        val getMotionScaleBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_motion_scale", GET_MOTION_SCALE_HASH)
-        }
 
         private const val SET_SHOW_REST_ONLY_HASH = 2586408642L
-        private val setShowRestOnlyBind by lazy {
+        @JvmField
+        val setShowRestOnlyBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_show_rest_only", SET_SHOW_REST_ONLY_HASH)
-        }
 
         private const val IS_SHOW_REST_ONLY_HASH = 36873697L
-        private val isShowRestOnlyBind by lazy {
+        @JvmField
+        val isShowRestOnlyBind =
             ObjectCalls.getMethodBind("Skeleton3D", "is_show_rest_only", IS_SHOW_REST_ONLY_HASH)
-        }
 
         private const val SET_MODIFIER_CALLBACK_MODE_PROCESS_HASH = 3916362634L
-        private val setModifierCallbackModeProcessBind by lazy {
+        @JvmField
+        val setModifierCallbackModeProcessBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_modifier_callback_mode_process", SET_MODIFIER_CALLBACK_MODE_PROCESS_HASH)
-        }
 
         private const val GET_MODIFIER_CALLBACK_MODE_PROCESS_HASH = 997182536L
-        private val getModifierCallbackModeProcessBind by lazy {
+        @JvmField
+        val getModifierCallbackModeProcessBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_modifier_callback_mode_process", GET_MODIFIER_CALLBACK_MODE_PROCESS_HASH)
-        }
 
         private const val ADVANCE_HASH = 373806689L
-        private val advanceBind by lazy {
+        @JvmField
+        val advanceBind =
             ObjectCalls.getMethodBind("Skeleton3D", "advance", ADVANCE_HASH)
-        }
 
         private const val CLEAR_BONES_GLOBAL_POSE_OVERRIDE_HASH = 3218959716L
-        private val clearBonesGlobalPoseOverrideBind by lazy {
+        @JvmField
+        val clearBonesGlobalPoseOverrideBind =
             ObjectCalls.getMethodBind("Skeleton3D", "clear_bones_global_pose_override", CLEAR_BONES_GLOBAL_POSE_OVERRIDE_HASH)
-        }
 
         private const val SET_BONE_GLOBAL_POSE_OVERRIDE_HASH = 3483398371L
-        private val setBoneGlobalPoseOverrideBind by lazy {
+        @JvmField
+        val setBoneGlobalPoseOverrideBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_bone_global_pose_override", SET_BONE_GLOBAL_POSE_OVERRIDE_HASH)
-        }
 
         private const val GET_BONE_GLOBAL_POSE_OVERRIDE_HASH = 1965739696L
-        private val getBoneGlobalPoseOverrideBind by lazy {
+        @JvmField
+        val getBoneGlobalPoseOverrideBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_global_pose_override", GET_BONE_GLOBAL_POSE_OVERRIDE_HASH)
-        }
 
         private const val GET_BONE_GLOBAL_POSE_NO_OVERRIDE_HASH = 1965739696L
-        private val getBoneGlobalPoseNoOverrideBind by lazy {
+        @JvmField
+        val getBoneGlobalPoseNoOverrideBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_global_pose_no_override", GET_BONE_GLOBAL_POSE_NO_OVERRIDE_HASH)
-        }
 
         private const val SET_ANIMATE_PHYSICAL_BONES_HASH = 2586408642L
-        private val setAnimatePhysicalBonesBind by lazy {
+        @JvmField
+        val setAnimatePhysicalBonesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "set_animate_physical_bones", SET_ANIMATE_PHYSICAL_BONES_HASH)
-        }
 
         private const val GET_ANIMATE_PHYSICAL_BONES_HASH = 36873697L
-        private val getAnimatePhysicalBonesBind by lazy {
+        @JvmField
+        val getAnimatePhysicalBonesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_animate_physical_bones", GET_ANIMATE_PHYSICAL_BONES_HASH)
-        }
 
         private const val PHYSICAL_BONES_STOP_SIMULATION_HASH = 3218959716L
-        private val physicalBonesStopSimulationBind by lazy {
+        @JvmField
+        val physicalBonesStopSimulationBind =
             ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_stop_simulation", PHYSICAL_BONES_STOP_SIMULATION_HASH)
-        }
 
         private const val PHYSICAL_BONES_START_SIMULATION_HASH = 2787316981L
-        private val physicalBonesStartSimulationBind by lazy {
+        @JvmField
+        val physicalBonesStartSimulationBind =
             ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_start_simulation", PHYSICAL_BONES_START_SIMULATION_HASH)
-        }
 
         private const val PHYSICAL_BONES_ADD_COLLISION_EXCEPTION_HASH = 2722037293L
-        private val physicalBonesAddCollisionExceptionBind by lazy {
+        @JvmField
+        val physicalBonesAddCollisionExceptionBind =
             ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_add_collision_exception", PHYSICAL_BONES_ADD_COLLISION_EXCEPTION_HASH)
-        }
 
         private const val PHYSICAL_BONES_REMOVE_COLLISION_EXCEPTION_HASH = 2722037293L
-        private val physicalBonesRemoveCollisionExceptionBind by lazy {
+        @JvmField
+        val physicalBonesRemoveCollisionExceptionBind =
             ObjectCalls.getMethodBind("Skeleton3D", "physical_bones_remove_collision_exception", PHYSICAL_BONES_REMOVE_COLLISION_EXCEPTION_HASH)
-        }
     }
 }

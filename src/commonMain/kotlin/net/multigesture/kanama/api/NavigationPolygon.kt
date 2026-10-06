@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -87,7 +88,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setVertices(vertices: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setVerticesBind, segment, vertices)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setVerticesBind, segment, vertices)
     }
 
     /**
@@ -97,7 +98,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getVertices(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getVerticesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getVerticesBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun addPolygon(polygon: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(addPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.addPolygonBind, segment, polygon)
     }
 
     /**
@@ -117,7 +118,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygonCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPolygonCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolygonCountBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getPolygon(idx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(getPolygonBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedInt32List(Binds.getPolygonBind, segment, idx)
     }
 
     /**
@@ -137,7 +138,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun clearPolygons() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearPolygonsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearPolygonsBind, segment)
     }
 
     /**
@@ -149,7 +150,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMesh(): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, segment))
+        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNavigationMeshBind, segment))
     }
 
     /**
@@ -160,7 +161,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun addOutline(outline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(addOutlineBind, segment, outline)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.addOutlineBind, segment, outline)
     }
 
     /**
@@ -171,7 +172,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun addOutlineAtIndex(outline: List<Vector2>, index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(addOutlineAtIndexBind, segment, outline, index)
+        ObjectCalls.ptrcallWithPackedVector2ListAndIntArgs(Binds.addOutlineAtIndexBind, segment, outline, index)
     }
 
     /**
@@ -181,7 +182,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutlineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutlineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutlineCountBind, segment)
     }
 
     /**
@@ -192,7 +193,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setOutline(idx: Int, outline: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(setOutlineBind, segment, idx, outline)
+        ObjectCalls.ptrcallWithIntAndPackedVector2ListArgs(Binds.setOutlineBind, segment, idx, outline)
     }
 
     /**
@@ -203,7 +204,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getOutline(idx: Int): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(getOutlineBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedVector2List(Binds.getOutlineBind, segment, idx)
     }
 
     /**
@@ -214,7 +215,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun removeOutline(idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeOutlineBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeOutlineBind, segment, idx)
     }
 
     /**
@@ -225,7 +226,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun clearOutlines() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearOutlinesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearOutlinesBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun makePolygonsFromOutlines() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(makePolygonsFromOutlinesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makePolygonsFromOutlinesBind, segment)
     }
 
     /**
@@ -246,7 +247,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setCellSize(cellSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, segment, cellSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCellSizeBind, segment, cellSize)
     }
 
     /**
@@ -257,7 +258,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getCellSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
     }
 
     /**
@@ -269,7 +270,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setBorderSize(borderSize: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBorderSizeBind, segment, borderSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBorderSizeBind, segment, borderSize)
     }
 
     /**
@@ -281,7 +282,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getBorderSize(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderSizeBind, segment)
     }
 
     /**
@@ -291,7 +292,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setSamplePartitionType(samplePartitionType: NavigationPolygon.SamplePartitionType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSamplePartitionTypeBind, segment, samplePartitionType.value)
     }
 
     /**
@@ -301,7 +302,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getSamplePartitionType(): NavigationPolygon.SamplePartitionType {
         checkOpen()
-        return NavigationPolygon.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment))
+        return NavigationPolygon.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSamplePartitionTypeBind, segment))
     }
 
     /**
@@ -311,7 +312,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setParsedGeometryType(geometryType: NavigationPolygon.ParsedGeometryType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setParsedGeometryTypeBind, segment, geometryType.value)
     }
 
     /**
@@ -321,7 +322,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedGeometryType(): NavigationPolygon.ParsedGeometryType {
         checkOpen()
-        return NavigationPolygon.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment))
+        return NavigationPolygon.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getParsedGeometryTypeBind, segment))
     }
 
     /**
@@ -332,7 +333,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setParsedCollisionMask(mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setParsedCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setParsedCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -343,7 +344,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedCollisionMask(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getParsedCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getParsedCollisionMaskBind, segment)
     }
 
     /**
@@ -354,7 +355,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setParsedCollisionMaskValue(layerNumber: Int, value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setParsedCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setParsedCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -365,7 +366,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getParsedCollisionMaskValue(layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getParsedCollisionMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getParsedCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -375,7 +376,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceGeometryMode(geometryMode: NavigationPolygon.SourceGeometryMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, geometryMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSourceGeometryModeBind, segment, geometryMode.value)
     }
 
     /**
@@ -385,7 +386,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGeometryMode(): NavigationPolygon.SourceGeometryMode {
         checkOpen()
-        return NavigationPolygon.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment))
+        return NavigationPolygon.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceGeometryModeBind, segment))
     }
 
     /**
@@ -397,7 +398,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceGeometryGroupName(groupName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setSourceGeometryGroupNameBind, segment, groupName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setSourceGeometryGroupNameBind, segment, groupName)
     }
 
     /**
@@ -409,7 +410,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceGeometryGroupName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getSourceGeometryGroupNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getSourceGeometryGroupNameBind, segment)
     }
 
     /**
@@ -423,7 +424,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setAgentRadius(agentRadius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAgentRadiusBind, segment, agentRadius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAgentRadiusBind, segment, agentRadius)
     }
 
     /**
@@ -437,7 +438,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getAgentRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAgentRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAgentRadiusBind, segment)
     }
 
     /**
@@ -448,7 +449,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setBakingRect(rect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2Arg(setBakingRectBind, segment, rect)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setBakingRectBind, segment, rect)
     }
 
     /**
@@ -459,7 +460,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakingRect(): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2(getBakingRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getBakingRectBind, segment)
     }
 
     /**
@@ -469,7 +470,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun setBakingRectOffset(rectOffset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setBakingRectOffsetBind, segment, rectOffset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setBakingRectOffsetBind, segment, rectOffset)
     }
 
     /**
@@ -479,7 +480,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getBakingRectOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBakingRectOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBakingRectOffsetBind, segment)
     }
 
     /**
@@ -489,7 +490,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -611,195 +612,197 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationPolygon? =
             if (handle.address() == 0L) null else NavigationPolygon(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VERTICES_HASH = 1509147220L
-        private val setVerticesBind by lazy {
+        @JvmField
+        val setVerticesBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_vertices", SET_VERTICES_HASH)
-        }
 
         private const val GET_VERTICES_HASH = 2961356807L
-        private val getVerticesBind by lazy {
+        @JvmField
+        val getVerticesBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_vertices", GET_VERTICES_HASH)
-        }
 
         private const val ADD_POLYGON_HASH = 3614634198L
-        private val addPolygonBind by lazy {
+        @JvmField
+        val addPolygonBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "add_polygon", ADD_POLYGON_HASH)
-        }
 
         private const val GET_POLYGON_COUNT_HASH = 3905245786L
-        private val getPolygonCountBind by lazy {
+        @JvmField
+        val getPolygonCountBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_polygon_count", GET_POLYGON_COUNT_HASH)
-        }
 
         private const val GET_POLYGON_HASH = 3668444399L
-        private val getPolygonBind by lazy {
+        @JvmField
+        val getPolygonBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_polygon", GET_POLYGON_HASH)
-        }
 
         private const val CLEAR_POLYGONS_HASH = 3218959716L
-        private val clearPolygonsBind by lazy {
+        @JvmField
+        val clearPolygonsBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "clear_polygons", CLEAR_POLYGONS_HASH)
-        }
 
         private const val GET_NAVIGATION_MESH_HASH = 330232164L
-        private val getNavigationMeshBind by lazy {
+        @JvmField
+        val getNavigationMeshBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_navigation_mesh", GET_NAVIGATION_MESH_HASH)
-        }
 
         private const val ADD_OUTLINE_HASH = 1509147220L
-        private val addOutlineBind by lazy {
+        @JvmField
+        val addOutlineBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "add_outline", ADD_OUTLINE_HASH)
-        }
 
         private const val ADD_OUTLINE_AT_INDEX_HASH = 1569738947L
-        private val addOutlineAtIndexBind by lazy {
+        @JvmField
+        val addOutlineAtIndexBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "add_outline_at_index", ADD_OUTLINE_AT_INDEX_HASH)
-        }
 
         private const val GET_OUTLINE_COUNT_HASH = 3905245786L
-        private val getOutlineCountBind by lazy {
+        @JvmField
+        val getOutlineCountBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_outline_count", GET_OUTLINE_COUNT_HASH)
-        }
 
         private const val SET_OUTLINE_HASH = 1201971903L
-        private val setOutlineBind by lazy {
+        @JvmField
+        val setOutlineBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_outline", SET_OUTLINE_HASH)
-        }
 
         private const val GET_OUTLINE_HASH = 3946907486L
-        private val getOutlineBind by lazy {
+        @JvmField
+        val getOutlineBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_outline", GET_OUTLINE_HASH)
-        }
 
         private const val REMOVE_OUTLINE_HASH = 1286410249L
-        private val removeOutlineBind by lazy {
+        @JvmField
+        val removeOutlineBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "remove_outline", REMOVE_OUTLINE_HASH)
-        }
 
         private const val CLEAR_OUTLINES_HASH = 3218959716L
-        private val clearOutlinesBind by lazy {
+        @JvmField
+        val clearOutlinesBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "clear_outlines", CLEAR_OUTLINES_HASH)
-        }
 
         private const val MAKE_POLYGONS_FROM_OUTLINES_HASH = 3218959716L
-        private val makePolygonsFromOutlinesBind by lazy {
+        @JvmField
+        val makePolygonsFromOutlinesBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "make_polygons_from_outlines", MAKE_POLYGONS_FROM_OUTLINES_HASH)
-        }
 
         private const val SET_CELL_SIZE_HASH = 373806689L
-        private val setCellSizeBind by lazy {
+        @JvmField
+        val setCellSizeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_cell_size", SET_CELL_SIZE_HASH)
-        }
 
         private const val GET_CELL_SIZE_HASH = 1740695150L
-        private val getCellSizeBind by lazy {
+        @JvmField
+        val getCellSizeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_cell_size", GET_CELL_SIZE_HASH)
-        }
 
         private const val SET_BORDER_SIZE_HASH = 373806689L
-        private val setBorderSizeBind by lazy {
+        @JvmField
+        val setBorderSizeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_border_size", SET_BORDER_SIZE_HASH)
-        }
 
         private const val GET_BORDER_SIZE_HASH = 1740695150L
-        private val getBorderSizeBind by lazy {
+        @JvmField
+        val getBorderSizeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_border_size", GET_BORDER_SIZE_HASH)
-        }
 
         private const val SET_SAMPLE_PARTITION_TYPE_HASH = 2441478482L
-        private val setSamplePartitionTypeBind by lazy {
+        @JvmField
+        val setSamplePartitionTypeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_sample_partition_type", SET_SAMPLE_PARTITION_TYPE_HASH)
-        }
 
         private const val GET_SAMPLE_PARTITION_TYPE_HASH = 3887422851L
-        private val getSamplePartitionTypeBind by lazy {
+        @JvmField
+        val getSamplePartitionTypeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_sample_partition_type", GET_SAMPLE_PARTITION_TYPE_HASH)
-        }
 
         private const val SET_PARSED_GEOMETRY_TYPE_HASH = 2507971764L
-        private val setParsedGeometryTypeBind by lazy {
+        @JvmField
+        val setParsedGeometryTypeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_parsed_geometry_type", SET_PARSED_GEOMETRY_TYPE_HASH)
-        }
 
         private const val GET_PARSED_GEOMETRY_TYPE_HASH = 1073219508L
-        private val getParsedGeometryTypeBind by lazy {
+        @JvmField
+        val getParsedGeometryTypeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_parsed_geometry_type", GET_PARSED_GEOMETRY_TYPE_HASH)
-        }
 
         private const val SET_PARSED_COLLISION_MASK_HASH = 1286410249L
-        private val setParsedCollisionMaskBind by lazy {
+        @JvmField
+        val setParsedCollisionMaskBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_parsed_collision_mask", SET_PARSED_COLLISION_MASK_HASH)
-        }
 
         private const val GET_PARSED_COLLISION_MASK_HASH = 3905245786L
-        private val getParsedCollisionMaskBind by lazy {
+        @JvmField
+        val getParsedCollisionMaskBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_parsed_collision_mask", GET_PARSED_COLLISION_MASK_HASH)
-        }
 
         private const val SET_PARSED_COLLISION_MASK_VALUE_HASH = 300928843L
-        private val setParsedCollisionMaskValueBind by lazy {
+        @JvmField
+        val setParsedCollisionMaskValueBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_parsed_collision_mask_value", SET_PARSED_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val GET_PARSED_COLLISION_MASK_VALUE_HASH = 1116898809L
-        private val getParsedCollisionMaskValueBind by lazy {
+        @JvmField
+        val getParsedCollisionMaskValueBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_parsed_collision_mask_value", GET_PARSED_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val SET_SOURCE_GEOMETRY_MODE_HASH = 4002316705L
-        private val setSourceGeometryModeBind by lazy {
+        @JvmField
+        val setSourceGeometryModeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_source_geometry_mode", SET_SOURCE_GEOMETRY_MODE_HASH)
-        }
 
         private const val GET_SOURCE_GEOMETRY_MODE_HASH = 459686762L
-        private val getSourceGeometryModeBind by lazy {
+        @JvmField
+        val getSourceGeometryModeBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_source_geometry_mode", GET_SOURCE_GEOMETRY_MODE_HASH)
-        }
 
         private const val SET_SOURCE_GEOMETRY_GROUP_NAME_HASH = 3304788590L
-        private val setSourceGeometryGroupNameBind by lazy {
+        @JvmField
+        val setSourceGeometryGroupNameBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_source_geometry_group_name", SET_SOURCE_GEOMETRY_GROUP_NAME_HASH)
-        }
 
         private const val GET_SOURCE_GEOMETRY_GROUP_NAME_HASH = 2002593661L
-        private val getSourceGeometryGroupNameBind by lazy {
+        @JvmField
+        val getSourceGeometryGroupNameBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_source_geometry_group_name", GET_SOURCE_GEOMETRY_GROUP_NAME_HASH)
-        }
 
         private const val SET_AGENT_RADIUS_HASH = 373806689L
-        private val setAgentRadiusBind by lazy {
+        @JvmField
+        val setAgentRadiusBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_agent_radius", SET_AGENT_RADIUS_HASH)
-        }
 
         private const val GET_AGENT_RADIUS_HASH = 1740695150L
-        private val getAgentRadiusBind by lazy {
+        @JvmField
+        val getAgentRadiusBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_agent_radius", GET_AGENT_RADIUS_HASH)
-        }
 
         private const val SET_BAKING_RECT_HASH = 2046264180L
-        private val setBakingRectBind by lazy {
+        @JvmField
+        val setBakingRectBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_baking_rect", SET_BAKING_RECT_HASH)
-        }
 
         private const val GET_BAKING_RECT_HASH = 1639390495L
-        private val getBakingRectBind by lazy {
+        @JvmField
+        val getBakingRectBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_baking_rect", GET_BAKING_RECT_HASH)
-        }
 
         private const val SET_BAKING_RECT_OFFSET_HASH = 743155724L
-        private val setBakingRectOffsetBind by lazy {
+        @JvmField
+        val setBakingRectOffsetBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "set_baking_rect_offset", SET_BAKING_RECT_OFFSET_HASH)
-        }
 
         private const val GET_BAKING_RECT_OFFSET_HASH = 3341600327L
-        private val getBakingRectOffsetBind by lazy {
+        @JvmField
+        val getBakingRectOffsetBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "get_baking_rect_offset", GET_BAKING_RECT_OFFSET_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("NavigationPolygon", "clear", CLEAR_HASH)
-        }
     }
 }

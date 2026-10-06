@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTravel(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTravelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTravelBind, segment)
     }
 
     /**
@@ -29,7 +30,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemainder(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRemainderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRemainderBind, segment)
     }
 
     /**
@@ -39,7 +40,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBind, segment)
     }
 
     /**
@@ -49,7 +50,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollisionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionCountBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPosition(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getPositionBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getPositionBind, segment, collisionIndex)
     }
 
     /**
@@ -71,7 +72,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNormal(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getNormalBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getNormalBind, segment, collisionIndex)
     }
 
     /**
@@ -82,7 +83,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAngle(collisionIndex: Int = 0, upDirection: Vector3): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(getAngleBind, segment, collisionIndex, upDirection)
+        return ObjectCalls.ptrcallWithIntVector3ArgsRetDouble(Binds.getAngleBind, segment, collisionIndex, upDirection)
     }
 
     /**
@@ -93,7 +94,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalShape(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLocalShapeBind, segment, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getLocalShapeBind, segment, collisionIndex))
     }
 
     /**
@@ -104,7 +105,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCollider(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderBind, segment, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getColliderBind, segment, collisionIndex))
     }
 
     /**
@@ -115,7 +116,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderId(collisionIndex: Int = 0): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColliderIdBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getColliderIdBind, segment, collisionIndex)
     }
 
     /**
@@ -126,7 +127,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderRid(collisionIndex: Int = 0): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(getColliderRidBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getColliderRidBind, segment, collisionIndex)
     }
 
     /**
@@ -136,7 +137,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShape(collisionIndex: Int = 0): GodotObject? {
         checkOpen()
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getColliderShapeBind, segment, collisionIndex))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getColliderShapeBind, segment, collisionIndex))
     }
 
     /**
@@ -147,7 +148,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderShapeIndex(collisionIndex: Int = 0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getColliderShapeIndexBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getColliderShapeIndexBind, segment, collisionIndex)
     }
 
     /**
@@ -158,7 +159,7 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getColliderVelocity(collisionIndex: Int = 0): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getColliderVelocityBind, segment, collisionIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getColliderVelocityBind, segment, collisionIndex)
     }
 
     companion object {
@@ -171,75 +172,77 @@ class KinematicCollision3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): KinematicCollision3D? =
             if (handle.address() == 0L) null else KinematicCollision3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRAVEL_HASH = 3360562783L
-        private val getTravelBind by lazy {
+        @JvmField
+        val getTravelBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_travel", GET_TRAVEL_HASH)
-        }
 
         private const val GET_REMAINDER_HASH = 3360562783L
-        private val getRemainderBind by lazy {
+        @JvmField
+        val getRemainderBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_remainder", GET_REMAINDER_HASH)
-        }
 
         private const val GET_DEPTH_HASH = 1740695150L
-        private val getDepthBind by lazy {
+        @JvmField
+        val getDepthBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_depth", GET_DEPTH_HASH)
-        }
 
         private const val GET_COLLISION_COUNT_HASH = 3905245786L
-        private val getCollisionCountBind by lazy {
+        @JvmField
+        val getCollisionCountBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collision_count", GET_COLLISION_COUNT_HASH)
-        }
 
         private const val GET_POSITION_HASH = 1914908202L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_position", GET_POSITION_HASH)
-        }
 
         private const val GET_NORMAL_HASH = 1914908202L
-        private val getNormalBind by lazy {
+        @JvmField
+        val getNormalBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_normal", GET_NORMAL_HASH)
-        }
 
         private const val GET_ANGLE_HASH = 1242741860L
-        private val getAngleBind by lazy {
+        @JvmField
+        val getAngleBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_angle", GET_ANGLE_HASH)
-        }
 
         private const val GET_LOCAL_SHAPE_HASH = 2639523548L
-        private val getLocalShapeBind by lazy {
+        @JvmField
+        val getLocalShapeBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_local_shape", GET_LOCAL_SHAPE_HASH)
-        }
 
         private const val GET_COLLIDER_HASH = 2639523548L
-        private val getColliderBind by lazy {
+        @JvmField
+        val getColliderBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collider", GET_COLLIDER_HASH)
-        }
 
         private const val GET_COLLIDER_ID_HASH = 1591665591L
-        private val getColliderIdBind by lazy {
+        @JvmField
+        val getColliderIdBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collider_id", GET_COLLIDER_ID_HASH)
-        }
 
         private const val GET_COLLIDER_RID_HASH = 1231817359L
-        private val getColliderRidBind by lazy {
+        @JvmField
+        val getColliderRidBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collider_rid", GET_COLLIDER_RID_HASH)
-        }
 
         private const val GET_COLLIDER_SHAPE_HASH = 2639523548L
-        private val getColliderShapeBind by lazy {
+        @JvmField
+        val getColliderShapeBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collider_shape", GET_COLLIDER_SHAPE_HASH)
-        }
 
         private const val GET_COLLIDER_SHAPE_INDEX_HASH = 1591665591L
-        private val getColliderShapeIndexBind by lazy {
+        @JvmField
+        val getColliderShapeIndexBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collider_shape_index", GET_COLLIDER_SHAPE_INDEX_HASH)
-        }
 
         private const val GET_COLLIDER_VELOCITY_HASH = 1914908202L
-        private val getColliderVelocityBind by lazy {
+        @JvmField
+        val getColliderVelocityBind =
             ObjectCalls.getMethodBind("KinematicCollision3D", "get_collider_velocity", GET_COLLIDER_VELOCITY_HASH)
-        }
     }
 }

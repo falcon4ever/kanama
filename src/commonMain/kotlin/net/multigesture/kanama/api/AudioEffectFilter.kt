@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -43,7 +44,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setCutoff(freq: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCutoffBind, segment, freq)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCutoffBind, segment, freq)
     }
 
     /**
@@ -53,7 +54,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getCutoff(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCutoffBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCutoffBind, segment)
     }
 
     /**
@@ -68,7 +69,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setResonance(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setResonanceBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setResonanceBind, segment, amount)
     }
 
     /**
@@ -83,7 +84,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getResonance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getResonanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getResonanceBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setGain(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGainBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGainBind, segment, amount)
     }
 
     /**
@@ -105,7 +106,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGainBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDb(amount: AudioEffectFilter.FilterDB) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDbBind, segment, amount.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDbBind, segment, amount.value)
     }
 
     /**
@@ -129,7 +130,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDb(): AudioEffectFilter.FilterDB {
         checkOpen()
-        return AudioEffectFilter.FilterDB(ObjectCalls.ptrcallNoArgsRetLong(getDbBind, segment))
+        return AudioEffectFilter.FilterDB(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDbBind, segment))
     }
 
     /**
@@ -182,45 +183,47 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectFilter? =
             if (handle.address() == 0L) null else AudioEffectFilter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CUTOFF_HASH = 373806689L
-        private val setCutoffBind by lazy {
+        @JvmField
+        val setCutoffBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "set_cutoff", SET_CUTOFF_HASH)
-        }
 
         private const val GET_CUTOFF_HASH = 1740695150L
-        private val getCutoffBind by lazy {
+        @JvmField
+        val getCutoffBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "get_cutoff", GET_CUTOFF_HASH)
-        }
 
         private const val SET_RESONANCE_HASH = 373806689L
-        private val setResonanceBind by lazy {
+        @JvmField
+        val setResonanceBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "set_resonance", SET_RESONANCE_HASH)
-        }
 
         private const val GET_RESONANCE_HASH = 1740695150L
-        private val getResonanceBind by lazy {
+        @JvmField
+        val getResonanceBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "get_resonance", GET_RESONANCE_HASH)
-        }
 
         private const val SET_GAIN_HASH = 373806689L
-        private val setGainBind by lazy {
+        @JvmField
+        val setGainBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "set_gain", SET_GAIN_HASH)
-        }
 
         private const val GET_GAIN_HASH = 1740695150L
-        private val getGainBind by lazy {
+        @JvmField
+        val getGainBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "get_gain", GET_GAIN_HASH)
-        }
 
         private const val SET_DB_HASH = 771740901L
-        private val setDbBind by lazy {
+        @JvmField
+        val setDbBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "set_db", SET_DB_HASH)
-        }
 
         private const val GET_DB_HASH = 3981721890L
-        private val getDbBind by lazy {
+        @JvmField
+        val getDbBind =
             ObjectCalls.getMethodBind("AudioEffectFilter", "get_db", GET_DB_HASH)
-        }
     }
 }

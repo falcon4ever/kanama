@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -66,7 +67,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_label
      */
     fun setLabel(label: String) {
-        ObjectCalls.ptrcallWithStringArg(setLabelBind, segment, label)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLabelBind, segment, label)
     }
 
     /**
@@ -75,7 +76,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.get_label
      */
     fun getLabel(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLabelBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_suffix
      */
     fun setSuffix(suffix: String) {
-        ObjectCalls.ptrcallWithStringArg(setSuffixBind, segment, suffix)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSuffixBind, segment, suffix)
     }
 
     /**
@@ -95,7 +96,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.get_suffix
      */
     fun getSuffix(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSuffixBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_read_only
      */
     fun setReadOnly(readOnly: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setReadOnlyBind, segment, readOnly)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setReadOnlyBind, segment, readOnly)
     }
 
     /**
@@ -113,7 +114,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_read_only
      */
     fun isReadOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isReadOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReadOnlyBind, segment)
     }
 
     /**
@@ -122,7 +123,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_flat
      */
     fun setFlat(flat: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlatBind, segment, flat)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlatBind, segment, flat)
     }
 
     /**
@@ -131,7 +132,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_flat
      */
     fun isFlat(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlatBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlatBind, segment)
     }
 
     /**
@@ -140,7 +141,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_control_state
      */
     fun setControlState(state: EditorSpinSlider.ControlState) {
-        ObjectCalls.ptrcallWithLongArg(setControlStateBind, segment, state.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setControlStateBind, segment, state.value)
     }
 
     /**
@@ -149,7 +150,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.get_control_state
      */
     fun getControlState(): EditorSpinSlider.ControlState {
-        return EditorSpinSlider.ControlState(ObjectCalls.ptrcallNoArgsRetLong(getControlStateBind, segment))
+        return EditorSpinSlider.ControlState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getControlStateBind, segment))
     }
 
     /**
@@ -158,7 +159,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_hide_slider
      */
     fun setHideSlider(hideSlider: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHideSliderBind, segment, hideSlider)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHideSliderBind, segment, hideSlider)
     }
 
     /**
@@ -167,7 +168,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_hiding_slider
      */
     fun isHidingSlider(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHidingSliderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHidingSliderBind, segment)
     }
 
     /**
@@ -182,7 +183,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_editing_integer
      */
     fun setEditingInteger(editingInteger: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditingIntegerBind, segment, editingInteger)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditingIntegerBind, segment, editingInteger)
     }
 
     /**
@@ -197,7 +198,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_editing_integer
      */
     fun isEditingInteger(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntegerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditingIntegerBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.set_deferred_drag_mode_enabled
      */
     fun setDeferredDragModeEnabled(enabled: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(setDeferredDragModeEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeferredDragModeEnabledBind, segment, enabled)
     }
 
     /**
@@ -217,7 +218,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: EditorSpinSlider.is_deferred_drag_mode_enabled
      */
     fun isDeferredDragModeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeferredDragModeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeferredDragModeEnabledBind, segment)
     }
 
     /** Signal `grabbed()`; see [TypedSignal]. */
@@ -291,85 +292,87 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): EditorSpinSlider? =
             if (handle.address() == 0L) null else EditorSpinSlider(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LABEL_HASH = 83702148L
-        private val setLabelBind by lazy {
+        @JvmField
+        val setLabelBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_label", SET_LABEL_HASH)
-        }
 
         private const val GET_LABEL_HASH = 201670096L
-        private val getLabelBind by lazy {
+        @JvmField
+        val getLabelBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "get_label", GET_LABEL_HASH)
-        }
 
         private const val SET_SUFFIX_HASH = 83702148L
-        private val setSuffixBind by lazy {
+        @JvmField
+        val setSuffixBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_suffix", SET_SUFFIX_HASH)
-        }
 
         private const val GET_SUFFIX_HASH = 201670096L
-        private val getSuffixBind by lazy {
+        @JvmField
+        val getSuffixBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "get_suffix", GET_SUFFIX_HASH)
-        }
 
         private const val SET_READ_ONLY_HASH = 2586408642L
-        private val setReadOnlyBind by lazy {
+        @JvmField
+        val setReadOnlyBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_read_only", SET_READ_ONLY_HASH)
-        }
 
         private const val IS_READ_ONLY_HASH = 36873697L
-        private val isReadOnlyBind by lazy {
+        @JvmField
+        val isReadOnlyBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "is_read_only", IS_READ_ONLY_HASH)
-        }
 
         private const val SET_FLAT_HASH = 2586408642L
-        private val setFlatBind by lazy {
+        @JvmField
+        val setFlatBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_flat", SET_FLAT_HASH)
-        }
 
         private const val IS_FLAT_HASH = 36873697L
-        private val isFlatBind by lazy {
+        @JvmField
+        val isFlatBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "is_flat", IS_FLAT_HASH)
-        }
 
         private const val SET_CONTROL_STATE_HASH = 1324557109L
-        private val setControlStateBind by lazy {
+        @JvmField
+        val setControlStateBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_control_state", SET_CONTROL_STATE_HASH)
-        }
 
         private const val GET_CONTROL_STATE_HASH = 3406006200L
-        private val getControlStateBind by lazy {
+        @JvmField
+        val getControlStateBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "get_control_state", GET_CONTROL_STATE_HASH)
-        }
 
         private const val SET_HIDE_SLIDER_HASH = 2586408642L
-        private val setHideSliderBind by lazy {
+        @JvmField
+        val setHideSliderBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_hide_slider", SET_HIDE_SLIDER_HASH)
-        }
 
         private const val IS_HIDING_SLIDER_HASH = 36873697L
-        private val isHidingSliderBind by lazy {
+        @JvmField
+        val isHidingSliderBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "is_hiding_slider", IS_HIDING_SLIDER_HASH)
-        }
 
         private const val SET_EDITING_INTEGER_HASH = 2586408642L
-        private val setEditingIntegerBind by lazy {
+        @JvmField
+        val setEditingIntegerBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_editing_integer", SET_EDITING_INTEGER_HASH)
-        }
 
         private const val IS_EDITING_INTEGER_HASH = 36873697L
-        private val isEditingIntegerBind by lazy {
+        @JvmField
+        val isEditingIntegerBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "is_editing_integer", IS_EDITING_INTEGER_HASH)
-        }
 
         private const val SET_DEFERRED_DRAG_MODE_ENABLED_HASH = 3216645846L
-        private val setDeferredDragModeEnabledBind by lazy {
+        @JvmField
+        val setDeferredDragModeEnabledBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "set_deferred_drag_mode_enabled", SET_DEFERRED_DRAG_MODE_ENABLED_HASH)
-        }
 
         private const val IS_DEFERRED_DRAG_MODE_ENABLED_HASH = 36873697L
-        private val isDeferredDragModeEnabledBind by lazy {
+        @JvmField
+        val isDeferredDragModeEnabledBind =
             ObjectCalls.getMethodBind("EditorSpinSlider", "is_deferred_drag_mode_enabled", IS_DEFERRED_DRAG_MODE_ENABLED_HASH)
-        }
     }
 }

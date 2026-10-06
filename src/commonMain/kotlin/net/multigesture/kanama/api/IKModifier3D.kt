@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -23,7 +24,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: IKModifier3D.set_setting_count
      */
     fun setSettingCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSettingCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSettingCountBind, segment, count)
     }
 
     /**
@@ -32,7 +33,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: IKModifier3D.get_setting_count
      */
     fun getSettingCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSettingCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSettingCountBind, segment)
     }
 
     /**
@@ -41,7 +42,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: IKModifier3D.clear_settings
      */
     fun clearSettings() {
-        ObjectCalls.ptrcallNoArgs(clearSettingsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearSettingsBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: IKModifier3D.set_mutable_bone_axes
      */
     fun setMutableBoneAxes(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMutableBoneAxesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMutableBoneAxesBind, segment, enabled)
     }
 
     /**
@@ -65,7 +66,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: IKModifier3D.are_bone_axes_mutable
      */
     fun areBoneAxesMutable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(areBoneAxesMutableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.areBoneAxesMutableBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: IKModifier3D.reset
      */
     fun reset() {
-        ObjectCalls.ptrcallNoArgs(resetBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetBind, segment)
     }
 
     companion object {
@@ -84,35 +85,37 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): IKModifier3D? =
             if (handle.address() == 0L) null else IKModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SETTING_COUNT_HASH = 1286410249L
-        private val setSettingCountBind by lazy {
+        @JvmField
+        val setSettingCountBind =
             ObjectCalls.getMethodBind("IKModifier3D", "set_setting_count", SET_SETTING_COUNT_HASH)
-        }
 
         private const val GET_SETTING_COUNT_HASH = 3905245786L
-        private val getSettingCountBind by lazy {
+        @JvmField
+        val getSettingCountBind =
             ObjectCalls.getMethodBind("IKModifier3D", "get_setting_count", GET_SETTING_COUNT_HASH)
-        }
 
         private const val CLEAR_SETTINGS_HASH = 3218959716L
-        private val clearSettingsBind by lazy {
+        @JvmField
+        val clearSettingsBind =
             ObjectCalls.getMethodBind("IKModifier3D", "clear_settings", CLEAR_SETTINGS_HASH)
-        }
 
         private const val SET_MUTABLE_BONE_AXES_HASH = 2586408642L
-        private val setMutableBoneAxesBind by lazy {
+        @JvmField
+        val setMutableBoneAxesBind =
             ObjectCalls.getMethodBind("IKModifier3D", "set_mutable_bone_axes", SET_MUTABLE_BONE_AXES_HASH)
-        }
 
         private const val ARE_BONE_AXES_MUTABLE_HASH = 36873697L
-        private val areBoneAxesMutableBind by lazy {
+        @JvmField
+        val areBoneAxesMutableBind =
             ObjectCalls.getMethodBind("IKModifier3D", "are_bone_axes_mutable", ARE_BONE_AXES_MUTABLE_HASH)
-        }
 
         private const val RESET_HASH = 3218959716L
-        private val resetBind by lazy {
+        @JvmField
+        val resetBind =
             ObjectCalls.getMethodBind("IKModifier3D", "reset", RESET_HASH)
-        }
     }
 }

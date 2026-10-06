@@ -22,7 +22,5 @@ class AnimationNodeTimeScale(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeScale? =
             if (handle.address() == 0L) null else AnimationNodeTimeScale(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

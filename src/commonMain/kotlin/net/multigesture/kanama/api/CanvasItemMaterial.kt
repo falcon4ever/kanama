@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -55,7 +56,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setBlendMode(blendMode: CanvasItemMaterial.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlendModeBind, segment, blendMode.value)
     }
 
     /**
@@ -65,7 +66,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getBlendMode(): CanvasItemMaterial.BlendMode {
         checkOpen()
-        return CanvasItemMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
+        return CanvasItemMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendModeBind, segment))
     }
 
     /**
@@ -75,7 +76,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setLightMode(lightMode: CanvasItemMaterial.LightMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLightModeBind, segment, lightMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLightModeBind, segment, lightMode.value)
     }
 
     /**
@@ -85,7 +86,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getLightMode(): CanvasItemMaterial.LightMode {
         checkOpen()
-        return CanvasItemMaterial.LightMode(ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, segment))
+        return CanvasItemMaterial.LightMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLightModeBind, segment))
     }
 
     /**
@@ -99,7 +100,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimation(particlesAnim: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimationBind, segment, particlesAnim)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setParticlesAnimationBind, segment, particlesAnim)
     }
 
     /**
@@ -113,7 +114,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimation(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimationBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimHFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimHFramesBind, segment, frames)
+        ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimHFramesBind, segment, frames)
     }
 
     /**
@@ -137,7 +138,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimHFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimHFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimHFramesBind, segment)
     }
 
     /**
@@ -149,7 +150,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimVFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setParticlesAnimVFramesBind, segment, frames)
+        ObjectCalls.ptrcallWithIntArg(Binds.setParticlesAnimVFramesBind, segment, frames)
     }
 
     /**
@@ -161,7 +162,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimVFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getParticlesAnimVFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParticlesAnimVFramesBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParticlesAnimLoop(loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setParticlesAnimLoopBind, segment, loop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setParticlesAnimLoopBind, segment, loop)
     }
 
     /**
@@ -183,7 +184,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getParticlesAnimLoop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getParticlesAnimLoopBind, segment)
     }
 
     /**
@@ -268,65 +269,67 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CanvasItemMaterial? =
             if (handle.address() == 0L) null else CanvasItemMaterial(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BLEND_MODE_HASH = 1786054936L
-        private val setBlendModeBind by lazy {
+        @JvmField
+        val setBlendModeBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "set_blend_mode", SET_BLEND_MODE_HASH)
-        }
 
         private const val GET_BLEND_MODE_HASH = 3318684035L
-        private val getBlendModeBind by lazy {
+        @JvmField
+        val getBlendModeBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "get_blend_mode", GET_BLEND_MODE_HASH)
-        }
 
         private const val SET_LIGHT_MODE_HASH = 628074070L
-        private val setLightModeBind by lazy {
+        @JvmField
+        val setLightModeBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "set_light_mode", SET_LIGHT_MODE_HASH)
-        }
 
         private const val GET_LIGHT_MODE_HASH = 3863292382L
-        private val getLightModeBind by lazy {
+        @JvmField
+        val getLightModeBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "get_light_mode", GET_LIGHT_MODE_HASH)
-        }
 
         private const val SET_PARTICLES_ANIMATION_HASH = 2586408642L
-        private val setParticlesAnimationBind by lazy {
+        @JvmField
+        val setParticlesAnimationBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "set_particles_animation", SET_PARTICLES_ANIMATION_HASH)
-        }
 
         private const val GET_PARTICLES_ANIMATION_HASH = 36873697L
-        private val getParticlesAnimationBind by lazy {
+        @JvmField
+        val getParticlesAnimationBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "get_particles_animation", GET_PARTICLES_ANIMATION_HASH)
-        }
 
         private const val SET_PARTICLES_ANIM_H_FRAMES_HASH = 1286410249L
-        private val setParticlesAnimHFramesBind by lazy {
+        @JvmField
+        val setParticlesAnimHFramesBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "set_particles_anim_h_frames", SET_PARTICLES_ANIM_H_FRAMES_HASH)
-        }
 
         private const val GET_PARTICLES_ANIM_H_FRAMES_HASH = 3905245786L
-        private val getParticlesAnimHFramesBind by lazy {
+        @JvmField
+        val getParticlesAnimHFramesBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "get_particles_anim_h_frames", GET_PARTICLES_ANIM_H_FRAMES_HASH)
-        }
 
         private const val SET_PARTICLES_ANIM_V_FRAMES_HASH = 1286410249L
-        private val setParticlesAnimVFramesBind by lazy {
+        @JvmField
+        val setParticlesAnimVFramesBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "set_particles_anim_v_frames", SET_PARTICLES_ANIM_V_FRAMES_HASH)
-        }
 
         private const val GET_PARTICLES_ANIM_V_FRAMES_HASH = 3905245786L
-        private val getParticlesAnimVFramesBind by lazy {
+        @JvmField
+        val getParticlesAnimVFramesBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "get_particles_anim_v_frames", GET_PARTICLES_ANIM_V_FRAMES_HASH)
-        }
 
         private const val SET_PARTICLES_ANIM_LOOP_HASH = 2586408642L
-        private val setParticlesAnimLoopBind by lazy {
+        @JvmField
+        val setParticlesAnimLoopBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "set_particles_anim_loop", SET_PARTICLES_ANIM_LOOP_HASH)
-        }
 
         private const val GET_PARTICLES_ANIM_LOOP_HASH = 36873697L
-        private val getParticlesAnimLoopBind by lazy {
+        @JvmField
+        val getParticlesAnimLoopBind =
             ObjectCalls.getMethodBind("CanvasItemMaterial", "get_particles_anim_loop", GET_PARTICLES_ANIM_LOOP_HASH)
-        }
     }
 }

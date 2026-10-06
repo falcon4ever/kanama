@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -23,7 +24,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.queue_resource_preview
      */
     fun queueResourcePreview(path: String, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
-        ObjectCalls.ptrcallWithStringObjectStringNameVariantArgs(queueResourcePreviewBind, segment, path, receiver.segment, receiverFunc, userdata)
+        ObjectCalls.ptrcallWithStringObjectStringNameVariantArgs(Binds.queueResourcePreviewBind, segment, path, receiver.segment, receiverFunc, userdata)
     }
 
     /**
@@ -37,7 +38,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.queue_edited_resource_preview
      */
     fun queueEditedResourcePreview(resource: Resource?, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
-        ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(queueEditedResourcePreviewBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT, receiver.segment, receiverFunc, userdata)
+        ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(Binds.queueEditedResourcePreviewBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT, receiver.segment, receiverFunc, userdata)
     }
 
     /**
@@ -46,7 +47,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.add_preview_generator
      */
     fun addPreviewGenerator(generator: EditorResourcePreviewGenerator?) {
-        ObjectCalls.ptrcallWithObjectArgs(addPreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addPreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -55,7 +56,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.remove_preview_generator
      */
     fun removePreviewGenerator(generator: EditorResourcePreviewGenerator?) {
-        ObjectCalls.ptrcallWithObjectArgs(removePreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removePreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -65,7 +66,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.check_for_invalidation
      */
     fun checkForInvalidation(path: String) {
-        ObjectCalls.ptrcallWithStringArg(checkForInvalidationBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.checkForInvalidationBind, segment, path)
     }
 
     /** Signal `preview_invalidated(path: String)`; see [TypedSignal]. */
@@ -84,30 +85,32 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): EditorResourcePreview? =
             if (handle.address() == 0L) null else EditorResourcePreview(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val QUEUE_RESOURCE_PREVIEW_HASH = 233177534L
-        private val queueResourcePreviewBind by lazy {
+        @JvmField
+        val queueResourcePreviewBind =
             ObjectCalls.getMethodBind("EditorResourcePreview", "queue_resource_preview", QUEUE_RESOURCE_PREVIEW_HASH)
-        }
 
         private const val QUEUE_EDITED_RESOURCE_PREVIEW_HASH = 1608376650L
-        private val queueEditedResourcePreviewBind by lazy {
+        @JvmField
+        val queueEditedResourcePreviewBind =
             ObjectCalls.getMethodBind("EditorResourcePreview", "queue_edited_resource_preview", QUEUE_EDITED_RESOURCE_PREVIEW_HASH)
-        }
 
         private const val ADD_PREVIEW_GENERATOR_HASH = 332288124L
-        private val addPreviewGeneratorBind by lazy {
+        @JvmField
+        val addPreviewGeneratorBind =
             ObjectCalls.getMethodBind("EditorResourcePreview", "add_preview_generator", ADD_PREVIEW_GENERATOR_HASH)
-        }
 
         private const val REMOVE_PREVIEW_GENERATOR_HASH = 332288124L
-        private val removePreviewGeneratorBind by lazy {
+        @JvmField
+        val removePreviewGeneratorBind =
             ObjectCalls.getMethodBind("EditorResourcePreview", "remove_preview_generator", REMOVE_PREVIEW_GENERATOR_HASH)
-        }
 
         private const val CHECK_FOR_INVALIDATION_HASH = 83702148L
-        private val checkForInvalidationBind by lazy {
+        @JvmField
+        val checkForInvalidationBind =
             ObjectCalls.getMethodBind("EditorResourcePreview", "check_for_invalidation", CHECK_FOR_INVALIDATION_HASH)
-        }
     }
 }

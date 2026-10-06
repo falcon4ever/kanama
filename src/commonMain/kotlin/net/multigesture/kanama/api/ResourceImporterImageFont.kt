@@ -22,7 +22,5 @@ class ResourceImporterImageFont(handle: GodotHandle) : ResourceImporter(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterImageFont? =
             if (handle.address() == 0L) null else ResourceImporterImageFont(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

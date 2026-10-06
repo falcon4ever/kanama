@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, length)
     }
 
     /**
@@ -40,7 +41,7 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
     }
 
     /**
@@ -52,7 +53,7 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setSlideOnSlope(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSlideOnSlopeBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSlideOnSlopeBind, segment, active)
     }
 
     /**
@@ -64,7 +65,7 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getSlideOnSlope(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSlideOnSlopeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSlideOnSlopeBind, segment)
     }
 
     companion object {
@@ -77,25 +78,27 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SeparationRayShape3D? =
             if (handle.address() == 0L) null else SeparationRayShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LENGTH_HASH = 373806689L
-        private val setLengthBind by lazy {
+        @JvmField
+        val setLengthBind =
             ObjectCalls.getMethodBind("SeparationRayShape3D", "set_length", SET_LENGTH_HASH)
-        }
 
         private const val GET_LENGTH_HASH = 1740695150L
-        private val getLengthBind by lazy {
+        @JvmField
+        val getLengthBind =
             ObjectCalls.getMethodBind("SeparationRayShape3D", "get_length", GET_LENGTH_HASH)
-        }
 
         private const val SET_SLIDE_ON_SLOPE_HASH = 2586408642L
-        private val setSlideOnSlopeBind by lazy {
+        @JvmField
+        val setSlideOnSlopeBind =
             ObjectCalls.getMethodBind("SeparationRayShape3D", "set_slide_on_slope", SET_SLIDE_ON_SLOPE_HASH)
-        }
 
         private const val GET_SLIDE_ON_SLOPE_HASH = 36873697L
-        private val getSlideOnSlopeBind by lazy {
+        @JvmField
+        val getSlideOnSlopeBind =
             ObjectCalls.getMethodBind("SeparationRayShape3D", "get_slide_on_slope", GET_SLIDE_ON_SLOPE_HASH)
-        }
     }
 }

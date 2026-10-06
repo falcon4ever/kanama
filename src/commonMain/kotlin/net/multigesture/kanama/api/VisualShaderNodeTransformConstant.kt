@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,12 +19,12 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
 
     fun setConstant(constant: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setConstantBind, segment, constant)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setConstantBind, segment, constant)
     }
 
     fun getConstant(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getConstantBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getConstantBind, segment)
     }
 
     companion object {
@@ -36,15 +37,17 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CONSTANT_HASH = 2952846383L
-        private val setConstantBind by lazy {
+        @JvmField
+        val setConstantBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTransformConstant", "set_constant", SET_CONSTANT_HASH)
-        }
 
         private const val GET_CONSTANT_HASH = 3229777777L
-        private val getConstantBind by lazy {
+        @JvmField
+        val getConstantBind =
             ObjectCalls.getMethodBind("VisualShaderNodeTransformConstant", "get_constant", GET_CONSTANT_HASH)
-        }
     }
 }

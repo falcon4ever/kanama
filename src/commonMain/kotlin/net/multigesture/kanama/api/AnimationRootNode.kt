@@ -23,7 +23,5 @@ open class AnimationRootNode(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationRootNode? =
             if (handle.address() == 0L) null else AnimationRootNode(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

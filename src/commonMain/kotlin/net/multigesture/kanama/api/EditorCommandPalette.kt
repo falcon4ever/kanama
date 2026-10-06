@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -20,7 +21,7 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: EditorCommandPalette.add_command
      */
     fun addCommand(commandName: String, keyName: String, bindedCallable: GodotCallable, shortcutText: String = "None") {
-        ObjectCalls.ptrcallWithTwoStringCallableStringArgs(addCommandBind, segment, commandName, keyName, bindedCallable.target.segment, bindedCallable.method, shortcutText)
+        ObjectCalls.ptrcallWithTwoStringCallableStringArgs(Binds.addCommandBind, segment, commandName, keyName, bindedCallable.target.segment, bindedCallable.method, shortcutText)
     }
 
     /**
@@ -30,7 +31,7 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
      * Generated from Godot docs: EditorCommandPalette.remove_command
      */
     fun removeCommand(keyName: String) {
-        ObjectCalls.ptrcallWithStringArg(removeCommandBind, segment, keyName)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeCommandBind, segment, keyName)
     }
 
     companion object {
@@ -40,15 +41,17 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
 
         internal fun wrap(handle: RawSegment): EditorCommandPalette? =
             if (handle.address() == 0L) null else EditorCommandPalette(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_COMMAND_HASH = 864043298L
-        private val addCommandBind by lazy {
+        @JvmField
+        val addCommandBind =
             ObjectCalls.getMethodBind("EditorCommandPalette", "add_command", ADD_COMMAND_HASH)
-        }
 
         private const val REMOVE_COMMAND_HASH = 83702148L
-        private val removeCommandBind by lazy {
+        @JvmField
+        val removeCommandBind =
             ObjectCalls.getMethodBind("EditorCommandPalette", "remove_command", REMOVE_COMMAND_HASH)
-        }
     }
 }

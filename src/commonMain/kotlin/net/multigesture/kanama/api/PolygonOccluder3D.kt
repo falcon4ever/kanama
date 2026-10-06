@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,7 +28,7 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun setPolygon(polygon: List<Vector2>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector2ListArg(setPolygonBind, segment, polygon)
+        ObjectCalls.ptrcallWithPackedVector2ListArg(Binds.setPolygonBind, segment, polygon)
     }
 
     /**
@@ -39,7 +40,7 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
      */
     fun getPolygon(): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getPolygonBind, segment)
     }
 
     companion object {
@@ -52,15 +53,17 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PolygonOccluder3D? =
             if (handle.address() == 0L) null else PolygonOccluder3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POLYGON_HASH = 1509147220L
-        private val setPolygonBind by lazy {
+        @JvmField
+        val setPolygonBind =
             ObjectCalls.getMethodBind("PolygonOccluder3D", "set_polygon", SET_POLYGON_HASH)
-        }
 
         private const val GET_POLYGON_HASH = 2961356807L
-        private val getPolygonBind by lazy {
+        @JvmField
+        val getPolygonBind =
             ObjectCalls.getMethodBind("PolygonOccluder3D", "get_polygon", GET_POLYGON_HASH)
-        }
     }
 }

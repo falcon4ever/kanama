@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -85,7 +86,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEnableDepthClamp(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableDepthClampBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDepthClampBind, segment, pMember)
     }
 
     /**
@@ -96,7 +97,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEnableDepthClamp(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDepthClampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDepthClampBind, segment)
     }
 
     /**
@@ -106,7 +107,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDiscardPrimitives(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDiscardPrimitivesBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDiscardPrimitivesBind, segment, pMember)
     }
 
     /**
@@ -116,7 +117,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDiscardPrimitives(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDiscardPrimitivesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDiscardPrimitivesBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setWireframe(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWireframeBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWireframeBind, segment, pMember)
     }
 
     /**
@@ -136,7 +137,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWireframe(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWireframeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWireframeBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCullMode(pMember: RenderingDevice.PolygonCullMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCullModeBind, segment, pMember.value)
     }
 
     /**
@@ -158,7 +159,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCullMode(): RenderingDevice.PolygonCullMode {
         checkOpen()
-        return RenderingDevice.PolygonCullMode(ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment))
+        return RenderingDevice.PolygonCullMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCullModeBind, segment))
     }
 
     /**
@@ -168,7 +169,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFrontFace(pMember: RenderingDevice.PolygonFrontFace) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFrontFaceBind, segment, pMember.value)
     }
 
     /**
@@ -178,7 +179,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFrontFace(): RenderingDevice.PolygonFrontFace {
         checkOpen()
-        return RenderingDevice.PolygonFrontFace(ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, segment))
+        return RenderingDevice.PolygonFrontFace(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFrontFaceBind, segment))
     }
 
     /**
@@ -190,7 +191,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDepthBiasEnabled(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDepthBiasEnabledBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDepthBiasEnabledBind, segment, pMember)
     }
 
     /**
@@ -202,7 +203,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDepthBiasEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDepthBiasEnabledBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDepthBiasConstantFactor(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasConstantFactorBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBiasConstantFactorBind, segment, pMember)
     }
 
     /**
@@ -222,7 +223,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasConstantFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasConstantFactorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasConstantFactorBind, segment)
     }
 
     /**
@@ -233,7 +234,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDepthBiasClamp(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasClampBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBiasClampBind, segment, pMember)
     }
 
     /**
@@ -244,7 +245,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasClamp(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasClampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasClampBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDepthBiasSlopeFactor(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthBiasSlopeFactorBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthBiasSlopeFactorBind, segment, pMember)
     }
 
     /**
@@ -266,7 +267,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDepthBiasSlopeFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthBiasSlopeFactorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthBiasSlopeFactorBind, segment)
     }
 
     /**
@@ -277,7 +278,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLineWidth(pMember: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineWidthBind, segment, pMember)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLineWidthBind, segment, pMember)
     }
 
     /**
@@ -288,7 +289,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineWidthBind, segment)
     }
 
     /**
@@ -299,7 +300,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPatchControlPoints(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setPatchControlPointsBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setPatchControlPointsBind, segment, pMember)
     }
 
     /**
@@ -310,7 +311,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPatchControlPoints(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPatchControlPointsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPatchControlPointsBind, segment)
     }
 
     companion object {
@@ -323,115 +324,117 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineRasterizationState? =
             if (handle.address() == 0L) null else RDPipelineRasterizationState(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLE_DEPTH_CLAMP_HASH = 2586408642L
-        private val setEnableDepthClampBind by lazy {
+        @JvmField
+        val setEnableDepthClampBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_enable_depth_clamp", SET_ENABLE_DEPTH_CLAMP_HASH)
-        }
 
         private const val GET_ENABLE_DEPTH_CLAMP_HASH = 36873697L
-        private val getEnableDepthClampBind by lazy {
+        @JvmField
+        val getEnableDepthClampBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_enable_depth_clamp", GET_ENABLE_DEPTH_CLAMP_HASH)
-        }
 
         private const val SET_DISCARD_PRIMITIVES_HASH = 2586408642L
-        private val setDiscardPrimitivesBind by lazy {
+        @JvmField
+        val setDiscardPrimitivesBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_discard_primitives", SET_DISCARD_PRIMITIVES_HASH)
-        }
 
         private const val GET_DISCARD_PRIMITIVES_HASH = 36873697L
-        private val getDiscardPrimitivesBind by lazy {
+        @JvmField
+        val getDiscardPrimitivesBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_discard_primitives", GET_DISCARD_PRIMITIVES_HASH)
-        }
 
         private const val SET_WIREFRAME_HASH = 2586408642L
-        private val setWireframeBind by lazy {
+        @JvmField
+        val setWireframeBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_wireframe", SET_WIREFRAME_HASH)
-        }
 
         private const val GET_WIREFRAME_HASH = 36873697L
-        private val getWireframeBind by lazy {
+        @JvmField
+        val getWireframeBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_wireframe", GET_WIREFRAME_HASH)
-        }
 
         private const val SET_CULL_MODE_HASH = 2662586502L
-        private val setCullModeBind by lazy {
+        @JvmField
+        val setCullModeBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_cull_mode", SET_CULL_MODE_HASH)
-        }
 
         private const val GET_CULL_MODE_HASH = 2192484313L
-        private val getCullModeBind by lazy {
+        @JvmField
+        val getCullModeBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_cull_mode", GET_CULL_MODE_HASH)
-        }
 
         private const val SET_FRONT_FACE_HASH = 2637251213L
-        private val setFrontFaceBind by lazy {
+        @JvmField
+        val setFrontFaceBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_front_face", SET_FRONT_FACE_HASH)
-        }
 
         private const val GET_FRONT_FACE_HASH = 708793786L
-        private val getFrontFaceBind by lazy {
+        @JvmField
+        val getFrontFaceBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_front_face", GET_FRONT_FACE_HASH)
-        }
 
         private const val SET_DEPTH_BIAS_ENABLED_HASH = 2586408642L
-        private val setDepthBiasEnabledBind by lazy {
+        @JvmField
+        val setDepthBiasEnabledBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_enabled", SET_DEPTH_BIAS_ENABLED_HASH)
-        }
 
         private const val GET_DEPTH_BIAS_ENABLED_HASH = 36873697L
-        private val getDepthBiasEnabledBind by lazy {
+        @JvmField
+        val getDepthBiasEnabledBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_enabled", GET_DEPTH_BIAS_ENABLED_HASH)
-        }
 
         private const val SET_DEPTH_BIAS_CONSTANT_FACTOR_HASH = 373806689L
-        private val setDepthBiasConstantFactorBind by lazy {
+        @JvmField
+        val setDepthBiasConstantFactorBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_constant_factor", SET_DEPTH_BIAS_CONSTANT_FACTOR_HASH)
-        }
 
         private const val GET_DEPTH_BIAS_CONSTANT_FACTOR_HASH = 1740695150L
-        private val getDepthBiasConstantFactorBind by lazy {
+        @JvmField
+        val getDepthBiasConstantFactorBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_constant_factor", GET_DEPTH_BIAS_CONSTANT_FACTOR_HASH)
-        }
 
         private const val SET_DEPTH_BIAS_CLAMP_HASH = 373806689L
-        private val setDepthBiasClampBind by lazy {
+        @JvmField
+        val setDepthBiasClampBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_clamp", SET_DEPTH_BIAS_CLAMP_HASH)
-        }
 
         private const val GET_DEPTH_BIAS_CLAMP_HASH = 1740695150L
-        private val getDepthBiasClampBind by lazy {
+        @JvmField
+        val getDepthBiasClampBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_clamp", GET_DEPTH_BIAS_CLAMP_HASH)
-        }
 
         private const val SET_DEPTH_BIAS_SLOPE_FACTOR_HASH = 373806689L
-        private val setDepthBiasSlopeFactorBind by lazy {
+        @JvmField
+        val setDepthBiasSlopeFactorBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_depth_bias_slope_factor", SET_DEPTH_BIAS_SLOPE_FACTOR_HASH)
-        }
 
         private const val GET_DEPTH_BIAS_SLOPE_FACTOR_HASH = 1740695150L
-        private val getDepthBiasSlopeFactorBind by lazy {
+        @JvmField
+        val getDepthBiasSlopeFactorBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_depth_bias_slope_factor", GET_DEPTH_BIAS_SLOPE_FACTOR_HASH)
-        }
 
         private const val SET_LINE_WIDTH_HASH = 373806689L
-        private val setLineWidthBind by lazy {
+        @JvmField
+        val setLineWidthBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_line_width", SET_LINE_WIDTH_HASH)
-        }
 
         private const val GET_LINE_WIDTH_HASH = 1740695150L
-        private val getLineWidthBind by lazy {
+        @JvmField
+        val getLineWidthBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_line_width", GET_LINE_WIDTH_HASH)
-        }
 
         private const val SET_PATCH_CONTROL_POINTS_HASH = 1286410249L
-        private val setPatchControlPointsBind by lazy {
+        @JvmField
+        val setPatchControlPointsBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "set_patch_control_points", SET_PATCH_CONTROL_POINTS_HASH)
-        }
 
         private const val GET_PATCH_CONTROL_POINTS_HASH = 3905245786L
-        private val getPatchControlPointsBind by lazy {
+        @JvmField
+        val getPatchControlPointsBind =
             ObjectCalls.getMethodBind("RDPipelineRasterizationState", "get_patch_control_points", GET_PATCH_CONTROL_POINTS_HASH)
-        }
     }
 }

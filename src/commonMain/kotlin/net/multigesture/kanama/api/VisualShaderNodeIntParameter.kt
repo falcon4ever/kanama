@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -54,72 +55,72 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
 
     fun setHint(hint: VisualShaderNodeIntParameter.Hint) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHintBind, segment, hint.value)
     }
 
     fun getHint(): VisualShaderNodeIntParameter.Hint {
         checkOpen()
-        return VisualShaderNodeIntParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment))
+        return VisualShaderNodeIntParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
     }
 
     fun setMin(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMinBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMinBind, segment, value)
     }
 
     fun getMin(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinBind, segment)
     }
 
     fun setMax(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxBind, segment, value)
     }
 
     fun getMax(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxBind, segment)
     }
 
     fun setStep(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStepBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStepBind, segment, value)
     }
 
     fun getStep(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStepBind, segment)
     }
 
     fun setEnumNames(names: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setEnumNamesBind, segment, names)
+        ObjectCalls.ptrcallWithPackedStringListArg(Binds.setEnumNamesBind, segment, names)
     }
 
     fun getEnumNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getEnumNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getEnumNamesBind, segment)
     }
 
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDefaultValueEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultValueEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
     fun setDefaultValue(value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDefaultValueBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDefaultValueBind, segment, value)
     }
 
     fun getDefaultValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
     }
 
     @JvmInline
@@ -143,75 +144,77 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIntParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeIntParameter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HINT_HASH = 2540512075L
-        private val setHintBind by lazy {
+        @JvmField
+        val setHintBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_hint", SET_HINT_HASH)
-        }
 
         private const val GET_HINT_HASH = 4250814924L
-        private val getHintBind by lazy {
+        @JvmField
+        val getHintBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_hint", GET_HINT_HASH)
-        }
 
         private const val SET_MIN_HASH = 1286410249L
-        private val setMinBind by lazy {
+        @JvmField
+        val setMinBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_min", SET_MIN_HASH)
-        }
 
         private const val GET_MIN_HASH = 3905245786L
-        private val getMinBind by lazy {
+        @JvmField
+        val getMinBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_min", GET_MIN_HASH)
-        }
 
         private const val SET_MAX_HASH = 1286410249L
-        private val setMaxBind by lazy {
+        @JvmField
+        val setMaxBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_max", SET_MAX_HASH)
-        }
 
         private const val GET_MAX_HASH = 3905245786L
-        private val getMaxBind by lazy {
+        @JvmField
+        val getMaxBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_max", GET_MAX_HASH)
-        }
 
         private const val SET_STEP_HASH = 1286410249L
-        private val setStepBind by lazy {
+        @JvmField
+        val setStepBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_step", SET_STEP_HASH)
-        }
 
         private const val GET_STEP_HASH = 3905245786L
-        private val getStepBind by lazy {
+        @JvmField
+        val getStepBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_step", GET_STEP_HASH)
-        }
 
         private const val SET_ENUM_NAMES_HASH = 4015028928L
-        private val setEnumNamesBind by lazy {
+        @JvmField
+        val setEnumNamesBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_enum_names", SET_ENUM_NAMES_HASH)
-        }
 
         private const val GET_ENUM_NAMES_HASH = 1139954409L
-        private val getEnumNamesBind by lazy {
+        @JvmField
+        val getEnumNamesBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_enum_names", GET_ENUM_NAMES_HASH)
-        }
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L
-        private val setDefaultValueEnabledBind by lazy {
+        @JvmField
+        val setDefaultValueEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_default_value_enabled", SET_DEFAULT_VALUE_ENABLED_HASH)
-        }
 
         private const val IS_DEFAULT_VALUE_ENABLED_HASH = 36873697L
-        private val isDefaultValueEnabledBind by lazy {
+        @JvmField
+        val isDefaultValueEnabledBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "is_default_value_enabled", IS_DEFAULT_VALUE_ENABLED_HASH)
-        }
 
         private const val SET_DEFAULT_VALUE_HASH = 1286410249L
-        private val setDefaultValueBind by lazy {
+        @JvmField
+        val setDefaultValueBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "set_default_value", SET_DEFAULT_VALUE_HASH)
-        }
 
         private const val GET_DEFAULT_VALUE_HASH = 3905245786L
-        private val getDefaultValueBind by lazy {
+        @JvmField
+        val getDefaultValueBind =
             ObjectCalls.getMethodBind("VisualShaderNodeIntParameter", "get_default_value", GET_DEFAULT_VALUE_HASH)
-        }
     }
 }

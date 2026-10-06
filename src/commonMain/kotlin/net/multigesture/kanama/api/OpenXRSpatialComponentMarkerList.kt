@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,17 +13,17 @@ import net.multigesture.kanama.types.RID
 class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getMarkerType(index: Long): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
-        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallWithLongArgRetLong(getMarkerTypeBind, segment, index))
+        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getMarkerTypeBind, segment, index))
     }
 
     fun getMarkerId(index: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetUInt32(getMarkerIdBind, segment, index)
+        return ObjectCalls.ptrcallWithLongArgRetUInt32(Binds.getMarkerIdBind, segment, index)
     }
 
     fun getMarkerData(snapshot: RID, index: Long): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(getMarkerDataBind, segment, snapshot, index)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(Binds.getMarkerDataBind, segment, snapshot, index)
     }
 
     @JvmInline
@@ -47,20 +48,22 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMarkerList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMarkerList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_MARKER_TYPE_HASH = 2627847866L
-        private val getMarkerTypeBind by lazy {
+        @JvmField
+        val getMarkerTypeBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMarkerList", "get_marker_type", GET_MARKER_TYPE_HASH)
-        }
 
         private const val GET_MARKER_ID_HASH = 923996154L
-        private val getMarkerIdBind by lazy {
+        @JvmField
+        val getMarkerIdBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMarkerList", "get_marker_id", GET_MARKER_ID_HASH)
-        }
 
         private const val GET_MARKER_DATA_HASH = 4069510997L
-        private val getMarkerDataBind by lazy {
+        @JvmField
+        val getMarkerDataBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentMarkerList", "get_marker_data", GET_MARKER_DATA_HASH)
-        }
     }
 }

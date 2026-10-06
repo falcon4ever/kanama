@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -56,7 +57,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setTransform(pMember: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, pMember)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, pMember)
     }
 
     /**
@@ -66,7 +67,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getTransform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -76,7 +77,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setId(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setIdBind, segment, pMember)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setIdBind, segment, pMember)
     }
 
     /**
@@ -86,7 +87,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getIdBind, segment)
     }
 
     /**
@@ -96,7 +97,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMask(pMember: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaskBind, segment, pMember)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaskBind, segment, pMember)
     }
 
     /**
@@ -106,7 +107,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMask(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaskBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setHitSbtRange(pMember: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHitSbtRangeBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHitSbtRangeBind, segment, pMember)
     }
 
     /**
@@ -128,7 +129,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getHitSbtRange(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHitSbtRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getHitSbtRangeBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setFlags(pMember: RenderingDevice.AccelerationStructureInstanceFlagBits) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, pMember.value)
     }
 
     /**
@@ -148,7 +149,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getFlags(): RenderingDevice.AccelerationStructureInstanceFlagBits {
         checkOpen()
-        return RenderingDevice.AccelerationStructureInstanceFlagBits(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
+        return RenderingDevice.AccelerationStructureInstanceFlagBits(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
     }
 
     /**
@@ -159,7 +160,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setBlas(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setBlasBind, segment, pMember)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setBlasBind, segment, pMember)
     }
 
     /**
@@ -170,7 +171,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getBlas(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getBlasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getBlasBind, segment)
     }
 
     companion object {
@@ -183,65 +184,67 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): RDAccelerationStructureInstance? =
             if (handle.address() == 0L) null else RDAccelerationStructureInstance(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TRANSFORM_HASH = 2952846383L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3229777777L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val SET_ID_HASH = 1286410249L
-        private val setIdBind by lazy {
+        @JvmField
+        val setIdBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "set_id", SET_ID_HASH)
-        }
 
         private const val GET_ID_HASH = 3905245786L
-        private val getIdBind by lazy {
+        @JvmField
+        val getIdBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "get_id", GET_ID_HASH)
-        }
 
         private const val SET_MASK_HASH = 1286410249L
-        private val setMaskBind by lazy {
+        @JvmField
+        val setMaskBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "set_mask", SET_MASK_HASH)
-        }
 
         private const val GET_MASK_HASH = 3905245786L
-        private val getMaskBind by lazy {
+        @JvmField
+        val getMaskBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "get_mask", GET_MASK_HASH)
-        }
 
         private const val SET_HIT_SBT_RANGE_HASH = 1286410249L
-        private val setHitSbtRangeBind by lazy {
+        @JvmField
+        val setHitSbtRangeBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "set_hit_sbt_range", SET_HIT_SBT_RANGE_HASH)
-        }
 
         private const val GET_HIT_SBT_RANGE_HASH = 3905245786L
-        private val getHitSbtRangeBind by lazy {
+        @JvmField
+        val getHitSbtRangeBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "get_hit_sbt_range", GET_HIT_SBT_RANGE_HASH)
-        }
 
         private const val SET_FLAGS_HASH = 2971840141L
-        private val setFlagsBind by lazy {
+        @JvmField
+        val setFlagsBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "set_flags", SET_FLAGS_HASH)
-        }
 
         private const val GET_FLAGS_HASH = 2410182637L
-        private val getFlagsBind by lazy {
+        @JvmField
+        val getFlagsBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "get_flags", GET_FLAGS_HASH)
-        }
 
         private const val SET_BLAS_HASH = 2722037293L
-        private val setBlasBind by lazy {
+        @JvmField
+        val setBlasBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "set_blas", SET_BLAS_HASH)
-        }
 
         private const val GET_BLAS_HASH = 2944877500L
-        private val getBlasBind by lazy {
+        @JvmField
+        val getBlasBind =
             ObjectCalls.getMethodBind("RDAccelerationStructureInstance", "get_blas", GET_BLAS_HASH)
-        }
     }
 }

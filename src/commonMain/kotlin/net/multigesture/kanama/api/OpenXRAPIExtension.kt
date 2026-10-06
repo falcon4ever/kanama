@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -15,242 +16,242 @@ import net.multigesture.kanama.types.Vector2i
 class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     fun getOpenxrVersion(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpenxrVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpenxrVersionBind, segment)
     }
 
     fun getInstance(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInstanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getInstanceBind, segment)
     }
 
     fun getSystemId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSystemIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSystemIdBind, segment)
     }
 
     fun getSession(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSessionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSessionBind, segment)
     }
 
     fun xrResult(result: Long, format: String, args: List<Any?>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(xrResultBind, segment, result, format, args)
+        return ObjectCalls.ptrcallWithLongStringArrayArgsRetBool(Binds.xrResultBind, segment, result, format, args)
     }
 
     fun getInstanceProcAddr(name: String): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(getInstanceProcAddrBind, segment, name)
+        return ObjectCalls.ptrcallWithStringArgRetLong(Binds.getInstanceProcAddrBind, segment, name)
     }
 
     fun getErrorString(result: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getErrorStringBind, segment, result)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getErrorStringBind, segment, result)
     }
 
     fun getSwapchainFormatName(swapchainFormat: Long): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getSwapchainFormatNameBind, segment, swapchainFormat)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getSwapchainFormatNameBind, segment, swapchainFormat)
     }
 
     fun setObjectName(objectType: Long, objectHandle: Long, objectName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongStringArgs(setObjectNameBind, segment, objectType, objectHandle, objectName)
+        ObjectCalls.ptrcallWithTwoLongStringArgs(Binds.setObjectNameBind, segment, objectType, objectHandle, objectName)
     }
 
     fun beginDebugLabelRegion(labelName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(beginDebugLabelRegionBind, segment, labelName)
+        ObjectCalls.ptrcallWithStringArg(Binds.beginDebugLabelRegionBind, segment, labelName)
     }
 
     fun endDebugLabelRegion() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(endDebugLabelRegionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endDebugLabelRegionBind, segment)
     }
 
     fun insertDebugLabel(labelName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(insertDebugLabelBind, segment, labelName)
+        ObjectCalls.ptrcallWithStringArg(Binds.insertDebugLabelBind, segment, labelName)
     }
 
     fun getViewCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getViewCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getViewCountBind, segment)
     }
 
     fun getViewConfiguration(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getViewConfigurationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getViewConfigurationBind, segment)
     }
 
     fun isInitialized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInitializedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInitializedBind, segment)
     }
 
     fun isRunning(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRunningBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRunningBind, segment)
     }
 
     fun getPlaySpace(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaySpaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaySpaceBind, segment)
     }
 
     fun getPredictedDisplayTime(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPredictedDisplayTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPredictedDisplayTimeBind, segment)
     }
 
     fun getNextFrameTime(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNextFrameTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getNextFrameTimeBind, segment)
     }
 
     fun canRender(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canRenderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canRenderBind, segment)
     }
 
     fun findAction(name: String, actionSet: RID): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndRIDArgRetRID(findActionBind, segment, name, actionSet)
+        return ObjectCalls.ptrcallWithStringAndRIDArgRetRID(Binds.findActionBind, segment, name, actionSet)
     }
 
     fun actionGetHandle(action: RID): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(actionGetHandleBind, segment, action)
+        return ObjectCalls.ptrcallWithRIDArgRetLong(Binds.actionGetHandleBind, segment, action)
     }
 
     fun getHandTracker(handIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getHandTrackerBind, segment, handIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getHandTrackerBind, segment, handIndex)
     }
 
     fun registerCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerCompositionLayerProviderBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.registerCompositionLayerProviderBind, segment, listOf(extension.segment))
     }
 
     fun unregisterCompositionLayerProvider(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterCompositionLayerProviderBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterCompositionLayerProviderBind, segment, listOf(extension.segment))
     }
 
     fun registerProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerProjectionViewsExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.registerProjectionViewsExtensionBind, segment, listOf(extension.segment))
     }
 
     fun unregisterProjectionViewsExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionViewsExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterProjectionViewsExtensionBind, segment, listOf(extension.segment))
     }
 
     fun registerFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerFrameInfoExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.registerFrameInfoExtensionBind, segment, listOf(extension.segment))
     }
 
     fun unregisterFrameInfoExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterFrameInfoExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterFrameInfoExtensionBind, segment, listOf(extension.segment))
     }
 
     fun registerProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(registerProjectionLayerExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.registerProjectionLayerExtensionBind, segment, listOf(extension.segment))
     }
 
     fun unregisterProjectionLayerExtension(extension: OpenXRExtensionWrapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(unregisterProjectionLayerExtensionBind, segment, listOf(extension.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.unregisterProjectionLayerExtensionBind, segment, listOf(extension.segment))
     }
 
     fun getRenderStateZNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZNearBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderStateZNearBind, segment)
     }
 
     fun getRenderStateZFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRenderStateZFarBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRenderStateZFarBind, segment)
     }
 
     fun setVelocityTexture(renderTarget: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setVelocityTextureBind, segment, renderTarget)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setVelocityTextureBind, segment, renderTarget)
     }
 
     fun setVelocityDepthTexture(renderTarget: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setVelocityDepthTextureBind, segment, renderTarget)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setVelocityDepthTextureBind, segment, renderTarget)
     }
 
     fun setVelocityTargetSize(targetSize: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setVelocityTargetSizeBind, segment, targetSize)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setVelocityTargetSizeBind, segment, targetSize)
     }
 
     fun getSupportedSwapchainFormats(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getSupportedSwapchainFormatsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getSupportedSwapchainFormatsBind, segment)
     }
 
     fun openxrSwapchainCreate(createFlags: Long, usageFlags: Long, swapchainFormat: Long, width: Long, height: Long, sampleCount: Long, arraySize: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(openxrSwapchainCreateBind, segment, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
+        return ObjectCalls.ptrcallWithThreeLongFourUInt32ArgsRetLong(Binds.openxrSwapchainCreateBind, segment, createFlags, usageFlags, swapchainFormat, width, height, sampleCount, arraySize)
     }
 
     fun openxrSwapchainFree(swapchain: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(openxrSwapchainFreeBind, segment, swapchain)
+        ObjectCalls.ptrcallWithLongArg(Binds.openxrSwapchainFreeBind, segment, swapchain)
     }
 
     fun openxrSwapchainGetSwapchain(swapchain: Long): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(openxrSwapchainGetSwapchainBind, segment, swapchain)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.openxrSwapchainGetSwapchainBind, segment, swapchain)
     }
 
     fun openxrSwapchainAcquire(swapchain: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(openxrSwapchainAcquireBind, segment, swapchain)
+        ObjectCalls.ptrcallWithLongArg(Binds.openxrSwapchainAcquireBind, segment, swapchain)
     }
 
     fun openxrSwapchainGetImage(swapchain: Long): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetRID(openxrSwapchainGetImageBind, segment, swapchain)
+        return ObjectCalls.ptrcallWithLongArgRetRID(Binds.openxrSwapchainGetImageBind, segment, swapchain)
     }
 
     fun openxrSwapchainRelease(swapchain: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(openxrSwapchainReleaseBind, segment, swapchain)
+        ObjectCalls.ptrcallWithLongArg(Binds.openxrSwapchainReleaseBind, segment, swapchain)
     }
 
     fun getProjectionLayer(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getProjectionLayerBind, segment)
     }
 
     fun setRenderRegion(renderRegion: Rect2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iArg(setRenderRegionBind, segment, renderRegion)
+        ObjectCalls.ptrcallWithRect2iArg(Binds.setRenderRegionBind, segment, renderRegion)
     }
 
     fun setEmulateEnvironmentBlendModeAlphaBlend(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEmulateEnvironmentBlendModeAlphaBlendBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmulateEnvironmentBlendModeAlphaBlendBind, segment, enabled)
     }
 
     fun isEnvironmentBlendModeAlphaSupported(): OpenXRAPIExtension.OpenXRAlphaBlendModeSupport {
         checkOpen()
-        return OpenXRAPIExtension.OpenXRAlphaBlendModeSupport(ObjectCalls.ptrcallNoArgsRetLong(isEnvironmentBlendModeAlphaSupportedBind, segment))
+        return OpenXRAPIExtension.OpenXRAlphaBlendModeSupport(ObjectCalls.ptrcallNoArgsRetLong(Binds.isEnvironmentBlendModeAlphaSupportedBind, segment))
     }
 
     fun updateMainSwapchainSize() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(updateMainSwapchainSizeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateMainSwapchainSizeBind, segment)
     }
 
     @JvmInline
@@ -264,7 +265,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
 
     companion object {
         fun openxrIsEnabled(checkRunInEditor: Boolean): Boolean {
-            return ObjectCalls.ptrcallWithBoolArgRetBool(openxrIsEnabledBind, NULL_SEGMENT, checkRunInEditor)
+            return ObjectCalls.ptrcallWithBoolArgRetBool(Binds.openxrIsEnabledBind, NULL_SEGMENT, checkRunInEditor)
         }
 
         @JvmStatic
@@ -276,250 +277,252 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRAPIExtension? =
             if (handle.address() == 0L) null else OpenXRAPIExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_OPENXR_VERSION_HASH = 2455072627L
-        private val getOpenxrVersionBind by lazy {
+        @JvmField
+        val getOpenxrVersionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_openxr_version", GET_OPENXR_VERSION_HASH)
-        }
 
         private const val GET_INSTANCE_HASH = 2455072627L
-        private val getInstanceBind by lazy {
+        @JvmField
+        val getInstanceBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_instance", GET_INSTANCE_HASH)
-        }
 
         private const val GET_SYSTEM_ID_HASH = 2455072627L
-        private val getSystemIdBind by lazy {
+        @JvmField
+        val getSystemIdBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_system_id", GET_SYSTEM_ID_HASH)
-        }
 
         private const val GET_SESSION_HASH = 2455072627L
-        private val getSessionBind by lazy {
+        @JvmField
+        val getSessionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_session", GET_SESSION_HASH)
-        }
 
         private const val XR_RESULT_HASH = 3886436197L
-        private val xrResultBind by lazy {
+        @JvmField
+        val xrResultBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "xr_result", XR_RESULT_HASH)
-        }
 
         private const val OPENXR_IS_ENABLED_HASH = 2703660260L
-        private val openxrIsEnabledBind by lazy {
+        @JvmField
+        val openxrIsEnabledBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_is_enabled", OPENXR_IS_ENABLED_HASH)
-        }
 
         private const val GET_INSTANCE_PROC_ADDR_HASH = 1597066294L
-        private val getInstanceProcAddrBind by lazy {
+        @JvmField
+        val getInstanceProcAddrBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_instance_proc_addr", GET_INSTANCE_PROC_ADDR_HASH)
-        }
 
         private const val GET_ERROR_STRING_HASH = 990163283L
-        private val getErrorStringBind by lazy {
+        @JvmField
+        val getErrorStringBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_error_string", GET_ERROR_STRING_HASH)
-        }
 
         private const val GET_SWAPCHAIN_FORMAT_NAME_HASH = 990163283L
-        private val getSwapchainFormatNameBind by lazy {
+        @JvmField
+        val getSwapchainFormatNameBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_swapchain_format_name", GET_SWAPCHAIN_FORMAT_NAME_HASH)
-        }
 
         private const val SET_OBJECT_NAME_HASH = 2285447957L
-        private val setObjectNameBind by lazy {
+        @JvmField
+        val setObjectNameBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_object_name", SET_OBJECT_NAME_HASH)
-        }
 
         private const val BEGIN_DEBUG_LABEL_REGION_HASH = 83702148L
-        private val beginDebugLabelRegionBind by lazy {
+        @JvmField
+        val beginDebugLabelRegionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "begin_debug_label_region", BEGIN_DEBUG_LABEL_REGION_HASH)
-        }
 
         private const val END_DEBUG_LABEL_REGION_HASH = 3218959716L
-        private val endDebugLabelRegionBind by lazy {
+        @JvmField
+        val endDebugLabelRegionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "end_debug_label_region", END_DEBUG_LABEL_REGION_HASH)
-        }
 
         private const val INSERT_DEBUG_LABEL_HASH = 83702148L
-        private val insertDebugLabelBind by lazy {
+        @JvmField
+        val insertDebugLabelBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "insert_debug_label", INSERT_DEBUG_LABEL_HASH)
-        }
 
         private const val GET_VIEW_COUNT_HASH = 3905245786L
-        private val getViewCountBind by lazy {
+        @JvmField
+        val getViewCountBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_view_count", GET_VIEW_COUNT_HASH)
-        }
 
         private const val GET_VIEW_CONFIGURATION_HASH = 3905245786L
-        private val getViewConfigurationBind by lazy {
+        @JvmField
+        val getViewConfigurationBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_view_configuration", GET_VIEW_CONFIGURATION_HASH)
-        }
 
         private const val IS_INITIALIZED_HASH = 2240911060L
-        private val isInitializedBind by lazy {
+        @JvmField
+        val isInitializedBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "is_initialized", IS_INITIALIZED_HASH)
-        }
 
         private const val IS_RUNNING_HASH = 2240911060L
-        private val isRunningBind by lazy {
+        @JvmField
+        val isRunningBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "is_running", IS_RUNNING_HASH)
-        }
 
         private const val GET_PLAY_SPACE_HASH = 2455072627L
-        private val getPlaySpaceBind by lazy {
+        @JvmField
+        val getPlaySpaceBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_play_space", GET_PLAY_SPACE_HASH)
-        }
 
         private const val GET_PREDICTED_DISPLAY_TIME_HASH = 2455072627L
-        private val getPredictedDisplayTimeBind by lazy {
+        @JvmField
+        val getPredictedDisplayTimeBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_predicted_display_time", GET_PREDICTED_DISPLAY_TIME_HASH)
-        }
 
         private const val GET_NEXT_FRAME_TIME_HASH = 2455072627L
-        private val getNextFrameTimeBind by lazy {
+        @JvmField
+        val getNextFrameTimeBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_next_frame_time", GET_NEXT_FRAME_TIME_HASH)
-        }
 
         private const val CAN_RENDER_HASH = 2240911060L
-        private val canRenderBind by lazy {
+        @JvmField
+        val canRenderBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "can_render", CAN_RENDER_HASH)
-        }
 
         private const val FIND_ACTION_HASH = 4106179378L
-        private val findActionBind by lazy {
+        @JvmField
+        val findActionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "find_action", FIND_ACTION_HASH)
-        }
 
         private const val ACTION_GET_HANDLE_HASH = 3917799429L
-        private val actionGetHandleBind by lazy {
+        @JvmField
+        val actionGetHandleBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "action_get_handle", ACTION_GET_HANDLE_HASH)
-        }
 
         private const val GET_HAND_TRACKER_HASH = 3744713108L
-        private val getHandTrackerBind by lazy {
+        @JvmField
+        val getHandTrackerBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_hand_tracker", GET_HAND_TRACKER_HASH)
-        }
 
         private const val REGISTER_COMPOSITION_LAYER_PROVIDER_HASH = 1477360496L
-        private val registerCompositionLayerProviderBind by lazy {
+        @JvmField
+        val registerCompositionLayerProviderBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "register_composition_layer_provider", REGISTER_COMPOSITION_LAYER_PROVIDER_HASH)
-        }
 
         private const val UNREGISTER_COMPOSITION_LAYER_PROVIDER_HASH = 1477360496L
-        private val unregisterCompositionLayerProviderBind by lazy {
+        @JvmField
+        val unregisterCompositionLayerProviderBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "unregister_composition_layer_provider", UNREGISTER_COMPOSITION_LAYER_PROVIDER_HASH)
-        }
 
         private const val REGISTER_PROJECTION_VIEWS_EXTENSION_HASH = 1477360496L
-        private val registerProjectionViewsExtensionBind by lazy {
+        @JvmField
+        val registerProjectionViewsExtensionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "register_projection_views_extension", REGISTER_PROJECTION_VIEWS_EXTENSION_HASH)
-        }
 
         private const val UNREGISTER_PROJECTION_VIEWS_EXTENSION_HASH = 1477360496L
-        private val unregisterProjectionViewsExtensionBind by lazy {
+        @JvmField
+        val unregisterProjectionViewsExtensionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "unregister_projection_views_extension", UNREGISTER_PROJECTION_VIEWS_EXTENSION_HASH)
-        }
 
         private const val REGISTER_FRAME_INFO_EXTENSION_HASH = 1477360496L
-        private val registerFrameInfoExtensionBind by lazy {
+        @JvmField
+        val registerFrameInfoExtensionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "register_frame_info_extension", REGISTER_FRAME_INFO_EXTENSION_HASH)
-        }
 
         private const val UNREGISTER_FRAME_INFO_EXTENSION_HASH = 1477360496L
-        private val unregisterFrameInfoExtensionBind by lazy {
+        @JvmField
+        val unregisterFrameInfoExtensionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "unregister_frame_info_extension", UNREGISTER_FRAME_INFO_EXTENSION_HASH)
-        }
 
         private const val REGISTER_PROJECTION_LAYER_EXTENSION_HASH = 1477360496L
-        private val registerProjectionLayerExtensionBind by lazy {
+        @JvmField
+        val registerProjectionLayerExtensionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "register_projection_layer_extension", REGISTER_PROJECTION_LAYER_EXTENSION_HASH)
-        }
 
         private const val UNREGISTER_PROJECTION_LAYER_EXTENSION_HASH = 1477360496L
-        private val unregisterProjectionLayerExtensionBind by lazy {
+        @JvmField
+        val unregisterProjectionLayerExtensionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "unregister_projection_layer_extension", UNREGISTER_PROJECTION_LAYER_EXTENSION_HASH)
-        }
 
         private const val GET_RENDER_STATE_Z_NEAR_HASH = 191475506L
-        private val getRenderStateZNearBind by lazy {
+        @JvmField
+        val getRenderStateZNearBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_render_state_z_near", GET_RENDER_STATE_Z_NEAR_HASH)
-        }
 
         private const val GET_RENDER_STATE_Z_FAR_HASH = 191475506L
-        private val getRenderStateZFarBind by lazy {
+        @JvmField
+        val getRenderStateZFarBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_render_state_z_far", GET_RENDER_STATE_Z_FAR_HASH)
-        }
 
         private const val SET_VELOCITY_TEXTURE_HASH = 2722037293L
-        private val setVelocityTextureBind by lazy {
+        @JvmField
+        val setVelocityTextureBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_velocity_texture", SET_VELOCITY_TEXTURE_HASH)
-        }
 
         private const val SET_VELOCITY_DEPTH_TEXTURE_HASH = 2722037293L
-        private val setVelocityDepthTextureBind by lazy {
+        @JvmField
+        val setVelocityDepthTextureBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_velocity_depth_texture", SET_VELOCITY_DEPTH_TEXTURE_HASH)
-        }
 
         private const val SET_VELOCITY_TARGET_SIZE_HASH = 1130785943L
-        private val setVelocityTargetSizeBind by lazy {
+        @JvmField
+        val setVelocityTargetSizeBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_velocity_target_size", SET_VELOCITY_TARGET_SIZE_HASH)
-        }
 
         private const val GET_SUPPORTED_SWAPCHAIN_FORMATS_HASH = 3851388692L
-        private val getSupportedSwapchainFormatsBind by lazy {
+        @JvmField
+        val getSupportedSwapchainFormatsBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_supported_swapchain_formats", GET_SUPPORTED_SWAPCHAIN_FORMATS_HASH)
-        }
 
         private const val OPENXR_SWAPCHAIN_CREATE_HASH = 2162228999L
-        private val openxrSwapchainCreateBind by lazy {
+        @JvmField
+        val openxrSwapchainCreateBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_swapchain_create", OPENXR_SWAPCHAIN_CREATE_HASH)
-        }
 
         private const val OPENXR_SWAPCHAIN_FREE_HASH = 1286410249L
-        private val openxrSwapchainFreeBind by lazy {
+        @JvmField
+        val openxrSwapchainFreeBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_swapchain_free", OPENXR_SWAPCHAIN_FREE_HASH)
-        }
 
         private const val OPENXR_SWAPCHAIN_GET_SWAPCHAIN_HASH = 3744713108L
-        private val openxrSwapchainGetSwapchainBind by lazy {
+        @JvmField
+        val openxrSwapchainGetSwapchainBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_swapchain_get_swapchain", OPENXR_SWAPCHAIN_GET_SWAPCHAIN_HASH)
-        }
 
         private const val OPENXR_SWAPCHAIN_ACQUIRE_HASH = 1286410249L
-        private val openxrSwapchainAcquireBind by lazy {
+        @JvmField
+        val openxrSwapchainAcquireBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_swapchain_acquire", OPENXR_SWAPCHAIN_ACQUIRE_HASH)
-        }
 
         private const val OPENXR_SWAPCHAIN_GET_IMAGE_HASH = 937000113L
-        private val openxrSwapchainGetImageBind by lazy {
+        @JvmField
+        val openxrSwapchainGetImageBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_swapchain_get_image", OPENXR_SWAPCHAIN_GET_IMAGE_HASH)
-        }
 
         private const val OPENXR_SWAPCHAIN_RELEASE_HASH = 1286410249L
-        private val openxrSwapchainReleaseBind by lazy {
+        @JvmField
+        val openxrSwapchainReleaseBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "openxr_swapchain_release", OPENXR_SWAPCHAIN_RELEASE_HASH)
-        }
 
         private const val GET_PROJECTION_LAYER_HASH = 2455072627L
-        private val getProjectionLayerBind by lazy {
+        @JvmField
+        val getProjectionLayerBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_projection_layer", GET_PROJECTION_LAYER_HASH)
-        }
 
         private const val SET_RENDER_REGION_HASH = 1763793166L
-        private val setRenderRegionBind by lazy {
+        @JvmField
+        val setRenderRegionBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_render_region", SET_RENDER_REGION_HASH)
-        }
 
         private const val SET_EMULATE_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND_HASH = 2586408642L
-        private val setEmulateEnvironmentBlendModeAlphaBlendBind by lazy {
+        @JvmField
+        val setEmulateEnvironmentBlendModeAlphaBlendBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_emulate_environment_blend_mode_alpha_blend", SET_EMULATE_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND_HASH)
-        }
 
         private const val IS_ENVIRONMENT_BLEND_MODE_ALPHA_SUPPORTED_HASH = 1579290861L
-        private val isEnvironmentBlendModeAlphaSupportedBind by lazy {
+        @JvmField
+        val isEnvironmentBlendModeAlphaSupportedBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "is_environment_blend_mode_alpha_supported", IS_ENVIRONMENT_BLEND_MODE_ALPHA_SUPPORTED_HASH)
-        }
 
         private const val UPDATE_MAIN_SWAPCHAIN_SIZE_HASH = 3218959716L
-        private val updateMainSwapchainSizeBind by lazy {
+        @JvmField
+        val updateMainSwapchainSizeBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "update_main_swapchain_size", UPDATE_MAIN_SWAPCHAIN_SIZE_HASH)
-        }
     }
 }

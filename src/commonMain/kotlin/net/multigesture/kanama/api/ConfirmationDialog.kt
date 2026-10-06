@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
      * Generated from Godot docs: ConfirmationDialog.get_cancel_button
      */
     fun getCancelButton(): Button? {
-        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCancelButtonBind, segment))
+        return Button.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCancelButtonBind, segment))
     }
 
     /**
@@ -34,7 +35,7 @@ open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
      * Generated from Godot docs: ConfirmationDialog.set_cancel_button_text
      */
     fun setCancelButtonText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setCancelButtonTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCancelButtonTextBind, segment, text)
     }
 
     /**
@@ -43,7 +44,7 @@ open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
      * Generated from Godot docs: ConfirmationDialog.get_cancel_button_text
      */
     fun getCancelButtonText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCancelButtonTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCancelButtonTextBind, segment)
     }
 
     companion object {
@@ -53,20 +54,22 @@ open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
 
         internal fun wrap(handle: RawSegment): ConfirmationDialog? =
             if (handle.address() == 0L) null else ConfirmationDialog(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CANCEL_BUTTON_HASH = 1856205918L
-        private val getCancelButtonBind by lazy {
+        @JvmField
+        val getCancelButtonBind =
             ObjectCalls.getMethodBind("ConfirmationDialog", "get_cancel_button", GET_CANCEL_BUTTON_HASH)
-        }
 
         private const val SET_CANCEL_BUTTON_TEXT_HASH = 83702148L
-        private val setCancelButtonTextBind by lazy {
+        @JvmField
+        val setCancelButtonTextBind =
             ObjectCalls.getMethodBind("ConfirmationDialog", "set_cancel_button_text", SET_CANCEL_BUTTON_TEXT_HASH)
-        }
 
         private const val GET_CANCEL_BUTTON_TEXT_HASH = 201670096L
-        private val getCancelButtonTextBind by lazy {
+        @JvmField
+        val getCancelButtonTextBind =
             ObjectCalls.getMethodBind("ConfirmationDialog", "get_cancel_button_text", GET_CANCEL_BUTTON_TEXT_HASH)
-        }
     }
 }

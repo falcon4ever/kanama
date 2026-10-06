@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -40,7 +41,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.set_engine_force
      */
     fun setEngineForce(engineForce: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEngineForceBind, segment, engineForce)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEngineForceBind, segment, engineForce)
     }
 
     /**
@@ -54,7 +55,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.get_engine_force
      */
     fun getEngineForce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEngineForceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEngineForceBind, segment)
     }
 
     /**
@@ -66,7 +67,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.set_brake
      */
     fun setBrake(brake: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBrakeBind, segment, brake)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBrakeBind, segment, brake)
     }
 
     /**
@@ -78,7 +79,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.get_brake
      */
     fun getBrake(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBrakeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBrakeBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.set_steering
      */
     fun setSteering(steering: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSteeringBind, segment, steering)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSteeringBind, segment, steering)
     }
 
     /**
@@ -102,7 +103,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
      * Generated from Godot docs: VehicleBody3D.get_steering
      */
     fun getSteering(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSteeringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSteeringBind, segment)
     }
 
     companion object {
@@ -112,35 +113,37 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
 
         internal fun wrap(handle: RawSegment): VehicleBody3D? =
             if (handle.address() == 0L) null else VehicleBody3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENGINE_FORCE_HASH = 373806689L
-        private val setEngineForceBind by lazy {
+        @JvmField
+        val setEngineForceBind =
             ObjectCalls.getMethodBind("VehicleBody3D", "set_engine_force", SET_ENGINE_FORCE_HASH)
-        }
 
         private const val GET_ENGINE_FORCE_HASH = 1740695150L
-        private val getEngineForceBind by lazy {
+        @JvmField
+        val getEngineForceBind =
             ObjectCalls.getMethodBind("VehicleBody3D", "get_engine_force", GET_ENGINE_FORCE_HASH)
-        }
 
         private const val SET_BRAKE_HASH = 373806689L
-        private val setBrakeBind by lazy {
+        @JvmField
+        val setBrakeBind =
             ObjectCalls.getMethodBind("VehicleBody3D", "set_brake", SET_BRAKE_HASH)
-        }
 
         private const val GET_BRAKE_HASH = 1740695150L
-        private val getBrakeBind by lazy {
+        @JvmField
+        val getBrakeBind =
             ObjectCalls.getMethodBind("VehicleBody3D", "get_brake", GET_BRAKE_HASH)
-        }
 
         private const val SET_STEERING_HASH = 373806689L
-        private val setSteeringBind by lazy {
+        @JvmField
+        val setSteeringBind =
             ObjectCalls.getMethodBind("VehicleBody3D", "set_steering", SET_STEERING_HASH)
-        }
 
         private const val GET_STEERING_HASH = 1740695150L
-        private val getSteeringBind by lazy {
+        @JvmField
+        val getSteeringBind =
             ObjectCalls.getMethodBind("VehicleBody3D", "get_steering", GET_STEERING_HASH)
-        }
     }
 }

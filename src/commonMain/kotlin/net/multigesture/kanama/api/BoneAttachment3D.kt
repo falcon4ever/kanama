@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_skeleton
      */
     fun getSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkeletonBind, segment))
     }
 
     /**
@@ -58,7 +59,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -67,7 +68,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBoneNameBind, segment)
     }
 
     /**
@@ -76,7 +77,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_bone_idx
      */
     fun setBoneIdx(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneIdxBind, segment, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBoneIdxBind, segment, boneIdx)
     }
 
     /**
@@ -85,7 +86,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_bone_idx
      */
     fun getBoneIdx(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneIdxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneIdxBind, segment)
     }
 
     /**
@@ -96,7 +97,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.on_skeleton_update
      */
     fun onSkeletonUpdate() {
-        ObjectCalls.ptrcallNoArgs(onSkeletonUpdateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.onSkeletonUpdateBind, segment)
     }
 
     /**
@@ -109,7 +110,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_override_pose
      */
     fun setOverridePose(overridePose: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOverridePoseBind, segment, overridePose)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOverridePoseBind, segment, overridePose)
     }
 
     /**
@@ -122,7 +123,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_override_pose
      */
     fun getOverridePose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getOverridePoseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getOverridePoseBind, segment)
     }
 
     /**
@@ -133,7 +134,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_use_external_skeleton
      */
     fun setUseExternalSkeleton(useExternalSkeleton: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseExternalSkeletonBind, segment, useExternalSkeleton)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseExternalSkeletonBind, segment, useExternalSkeleton)
     }
 
     /**
@@ -144,7 +145,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_use_external_skeleton
      */
     fun getUseExternalSkeleton(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseExternalSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseExternalSkeletonBind, segment)
     }
 
     /**
@@ -153,7 +154,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.set_external_skeleton
      */
     fun setExternalSkeleton(externalSkeleton: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setExternalSkeletonBind, segment, externalSkeleton)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setExternalSkeletonBind, segment, externalSkeleton)
     }
 
     /**
@@ -162,7 +163,7 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: BoneAttachment3D.get_external_skeleton
      */
     fun getExternalSkeleton(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getExternalSkeletonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getExternalSkeletonBind, segment)
     }
 
     companion object {
@@ -172,65 +173,67 @@ class BoneAttachment3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): BoneAttachment3D? =
             if (handle.address() == 0L) null else BoneAttachment3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SKELETON_HASH = 1814733083L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "get_skeleton", GET_SKELETON_HASH)
-        }
 
         private const val SET_BONE_NAME_HASH = 83702148L
-        private val setBoneNameBind by lazy {
+        @JvmField
+        val setBoneNameBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "set_bone_name", SET_BONE_NAME_HASH)
-        }
 
         private const val GET_BONE_NAME_HASH = 201670096L
-        private val getBoneNameBind by lazy {
+        @JvmField
+        val getBoneNameBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "get_bone_name", GET_BONE_NAME_HASH)
-        }
 
         private const val SET_BONE_IDX_HASH = 1286410249L
-        private val setBoneIdxBind by lazy {
+        @JvmField
+        val setBoneIdxBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "set_bone_idx", SET_BONE_IDX_HASH)
-        }
 
         private const val GET_BONE_IDX_HASH = 3905245786L
-        private val getBoneIdxBind by lazy {
+        @JvmField
+        val getBoneIdxBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "get_bone_idx", GET_BONE_IDX_HASH)
-        }
 
         private const val ON_SKELETON_UPDATE_HASH = 3218959716L
-        private val onSkeletonUpdateBind by lazy {
+        @JvmField
+        val onSkeletonUpdateBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "on_skeleton_update", ON_SKELETON_UPDATE_HASH)
-        }
 
         private const val SET_OVERRIDE_POSE_HASH = 2586408642L
-        private val setOverridePoseBind by lazy {
+        @JvmField
+        val setOverridePoseBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "set_override_pose", SET_OVERRIDE_POSE_HASH)
-        }
 
         private const val GET_OVERRIDE_POSE_HASH = 36873697L
-        private val getOverridePoseBind by lazy {
+        @JvmField
+        val getOverridePoseBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "get_override_pose", GET_OVERRIDE_POSE_HASH)
-        }
 
         private const val SET_USE_EXTERNAL_SKELETON_HASH = 2586408642L
-        private val setUseExternalSkeletonBind by lazy {
+        @JvmField
+        val setUseExternalSkeletonBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "set_use_external_skeleton", SET_USE_EXTERNAL_SKELETON_HASH)
-        }
 
         private const val GET_USE_EXTERNAL_SKELETON_HASH = 36873697L
-        private val getUseExternalSkeletonBind by lazy {
+        @JvmField
+        val getUseExternalSkeletonBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "get_use_external_skeleton", GET_USE_EXTERNAL_SKELETON_HASH)
-        }
 
         private const val SET_EXTERNAL_SKELETON_HASH = 1348162250L
-        private val setExternalSkeletonBind by lazy {
+        @JvmField
+        val setExternalSkeletonBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "set_external_skeleton", SET_EXTERNAL_SKELETON_HASH)
-        }
 
         private const val GET_EXTERNAL_SKELETON_HASH = 4075236667L
-        private val getExternalSkeletonBind by lazy {
+        @JvmField
+        val getExternalSkeletonBind =
             ObjectCalls.getMethodBind("BoneAttachment3D", "get_external_skeleton", GET_EXTERNAL_SKELETON_HASH)
-        }
     }
 }

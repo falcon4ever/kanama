@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -60,7 +61,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_progress
      */
     fun setProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressBind, segment, progress)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setProgressBind, segment, progress)
     }
 
     /**
@@ -70,7 +71,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_progress
      */
     fun getProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProgressBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_h_offset
      */
     fun setHOffset(hOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, hOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHOffsetBind, segment, hOffset)
     }
 
     /**
@@ -88,7 +89,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_h_offset
      */
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHOffsetBind, segment)
     }
 
     /**
@@ -97,7 +98,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_v_offset
      */
     fun setVOffset(vOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, vOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVOffsetBind, segment, vOffset)
     }
 
     /**
@@ -106,7 +107,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_v_offset
      */
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVOffsetBind, segment)
     }
 
     /**
@@ -120,7 +121,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_progress_ratio
      */
     fun setProgressRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setProgressRatioBind, segment, ratio)
     }
 
     /**
@@ -134,7 +135,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_progress_ratio
      */
     fun getProgressRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProgressRatioBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_rotates
      */
     fun setRotates(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRotatesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRotatesBind, segment, enabled)
     }
 
     /**
@@ -154,7 +155,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.is_rotating
      */
     fun isRotating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRotatingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRotatingBind, segment)
     }
 
     /**
@@ -169,7 +170,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_cubic_interpolation
      */
     fun setCubicInterpolation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCubicInterpolationBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCubicInterpolationBind, segment, enabled)
     }
 
     /**
@@ -184,7 +185,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.get_cubic_interpolation
      */
     fun getCubicInterpolation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCubicInterpolationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCubicInterpolationBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.set_loop
      */
     fun setLoop(loop: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
     }
 
     /**
@@ -204,7 +205,7 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: PathFollow2D.has_loop
      */
     fun hasLoop(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
     }
 
     companion object {
@@ -214,75 +215,77 @@ class PathFollow2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): PathFollow2D? =
             if (handle.address() == 0L) null else PathFollow2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PROGRESS_HASH = 373806689L
-        private val setProgressBind by lazy {
+        @JvmField
+        val setProgressBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_progress", SET_PROGRESS_HASH)
-        }
 
         private const val GET_PROGRESS_HASH = 1740695150L
-        private val getProgressBind by lazy {
+        @JvmField
+        val getProgressBind =
             ObjectCalls.getMethodBind("PathFollow2D", "get_progress", GET_PROGRESS_HASH)
-        }
 
         private const val SET_H_OFFSET_HASH = 373806689L
-        private val setHOffsetBind by lazy {
+        @JvmField
+        val setHOffsetBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_h_offset", SET_H_OFFSET_HASH)
-        }
 
         private const val GET_H_OFFSET_HASH = 1740695150L
-        private val getHOffsetBind by lazy {
+        @JvmField
+        val getHOffsetBind =
             ObjectCalls.getMethodBind("PathFollow2D", "get_h_offset", GET_H_OFFSET_HASH)
-        }
 
         private const val SET_V_OFFSET_HASH = 373806689L
-        private val setVOffsetBind by lazy {
+        @JvmField
+        val setVOffsetBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_v_offset", SET_V_OFFSET_HASH)
-        }
 
         private const val GET_V_OFFSET_HASH = 1740695150L
-        private val getVOffsetBind by lazy {
+        @JvmField
+        val getVOffsetBind =
             ObjectCalls.getMethodBind("PathFollow2D", "get_v_offset", GET_V_OFFSET_HASH)
-        }
 
         private const val SET_PROGRESS_RATIO_HASH = 373806689L
-        private val setProgressRatioBind by lazy {
+        @JvmField
+        val setProgressRatioBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_progress_ratio", SET_PROGRESS_RATIO_HASH)
-        }
 
         private const val GET_PROGRESS_RATIO_HASH = 1740695150L
-        private val getProgressRatioBind by lazy {
+        @JvmField
+        val getProgressRatioBind =
             ObjectCalls.getMethodBind("PathFollow2D", "get_progress_ratio", GET_PROGRESS_RATIO_HASH)
-        }
 
         private const val SET_ROTATES_HASH = 2586408642L
-        private val setRotatesBind by lazy {
+        @JvmField
+        val setRotatesBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_rotates", SET_ROTATES_HASH)
-        }
 
         private const val IS_ROTATING_HASH = 36873697L
-        private val isRotatingBind by lazy {
+        @JvmField
+        val isRotatingBind =
             ObjectCalls.getMethodBind("PathFollow2D", "is_rotating", IS_ROTATING_HASH)
-        }
 
         private const val SET_CUBIC_INTERPOLATION_HASH = 2586408642L
-        private val setCubicInterpolationBind by lazy {
+        @JvmField
+        val setCubicInterpolationBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_cubic_interpolation", SET_CUBIC_INTERPOLATION_HASH)
-        }
 
         private const val GET_CUBIC_INTERPOLATION_HASH = 36873697L
-        private val getCubicInterpolationBind by lazy {
+        @JvmField
+        val getCubicInterpolationBind =
             ObjectCalls.getMethodBind("PathFollow2D", "get_cubic_interpolation", GET_CUBIC_INTERPOLATION_HASH)
-        }
 
         private const val SET_LOOP_HASH = 2586408642L
-        private val setLoopBind by lazy {
+        @JvmField
+        val setLoopBind =
             ObjectCalls.getMethodBind("PathFollow2D", "set_loop", SET_LOOP_HASH)
-        }
 
         private const val HAS_LOOP_HASH = 36873697L
-        private val hasLoopBind by lazy {
+        @JvmField
+        val hasLoopBind =
             ObjectCalls.getMethodBind("PathFollow2D", "has_loop", HAS_LOOP_HASH)
-        }
     }
 }

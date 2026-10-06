@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setUniformType(pMember: RenderingDevice.UniformType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setUniformTypeBind, segment, pMember.value)
     }
 
     /**
@@ -41,7 +42,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUniformType(): RenderingDevice.UniformType {
         checkOpen()
-        return RenderingDevice.UniformType(ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, segment))
+        return RenderingDevice.UniformType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUniformTypeBind, segment))
     }
 
     /**
@@ -51,7 +52,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBinding(pMember: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setBindingBind, segment, pMember)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBindingBind, segment, pMember)
     }
 
     /**
@@ -61,7 +62,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBinding(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBindingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addId(id: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(addIdBind, segment, id)
+        ObjectCalls.ptrcallWithRIDArg(Binds.addIdBind, segment, id)
     }
 
     /**
@@ -82,7 +83,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clearIds() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearIdsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearIdsBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIds(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getIdsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getIdsBind, segment)
     }
 
     companion object {
@@ -105,40 +106,42 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDUniform? =
             if (handle.address() == 0L) null else RDUniform(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_UNIFORM_TYPE_HASH = 1664894931L
-        private val setUniformTypeBind by lazy {
+        @JvmField
+        val setUniformTypeBind =
             ObjectCalls.getMethodBind("RDUniform", "set_uniform_type", SET_UNIFORM_TYPE_HASH)
-        }
 
         private const val GET_UNIFORM_TYPE_HASH = 475470040L
-        private val getUniformTypeBind by lazy {
+        @JvmField
+        val getUniformTypeBind =
             ObjectCalls.getMethodBind("RDUniform", "get_uniform_type", GET_UNIFORM_TYPE_HASH)
-        }
 
         private const val SET_BINDING_HASH = 1286410249L
-        private val setBindingBind by lazy {
+        @JvmField
+        val setBindingBind =
             ObjectCalls.getMethodBind("RDUniform", "set_binding", SET_BINDING_HASH)
-        }
 
         private const val GET_BINDING_HASH = 3905245786L
-        private val getBindingBind by lazy {
+        @JvmField
+        val getBindingBind =
             ObjectCalls.getMethodBind("RDUniform", "get_binding", GET_BINDING_HASH)
-        }
 
         private const val ADD_ID_HASH = 2722037293L
-        private val addIdBind by lazy {
+        @JvmField
+        val addIdBind =
             ObjectCalls.getMethodBind("RDUniform", "add_id", ADD_ID_HASH)
-        }
 
         private const val CLEAR_IDS_HASH = 3218959716L
-        private val clearIdsBind by lazy {
+        @JvmField
+        val clearIdsBind =
             ObjectCalls.getMethodBind("RDUniform", "clear_ids", CLEAR_IDS_HASH)
-        }
 
         private const val GET_IDS_HASH = 3995934104L
-        private val getIdsBind by lazy {
+        @JvmField
+        val getIdsBind =
             ObjectCalls.getMethodBind("RDUniform", "get_ids", GET_IDS_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -79,7 +80,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -90,7 +91,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
     /**
@@ -102,7 +103,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setUseColors(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseColorsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseColorsBind, segment, enable)
     }
 
     /**
@@ -114,7 +115,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingColors(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingColorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingColorsBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setUseCustomData(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomDataBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomDataBind, segment, enable)
     }
 
     /**
@@ -138,7 +139,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingCustomData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingCustomDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingCustomDataBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setTransformFormat(format: MultiMesh.TransformFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTransformFormatBind, segment, format.value)
     }
 
     /**
@@ -158,7 +159,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getTransformFormat(): MultiMesh.TransformFormat {
         checkOpen()
-        return MultiMesh.TransformFormat(ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, segment))
+        return MultiMesh.TransformFormat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTransformFormatBind, segment))
     }
 
     /**
@@ -170,7 +171,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setInstanceCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInstanceCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInstanceCountBind, segment, count)
     }
 
     /**
@@ -182,7 +183,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInstanceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceCountBind, segment)
     }
 
     /**
@@ -193,7 +194,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setVisibleInstanceCount(count: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVisibleInstanceCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVisibleInstanceCountBind, segment, count)
     }
 
     /**
@@ -204,7 +205,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getVisibleInstanceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleInstanceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleInstanceCountBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setPhysicsInterpolationQuality(quality: MultiMesh.PhysicsInterpolationQuality) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, segment, quality.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPhysicsInterpolationQualityBind, segment, quality.value)
     }
 
     /**
@@ -230,7 +231,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsInterpolationQuality(): MultiMesh.PhysicsInterpolationQuality {
         checkOpen()
-        return MultiMesh.PhysicsInterpolationQuality(ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, segment))
+        return MultiMesh.PhysicsInterpolationQuality(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicsInterpolationQualityBind, segment))
     }
 
     /**
@@ -240,7 +241,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setInstanceTransform(instance: Int, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform3DArg(setInstanceTransformBind, segment, instance, transform)
+        ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setInstanceTransformBind, segment, instance, transform)
     }
 
     /**
@@ -250,7 +251,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setInstanceTransform2d(instance: Int, transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform2DArg(setInstanceTransform2dBind, segment, instance, transform)
+        ObjectCalls.ptrcallWithIntAndTransform2DArg(Binds.setInstanceTransform2dBind, segment, instance, transform)
     }
 
     /**
@@ -260,7 +261,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceTransform(instance: Int): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform3D(getInstanceTransformBind, segment, instance)
+        return ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getInstanceTransformBind, segment, instance)
     }
 
     /**
@@ -270,7 +271,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceTransform2d(instance: Int): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getInstanceTransform2dBind, segment, instance)
+        return ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getInstanceTransform2dBind, segment, instance)
     }
 
     /**
@@ -286,7 +287,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setInstanceColor(instance: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setInstanceColorBind, segment, instance, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setInstanceColorBind, segment, instance, color)
     }
 
     /**
@@ -296,7 +297,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceColor(instance: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceColorBind, segment, instance)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInstanceColorBind, segment, instance)
     }
 
     /**
@@ -310,7 +311,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setInstanceCustomData(instance: Int, customData: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndColorArg(setInstanceCustomDataBind, segment, instance, customData)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setInstanceCustomDataBind, segment, instance, customData)
     }
 
     /**
@@ -320,7 +321,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getInstanceCustomData(instance: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetColor(getInstanceCustomDataBind, segment, instance)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInstanceCustomDataBind, segment, instance)
     }
 
     /**
@@ -333,7 +334,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun resetInstancePhysicsInterpolation(instance: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(resetInstancePhysicsInterpolationBind, segment, instance)
+        ObjectCalls.ptrcallWithIntArg(Binds.resetInstancePhysicsInterpolationBind, segment, instance)
     }
 
     /**
@@ -345,7 +346,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun resetInstancesPhysicsInterpolation() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetInstancesPhysicsInterpolationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetInstancesPhysicsInterpolationBind, segment)
     }
 
     /**
@@ -356,7 +357,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -367,7 +368,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
     }
 
     /**
@@ -377,17 +378,17 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getAabbBind, segment)
     }
 
     fun getBuffer(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBufferBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBufferBind, segment)
     }
 
     fun setBuffer(buffer: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBufferBind, segment, buffer)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setBufferBind, segment, buffer)
     }
 
     /**
@@ -402,7 +403,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setBufferInterpolated(bufferCurr: List<Float>, bufferPrev: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, segment, bufferCurr, bufferPrev)
+        ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(Binds.setBufferInterpolatedBind, segment, bufferCurr, bufferPrev)
     }
 
     /**
@@ -465,155 +466,157 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiMesh? =
             if (handle.address() == 0L) null else MultiMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MESH_HASH = 194775623L
-        private val setMeshBind by lazy {
+        @JvmField
+        val setMeshBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_mesh", SET_MESH_HASH)
-        }
 
         private const val GET_MESH_HASH = 1808005922L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val SET_USE_COLORS_HASH = 2586408642L
-        private val setUseColorsBind by lazy {
+        @JvmField
+        val setUseColorsBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_use_colors", SET_USE_COLORS_HASH)
-        }
 
         private const val IS_USING_COLORS_HASH = 36873697L
-        private val isUsingColorsBind by lazy {
+        @JvmField
+        val isUsingColorsBind =
             ObjectCalls.getMethodBind("MultiMesh", "is_using_colors", IS_USING_COLORS_HASH)
-        }
 
         private const val SET_USE_CUSTOM_DATA_HASH = 2586408642L
-        private val setUseCustomDataBind by lazy {
+        @JvmField
+        val setUseCustomDataBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_use_custom_data", SET_USE_CUSTOM_DATA_HASH)
-        }
 
         private const val IS_USING_CUSTOM_DATA_HASH = 36873697L
-        private val isUsingCustomDataBind by lazy {
+        @JvmField
+        val isUsingCustomDataBind =
             ObjectCalls.getMethodBind("MultiMesh", "is_using_custom_data", IS_USING_CUSTOM_DATA_HASH)
-        }
 
         private const val SET_TRANSFORM_FORMAT_HASH = 2404750322L
-        private val setTransformFormatBind by lazy {
+        @JvmField
+        val setTransformFormatBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_transform_format", SET_TRANSFORM_FORMAT_HASH)
-        }
 
         private const val GET_TRANSFORM_FORMAT_HASH = 2444156481L
-        private val getTransformFormatBind by lazy {
+        @JvmField
+        val getTransformFormatBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_transform_format", GET_TRANSFORM_FORMAT_HASH)
-        }
 
         private const val SET_INSTANCE_COUNT_HASH = 1286410249L
-        private val setInstanceCountBind by lazy {
+        @JvmField
+        val setInstanceCountBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_instance_count", SET_INSTANCE_COUNT_HASH)
-        }
 
         private const val GET_INSTANCE_COUNT_HASH = 3905245786L
-        private val getInstanceCountBind by lazy {
+        @JvmField
+        val getInstanceCountBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_instance_count", GET_INSTANCE_COUNT_HASH)
-        }
 
         private const val SET_VISIBLE_INSTANCE_COUNT_HASH = 1286410249L
-        private val setVisibleInstanceCountBind by lazy {
+        @JvmField
+        val setVisibleInstanceCountBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_visible_instance_count", SET_VISIBLE_INSTANCE_COUNT_HASH)
-        }
 
         private const val GET_VISIBLE_INSTANCE_COUNT_HASH = 3905245786L
-        private val getVisibleInstanceCountBind by lazy {
+        @JvmField
+        val getVisibleInstanceCountBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_visible_instance_count", GET_VISIBLE_INSTANCE_COUNT_HASH)
-        }
 
         private const val SET_PHYSICS_INTERPOLATION_QUALITY_HASH = 1819488408L
-        private val setPhysicsInterpolationQualityBind by lazy {
+        @JvmField
+        val setPhysicsInterpolationQualityBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_physics_interpolation_quality", SET_PHYSICS_INTERPOLATION_QUALITY_HASH)
-        }
 
         private const val GET_PHYSICS_INTERPOLATION_QUALITY_HASH = 1465701882L
-        private val getPhysicsInterpolationQualityBind by lazy {
+        @JvmField
+        val getPhysicsInterpolationQualityBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_physics_interpolation_quality", GET_PHYSICS_INTERPOLATION_QUALITY_HASH)
-        }
 
         private const val SET_INSTANCE_TRANSFORM_HASH = 3616898986L
-        private val setInstanceTransformBind by lazy {
+        @JvmField
+        val setInstanceTransformBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_instance_transform", SET_INSTANCE_TRANSFORM_HASH)
-        }
 
         private const val SET_INSTANCE_TRANSFORM_2D_HASH = 30160968L
-        private val setInstanceTransform2dBind by lazy {
+        @JvmField
+        val setInstanceTransform2dBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_instance_transform_2d", SET_INSTANCE_TRANSFORM_2D_HASH)
-        }
 
         private const val GET_INSTANCE_TRANSFORM_HASH = 1965739696L
-        private val getInstanceTransformBind by lazy {
+        @JvmField
+        val getInstanceTransformBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_instance_transform", GET_INSTANCE_TRANSFORM_HASH)
-        }
 
         private const val GET_INSTANCE_TRANSFORM_2D_HASH = 3836996910L
-        private val getInstanceTransform2dBind by lazy {
+        @JvmField
+        val getInstanceTransform2dBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_instance_transform_2d", GET_INSTANCE_TRANSFORM_2D_HASH)
-        }
 
         private const val SET_INSTANCE_COLOR_HASH = 2878471219L
-        private val setInstanceColorBind by lazy {
+        @JvmField
+        val setInstanceColorBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_instance_color", SET_INSTANCE_COLOR_HASH)
-        }
 
         private const val GET_INSTANCE_COLOR_HASH = 3457211756L
-        private val getInstanceColorBind by lazy {
+        @JvmField
+        val getInstanceColorBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_instance_color", GET_INSTANCE_COLOR_HASH)
-        }
 
         private const val SET_INSTANCE_CUSTOM_DATA_HASH = 2878471219L
-        private val setInstanceCustomDataBind by lazy {
+        @JvmField
+        val setInstanceCustomDataBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_instance_custom_data", SET_INSTANCE_CUSTOM_DATA_HASH)
-        }
 
         private const val GET_INSTANCE_CUSTOM_DATA_HASH = 3457211756L
-        private val getInstanceCustomDataBind by lazy {
+        @JvmField
+        val getInstanceCustomDataBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_instance_custom_data", GET_INSTANCE_CUSTOM_DATA_HASH)
-        }
 
         private const val RESET_INSTANCE_PHYSICS_INTERPOLATION_HASH = 1286410249L
-        private val resetInstancePhysicsInterpolationBind by lazy {
+        @JvmField
+        val resetInstancePhysicsInterpolationBind =
             ObjectCalls.getMethodBind("MultiMesh", "reset_instance_physics_interpolation", RESET_INSTANCE_PHYSICS_INTERPOLATION_HASH)
-        }
 
         private const val RESET_INSTANCES_PHYSICS_INTERPOLATION_HASH = 3218959716L
-        private val resetInstancesPhysicsInterpolationBind by lazy {
+        @JvmField
+        val resetInstancesPhysicsInterpolationBind =
             ObjectCalls.getMethodBind("MultiMesh", "reset_instances_physics_interpolation", RESET_INSTANCES_PHYSICS_INTERPOLATION_HASH)
-        }
 
         private const val SET_CUSTOM_AABB_HASH = 259215842L
-        private val setCustomAabbBind by lazy {
+        @JvmField
+        val setCustomAabbBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_custom_aabb", SET_CUSTOM_AABB_HASH)
-        }
 
         private const val GET_CUSTOM_AABB_HASH = 1068685055L
-        private val getCustomAabbBind by lazy {
+        @JvmField
+        val getCustomAabbBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_custom_aabb", GET_CUSTOM_AABB_HASH)
-        }
 
         private const val GET_AABB_HASH = 1068685055L
-        private val getAabbBind by lazy {
+        @JvmField
+        val getAabbBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_aabb", GET_AABB_HASH)
-        }
 
         private const val GET_BUFFER_HASH = 675695659L
-        private val getBufferBind by lazy {
+        @JvmField
+        val getBufferBind =
             ObjectCalls.getMethodBind("MultiMesh", "get_buffer", GET_BUFFER_HASH)
-        }
 
         private const val SET_BUFFER_HASH = 2899603908L
-        private val setBufferBind by lazy {
+        @JvmField
+        val setBufferBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_buffer", SET_BUFFER_HASH)
-        }
 
         private const val SET_BUFFER_INTERPOLATED_HASH = 3514430332L
-        private val setBufferInterpolatedBind by lazy {
+        @JvmField
+        val setBufferInterpolatedBind =
             ObjectCalls.getMethodBind("MultiMesh", "set_buffer_interpolated", SET_BUFFER_INTERPOLATED_HASH)
-        }
     }
 }

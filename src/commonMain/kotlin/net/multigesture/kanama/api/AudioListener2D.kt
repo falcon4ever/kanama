@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class AudioListener2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioListener2D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makeCurrentBind, segment)
     }
 
     /**
@@ -27,7 +28,7 @@ class AudioListener2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioListener2D.clear_current
      */
     fun clearCurrent() {
-        ObjectCalls.ptrcallNoArgs(clearCurrentBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearCurrentBind, segment)
     }
 
     /**
@@ -36,7 +37,7 @@ class AudioListener2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioListener2D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCurrentBind, segment)
     }
 
     companion object {
@@ -46,20 +47,22 @@ class AudioListener2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): AudioListener2D? =
             if (handle.address() == 0L) null else AudioListener2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val MAKE_CURRENT_HASH = 3218959716L
-        private val makeCurrentBind by lazy {
+        @JvmField
+        val makeCurrentBind =
             ObjectCalls.getMethodBind("AudioListener2D", "make_current", MAKE_CURRENT_HASH)
-        }
 
         private const val CLEAR_CURRENT_HASH = 3218959716L
-        private val clearCurrentBind by lazy {
+        @JvmField
+        val clearCurrentBind =
             ObjectCalls.getMethodBind("AudioListener2D", "clear_current", CLEAR_CURRENT_HASH)
-        }
 
         private const val IS_CURRENT_HASH = 36873697L
-        private val isCurrentBind by lazy {
+        @JvmField
+        val isCurrentBind =
             ObjectCalls.getMethodBind("AudioListener2D", "is_current", IS_CURRENT_HASH)
-        }
     }
 }

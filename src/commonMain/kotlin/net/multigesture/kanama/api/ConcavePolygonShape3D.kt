@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -32,7 +33,7 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setFaces(faces: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setFacesBind, segment, faces)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setFacesBind, segment, faces)
     }
 
     /**
@@ -43,7 +44,7 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun getFaces(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getFacesBind, segment)
     }
 
     /**
@@ -54,7 +55,7 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun setBackfaceCollisionEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setBackfaceCollisionEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBackfaceCollisionEnabledBind, segment, enabled)
     }
 
     /**
@@ -65,7 +66,7 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
      */
     fun isBackfaceCollisionEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBackfaceCollisionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBackfaceCollisionEnabledBind, segment)
     }
 
     companion object {
@@ -78,25 +79,27 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ConcavePolygonShape3D? =
             if (handle.address() == 0L) null else ConcavePolygonShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FACES_HASH = 334873810L
-        private val setFacesBind by lazy {
+        @JvmField
+        val setFacesBind =
             ObjectCalls.getMethodBind("ConcavePolygonShape3D", "set_faces", SET_FACES_HASH)
-        }
 
         private const val GET_FACES_HASH = 497664490L
-        private val getFacesBind by lazy {
+        @JvmField
+        val getFacesBind =
             ObjectCalls.getMethodBind("ConcavePolygonShape3D", "get_faces", GET_FACES_HASH)
-        }
 
         private const val SET_BACKFACE_COLLISION_ENABLED_HASH = 2586408642L
-        private val setBackfaceCollisionEnabledBind by lazy {
+        @JvmField
+        val setBackfaceCollisionEnabledBind =
             ObjectCalls.getMethodBind("ConcavePolygonShape3D", "set_backface_collision_enabled", SET_BACKFACE_COLLISION_ENABLED_HASH)
-        }
 
         private const val IS_BACKFACE_COLLISION_ENABLED_HASH = 36873697L
-        private val isBackfaceCollisionEnabledBind by lazy {
+        @JvmField
+        val isBackfaceCollisionEnabledBind =
             ObjectCalls.getMethodBind("ConcavePolygonShape3D", "is_backface_collision_enabled", IS_BACKFACE_COLLISION_ENABLED_HASH)
-        }
     }
 }

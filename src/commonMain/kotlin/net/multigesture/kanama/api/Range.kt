@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -78,7 +79,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.get_value
      */
     fun getValue(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getValueBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.get_min
      */
     fun getMin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinBind, segment)
     }
 
     /**
@@ -96,7 +97,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.get_max
      */
     fun getMax(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.get_step
      */
     fun getStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
     }
 
     /**
@@ -118,7 +119,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.get_page
      */
     fun getPage(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPageBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.get_as_ratio
      */
     fun getAsRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAsRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAsRatioBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_value
      */
     fun setValue(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setValueBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setValueBind, segment, value)
     }
 
     /**
@@ -147,7 +148,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_value_no_signal
      */
     fun setValueNoSignal(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setValueNoSignalBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setValueNoSignalBind, segment, value)
     }
 
     /**
@@ -156,7 +157,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_min
      */
     fun setMin(minimum: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinBind, segment, minimum)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinBind, segment, minimum)
     }
 
     /**
@@ -165,7 +166,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_max
      */
     fun setMax(maximum: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMaxBind, segment, maximum)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxBind, segment, maximum)
     }
 
     /**
@@ -177,7 +178,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_step
      */
     fun setStep(step: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, step)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStepBind, segment, step)
     }
 
     /**
@@ -187,7 +188,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_page
      */
     fun setPage(pagesize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPageBind, segment, pagesize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPageBind, segment, pagesize)
     }
 
     /**
@@ -196,7 +197,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_as_ratio
      */
     fun setAsRatio(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAsRatioBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAsRatioBind, segment, value)
     }
 
     /**
@@ -205,7 +206,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_use_rounded_values
      */
     fun setUseRoundedValues(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseRoundedValuesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseRoundedValuesBind, segment, enabled)
     }
 
     /**
@@ -214,7 +215,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.is_using_rounded_values
      */
     fun isUsingRoundedValues(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingRoundedValuesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRoundedValuesBind, segment)
     }
 
     /**
@@ -224,7 +225,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_exp_ratio
      */
     fun setExpRatio(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpRatioBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExpRatioBind, segment, enabled)
     }
 
     /**
@@ -234,7 +235,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.is_ratio_exp
      */
     fun isRatioExp(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRatioExpBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRatioExpBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_allow_greater
      */
     fun setAllowGreater(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowGreaterBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowGreaterBind, segment, allow)
     }
 
     /**
@@ -252,7 +253,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.is_greater_allowed
      */
     fun isGreaterAllowed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isGreaterAllowedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGreaterAllowedBind, segment)
     }
 
     /**
@@ -261,7 +262,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.set_allow_lesser
      */
     fun setAllowLesser(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowLesserBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowLesserBind, segment, allow)
     }
 
     /**
@@ -270,7 +271,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.is_lesser_allowed
      */
     fun isLesserAllowed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLesserAllowedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLesserAllowedBind, segment)
     }
 
     /**
@@ -281,7 +282,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.share
      */
     fun share(with: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(shareBind, segment, listOf(with.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.shareBind, segment, listOf(with.segment))
     }
 
     /**
@@ -290,7 +291,7 @@ open class Range(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Range.unshare
      */
     fun unshare() {
-        ObjectCalls.ptrcallNoArgs(unshareBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.unshareBind, segment)
     }
 
     /** Signal `value_changed(value: float)`; see [TypedSignal]. */
@@ -315,120 +316,122 @@ open class Range(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): Range? =
             if (handle.address() == 0L) null else Range(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_VALUE_HASH = 1740695150L
-        private val getValueBind by lazy {
+        @JvmField
+        val getValueBind =
             ObjectCalls.getMethodBind("Range", "get_value", GET_VALUE_HASH)
-        }
 
         private const val GET_MIN_HASH = 1740695150L
-        private val getMinBind by lazy {
+        @JvmField
+        val getMinBind =
             ObjectCalls.getMethodBind("Range", "get_min", GET_MIN_HASH)
-        }
 
         private const val GET_MAX_HASH = 1740695150L
-        private val getMaxBind by lazy {
+        @JvmField
+        val getMaxBind =
             ObjectCalls.getMethodBind("Range", "get_max", GET_MAX_HASH)
-        }
 
         private const val GET_STEP_HASH = 1740695150L
-        private val getStepBind by lazy {
+        @JvmField
+        val getStepBind =
             ObjectCalls.getMethodBind("Range", "get_step", GET_STEP_HASH)
-        }
 
         private const val GET_PAGE_HASH = 1740695150L
-        private val getPageBind by lazy {
+        @JvmField
+        val getPageBind =
             ObjectCalls.getMethodBind("Range", "get_page", GET_PAGE_HASH)
-        }
 
         private const val GET_AS_RATIO_HASH = 1740695150L
-        private val getAsRatioBind by lazy {
+        @JvmField
+        val getAsRatioBind =
             ObjectCalls.getMethodBind("Range", "get_as_ratio", GET_AS_RATIO_HASH)
-        }
 
         private const val SET_VALUE_HASH = 373806689L
-        private val setValueBind by lazy {
+        @JvmField
+        val setValueBind =
             ObjectCalls.getMethodBind("Range", "set_value", SET_VALUE_HASH)
-        }
 
         private const val SET_VALUE_NO_SIGNAL_HASH = 373806689L
-        private val setValueNoSignalBind by lazy {
+        @JvmField
+        val setValueNoSignalBind =
             ObjectCalls.getMethodBind("Range", "set_value_no_signal", SET_VALUE_NO_SIGNAL_HASH)
-        }
 
         private const val SET_MIN_HASH = 373806689L
-        private val setMinBind by lazy {
+        @JvmField
+        val setMinBind =
             ObjectCalls.getMethodBind("Range", "set_min", SET_MIN_HASH)
-        }
 
         private const val SET_MAX_HASH = 373806689L
-        private val setMaxBind by lazy {
+        @JvmField
+        val setMaxBind =
             ObjectCalls.getMethodBind("Range", "set_max", SET_MAX_HASH)
-        }
 
         private const val SET_STEP_HASH = 373806689L
-        private val setStepBind by lazy {
+        @JvmField
+        val setStepBind =
             ObjectCalls.getMethodBind("Range", "set_step", SET_STEP_HASH)
-        }
 
         private const val SET_PAGE_HASH = 373806689L
-        private val setPageBind by lazy {
+        @JvmField
+        val setPageBind =
             ObjectCalls.getMethodBind("Range", "set_page", SET_PAGE_HASH)
-        }
 
         private const val SET_AS_RATIO_HASH = 373806689L
-        private val setAsRatioBind by lazy {
+        @JvmField
+        val setAsRatioBind =
             ObjectCalls.getMethodBind("Range", "set_as_ratio", SET_AS_RATIO_HASH)
-        }
 
         private const val SET_USE_ROUNDED_VALUES_HASH = 2586408642L
-        private val setUseRoundedValuesBind by lazy {
+        @JvmField
+        val setUseRoundedValuesBind =
             ObjectCalls.getMethodBind("Range", "set_use_rounded_values", SET_USE_ROUNDED_VALUES_HASH)
-        }
 
         private const val IS_USING_ROUNDED_VALUES_HASH = 36873697L
-        private val isUsingRoundedValuesBind by lazy {
+        @JvmField
+        val isUsingRoundedValuesBind =
             ObjectCalls.getMethodBind("Range", "is_using_rounded_values", IS_USING_ROUNDED_VALUES_HASH)
-        }
 
         private const val SET_EXP_RATIO_HASH = 2586408642L
-        private val setExpRatioBind by lazy {
+        @JvmField
+        val setExpRatioBind =
             ObjectCalls.getMethodBind("Range", "set_exp_ratio", SET_EXP_RATIO_HASH)
-        }
 
         private const val IS_RATIO_EXP_HASH = 36873697L
-        private val isRatioExpBind by lazy {
+        @JvmField
+        val isRatioExpBind =
             ObjectCalls.getMethodBind("Range", "is_ratio_exp", IS_RATIO_EXP_HASH)
-        }
 
         private const val SET_ALLOW_GREATER_HASH = 2586408642L
-        private val setAllowGreaterBind by lazy {
+        @JvmField
+        val setAllowGreaterBind =
             ObjectCalls.getMethodBind("Range", "set_allow_greater", SET_ALLOW_GREATER_HASH)
-        }
 
         private const val IS_GREATER_ALLOWED_HASH = 36873697L
-        private val isGreaterAllowedBind by lazy {
+        @JvmField
+        val isGreaterAllowedBind =
             ObjectCalls.getMethodBind("Range", "is_greater_allowed", IS_GREATER_ALLOWED_HASH)
-        }
 
         private const val SET_ALLOW_LESSER_HASH = 2586408642L
-        private val setAllowLesserBind by lazy {
+        @JvmField
+        val setAllowLesserBind =
             ObjectCalls.getMethodBind("Range", "set_allow_lesser", SET_ALLOW_LESSER_HASH)
-        }
 
         private const val IS_LESSER_ALLOWED_HASH = 36873697L
-        private val isLesserAllowedBind by lazy {
+        @JvmField
+        val isLesserAllowedBind =
             ObjectCalls.getMethodBind("Range", "is_lesser_allowed", IS_LESSER_ALLOWED_HASH)
-        }
 
         private const val SHARE_HASH = 1078189570L
-        private val shareBind by lazy {
+        @JvmField
+        val shareBind =
             ObjectCalls.getMethodBind("Range", "share", SHARE_HASH)
-        }
 
         private const val UNSHARE_HASH = 3218959716L
-        private val unshareBind by lazy {
+        @JvmField
+        val unshareBind =
             ObjectCalls.getMethodBind("Range", "unshare", UNSHARE_HASH)
-        }
     }
 }

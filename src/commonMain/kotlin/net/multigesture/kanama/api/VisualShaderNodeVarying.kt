@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -23,22 +24,22 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
 
     fun setVaryingName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setVaryingNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setVaryingNameBind, segment, name)
     }
 
     fun getVaryingName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getVaryingNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVaryingNameBind, segment)
     }
 
     fun setVaryingType(type: VisualShader.VaryingType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVaryingTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVaryingTypeBind, segment, type.value)
     }
 
     fun getVaryingType(): VisualShader.VaryingType {
         checkOpen()
-        return VisualShader.VaryingType(ObjectCalls.ptrcallNoArgsRetLong(getVaryingTypeBind, segment))
+        return VisualShader.VaryingType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVaryingTypeBind, segment))
     }
 
     companion object {
@@ -51,25 +52,27 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVarying? =
             if (handle.address() == 0L) null else VisualShaderNodeVarying(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VARYING_NAME_HASH = 83702148L
-        private val setVaryingNameBind by lazy {
+        @JvmField
+        val setVaryingNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeVarying", "set_varying_name", SET_VARYING_NAME_HASH)
-        }
 
         private const val GET_VARYING_NAME_HASH = 201670096L
-        private val getVaryingNameBind by lazy {
+        @JvmField
+        val getVaryingNameBind =
             ObjectCalls.getMethodBind("VisualShaderNodeVarying", "get_varying_name", GET_VARYING_NAME_HASH)
-        }
 
         private const val SET_VARYING_TYPE_HASH = 3565867981L
-        private val setVaryingTypeBind by lazy {
+        @JvmField
+        val setVaryingTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeVarying", "set_varying_type", SET_VARYING_TYPE_HASH)
-        }
 
         private const val GET_VARYING_TYPE_HASH = 523183580L
-        private val getVaryingTypeBind by lazy {
+        @JvmField
+        val getVaryingTypeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeVarying", "get_varying_type", GET_VARYING_TYPE_HASH)
-        }
     }
 }

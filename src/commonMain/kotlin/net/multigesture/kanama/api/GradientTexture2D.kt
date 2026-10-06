@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -57,7 +58,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setGradient(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -67,7 +68,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getGradient(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGradientBind, segment))
     }
 
     /**
@@ -78,7 +79,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -89,7 +90,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -102,7 +103,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setUseHdr(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseHdrBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseHdrBind, segment, enabled)
     }
 
     /**
@@ -115,7 +116,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun isUsingHdr(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdrBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingHdrBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFill(fill: GradientTexture2D.Fill) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFillBind, segment, fill.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFillBind, segment, fill.value)
     }
 
     /**
@@ -135,7 +136,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFill(): GradientTexture2D.Fill {
         checkOpen()
-        return GradientTexture2D.Fill(ObjectCalls.ptrcallNoArgsRetLong(getFillBind, segment))
+        return GradientTexture2D.Fill(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFillBind, segment))
     }
 
     /**
@@ -145,7 +146,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFillFrom(fillFrom: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setFillFromBind, segment, fillFrom)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setFillFromBind, segment, fillFrom)
     }
 
     /**
@@ -155,7 +156,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFillFrom(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFillFromBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFillFromBind, segment)
     }
 
     /**
@@ -165,7 +166,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFillTo(fillTo: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setFillToBind, segment, fillTo)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setFillToBind, segment, fillTo)
     }
 
     /**
@@ -175,7 +176,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFillTo(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getFillToBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getFillToBind, segment)
     }
 
     /**
@@ -185,7 +186,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setRepeat(repeat: GradientTexture2D.Repeat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatBind, segment, repeat.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRepeatBind, segment, repeat.value)
     }
 
     /**
@@ -195,7 +196,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getRepeat(): GradientTexture2D.Repeat {
         checkOpen()
-        return GradientTexture2D.Repeat(ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, segment))
+        return GradientTexture2D.Repeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRepeatBind, segment))
     }
 
     /**
@@ -276,75 +277,77 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GradientTexture2D? =
             if (handle.address() == 0L) null else GradientTexture2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_GRADIENT_HASH = 2756054477L
-        private val setGradientBind by lazy {
+        @JvmField
+        val setGradientBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_gradient", SET_GRADIENT_HASH)
-        }
 
         private const val GET_GRADIENT_HASH = 132272999L
-        private val getGradientBind by lazy {
+        @JvmField
+        val getGradientBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "get_gradient", GET_GRADIENT_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 1286410249L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val SET_USE_HDR_HASH = 2586408642L
-        private val setUseHdrBind by lazy {
+        @JvmField
+        val setUseHdrBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_use_hdr", SET_USE_HDR_HASH)
-        }
 
         private const val IS_USING_HDR_HASH = 36873697L
-        private val isUsingHdrBind by lazy {
+        @JvmField
+        val isUsingHdrBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "is_using_hdr", IS_USING_HDR_HASH)
-        }
 
         private const val SET_FILL_HASH = 3623927636L
-        private val setFillBind by lazy {
+        @JvmField
+        val setFillBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_fill", SET_FILL_HASH)
-        }
 
         private const val GET_FILL_HASH = 1876227217L
-        private val getFillBind by lazy {
+        @JvmField
+        val getFillBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "get_fill", GET_FILL_HASH)
-        }
 
         private const val SET_FILL_FROM_HASH = 743155724L
-        private val setFillFromBind by lazy {
+        @JvmField
+        val setFillFromBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_fill_from", SET_FILL_FROM_HASH)
-        }
 
         private const val GET_FILL_FROM_HASH = 3341600327L
-        private val getFillFromBind by lazy {
+        @JvmField
+        val getFillFromBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "get_fill_from", GET_FILL_FROM_HASH)
-        }
 
         private const val SET_FILL_TO_HASH = 743155724L
-        private val setFillToBind by lazy {
+        @JvmField
+        val setFillToBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_fill_to", SET_FILL_TO_HASH)
-        }
 
         private const val GET_FILL_TO_HASH = 3341600327L
-        private val getFillToBind by lazy {
+        @JvmField
+        val getFillToBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "get_fill_to", GET_FILL_TO_HASH)
-        }
 
         private const val SET_REPEAT_HASH = 1357597002L
-        private val setRepeatBind by lazy {
+        @JvmField
+        val setRepeatBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "set_repeat", SET_REPEAT_HASH)
-        }
 
         private const val GET_REPEAT_HASH = 3351758665L
-        private val getRepeatBind by lazy {
+        @JvmField
+        val getRepeatBind =
             ObjectCalls.getMethodBind("GradientTexture2D", "get_repeat", GET_REPEAT_HASH)
-        }
     }
 }

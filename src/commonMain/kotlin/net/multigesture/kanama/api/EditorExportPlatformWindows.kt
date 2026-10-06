@@ -20,7 +20,5 @@ class EditorExportPlatformWindows(handle: GodotHandle) : EditorExportPlatformPC(
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformWindows? =
             if (handle.address() == 0L) null else EditorExportPlatformWindows(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

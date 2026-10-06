@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addImportOption(name: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndVariantArg(addImportOptionBind, segment, name, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(Binds.addImportOptionBind, segment, name, value)
     }
 
     /**
@@ -29,7 +30,7 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addImportOptionAdvanced(type: VariantType, name: String, defaultValue: Any?, hint: GodotPropertyHint = GodotPropertyHint.NONE, hintString: String = "", usageFlags: Int = 6) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
+        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(Binds.addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
     }
 
     /**
@@ -129,15 +130,17 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporter? =
             if (handle.address() == 0L) null else EditorSceneFormatImporter(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_IMPORT_OPTION_HASH = 402577236L
-        private val addImportOptionBind by lazy {
+        @JvmField
+        val addImportOptionBind =
             ObjectCalls.getMethodBind("EditorSceneFormatImporter", "add_import_option", ADD_IMPORT_OPTION_HASH)
-        }
 
         private const val ADD_IMPORT_OPTION_ADVANCED_HASH = 3674075649L
-        private val addImportOptionAdvancedBind by lazy {
+        @JvmField
+        val addImportOptionAdvancedBind =
             ObjectCalls.getMethodBind("EditorSceneFormatImporter", "add_import_option_advanced", ADD_IMPORT_OPTION_ADVANCED_HASH)
-        }
     }
 }

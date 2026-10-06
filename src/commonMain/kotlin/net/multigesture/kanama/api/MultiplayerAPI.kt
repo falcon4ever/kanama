@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -26,7 +27,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasMultiplayerPeer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMultiplayerPeerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMultiplayerPeerBind, segment)
     }
 
     /**
@@ -41,7 +42,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMultiplayerPeer(): MultiplayerPeer? {
         checkOpen()
-        return MultiplayerPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, segment))
+        return MultiplayerPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMultiplayerPeerBind, segment))
     }
 
     /**
@@ -56,7 +57,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMultiplayerPeer(peer: MultiplayerPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMultiplayerPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -66,7 +67,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getUniqueId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUniqueIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUniqueIdBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isServer(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerBind, segment)
     }
 
     /**
@@ -89,7 +90,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRemoteSenderId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRemoteSenderIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRemoteSenderIdBind, segment)
     }
 
     /**
@@ -102,7 +103,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
     }
 
     /**
@@ -117,7 +118,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun rpc(peer: Int, objectValue: GodotObject, method: String, arguments: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(rpcBind, segment, peer, objectValue.segment, method, arguments))
+        return GodotError(ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(Binds.rpcBind, segment, peer, objectValue.segment, method, arguments))
     }
 
     /**
@@ -132,7 +133,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun objectConfigurationAdd(objectValue: GodotObject, configuration: Any?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationAddBind, segment, objectValue.segment, configuration))
+        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(Binds.objectConfigurationAddBind, segment, objectValue.segment, configuration))
     }
 
     /**
@@ -147,7 +148,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun objectConfigurationRemove(objectValue: GodotObject, configuration: Any?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationRemoveBind, segment, objectValue.segment, configuration))
+        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(Binds.objectConfigurationRemoveBind, segment, objectValue.segment, configuration))
     }
 
     /**
@@ -157,7 +158,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPeers(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPeersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPeersBind, segment)
     }
 
     /** Signal `peer_connected(id: int)`; see [TypedSignal]. */
@@ -236,7 +237,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.set_default_interface
          */
         fun setDefaultInterface(interfaceName: String) {
-            ObjectCalls.ptrcallWithStringNameArg(setDefaultInterfaceBind, NULL_SEGMENT, interfaceName)
+            ObjectCalls.ptrcallWithStringNameArg(Binds.setDefaultInterfaceBind, NULL_SEGMENT, interfaceName)
         }
 
         /**
@@ -246,7 +247,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.get_default_interface
          */
         fun getDefaultInterface(): String {
-            return ObjectCalls.ptrcallNoArgsRetStringName(getDefaultInterfaceBind, NULL_SEGMENT)
+            return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getDefaultInterfaceBind, NULL_SEGMENT)
         }
 
         /**
@@ -255,7 +256,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.create_default_interface
          */
         fun createDefaultInterface(): MultiplayerAPI? {
-            return MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createDefaultInterfaceBind, NULL_SEGMENT))
+            return MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createDefaultInterfaceBind, NULL_SEGMENT))
         }
 
         @JvmStatic
@@ -267,75 +268,77 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerAPI? =
             if (handle.address() == 0L) null else MultiplayerAPI(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val HAS_MULTIPLAYER_PEER_HASH = 2240911060L
-        private val hasMultiplayerPeerBind by lazy {
+        @JvmField
+        val hasMultiplayerPeerBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "has_multiplayer_peer", HAS_MULTIPLAYER_PEER_HASH)
-        }
 
         private const val GET_MULTIPLAYER_PEER_HASH = 3223692825L
-        private val getMultiplayerPeerBind by lazy {
+        @JvmField
+        val getMultiplayerPeerBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "get_multiplayer_peer", GET_MULTIPLAYER_PEER_HASH)
-        }
 
         private const val SET_MULTIPLAYER_PEER_HASH = 3694835298L
-        private val setMultiplayerPeerBind by lazy {
+        @JvmField
+        val setMultiplayerPeerBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "set_multiplayer_peer", SET_MULTIPLAYER_PEER_HASH)
-        }
 
         private const val GET_UNIQUE_ID_HASH = 2455072627L
-        private val getUniqueIdBind by lazy {
+        @JvmField
+        val getUniqueIdBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "get_unique_id", GET_UNIQUE_ID_HASH)
-        }
 
         private const val IS_SERVER_HASH = 2240911060L
-        private val isServerBind by lazy {
+        @JvmField
+        val isServerBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "is_server", IS_SERVER_HASH)
-        }
 
         private const val GET_REMOTE_SENDER_ID_HASH = 2455072627L
-        private val getRemoteSenderIdBind by lazy {
+        @JvmField
+        val getRemoteSenderIdBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "get_remote_sender_id", GET_REMOTE_SENDER_ID_HASH)
-        }
 
         private const val POLL_HASH = 166280745L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "poll", POLL_HASH)
-        }
 
         private const val RPC_HASH = 2077486355L
-        private val rpcBind by lazy {
+        @JvmField
+        val rpcBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "rpc", RPC_HASH)
-        }
 
         private const val OBJECT_CONFIGURATION_ADD_HASH = 1171879464L
-        private val objectConfigurationAddBind by lazy {
+        @JvmField
+        val objectConfigurationAddBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "object_configuration_add", OBJECT_CONFIGURATION_ADD_HASH)
-        }
 
         private const val OBJECT_CONFIGURATION_REMOVE_HASH = 1171879464L
-        private val objectConfigurationRemoveBind by lazy {
+        @JvmField
+        val objectConfigurationRemoveBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "object_configuration_remove", OBJECT_CONFIGURATION_REMOVE_HASH)
-        }
 
         private const val GET_PEERS_HASH = 969006518L
-        private val getPeersBind by lazy {
+        @JvmField
+        val getPeersBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "get_peers", GET_PEERS_HASH)
-        }
 
         private const val SET_DEFAULT_INTERFACE_HASH = 3304788590L
-        private val setDefaultInterfaceBind by lazy {
+        @JvmField
+        val setDefaultInterfaceBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "set_default_interface", SET_DEFAULT_INTERFACE_HASH)
-        }
 
         private const val GET_DEFAULT_INTERFACE_HASH = 2737447660L
-        private val getDefaultInterfaceBind by lazy {
+        @JvmField
+        val getDefaultInterfaceBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "get_default_interface", GET_DEFAULT_INTERFACE_HASH)
-        }
 
         private const val CREATE_DEFAULT_INTERFACE_HASH = 3294156723L
-        private val createDefaultInterfaceBind by lazy {
+        @JvmField
+        val createDefaultInterfaceBind =
             ObjectCalls.getMethodBind("MultiplayerAPI", "create_default_interface", CREATE_DEFAULT_INTERFACE_HASH)
-        }
     }
 }

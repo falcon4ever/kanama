@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setRecordingActive(record: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRecordingActiveBind, segment, record)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRecordingActiveBind, segment, record)
     }
 
     /**
@@ -35,7 +36,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun isRecordingActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRecordingActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRecordingActiveBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setFormat(format: AudioStreamWAV.Format) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatBind, segment, format.value)
     }
 
     /**
@@ -55,7 +56,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getFormat(): AudioStreamWAV.Format {
         checkOpen()
-        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -65,7 +66,7 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRecording(): AudioStreamWAV? {
         checkOpen()
-        return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRecordingBind, segment))
+        return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getRecordingBind, segment))
     }
 
     companion object {
@@ -78,30 +79,32 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectRecord? =
             if (handle.address() == 0L) null else AudioEffectRecord(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RECORDING_ACTIVE_HASH = 2586408642L
-        private val setRecordingActiveBind by lazy {
+        @JvmField
+        val setRecordingActiveBind =
             ObjectCalls.getMethodBind("AudioEffectRecord", "set_recording_active", SET_RECORDING_ACTIVE_HASH)
-        }
 
         private const val IS_RECORDING_ACTIVE_HASH = 36873697L
-        private val isRecordingActiveBind by lazy {
+        @JvmField
+        val isRecordingActiveBind =
             ObjectCalls.getMethodBind("AudioEffectRecord", "is_recording_active", IS_RECORDING_ACTIVE_HASH)
-        }
 
         private const val SET_FORMAT_HASH = 60648488L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("AudioEffectRecord", "set_format", SET_FORMAT_HASH)
-        }
 
         private const val GET_FORMAT_HASH = 3151724922L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("AudioEffectRecord", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val GET_RECORDING_HASH = 2964110865L
-        private val getRecordingBind by lazy {
+        @JvmField
+        val getRecordingBind =
             ObjectCalls.getMethodBind("AudioEffectRecord", "get_recording", GET_RECORDING_HASH)
-        }
     }
 }

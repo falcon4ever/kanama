@@ -22,7 +22,5 @@ class AnimationNodeAdd2(handle: GodotHandle) : AnimationNodeSync(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeAdd2? =
             if (handle.address() == 0L) null else AnimationNodeAdd2(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }
