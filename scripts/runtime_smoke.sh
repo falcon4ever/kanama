@@ -668,17 +668,17 @@ case "$UNAME_S" in
       sleep 0.1
     done
     sleep 1
-    kill -TERM "$sigterm_pid" 2>/dev/null || true
+    kill -TERM "$sigterm_pid" 2>/dev/null || true # justified: it may have exited already; its exit status decides below
     for _ in $(seq 1 300); do
       kill -0 "$sigterm_pid" 2>/dev/null || break
       sleep 0.1
     done
     if kill -0 "$sigterm_pid" 2>/dev/null; then
-      kill -KILL "$sigterm_pid" 2>/dev/null || true
+      kill -KILL "$sigterm_pid" 2>/dev/null || true # justified: the hang itself fails the leg (sigterm_rc=hang)
       sigterm_rc=hang
     fi
-    set +e
-    wait "$sigterm_pid" 2>/dev/null
+    set +e # justified: the status of the wait below is the verdict, checked against 143
+    wait "$sigterm_pid" 2>/dev/null # justified: its status is captured on the next line and checked
     sigterm_wait_rc=$?
     set -e
     [[ "${sigterm_rc:-}" == hang ]] || sigterm_rc=$sigterm_wait_rc
@@ -695,7 +695,7 @@ case "$UNAME_S" in
     if [[ -n "$sigterm_problem" ]]; then
       echo "[runtime_smoke] SIGTERM log tail:" >&2
       tail -n 60 "$SIGTERM_LOG" >&2
-      cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null | head -n 40 >&2 || true
+      cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null | head -n 40 >&2 || true # justified: diagnostics only; the leg fails just below
       echo "[runtime_smoke] FAIL -- $sigterm_problem (log: $SIGTERM_LOG)" >&2
       exit 1
     fi
