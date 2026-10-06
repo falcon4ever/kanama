@@ -37,6 +37,11 @@ internal object EngineMethodTable {
     methodsByClass = methods
   }
 
+  private val allMethodNames: Set<String> by lazy { methodsByClass.values.flatten().toHashSet() }
+
+  /** True when some engine class declares a method named [godotName] (`play`, `queue_free`). */
+  fun isMethodOfAnyClass(godotName: String): Boolean = godotName in allMethodNames
+
   /** True when [name] is an engine class (`Object` and every class that inherits). */
   fun isClass(name: String): Boolean = name == "Object" || name in inherits
 
