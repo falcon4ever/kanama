@@ -2177,6 +2177,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_tween_callback")
     appendLine("var _kanama_noargs_vector3_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
+    // Set when the Kotlin constructor threw: the failure was reported once at the boundary, and a
+    // later _kanama_ensure_created must not rebuild the script (a retry that succeeds would leave a
+    // live script whose _ready never runs and whose initializer side effects ran twice).
+    appendLine("var _kanama_create_failed: bool = false")
     appendLine("var _kanama_pulling: bool = false")
     appendLine("var _kanama_object_handles: Dictionary = KanamaWebHandles.handles")
     appendLine("var _kanama_tween_children: Dictionary = {}")
@@ -2187,6 +2191,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\treturn 0")
     appendLine("\tif _kanama_handle != 0:")
     appendLine("\t\treturn _kanama_handle")
+    appendLine("\tif _kanama_create_failed:")
+    appendLine("\t\treturn 0")
     appendLine("\t_kanama_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
     appendLine("\tif _kanama_bridge == null:")
     appendLine("\t\tpush_error(\"Kanama Web bridge was not initialized before Godot\")")
@@ -2282,14 +2288,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_signal_vector2i_callback,")
     appendLine("\t\t_kanama_tween_callback,")
     appendLine("\t\t_kanama_noargs_vector3_callback)")
-    // The constructor runs only now, with the callbacks installed under the handle, so its property
-    // initializers can call the engine. The snapshots below follow it: seeding one needs the Kotlin
-    // instance. A throwing constructor leaves the proxy unmade.
-    appendLine("\tif int(_kanama_bridge.construct(_kanama_handle)) == 0:")
-    appendLine("\t\t_kanama_object_handles.erase(_kanama_handle)")
-    appendLine("\t\t_kanama_handle = 0")
-    appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
-    appendLine("\t\treturn 0")
     appendLine("\t_kanama_refresh_self_snapshots()")
     // The renderer name is global and any script may branch on it at ready (squash's Main
     // attaches to a plain Node), so every proxy seeds its per-script snapshot.
@@ -2299,6 +2297,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     if (particlesAttachment) {
       appendLine("\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
     }
+    // The constructor runs only now: the callbacks are installed under the handle and every
+    // handle-keyed snapshot is seeded, so a property initializer can call the engine and read
+    // `self` (getTree, getNodeOrNull, position, RenderingServer.getCurrentRenderingMethod).
+    // A throwing constructor leaves the proxy unmade, and it is not retried (the failure was
+    // reported once; see _kanama_create_failed).
+    appendLine("\tif int(_kanama_bridge.construct(_kanama_handle)) == 0:")
+    appendLine("\t\t_kanama_object_handles.erase(_kanama_handle)")
+    appendLine("\t\t_kanama_handle = 0")
+    appendLine("\t\t_kanama_create_failed = true")
+    appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
+    appendLine("\t\treturn 0")
     model.properties.forEachIndexed { index, property ->
       when (propertyArm(property)) {
         WebPropertyArm.STRING ->

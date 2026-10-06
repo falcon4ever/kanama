@@ -47,11 +47,17 @@ internal class WebInstanceRegistry(
    * must bind to the script being built, not to whichever callback happened to trigger the
    * construction. [around] wraps only the constructor (the caller marks the handle as the running
    * script, so engine singleton calls from an initializer have an owner). A constructor that throws
-   * releases the slot before the exception propagates.
+   * releases the slot before the exception propagates. Constructing a handle that was never
+   * reserved, or that is already constructed, throws without touching the slot.
    */
   fun construct(handle: Int, around: (block: () -> KanamaWebScript) -> KanamaWebScript): Int {
     val slot = liveSlot(handle)
-    val scriptId = slot?.pendingScriptId ?: error("Kanama Web handle=$handle was not reserved")
+    val scriptId =
+      slot?.pendingScriptId
+        ?: error(
+          if (slot?.record != null) "Kanama Web handle=$handle is already constructed"
+          else "Kanama Web handle=$handle was not reserved"
+        )
     try {
       val script = around { WebFrameScheduler.withOwner(handle) { createScript(scriptId, handle) } }
       slot.record = WebScriptRecord(scriptId, script)
@@ -68,14 +74,35 @@ internal class WebInstanceRegistry(
 
   fun require(handle: Int): WebScriptRecord {
     val slot = liveSlot(handle)
-    return slot?.record ?: error("Stale Kanama Web object handle=$handle")
+    slot?.record?.let {
+      return it
+    }
+    error(
+      if (slot?.pendingScriptId != null) {
+        "Kanama Web script handle=$handle is still constructing: its constructor cannot call back " +
+          "into its own script instance"
+      } else {
+        "Stale Kanama Web object handle=$handle"
+      }
+    )
   }
 
+  /** True once the script is constructed and until it is freed. */
   fun isLive(handle: Int): Boolean = liveSlot(handle)?.record != null
 
+  /**
+   * True from [reserve] until [free]: the script's engine node exists and its proxy is wired, so
+   * the engine-side handle (`self`) answers calls, snapshots and lookups even while the Kotlin
+   * constructor is still running its property initializers.
+   */
+  fun isLiveOrConstructing(handle: Int): Boolean =
+    liveSlot(handle)?.let { it.record != null || it.pendingScriptId != null } == true
+
+  /** Releases a constructed or reserved slot; false when it was already free (no double-push). */
   fun free(handle: Int): Boolean {
     val slotIndex = slotIndex(handle)
     val slot = liveSlot(handle) ?: return false
+    if (slot.record == null && slot.pendingScriptId == null) return false
     slot.record?.script?.close()
     slot.record = null
     slot.pendingScriptId = null

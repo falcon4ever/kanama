@@ -28,6 +28,15 @@ internal class WebCommandBuffer(capacity: Int) {
     wordCount = 0
   }
 
+  /** The queue's extent now, for [rollbackTo]: commands appended after it can be dropped alone. */
+  fun checkpoint(): Long = (commandCount.toLong() shl 32) or wordCount.toLong()
+
+  /** Drops every command appended since [checkpoint], keeping the ones queued before it. */
+  fun rollbackTo(checkpoint: Long) {
+    commandCount = (checkpoint ushr 32).toInt()
+    wordCount = (checkpoint and 0xffffffffL).toInt()
+  }
+
   fun appendScalarMutation(objectHandle: Int, value: Int) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
     words[offset] = OPCODE_SCALAR_MUTATION

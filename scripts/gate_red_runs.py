@@ -372,6 +372,11 @@ case("check_web_callback_flush.py", py("check_web_callback_flush.py"),
            "    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)\n    commands.flush()",
            "    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)")],
      "without flushing the command buffer", "a Web callback boundary stops flushing the command buffer")
+case("check_web_callback_flush.py (constructor)", py("check_web_callback_flush.py"),
+     [Edit("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt",
+           "    commands.flush()\n    handle\n  } catch",
+           "    handle\n  } catch")],
+     "runs a script constructor", "the constructor boundary stops flushing the command buffer")
 case("check_web_typed_enums.py", py("check_web_typed_enums.py"),
      [Edit(f"{WEBGEN}/Node.kt", "  fun setProcessMode(mode: Node.ProcessMode) {", "  fun setProcessMode(mode: Long) {")],
      "web_typed_enums] FAIL", "a Web wrapper enum parameter goes back to a raw Long")

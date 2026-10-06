@@ -156,8 +156,9 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
       menu = snap;
       break;
     }
-    // A boundary failure before the menu readies is final: nothing retries a failed _ready.
-    if (snap && snap.callbackErrors > 0) break;
+    // A boundary failure or a fatal before the menu readies is final: nothing retries a failed
+    // _ready, and a fatal (KanamaWebFailure) can arrive with no boundary error at all.
+    if (snap && (snap.callbackErrors > 0 || snap.failure)) break;
     await delay(250);
   }
   // The last snapshot rides on the error: "did not become ready" alone cannot say whether the

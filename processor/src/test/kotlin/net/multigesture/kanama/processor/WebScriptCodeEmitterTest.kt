@@ -155,18 +155,24 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("@export var greeting: String"))
     assertTrue(proxy.source.contains("JavaScriptBridge.get_interface(\"KanamaWebBridge\")"))
     assertTrue(proxy.source.contains("refreshNode2DSnapshot(_kanama_handle,"))
-    // Two-step creation (protocol 33): the constructor runs only after the callbacks are installed
-    // under the handle, so a property initializer can call the engine; snapshots follow it.
+    // Two-step creation (protocol 33): the callbacks install under the handle, the handle-keyed
+    // snapshots are seeded, and only then does the constructor run, so a property initializer can
+    // call the engine and read `self`. A failed construction is remembered, not retried.
     val reserve = proxy.source.indexOf("_kanama_bridge.reserve(_KANAMA_SCRIPT_ID)")
     val install = proxy.source.indexOf("_kanama_bridge.installProxyCallbacks(")
-    val construct = proxy.source.indexOf("_kanama_bridge.construct(_kanama_handle)")
     val snapshot =
       proxy.source.indexOf(
         "_kanama_refresh_self_snapshots()\n\t_kanama_bridge.refreshRenderingMethodSnapshot"
       )
+    val construct = proxy.source.indexOf("_kanama_bridge.construct(_kanama_handle)")
     assertTrue(reserve in 0 until install, "reserve must precede installProxyCallbacks")
-    assertTrue(install in 0 until construct, "construct must follow installProxyCallbacks")
-    assertTrue(construct in 0 until snapshot, "snapshots are seeded after construct")
+    assertTrue(install in 0 until snapshot, "snapshots are seeded after the callbacks install")
+    assertTrue(snapshot in 0 until construct, "construct must follow the snapshots")
+    assertTrue(proxy.source.contains("_kanama_create_failed = true"), "a failed construct sticks")
+    assertTrue(
+      proxy.source.indexOf("if _kanama_create_failed:") in 0 until reserve,
+      "a failed construct must not be retried",
+    )
     assertTrue(proxy.source.contains("opcode == 3"))
     assertTrue(proxy.source.contains("opcode == 30"))
     assertTrue(proxy.source.contains("opcode == 32"))

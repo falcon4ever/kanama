@@ -167,7 +167,10 @@ script = ExtResource("7_share")
 [node name="ShareB" type="Node" parent="."]
 script = ExtResource("7_share")
 
-[node name="InitProbe" type="Node" parent="."]
+[node name="InitSibling" type="Node" parent="."]
+
+[node name="InitProbe" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 3)
 script = ExtResource("8_initprobe")
 
 [connection signal="body_entered" from="Coin1" to="Coin1" method="_on_body_entered"]

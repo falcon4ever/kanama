@@ -75,13 +75,25 @@ another property is not — the proxy re-emits the default into GDScript and pus
 it back into Kotlin at hydration), and a property type outside the supported Web
 set is rejected with an error naming the property.
 
-**A script's property initializers may call the engine**, as GDScript's `var x = ...` can
-(`private val config = ConfigFile.create()`, `RenderingServer.getCurrentRenderingDriverName()`):
-the constructor runs with the script's proxy already wired, so the calls have an owner. What cannot
-call the engine is code that runs before any script exists, such as a top-level or
-companion-object initializer evaluated at module start; it fails with "No Kanama Web proxy owns
-handle=0". A constructor cannot read a mirrored spatial value (`self.position`) either: the
-snapshots are seeded after it returns.
+**A script's property initializers may call the engine**, as GDScript's `var x = ...` can. The
+constructor runs with the script's proxy wired and its handle-keyed snapshots seeded, so an
+initializer can call an engine singleton (`RenderingServer.getCurrentRenderingDriverName()`,
+`RenderingServer.getCurrentRenderingMethod()`), construct a `RefCounted` (`ConfigFile.create()`),
+and use `self`: `self.getTree()`, `self.getNodeOrNull(...)`, `self.addChild(...)` and the mirrored
+spatial reads (`self.position`). Two Web differences from desktop: the node is usually already in the
+tree when its initializers run (the proxy builds the script at `_enter_tree`/`_ready`; desktop runs
+them at `.new()`, before it is), and the `self` reads see
+the value mirrored when the proxy was wired, not a later engine change. A script that calls into
+its own script instance from an initializer fails with "still constructing". If an initializer
+throws, the script is not built and not retried: the failure is reported once, and any other
+script that looks it up gets an error, not a half-built instance.
+
+A **companion-object or top-level property is not a script's property**: Kotlin initializes it on
+first access, inside whichever script's callback touches it first. An engine object it creates is
+billed to that script and released with it, so another script reading the cached value later holds
+a dead handle. Create engine objects in per-instance properties. Engine code that runs with no
+script running at all (a call outside any callback) fails with "No Kanama Web proxy owns handle=0"
+or "A Kanama Web singleton call was made outside a script callback".
 
 **Physics loops should derive movement from velocity, not from re-reading a
 spatial value they just wrote.** On Web, spatial reads (`self.position`,

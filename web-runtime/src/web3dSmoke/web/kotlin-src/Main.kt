@@ -1299,16 +1299,15 @@ class Main(godotObject: GodotHandle) :
 
   /**
    * Script-initializer engine calls: the InitProbe node's property initializers call an engine
-   * singleton and construct a RefCounted (see InitProbe). 3 when both worked; 0 when the node never
-   * constructed (the failure this probe pins: on Web the constructor ran before the proxy was
-   * wired, so the initializers had no owner and the node never existed).
+   * singleton, construct a RefCounted and read `self` (see InitProbe), and its @OnReady runs. 63
+   * when every row worked. A lookup or call failure is reported in the thrown message, so the
+   * driver's trace says why (the bare 0 it returns for a missing node hid the reason once).
    */
-  fun initProbe(value: Long): Long =
-    runCatching {
-        val node = self.requireAs("InitProbe", ::Node)
-        WebExperimentalGenericCall.callImmediate(node, "init_probe", listOf(0L)).asLong()
-      }
-      .getOrDefault(0L)
+  fun initProbe(value: Long): Long {
+    val node =
+      self.getNodeOrNull("InitProbe") ?: error("InitProbe node never constructed (no Node found)")
+    return WebExperimentalGenericCall.callImmediate(node, "init_probe", listOf(0L)).asLong()
+  }
 
   /** Readback of [shareProbe]: 31 once its frames have passed. */
   fun shareProbeAfter(value: Long): Long = shareMask

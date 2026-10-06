@@ -435,7 +435,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   trace(`shareProbeAfter: ${shareProbeAfter}`);
 
   // Script-initializer engine calls: InitProbe's property initializers call an engine singleton and
-  // construct a RefCounted (Main.init_probe reads it back; healthy = 3).
+  // construct a RefCounted, read `self`, and run its @OnReady (Main.init_probe reads it back;
+  // healthy = 127: one bit per row, see InitProbe).
   const initProbe = Number(
     await evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("init_probe")}, 0)`,
@@ -527,7 +528,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
     // A script whose property initializers call an engine singleton and construct a RefCounted
     // constructs on Web as it does on desktop (the tps-demo Settings autoload's boot failure).
-    scriptInitializersCallEngine: initProbe === 3,
+    scriptInitializersCallEngine: initProbe === 127,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

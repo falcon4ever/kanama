@@ -375,17 +375,27 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   autoload built a `ConfigFile` that way, so `Main._ready` later read an empty config (a null cast)
   and the menu never became ready in the browser. CI never saw it because tpsdemo is not in the
   hosted `ci` corpus. Script creation is now two steps, `reserve` (mint the handle) and `construct`
-  (run the constructor once the proxy's callbacks are installed under it), so the initializer's
-  engine calls are applied through the script's own proxy, as on desktop. This changes the proxy
-  contract, so the Web protocol is now 33; rebuild the scripts. Still failing, with a message that
-  names the cause and the way out: engine code that runs before any script exists (a top-level or
-  companion-object initializer at module start). A script's `create` failure now carries its cause
-  chain like a callback failure, and the bridge keeps the first eight boundary failures
-  (`callbackErrorLog`), not only the last. Proof: the web3d smoke's new `InitProbe` script (an
-  engine singleton call and a `ConfigFile` in its initializers; check `scriptInitializersCallEngine`)
-  and the tpsdemo cell, red on main and green with the fix. The tpsdemo driver also stops at the
-  first boundary error before the menu is ready and prints that log instead of waiting three
-  minutes.
+  (run the constructor once the proxy's callbacks are installed under it and its snapshots are
+  seeded), so an initializer's engine calls are applied through the script's own proxy, as on
+  desktop, and an initializer can use `self` (`getTree()`, `getNodeOrNull`, `addChild`, `position`,
+  `RenderingServer.getCurrentRenderingMethod()`). This changes the proxy contract, so the Web
+  protocol is now 33; rebuild the scripts.
+- A constructor that throws no longer leaves anything behind: the node handles it resolved, its
+  signal connections, scheduler jobs and snapshots are released like a freed script's, the commands
+  its initializers queued are dropped, and the proxy does not retry the construction (the failure is
+  reported once). Mutations an initializer queues are now applied at the end of construction instead
+  of being discarded by the next frame's pump.
+- Still failing, with a message that names the cause: engine code that runs with no script running.
+  A companion-object or top-level property initializes on first access inside whichever script
+  touches it, so its engine objects are billed to that script (see
+  [Exporting to the Web](docs/exporting/web.md)). A script's `create` failure carries its cause chain
+  like a callback failure does, and the bridge keeps the first eight boundary failures
+  (`callbackErrorLog`). Proof: the web3d smoke's `InitProbe` script (initializers that call a
+  singleton, build a `ConfigFile`, read `self.getTree()`, `self.position`, a sibling and the
+  rendering method, plus an `@OnReady` bit; check `scriptInitializersCallEngine`, 127 when healthy,
+  35 on main), the registry unit tests, and the tpsdemo cell, red on main and green with the fix.
+  The tpsdemo driver also stops at the first boundary error or fatal before the menu is ready and
+  prints that log instead of waiting three minutes.
 
 ### Fixed — Web: a node looked up by two scripts survives the first script's free
 
