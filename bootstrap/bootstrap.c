@@ -1013,122 +1013,14 @@ static void JNICALL kanama_jvm_exit_hook(jint code) {
 /* Embedded JVM options (task 131 item 18)                            */
 /* ------------------------------------------------------------------ */
 
-/* The heap defaults Kanama gives the embedded desktop JVM. G1 sizes its young
- * generation adaptively and, with a game's small live set and short pauses,
- * grows eden to hundreds of MiB (~600 MiB on a 64 GiB machine), so after a
- * large spawn the next young collection comes seconds later. Until it runs,
- * the freshly created script objects sit in eden interleaved with the garbage
- * the spawn produced, and every frame that walks them pays the scattered
- * layout (Bunnymark V1: ~25-30 % slower frames for ~900 frames); the
- * collection copies them together and the frames recover. Capping the young
- * generation bounds that phase to 128 MiB of allocation (~200 frames there)
- * at no measurable steady-state cost: more, shorter young pauses. The cap
- * must be a JNI (command-line) option -- G1 ignores -XX:MaxNewSize given in
- * JAVA_TOOL_OPTIONS. Measurements: CHANGELOG (task 131 item 18) and
- * docs/exporting/desktop.md "JVM Options". */
-typedef struct {
-    const char *option;
-    /* Settings that drop this default when KANAMA_JVM_OPTIONS sets any of
-     * them: the user then sizes the young generation. */
-    const char *skip_if_set[6];
-    /* The same for JAVA_TOOL_OPTIONS, which HotSpot reads as environment
-     * options: G1 discards -XX:MaxNewSize/NewSize/NewRatio given there (its
-     * young sizing only honours command-line ones), so only -Xmn counts. */
-    const char *skip_if_tool_set[6];
-} KanamaJvmDefault;
-
-static const KanamaJvmDefault KANAMA_DEFAULT_JVM_OPTIONS[] = {
-    {"-XX:MaxNewSize=128m",
-     {"-XX:MaxNewSize", "-XX:NewSize", "-Xmn", "-XX:NewRatio", NULL},
-     {"-Xmn", NULL}},
-};
-#define KANAMA_DEFAULT_JVM_OPTION_COUNT \
-    (sizeof KANAMA_DEFAULT_JVM_OPTIONS / sizeof KANAMA_DEFAULT_JVM_OPTIONS[0])
+/* Kanama adds no heap or GC options of its own: HotSpot's ergonomics apply.
+ * KANAMA_JVM_OPTIONS (whitespace-separated) is passed after Kanama's own
+ * options as JNI options, which HotSpot treats as command-line ones -- unlike
+ * JAVA_TOOL_OPTIONS, whose -XX:MaxNewSize/NewSize G1 discards. Games that
+ * spawn many objects at once can cap the young generation there
+ * (-XX:MaxNewSize=128m): see docs/exporting/desktop.md "JVM Options" for the
+ * post-spawn slow phase it ends and what it costs. */
 #define KANAMA_MAX_USER_JVM_OPTIONS 32
-
-/* The part of a JVM option that names the setting, so a user's value for it
- * replaces the default: "-Xms64m" -> "-Xms", "-XX:NewSize=8m" -> "-XX:NewSize",
- * "-XX:+UseZGC" -> "-XX:UseZGC". */
-static size_t jvm_option_key(const char *option, char *key, size_t key_size) {
-    size_t n = 0;
-    if (key_size == 0) {
-        return 0;
-    }
-    if (strncmp(option, "-XX:", 4) == 0) {
-        const char *name = option + 4;
-        if (*name == '+' || *name == '-') {
-            name++;
-        }
-        n = (size_t)snprintf(key, key_size, "-XX:");
-        while (*name && *name != '=' && n + 1 < key_size) {
-            key[n++] = *name++;
-        }
-        key[n] = '\0';
-        return n;
-    }
-    if (strncmp(option, "-Xms", 4) == 0 || strncmp(option, "-Xmx", 4) == 0 ||
-        strncmp(option, "-Xmn", 4) == 0 || strncmp(option, "-Xss", 4) == 0) {
-        return (size_t)snprintf(key, key_size, "%.4s", option);
-    }
-    while (option[n] && option[n] != '=' && option[n] != ':' && n + 1 < key_size) {
-        key[n] = option[n];
-        n++;
-    }
-    key[n] = '\0';
-    return n;
-}
-
-/* True when the whitespace-separated option list [options] sets the setting
- * [key] (as jvm_option_key spells it). */
-static int jvm_options_set(const char *options, const char *key) {
-    char have[128];
-    char token[512];
-    if (!options || !*options) {
-        return 0;
-    }
-    const char *p = options;
-    while (*p) {
-        while (*p && isspace((unsigned char)*p)) {
-            p++;
-        }
-        size_t n = 0;
-        while (p[n] && !isspace((unsigned char)p[n]) && n + 1 < sizeof token) {
-            token[n] = p[n];
-            n++;
-        }
-        token[n] = '\0';
-        p += n;
-        while (*p && !isspace((unsigned char)*p)) {
-            p++;
-        }
-        if (n == 0) {
-            continue;
-        }
-        jvm_option_key(token, have, sizeof have);
-        if (strcmp(have, key) == 0) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-/* True when [options] sets any of the NULL-terminated [keys]. */
-static int jvm_options_set_any(const char *options, const char *const *keys, size_t max_keys) {
-    for (size_t i = 0; i < max_keys && keys[i]; i++) {
-        if (jvm_options_set(options, keys[i])) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-/* True when the user's KANAMA_JVM_OPTIONS or JAVA_TOOL_OPTIONS replace [entry]. */
-static int jvm_default_overridden(const KanamaJvmDefault *entry, const char *tool_options,
-                                  const char *user_options) {
-    size_t max_keys = sizeof entry->skip_if_set / sizeof entry->skip_if_set[0];
-    return jvm_options_set_any(user_options, entry->skip_if_set, max_keys) ||
-           jvm_options_set_any(tool_options, entry->skip_if_tool_set, max_keys);
-}
 
 /* Splits KANAMA_JVM_OPTIONS on whitespace into [storage] (one copy of the
  * string) and points [out] at each option. Returns the count. */
@@ -1249,17 +1141,15 @@ static int start_jvm(const char *jar_path) {
         fprintf(stderr, "[kanama] JDWP debug agent enabled at %s\n", jdwp_address);
     }
 
-    /* Order matters: HotSpot applies JNI options after JAVA_TOOL_OPTIONS, and a
-     * later option wins. So a default is left out when the user already sets
-     * it (jvm_default_overridden), and KANAMA_JVM_OPTIONS comes last. */
-    const char *tool_options = getenv("JAVA_TOOL_OPTIONS");
+    /* HotSpot applies JNI options after JAVA_TOOL_OPTIONS, and a later option
+     * wins, so KANAMA_JVM_OPTIONS overrides JAVA_TOOL_OPTIONS. */
     const char *user_options = getenv("KANAMA_JVM_OPTIONS");
     char user_storage[2048];
     char *user_split[KANAMA_MAX_USER_JVM_OPTIONS];
     int n_user = split_user_jvm_options(user_options, user_storage, sizeof user_storage,
                                         user_split, KANAMA_MAX_USER_JVM_OPTIONS);
 
-    JavaVMOption options[4 + KANAMA_DEFAULT_JVM_OPTION_COUNT + KANAMA_MAX_USER_JVM_OPTIONS];
+    JavaVMOption options[4 + KANAMA_MAX_USER_JVM_OPTIONS];
     int n = 0;
     options[n].optionString = classpath_opt;
     options[n++].extraInfo = NULL;
@@ -1270,14 +1160,6 @@ static int start_jvm(const char *jar_path) {
     options[n++].extraInfo = (void *)kanama_jvm_exit_hook;
     if (n_opts == 4) {
         options[n].optionString = jdwp_opt;
-        options[n++].extraInfo = NULL;
-    }
-    for (size_t i = 0; i < KANAMA_DEFAULT_JVM_OPTION_COUNT; i++) {
-        const KanamaJvmDefault *entry = &KANAMA_DEFAULT_JVM_OPTIONS[i];
-        if (jvm_default_overridden(entry, tool_options, user_options)) {
-            continue;
-        }
-        options[n].optionString = (char *)entry->option;
         options[n++].extraInfo = NULL;
     }
     for (int i = 0; i < n_user; i++) {
