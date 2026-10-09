@@ -14,6 +14,12 @@ them), applies the rules line by line to the same two trees (skipping `*.expect.
 does), strips comments, and fails on any forbidden fragment -- the same verdict the Gradle audit
 would reach. Call a function value as `f(args)` or `f?.let { it(args) }`, never `.invoke(`.
 
+It also fails on a whole-address-space segment (`MemorySegment.NULL.reinterpret(...)`, task 138
+item 21): such a segment is addressed with ABSOLUTE addresses as offsets, and on Android every
+native heap pointer is tagged (top byte `0xB4`), negative as a signed `long`, so the access throws
+`IndexOutOfBoundsException` on the device while every desktop run passes. Address native memory
+through a segment derived from the pointer (`ptr.reinterpret(size)`, offsets relative to it).
+
 Usage:
     python3 scripts/check_android_remap_sources.py
 """
@@ -34,6 +40,9 @@ TAG = "[android-remap-sources]"
 # remap must rewrite every one to `invokeWithArguments`. Each file listed here must contain at least
 # one such site the remap rewrote, so a site moved out of the gate's sight fails loudly instead of
 # passing by having nothing to check (task 134 B: the builtin-call frame's one downcall).
+# A segment based at address 0: its offsets are absolute addresses (task 138 item 21).
+ADDRESS_SPACE_SEGMENT = re.compile(r"\bNULL\s*\.\s*reinterpret\s*\(|\bofAddress\s*\(\s*0L?\s*\)\s*\.\s*reinterpret\s*\(")
+
 REQUIRED_EXACT_SITES = (
     "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt",
     "src/jvmMain/kotlin/binding/runtime/GodotStrings.kt",
@@ -94,6 +103,13 @@ def main() -> int:
                     line = line.replace(needle, replacement)
                 remapped.append(line)
             original = strip_comments(path.read_text(encoding="utf-8").splitlines())
+            for number, line in enumerate(original, start=1):
+                if ADDRESS_SPACE_SEGMENT.search(line):
+                    failures.append(
+                        f"{path.relative_to(ROOT)}:{number}: whole-address-space segment: an Android heap "
+                        "pointer is tagged (top byte 0xB4) and negative as a long, so it is never a valid "
+                        "offset -- address memory through the pointer's own segment (ptr.reinterpret(size))"
+                    )
             for number, (before, after) in enumerate(zip(original, strip_comments(remapped)), start=1):
                 if ".invokeExact(" in before:
                     rel = str(path.relative_to(ROOT))
@@ -119,7 +135,7 @@ def main() -> int:
         return 1
     print(
         f"{TAG} PASS {files} file(s) remapped with {len(rules)} rule(s); "
-        f"no forbidden fragment ({len(fragments)} checked); {sum(exact_sites.values())} invokeExact site(s) "
+        f"no forbidden fragment ({len(fragments)} checked), no whole-address-space segment; {sum(exact_sites.values())} invokeExact site(s) "
         f"rewritten ({', '.join(f'{Path(k).name}: {v}' for k, v in sorted(exact_sites.items()))})"
     )
     return 0

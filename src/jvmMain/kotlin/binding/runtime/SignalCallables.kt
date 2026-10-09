@@ -42,6 +42,7 @@ object SignalCallables {
 
   private const val CALL_OK = 0
   private const val CALL_ERROR_TOO_FEW_ARGUMENTS = 4
+  private const val CALL_ERROR_SIZE = 12L
 
   private const val CONNECT_HASH = 1518946055L
   private const val DISCONNECT_HASH = 1874754934L
@@ -204,20 +205,21 @@ object SignalCallables {
     rReturn: MemorySegment,
     rError: MemorySegment,
   ) {
-    // Written through the whole-address-space segment: no segment per call (task 134 D4).
-    val memory = JvmSignalArgReader.ADDRESS_SPACE
-    val error = rError.address()
-    memory.set(JAVA_INT, error, CALL_OK)
-    memory.set(JAVA_INT, error + 4, 0)
-    memory.set(JAVA_INT, error + 8, 0)
+    // GDExtensionCallError {error, argument, expected}, written at offsets relative to rError,
+    // never
+    // at its absolute address: an Android heap pointer is tagged and negative (task 138 item 21).
+    val error = rError.reinterpret(CALL_ERROR_SIZE)
+    error.set(JAVA_INT, 0, CALL_OK)
+    error.set(JAVA_INT, 4, 0)
+    error.set(JAVA_INT, 8, 0)
     val entry = SignalCallbackRegistry.entry(userdata.address()) ?: return
     if (argCount < entry.argumentCount) {
-      memory.set(JAVA_INT, error, CALL_ERROR_TOO_FEW_ARGUMENTS)
-      memory.set(JAVA_INT, error + 8, entry.argumentCount)
+      error.set(JAVA_INT, 0, CALL_ERROR_TOO_FEW_ARGUMENTS)
+      error.set(JAVA_INT, 8, entry.argumentCount)
       return
     }
     try {
-      JvmSignalArgReader.current().dispatch(args.address(), argCount.toInt(), entry.dispatch)
+      JvmSignalArgReader.current().dispatch(args, argCount.toInt(), entry.dispatch)
     } catch (t: Throwable) {
       ScriptErrors.report(t, "signal lambda")
       runCatching {
