@@ -38,6 +38,15 @@ internal object WebScriptErrors {
   fun isUserFailure(error: Throwable): Boolean = error === lastUserFailure
 
   /**
+   * Forgets [error] once a callback boundary has consumed it (reported and contained it), so the
+   * record never keeps a finished failure -- and the stack it holds -- alive, and a later error
+   * cannot be mistaken for it.
+   */
+  fun consumeUserFailure(error: Throwable) {
+    if (lastUserFailure === error) lastUserFailure = null
+  }
+
+  /**
    * An exception in a script's coroutine is a script error: reported with its type and message, the
    * scope and the frame loop carry on (a `KanamaScope`'s SupervisorJob keeps its other children).
    */

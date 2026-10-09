@@ -112,6 +112,7 @@ private fun <T> webCallbackBoundary(
     // boundary's own: a failure in it is fatal, like the flush of a callback that did not throw.
     if (callback == "_draw") drawCommands.flush() else commands.flush()
     val shown = if (memberName.startsWith("_kanama_web_signal_")) "<signal handler>" else memberName
+    WebScriptErrors.consumeUserFailure(error)
     throw containScriptError(
       error,
       "${scriptName.substringAfterLast('.')}.$shown",

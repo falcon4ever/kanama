@@ -99,6 +99,16 @@ class WebScriptErrorsTest {
   }
 
   @Test
+  fun aConsumedUserFailureIsForgotten() {
+    val user = IllegalStateException("the script threw")
+    assertFailsWith<IllegalStateException> { userScript { throw user } }
+    WebScriptErrors.consumeUserFailure(IllegalStateException("another"))
+    assertTrue(WebScriptErrors.isUserFailure(user), "only the consumed failure is forgotten")
+    WebScriptErrors.consumeUserFailure(user)
+    assertFalse(WebScriptErrors.isUserFailure(user))
+  }
+
+  @Test
   fun theSignalRegistrysOwnInvariantsAreNotUserFailures() {
     val owner = 7_000_001
     val thrown = IllegalArgumentException("lambda failed")
