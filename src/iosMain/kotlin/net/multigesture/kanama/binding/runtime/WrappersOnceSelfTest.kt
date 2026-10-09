@@ -12,6 +12,7 @@ import net.multigesture.kanama.api.Image
 import net.multigesture.kanama.api.ImageTexture
 import net.multigesture.kanama.api.Mesh
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.NoiseTexture2D
 import net.multigesture.kanama.api.PackedScene
 import net.multigesture.kanama.api.ParticleProcessMaterial
 import net.multigesture.kanama.api.PlaceholderTexture2D
@@ -112,6 +113,18 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
     check(
       "shader-material(fromObject -> the same material)",
       viaObject?.instanceId == material.instanceId,
+    )
+    viaObject?.close()
+  }
+  newRef("NoiseTexture2D", ::NoiseTexture2D).use { noise ->
+    noise.setWidth(48)
+    noise.setGenerateMipmaps(false)
+    val viaObject = NoiseTexture2D.fromObject(GodotObject(noise.handle))
+    check(
+      "noise-texture-2d(setWidth 48, generateMipmaps false, fromObject -> the same texture)",
+      noise.getWidth() == 48 &&
+        !noise.isGeneratingMipmaps() &&
+        viaObject?.instanceId == noise.instanceId,
     )
     viaObject?.close()
   }
