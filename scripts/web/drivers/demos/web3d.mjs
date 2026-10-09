@@ -348,6 +348,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("share_probe")}, 0)`,
   );
 
+  // Task 131 item 12: lambda signal connections give their Kotlin callback back with whatever held
+  // them -- a fired one-shot, an emitter freed by the engine, the receiving script freed (see
+  // Main.leak_probe). Armed here, read back after the pumps (healthy = 31).
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe")}, 0)`,
+  );
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -433,6 +440,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     shareProbeAfter = await readShareAfter();
   }
   trace(`shareProbeAfter: ${shareProbeAfter}`);
+  const readLeakAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
+    ).then(Number);
+  let leakProbeAfter = await readLeakAfter();
+  const leakDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (leakProbeAfter !== 31 && Date.now() < leakDeadline) {
+    await delay(150);
+    leakProbeAfter = await readLeakAfter();
+  }
+  trace(`leakProbeAfter: ${leakProbeAfter}`);
 
   // Script-initializer engine calls: InitProbe's property initializers call an engine singleton and
   // construct a RefCounted, read `self`, and run its @OnReady (Main.init_probe reads it back;
@@ -526,6 +544,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // A plain node's handle shared by two scripts survives the first script's free (owner counting),
     // a later lookup of it works, and a node freed under its owners fails cleanly.
     sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
+    // Task 131 item 12: a lambda connection's Kotlin callback is dropped with its one-shot firing,
+    // its emitter's free and its receiver's free (desktop's SignalCallbackRegistry rules).
+    lambdaConnectionsReleaseTheirCallbacks: leakProbeAfter === 31,
     // A script whose property initializers call an engine singleton and construct a RefCounted
     // constructs on Web as it does on desktop (the tps-demo Settings autoload's boot failure).
     scriptInitializersCallEngine: initProbe === 127,

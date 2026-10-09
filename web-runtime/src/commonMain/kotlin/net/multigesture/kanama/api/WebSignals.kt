@@ -94,6 +94,9 @@ internal object WebSignalCallbackRegistry {
     return id
   }
 
+  /** How many entries [ownerHandle]'s script still has registered (the leak probes' view). */
+  fun countOwnedBy(ownerHandle: Int): Int = entries.values.count { it.ownerHandle == ownerHandle }
+
   /** Whether [id] is still registered (a fired one-shot or a released entry is not). */
   fun contains(id: Int): Boolean = id in entries
 

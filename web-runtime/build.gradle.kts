@@ -1332,6 +1332,7 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/D1Emitter.kt",
                 "res://kotlin-src/HandleShare.kt",
                 "res://kotlin-src/InitProbe.kt",
+                "res://kotlin-src/LeakProbe.kt",
             )
         val mappings =
             manifest

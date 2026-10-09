@@ -161,7 +161,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `create` into `reserve` + `construct`: the proxy installs its callbacks between them, so a
      * script's property initializers can call the engine.
      */
-    const val PROTOCOL_VERSION = 33
+    const val PROTOCOL_VERSION = 34
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -204,6 +204,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val SIGNAL_AWAIT = "_kanama_web_signal_await"
     internal const val CONNECT_AWAIT = "_kanama_connect_await"
     internal const val SIGNAL_WATCHER = "_KanamaSignalWatcher"
+    /**
+     * Task 131 item 12: the guard a lambda connection carries as its LAST bound argument, so the
+     * emitter's own free (which drops the connection and the guard with it) tells Kotlin to drop
+     * the registry entry, as desktop's custom Callable `free_func` does.
+     */
+    internal const val SIGNAL_GUARD = "_KanamaSignalGuard"
     /** Task 134 D1 review S3: close one await, and every await a freed script was delivering. */
     internal const val DROP_AWAIT = "_kanama_drop_await"
     internal const val DROP_ROUTED_AWAITS = "_kanama_drop_routed_awaits"
@@ -862,6 +868,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("# Task 134 D1: the live await watchers by callback id (weak: the emitter's")
             appendLine("# connection owns each one), so any proxy can close an await.")
             appendLine("static var await_watchers: Dictionary = {}")
+            appendLine()
+            appendLine("# Task 131 item 12: the live guards of lambda connections by callback id (weak:")
+            appendLine("# the emitter's connection owns each one).")
+            appendLine("static var signal_guards: Dictionary = {}")
             appendLine()
             appendLine("# Proxy script path per Kanama script class (simple name), so a proxy can")
             appendLine("# instantiate a scripted resource for the runtime factory crossing.")
@@ -4041,14 +4051,37 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\telif source != null and target != null:")
     appendLine("\t\tvar callable := Callable(target, StringName(String(args[3])))")
+    appendLine("\t\tvar guard: $SIGNAL_GUARD = null")
     appendLine("\t\tif args.size() > 5:")
-    appendLine("\t\t\tcallable = callable.bind(int(args[5]))")
+    appendLine("\t\t\tvar callback_id := int(args[5])")
+    appendLine("\t\t\tif String(args[3]).begins_with(\"_kanama_web_signal_dispatch\"):")
+    appendLine("\t\t\t\t# The guard rides as the last bound argument (see $SIGNAL_GUARD).")
+    appendLine("\t\t\t\tif int(args[4]) == -1:")
+    appendLine("\t\t\t\t\tvar ref: WeakRef = KanamaWebHandles.signal_guards.get(callback_id)")
+    appendLine("\t\t\t\t\tguard = ref.get_ref() if ref != null else null")
+    appendLine("\t\t\t\telse:")
+    appendLine("\t\t\t\t\tguard = $SIGNAL_GUARD.new()")
+    appendLine("\t\t\t\t\tguard.bridge = _kanama_bridge")
+    appendLine("\t\t\t\t\tguard.router_handle = target_handle")
+    appendLine("\t\t\t\t\tguard.callback_id = callback_id")
+    appendLine("\t\t\t\tcallable = callable.bind(callback_id, guard)")
+    appendLine("\t\t\telse:")
+    appendLine("\t\t\t\tcallable = callable.bind(callback_id)")
     appendLine("\t\tif int(args[4]) == -1:")
     appendLine("\t\t\t# flags -1 selects disconnect for the same bound callable shape.")
-    appendLine("\t\t\tsource.disconnect(StringName(String(args[1])), callable)")
+    appendLine("\t\t\tif guard != null:")
+    appendLine("\t\t\t\tguard.done = true")
+    appendLine("\t\t\t\tKanamaWebHandles.signal_guards.erase(guard.callback_id)")
+    appendLine("\t\t\tif source.is_connected(StringName(String(args[1])), callable):")
+    appendLine("\t\t\t\tsource.disconnect(StringName(String(args[1])), callable)")
     appendLine("\t\t\tresult = OK")
     appendLine("\t\telse:")
     appendLine("\t\t\tresult = source.connect(StringName(String(args[1])), callable, int(args[4]))")
+    appendLine("\t\t\tif guard != null:")
+    appendLine("\t\t\t\tif result == OK:")
+    appendLine("\t\t\t\t\tKanamaWebHandles.signal_guards[guard.callback_id] = weakref(guard)")
+    appendLine("\t\t\t\telse:")
+    appendLine("\t\t\t\t\tguard.done = true")
     appendLine("\t_kanama_bridge.recordImmediateConnectResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -4116,6 +4149,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tif watcher == null or watcher.router_handle == router_handle:")
     appendLine("\t\t\t$DROP_AWAIT(callback_id)")
     appendLine()
+    appendLine("class $SIGNAL_GUARD extends RefCounted:")
+    appendLine("\t# Held only by its connection: dies with the emitter (or the receiver, or a")
+    appendLine("\t# disconnect) and then tells Kotlin to drop the callback entry.")
+    appendLine("\tvar bridge: Variant")
+    appendLine("\tvar router_handle := 0")
+    appendLine("\tvar callback_id := 0")
+    appendLine("\tvar done := false")
+    appendLine()
+    appendLine("\tfunc _notification(what: int) -> void:")
+    appendLine("\t\tif what == NOTIFICATION_PREDELETE and not done:")
+    appendLine("\t\t\tdone = true")
+    appendLine("\t\t\tKanamaWebHandles.signal_guards.erase(callback_id)")
+    appendLine("\t\t\tbridge.releaseSignalCallback(router_handle, callback_id)")
+    appendLine()
     appendLine("class $SIGNAL_WATCHER extends RefCounted:")
     appendLine("\tvar bridge: Variant")
     appendLine("\tvar router_handle := 0")
@@ -4143,8 +4190,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func $SIGNAL_DISPATCH_ARGS(...args: Array) -> void:")
     appendLine(
-      "\t# Task 134 D1: any number of emitted arguments; the bound callback id comes last."
+      "\t# Task 134 D1: any number of emitted arguments; the bound callback id comes last, after it the"
     )
+    appendLine("\t# connection's guard (task 131 item 12), which only has to stay alive with the connection.")
+    appendLine("\targs.pop_back()")
     appendLine("\tvar callback_id := int(args.pop_back())")
     appendLine("\t$SIGNAL_DELIVER(args, callback_id)")
     appendLine()
@@ -4160,10 +4209,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_object_handles.erase(handle)")
     appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(handle)")
     appendLine()
-    appendLine("func $SIGNAL_DISPATCH_ZERO(callback_id: int) -> void:")
+    appendLine("func $SIGNAL_DISPATCH_ZERO(callback_id: int, _guard: Variant = null) -> void:")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
     appendLine()
-    appendLine("func $SIGNAL_DISPATCH_ONE(arg: Variant, callback_id: int) -> void:")
+    appendLine("func $SIGNAL_DISPATCH_ONE(arg: Variant, callback_id: int, _guard: Variant = null) -> void:")
     appendLine(
       "\t# Task 80 slice 2: the emitted scalar crosses PACKED, so a typed GodotSignal.connect*"
     )
@@ -4236,7 +4285,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\ttransient_handles.append(packed_handle)")
     appendLine("\treturn packed_handle")
     appendLine()
-    appendLine("func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int) -> void:")
+    appendLine("func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int, _guard: Variant = null) -> void:")
     appendLine("\tvar script_arg_handle := 0")
     appendLine("\tif arg != null and arg.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\tscript_arg_handle = int(arg.call(\"_kanama_ensure_created\"))")

@@ -1309,6 +1309,49 @@ class Main(godotObject: GodotHandle) :
     return WebExperimentalGenericCall.callImmediate(node, "init_probe", listOf(0L)).asLong()
   }
 
+  private var leakMask = 0L
+
+  /**
+   * Lambda-connection leak probe (task 131 item 12; driver `leak_probe`, then `leak_probe_after`).
+   * LeakProbe connects six lambdas (see LeakProbe) and the Kotlin callback registry must give each
+   * one back with whatever held it. It counts the entries LeakProbe owns, not the whole registry,
+   * which other probes' awaits are still draining. Bits:
+   * - 1: the six connections registered;
+   * - 2: after B's one-shot fired (it was emitted twice) and its normal one fired once, five are left;
+   * - 4: after emitter A (four connections, one of them a never-fired one-shot) was freed by the
+   *   engine, only B's normal lambda is left;
+   * - 8: after the receiver itself was freed, none is left;
+   * - 16: B's lambdas ran exactly as connected (the one-shot once = 100, the normal one once = 1).
+   * A healthy run returns 31 from [leakProbeAfter].
+   */
+  fun leakProbe(value: Long): Long {
+    val registry = net.multigesture.kanama.api.WebSignalCallbackRegistry
+    val receiver = self.requireAs("LeakProbe", ::Node)
+    val emitterA = self.requireAs("LeakEmitterA", ::Node)
+    val owner = receiver.handle.value
+    val call = { method: String ->
+      WebExperimentalGenericCall.callImmediate(receiver, method, listOf(0L)).asLong()
+    }
+    leakMask = 0L
+    call("leak_connect")
+    if (registry.countOwnedBy(owner) == 6) leakMask = leakMask or 1L
+    val fired = call("leak_fire")
+    if (registry.countOwnedBy(owner) == 5) leakMask = leakMask or 2L
+    if (fired == 101L) leakMask = leakMask or 16L
+    emitterA.queueFree()
+    MainThread.postAfterFrames(3) {
+      if (registry.countOwnedBy(owner) == 1) leakMask = leakMask or 4L
+      receiver.queueFree()
+      MainThread.postAfterFrames(3) {
+        if (registry.countOwnedBy(owner) == 0) leakMask = leakMask or 8L
+      }
+    }
+    return 0L
+  }
+
+  /** Readback of [leakProbe]: 31 once its frames have passed. */
+  fun leakProbeAfter(value: Long): Long = leakMask
+
   /** Readback of [shareProbe]: 31 once its frames have passed. */
   fun shareProbeAfter(value: Long): Long = shareMask
 

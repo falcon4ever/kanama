@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 33"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 34"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -169,6 +169,11 @@ class WebScriptCodeEmitterTest {
     assertTrue(install in 0 until snapshot, "snapshots are seeded after the callbacks install")
     assertTrue(snapshot in 0 until construct, "construct must follow the snapshots")
     assertTrue(proxy.source.contains("_kanama_create_failed = true"), "a failed construct sticks")
+    // Task 131 item 12: a lambda connection carries a guard as its last bound argument, so the
+    // emitter's free releases the Kotlin callback entry; the dispatch helpers tolerate it.
+    assertTrue(proxy.source.contains("class _KanamaSignalGuard extends RefCounted:"))
+    assertTrue(proxy.source.contains("callable = callable.bind(callback_id, guard)"))
+    assertTrue(proxy.source.contains("func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null)"))
     assertTrue(
       proxy.source.indexOf("if _kanama_create_failed:") in 0 until reserve,
       "a failed construct must not be retried",
@@ -741,10 +746,10 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_connect(args: Array) -> int:"))
-    assertTrue(mainProxy.contains("callable = callable.bind(int(args[5]))"))
+    assertTrue(mainProxy.contains("callable = callable.bind(callback_id)"))
     assertTrue(mainProxy.contains("func _kanama_signal_emit(args: Array) -> int:"))
     assertTrue(mainProxy.contains("result = value.emit_signal(StringName(String(args[1])))"))
-    assertTrue(mainProxy.contains("func _kanama_web_signal_dispatch0(callback_id: int) -> void:"))
+    assertTrue(mainProxy.contains("func _kanama_web_signal_dispatch0(callback_id: int, _guard: Variant = null) -> void:"))
     assertTrue(mainProxy.contains("dispatchSignal0(_kanama_handle, callback_id)"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
     assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, event_handle)"))
@@ -790,7 +795,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 33"))
+    assertTrue(protocol.contains("\"protocolVersion\": 34"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -801,7 +806,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=33\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=34\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1626,7 +1631,7 @@ class WebScriptCodeEmitterTest {
     val proxy = task80Proxy()
     // The one-argument helper carries the payload instead of discarding it.
     assertTrue(
-      proxy.contains("func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int) -> void:"),
+      proxy.contains("func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null) -> void:"),
       proxy,
     )
     assertTrue(
@@ -1920,7 +1925,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 33"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 34"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
