@@ -141,10 +141,23 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
       ProjectSettings.hasSetting("physics/common/physics_ticks_per_second") &&
       ProjectSettings.getSettingLong("physics/common/physics_ticks_per_second") == ticks.toLong(),
   )
-  check(
-    "project-settings(globalizePath(res://) non-empty, getSettingDouble(gravity) > 0)",
-    ProjectSettings.globalizePath("res://").isNotEmpty() &&
-      ProjectSettings.getSettingDouble("physics/3d/default_gravity") > 0.0,
+  // globalizePath: a user:// path is always a real directory. res:// is NOT: an exported game
+  // reads its resources from the .pck, where Godot's ProjectSettings::globalize_path("res://...")
+  // has no filesystem root to substitute and returns the path with the "res://" prefix stripped
+  // (the empty string for "res://" itself), so res:// is reported, never asserted non-empty.
+  val userDir = ProjectSettings.globalizePath("user://")
+  val resDir = ProjectSettings.globalizePath("res://")
+  val gravity = ProjectSettings.getSettingDouble("physics/3d/default_gravity")
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1) INFO: project-settings " +
+      "globalizePath(user://)='$userDir' globalizePath(res://)='$resDir' " +
+      "getSettingDouble(physics/3d/default_gravity)=$gravity"
+  )
+  checkParts(
+    check,
+    "project-settings(globalizePath(user://) absolute, getSettingDouble(gravity) > 0)",
+    "globalizePath(user://)" to (userDir.startsWith("/") to userDir),
+    "getSettingDouble(physics/3d/default_gravity) > 0" to ((gravity > 0.0) to gravity.toString()),
   )
   check(
     "engine(getVersionInfo major == 4, getMainLoop is the SceneTree)",
@@ -194,13 +207,31 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
     player.pitchScale = 1.25
     player.setStreamPaused(true)
     player.maxPolyphony = 3
-    check(
-      "audio-stream-player(volumeDb -6.5, pitchScale 1.25, streamPaused, maxPolyphony 3 round-trip)",
-      player.getVolumeDb() == -6.5 &&
-        player.pitchScale == 1.25 &&
-        player.getStreamPaused() &&
-        player.maxPolyphony == 3 &&
-        !player.isPlaying(),
+    player.setAutoplay(true)
+    // Godot derives get_stream_paused from the live playbacks, and a player with no stream has
+    // none: it reads false after set_stream_paused(true) on every platform (the desktop
+    // runtime_smoke pins `paused=false`). The bool ARGUMENT path is proved by autoplay instead.
+    val volumeDb = player.getVolumeDb()
+    val pitchScale = player.pitchScale
+    val streamPaused = player.getStreamPaused()
+    val maxPolyphony = player.maxPolyphony
+    val autoplay = player.isAutoplayEnabled()
+    val playing = player.isPlaying()
+    println(
+      "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1) INFO: audio-stream-player " +
+        "volumeDb=$volumeDb pitchScale=$pitchScale streamPaused=$streamPaused " +
+        "maxPolyphony=$maxPolyphony autoplay=$autoplay playing=$playing"
+    )
+    checkParts(
+      check,
+      "audio-stream-player(volumeDb -6.5, pitchScale 1.25, maxPolyphony 3, autoplay round-trip; streamPaused false without a stream)",
+      "volumeDb == -6.5" to ((volumeDb == -6.5) to volumeDb.toString()),
+      "pitchScale == 1.25" to ((pitchScale == 1.25) to pitchScale.toString()),
+      "maxPolyphony == 3" to ((maxPolyphony == 3) to maxPolyphony.toString()),
+      "autoplay == true" to (autoplay to autoplay.toString()),
+      "streamPaused == false (no stream, no playback)" to
+        (!streamPaused to streamPaused.toString()),
+      "playing == false" to (!playing to playing.toString()),
     )
     player.setStreamFromPath(audioPath)
     val stream = player.getStream()
@@ -292,3 +323,21 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
 
 private fun <T : RefCounted> newRef(className: String, wrap: (GodotHandle) -> T): T =
   RefCounted.owned(wrap(GodotHandle(ObjectCalls.constructObject(className))))
+
+/**
+ * One row made of named sub-checks. Each part is `name to (passed to value read back)`; on a
+ * failure the row's label lists every failing part with the value it got, so the device log says
+ * which part broke and what it saw.
+ */
+private fun checkParts(
+  check: (String, Boolean) -> Unit,
+  label: String,
+  vararg parts: Pair<String, Pair<Boolean, String>>,
+) {
+  val failed = parts.filter { !it.second.first }
+  check(
+    if (failed.isEmpty()) label
+    else label + " :: " + failed.joinToString("; ") { "${it.first} got '${it.second.second}'" },
+    failed.isEmpty(),
+  )
+}
