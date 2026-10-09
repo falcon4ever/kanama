@@ -3520,9 +3520,9 @@ BoxMesh: fun getSubdivideDepth(): Int
 BoxMesh: fun getSubdivideHeight(): Int
 BoxMesh: fun getSubdivideWidth(): Int
 BoxMesh: fun setSize(size: Vector3)
-BoxMesh: fun setSubdivideDepth(divisions: Int)
-BoxMesh: fun setSubdivideHeight(divisions: Int)
-BoxMesh: fun setSubdivideWidth(subdivide: Int)
+BoxMesh: fun setSubdivideDepth(subdivideDepth: Int)
+BoxMesh: fun setSubdivideHeight(subdivideHeight: Int)
+BoxMesh: fun setSubdivideWidth(subdivideWidth: Int)
 BoxMesh: var size: Vector3
 BoxMesh: var subdivideDepth: Int
 BoxMesh: var subdivideHeight: Int

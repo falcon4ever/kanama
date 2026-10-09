@@ -5526,6 +5526,11 @@ static int64_t kanama_ios_godot_ptrcall_load_status_with_progress_dispatch(
             g_variant_to_float(&v, elem_variant);
             *out_progress = v;
             g_variant_destroy((GDExtensionVariantPtr)elem_variant);
+        } else {
+            // Godot always resizes the out-Array to one element: an empty one means the read-back
+            // is broken, which must not look like "0% loaded".
+            kanama_ios_fault(__func__, "progress-readback", "load_threaded_get_status wrote no progress");
+            status = -1;
         }
     }
 

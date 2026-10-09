@@ -591,8 +591,8 @@ garbage collector drops it ([a late release](#a-forgotten-close-is-a-late-releas
 Do not register `RefCounted` values as engine singletons. Godot 4.7 preview builds
 warns for `Engine.register_singleton` with `RefCounted` instances because the
 engine singleton table stores a raw `Object*`, not a `Ref<>`. Kanama's
-`Engine.registerSingleton` rejects this shape before calling Godot, on every platform
-(`IllegalArgumentException`); use an `Object`-derived singleton instead.
+`Engine.registerSingleton` rejects this shape before calling Godot, on desktop, Android and iOS
+(`IllegalArgumentException`; Web has no `Engine.registerSingleton`); use an `Object`-derived singleton instead.
 
 Prefer convenience APIs when they exist. For audio players, use:
 

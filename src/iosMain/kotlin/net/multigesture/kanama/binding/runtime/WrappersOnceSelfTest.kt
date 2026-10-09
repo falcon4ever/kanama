@@ -25,6 +25,7 @@ import net.multigesture.kanama.api.ShaderMaterial
 import net.multigesture.kanama.api.SurfaceTool
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
+import platform.posix.usleep
 
 /**
  * Task 129 C rows of the OBJECTCALLS SELFTEST frame-1 phase: one representative member of each
@@ -60,10 +61,12 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
     cover.setSize(Vector2(8.0, 4.0))
     newRef("ProceduralSkyMaterial", ::ProceduralSkyMaterial).use { sky ->
       sky.skyCover = cover
+      val back = sky.skyCover
       check(
         "procedural-sky-material(skyCover round-trip -> same texture, width 8)",
-        sky.skyCover?.let { it.instanceId == cover.instanceId && it.getWidth() == 8 } == true,
+        back != null && back.instanceId == cover.instanceId && back.getWidth() == 8,
       )
+      back?.close()
     }
   }
   BoxShape3D.create().use { shape ->
@@ -247,18 +250,42 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
       false,
       ResourceLoader.CacheMode.IGNORE,
     )
-  val progress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
+  // Poll (bounded, ~5 s) until LOADED: Godot reports progress 1.0 for a loaded resource, so a
+  // progress read-back that returned nothing or a default cannot pass as 1.0.
+  var progress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
+  var polls = 0
+  while (progress.status != ResourceLoader.ThreadLoadStatus.LOADED && polls++ < 500) {
+    usleep(10_000u)
+    progress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
+  }
   val scene = ResourceLoader.loadThreadedGetPackedScene(scenePath)
   val instance = scene?.instantiate()
   check(
     "resource-loader(threaded load of a saved scene -> instantiate() named KanamaSelfTestScene)",
     sceneSaved &&
       requested == GodotError.OK &&
-      progress.status != ResourceLoader.ThreadLoadStatus.INVALID_RESOURCE &&
+      progress.status == ResourceLoader.ThreadLoadStatus.LOADED &&
+      progress.progress == 1.0 &&
       instance?.getName() == "KanamaSelfTestScene",
   )
   instance?.let { ObjectCalls.destroyObject(it.segment) }
   scene?.close()
+
+  // A loaded texture read as a PackedScene: closed, reported as a Godot error, returned as null
+  // (the typed loaders check the class, like GDScript's typed assignment).
+  val mismatchRequested =
+    ResourceLoader.loadThreadedRequest(
+      texturePath,
+      "Texture2D",
+      false,
+      ResourceLoader.CacheMode.IGNORE,
+    )
+  val mismatch = ResourceLoader.loadThreadedGetPackedScene(texturePath)
+  check(
+    "resource-loader(loadThreadedGetPackedScene of a texture -> null, not a mis-wrapped PackedScene)",
+    textureSaved && mismatchRequested == GodotError.OK && mismatch == null,
+  )
+  mismatch?.close()
 
   check("wrappers-once(no kanama_ios_fault raised)", ObjectCalls.faultCount() == faultsBefore)
 }

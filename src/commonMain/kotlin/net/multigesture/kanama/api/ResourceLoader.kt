@@ -214,37 +214,67 @@ object ResourceLoader {
         }
     }
 
-    /** [loadThreadedGet] as a `PackedScene` (null when the resource is not one). */
-    @JvmStatic
-    fun loadThreadedGetPackedScene(path: String): PackedScene? =
-        PackedScene.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadThreadedGetBind, singleton, path))
+    // The typed loaders (TYPED_LOADERS) wrap what Godot returns as the type they name; a resource of
+    // another class is released and reported, like GDScript's typed-assignment error.
+    private fun <T : RefCounted> typedResource(loaded: T?, expected: String, path: String): T? {
+        if (loaded == null || loaded.isClass(expected)) return loaded
+        val actual = loaded.getClassName()
+        loaded.close()
+        GD.pushError("ResourceLoader: '$path' is a $actual, not a $expected")
+        return null
+    }
 
-    /** [load] with the `PackedScene` type hint. */
+    /** [load] with the `PackedScene` type hint (null and a Godot error when the resource is another class). */
     @JvmStatic
     fun loadPackedScene(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): PackedScene? =
-        PackedScene.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "PackedScene", cacheMode.value),
+        typedResource(
+            PackedScene.wrapOwned(
+                ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "PackedScene", cacheMode.value),
+            ),
+            "PackedScene",
+            path,
         )
 
-    /** [load] with the `Texture2D` type hint. */
+    /** [loadThreadedGet] as a `PackedScene` (null and a Godot error when the resource is another class). */
+    @JvmStatic
+    fun loadThreadedGetPackedScene(path: String): PackedScene? =
+        typedResource(
+            PackedScene.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadThreadedGetBind, singleton, path)),
+            "PackedScene",
+            path,
+        )
+
+    /** [load] with the `Texture2D` type hint (null and a Godot error when the resource is another class). */
     @JvmStatic
     fun loadTexture2D(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Texture2D? =
-        Texture2D.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "Texture2D", cacheMode.value),
+        typedResource(
+            Texture2D.wrapOwned(
+                ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "Texture2D", cacheMode.value),
+            ),
+            "Texture2D",
+            path,
         )
 
-    /** [load] with the `AudioStream` type hint. */
+    /** [load] with the `AudioStream` type hint (null and a Godot error when the resource is another class). */
     @JvmStatic
     fun loadAudioStream(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): AudioStream? =
-        AudioStream.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "AudioStream", cacheMode.value),
+        typedResource(
+            AudioStream.wrapOwned(
+                ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "AudioStream", cacheMode.value),
+            ),
+            "AudioStream",
+            path,
         )
 
-    /** [load] with the `LightmapGIData` type hint. */
+    /** [load] with the `LightmapGIData` type hint (null and a Godot error when the resource is another class). */
     @JvmStatic
     fun loadLightmapGIData(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): LightmapGIData? =
-        LightmapGIData.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "LightmapGIData", cacheMode.value),
+        typedResource(
+            LightmapGIData.wrapOwned(
+                ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "LightmapGIData", cacheMode.value),
+            ),
+            "LightmapGIData",
+            path,
         )
 
     /**

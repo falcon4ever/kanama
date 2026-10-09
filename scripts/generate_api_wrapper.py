@@ -162,7 +162,7 @@ OWNERSHIP_SENSITIVE_METHODS = {
     ("RefCounted", "reference"),
 }
 # Godot methods whose generated form is deliberately REPLACED (not overloaded) by the class's
-# IOS_MEMBER_SECTIONS text: the section declares the same Kotlin name and parameter list with a
+# hand-written section text: the section declares the same Kotlin name and parameter list with a
 # different return type, so emitting both would be a conflicting-overloads compile error. Consulted
 # only when rendering in iOS MODE for the iOS target (`IOS_AUDIT_ONLY` is also set during the
 # shared-tree pass, so the lookup is additionally guarded on RENDER_TARGET — a shared class must never
@@ -767,6 +767,10 @@ PARAMETER_NAME_OVERRIDES = {
     # call keeps compiling.
     ("AudioStreamPlayer", "set_autoplay", "enable"): "enabled",
     ("AudioStreamPlayer", "set_stream_paused", "pause"): "paused",
+    # The retired desktop hand BoxMesh's setter parameter names (Godot's are `subdivide` / `divisions`).
+    ("BoxMesh", "set_subdivide_width", "subdivide"): "subdivideWidth",
+    ("BoxMesh", "set_subdivide_height", "divisions"): "subdivideHeight",
+    ("BoxMesh", "set_subdivide_depth", "divisions"): "subdivideDepth",
 }
 PROPERTY_NAME_OVERRIDES = {
     ("Curve3D", "closed"): "curveClosed",
@@ -834,13 +838,19 @@ METHOD_PRECONDITIONS: dict[tuple[str, str], tuple[str, ...]] = {
 }
 
 
+# Indent of a generated method body (the receiver guard and the METHOD_PRECONDITIONS statements).
+METHOD_BODY_INDENT = " " * 8
+# (class, method) rows precondition_lines rendered in this run; regenerate_tree fails on a row that
+# no method used (a typo, or a method the generator no longer renders).
+_PRECONDITIONS_RENDERED: set[tuple[str, str]] = set()
+
+
 def precondition_lines(class_name: str, method_name: str) -> list[str]:
     """The METHOD_PRECONDITIONS statements of one method, at method-body indent."""
-    return [
-        f"        {line}"
-        for statement in METHOD_PRECONDITIONS.get((class_name, method_name), ())
-        for line in statement.split("\n")
-    ]
+    statements = METHOD_PRECONDITIONS.get((class_name, method_name), ())
+    if statements:
+        _PRECONDITIONS_RENDERED.add((class_name, method_name))
+    return [f"{METHOD_BODY_INDENT}{line}" for statement in statements for line in statement.split("\n")]
 
 
 # Final Kotlin default expressions injected by (class, method, arg), bypassing
@@ -874,46 +884,16 @@ CLASS_EXTRA_SUPERTYPES: dict[str, tuple[str, ...]] = {}
 # kept the generated iOS `RefCounted.unreference()` internal, and the shared hand-written RefCounted
 # has no such member (close() calls the bind directly, like desktop always did).
 METHOD_VISIBILITY_OVERRIDES: dict[tuple[str, str], str] = {}
-# Empty since task 129 C: its one entry (ProjectSettings' typed getSetting* readers) is a
-# SHARED_MEMBER_SECTIONS entry now that ProjectSettings is generated once.
-DESKTOP_MEMBER_SECTIONS: dict[str, str] = {}
-# Empty since task 119 item 33: every entry this table held was a `from*` downcast helper, and
-# those are rows in FACTORY_HELPERS now. Non-factory desktop companion members belong here.
-DESKTOP_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
+# (The per-platform member / companion section tables -- DESKTOP_MEMBER_SECTIONS,
+# DESKTOP_COMPANION_MEMBER_SECTIONS, IOS_MEMBER_SECTIONS, IOS_COMPANION_MEMBER_SECTIONS -- were all
+# empty after task 129 C: every generated wrapper is shared, so a class's hand-written members belong
+# in the SHARED_* tables below and a platform-only helper in the *_EXTENSION_SECTIONS.)
 
-# iOS-only hand-written body members emitted into the generated wrapper as a stable
-# custom-section (Phase 4.2). These are Kanama ergonomics that can't come from
-# extension_api.json (SceneTree/Tween/IosGodot facade glue, generic node-cast helpers);
-# they used to live behind a `// KANAMA-IOS-SUGAR` marker that had to be hand-re-added
-# after every regen. Emitting them here makes regeneration lossless. Referenced types
-# (SceneTree, Tween, IosGodot, Node, NodePath) are all in the same package, so no extra
-# imports are needed. Gated to IOS_AUDIT_ONLY in render_wrapper.
-# task 100 parcel 7: the ConfigFile setValue/getValue, ShaderMaterial setShaderParameter and Node
-# propagateCall sugar that routed Variant / Array arguments through call() is gone — those members
-# are generated now (Variant / Dictionary / Array are audited arg kinds).
-IOS_MEMBER_SECTIONS: dict[str, str] = {
-    # (RefCounted's ownership section left with task 117 P3': RefCounted is a shared hand root,
-    # SHARED_HAND_ROOTS, and carries close()/checkOpen()/requireOpenHandle() itself.)
-    # (SurfaceTool's no-argument `commit()` overload left with task 129 C: SurfaceTool is generated
-    # once and `existing` defaults to null through KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.)
-}
-
-# iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
-# 8-space indent). A shared class's iOS-only sugar belongs in IOS_EXTENSION_SECTIONS instead.
-IOS_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
-    # (RefCounted's releaseHandle section left with task 117 P3', like its member section above.)
-    # (InputEventKey's hand KEY_* constant subset left with task 128 A: Godot's `Key` enum is the
-    # generated global value class `Key`, so scripts write `Key.ESCAPE` on every platform.)
-}
-
-
-
-# Custom sections come in three flavours, one table each, keyed by class. The generator refuses a
-# key in the wrong table (a member-style section on a shared class would duplicate on one platform).
-#   *_MEMBER_SECTIONS / *_COMPANION_MEMBER_SECTIONS: member-style text emitted INSIDE the generated
-#     class / companion object. SHARED_* apply to shared-tree classes on every platform (so the text
-#     may only use what both platforms resolve: ObjectCalls.constructObject, isClass, wrappers);
-#     DESKTOP_*/IOS_* apply to the classes generated for that platform only.
+# Custom sections come in two flavours, one table each, keyed by class. The generator refuses a
+# key that is not a shared class.
+#   SHARED_MEMBER_SECTIONS / SHARED_COMPANION_MEMBER_SECTIONS: member-style text emitted INSIDE the
+#     generated class / companion object on every platform (so the text may only use what both
+#     platforms resolve: ObjectCalls.constructObject, isClass, wrappers).
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {
@@ -927,10 +907,10 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
         ResourceLoader.loadAudioStream(path, cacheMode)?.use { stream -> setStream(stream) }
     }
 """.strip("\n"),
-    # Task 129 C: the typed loaders and the threaded-load progress reader of the retired hand
-    # ResourceLoader copies (desktop names and defaults). `load` with a type hint, wrapped as the
-    # type it names; the progress goes through the one ObjectCalls helper both platforms implement
-    # (Godot writes it into an out-Array the generated `loadThreadedGetStatus` cannot hand back).
+    # Task 129 C: the threaded-load progress reader of the retired hand ResourceLoader copies; the
+    # progress goes through the one ObjectCalls helper both platforms implement (Godot writes it into
+    # an out-Array the generated `loadThreadedGetStatus` cannot hand back). The typed loaders are
+    # rendered from TYPED_LOADERS (below) and checked against the loaded resource's class.
     "ResourceLoader": """
     /**
      * [loadThreadedGetStatusWithProgress]'s result: the status and, when Godot reports it, the
@@ -950,40 +930,17 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
         }
     }
 
-    /** [loadThreadedGet] as a `PackedScene` (null when the resource is not one). */
-    @JvmStatic
-    fun loadThreadedGetPackedScene(path: String): PackedScene? =
-        PackedScene.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadThreadedGetBind, singleton, path))
-
-    /** [load] with the `PackedScene` type hint. */
-    @JvmStatic
-    fun loadPackedScene(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): PackedScene? =
-        PackedScene.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "PackedScene", cacheMode.value),
-        )
-
-    /** [load] with the `Texture2D` type hint. */
-    @JvmStatic
-    fun loadTexture2D(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Texture2D? =
-        Texture2D.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "Texture2D", cacheMode.value),
-        )
-
-    /** [load] with the `AudioStream` type hint. */
-    @JvmStatic
-    fun loadAudioStream(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): AudioStream? =
-        AudioStream.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "AudioStream", cacheMode.value),
-        )
-
-    /** [load] with the `LightmapGIData` type hint. */
-    @JvmStatic
-    fun loadLightmapGIData(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): LightmapGIData? =
-        LightmapGIData.wrapOwned(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "LightmapGIData", cacheMode.value),
-        )
+    // The typed loaders (TYPED_LOADERS) wrap what Godot returns as the type they name; a resource of
+    // another class is released and reported, like GDScript's typed-assignment error.
+    private fun <T : RefCounted> typedResource(loaded: T?, expected: String, path: String): T? {
+        if (loaded == null || loaded.isClass(expected)) return loaded
+        val actual = loaded.getClassName()
+        loaded.close()
+        GD.pushError("ResourceLoader: '$path' is a $actual, not a $expected")
+        return null
+    }
 """.strip("\n"),
-    # Task 129 C: ProjectSettings' typed readers (a DESKTOP_MEMBER_SECTIONS entry until the class was
+    # Task 129 C: ProjectSettings' typed readers (a desktop-only section until the class was
     # generated once; iOS had only a hand getSettingDouble).
     "ProjectSettings": """
     @JvmStatic
@@ -1637,16 +1594,63 @@ fun ShapeCast3D.getCollisionPoint(index: Long): Vector3 = getCollisionPoint(inde
 }
 
 
+# Typed loaders rendered into a shared class (task 129 C): `load<Type>(path, cacheMode)` is `load` with
+# that type hint, wrapped as the type; the flag adds `loadThreadedGet<Type>(path)`. A loaded resource
+# of another class is closed, reported with GD.pushError (expected and actual class) and returns
+# null. The class's SHARED_MEMBER_SECTIONS entry declares the `typedResource` helper they call.
+TYPED_LOADERS: dict[str, tuple[tuple[str, bool], ...]] = {
+    "ResourceLoader": (
+        ("PackedScene", True),
+        ("Texture2D", False),
+        ("AudioStream", False),
+        ("LightmapGIData", False),
+    ),
+}
+
+
+def typed_loader_section(class_name: str) -> str:
+    """The Kotlin members TYPED_LOADERS renders for one class (member indent, no trailing newline)."""
+    blocks = []
+    for type_name, threaded in TYPED_LOADERS[class_name]:
+        blocks.append(
+            f"    /** [load] with the `{type_name}` type hint (null and a Godot error when the resource is another class). */\n"
+            "    @JvmStatic\n"
+            f"    fun load{type_name}(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): {type_name}? =\n"
+            f"        typedResource(\n"
+            f"            {type_name}.wrapOwned(\n"
+            f'                ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "{type_name}", cacheMode.value),\n'
+            "            ),\n"
+            f'            "{type_name}",\n'
+            "            path,\n"
+            "        )\n"
+        )
+        if threaded:
+            blocks.append(
+                f"    /** [loadThreadedGet] as a `{type_name}` (null and a Godot error when the resource is another class). */\n"
+                "    @JvmStatic\n"
+                f"    fun loadThreadedGet{type_name}(path: String): {type_name}? =\n"
+                f"        typedResource(\n"
+                f"            {type_name}.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadThreadedGetBind, singleton, path)),\n"
+                f'            "{type_name}",\n'
+                "            path,\n"
+                "        )\n"
+            )
+    return "\n".join(blocks).rstrip("\n")
+
+
 def _member_section(class_name: str) -> str | None:
     if RENDER_TARGET == "shared":
-        return SHARED_MEMBER_SECTIONS.get(class_name)
-    return (IOS_MEMBER_SECTIONS if IOS_AUDIT_ONLY else DESKTOP_MEMBER_SECTIONS).get(class_name)
+        hand = SHARED_MEMBER_SECTIONS.get(class_name)
+        if class_name in TYPED_LOADERS:
+            return "\n\n".join(part for part in (hand, typed_loader_section(class_name)) if part)
+        return hand
+    return None
 
 
 def _companion_section(class_name: str) -> str | None:
     if RENDER_TARGET == "shared":
         return SHARED_COMPANION_MEMBER_SECTIONS.get(class_name)
-    return (IOS_COMPANION_MEMBER_SECTIONS if IOS_AUDIT_ONLY else DESKTOP_COMPANION_MEMBER_SECTIONS).get(class_name)
+    return None
 
 
 def check_section_tables(shared_classes: set[str]) -> None:
@@ -1657,10 +1661,7 @@ def check_section_tables(shared_classes: set[str]) -> None:
         ("SHARED_COMPANION_MEMBER_SECTIONS", SHARED_COMPANION_MEMBER_SECTIONS, shared_classes),
         ("DESKTOP_EXTENSION_SECTIONS", DESKTOP_EXTENSION_SECTIONS, shared_classes),
         ("IOS_EXTENSION_SECTIONS", IOS_EXTENSION_SECTIONS, shared_classes),
-        ("DESKTOP_MEMBER_SECTIONS", DESKTOP_MEMBER_SECTIONS, DESKTOP_ONLY_GENERATED),
-        ("DESKTOP_COMPANION_MEMBER_SECTIONS", DESKTOP_COMPANION_MEMBER_SECTIONS, DESKTOP_ONLY_GENERATED),
-        ("IOS_MEMBER_SECTIONS", IOS_MEMBER_SECTIONS, IOS_ONLY_GENERATED),
-        ("IOS_COMPANION_MEMBER_SECTIONS", IOS_COMPANION_MEMBER_SECTIONS, IOS_ONLY_GENERATED),
+        ("TYPED_LOADERS", TYPED_LOADERS, shared_classes),
     ):
         for key in table:
             if key not in allowed:
@@ -1696,8 +1697,6 @@ def check_factory_helpers(shared_classes: set[str]) -> list[str]:
             )
         for table_name, table in (
             ("SHARED_COMPANION_MEMBER_SECTIONS", SHARED_COMPANION_MEMBER_SECTIONS),
-            ("DESKTOP_COMPANION_MEMBER_SECTIONS", DESKTOP_COMPANION_MEMBER_SECTIONS),
-            ("IOS_COMPANION_MEMBER_SECTIONS", IOS_COMPANION_MEMBER_SECTIONS),
         ):
             pasted = _PASTED_FACTORY_RE.search(table.get(class_name, ""))
             if pasted:
@@ -2825,7 +2824,7 @@ def render_method(
     collapse_wrapper = self_return_collapse_wrapper(
         class_name, method, object_types, wrapper_classes, api_classes, singleton,
     )
-    guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    guard_lines = [f"{METHOD_BODY_INDENT}checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
     guard_lines += precondition_lines(class_name, method.name)
     visibility = METHOD_VISIBILITY_OVERRIDES.get((class_name, method.name), "")
     lines = []
@@ -2918,7 +2917,7 @@ def render_vararg_method(
     helper = override.function if override is not None else "callWithVariantArgs"
     call = f"ObjectCalls.{helper}({bind_name}, {receiver}, {call_args})"
     return_kind = method.logical_return_kind(object_types)
-    guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    guard_lines = [f"{METHOD_BODY_INDENT}checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
     guard_lines += precondition_lines(class_name, method.name)
     if return_kind == "void":
         lines = []
@@ -5442,6 +5441,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     skips: dict[str, list[str]] = {}
     gap: dict[str, SharedRender] = {}
     unnamed: set[str] = set()
+    _PRECONDITIONS_RENDERED.clear()
 
     def wanted(name: str) -> bool:
         return only is None or name in only
@@ -5458,6 +5458,13 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             files[_rel(DESKTOP_API_DIR / f"{name}{DESKTOP_COMPANION_SUFFIX}")] = result.desktop_companion
         if result.ios_companion is not None:
             files[_rel(IOS_API_DIR / f"{name}{IOS_COMPANION_SUFFIX}")] = result.ios_companion
+
+    unrendered = sorted(set(METHOD_PRECONDITIONS) - _PRECONDITIONS_RENDERED)
+    if unrendered:
+        raise SystemExit(
+            "[generate_api_wrapper] METHOD_PRECONDITIONS rows no generated method used: "
+            + ", ".join(f"{owner}.{method}" for owner, method in unrendered)
+        )
 
     # Class tokens (task 133): the shared table, and one per platform for its own classes.
     files[_rel(CLASS_TOKENS_SHARED_PATH)] = render_class_tokens(

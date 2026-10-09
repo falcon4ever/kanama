@@ -723,8 +723,7 @@ def check_typed_signals() -> int:
     """Task 134 D4: every engine signal in extension_api.json has a typed accessor (`val bodyEntered:
     Signal1<Node2D>`) on its class, with the arity Godot declares, under the name
     signal_accessor_names() chose (the `Signal` suffix on collisions). Object's two signals live on
-    the hand-written GodotObject; Tween and AudioStreamPlayer are hand-shaped per platform and carry
-    theirs by hand, so the gate reads every wrapper source, generated or not."""
+    the hand-written GodotObject, so the gate reads every wrapper source, generated or not."""
     import json
 
     from generate_api_wrapper import signal_accessor_names

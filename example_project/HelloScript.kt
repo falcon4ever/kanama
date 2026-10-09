@@ -256,7 +256,16 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     // Task 129 C: ResourceLoader and Engine are generated once; the progress out-array helper
     // (ptrcallLoadStatusWithProgress), the typed loaders' section and Engine.registerSingleton's
     // METHOD_PRECONDITIONS row are new code on desktop.
-    val threadedProgress = ResourceLoader.loadThreadedGetStatusWithProgress(threadedLoadPath)
+    // Poll (bounded) until the request is LOADED: Godot reports progress 1.0 for a loaded resource,
+    // so a progress read-back that returned nothing (or a default) cannot pass as 1.0.
+    var threadedProgress = ResourceLoader.loadThreadedGetStatusWithProgress(threadedLoadPath)
+    var threadedPolls = 0
+    while (
+      threadedProgress.status != ResourceLoader.ThreadLoadStatus.LOADED && threadedPolls++ < 500
+    ) {
+      OS.delayMsec(10)
+      threadedProgress = ResourceLoader.loadThreadedGetStatusWithProgress(threadedLoadPath)
+    }
     val threadedResource = ResourceLoader.loadThreadedGet(threadedLoadPath)
     val threadedResourceIsPackedScene = threadedResource?.isClass("PackedScene") ?: false
     val threadedResourcePathLen = threadedResource?.getPath()?.length ?: 0
@@ -265,6 +274,10 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val typedScene = ResourceLoader.loadPackedScene(threadedLoadPath)
     val typedSceneCanInstantiate = typedScene?.canInstantiate() ?: false
     typedScene?.close()
+    // A loaded Script read as a PackedScene: closed, reported with GD.pushError, returned as null.
+    val mismatchPath = "res://HelloScript.kt"
+    ResourceLoader.loadThreadedRequest(mismatchPath, "Script")
+    val typedMismatchNull = ResourceLoader.loadThreadedGetPackedScene(mismatchPath) == null
     val refCountedSingleton = Resource.create()
     val registerRejected =
       runCatching { Engine.registerSingleton("KanamaSmokeRefCounted", refCountedSingleton) }
@@ -272,8 +285,9 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     refCountedSingleton.close()
     System.err.println(
       "[kanama:kt] WrappersOnce threaded_progress_status=${threadedProgress.status.value} " +
-        "progress_in_range=${threadedProgress.progress?.let { it in 0.0..1.0 } == true} " +
+        "progress_loaded=${threadedProgress.progress == 1.0} " +
         "typed_scene=$typedSceneCanInstantiate register_refcounted_rejected=$registerRejected " +
+        "typed_mismatch_null=$typedMismatchNull " +
         "registered=${Engine.hasSingleton("KanamaSmokeRefCounted")}"
     )
     val generatedSceneUniqueId = Resource.generateSceneUniqueId()

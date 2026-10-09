@@ -981,13 +981,11 @@ int32_t kanama_ios_godot_instance_lookup_available(void);
 
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
 
-
 /* Task 132: ResourceLoader.load with CACHE_MODE_IGNORE (an owned +1 the caller releases). */
 int64_t kanama_ios_godot_resource_loader_load_uncached(const char *path, const char *type_hint);
 
 /* Task 132 self-test: a Kanama Script object for [path] (refcount 1, the caller's), or 0. */
 int64_t kanama_ios_godot_create_script_object(const char *path);
-
 
 int32_t kanama_ios_godot_object_emit_signal_int(
     int64_t object,

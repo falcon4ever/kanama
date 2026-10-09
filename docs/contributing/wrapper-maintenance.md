@@ -202,8 +202,8 @@ the `?.takeIf { … }?.let { … }` form for a nullable one (a fourth field rena
 parameter, which only `SceneMultiplayer.fromApi(api:)` needs). `render_factory_helpers`
 owns the body and the comment; the block is appended to the companion object after the
 class's custom section (so iOS `InputEventKey` keeps its Key constants above its
-factories) and before the MethodBinds, and rows of iOS-only generated classes carry no
-`@JvmStatic` (those files compile for iOS alone). `check_factory_helpers` fails the run
+factories) and before the MethodBinds (every generated class is shared since task 129 C, so the
+helpers carry `@JvmStatic` on every platform). `check_factory_helpers` fails the run
 if the key is not a class the generator renders, or if a section still pastes the same
 helper (any visibility or annotation).
 
@@ -347,7 +347,7 @@ hand-written `Signal0` … `Signal5` in `src/commonMain/.../api/TypedSignals.kt`
 an ancestor or a descendant already has the name). Each platform decodes the arguments through a
 `SignalArgReader` (`JvmSignalArgReader`, `IosSignalArgReader`). `check_typed_signals` in
 `scripts/check_wrapper_generator.py` fails when an engine signal has no accessor or one with the
-wrong arity; `GodotObject`, `Tween` and `AudioStreamPlayer` carry theirs by hand. Web generates
+wrong arity; `GodotObject` carries its signal accessors by hand. Web generates
 `Signal0`/`Signal1` for its policy signals in `scripts/generate_web_wrappers.py`.
 
 `check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
@@ -667,8 +667,8 @@ in `scripts/check_wrapper_generator.py`:
   hand-written iOS `SceneTree`, which overrode it with the correct `SceneTree.create_tween` bind
   (the FPS F2 fix). Both halves are gone now: `SceneTree` is a generated `MainLoop` since task 117
   P1'(b1), and `Node` is generated into the shared tree since P1'(b2), where `createTween` is a
-  plain generated member since task 129 A generated `Tween` once. Add a real case to the class's `IOS_MEMBER_SECTIONS`
-  entry (or `IOS_EXTENSION_SECTIONS` for a shared class), not by hand-editing the generated file.
+  plain generated member since task 129 A generated `Tween` once. Add a real case to the class's `SHARED_MEMBER_SECTIONS`
+  entry (or `IOS_EXTENSION_SECTIONS` for an iOS-only helper), not by hand-editing the generated file.
 
 - **A custom section that REPLACES a generated member.** A section normally adds members the
   generator cannot emit; when it declares the same Kotlin name AND parameter list as a generated

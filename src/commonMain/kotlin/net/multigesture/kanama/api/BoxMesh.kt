@@ -62,9 +62,9 @@ class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: BoxMesh.set_subdivide_width
      */
-    fun setSubdivideWidth(subdivide: Int) {
+    fun setSubdivideWidth(subdivideWidth: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideWidthBind, segment, subdivide)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideWidthBind, segment, subdivideWidth)
     }
 
     /**
@@ -82,9 +82,9 @@ class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: BoxMesh.set_subdivide_height
      */
-    fun setSubdivideHeight(divisions: Int) {
+    fun setSubdivideHeight(subdivideHeight: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideHeightBind, segment, divisions)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideHeightBind, segment, subdivideHeight)
     }
 
     /**
@@ -102,9 +102,9 @@ class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: BoxMesh.set_subdivide_depth
      */
-    fun setSubdivideDepth(divisions: Int) {
+    fun setSubdivideDepth(subdivideDepth: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideDepthBind, segment, divisions)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideDepthBind, segment, subdivideDepth)
     }
 
     /**

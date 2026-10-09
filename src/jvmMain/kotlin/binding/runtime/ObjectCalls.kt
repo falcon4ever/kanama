@@ -11657,8 +11657,11 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, argArray)
         val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
+        // Godot always resizes the out-Array to one element; a missing number means the read-back
+        // is broken, which must not look like "0% loaded".
         val progress =
-          (BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble() ?: 0.0
+          (BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble()
+            ?: error("ResourceLoader.load_threaded_get_status wrote no progress into its out-Array")
         return ret.get(JAVA_LONG, 0) to progress
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)

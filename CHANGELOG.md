@@ -89,6 +89,16 @@ are kept. Only `FileAccess` and `DirAccess` are still per-platform (task 129 par
   non-null `ResourceFormatLoader` (desktop took a nullable one; Godot rejects null). On iOS
   `ResourceLoader.load(path)` and the typed loaders gain desktop's `typeHint` / `cacheMode`
   parameters with defaults (calls compile), and `ThreadLoadProgress` is unchanged.
+- The `ResourceLoader` typed loaders (`loadPackedScene`, `loadTexture2D`, `loadAudioStream`,
+  `loadLightmapGIData`, `loadThreadedGetPackedScene`) are rendered from one generator table
+  (`TYPED_LOADERS`) on every platform and check the loaded resource's class: a resource of another
+  class (a texture read through `loadThreadedGetPackedScene`) is released, reported with
+  `GD.pushError` (`'path' is a Texture2D, not a PackedScene`, like GDScript's typed-assignment
+  error) and returned as `null`; they used to wrap it as the requested type. On iOS
+  `ResourceLoader.loadThreadedGet` now really calls Godot's `load_threaded_get`: it returns `null`
+  with an error when nothing was requested for the path, and it consumes the task, like desktop. `loadThreadedGetStatusWithProgress` fails loudly (desktop throws
+  `IllegalStateException`, iOS raises a shim fault and reports `INVALID_RESOURCE`) when Godot
+  returns no progress value instead of reporting 0.
 - **Source break:** `ShaderMaterial`, `ParticleProcessMaterial`, `ProceduralSkyMaterial` — on iOS
   `fromResource(value)` takes a non-null `Resource`, as on desktop (`res?.let { X.fromResource(it) }`).
 - **Source break:** `NoiseTexture2D`, `ProjectSettings`, `SurfaceTool` — iOS only, every call
@@ -109,7 +119,7 @@ are kept. Only `FileAccess` and `DirAccess` are still per-platform (task 129 par
 - The 20 classes read their MethodBinds from the generated per-class `Binds` holders, like every
   other generated class (the task 131 item 18 entry below lists the hand-kept desktop wrappers and
   the iOS per-platform files as still `by lazy`; of those only `FileAccess` and `DirAccess` remain).
-- iOS self-test: the frame-1 OBJECTCALLS phase gains 18 rows (`WrappersOnceSelfTest.kt`), one
+- iOS self-test: the frame-1 OBJECTCALLS phase gains 19 rows (`WrappersOnceSelfTest.kt`), one
   representative member per class whose iOS path is new (`AudioStreamPlayer` setters and getters,
   `setStreamFromPath`, the typed and threaded `ResourceLoader` loads of resources saved to `user://`,
   `Engine.registerSingleton` with its guard, `ProjectSettings` against `Engine`, the
