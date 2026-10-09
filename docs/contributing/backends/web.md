@@ -435,7 +435,15 @@ collision returns) go through `rejectUnpublishedObject`, which also hands back t
 had allocated. Every proxy callback reads its receiver through `_kanama_live_object`, never a typed
 `var x: Object = handles.get(...)`: a debug build aborts the function on assigning a freed
 instance to a typed Object, and a cast or call on one is undefined behaviour in a release build.
-Queued calls (setters, `queueFree`) do not cross here and do not throw at the call.
+A callback whose receiver is gone publishes NOTHING (the proxy tests `_kanama_handle_gone` before
+it publishes a default), so the same `unpublishedResult` path raises the error for every shape, the
+value shapes (signal emit, child count, `Control` position, connect) included.
+Queued calls (setters, `queueFree`) do not cross here and do not throw at the call: when the proxy's
+command loop stops on a target the engine freed, `flushCommands` asks the same freed check, skips
+that one command, applies the rest of the group and records the freed-instance message;
+`WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A command that
+stops the loop for any other reason is a protocol fault and ends the page through the
+applied/expected check.
 
 **Proving a script-facing change in a DEBUG export.** CI exports release only; GDScript's
 `DEBUG_ENABLED` checks (the typed-Object abort above) only exist in the debug template. Locally:

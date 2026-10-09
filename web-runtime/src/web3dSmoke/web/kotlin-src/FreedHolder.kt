@@ -1,6 +1,7 @@
 package web3d
 
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.Control
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
@@ -15,8 +16,11 @@ import net.multigesture.kanama.api.Node
 class FreedHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
   private var held: Node? = null
 
+  private var heldControl: Control? = null
+
   fun freedLookup(value: Long): Long {
     held = self.requireAs("../FreedParent/FreedChild", ::Node)
+    heldControl = self.requireAs("../FreedParent/FreedControl", ::Control)
     return if (held?.getName().toString() == "FreedChild") 1L else 0L
   }
 
@@ -53,6 +57,22 @@ class FreedHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
   fun freedGetNodeOrNull(value: Long): Long = freedKind { held?.getNodeOrNull("Missing") }
 
   fun freedGetChild(value: Long): Long = freedKind { held?.getChild(0) }
+
+  /** `emitSignal` on the freed node (the immediate signal shape). */
+  fun freedEmitSignal(value: Long): Long = freedKind { held?.emitSignal("renamed") }
+
+  /** `Control.position` read on a freed Control (the immediate Vector2 shape). */
+  fun freedControlPosition(value: Long): Long = freedKind { heldControl?.position }
+
+  /**
+   * A setter on the freed node (a queued command). It does not throw at the call on Web; the
+   * freed-instance error is reported as a script error when the queue is applied and the page
+   * carries on. 1 when the call came back.
+   */
+  fun freedSetter(value: Long): Long {
+    held?.setProcessMode(Node.ProcessMode.DISABLED)
+    return 1L
+  }
 
   /** 1 when this script's own node still answers after the held one was freed. */
   fun freedSelf(value: Long): Long = if (self.getName().toString() == "FreedHolder") 1L else 0L

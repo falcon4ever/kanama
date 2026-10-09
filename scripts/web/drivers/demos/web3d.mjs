@@ -467,7 +467,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ).then(Number);
   let freedProbeAfter = await readFreedAfter();
   const freedDeadline = Math.min(deadline, Date.now() + 10_000);
-  while (freedProbeAfter !== 63 && Date.now() < freedDeadline) {
+  while (freedProbeAfter !== 1023 && Date.now() < freedDeadline) {
     await delay(150);
     freedProbeAfter = await readFreedAfter();
   }
@@ -498,11 +498,15 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ready: "ThrowingReady._ready",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
+  // ...plus the one queued setter on a node the engine freed (FreedHolder.freed_setter): reported
+  // once as a script error naming the freed instance, not counted among the deliberate throws.
+  const freedSetterReports = 1;
+  const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
   while (Date.now() < errorDeadline) {
     errorSnap = await snapshot(evaluate);
-    if (errorSnap && errorSnap.scriptErrors >= expectedScriptErrors.length) break;
+    if (errorSnap && errorSnap.scriptErrors >= expectedReportTotal) break;
     await delay(150);
   }
   const errorProbeAfter = Number(
@@ -627,7 +631,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
     // Task 138 item 3: using a node the engine freed under its holder throws the freed-instance
     // error (catchable, like desktop's), and the holder keeps working.
-    engineFreedNodeThrowsFreedInstanceError: freedProbeAfter === 63,
+    engineFreedNodeThrowsFreedInstanceError: freedProbeAfter === 1023,
     // Task 131 item 12: a lambda connection's Kotlin callback is dropped with its one-shot firing,
     // its emitter's free and its receiver's free (desktop's SignalCallbackRegistry rules).
     lambdaConnectionsReleaseTheirCallbacks: leakProbeAfter === 31,
@@ -637,13 +641,23 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     scriptErrorsAreContained:
       errorProbe === 0 &&
       errorProbeAfter === 7 &&
-      (errorSnap?.scriptErrors ?? 0) === expectedScriptErrors.length &&
+      (errorSnap?.scriptErrors ?? 0) === expectedReportTotal &&
       (errorSnap?.processCalls ?? 0) >= errorProbeFrames + 5,
     // ...and each was reported to Godot's error log exactly once with the exception type, the
     // message and the "at:" frame line (the browser console must show the same ones: see
     // expectedConsoleErrors below).
     scriptErrorsAreReported:
-      errorReports.length === expectedScriptErrors.length &&
+      errorReports.length === expectedReportTotal &&
+      // A setter queued on a node the engine freed is reported once as the freed-instance
+      // IllegalStateException (desktop reports and carries on) and the page kept running (the
+      // freed probe's bit 512 is the frames after it).
+      errorReports.filter(
+        (text) =>
+          text.startsWith("SCRIPT ERROR: ") &&
+          text.includes("IllegalStateException") &&
+          text.includes("Invalid access to previously freed instance") &&
+          text.includes("<queued command>"),
+      ).length === freedSetterReports &&
       expectedScriptErrors.every(
         (kind) =>
           errorReports.filter(
@@ -758,20 +772,20 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // scriptError -- and the count must be exactly the expected one, so an unexpected script error
     // (or one fewer) fails here instead of being absorbed.
     noCallbackFaults:
-      settled.callbackErrors === expectedScriptErrors.length &&
-      settled.scriptErrors === expectedScriptErrors.length &&
+      settled.callbackErrors === expectedReportTotal &&
+      settled.scriptErrors === expectedReportTotal &&
       settled.failure === null,
   };
 
   const boundaryErrors = [];
   // callbackErrors only counts up, so the settled sample covers the whole run.
-  if (settled.callbackErrors !== expectedScriptErrors.length) {
+  if (settled.callbackErrors !== expectedReportTotal) {
     boundaryErrors.push(
-      `callbackErrors=${settled.callbackErrors} (expected only the ${expectedScriptErrors.length} deliberate script errors)`,
+      `callbackErrors=${settled.callbackErrors} (expected only the ${expectedScriptErrors.length} deliberate script errors and the ${freedSetterReports} freed-node setter report)`,
     );
   }
-  if (settled.scriptErrors !== expectedScriptErrors.length) {
-    boundaryErrors.push(`scriptErrors=${settled.scriptErrors} (expected ${expectedScriptErrors.length})`);
+  if (settled.scriptErrors !== expectedReportTotal) {
+    boundaryErrors.push(`scriptErrors=${settled.scriptErrors} (expected ${expectedReportTotal})`);
   }
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
 
@@ -784,7 +798,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     },
     checks,
     // The deliberate script errors reach the browser console through Godot's push_error.
-    expectedConsoleErrors: [{ pattern: "web3d deliberate script error", count: expectedScriptErrors.length }],
+    expectedConsoleErrors: [
+      { pattern: "web3d deliberate script error", count: expectedScriptErrors.length },
+      { pattern: "previously freed instance", count: freedSetterReports },
+    ],
     handles: {
       liveAfterGameplay: peak.maxLiveHandles,
       liveAfterTeardown: settled.liveHandles,

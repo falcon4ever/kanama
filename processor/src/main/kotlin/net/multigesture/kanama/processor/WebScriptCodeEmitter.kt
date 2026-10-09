@@ -2174,6 +2174,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("const _KANAMA_SCRIPT_ID: int = $scriptId")
     appendLine("const _KANAMA_PROTOCOL_VERSION: int = $PROTOCOL_VERSION")
+    // The bridge's `scriptErrorResult` (kanama-web-bridge.js): what a contained script error
+    // answers
+    // in place of a packed value. A constant, so a typed return does not read it off the bridge on
+    // every call.
+    appendLine("const _KANAMA_SCRIPT_ERROR: String = \"\\u001fkanama-script-error\\u001f\"")
     appendLine("var _kanama_bridge")
     appendLine("var _kanama_handle: int = 0")
     appendLine("var _kanama_apply_callback")
@@ -2707,7 +2712,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\ttarget_object = self")
     appendLine("\t\telse:")
     appendLine("\t\t\tvar target_held: Variant = _kanama_object_handles.get(object_handle)")
-    appendLine("\t\t\tif target_held != null:")
+    // A freed Object Variant compares EQUAL to null in Godot 4, so a `!= null` gate never reached
+    // the erase below. The type is tested instead: an Object entry that is no longer valid is
+    // retired here, an absent entry (Nil) is simply not resolved.
+    appendLine("\t\t\tif typeof(target_held) == TYPE_OBJECT:")
     appendLine("\t\t\t\tif is_instance_valid(target_held):")
     appendLine("\t\t\t\t\ttarget_object = target_held")
     appendLine("\t\t\t\telse:")
@@ -3518,9 +3526,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t\tvar deferred_method := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8)))"
     )
     appendLine("\t\t\tvar deferred_arg_handle := bytes.decode_s32(offset + 12)")
-    appendLine(
-      "\t\t\tvar deferred_arg: Variant = null if deferred_arg_handle == 0 else _kanama_object_handles.get(deferred_arg_handle)"
-    )
+    appendLine("\t\t\tvar deferred_arg: Object = _kanama_live_object(deferred_arg_handle)")
     appendLine("\t\t\ttarget_object.call_deferred(StringName(deferred_method), deferred_arg)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
@@ -3580,6 +3586,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     appendLine("\t\telse:")
+    // A command whose target the engine freed stops the group SILENTLY: the bridge asks whether
+    // that
+    // handle is gone, skips just that command, reports it once as a script error naming the freed
+    // instance (desktop's setter throws and the script carries on) and applies the rest. Any other
+    // unresolvable command is a protocol fault: reported here, and Kotlin's applied/expected check
+    // ends the page.
+    appendLine("\t\t\tif target_object == null and _kanama_handle_gone(object_handle):")
+    appendLine("\t\t\t\tbreak")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"
     )
@@ -3593,6 +3607,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t# Any tracked node can be counted, not just this proxy's own: a script may walk")
     appendLine("\t# the children of a node it looked up (the tps level counts spawn points).")
     appendLine("\tvar count_target: Object = _kanama_live_object(object_handle)")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    appendLine("\tif count_target == null and _kanama_handle_gone(object_handle):")
+    appendLine("\t\treturn result")
     appendLine("\tif count_target is Node:")
     appendLine("\t\tresult = (count_target as Node).get_child_count(bool(args[1]))")
     appendLine("\t_kanama_bridge.recordImmediateChildCount(result)")
@@ -3623,6 +3641,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar object_handle := int(args[0])")
     appendLine("\tvar value: Object = _kanama_live_object(object_handle)")
     appendLine("\tvar result := ERR_INVALID_PARAMETER")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    appendLine("\tif value == null and _kanama_handle_gone(object_handle):")
+    appendLine("\t\treturn result")
     appendLine("\tif value != null:")
     appendLine("\t\tif args.size() == 2:")
     appendLine("\t\t\tresult = value.emit_signal(StringName(String(args[1])))")
@@ -4038,6 +4060,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar source: Object = _kanama_live_object(source_handle)")
     appendLine("\tvar target: Object = _kanama_live_object(target_handle)")
     appendLine("\tvar result := ERR_INVALID_PARAMETER")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    appendLine(
+      "\tif (source == null and _kanama_handle_gone(source_handle)) or (target == null and _kanama_handle_gone(target_handle)):"
+    )
+    appendLine("\t\treturn result")
     appendLine("\tif source != null and target != null and String(args[3]) == \"$SIGNAL_AWAIT\":")
     appendLine(
       "\t\tresult = $CONNECT_AWAIT(source, StringName(String(args[1])), target, target_handle, int(args[5]), int(args[4]))"
@@ -4327,12 +4355,26 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t# call on it is undefined behaviour in a release build. A null receiver publishes nothing,"
     )
     appendLine("\t# which the bridge turns into the freed-instance error.")
+    appendLine("\tif handle == 0:")
+    appendLine("\t\treturn null")
     appendLine("\tif handle == _kanama_handle:")
     appendLine("\t\treturn self")
     appendLine("\tvar held: Variant = _kanama_object_handles.get(handle)")
     appendLine("\tif not is_instance_valid(held):")
     appendLine("\t\treturn null")
     appendLine("\treturn held")
+    appendLine()
+    appendLine("func _kanama_handle_gone(handle: int) -> bool:")
+    appendLine(
+      "\t# True when a handle names an object that is gone: freed by the engine, or its entry retired."
+    )
+    appendLine(
+      "\t# A receiver that is gone publishes NOTHING, so the bridge raises the freed-instance error;"
+    )
+    appendLine("\t# a handle of 0 or the script's own is never gone.")
+    appendLine("\tif handle == 0 or handle == _kanama_handle:")
+    appendLine("\t\treturn false")
+    appendLine("\treturn not is_instance_valid(_kanama_object_handles.get(handle))")
     appendLine()
     appendLine("func _kanama_object_query(args: Array) -> int:")
     appendLine("\tvar opcode := int(args[0])")
@@ -4358,6 +4400,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\treturn gone")
     appendLine("\tvar value: Object = _kanama_live_object(object_handle)")
     appendLine("\tvar result := 0")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    appendLine("\tif value == null and _kanama_handle_gone(object_handle):")
+    appendLine("\t\treturn result")
     appendLine("\tif value != null:")
     appendLine("\t\tif opcode == 23:")
     appendLine("\t\t\tresult = int(value.is_class(StringName(String(args[2]))))")
@@ -5188,6 +5234,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar object_handle := int(args[1])")
     appendLine("\tvar value: Object = _kanama_live_object(object_handle)")
     appendLine("\tvar result := Vector2.ZERO")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    // Opcode 314 reads an Input singleton and has no receiver.
+    appendLine("\tif value == null and opcode != 314 and _kanama_handle_gone(object_handle):")
+    appendLine("\t\treturn 0")
     appendLine("\tif opcode == 27 and value is CanvasItem:")
     appendLine("\t\tresult = (value as CanvasItem).get_local_mouse_position()")
     // Task 64 CameraMode family (protocol 25): singleton Vector2 query, no receiver.
@@ -5209,6 +5260,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar object_handle := int(args[1])")
     appendLine("\tvar value: Object = _kanama_live_object(object_handle)")
     appendLine("\tvar result := Vector3.ZERO")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    appendLine("\tif value == null and _kanama_handle_gone(object_handle):")
+    appendLine("\t\treturn 0")
     appendLine("\tif opcode == 113 and value is KinematicCollision3D:")
     appendLine("\t\tresult = (value as KinematicCollision3D).get_normal()")
     appendLine("\telif opcode == 123 and value is RayCast3D:")
@@ -5255,6 +5310,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar object_handle := int(args[0])")
     appendLine("\tvar value: Object = _kanama_live_object(object_handle)")
     appendLine("\tvar result := ERR_INVALID_PARAMETER")
+    // A freed receiver (the engine freed it under a script that held it) publishes NOTHING: the
+    // bridge turns the missing result into the freed-instance error, as desktop throws it.
+    appendLine("\tif value == null and _kanama_handle_gone(object_handle):")
+    appendLine("\t\treturn result")
     appendLine("\tif value != null:")
     appendLine(
       "\t\tresult = value.emit_signal(StringName(String(args[1])), Vector2i(int(args[2]), int(args[3])))"
@@ -5423,7 +5482,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // index an empty part list: a second, spurious error). Desktop returns nil; a declared GDScript
     // type cannot hold nil, so a typed return takes its default, a Variant return takes nil.
     val failed = if (gdType(type) == "Variant") "null" else gdDefault(type)
-    appendLine("\tif _kanama_packed == _kanama_bridge.scriptErrorResult:")
+    appendLine("\tif _kanama_packed == _KANAMA_SCRIPT_ERROR:")
     appendLine("\t\treturn $failed")
     when (type) {
       TypeMapping.STRING -> appendLine("\treturn _kanama_packed")
@@ -5601,7 +5660,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("\tvar $packed := String(_kanama_bridge.getPackedProperty(_kanama_handle, $id))")
       // A getter that threw is reported once and contained; its sentinel is not a packed value, so
       // the property keeps what it held.
-      appendLine("\tif $packed != _kanama_bridge.scriptErrorResult:")
+      appendLine("\tif $packed != _KANAMA_SCRIPT_ERROR:")
       val parseStart = length
       when {
         property.type == TypeMapping.STRING -> appendLine("\t$name = $packed")

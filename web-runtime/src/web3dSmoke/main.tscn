@@ -187,6 +187,8 @@ script = ExtResource("10_error")
 
 [node name="FreedChild" type="Node" parent="FreedParent"]
 
+[node name="FreedControl" type="Control" parent="FreedParent"]
+
 [node name="FreedHolder" type="Node" parent="."]
 script = ExtResource("11_freed")
 

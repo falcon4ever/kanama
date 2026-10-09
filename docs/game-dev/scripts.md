@@ -336,15 +336,18 @@ Variant argument) are silent, and Godot receives `null`. A release export does
 not check, and a call is undefined behaviour, so ask `GD.isInstanceValid(node)`
 before using an object that may be gone. Two wrappers of one object are `==`
 (and equal as `Set`/`Map` keys) whatever their class. On Web a call that returns a value or an object
-(`getName()`, `getParent()`, `getNode(...)`, `getChild(i)`, `emitSignal(...)`) on an
-object the engine freed (a child freed with its parent, a timer, a body) throws the same
-`IllegalStateException: Invalid access to previously freed instance`, naming the handle instead of
-the class. A call that returns nothing (`node.position = ...`, `queueFree()`, `addChild(...)`) is
-queued and applied with the rest of the frame's batch, so it does not throw at the call: on a
-freed object the batch reports Godot's `Invalid Kanama Web command opcode/object` error and then
-fails with `command batch applied 0 of 1 commands`, which ends the page, where desktop throws at
-the call; a position read of a `Node2D`/`Node3D` answers
-the last snapshot it had. Ask `GD.isInstanceValid(node)` first on Web too.
+(`getName()`, `getParent()`, `getNode(...)`, `getChild(i)`, `getChildCount()`, `emitSignal(...)`,
+`connect(...)` on a freed source or target, a `Control` position or size read, and every other
+query that crosses to Godot) on an object the engine freed (a child freed with its parent, a timer,
+a body) throws the same `IllegalStateException: Invalid access to previously freed instance`,
+naming the handle instead of the class. A call that returns nothing (`node.position = ...`,
+`queueFree()`, `addChild(...)`) is queued and applied with the rest of the frame's batch, so it
+cannot throw at the call. On a freed object that one command is skipped and the batch reports the
+same `IllegalStateException` once as a script error (`SCRIPT ERROR: ... at: Script.<queued
+command>`), the other commands of the batch are applied, and the page keeps running, as on desktop
+where the setter throws and the script carries on; the exception is not catchable at the setter.
+A command that is malformed for a live object (a protocol fault) still ends the page. A position
+read of a `Node2D`/`Node3D` answers the last snapshot it had. Ask `GD.isInstanceValid(node)` first on Web too.
 
 ## Rebuild Required
 

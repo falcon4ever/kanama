@@ -68,8 +68,13 @@ only `--write`.
   with "string query callback did not publish a string result" (or a similar bridge message). It now
   throws `IllegalStateException: Invalid access to previously freed instance`, as on desktop, for
   every call that returns a value or an object (`getName()`, `getParent()`, `getNode(...)`,
-  `getChild(i)`, tween and collision returns, ...), in release and debug exports alike. A call that
-  returns nothing (`node.position = ...`, `queueFree()`) is queued and does not throw at the call.
+  `getChild(i)`, `getChildCount()`, `emitSignal(...)`, `connect(...)`, `Control.position` /
+  `size`, tween and collision returns, ...), in release and debug exports alike; none of them
+  answers a default for a freed receiver any more. A call that returns nothing (`node.position =
+  ...`, `queueFree()`) is queued and cannot throw at the call: on a freed node that one command is
+  skipped and reported once as the same `IllegalStateException` script error, the rest of the batch
+  is applied and the page keeps running (it used to end the page with `command batch applied 0 of 1
+  commands`).
 
 ### Fixed — Web: a freed shared node could read as a live script (task 138 item 18)
 

@@ -2113,4 +2113,42 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(proxy.contains("var target_object: Object = null"))
   }
+
+  @Test
+  fun aFreedReceiverPublishesNothingAndHandleZeroIsNeverSelf() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+    fun body(name: String) =
+      proxy.substringAfter("func $name(args: Array) -> int:").substringBefore("\nfunc ")
+
+    // Handle 0 is "no object", not the script itself (a script still constructing has handle 0).
+    val live = proxy.substringAfter("func _kanama_live_object(handle: int) -> Object:")
+    assertTrue(live.indexOf("if handle == 0:") in 0 until live.indexOf("return self"))
+    // Every callback that used to publish a default for a freed receiver returns first, publishing
+    // nothing, so the bridge raises the freed-instance error.
+    for ((name, publish) in
+      listOf(
+        "_kanama_immediate_call" to "recordImmediateChildCount",
+        "_kanama_signal_emit" to "recordImmediateSignalResult",
+        "_kanama_signal_emit_vector2i" to "recordImmediateSignalResult",
+        "_kanama_noargs_vector2" to "recordImmediateVector2",
+        "_kanama_noargs_vector3" to "recordImmediateVector3",
+        "_kanama_connect" to "recordImmediateConnectResult",
+        "_kanama_object_query" to "recordImmediateLongResult",
+      )) {
+      val function = body(name)
+      val gone = function.indexOf("_kanama_handle_gone(")
+      assertTrue(gone >= 0, "$name must test for a gone receiver")
+      assertTrue(gone < function.lastIndexOf(publish), "$name must return before it publishes")
+    }
+    // The script-error sentinel is a constant, not read off the bridge on every return.
+    assertTrue(proxy.contains("const _KANAMA_SCRIPT_ERROR: String ="))
+    assertFalse(proxy.contains("_kanama_bridge.scriptErrorResult"))
+    // The command loop tests the held entry's TYPE, so a freed entry is retired.
+    assertTrue(proxy.contains("if typeof(target_held) == TYPE_OBJECT:"))
+    assertFalse(proxy.contains("if target_held != null:"))
+  }
 }

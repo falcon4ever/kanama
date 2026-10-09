@@ -1390,8 +1390,13 @@ class Main(godotObject: GodotHandle) :
    * - 2: using the freed child threw the freed-instance IllegalStateException (not a bridge failure);
    * - 4: the holder's own node still answers afterwards;
    * - 8, 16, 32: the object-returning shapes (`getParent`, `getNodeOrNull`, `getChild`) on the freed
-   *   child throw the same error, not a bridge failure and not a silent null.
-   * A healthy run returns 63 from [freedProbeAfter].
+   *   child throw the same error, not a bridge failure and not a silent null;
+   * - 64, 128: `emitSignal` on the freed node and a `Control.position` read on a freed Control (the
+   *   shapes that used to answer a default) throw it too;
+   * - 256: a setter on the freed node came back (it is a queued command; the driver checks that the
+   *   freed-instance error was REPORTED as a script error and no other fault appeared);
+   * - 512: frames kept running after the setter.
+   * A healthy run returns 1023 from [freedProbeAfter].
    */
   fun freedProbe(value: Long): Long {
     val holder = self.requireAs("FreedHolder", ::Node)
@@ -1408,11 +1413,15 @@ class Main(godotObject: GodotHandle) :
       if (says("freed_get_parent") == 2L) freedMask = freedMask or 8L
       if (says("freed_get_node_or_null") == 2L) freedMask = freedMask or 16L
       if (says("freed_get_child") == 2L) freedMask = freedMask or 32L
+      if (says("freed_emit_signal") == 2L) freedMask = freedMask or 64L
+      if (says("freed_control_position") == 2L) freedMask = freedMask or 128L
+      if (says("freed_setter") == 1L) freedMask = freedMask or 256L
+      MainThread.postAfterFrames(3) { freedMask = freedMask or 512L }
     }
     return 0L
   }
 
-  /** Readback of [freedProbe]: 63 once its frames have passed. */
+  /** Readback of [freedProbe]: 1023 once its frames have passed. */
   fun freedProbeAfter(value: Long): Long = freedMask
 
   /** Readback of [leakProbe]: 31 once its frames have passed. */

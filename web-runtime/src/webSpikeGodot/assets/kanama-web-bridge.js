@@ -323,6 +323,9 @@
     // What a packed-return callback answers when its script threw (contained) or the page failed:
     // not a packed value, so the proxy returns the declared type's default instead of parsing it.
     scriptErrorResult: "\u001fkanama-script-error\u001f",
+    // Commands skipped because their target was freed by the engine (flushCommands): the messages
+    // not yet reported.
+    freedCommandSkips: [],
     // Every boundary failure's message, oldest first, capped: lastCallbackError alone hides the
     // FIRST failure behind whatever it caused (an autoload that failed to construct surfaced only
     // as the later script that read it).
@@ -1281,7 +1284,7 @@
     reportScriptError(text) {
       this.scriptErrors += 1;
       this.recordCallbackError(text, false);
-      if (this.scriptErrorReports.length < 8) this.scriptErrorReports.push(text);
+      if (this.scriptErrorReports.length < 16) this.scriptErrorReports.push(text);
       const callback =
         this.reportCallbacks.get(this.activeOwnerHandle) ??
         this.reportCallbacks.values().next().value;
@@ -2232,9 +2235,9 @@
       abandon();
       throw new Error(freed ? FREED_INSTANCE_MESSAGE(handle) : message);
     },
-    isHandleFreed(handle) {
+    isHandleFreed(handle, ownerHandle = this.activeOwnerHandle) {
       const callback =
-        this.objectQueryCallbacks.get(this.activeOwnerHandle) ??
+        this.objectQueryCallbacks.get(ownerHandle) ??
         this.objectQueryCallbacks.values().next().value;
       if (!callback || (handle & BROWSER_HANDLE_NAMESPACE) === 0) return false;
       this.immediateLongResult = null;
@@ -2542,7 +2545,7 @@
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw this.unpublishedResult(handle, "Godot connect callback did not publish a result");
+        throw this.unpublishedResult(this.isHandleFreed(handle) ? handle : targetHandle, "Godot connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
         const sourceKind = this.browserHandleSlot(handle)?.kind;
@@ -2557,7 +2560,7 @@
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw this.unpublishedResult(handle, "Godot bound connect callback did not publish a result");
+        throw this.unpublishedResult(this.isHandleFreed(handle) ? handle : targetHandle, "Godot bound connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
         const sourceKind = this.browserHandleSlot(handle)?.kind;
@@ -2812,28 +2815,47 @@
       let groupCrossings = 0;
       let scanOffset = 0;
       let applied = 0;
+      let skippedFreed = 0;
       const flushGroup = () => {
         if (groupCommands === 0) return;
         const callback = this.applyCallbacks.get(groupOwner);
         if (!callback) {
           throw new Error(`Godot command callback is not installed for owner=${groupOwner}`);
         }
-        const parentFrame = this.activeCommandFlushFrame;
-        const frame = { applied: 0 };
-        this.activeCommandFlushFrame = frame;
-        try {
-          // Must be slice(), not subarray(): Godot's js_buffer_to_packed_byte_array reads
-          // from the underlying ArrayBuffer's start and ignores a view's byteOffset, so a
-          // subarray view for any group after the first (non-zero offset) would deliver the
-          // wrong commands to that owner's proxy. slice() copies into a fresh zero-offset
-          // buffer. Single-group batches (match3/bunnymark) start at 0 and were unaffected;
-          // multi-owner batches (e.g. dodge's new_game) require this.
-          callback(words.slice(groupStart, groupStart + groupWords), groupCommands);
-        } finally {
-          this.activeCommandFlushFrame = parentFrame;
+        let from = groupStart;
+        let remaining = groupCommands;
+        while (remaining > 0) {
+          const parentFrame = this.activeCommandFlushFrame;
+          const frame = { applied: 0 };
+          this.activeCommandFlushFrame = frame;
+          try {
+            // Must be slice(), not subarray(): Godot's js_buffer_to_packed_byte_array reads
+            // from the underlying ArrayBuffer's start and ignores a view's byteOffset, so a
+            // subarray view for any group after the first (non-zero offset) would deliver the
+            // wrong commands to that owner's proxy. slice() copies into a fresh zero-offset
+            // buffer. Single-group batches (match3/bunnymark) start at 0 and were unaffected;
+            // multi-owner batches (e.g. dodge's new_game) require this.
+            callback(words.slice(from, groupStart + groupWords), remaining);
+          } finally {
+            this.activeCommandFlushFrame = parentFrame;
+          }
+          applied += frame.applied;
+          groupCrossings += 1;
+          if (frame.applied >= remaining) break;
+          // The proxy stopped at command `frame.applied`. When its target is an object the engine
+          // freed under the script (a setter queued on a freed node), that command alone is
+          // skipped and reported (see takeFreedCommandSkips) and the rest of the group runs;
+          // anything else stays a protocol fault, which Kotlin's applied/expected check ends the
+          // page on.
+          let stop = from;
+          for (let skipped = 0; skipped < frame.applied; skipped += 1) {
+            stop += commandWordCount(words[stop]);
+          }
+          if (!this.skipFreedCommand(words[stop + 1], groupOwner)) break;
+          skippedFreed += 1;
+          from = stop + commandWordCount(words[stop]);
+          remaining -= frame.applied + 1;
         }
-        applied += frame.applied;
-        groupCrossings += 1;
       };
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[scanOffset];
@@ -2959,7 +2981,28 @@
         );
         this.lastPositionMutationBatch = positionMutationCount;
       }
-      return applied;
+      // A skipped command was consumed (reported, not lost): Kotlin's applied/expected check
+      // counts it, so only a command that was neither applied nor skipped fails the batch.
+      return applied + skippedFreed;
+    },
+    /**
+     * Whether a command's target handle is an object the engine freed (see flushCommands): if so
+     * records the freed-instance message for [takeFreedCommandSkips] and answers true.
+     */
+    skipFreedCommand(handle, ownerHandle) {
+      if (!this.isHandleFreed(handle, ownerHandle)) return false;
+      this.freedCommandSkips.push(FREED_INSTANCE_MESSAGE(handle));
+      return true;
+    },
+    /**
+     * The freed-instance messages of the commands [flushCommands] skipped since the last call, one
+     * per line. Kotlin reports each as a script error, so a setter on a freed node is reported and
+     * the page carries on, as it does on desktop.
+     */
+    takeFreedCommandSkips() {
+      const messages = this.freedCommandSkips.join("\n");
+      this.freedCommandSkips = [];
+      return messages;
     },
     recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;
