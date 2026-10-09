@@ -103,8 +103,9 @@ are kept. Only `FileAccess` and `DirAccess` are still per-platform (task 129 par
   `ptrcallWithStringAndArrayArgRetLongAndArray` helper (replaced by `ptrcallLoadStatusWithProgress`,
   the one helper both platforms implement for `ResourceLoader.loadThreadedGetStatusWithProgress`).
   Hand-written lines for these classes: desktop 6,333 → 0 (16 files), iOS 2,812 → 0 (7 files and
-  280 lines of `IosGodotApi.kt`); the sugar they carried is 52 new lines of shared generator
-  sections, plus `ProjectSettings`' 77, moved from a desktop-only section.
+  280 lines of `IosGodotApi.kt`); the sugar they carried is 57 new lines of shared generator
+  sections and a 3-line precondition row (both on the hand-code budget), plus `ProjectSettings`'
+  77, moved from a desktop-only section.
 - The 20 classes read their MethodBinds from the generated per-class `Binds` holders, like every
   other generated class (the task 131 item 18 entry below lists the hand-kept desktop wrappers and
   the iOS per-platform files as still `by lazy`; of those only `FileAccess` and `DirAccess` remain).
