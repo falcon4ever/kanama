@@ -93,8 +93,9 @@ internal object WebScriptErrors {
 
   /**
    * One stack line as a frame, or null for a line that names no Kotlin function: the exception's
-   * own header, an anonymous `wasm-function[N]` frame, a JS helper (`kotlin.createJsError`) or a
-   * name without a package. [ScriptErrorFrame.className] is the qualified name up to the last dot.
+   * own header, an anonymous `wasm-function[N]` frame, a JS helper (`kotlin.createJsError`), a
+   * frame in a JS file or a name without a package. [ScriptErrorFrame.className] is the qualified
+   * name up to the last dot.
    */
   internal fun parseFrame(line: String): ScriptErrorFrame? {
     val match = CHROME_FRAME.find(line) ?: GECKO_FRAME.find(line) ?: return null
@@ -107,6 +108,9 @@ internal object WebScriptErrors {
     val owner = name.substringBeforeLast('.')
     val method = name.substringAfterLast('.')
     val source = SOURCE_LOCATION.find(location)
+    // Only a Wasm frame or a Kotlin source line is game code; a frame in a JS file is the browser's
+    // (Firefox names its `requestAnimationFrame` callbacks) or the bridge's.
+    if (source == null && ".wasm" !in location) return null
     return ScriptErrorFrame(
       className = owner,
       methodName = method,

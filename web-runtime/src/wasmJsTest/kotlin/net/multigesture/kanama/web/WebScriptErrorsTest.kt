@@ -24,6 +24,9 @@ class WebScriptErrorsTest {
       frame("    at Object.createJsError__externalAdapter (file:///x/import-object.mjs:31:11)")
     )
     assertNull(frame("    at http://h/6a28.wasm:wasm-function[670]:0x38d93"))
+    assertNull(frame("globalThis.requestAnimationFrame/<@http://h/kanama-web-bridge.js:2040:17"))
+    assertNull(frame("    at Object.run (http://h/index.js:12:5)"))
+    assertNull(frame("    at some.pkg.Helper (http://h/kanama-web-bridge.js:9:1)"))
     assertNull(frame("wasm-function[670]@http://h/6a28.wasm:wasm-function[670]:0x38d93"))
     assertNull(frame("    at wasm-function[670] (http://h/6a28.wasm:wasm-function[670]:0x38d93)"))
   }
