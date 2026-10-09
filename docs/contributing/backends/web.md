@@ -387,6 +387,40 @@ Stale Kanama Web browser handle=...`, catchable in the script). Signal arguments
 each dispatch mints transient handles that the dispatching proxy owns and releases right after.
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 
+**A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,
+`connectObject` and the other typed overloads register a callback in `WebSignalCallbackRegistry` and
+connect the receiving script's proxy to the emitter with the callback id bound. The entry is dropped
+when its receiver script is freed (`kanamaWebFree`), when its one-shot fires, on `close()`, and --
+the case that leaked before protocol 34 -- when the *emitter* is freed by the engine: the proxy binds
+a `_KanamaSignalGuard` (a `RefCounted` held only by the connection) as the last bound argument, and
+its `NOTIFICATION_PREDELETE` calls `releaseSignalCallback`, as desktop's custom Callable `free_func`
+does. `close()` marks the guard done before disconnecting so it does not report. The web3d
+fixture's `LeakProbe` pins each case (`leak_probe`).
+
+**Script errors are contained and reported.** `webCallbackBoundary` catches an exception from user
+code, `WebScriptErrors` builds the shared `ScriptErrorReport` (type, message, frame; the same source
+as desktop and iOS) and hands it to the bridge's `reportScriptError`, which the proxy's
+`_kanama_report_error` turns into `push_error("SCRIPT ERROR: ...\n   at: ...")`; the boundary then
+throws an exception with a marker prefix that `invoke` recognises, so the callback returns its
+fallback instead of ending the page (a bridge or protocol fault still does). Coroutines
+(`CoroutineExceptionHandler`) and frame-scheduler tasks (a per-task catch) report the same way, and a
+script constructor that throws is reported, its half-built script torn down. What Wasm provides: the
+trace is the JS `Error.stack` -- `kotlin.createJsError` then anonymous `wasm-function[n]:0xoffset`
+frames; the production build has no name section and no source map, so no game frame can be named
+and the report's function is the containment site (`Script.callback`, `<signal handler>`,
+`<coroutine>`). A build that keeps names is parsed (`WebScriptErrors.parseFrame`) and picks the
+game frame. Reported errors are counted in `callbackErrors` as well (and in `scriptErrors`), so a
+demo that throws still fails its zero-errors check; the web3d driver subtracts its four deliberate
+ones and lists them as `expectedConsoleErrors`, which the envelope verifies reach the console.
+
+**A freed object is a freed-object error.** A browser handle's object the engine frees (not
+Kotlin's `queueFree`, which retires the Kotlin-side handle at once) leaves the handle live in Kotlin.
+When a bridge callback then cannot publish its result, `unpublishedResult` asks the proxy
+(`FREED_CHECK_OPCODE` 1004) whether the object is gone and throws "Invalid access to previously freed
+instance"; the transport turns that `JsException` into the `IllegalStateException` desktop throws.
+The handle namespaces are disjoint (bit 30): `WebInstanceRegistry` used to mask bit 30 away, so a
+browser handle with the slot and generation of a live script read as that script (task 138 item 18).
+
 ### RefCounted resource ownership (create/close on the handle bridge)
 
 The user-facing contract is the **same** as the pointer backends —

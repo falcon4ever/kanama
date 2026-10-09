@@ -612,6 +612,14 @@ commits, per-demo checksums, payload sizes, protocol version and driver results.
   Safari on a USB-connected device (see Testing On A Phone Or Tablet), but no
   automated iOS gate exists and mobile WebKit is not part of the validated
   claim.
+- **A script error names the callback, not a Kotlin file and line.** An exception in a script
+  callback (`_ready`, `_process`, a signal handler, a `@Function` call, a coroutine, a
+  constructor) is reported once through Godot's error log (`SCRIPT ERROR: <type>: <message>`,
+  `at: <Script>.<callback>`) and contained: the call returns its default and the frame loop and the
+  other scripts go on. The production Wasm module has no name section and publishes no source
+  maps, so a Kotlin/Wasm stack trace is only anonymous `wasm-function[n]` frames; the report
+  therefore names the script and the callback, with no `File.kt:line` as desktop, Android and iOS
+  give.
 - **Lifecycle virtuals are limited to what the proxy dispatches**: `_enter_tree`,
   `_ready`, `_process`, `_physics_process`, `_draw`, `_exit_tree`, `_input`, and
   `_unhandled_input`. Anything else is rejected at build time with a KSP error

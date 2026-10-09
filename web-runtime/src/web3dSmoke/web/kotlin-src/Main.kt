@@ -1380,6 +1380,36 @@ class Main(godotObject: GodotHandle) :
   /** Readback of [errorProbe]: 7 once it ran. */
   fun errorProbeAfter(value: Long): Long = errorMask
 
+  private var freedMask = 0L
+
+  /**
+   * Engine-freed node probe (task 138 item 3; driver `freed_probe`, then `freed_probe_after`).
+   * FreedHolder holds FreedChild; this frees FreedChild's PARENT, so the engine frees the child and
+   * Kotlin never learns of it. Bits:
+   * - 1: the holder looked the child up and reached it;
+   * - 2: using the freed child threw the freed-instance IllegalStateException (not a bridge failure);
+   * - 4: the holder's own node still answers afterwards.
+   * A healthy run returns 7 from [freedProbeAfter].
+   */
+  fun freedProbe(value: Long): Long {
+    val holder = self.requireAs("FreedHolder", ::Node)
+    val parent = self.requireAs("FreedParent", ::Node)
+    val says = { method: String ->
+      WebExperimentalGenericCall.callImmediate(holder, method, listOf(0L)).asLong()
+    }
+    freedMask = 0L
+    if (says("freed_lookup") == 1L) freedMask = freedMask or 1L
+    parent.queueFree()
+    MainThread.postAfterFrames(3) {
+      if (says("freed_name") == 2L) freedMask = freedMask or 2L
+      if (says("freed_self") == 1L) freedMask = freedMask or 4L
+    }
+    return 0L
+  }
+
+  /** Readback of [freedProbe]: 7 once its frames have passed. */
+  fun freedProbeAfter(value: Long): Long = freedMask
+
   /** Readback of [leakProbe]: 31 once its frames have passed. */
   fun leakProbeAfter(value: Long): Long = leakMask
 

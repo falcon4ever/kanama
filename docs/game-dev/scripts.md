@@ -315,8 +315,11 @@ Only, then Run in Xcode or `xcodebuild build`). Godot's `.ipa` export and its
 one-click deploy archive the app, which strips it, and report the failing
 callback with line 0. A release build names the class and method with line 0. In an R8-minified Android release
 build a frame without source info is not attributed, and the error names the
-callback that failed instead. The Web backend does not report Kotlin exceptions
-to Godot yet.
+callback that failed instead. On Web the same report reaches the browser console through
+Godot's error log -- `ERROR: SCRIPT ERROR: kotlin.IllegalStateException: no target`, then
+`at: Player.ready (no source line on Wasm)` -- and the callback returns its default while the game
+runs on. A Web export carries no names or source maps, so the report names the script and the
+callback that failed, not a Kotlin file and line.
 
 Calling a method through a wrapper whose object was freed (a node after
 `queueFree()` took effect) is such an error in debug builds — the editor and
@@ -327,7 +330,9 @@ it back to Godot as a value (an exported property, a method's return value, a
 Variant argument) are silent, and Godot receives `null`. A release export does
 not check, and a call is undefined behaviour, so ask `GD.isInstanceValid(node)`
 before using an object that may be gone. Two wrappers of one object are `==`
-(and equal as `Set`/`Map` keys) whatever their class.
+(and equal as `Set`/`Map` keys) whatever their class. On Web a call on an object the engine freed
+(a child freed with its parent, a timer, a body) throws the same `IllegalStateException: Invalid
+access to previously freed instance`, naming the handle instead of the class.
 
 ## Rebuild Required
 

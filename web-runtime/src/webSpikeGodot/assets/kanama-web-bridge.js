@@ -12,6 +12,11 @@
   const KANAMA_WEB_PROTOCOL_VERSION = 34;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
+  // Task 138 item 3: the object-query arm that answers whether a browser handle's object is gone.
+  const KANAMA_WEB_OPCODE_FREED_CHECK = 1004;
+  const FREED_INSTANCE_MESSAGE = (handle) =>
+    `Invalid access to previously freed instance (Kanama Web handle=${handle}): the engine freed ` +
+    "the object while a script still held it";
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -1599,7 +1604,7 @@
       this.immediateChildCountResult = null;
       callback(handle, includeInternal);
       if (!Number.isInteger(this.immediateChildCountResult)) {
-        throw new Error("Godot immediate callback did not publish a child count");
+        throw this.unpublishedResult(handle, "Godot immediate callback did not publish a child count");
       }
       return this.immediateChildCountResult;
     },
@@ -1805,7 +1810,7 @@
       this.immediateSignalResult = null;
       callback(handle, name, value);
       if (!Number.isInteger(this.immediateSignalResult)) {
-        throw new Error("Godot signal callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot signal callback did not publish a result");
       }
       return this.immediateSignalResult;
     },
@@ -1816,7 +1821,7 @@
       this.immediateSignalResult = null;
       callback(handle, name);
       if (!Number.isInteger(this.immediateSignalResult)) {
-        throw new Error("Godot no-args signal callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot no-args signal callback did not publish a result");
       }
       if (this.mode === "match3") this.match3NoArgsSignalEmits += 1;
       return this.immediateSignalResult;
@@ -1832,7 +1837,7 @@
       this.immediateSignalResult = null;
       callback(handle, name, x, y);
       if (!Number.isInteger(this.immediateSignalResult)) {
-        throw new Error("Godot Vector2i signal callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot Vector2i signal callback did not publish a result");
       }
       if (this.mode === "match3") this.match3Vector2iSignalEmits += 1;
       return this.immediateSignalResult;
@@ -1890,7 +1895,7 @@
       callback(opcode, handle, `${name}\u001f${resultHandle}`);
       const result = this.immediateLongResult;
       if (!Number.isInteger(result)) {
-        throw new Error("Godot property object query callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot property object query callback did not publish a result");
       }
       if (result !== resultHandle) {
         this.releaseBrowserHandle(resultHandle, "Object");
@@ -2104,7 +2109,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle);
       if (!Number.isInteger(this.immediateLongResult)) {
-        throw new Error("Godot Tween no-args callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot Tween no-args callback did not publish a result");
       }
       return this.immediateLongResult;
     },
@@ -2145,12 +2150,30 @@
       }
       return result;
     },
+    /**
+     * The error for a callback that did not publish its result. When the cause is an object the
+     * engine freed while a script still held its handle (a child freed with its parent, a timer, a
+     * body), say so, as desktop does: "did not publish a result" names a symptom, and Kotlin turns
+     * this message into the freed-instance IllegalStateException (task 138 item 3).
+     */
+    unpublishedResult(handle, message) {
+      return new Error(this.isHandleFreed(handle) ? FREED_INSTANCE_MESSAGE(handle) : message);
+    },
+    isHandleFreed(handle) {
+      const callback =
+        this.objectQueryCallbacks.get(this.activeOwnerHandle) ??
+        this.objectQueryCallbacks.values().next().value;
+      if (!callback || (handle & BROWSER_HANDLE_NAMESPACE) === 0) return false;
+      this.immediateLongResult = null;
+      callback(KANAMA_WEB_OPCODE_FREED_CHECK, handle, "");
+      return this.immediateLongResult === 1;
+    },
     immediateStringQuery(opcode, handle, value) {
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
       this.immediateStringResult = null;
       callback(opcode, handle, value);
       if (typeof this.immediateStringResult !== "string") {
-        throw new Error("Godot string query callback did not publish a string result");
+        throw this.unpublishedResult(handle, "Godot string query callback did not publish a string result");
       }
       // A generic call's object return that resolved to an already-tracked handle ("o", id,
       // "tracked"): the calling script holds that handle too.
@@ -2193,7 +2216,7 @@
         this.immediateVector3Result === null ||
         !Number.isFinite(this.immediateVector3Result.x)
       ) {
-        throw new Error("Godot Vector2-arg Vector3 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot Vector2-arg Vector3 callback did not publish a finite result");
       }
       return this.immediateVector3Result.x;
     },
@@ -2209,7 +2232,7 @@
         this.immediateVector3Result === null ||
         !Number.isFinite(this.immediateVector3Result.x)
       ) {
-        throw new Error("Godot indexed Vector3 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot indexed Vector3 callback did not publish a finite result");
       }
       return this.immediateVector3Result.x;
     },
@@ -2220,7 +2243,7 @@
       // flags slot carries -1 to select the disconnect arm in the shared connect callback.
       callback(handle, signal, targetHandle, method, -1, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw new Error("Godot bound disconnect callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot bound disconnect callback did not publish a result");
       }
       return this.immediateConnectResult;
     },
@@ -2403,7 +2426,7 @@
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw new Error("Godot connect callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
         const sourceKind = this.browserHandleSlot(handle)?.kind;
@@ -2418,7 +2441,7 @@
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw new Error("Godot bound connect callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot bound connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
         const sourceKind = this.browserHandleSlot(handle)?.kind;
@@ -2489,7 +2512,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (!Number.isInteger(this.immediateLongResult)) {
-        throw new Error("Godot object query callback did not publish an integer result");
+        throw this.unpublishedResult(handle, "Godot object query callback did not publish an integer result");
       }
       return this.immediateLongResult;
     },
@@ -2500,7 +2523,7 @@
       this.immediateLongResult = null;
       callback(65, handle, ratio);
       if (this.immediateLongResult !== 1) {
-        throw new Error("Godot set_progress_ratio callback did not confirm application");
+        throw this.unpublishedResult(handle, "Godot set_progress_ratio callback did not confirm application");
       }
       return this.immediateLongResult;
     },
@@ -2512,7 +2535,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (this.immediateLongResult !== 1) {
-        throw new Error("Godot double-query callback did not confirm application");
+        throw this.unpublishedResult(handle, "Godot double-query callback did not confirm application");
       }
       return this.immediateLongResult;
     },
@@ -2526,7 +2549,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (!Number.isInteger(this.immediateLongResult)) {
-        throw new Error("Godot double-returning query callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot double-returning query callback did not publish a result");
       }
       return this.immediateLongResult;
     },
@@ -2543,7 +2566,7 @@
         !Number.isFinite(this.immediateVector2Result.x) ||
         !Number.isFinite(this.immediateVector2Result.y)
       ) {
-        throw new Error("Godot Vector2 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot Vector2 callback did not publish a finite result");
       }
       return this.immediateVector2Result.x;
     },
@@ -2579,7 +2602,7 @@
         !Number.isFinite(this.immediateVector3Result.y) ||
         !Number.isFinite(this.immediateVector3Result.z)
       ) {
-        throw new Error("Godot Vector3 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot Vector3 callback did not publish a finite result");
       }
       return this.immediateVector3Result.x;
     },

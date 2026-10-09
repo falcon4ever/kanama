@@ -172,8 +172,18 @@ class WebScriptCodeEmitterTest {
     // Task 131 item 12: a lambda connection carries a guard as its last bound argument, so the
     // emitter's free releases the Kotlin callback entry; the dispatch helpers tolerate it.
     assertTrue(proxy.source.contains("class _KanamaSignalGuard extends RefCounted:"))
+    // Task 138 item 3 / task 131 item 14: the freed-object query arm and the error-report callback.
+    assertTrue(proxy.source.contains("if opcode == 1004:"), "the freed-handle check arm")
+    assertTrue(proxy.source.contains("func _kanama_report_error(args: Array) -> int:"))
+    assertTrue(
+      proxy.source.contains("installReportCallback(_kanama_handle, _kanama_report_callback)")
+    )
     assertTrue(proxy.source.contains("callable = callable.bind(callback_id, guard)"))
-    assertTrue(proxy.source.contains("func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null)"))
+    assertTrue(
+      proxy.source.contains(
+        "func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null)"
+      )
+    )
     assertTrue(
       proxy.source.indexOf("if _kanama_create_failed:") in 0 until reserve,
       "a failed construct must not be retried",
@@ -749,7 +759,11 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("callable = callable.bind(callback_id)"))
     assertTrue(mainProxy.contains("func _kanama_signal_emit(args: Array) -> int:"))
     assertTrue(mainProxy.contains("result = value.emit_signal(StringName(String(args[1])))"))
-    assertTrue(mainProxy.contains("func _kanama_web_signal_dispatch0(callback_id: int, _guard: Variant = null) -> void:"))
+    assertTrue(
+      mainProxy.contains(
+        "func _kanama_web_signal_dispatch0(callback_id: int, _guard: Variant = null) -> void:"
+      )
+    )
     assertTrue(mainProxy.contains("dispatchSignal0(_kanama_handle, callback_id)"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
     assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, event_handle)"))
@@ -1631,7 +1645,9 @@ class WebScriptCodeEmitterTest {
     val proxy = task80Proxy()
     // The one-argument helper carries the payload instead of discarding it.
     assertTrue(
-      proxy.contains("func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null) -> void:"),
+      proxy.contains(
+        "func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null) -> void:"
+      ),
       proxy,
     )
     assertTrue(

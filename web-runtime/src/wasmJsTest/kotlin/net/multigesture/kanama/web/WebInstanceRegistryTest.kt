@@ -36,6 +36,21 @@ class WebInstanceRegistryTest {
   }
 
   @Test
+  fun aBrowserHandleNeverReadsAsAScriptHandle() {
+    val registry = registry()
+    val script = registry.reserve(scriptId = 1)
+    registry.construct(script, ::passThrough)
+    // The browser namespace (bit 30) with the script's own slot and generation: same low bits.
+    val browserHandle = script or 0x40000000
+
+    assertFalse(registry.isLive(browserHandle))
+    assertFalse(registry.isLiveOrConstructing(browserHandle))
+    assertNull(registry.pendingScriptId(browserHandle))
+    assertFalse(registry.free(browserHandle))
+    assertTrue(registry.isLive(script))
+  }
+
+  @Test
   fun constructMakesTheScriptLive() {
     val registry = registry()
     val handle = registry.reserve(scriptId = 1)

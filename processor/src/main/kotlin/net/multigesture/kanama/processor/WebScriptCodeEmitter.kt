@@ -215,6 +215,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val DROP_ROUTED_AWAITS = "_kanama_drop_routed_awaits"
     /** Task 134 D1: the object-query arm and helper that run one builtin (value-type) method. */
     internal const val BUILTIN_CALL_OPCODE = 1003
+    /**
+     * Task 138 item 3: the object-query arm that says a handle's object was freed by the engine.
+     */
+    internal const val FREED_CHECK_OPCODE = 1004
     internal const val BUILTIN_CALL = "_kanama_web_builtin_call"
     /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
     internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
@@ -869,7 +873,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("# connection owns each one), so any proxy can close an await.")
             appendLine("static var await_watchers: Dictionary = {}")
             appendLine()
-            appendLine("# Task 131 item 12: the live guards of lambda connections by callback id (weak:")
+            appendLine(
+              "# Task 131 item 12: the live guards of lambda connections by callback id (weak:"
+            )
             appendLine("# the emitter's connection owns each one).")
             appendLine("static var signal_guards: Dictionary = {}")
             appendLine()
@@ -2300,9 +2306,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_tween_callback,")
     appendLine("\t\t_kanama_noargs_vector3_callback)")
     // Task 131 item 14: the way a contained script error reaches Godot's error log.
-    appendLine(
-      "\t_kanama_report_callback = JavaScriptBridge.create_callback(_kanama_report_error)"
-    )
+    appendLine("\t_kanama_report_callback = JavaScriptBridge.create_callback(_kanama_report_error)")
     appendLine("\t_kanama_bridge.installReportCallback(_kanama_handle, _kanama_report_callback)")
     appendLine("\t_kanama_refresh_self_snapshots()")
     // The renderer name is global and any script may branch on it at ready (squash's Main
@@ -4206,7 +4210,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t# Task 134 D1: any number of emitted arguments; the bound callback id comes last, after it the"
     )
-    appendLine("\t# connection's guard (task 131 item 12), which only has to stay alive with the connection.")
+    appendLine(
+      "\t# connection's guard (task 131 item 12), which only has to stay alive with the connection."
+    )
     appendLine("\targs.pop_back()")
     appendLine("\tvar callback_id := int(args.pop_back())")
     appendLine("\t$SIGNAL_DELIVER(args, callback_id)")
@@ -4226,7 +4232,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("func $SIGNAL_DISPATCH_ZERO(callback_id: int, _guard: Variant = null) -> void:")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
     appendLine()
-    appendLine("func $SIGNAL_DISPATCH_ONE(arg: Variant, callback_id: int, _guard: Variant = null) -> void:")
+    appendLine(
+      "func $SIGNAL_DISPATCH_ONE(arg: Variant, callback_id: int, _guard: Variant = null) -> void:"
+    )
     appendLine(
       "\t# Task 80 slice 2: the emitted scalar crosses PACKED, so a typed GodotSignal.connect*"
     )
@@ -4299,7 +4307,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\ttransient_handles.append(packed_handle)")
     appendLine("\treturn packed_handle")
     appendLine()
-    appendLine("func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int, _guard: Variant = null) -> void:")
+    appendLine(
+      "func $SIGNAL_DISPATCH_OBJECT(arg: Variant, callback_id: int, _guard: Variant = null) -> void:"
+    )
     appendLine("\tvar script_arg_handle := 0")
     appendLine("\tif arg != null and arg.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\tscript_arg_handle = int(arg.call(\"_kanama_ensure_created\"))")
@@ -4322,6 +4332,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\tvar value: Object = self if object_handle == _kanama_handle else _kanama_object_handles.get(object_handle)"
     )
+    appendLine("\tif opcode == $FREED_CHECK_OPCODE:")
+    appendLine(
+      "\t\t# Task 138 item 3: is the object behind this handle gone (freed by the engine, or its entry"
+    )
+    appendLine("\t\t# already retired)? Asked only after a callback failed to publish its result.")
+    appendLine("\t\tvar gone := 0")
+    appendLine("\t\tif object_handle != _kanama_handle:")
+    appendLine("\t\t\tvar held: Variant = _kanama_object_handles.get(object_handle)")
+    appendLine("\t\t\tif held == null or not is_instance_valid(held):")
+    appendLine("\t\t\t\tgone = 1")
+    appendLine("\t\t_kanama_bridge.recordImmediateLongResult(gone)")
+    appendLine("\t\treturn gone")
     appendLine("\tvar result := 0")
     appendLine("\tif value != null:")
     appendLine("\t\tif opcode == 23:")

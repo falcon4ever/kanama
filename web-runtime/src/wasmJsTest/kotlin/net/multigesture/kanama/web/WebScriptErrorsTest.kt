@@ -20,7 +20,9 @@ class WebScriptErrorsTest {
   fun anonymousWasmFramesAndJsHelpersAreNotFrames() {
     assertNull(frame("IllegalStateException: boom"))
     assertNull(frame("    at kotlin.createJsError (http://h/kanama-web-spike.js?v=1:1:9352)"))
-    assertNull(frame("    at Object.createJsError__externalAdapter (file:///x/import-object.mjs:31:11)"))
+    assertNull(
+      frame("    at Object.createJsError__externalAdapter (file:///x/import-object.mjs:31:11)")
+    )
     assertNull(frame("    at http://h/6a28.wasm:wasm-function[670]:0x38d93"))
     assertNull(frame("wasm-function[670]@http://h/6a28.wasm:wasm-function[670]:0x38d93"))
     assertNull(frame("    at wasm-function[670] (http://h/6a28.wasm:wasm-function[670]:0x38d93)"))
@@ -28,7 +30,8 @@ class WebScriptErrorsTest {
 
   @Test
   fun aNamedFrameWithoutASourceKeepsItsClassAndMethod() {
-    val parsed = frame("    at web3d.ErrorProbe.errorThrow (http://h/a.wasm:wasm-function[12]:0xabc)")!!
+    val parsed =
+      frame("    at web3d.ErrorProbe.errorThrow (http://h/a.wasm:wasm-function[12]:0xabc)")!!
     assertEquals("web3d.ErrorProbe", parsed.className)
     assertEquals("errorThrow", parsed.methodName)
     assertEquals("", parsed.fileName)
@@ -48,8 +51,7 @@ class WebScriptErrorsTest {
 
   @Test
   fun aThrownExceptionIsReportedWithItsTypeMessageAndContainmentSite() {
-    val report =
-      WebScriptErrors.reportFor(IllegalStateException("boom"), "ErrorProbe.error_throw")
+    val report = WebScriptErrors.reportFor(IllegalStateException("boom"), "ErrorProbe.error_throw")
     assertEquals("kotlin.IllegalStateException", report.description)
     assertEquals("kotlin.IllegalStateException: boom", report.message)
     // The production export's trace names no function (the report falls back to the containment

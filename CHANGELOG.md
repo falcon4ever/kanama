@@ -38,6 +38,39 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — Web: a lambda signal connection no longer leaks its callback (protocol 34, task 131 item 12)
+
+- A Kotlin lambda connected to a signal on Web (`signal.connect(this) { ... }`, the typed
+  `connectLong`/`connectObject` forms) kept its callback registered until its receiving script was
+  freed. When the *emitter* was freed first -- a node, a timer, a body, with the lambda still
+  connected -- or a one-shot on it never fired, the entry stayed for the rest of the run. The
+  callback is now dropped with whatever held it (receiver freed, one-shot fired, `close()`, emitter
+  freed), as on desktop. The proxy protocol is bumped to 34 (re-export a Web game with this
+  version).
+
+### Fixed — Web: a script exception is reported to Godot and contained (task 131 item 14)
+
+- An exception in a Web script callback (`_ready`, `_process`, a signal handler, a `@Function`
+  call, a coroutine, a constructor) used to end the page with a failure banner and reached no Godot
+  log. It is now reported once through Godot's error log, as `SCRIPT ERROR: <type>: <message>` and
+  `at: <Script>.<callback>`, and contained like on desktop: the call returns its default and the
+  game, the other scripts and the frame loop go on. A Kotlin/Wasm trace has no function names or
+  source lines in a production export, so the report names the script and the callback, not a
+  `File.kt:line`.
+
+### Fixed — Web: using a node the engine freed throws the freed-instance error (task 138 item 3)
+
+- A node freed by the engine (a child freed with its parent) while a script still held it failed
+  with "string query callback did not publish a string result" (or a similar bridge message). It now
+  throws `IllegalStateException: Invalid access to previously freed instance`, as on desktop.
+
+### Fixed — Web: a freed shared node could read as a live script (task 138 item 18)
+
+- A node several scripts hold could, depending on how many scripts the scene had, share its
+  handle's slot and generation with a live script, so using it after it was freed failed in the
+  bridge ("No Kanama Web proxy owns handle=...") instead of with the stale-handle error. The two
+  handle spaces are now kept apart.
+
 ### Changed — 20 more per-platform classes generated once for every platform (task 129 C) — BREAKING
 
 Desktop, Android and iOS. Twenty classes were still written per platform: by hand on desktop and

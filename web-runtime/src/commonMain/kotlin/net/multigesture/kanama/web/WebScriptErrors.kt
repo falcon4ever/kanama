@@ -1,12 +1,14 @@
 package net.multigesture.kanama.web
 
+import kotlinx.coroutines.CoroutineExceptionHandler
+import net.multigesture.kanama.api.WebScopeOwner
 import net.multigesture.kanama.binding.runtime.ScriptErrorFrame
 import net.multigesture.kanama.binding.runtime.ScriptErrorReport
 
 /**
  * Task 131 item 14: a contained Kotlin exception in a Web script callback, reported the way desktop
- * reports one (`ScriptErrors.report`): the exception's type and message and the game frame that threw.
- * The shared [ScriptErrorReport] decides which frame that is; Web supplies the frames
+ * reports one (`ScriptErrors.report`): the exception's type and message and the game frame that
+ * threw. The shared [ScriptErrorReport] decides which frame that is; Web supplies the frames
  * ([framesOf]) and the way out ([sink], the bridge's `reportScriptError`, which reaches Godot's
  * `push_error`).
  */
@@ -16,6 +18,16 @@ internal object WebScriptErrors {
 
   /** Re-entrancy guard: a report that fails inside the sink must not report again. */
   private var reporting = false
+
+  /**
+   * An exception in a script's coroutine is a script error: reported with its type and message, the
+   * scope and the frame loop carry on (a `KanamaScope`'s SupervisorJob keeps its other children).
+   */
+  val coroutineHandler: CoroutineExceptionHandler = CoroutineExceptionHandler { context, error ->
+    val owner = context[WebScopeOwner]?.ownerHandle ?: 0
+    val script = webScriptInstance(owner)?.let { it::class.simpleName } ?: "script"
+    report(error, "$script.<coroutine>")
+  }
 
   /** Reports [t]. [where] names the containment site (`Player._ready`). Never throws. */
   fun report(t: Throwable, where: String): Boolean {
@@ -49,7 +61,8 @@ internal object WebScriptErrors {
     return "SCRIPT ERROR: ${report.message}\n   at: ${report.function} ($place)"
   }
 
-  fun exceptionName(t: Throwable): String = t::class.qualifiedName ?: t::class.simpleName ?: "Throwable"
+  fun exceptionName(t: Throwable): String =
+    t::class.qualifiedName ?: t::class.simpleName ?: "Throwable"
 
   /**
    * The frames of [t]'s own stack, innermost first.
@@ -67,9 +80,11 @@ internal object WebScriptErrors {
   fun framesOf(t: Throwable): List<ScriptErrorFrame> =
     // The trace starts inside the exception's own constructor chain (`Throwable.<init>`, ...),
     // which a build with names shows; drop it so the exception class is not the reported frame.
-    t.stackTraceToString().lineSequence().mapNotNull(::parseFrame).dropWhile {
-      it.methodName == "<init>"
-    }.toList()
+    t.stackTraceToString()
+      .lineSequence()
+      .mapNotNull(::parseFrame)
+      .dropWhile { it.methodName == "<init>" }
+      .toList()
 
   // Chrome / Node `    at name (location)` and Firefox / Safari `name@location`.
   private val CHROME_FRAME = Regex("""^\s*at\s+(\S+)\s+\((.*)\)\s*$""")
@@ -87,7 +102,8 @@ internal object WebScriptErrors {
     val location = match.groupValues[2]
     if (name.startsWith("wasm-function[") || name == "<anonymous>" || '.' !in name) return null
     // JS helpers a Wasm trace passes through (`Object.createJsError__externalAdapter` in Node).
-    if ("createJsError" in name || name.startsWith("Object.") || name.startsWith("Module.")) return null
+    if ("createJsError" in name || name.startsWith("Object.") || name.startsWith("Module."))
+      return null
     val owner = name.substringBeforeLast('.')
     val method = name.substringAfterLast('.')
     val source = SOURCE_LOCATION.find(location)
