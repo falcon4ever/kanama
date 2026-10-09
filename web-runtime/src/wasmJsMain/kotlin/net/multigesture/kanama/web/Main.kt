@@ -4,6 +4,7 @@ package net.multigesture.kanama.web
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
+import kotlin.js.JsException
 import kotlin.js.JsExport
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.api.AudioStreamPlayer
@@ -91,13 +92,25 @@ private fun <T> webCallbackBoundary(
       withActiveWebScriptHandle(objectId) { block(record) }
     }
   } catch (error: Throwable) {
-    // A script exception (task 131 item 14): reported through Godot's error path with its type,
-    // message and game frame, then contained -- the bridge's `invoke` sees the marker, returns
-    // the callback's default and the frame loop runs on, as desktop's containment does.
-    // What the callback queued before it threw already took effect on desktop (calls are
-    // immediate there); apply it now so the next boundary's flush does not carry it along or the
-    // frame pump's clear drop it.
-    runCatching { commands.flush() }
+    // Only an exception that came out of the USER's code (see [userScript]) is a script error
+    // (task 131 item 14). A runtime failure -- the registry's invariants, the scheduler's owner
+    // checks, a bridge JsException -- is the page's fatal path, as before: containing it would
+    // hide a broken runtime behind a "script error" (and `kanamaWebFree` would skip releasing a
+    // still-live script).
+    if (!isContainableScriptError(error)) {
+      throw IllegalStateException(
+        "Kanama Web callback failed: script=$scriptName handle=$objectId callback=$callback " +
+          "member=$memberName cause=${describeCauseChain(error)}",
+        error,
+      )
+    }
+    // Reported through Godot's error path with its type, message and game frame, then contained --
+    // the bridge's `invoke` sees the marker, returns the callback's default and the frame loop
+    // runs on, as desktop's containment does. What the callback queued before it threw already
+    // took effect on desktop (calls are immediate there); apply it now so the next boundary's
+    // flush does not carry it along or the frame pump's clear drop it. That flush is the
+    // boundary's own: a failure in it is fatal, like the flush of a callback that did not throw.
+    if (callback == "_draw") drawCommands.flush() else commands.flush()
     val shown = if (memberName.startsWith("_kanama_web_signal_")) "<signal handler>" else memberName
     throw containScriptError(
       error,
@@ -108,19 +121,30 @@ private fun <T> webCallbackBoundary(
 }
 
 /**
+ * Whether [error] is a script error to report and contain: it came out of user script code, and it
+ * is not the bridge failing underneath that code (an untranslated `JsException` is the runtime, not
+ * the script).
+ */
+private fun isContainableScriptError(error: Throwable): Boolean =
+  WebScriptErrors.isUserFailure(error) && error !is JsException
+
+/**
  * Reports [error] to Godot and returns the exception to throw across the JS boundary: the marker
  * [WEB_SCRIPT_ERROR_MARKER] tells the bridge it was already reported and must not end the page.
  */
 private fun containScriptError(error: Throwable, where: String, context: String): Throwable {
-  WebScriptErrors.report(error, where)
-  return IllegalStateException(
-    "$WEB_SCRIPT_ERROR_MARKER $context cause=${describeCauseChain(error)}",
-    error,
-  )
+  val reported = WebScriptErrors.report(error, where)
+  val marker =
+    if (reported) WEB_SCRIPT_ERROR_MARKER
+    else "$WEB_SCRIPT_ERROR_MARKER $WEB_SCRIPT_ERROR_UNREPORTED"
+  return IllegalStateException("$marker $context cause=${describeCauseChain(error)}", error)
 }
 
 /** Prefix of a contained script error's message; the bridge matches it (see `invoke`). */
 private const val WEB_SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):"
+
+/** Added after the marker when the report did not reach Godot's error log; the bridge counts it. */
+private const val WEB_SCRIPT_ERROR_UNREPORTED = "(not reported to Godot)"
 
 /**
  * Renders a throwable and its causes as one line.
@@ -182,6 +206,8 @@ fun kanamaWebConstruct(handle: Int): Int {
     clearWebPositionSnapshot(handle)
     WebSignalCallbackRegistry.releaseOwner(handle)
     WebFrameScheduler.cancelOwner(handle)
+    // The runtime failing around the constructor is fatal, like any other boundary's own failure.
+    if (!isContainableScriptError(error)) throw error
     // A constructor that throws is a script error like any other: reported with its game frame,
     // contained (the bridge tears the half-built script down and the proxy reports the failed
     // construction once).
@@ -242,7 +268,7 @@ fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
 @JsExport
 fun kanamaWebEnterTree(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_enter_tree") { record ->
-    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)
+    userScript { KanamaWebProjectRegistry.enterTree(record.scriptId, record.script) }
     commands.flush()
     1
   }
@@ -251,7 +277,7 @@ fun kanamaWebEnterTree(objectId: Int): Int {
 @JsExport
 fun kanamaWebReady(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_ready") { record ->
-    KanamaWebProjectRegistry.ready(record.scriptId, record.script)
+    userScript { KanamaWebProjectRegistry.ready(record.scriptId, record.script) }
     commands.flush()
     1
   }
@@ -260,7 +286,7 @@ fun kanamaWebReady(objectId: Int): Int {
 @JsExport
 fun kanamaWebInput(objectId: Int, eventHandle: Int): Int {
   return webCallbackBoundary(objectId, "_input") { record ->
-    KanamaWebProjectRegistry.input(record.scriptId, record.script, eventHandle)
+    userScript { KanamaWebProjectRegistry.input(record.scriptId, record.script, eventHandle) }
     commands.flush()
     1
   }
@@ -269,7 +295,9 @@ fun kanamaWebInput(objectId: Int, eventHandle: Int): Int {
 @JsExport
 fun kanamaWebUnhandledInput(objectId: Int, eventHandle: Int): Int {
   return webCallbackBoundary(objectId, "_unhandled_input") { record ->
-    KanamaWebProjectRegistry.unhandledInput(record.scriptId, record.script, eventHandle)
+    userScript {
+      KanamaWebProjectRegistry.unhandledInput(record.scriptId, record.script, eventHandle)
+    }
     commands.flush()
     1
   }
@@ -279,7 +307,7 @@ fun kanamaWebUnhandledInput(objectId: Int, eventHandle: Int): Int {
 fun kanamaWebProcess(objectId: Int, delta: Double): Int {
   return webCallbackBoundary(objectId, "_process") { record ->
     commands.clear()
-    KanamaWebProjectRegistry.process(record.scriptId, record.script, delta)
+    userScript { KanamaWebProjectRegistry.process(record.scriptId, record.script, delta) }
     commands.flush()
   }
 }
@@ -288,7 +316,7 @@ fun kanamaWebProcess(objectId: Int, delta: Double): Int {
 fun kanamaWebPhysicsProcess(objectId: Int, delta: Double): Int {
   return webCallbackBoundary(objectId, "_physics_process") { record ->
     commands.clear()
-    KanamaWebProjectRegistry.physicsProcess(record.scriptId, record.script, delta)
+    userScript { KanamaWebProjectRegistry.physicsProcess(record.scriptId, record.script, delta) }
     commands.flush()
   }
 }
@@ -326,7 +354,7 @@ fun kanamaWebPumpFrameScheduler(delta: Double): Int {
             try {
               action()
             } catch (error: Throwable) {
-              WebScriptErrors.report(error, "coroutine")
+              WebScriptErrors.report(error, "MainThread task")
             }
           } finally {
             exitWebBridgeFrameOwner(previousOwner)
@@ -357,7 +385,7 @@ fun kanamaWebPumpFrameScheduler(delta: Double): Int {
 fun kanamaWebSpikeProcess(objectId: Int, delta: Double): Int {
   return webCallbackBoundary(objectId, "_process") { record ->
     commands.clear()
-    KanamaWebProjectRegistry.process(record.scriptId, record.script, delta)
+    userScript { KanamaWebProjectRegistry.process(record.scriptId, record.script, delta) }
     frameSequence += 1
     commands.appendScalarMutation(objectId, frameSequence)
     commands.flush()
@@ -368,7 +396,7 @@ fun kanamaWebSpikeProcess(objectId: Int, delta: Double): Int {
 fun kanamaWebDraw(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_draw") { record ->
     drawCommands.clear()
-    KanamaWebProjectRegistry.draw(record.scriptId, record.script)
+    userScript { KanamaWebProjectRegistry.draw(record.scriptId, record.script) }
     drawCommands.flush()
   }
 }
@@ -382,14 +410,18 @@ fun kanamaWebEmptyFrame(objectId: Int, delta: Double): Int {
 @JsExport
 fun kanamaWebGetStringProperty(objectId: Int, propertyId: Int): String {
   return webCallbackBoundary(objectId, "property_get", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.getStringProperty(record.scriptId, propertyId, record.script)
+    userScript {
+      KanamaWebProjectRegistry.getStringProperty(record.scriptId, propertyId, record.script)
+    }
   }
 }
 
 @JsExport
 fun kanamaWebSetStringProperty(objectId: Int, propertyId: Int, value: String): Int {
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setStringProperty(record.scriptId, propertyId, record.script, value)
+    userScript {
+      KanamaWebProjectRegistry.setStringProperty(record.scriptId, propertyId, record.script, value)
+    }
     1
   }
 }
@@ -398,7 +430,9 @@ fun kanamaWebSetStringProperty(objectId: Int, propertyId: Int, value: String): I
 fun kanamaWebSetDoubleProperty(objectId: Int, propertyId: Int, value: Double): Int {
   require(value.isFinite()) { "Web double property must be finite" }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setDoubleProperty(record.scriptId, propertyId, record.script, value)
+    userScript {
+      KanamaWebProjectRegistry.setDoubleProperty(record.scriptId, propertyId, record.script, value)
+    }
     1
   }
 }
@@ -406,7 +440,9 @@ fun kanamaWebSetDoubleProperty(objectId: Int, propertyId: Int, value: Double): I
 @JsExport
 fun kanamaWebSetVector2Property(objectId: Int, propertyId: Int, x: Double, y: Double): Int {
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setVector2Property(record.scriptId, propertyId, record.script, x, y)
+    userScript {
+      KanamaWebProjectRegistry.setVector2Property(record.scriptId, propertyId, record.script, x, y)
+    }
     1
   }
 }
@@ -414,7 +450,9 @@ fun kanamaWebSetVector2Property(objectId: Int, propertyId: Int, x: Double, y: Do
 @JsExport
 fun kanamaWebSetVector2iProperty(objectId: Int, propertyId: Int, x: Int, y: Int): Int {
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setVector2iProperty(record.scriptId, propertyId, record.script, x, y)
+    userScript {
+      KanamaWebProjectRegistry.setVector2iProperty(record.scriptId, propertyId, record.script, x, y)
+    }
     1
   }
 }
@@ -422,7 +460,9 @@ fun kanamaWebSetVector2iProperty(objectId: Int, propertyId: Int, x: Int, y: Int)
 @JsExport
 fun kanamaWebGetPackedProperty(objectId: Int, propertyId: Int): String {
   return webCallbackBoundary(objectId, "property_get", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.getPackedProperty(record.scriptId, propertyId, record.script)
+    userScript {
+      KanamaWebProjectRegistry.getPackedProperty(record.scriptId, propertyId, record.script)
+    }
   }
 }
 
@@ -435,7 +475,16 @@ fun kanamaWebSetVector3Property(
   z: Double,
 ): Int {
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setVector3Property(record.scriptId, propertyId, record.script, x, y, z)
+    userScript {
+      KanamaWebProjectRegistry.setVector3Property(
+        record.scriptId,
+        propertyId,
+        record.script,
+        x,
+        y,
+        z,
+      )
+    }
     1
   }
 }
@@ -447,12 +496,14 @@ fun kanamaWebSetVector3Property(
 @JsExport
 fun kanamaWebSetPackedValueProperty(objectId: Int, propertyId: Int, packed: String): Int {
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setPackedValueProperty(
-      record.scriptId,
-      propertyId,
-      record.script,
-      packed,
-    )
+    userScript {
+      KanamaWebProjectRegistry.setPackedValueProperty(
+        record.scriptId,
+        propertyId,
+        record.script,
+        packed,
+      )
+    }
     1
   }
 }
@@ -468,15 +519,17 @@ fun kanamaWebSetColorProperty(
   a: Double,
 ): Int {
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setColorProperty(
-      record.scriptId,
-      propertyId,
-      record.script,
-      r,
-      g,
-      b,
-      a,
-    )
+    userScript {
+      KanamaWebProjectRegistry.setColorProperty(
+        record.scriptId,
+        propertyId,
+        record.script,
+        r,
+        g,
+        b,
+        a,
+      )
+    }
     1
   }
 }
@@ -485,12 +538,14 @@ fun kanamaWebSetColorProperty(
 fun kanamaWebSetLongProperty(objectId: Int, propertyId: Int, value: Double): Int {
   require(value.isFinite() && value % 1.0 == 0.0) { "Web integer property must be integral" }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setLongProperty(
-      record.scriptId,
-      propertyId,
-      record.script,
-      value.toLong(),
-    )
+    userScript {
+      KanamaWebProjectRegistry.setLongProperty(
+        record.scriptId,
+        propertyId,
+        record.script,
+        value.toLong(),
+      )
+    }
     1
   }
 }
@@ -514,7 +569,9 @@ fun kanamaWebSetObjectProperty(objectId: Int, propertyId: Int, value: Int): Int 
     registerWebBrowserHandle(value, WebBrowserHandleKind.RESOURCE)
   }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setObjectProperty(record.scriptId, propertyId, record.script, value)
+    userScript {
+      KanamaWebProjectRegistry.setObjectProperty(record.scriptId, propertyId, record.script, value)
+    }
     1
   }
 }
@@ -523,12 +580,14 @@ fun kanamaWebSetObjectProperty(objectId: Int, propertyId: Int, value: Int): Int 
 fun kanamaWebSetStringArrayProperty(objectId: Int, propertyId: Int, encodedValues: String): Int {
   val values = encodedValues.takeIf { it.isNotEmpty() }?.split('\u001f') ?: emptyList()
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setStringArrayProperty(
-      record.scriptId,
-      propertyId,
-      record.script,
-      values,
-    )
+    userScript {
+      KanamaWebProjectRegistry.setStringArrayProperty(
+        record.scriptId,
+        propertyId,
+        record.script,
+        values,
+      )
+    }
     1
   }
 }
@@ -547,12 +606,14 @@ fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValue
     }
   }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
-    KanamaWebProjectRegistry.setObjectArrayProperty(
-      record.scriptId,
-      propertyId,
-      record.script,
-      values,
-    )
+    userScript {
+      KanamaWebProjectRegistry.setObjectArrayProperty(
+        record.scriptId,
+        propertyId,
+        record.script,
+        values,
+      )
+    }
     1
   }
 }
@@ -560,7 +621,9 @@ fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValue
 @JsExport
 fun kanamaWebCallString(objectId: Int, methodId: Int, value: String): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callString(record.scriptId, methodId, record.script, value)
+    userScript {
+      KanamaWebProjectRegistry.callString(record.scriptId, methodId, record.script, value)
+    }
     commands.flush()
     1
   }
@@ -569,8 +632,9 @@ fun kanamaWebCallString(objectId: Int, methodId: Int, value: String): Int {
 @JsExport
 fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    val result =
+    val result = userScript {
       KanamaWebProjectRegistry.callLong(record.scriptId, methodId, record.script, value.toLong())
+    }
     // Task 88: same missing flush as the signal boundaries — its siblings callNoArgs and
     // callLongVoid both flush, this one did not, so a user's `fun f(x: Long): Long` lost
     // every mutation it queued.
@@ -582,7 +646,14 @@ fun kanamaWebCallInt(objectId: Int, methodId: Int, value: Int): Int {
 @JsExport
 fun kanamaWebCallLongVoid(objectId: Int, methodId: Int, value: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callLongVoid(record.scriptId, methodId, record.script, value.toLong())
+    userScript {
+      KanamaWebProjectRegistry.callLongVoid(
+        record.scriptId,
+        methodId,
+        record.script,
+        value.toLong(),
+      )
+    }
     commands.flush()
     1
   }
@@ -591,7 +662,7 @@ fun kanamaWebCallLongVoid(objectId: Int, methodId: Int, value: Int): Int {
 @JsExport
 fun kanamaWebCallNoArgs(objectId: Int, methodId: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callNoArgs(record.scriptId, methodId, record.script)
+    userScript { KanamaWebProjectRegistry.callNoArgs(record.scriptId, methodId, record.script) }
     commands.flush()
   }
 }
@@ -599,7 +670,9 @@ fun kanamaWebCallNoArgs(objectId: Int, methodId: Int): Int {
 @JsExport
 fun kanamaWebCallVector2i(objectId: Int, methodId: Int, x: Int, y: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callVector2i(record.scriptId, methodId, record.script, x, y)
+    userScript {
+      KanamaWebProjectRegistry.callVector2i(record.scriptId, methodId, record.script, x, y)
+    }
     commands.flush()
     1
   }
@@ -615,14 +688,16 @@ fun kanamaWebCallObjectObjectLong(
 ): Int {
   require(value.isFinite() && value % 1.0 == 0.0) { "Web integer argument must be integral" }
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callObjectObjectLong(
-      record.scriptId,
-      methodId,
-      record.script,
-      firstHandle,
-      secondHandle,
-      value.toLong(),
-    )
+    userScript {
+      KanamaWebProjectRegistry.callObjectObjectLong(
+        record.scriptId,
+        methodId,
+        record.script,
+        firstHandle,
+        secondHandle,
+        value.toLong(),
+      )
+    }
     commands.flush()
     1
   }
@@ -631,7 +706,9 @@ fun kanamaWebCallObjectObjectLong(
 @JsExport
 fun kanamaWebCallObject(objectId: Int, methodId: Int, argHandle: Int): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callObject(record.scriptId, methodId, record.script, argHandle)
+    userScript {
+      KanamaWebProjectRegistry.callObject(record.scriptId, methodId, record.script, argHandle)
+    }
     commands.flush()
     1
   }
@@ -653,17 +730,19 @@ fun kanamaWebCallDoubles(
   a5: Double,
 ): Int {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    KanamaWebProjectRegistry.callDoubles(
-      record.scriptId,
-      methodId,
-      record.script,
-      a0,
-      a1,
-      a2,
-      a3,
-      a4,
-      a5,
-    )
+    userScript {
+      KanamaWebProjectRegistry.callDoubles(
+        record.scriptId,
+        methodId,
+        record.script,
+        a0,
+        a1,
+        a2,
+        a3,
+        a4,
+        a5,
+      )
+    }
     commands.flush()
     1
   }
@@ -676,7 +755,9 @@ fun kanamaWebCallDoubles(
 @JsExport
 fun kanamaWebCallPacked(objectId: Int, methodId: Int): String {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    val packed = KanamaWebProjectRegistry.callPacked(record.scriptId, methodId, record.script)
+    val packed = userScript {
+      KanamaWebProjectRegistry.callPacked(record.scriptId, methodId, record.script)
+    }
     commands.flush()
     packed
   }
@@ -686,8 +767,9 @@ fun kanamaWebCallPacked(objectId: Int, methodId: Int): String {
 @JsExport
 fun kanamaWebCallPackedArgs(objectId: Int, methodId: Int, value: String): String {
   return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
-    val packed =
+    val packed = userScript {
       KanamaWebProjectRegistry.callPackedArgs(record.scriptId, methodId, record.script, value)
+    }
     commands.flush()
     packed
   }
@@ -709,7 +791,7 @@ fun kanamaWebCallPackedArgs(objectId: Int, methodId: Int, value: String): String
 @JsExport
 fun kanamaWebExitTree(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_exit_tree") { record ->
-    KanamaWebProjectRegistry.exitTree(record.scriptId, record.script)
+    userScript { KanamaWebProjectRegistry.exitTree(record.scriptId, record.script) }
     commands.flush()
     1
   }

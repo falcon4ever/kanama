@@ -59,7 +59,9 @@ internal class WebInstanceRegistry(
           else "Kanama Web handle=$handle was not reserved"
         )
     try {
-      val script = around { WebFrameScheduler.withOwner(handle) { createScript(scriptId, handle) } }
+      val script = around {
+        WebFrameScheduler.withOwner(handle) { userScript { createScript(scriptId, handle) } }
+      }
       slot.record = WebScriptRecord(scriptId, script)
       slot.pendingScriptId = null
     } catch (error: Throwable) {

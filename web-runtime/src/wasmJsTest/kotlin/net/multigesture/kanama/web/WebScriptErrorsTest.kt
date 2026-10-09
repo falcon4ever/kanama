@@ -2,8 +2,11 @@ package net.multigesture.kanama.web
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import net.multigesture.kanama.api.WebSignalCallbackRegistry
 import net.multigesture.kanama.binding.runtime.ScriptErrorFrame
 import net.multigesture.kanama.binding.runtime.ScriptErrorReport
 
@@ -57,12 +60,8 @@ class WebScriptErrorsTest {
     val report = WebScriptErrors.reportFor(IllegalStateException("boom"), "ErrorProbe.error_throw")
     assertEquals("kotlin.IllegalStateException", report.description)
     assertEquals("kotlin.IllegalStateException: boom", report.message)
-    // The production export's trace names no function (the report falls back to the containment
-    // site); this Node test build keeps the name section, so it reports the throwing frame instead.
-    assertTrue(
-      report.function == "ErrorProbe.error_throw" || report.function.contains("aThrownException"),
-      report.function,
-    )
+    // The Wasm test build has no function names either, so the report names the containment site.
+    assertEquals("ErrorProbe.error_throw", report.function)
     assertEquals("", report.file)
   }
 
@@ -88,5 +87,36 @@ class WebScriptErrorsTest {
         ScriptErrorReport("e", "e: m", "Player.ready", file = "Player.kt", line = 12)
       )
     assertEquals("SCRIPT ERROR: e: m\n   at: Player.ready (Player.kt:12)", located)
+  }
+
+  @Test
+  fun onlyAnExceptionFromUserCodeIsAUserFailure() {
+    val user = IllegalStateException("the script threw")
+    assertFailsWith<IllegalStateException> { userScript { throw user } }
+    assertTrue(WebScriptErrors.isUserFailure(user))
+    // A runtime failure of the same type is told apart by identity, not by type.
+    assertFalse(WebScriptErrors.isUserFailure(IllegalStateException("the script threw")))
+  }
+
+  @Test
+  fun theSignalRegistrysOwnInvariantsAreNotUserFailures() {
+    val owner = 7_000_001
+    val thrown = IllegalArgumentException("lambda failed")
+    val id = WebSignalCallbackRegistry.register(owner, 0, oneShot = false) { throw thrown }
+    // The user's lambda throwing: a user failure, rethrown unchanged.
+    val fromLambda =
+      assertFailsWith<IllegalArgumentException> { WebSignalCallbackRegistry.dispatch(owner, id) }
+    assertTrue(fromLambda === thrown)
+    assertTrue(WebScriptErrors.isUserFailure(fromLambda))
+    // The registry's checks (a stale id, another script's id) are the runtime's.
+    val stale =
+      assertFailsWith<IllegalStateException> {
+        WebSignalCallbackRegistry.dispatch(owner, id + 1000)
+      }
+    assertFalse(WebScriptErrors.isUserFailure(stale))
+    val foreign =
+      assertFailsWith<IllegalStateException> { WebSignalCallbackRegistry.dispatch(owner + 1, id) }
+    assertFalse(WebScriptErrors.isUserFailure(foreign))
+    WebSignalCallbackRegistry.unregister(id)
   }
 }

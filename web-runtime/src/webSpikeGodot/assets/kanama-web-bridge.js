@@ -12,6 +12,9 @@
   const KANAMA_WEB_PROTOCOL_VERSION = 34;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
+  // Added after the marker when Godot's error log could not be reached (Main.kt
+  // WEB_SCRIPT_ERROR_UNREPORTED): the error is still contained, but no report counted it.
+  const SCRIPT_ERROR_UNREPORTED = "(not reported to Godot)";
   // Task 138 item 3: the object-query arm that answers whether a browser handle's object is gone.
   const KANAMA_WEB_OPCODE_FREED_CHECK = 1004;
   const FREED_INSTANCE_MESSAGE = (handle) =>
@@ -310,12 +313,16 @@
     doubleArgCalls: 0,
     packedReturnCalls: 0,
     builtinCalls: 0,
-    releasedSignalWaits: 0,
+    releasedSignalCallbacks: 0,
     addBunnyCalls: 0,
     removeBunnyCalls: 0,
     finishCalls: 0,
     callbackErrors: 0,
     lastCallbackError: null,
+    lastCallbackErrorFatal: false,
+    // What a packed-return callback answers when its script threw (contained) or the page failed:
+    // not a packed value, so the proxy returns the declared type's default instead of parsing it.
+    scriptErrorResult: "\u001fkanama-script-error\u001f",
     // Every boundary failure's message, oldest first, capped: lastCallbackError alone hides the
     // FIRST failure behind whatever it caused (an autoload that failed to construct surfaced only
     // as the later script that read it).
@@ -518,6 +525,18 @@
       },
     },
 
+    /**
+     * Counts one failed callback. `lastCallbackError` names the failure that ended the page, so a
+     * contained script error (`fatal` false) never replaces an earlier fatal one; the log keeps
+     * every message either way.
+     */
+    recordCallbackError(message, fatal) {
+      this.callbackErrors += 1;
+      if (fatal || !this.lastCallbackErrorFatal) this.lastCallbackError = message;
+      if (fatal) this.lastCallbackErrorFatal = true;
+      if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(message);
+    },
+
     invoke(handle, callback, member, action, fallback) {
       const previousOwner = this.activeOwnerHandle;
       // A script with its own proxy owns its OWN lifetime, whatever the routing map
@@ -554,11 +573,14 @@
           // (reportScriptError counted it) and contained (task 131 item 14): the callback returns
           // its default and the game runs on. Bridge or protocol faults still end the page below.
           if (this.scriptErrorLog.length < 8) this.scriptErrorLog.push(contextual.message);
+          if (message.includes(SCRIPT_ERROR_UNREPORTED)) {
+            // reportScriptError never ran, so nothing counted this error: count it here, or a
+            // swallowed failure would leave the run green.
+            this.recordCallbackError(contextual.message, false);
+          }
           return fallback;
         }
-        this.callbackErrors += 1;
-        this.lastCallbackError = contextual.message;
-        if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(contextual.message);
+        this.recordCallbackError(contextual.message, true);
         globalThis.failKanamaWeb(contextual);
         return fallback;
       } finally {
@@ -949,7 +971,7 @@
         "property_get",
         `property#${propertyId}`,
         () => this.api.kanamaWebGetPackedProperty(handle, propertyId),
-        "",
+        this.scriptErrorResult,
       );
     },
     setLongProperty(handle, propertyId, value) {
@@ -1127,7 +1149,7 @@
         "registered_function",
         `method#${methodId}`,
         () => this.api.kanamaWebCallPacked(handle, methodId),
-        "",
+        this.scriptErrorResult,
       );
     },
     // Task 134 D1: a registered method with arguments AND a return value: the packed argument
@@ -1139,7 +1161,7 @@
         "registered_function",
         `method#${methodId}`,
         () => this.api.kanamaWebCallPackedArgs(handle, methodId, String(value)),
-        "",
+        this.scriptErrorResult,
       );
     },
     bunnymarkMethodId(method) {
@@ -1258,9 +1280,7 @@
      */
     reportScriptError(text) {
       this.scriptErrors += 1;
-      this.callbackErrors += 1;
-      this.lastCallbackError = text;
-      if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(text);
+      this.recordCallbackError(text, false);
       if (this.scriptErrorReports.length < 8) this.scriptErrorReports.push(text);
       const callback =
         this.reportCallbacks.get(this.activeOwnerHandle) ??
@@ -1914,6 +1934,15 @@
       this.immediateObjectHandleResult = null;
       callback(handle, resultHandle, path);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "Node");
+        },
+        "Godot node lookup callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const scriptHandle = this.api.kanamaWebIsLive(result) === 1;
         if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
@@ -1969,6 +1998,15 @@
       this.immediateObjectHandleResult = null;
       callback(resourceHandle, proposedHandle, editState);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        resourceHandle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(proposedHandle);
+          this.releaseBrowserHandle(proposedHandle, "Node");
+        },
+        "Godot PackedScene callback did not publish a result",
+      );
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(proposedHandle);
         this.releaseBrowserHandle(proposedHandle, "Node");
@@ -2078,6 +2116,16 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          else this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, kind);
+        },
+        "Godot no-args object callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const liveScript = this.api.kanamaWebIsLive(result) === 1;
         if (!isCollider || (!liveScript && this.isBrowserHandleLive(result) !== 1)) {
@@ -2117,6 +2165,7 @@
       const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween bool");
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, value);
+      this.rejectUnpublishedObject(this.immediateObjectHandleResult, handle, () => {}, "Godot Tween bool callback did not return its receiver");
       if (this.immediateObjectHandleResult !== handle) {
         throw new Error("Godot Tween bool callback did not return its receiver");
       }
@@ -2126,6 +2175,7 @@
       const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tweener long");
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, value);
+      this.rejectUnpublishedObject(this.immediateObjectHandleResult, handle, () => {}, "Godot Tweener long callback did not return its receiver");
       if (this.immediateObjectHandleResult !== handle) {
         throw new Error("Godot Tweener long callback did not return its receiver");
       }
@@ -2141,6 +2191,15 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle, packed);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
+        },
+        "Godot move-and-collide callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         throw new Error("Godot move-and-collide callback published an invalid handle");
       }
@@ -2158,6 +2217,20 @@
      */
     unpublishedResult(handle, message) {
       return new Error(this.isHandleFreed(handle) ? FREED_INSTANCE_MESSAGE(handle) : message);
+    },
+    /**
+     * Task 131 item 3 for the object-returning shapes. A callback on a receiver the engine freed
+     * publishes nothing (a debug build aborts the typed read) or 0 (a null receiver); both are
+     * "the object is gone", not a missing node or a bridge fault. `abandon` gives the proposed
+     * result handle back first, so the throw leaks nothing. An unpublished result that is not a
+     * freed receiver keeps its own message. A published 0 for a live receiver is a real null.
+     */
+    rejectUnpublishedObject(result, handle, abandon, message) {
+      if (Number.isInteger(result) && result !== 0) return;
+      const freed = this.isHandleFreed(handle);
+      if (!freed && result === 0) return;
+      abandon();
+      throw new Error(freed ? FREED_INSTANCE_MESSAGE(handle) : message);
     },
     isHandleFreed(handle) {
       const callback =
@@ -2264,6 +2337,15 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle, index);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "Node");
+        },
+        "Godot indexed lookup callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const scriptHandle = this.api.kanamaWebIsLive(result) === 1;
         if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
@@ -2287,6 +2369,15 @@
       this.immediateObjectHandleResult = null;
       callback(111, handle, resultHandle, index);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
+        },
+        "Godot slide-collision callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         throw new Error("Godot slide-collision callback published an invalid handle");
       }
@@ -2306,6 +2397,15 @@
       this.immediateObjectHandleResult = null;
       callback(133, handle, resultHandle, index);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "Node");
+        },
+        "Godot child lookup callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const liveScript = this.api.kanamaWebIsLive(result) === 1;
         if (!liveScript && this.isBrowserHandleLive(result) !== 1) {
@@ -2325,6 +2425,7 @@
       const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween object");
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, valueId);
+      this.rejectUnpublishedObject(this.immediateObjectHandleResult, handle, () => {}, "Godot Tween object callback did not return its receiver");
       if (this.immediateObjectHandleResult !== handle) {
         throw new Error("Godot Tween object callback did not return its receiver");
       }
@@ -2345,6 +2446,12 @@
       const callback = this.callbackFor(this.tweenCallbacks, objectId, "Godot PropertyTweener color");
       this.immediateObjectHandleResult = null;
       callback(opcode, objectId, 0, 0, "", r, g, b, a);
+      this.rejectUnpublishedObject(
+        this.immediateObjectHandleResult,
+        objectId,
+        () => {},
+        "Godot PropertyTweener color callback did not return its receiver",
+      );
       return this.immediateObjectHandleResult === objectId ? objectId : 0;
     },
     immediateTweenPropertyDouble(opcode, tweenHandle, targetHandle, property, value, duration) {
@@ -2383,6 +2490,15 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, tweenHandle, resultHandle, targetHandle, property, ...values);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        tweenHandle,
+        () => {
+          this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "PropertyTweener");
+        },
+        "Godot Tween property callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         throw new Error("Godot Tween property callback published an invalid handle");
       }
@@ -2479,7 +2595,7 @@
     // from the watcher's NOTIFICATION_PREDELETE, so it bypasses `invoke`: the owner may be
     // gone, which Kotlin treats as nothing left to cancel.
     releaseSignalCallback(handle, callbackId) {
-      this.releasedSignalWaits += 1;
+      this.releasedSignalCallbacks += 1;
       return this.api.kanamaWebReleaseSignalCallback(handle, callbackId);
     },
     dispatchSignal0(handle, callbackId) {

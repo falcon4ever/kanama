@@ -1338,6 +1338,9 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/LeakProbe.kt",
                 "res://kotlin-src/ErrorProbe.kt",
                 "res://kotlin-src/FreedHolder.kt",
+                "res://kotlin-src/ThrowingConstructor.kt",
+                "res://kotlin-src/ThrowingProperty.kt",
+                "res://kotlin-src/ThrowingReady.kt",
             )
         val mappings =
             manifest
@@ -2865,6 +2868,7 @@ tasks.register<Exec>("exportWeb") {
     dependsOn("buildWebScripts", "wasmJsBrowserDistribution")
     dependsOn(webDemo.map(::stageTaskFor))
     inputs.property("kanamaWebDemo", webDemo)
+    inputs.property("kanamaWebTemplateDebug", providers.gradleProperty("kanamaWebTemplateDebug").orElse(""))
     inputs.dir(webDistribution)
     inputs.dir(webSpikeAssets)
     // The staged project is what Godot actually exports; without it as an input a
@@ -2883,6 +2887,17 @@ tasks.register<Exec>("exportWeb") {
                 ?: error("Pass -PkanamaWebTemplateRelease=/absolute/path/to/web_nothreads_release.zip")
         val webTemplateFile = file(webTemplateRelease)
         check(webTemplateFile.isFile) { "Godot Web release template not found: $webTemplateFile" }
+        // Local-only: -PkanamaWebTemplateDebug=/abs/web_nothreads_debug.zip exports with Godot's DEBUG
+        // template (--export-debug) instead. CI exports release only, and a debug template runs
+        // GDScript's DEBUG_ENABLED checks (typed-Object freed-instance aborts, ...) that a release
+        // export never sees, so a script-facing change is proved in both.
+        val webTemplateDebug = providers.gradleProperty("kanamaWebTemplateDebug").orNull
+        val webTemplateDebugFile = webTemplateDebug?.let { file(it) }
+        if (webTemplateDebugFile != null) {
+            check(webTemplateDebugFile.isFile) {
+                "Godot Web debug template not found: $webTemplateDebugFile"
+            }
+        }
 
         val stagingDir = stagingDirFor(demo)
         val stagedPreset = stagingDir.resolve("export_presets.cfg")
@@ -2894,6 +2909,10 @@ tasks.register<Exec>("exportWeb") {
                     "custom_template/release=\"\"",
                     "custom_template/release=\"${webTemplateFile.absolutePath}\"",
                 )
+                .replace(
+                    "custom_template/debug=\"\"",
+                    "custom_template/debug=\"${webTemplateDebugFile?.absolutePath.orEmpty()}\"",
+                )
         )
 
         val exportDir = webExportRoot.get().dir(demo).asFile
@@ -2904,7 +2923,7 @@ tasks.register<Exec>("exportWeb") {
             "--headless",
             "--path",
             stagingDir.absolutePath,
-            "--export-release",
+            if (webTemplateDebugFile != null) "--export-debug" else "--export-release",
             "Web",
             exportDir.resolve("index.html").absolutePath,
         )

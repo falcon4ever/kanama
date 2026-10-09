@@ -351,7 +351,7 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 34", "KANAMA_WEB_PROTOCOL_VERSION = 33")],
-     "protocol version disagrees", "the bridge pins protocol 32 while the emitter says 33")
+     "protocol version disagrees", "the bridge pins protocol 33 while the emitter says 34")
 case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")

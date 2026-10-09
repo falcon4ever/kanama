@@ -367,7 +367,7 @@ class WebScriptCodeEmitterTest {
         .source
 
     assertTrue(proxy.contains("opcode == 46 and target_object is AudioStreamPlayer"))
-    assertTrue(proxy.contains("_kanama_object_handles.get(stream_handle) as AudioStream"))
+    assertTrue(proxy.contains("_kanama_live_object(stream_handle) as AudioStream"))
     assertTrue(proxy.contains("(target_object as AudioStreamPlayer).set_stream(stream)"))
     assertTrue(proxy.contains("opcode == 47 and target_object is AudioStreamPlayer"))
     assertTrue(proxy.contains("resolveCommandStringName(bus_id)"))
@@ -440,9 +440,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.contains("InputMap.add_action(StringName(String(args[2])))"))
     assertTrue(proxy.contains("elif opcode == 293:"))
     assertTrue(proxy.contains("var add_event_parts := String(args[2]).split(\"\\u001f\")"))
-    assertTrue(
-      proxy.contains("var add_event: Object = _kanama_object_handles.get(add_event_handle)")
-    )
+    assertTrue(proxy.contains("var add_event: Object = _kanama_live_object(add_event_handle)"))
     assertTrue(
       proxy.contains(
         "InputMap.action_add_event(StringName(add_event_parts[0]), add_event as InputEvent)"
@@ -2086,5 +2084,33 @@ class WebScriptCodeEmitterTest {
     assertEquals(emptyList(), emitter.degradations())
     assertEquals(1, emitter.degradationReport().size, "a clean script reports only the summary")
     assertFalse(emitter.protocolManifest().contains("dispatchReason"))
+  }
+
+  @Test
+  fun freedObjectsNeverReachATypedObjectRead() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+
+    // The receiver of every bridge callback goes through the freed-aware helper...
+    assertTrue(proxy.contains("func _kanama_live_object(handle: int) -> Object:"))
+    assertTrue(proxy.contains("if not is_instance_valid(held):"))
+    assertFalse(
+      proxy.contains("self if object_handle == _kanama_handle else _kanama_object_handles.get")
+    )
+    // ...the freed check is answered before the typed `value: Object` read, which a debug build
+    // aborts on a freed instance...
+    val query = proxy.substringAfter("func _kanama_object_query(args: Array) -> int:")
+    assertTrue(
+      query.indexOf("var held: Variant") in 0 until query.indexOf("var value: Object ="),
+      "the freed check must come before the typed read",
+    )
+    // ...and the command loop reads a handle's entry as a Variant until it is known to be alive.
+    assertTrue(
+      proxy.contains("var target_held: Variant = _kanama_object_handles.get(object_handle)")
+    )
+    assertTrue(proxy.contains("var target_object: Object = null"))
   }
 }

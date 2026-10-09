@@ -2489,7 +2489,12 @@ def _method(shape: str, calls: list[BackendCallPolicy]) -> list[str]:
     lines += [f"{p}," for p in header]
     lines.append(f"){ret_suffix} {{")
     lines.append("requireOpcode(descriptor, callSite)")
+    # Task 131 item 3: every engine call a script makes enters here, so the freed-instance
+    # conversion (a bridge "previously freed instance" JsException -> the IllegalStateException
+    # desktop throws) is applied once, to every shape, present and future, instead of per extern.
+    lines.append("return webFreedAware {" if ret else "webFreedAware {")
     lines += emitter(calls)
+    lines.append("}")
     lines.append("}")
     return lines
 

@@ -20,6 +20,24 @@ internal object WebScriptErrors {
   private var reporting = false
 
   /**
+   * The last exception that escaped USER script code (see [userScript]). A callback boundary
+   * contains an exception only when it is this one: the registry's own invariants ("Stale Kanama
+   * Web signal callback id"), the frame scheduler's owner checks, a failing flush and an
+   * untranslated bridge error are runtime failures that must still end the page, not a script error
+   * to report and carry on from. Identity, not type: a user `throw IllegalStateException(...)` and
+   * a runtime `check` failure look alike.
+   */
+  private var lastUserFailure: Throwable? = null
+
+  /** Records that [error] came out of user script code. Called by [userScript]. */
+  fun markUserFailure(error: Throwable) {
+    lastUserFailure = error
+  }
+
+  /** Whether [error] is the exception that last escaped user script code. */
+  fun isUserFailure(error: Throwable): Boolean = error === lastUserFailure
+
+  /**
    * An exception in a script's coroutine is a script error: reported with its type and message, the
    * scope and the frame loop carry on (a `KanamaScope`'s SupervisorJob keeps its other children).
    */
@@ -119,3 +137,17 @@ internal object WebScriptErrors {
     )
   }
 }
+
+/**
+ * Runs the user's script code (a lifecycle callback, a registered function, a property accessor, a
+ * signal lambda) and records an exception that escapes it as a USER failure, rethrowing it
+ * unchanged. Wrap only the call into user code, never the runtime around it (see
+ * [WebScriptErrors.isUserFailure]).
+ */
+internal inline fun <T> userScript(block: () -> T): T =
+  try {
+    block()
+  } catch (error: Throwable) {
+    WebScriptErrors.markUserFailure(error)
+    throw error
+  }

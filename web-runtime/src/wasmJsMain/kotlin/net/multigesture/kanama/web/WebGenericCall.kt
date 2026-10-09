@@ -64,12 +64,13 @@ object WebExperimentalGenericCall {
         append(encodeArg(arg))
       }
     }
-    val raw =
+    val raw = webFreedAware {
       immediateWebStringQuery(
         WebCommandBuffer.OPCODE_GENERIC_IMMEDIATE_CALL,
         target.handle.value,
         packed,
       )
+    }
     return WebGenericCallResult.parse(raw)
   }
 
