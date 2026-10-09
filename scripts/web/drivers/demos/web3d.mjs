@@ -467,7 +467,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ).then(Number);
   let freedProbeAfter = await readFreedAfter();
   const freedDeadline = Math.min(deadline, Date.now() + 10_000);
-  while (freedProbeAfter !== 7 && Date.now() < freedDeadline) {
+  while (freedProbeAfter !== 63 && Date.now() < freedDeadline) {
     await delay(150);
     freedProbeAfter = await readFreedAfter();
   }
@@ -484,14 +484,18 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
   trace(`leakProbeAfter: ${leakProbeAfter}`);
 
-  // The four deliberate script errors have landed (the process and coroutine ones a frame or two
-  // after the arm), and the frame loop went on past them.
+  // The seven deliberate script errors have landed: three at scene load (constructor, property
+  // setter, _ready), the rest when ErrorProbe's calls run (the process and coroutine ones a frame or
+  // two after the arm); and the frame loop went on past them.
   // Kind -> the containment site the report's `at:` line names (a Wasm trace has no Kotlin frame).
   const expectedSites = {
     function: "ErrorProbe.error_throw",
     signal: "ErrorProbe.<signal handler>",
     process: "ErrorProbe._process",
     coroutine: "ErrorProbe.<coroutine>",
+    constructor: "ThrowingConstructor.<init>",
+    property: "ThrowingProperty.gate",
+    ready: "ThrowingReady._ready",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
   let errorSnap = null;
@@ -530,6 +534,21 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   if (extraPlayMs > 0) {
     trace(`extra play: ${extraPlayMs}ms`);
     await observe(evaluate, peak, extraPlayMs, deadline);
+  }
+
+  // KANAMA_WEB3D_INJECT_RUNTIME_FAULT=1: the red run for the containment boundary (task 131 item 14).
+  // A signal dispatch with a callback id the registry never issued is a RUNTIME invariant failing
+  // inside a boundary, not a script error: it must end the page (a fatal failure naming the id), where
+  // a contained script error carries on. The run is then supposed to fail every other row; the
+  // evidence is `runtimeFaultIsFatal`. Unset = no injection.
+  const injectRuntimeFault = process.env.KANAMA_WEB3D_INJECT_RUNTIME_FAULT === "1";
+  let injectedFailure = null;
+  if (injectRuntimeFault) {
+    await evaluate(
+      "globalThis.KanamaWebBridge.dispatchSignal0(globalThis.KanamaWebBridge.web3dMainHandle, 2147483000); true",
+    );
+    injectedFailure = (await snapshot(evaluate))?.failure ?? null;
+    trace(`injected runtime fault: failure=${injectedFailure?.split("\n")[0]}`);
   }
 
   trace("smoke_teardown");
@@ -604,7 +623,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
     // Task 138 item 3: using a node the engine freed under its holder throws the freed-instance
     // error (catchable, like desktop's), and the holder keeps working.
-    engineFreedNodeThrowsFreedInstanceError: freedProbeAfter === 7,
+    engineFreedNodeThrowsFreedInstanceError: freedProbeAfter === 63,
     // Task 131 item 12: a lambda connection's Kotlin callback is dropped with its one-shot firing,
     // its emitter's free and its receiver's free (desktop's SignalCallbackRegistry rules).
     lambdaConnectionsReleaseTheirCallbacks: leakProbeAfter === 31,
@@ -617,7 +636,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       (errorSnap?.scriptErrors ?? 0) === expectedScriptErrors.length &&
       (errorSnap?.processCalls ?? 0) >= errorProbeFrames + 5,
     // ...and each was reported to Godot's error log exactly once with the exception type, the
-    // message and the "at:" frame line (the browser console must show the same four: see
+    // message and the "at:" frame line (the browser console must show the same ones: see
     // expectedConsoleErrors below).
     scriptErrorsAreReported:
       errorReports.length === expectedScriptErrors.length &&
@@ -722,17 +741,33 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // not a leftover from startup.
     coroutineProbeArmedByDriver: maskBeforeArm === 0,
     fullTeardownToZero: settled.liveHandles === 0,
+    ...(injectRuntimeFault
+      ? {
+          runtimeFaultIsFatal:
+            injectedFailure !== null &&
+            injectedFailure.includes("Stale Kanama Web signal callback id") &&
+            !injectedFailure.includes("script error (contained)"),
+        }
+      : {}),
     // The deliberate script errors above are counted in callbackErrors too (so every other demo's
-    // zero-errors check sees a throwing script); a fault of the bridge itself is whatever is left.
+    // zero-errors check sees a throwing script). Exactly those are subtracted -- never every
+    // scriptError -- and the count must be exactly the expected one, so an unexpected script error
+    // (or one fewer) fails here instead of being absorbed.
     noCallbackFaults:
-      peak.callbackErrors - peak.scriptErrors === 0 &&
-      settled.callbackErrors - settled.scriptErrors === 0 &&
+      settled.callbackErrors === expectedScriptErrors.length &&
+      settled.scriptErrors === expectedScriptErrors.length &&
       settled.failure === null,
   };
 
   const boundaryErrors = [];
-  if (peak.callbackErrors - peak.scriptErrors !== 0) {
-    boundaryErrors.push(`callbackErrors=${peak.callbackErrors} (scriptErrors=${peak.scriptErrors})`);
+  // callbackErrors only counts up, so the settled sample covers the whole run.
+  if (settled.callbackErrors !== expectedScriptErrors.length) {
+    boundaryErrors.push(
+      `callbackErrors=${settled.callbackErrors} (expected only the ${expectedScriptErrors.length} deliberate script errors)`,
+    );
+  }
+  if (settled.scriptErrors !== expectedScriptErrors.length) {
+    boundaryErrors.push(`scriptErrors=${settled.scriptErrors} (expected ${expectedScriptErrors.length})`);
   }
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
 
@@ -744,7 +779,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       durationMs: startupDurationMs,
     },
     checks,
-    // The four deliberate script errors reach the browser console through Godot's push_error.
+    // The deliberate script errors reach the browser console through Godot's push_error.
     expectedConsoleErrors: [{ pattern: "web3d deliberate script error", count: expectedScriptErrors.length }],
     handles: {
       liveAfterGameplay: peak.maxLiveHandles,
@@ -778,7 +813,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     teardown: {
       outcome:
         checks.fullTeardownToZero &&
-        settled.callbackErrors - settled.scriptErrors === 0 &&
+        settled.callbackErrors === expectedScriptErrors.length &&
+        settled.scriptErrors === expectedScriptErrors.length &&
         settled.failure === null
           ? "clean"
           : "incomplete",

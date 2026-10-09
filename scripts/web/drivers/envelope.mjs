@@ -229,7 +229,20 @@ export function buildEnvelope({
     seen: 0,
   }));
   let lastWasExpected = false;
+  // Local debug-template run (web_export_smoke.sh --debug-template): the debug engine prints a
+  // "GDScript backtrace" block under every engine error or warning; it belongs to that message and
+  // takes its classification.
+  const debugTemplate = process.env.KANAMA_WEB_DEBUG_TEMPLATE === "1";
+  const isBacktraceLine = (text) =>
+    debugTemplate && (/^\s*GDScript backtrace \(most recent call first\):/.test(text) || /^\s+\[\d+\] /.test(text));
   for (const event of consoleEvents) {
+    if (event.type === "console.error" && isBacktraceLine(event.text)) {
+      // A backtrace after an expected error or a warning is that message's; after anything else it
+      // follows an error that was already counted.
+      if (lastWasExpected || lastWasWarning) consoleWarnings.push(`${lastWasExpected ? "expected " : ""}${event.type}: ${event.text}`);
+      else consoleErrors.push(`${event.type}: ${event.text}`);
+      continue;
+    }
     const expected =
       event.type === "console.error" ? expectedErrors.find((entry) => entry.regex.test(event.text)) : undefined;
     if (expected || (lastWasExpected && event.type === "console.error" && /^\s*at: /.test(event.text))) {

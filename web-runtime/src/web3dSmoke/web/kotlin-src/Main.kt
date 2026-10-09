@@ -1388,8 +1388,10 @@ class Main(godotObject: GodotHandle) :
    * Kotlin never learns of it. Bits:
    * - 1: the holder looked the child up and reached it;
    * - 2: using the freed child threw the freed-instance IllegalStateException (not a bridge failure);
-   * - 4: the holder's own node still answers afterwards.
-   * A healthy run returns 7 from [freedProbeAfter].
+   * - 4: the holder's own node still answers afterwards;
+   * - 8, 16, 32: the object-returning shapes (`getParent`, `getNodeOrNull`, `getChild`) on the freed
+   *   child throw the same error, not a bridge failure and not a silent null.
+   * A healthy run returns 63 from [freedProbeAfter].
    */
   fun freedProbe(value: Long): Long {
     val holder = self.requireAs("FreedHolder", ::Node)
@@ -1403,11 +1405,14 @@ class Main(godotObject: GodotHandle) :
     MainThread.postAfterFrames(3) {
       if (says("freed_name") == 2L) freedMask = freedMask or 2L
       if (says("freed_self") == 1L) freedMask = freedMask or 4L
+      if (says("freed_get_parent") == 2L) freedMask = freedMask or 8L
+      if (says("freed_get_node_or_null") == 2L) freedMask = freedMask or 16L
+      if (says("freed_get_child") == 2L) freedMask = freedMask or 32L
     }
     return 0L
   }
 
-  /** Readback of [freedProbe]: 7 once its frames have passed. */
+  /** Readback of [freedProbe]: 63 once its frames have passed. */
   fun freedProbeAfter(value: Long): Long = freedMask
 
   /** Readback of [leakProbe]: 31 once its frames have passed. */

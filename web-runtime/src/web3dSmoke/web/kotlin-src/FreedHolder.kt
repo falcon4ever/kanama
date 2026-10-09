@@ -33,6 +33,27 @@ class FreedHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       3L
     }
 
+  /**
+   * The object-returning shapes on the freed node: 2 when `block` throws the freed-instance
+   * IllegalStateException, 1 when it answers (a bridge that hid the freed node behind a null), 3
+   * when it throws anything else (the bridge's own "published an invalid handle" failure).
+   */
+  private fun freedKind(block: () -> Any?): Long =
+    try {
+      block()
+      1L
+    } catch (e: IllegalStateException) {
+      if (e.message.orEmpty().contains("previously freed instance")) 2L else 3L
+    } catch (e: Throwable) {
+      3L
+    }
+
+  fun freedGetParent(value: Long): Long = freedKind { held?.getParent() }
+
+  fun freedGetNodeOrNull(value: Long): Long = freedKind { held?.getNodeOrNull("Missing") }
+
+  fun freedGetChild(value: Long): Long = freedKind { held?.getChild(0) }
+
   /** 1 when this script's own node still answers after the held one was freed. */
   fun freedSelf(value: Long): Long = if (self.getName().toString() == "FreedHolder") 1L else 0L
 }
