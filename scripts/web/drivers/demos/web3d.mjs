@@ -547,7 +547,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     await evaluate(
       "globalThis.KanamaWebBridge.dispatchSignal0(globalThis.KanamaWebBridge.web3dMainHandle, 2147483000); true",
     );
-    injectedFailure = (await snapshot(evaluate))?.failure ?? null;
+    // The page ended (the fatal path sets data-status="fail") and the bridge's last callback error is
+    // the registry's own invariant, not a contained script error.
+    injectedFailure = await evaluate(
+      "document.body.dataset.status === 'fail' ? String(globalThis.KanamaWebBridge.lastCallbackError ?? '') : null",
+    );
     trace(`injected runtime fault: failure=${injectedFailure?.split("\n")[0]}`);
   }
 

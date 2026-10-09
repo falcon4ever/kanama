@@ -341,8 +341,9 @@ object the engine freed (a child freed with its parent, a timer, a body) throws 
 `IllegalStateException: Invalid access to previously freed instance`, naming the handle instead of
 the class. A call that returns nothing (`node.position = ...`, `queueFree()`, `addChild(...)`) is
 queued and applied with the rest of the frame's batch, so it does not throw at the call: on a
-freed object the batch reports Godot's `Invalid Kanama Web command opcode/object` error and the
-callback fails, where desktop throws at the call; a position read of a `Node2D`/`Node3D` answers
+freed object the batch reports Godot's `Invalid Kanama Web command opcode/object` error and then
+fails with `command batch applied 0 of 1 commands`, which ends the page, where desktop throws at
+the call; a position read of a `Node2D`/`Node3D` answers
 the last snapshot it had. Ask `GD.isInstanceValid(node)` first on Web too.
 
 ## Rebuild Required
