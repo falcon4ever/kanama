@@ -1349,6 +1349,37 @@ class Main(godotObject: GodotHandle) :
     return 0L
   }
 
+  private var errorMask = 0L
+
+  /**
+   * Script-error containment probe (task 131 item 14; driver `error_probe`, then `error_probe_after`).
+   * ErrorProbe throws from a registered function, a signal handler, `_process` and a coroutine; each
+   * is reported to Godot's error log and contained. Bits:
+   * - 1: the throwing function call came back (to its default) and the script still answers;
+   * - 2: the throwing signal handler did not stop `emit_signal`, and the script still answers;
+   * - 4: this script was not disturbed: a call after both succeeded.
+   * The `_process` and coroutine throws land on later frames; the driver counts their reports.
+   * A healthy run returns 7 from [errorProbeAfter].
+   */
+  fun errorProbe(value: Long): Long {
+    val node = self.requireAs("ErrorProbe", ::Node)
+    val call = { method: String ->
+      WebExperimentalGenericCall.callImmediate(node, method, listOf(0L)).asLong()
+    }
+    errorMask = 0L
+    runCatching { call("error_throw") }
+    if (call("error_alive") == 1L) errorMask = errorMask or 1L
+    runCatching { call("error_signal") }
+    if (call("error_alive") == 2L) errorMask = errorMask or 2L
+    call("error_arm_process")
+    call("error_coroutine")
+    errorMask = errorMask or 4L
+    return 0L
+  }
+
+  /** Readback of [errorProbe]: 7 once it ran. */
+  fun errorProbeAfter(value: Long): Long = errorMask
+
   /** Readback of [leakProbe]: 31 once its frames have passed. */
   fun leakProbeAfter(value: Long): Long = leakMask
 

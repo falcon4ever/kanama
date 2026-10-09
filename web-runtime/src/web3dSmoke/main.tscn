@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://kotlin-src/HandleShare.kt" id="7_share"]
 [ext_resource type="Script" path="res://kotlin-src/InitProbe.kt" id="8_initprobe"]
 [ext_resource type="Script" path="res://kotlin-src/LeakProbe.kt" id="9_leak"]
+[ext_resource type="Script" path="res://kotlin-src/ErrorProbe.kt" id="10_error"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -174,6 +175,9 @@ script = ExtResource("7_share")
 
 [node name="LeakProbe" type="Node" parent="."]
 script = ExtResource("9_leak")
+
+[node name="ErrorProbe" type="Node" parent="."]
+script = ExtResource("10_error")
 
 [node name="InitSibling" type="Node" parent="."]
 

@@ -2186,6 +2186,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_signal_vector2i_callback")
     appendLine("var _kanama_tween_callback")
     appendLine("var _kanama_noargs_vector3_callback")
+    appendLine("var _kanama_report_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
     // Set when the Kotlin constructor threw: the failure was reported once at the boundary, and a
     // later _kanama_ensure_created must not rebuild the script (a retry that succeeds would leave a
@@ -2298,6 +2299,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_signal_vector2i_callback,")
     appendLine("\t\t_kanama_tween_callback,")
     appendLine("\t\t_kanama_noargs_vector3_callback)")
+    // Task 131 item 14: the way a contained script error reaches Godot's error log.
+    appendLine(
+      "\t_kanama_report_callback = JavaScriptBridge.create_callback(_kanama_report_error)"
+    )
+    appendLine("\t_kanama_bridge.installReportCallback(_kanama_handle, _kanama_report_callback)")
     appendLine("\t_kanama_refresh_self_snapshots()")
     // The renderer name is global and any script may branch on it at ready (squash's Main
     // attaches to a plain Node), so every proxy seeds its per-script snapshot.
@@ -2669,6 +2675,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t_kanama_signal_vector2i_callback = null")
     appendLine("\t_kanama_tween_callback = null")
     appendLine("\t_kanama_noargs_vector3_callback = null")
+    appendLine("\t_kanama_report_callback = null")
+    appendLine()
+    appendLine("func _kanama_report_error(args: Array) -> int:")
+    appendLine(
+      "\t# Task 131 item 14: a Kotlin script exception, already rendered like desktop's script error."
+    )
+    appendLine("\tpush_error(String(args[0]))")
+    appendLine("\treturn 1")
     appendLine()
     appendLine("func _kanama_apply_commands(args: Array) -> int:")
     appendLine(

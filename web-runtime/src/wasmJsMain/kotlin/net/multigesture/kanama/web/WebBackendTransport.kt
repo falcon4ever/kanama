@@ -13,6 +13,10 @@ import kotlin.js.ExperimentalWasmJsInterop
  * `WebCommonGodotBackend.generated.kt` calls them. Admitting a new call family is a regenerated
  * dispatch diff plus, where a new crossing shape appears, a transport extern added here.
  */
+/** Task 131 item 14: hands a rendered script-error report to the bridge, which reaches `push_error`. */
+internal fun jsReportScriptError(text: String): Unit =
+  js("globalThis.KanamaWebBridge.reportScriptError(text)")
+
 internal fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int =
   js("globalThis.KanamaWebBridge.immediateChildCount(objectId, includeInternal)")
 

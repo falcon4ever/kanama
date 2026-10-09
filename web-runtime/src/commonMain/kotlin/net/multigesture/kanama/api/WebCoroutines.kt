@@ -2,11 +2,14 @@ package net.multigesture.kanama.api
 
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import net.multigesture.kanama.web.WebScriptErrors
+import net.multigesture.kanama.web.webScriptInstance
 
 /** Coroutine surface over the frame scheduler; see `WebFrameScheduler.kt` for the pump itself. */
 internal object WebFrameCoroutineDispatcher : CoroutineDispatcher() {
@@ -46,7 +49,16 @@ internal class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.curr
   CoroutineScope {
   private val job = SupervisorJob()
   override val coroutineContext: CoroutineContext =
-    WebFrameCoroutineDispatcher + job + WebScopeOwner(ownerHandle)
+    WebFrameCoroutineDispatcher +
+      job +
+      WebScopeOwner(ownerHandle) +
+      // An exception in a script's coroutine is a script error: reported with its game frame, the
+      // scope and the frame loop carry on (the SupervisorJob keeps its other children).
+      CoroutineExceptionHandler { context, error ->
+        val owner = context[WebScopeOwner]?.ownerHandle ?: 0
+        val script = webScriptInstance(owner)?.let { it::class.simpleName }
+        WebScriptErrors.report(error, "${script ?: "script"}.<coroutine>")
+      }
 
   fun cancel() {
     job.cancel()

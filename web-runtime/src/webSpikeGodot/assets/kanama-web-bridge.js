@@ -10,6 +10,8 @@
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
   const KANAMA_WEB_PROTOCOL_VERSION = 34;
+  // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
+  const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -236,6 +238,8 @@
     objectQueryCallbacks: new Map(),
     noArgsVector2Callbacks: new Map(),
     noArgsVector3Callbacks: new Map(),
+    // Task 131 item 14: per script, the proxy function that pushes a script error to Godot.
+    reportCallbacks: new Map(),
     signalVector2iCallbacks: new Map(),
     tweenCallbacks: new Map(),
     handleOwners: new Map(),
@@ -311,6 +315,12 @@
     // FIRST failure behind whatever it caused (an autoload that failed to construct surfaced only
     // as the later script that read it).
     callbackErrorLog: [],
+    // Task 131 item 14: Kotlin script exceptions that were reported to Godot and contained (they
+    // are also counted in callbackErrors, so a demo run that throws still fails its gate).
+    scriptErrors: 0,
+    scriptErrorLog: [],
+    // The texts handed to Godot's error log, oldest first, capped.
+    scriptErrorReports: [],
     drawCalls: 0,
     drawCommands: 0,
     drawBatches: 0,
@@ -534,6 +544,13 @@
           `Kanama Web boundary failure: handle=${handle}${script ? ` (${script})` : ""} ` +
             `callback=${callback} member=${member}\n${detail}`,
         );
+        if (message.includes(SCRIPT_ERROR_MARKER)) {
+          // A script exception the Kotlin side already reported to Godot's error log
+          // (reportScriptError counted it) and contained (task 131 item 14): the callback returns
+          // its default and the game runs on. Bridge or protocol faults still end the page below.
+          if (this.scriptErrorLog.length < 8) this.scriptErrorLog.push(contextual.message);
+          return fallback;
+        }
         this.callbackErrors += 1;
         this.lastCallbackError = contextual.message;
         if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(contextual.message);
@@ -1225,6 +1242,27 @@
       this.tweenCallbacks.set(handle, tween);
       this.noArgsVector3Callbacks.set(handle, noArgsVector3);
     },
+    installReportCallback(handle, report) {
+      this.reportCallbacks.set(handle, report);
+    },
+    /**
+     * Task 131 item 14: hands a Kotlin script error, rendered by the Kotlin side, to Godot's error
+     * log through a proxy's `push_error` (the calling script's own when it has one). Without any
+     * proxy (a constructor that failed before its callbacks were reachable) it is the browser
+     * console, which is where Godot's own error output lands as well.
+     */
+    reportScriptError(text) {
+      this.scriptErrors += 1;
+      this.callbackErrors += 1;
+      this.lastCallbackError = text;
+      if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(text);
+      if (this.scriptErrorReports.length < 8) this.scriptErrorReports.push(text);
+      const callback =
+        this.reportCallbacks.get(this.activeOwnerHandle) ??
+        this.reportCallbacks.values().next().value;
+      if (callback) callback(text);
+      else console.error(text);
+    },
     clearProxyCallbacks(handle) {
       this.applyCallbacks.delete(handle);
       this.immediateCallbacks.delete(handle);
@@ -1242,6 +1280,7 @@
       this.signalVector2iCallbacks.delete(handle);
       this.tweenCallbacks.delete(handle);
       this.noArgsVector3Callbacks.delete(handle);
+      this.reportCallbacks.delete(handle);
       this.handleOwners.delete(handle);
       // A spawned SCRIPTED child is deliberately routed through its instantiator (the
       // immediatePackedSceneInstantiate re-point; task-60h/#125 separated routing from

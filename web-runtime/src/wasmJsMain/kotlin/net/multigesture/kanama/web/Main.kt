@@ -66,8 +66,9 @@ private fun <T> webCallbackBoundary(
 ): T {
   var scriptName = "<unresolved>"
   var memberName = callback
+  val record: WebScriptRecord
   try {
-    val record = instances.require(objectId)
+    record = instances.require(objectId)
     val descriptor = KanamaWebProjectRegistry.scripts.firstOrNull { it.id == record.scriptId }
     scriptName = descriptor?.className ?: "script#${record.scriptId}"
     memberName =
@@ -76,17 +77,50 @@ private fun <T> webCallbackBoundary(
         "property" -> descriptor?.properties?.firstOrNull { it.id == memberId }?.name
         else -> null
       } ?: memberKind?.let { "$it#$memberId" } ?: callback
-    return WebFrameScheduler.withOwner(objectId) {
-      withActiveWebScriptHandle(objectId) { block(record) }
-    }
   } catch (error: Throwable) {
+    // No live script to run: the proxy and the registry disagree, which is a bridge failure, not
+    // a script error (the page's fatal path, as before).
     throw IllegalStateException(
       "Kanama Web callback failed: script=$scriptName handle=$objectId callback=$callback " +
         "member=$memberName cause=${describeCauseChain(error)}",
       error,
     )
   }
+  try {
+    return WebFrameScheduler.withOwner(objectId) {
+      withActiveWebScriptHandle(objectId) { block(record) }
+    }
+  } catch (error: Throwable) {
+    // A script exception (task 131 item 14): reported through Godot's error path with its type,
+    // message and game frame, then contained -- the bridge's `invoke` sees the marker, returns
+    // the callback's default and the frame loop runs on, as desktop's containment does.
+    // What the callback queued before it threw already took effect on desktop (calls are
+    // immediate there); apply it now so the next boundary's flush does not carry it along or the
+    // frame pump's clear drop it.
+    runCatching { commands.flush() }
+    val shown = if (memberName.startsWith("_kanama_web_signal_")) "<signal handler>" else memberName
+    throw containScriptError(
+      error,
+      "${scriptName.substringAfterLast('.')}.$shown",
+      "script=$scriptName handle=$objectId callback=$callback member=$memberName",
+    )
+  }
 }
+
+/**
+ * Reports [error] to Godot and returns the exception to throw across the JS boundary: the marker
+ * [WEB_SCRIPT_ERROR_MARKER] tells the bridge it was already reported and must not end the page.
+ */
+private fun containScriptError(error: Throwable, where: String, context: String): Throwable {
+  WebScriptErrors.report(error, where)
+  return IllegalStateException(
+    "$WEB_SCRIPT_ERROR_MARKER $context cause=${describeCauseChain(error)}",
+    error,
+  )
+}
+
+/** Prefix of a contained script error's message; the bridge matches it (see `invoke`). */
+private const val WEB_SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):"
 
 /**
  * Renders a throwable and its causes as one line.
@@ -148,11 +182,13 @@ fun kanamaWebConstruct(handle: Int): Int {
     clearWebPositionSnapshot(handle)
     WebSignalCallbackRegistry.releaseOwner(handle)
     WebFrameScheduler.cancelOwner(handle)
-    // Name the cause chain like a callback failure does: a script constructor that throws was
-    // otherwise reported as "create failed" with the reason only in an unprinted `cause`.
-    throw IllegalStateException(
-      "Kanama Web create failed: script=$scriptName cause=${describeCauseChain(error)}",
+    // A constructor that throws is a script error like any other: reported with its game frame,
+    // contained (the bridge tears the half-built script down and the proxy reports the failed
+    // construction once).
+    throw containScriptError(
       error,
+      "${scriptName.substringAfterLast('.')}.<init>",
+      "script=$scriptName handle=$handle callback=create member=construct",
     )
   }
 }
@@ -285,7 +321,13 @@ fun kanamaWebPumpFrameScheduler(delta: Double): Int {
         withActiveWebScriptHandle(ownerHandle) {
           val previousOwner = enterWebBridgeFrameOwner(ownerHandle)
           try {
-            action()
+            // One continuation or post that throws is reported and dropped; the frame's other
+            // work (other scripts' coroutines, their command batch) still runs.
+            try {
+              action()
+            } catch (error: Throwable) {
+              WebScriptErrors.report(error, "coroutine")
+            }
           } finally {
             exitWebBridgeFrameOwner(previousOwner)
           }
@@ -1234,5 +1276,6 @@ fun kanamaWebBenchmarkBatch(objectId: Int, operations: Int): Double {
 }
 
 fun main() {
+  WebScriptErrors.sink = ::jsReportScriptError
   installWebCommonGodotBackend()
 }

@@ -150,6 +150,9 @@ kotlin {
             // Task 134 D2: Godot's String / PackedByteArray methods on Kotlin's String and ByteArray,
             // the same generated source as native; their engine calls cross through WebBuiltinRemote.
             kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/builtins"))
+            // Task 131 item 14: the script-error report (its fields and the game-frame rule) is ONE
+            // source with desktop, Android and iOS; Web supplies only its frames and its way out.
+            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/scripterrors"))
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(project(":kanama-common-api"))
@@ -1333,6 +1336,7 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/HandleShare.kt",
                 "res://kotlin-src/InitProbe.kt",
                 "res://kotlin-src/LeakProbe.kt",
+                "res://kotlin-src/ErrorProbe.kt",
             )
         val mappings =
             manifest
