@@ -398,7 +398,11 @@ does. `close()` marks the guard done before disconnecting so it does not report.
 fixture's `LeakProbe` pins each case (`leak_probe`).
 
 **Script errors are contained and reported.** `webCallbackBoundary` catches an exception from user
-code, `WebScriptErrors` builds the shared `ScriptErrorReport` (type, message, frame; the same source
+code (and only that: the registry/project call into user code runs through `userScript`, which
+records the exception that escaped it, and the boundary contains exactly that exception -- the
+registry's invariants, `WebFrameScheduler.withOwner`, the boundary's own flush and an untranslated
+bridge `JsException` stay fatal, and `kanamaWebFree` therefore never skips its release),
+`WebScriptErrors` builds the shared `ScriptErrorReport` (type, message, frame; the same source
 as desktop and iOS) and hands it to the bridge's `reportScriptError`, which the proxy's
 `_kanama_report_error` turns into `push_error("SCRIPT ERROR: ...\n   at: ...")`; the boundary then
 throws an exception with a marker prefix that `invoke` recognises, so the callback returns its
@@ -410,14 +414,41 @@ frames; the production build has no name section and no source map, so no game f
 and the report's function is the containment site (`Script.callback`, `<signal handler>`,
 `<coroutine>`). A build that keeps names is parsed (`WebScriptErrors.parseFrame`) and picks the
 game frame. Reported errors are counted in `callbackErrors` as well (and in `scriptErrors`), so a
-demo that throws still fails its zero-errors check; the web3d driver subtracts its four deliberate
-ones and lists them as `expectedConsoleErrors`, which the envelope verifies reach the console.
+demo that throws still fails its zero-errors check; the web3d driver expects exactly its seven
+deliberate ones (`scriptErrors === 7`, four from `ErrorProbe`, three thrown at scene load by the
+`Throwing*` scripts), subtracts only those from `callbackErrors`, and lists them as
+`expectedConsoleErrors`, which the envelope verifies reach the console. A call whose script threw
+answers the bridge's `scriptErrorResult` sentinel instead of a packed value, which the proxy turns
+into the declared type's default (Variant returns: `null`) before any parse. Red run for the
+boundary: `KANAMA_WEB3D_INJECT_RUNTIME_FAULT=1` dispatches a callback id the registry never issued
+and expects the page to end (`runtimeFaultIsFatal`).
 
 **A freed object is a freed-object error.** A browser handle's object the engine frees (not
 Kotlin's `queueFree`, which retires the Kotlin-side handle at once) leaves the handle live in Kotlin.
 When a bridge callback then cannot publish its result, `unpublishedResult` asks the proxy
 (`FREED_CHECK_OPCODE` 1004) whether the object is gone and throws "Invalid access to previously freed
-instance"; the transport turns that `JsException` into the `IllegalStateException` desktop throws.
+instance"; `webFreedAware` turns that `JsException` into the `IllegalStateException` desktop throws,
+once per entry point -- the generated backend dispatch wraps every call shape's body
+(`generate_web_backend.py`), so a new extern gets it for free, as does `WebExperimentalGenericCall`.
+The object-returning shapes (node lookups, `getParent`, `getChild`, indexed lookups, tween and
+collision returns) go through `rejectUnpublishedObject`, which also hands back the result handle it
+had allocated. Every proxy callback reads its receiver through `_kanama_live_object`, never a typed
+`var x: Object = handles.get(...)`: a debug build aborts the function on assigning a freed
+instance to a typed Object, and a cast or call on one is undefined behaviour in a release build.
+Queued calls (setters, `queueFree`) do not cross here and do not throw at the call.
+
+**Proving a script-facing change in a DEBUG export.** CI exports release only; GDScript's
+`DEBUG_ENABLED` checks (the typed-Object abort above) only exist in the debug template. Locally:
+`./gradlew :web-runtime:exportWeb -PkanamaWebDemo=web3d ... -PkanamaWebTemplateDebug=<...>/web_nothreads_debug.zip`
+(it exports with `--export-debug`), then `scripts/web_export_smoke.sh ... --debug-template`, which
+reads the debug engine's "GDScript backtrace" lines as part of the error above them. Run web3d
+in both.
+
+**Lambda connections never coalesce.** The unique callback id is bound into the connection's
+`Callable`, so two connects of the same lambda are two connections (`CONNECT_REFERENCE_COUNTED`
+included), each with its own guard and registry entry. A user `disconnectBound` keeps Godot's own
+error for a connection that is not there; only `SignalConnection.close()` is quiet about one that
+is already gone.
 The handle namespaces are disjoint (bit 30): `WebInstanceRegistry` used to mask bit 30 away, so a
 browser handle with the slot and generation of a live script read as that script (task 138 item 18).
 

@@ -56,13 +56,20 @@ only `--write`.
   `at: <Script>.<callback>`, and contained like on desktop: the call returns its default and the
   game, the other scripts and the frame loop go on. A Kotlin/Wasm trace has no function names or
   source lines in a production export, so the report names the script and the callback, not a
-  `File.kt:line`.
+  `File.kt:line`. Only an exception thrown by your code is contained; the runtime failing around
+  it (the signal registry's own checks, a failed command flush, a bridge error) still ends the
+  page, and `kanamaWebFree` can no longer skip releasing a live script. A call whose script threw
+  answers its declared type's default (`0`, `""`, a zero `Vector2`; `null` for a Vector3, Color or
+  other Variant return) without a second error.
 
 ### Fixed — Web: using a node the engine freed throws the freed-instance error (task 138 item 3)
 
 - A node freed by the engine (a child freed with its parent) while a script still held it failed
   with "string query callback did not publish a string result" (or a similar bridge message). It now
-  throws `IllegalStateException: Invalid access to previously freed instance`, as on desktop.
+  throws `IllegalStateException: Invalid access to previously freed instance`, as on desktop, for
+  every call that returns a value or an object (`getName()`, `getParent()`, `getNode(...)`,
+  `getChild(i)`, tween and collision returns, ...), in release and debug exports alike. A call that
+  returns nothing (`node.position = ...`, `queueFree()`) is queued and does not throw at the call.
 
 ### Fixed — Web: a freed shared node could read as a live script (task 138 item 18)
 
