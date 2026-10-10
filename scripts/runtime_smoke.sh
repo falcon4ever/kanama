@@ -369,6 +369,13 @@ check_absent "Invalid call\. Nonexistent function"
 # after the object is freed. Before task 131 equal=false and set_size=3.
 # task 131 item 2 (F2) -- the editor binary is a debug build, so the freed-object check is on.
 check "\[kanama:kt\] freed-object checks: on"
+# task 138 item 23 -- the typed-signal self-test (SignalSelfTest.kt) runs on the first frame of every
+# debug game run: Signal0..Signal5 emitted from Kotlin and received by lambdas and by a registered
+# class's methods, one-shot, nested emits, release. A run that printed no pass line, or any FAIL
+# line or a non-zero failed count, fails here (the same check gates every Android demo smoke).
+check "\[kanama\] SIGNAL SELFTEST: [0-9]+ passed, 0 failed"
+check_absent "SIGNAL SELFTEST FAIL"
+check_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
 # task 132 -- the GC fallback release: 10,000 dropped owned Resources are gone again after GC +
 # drain (object count back to the baseline), and a getter's +1 that was closed and then collected
 # is released once (the mesh keeps exactly its two references).

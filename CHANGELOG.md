@@ -38,6 +38,22 @@ only `--write`.
 
 ## Unreleased
 
+### Added — a typed-signal self-test on every debug run, desktop and Android (task 138 item 23)
+
+The Android-only typed-emit failure above lived five days because no Android smoke needed a typed
+signal to fire (squash emits only when the player dies or squashes a mob). On the first frame of a
+debug game run, desktop and Android now run `SignalSelfTest` (shared JVM code, like the iOS
+`OBJECTCALLS SELFTEST`): it emits `Signal0`..`Signal5` from Kotlin with mixed arguments (`Long`,
+`Double`, `Boolean`, `String`, `Vector3`, an `Object`) and checks that a Kotlin lambda connection and a
+Callable to a method of a small registered class (the path of an `@Function`) each received exactly
+those values, then a one-shot connection, an emit from inside a handler three levels deep (the outer
+handler's own arguments checked after the nested emits returned), the release of every connection and
+closure, and the objects. It prints `[kanama] SIGNAL SELFTEST: <n> passed, 0 failed` and one
+`[kanama] SIGNAL SELFTEST FAIL: <row> got <values>` line per failure. It is off in release builds and
+in the editor; `KANAMA_SIGNAL_SELFTEST=1` forces it on, `0` off. `scripts/runtime_smoke.sh` and
+`scripts/android_smoke.sh` now require the pass line and no FAIL line, so a demo smoke fails when typed
+signals do not work on the device; `gate_red_runs.py` has a slow case that makes `emit` skip the call.
+
 ### Fixed — Android: a typed signal `emit` failed on the device (task 138 item 21)
 
 On an arm64 Android device (Android 11+ tags heap pointers; seen on the Pixel 7) every typed

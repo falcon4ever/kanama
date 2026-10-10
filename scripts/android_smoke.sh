@@ -353,6 +353,13 @@ check_log "ResourceFormatLoader\\._load bound kotlinClass="
 # real, non-placeholder instance, so the construct line itself is the equivalent proof.)
 check_log "KanamaScript\\.construct kotlinClass="
 check_log "OnGodotMainLoopStarted"
+# task 138 item 23 -- the typed-signal self-test (SignalSelfTest.kt, shared desktop/Android code)
+# runs on the first frame of a debug build and prints its verdict. An Android-only typed-emit
+# failure (tagged heap pointers, task 138 item 21) lived five days because no smoke required a
+# typed signal to fire; now a demo smoke fails if signals do not work on the device.
+check_log "\\[kanama\\] SIGNAL SELFTEST: [0-9]+ passed, 0 failed"
+check_log_absent "SIGNAL SELFTEST FAIL"
+check_log_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
 
 # Renderer assertion: the override must have actually initialized on device.
 # Godot logs the active driver + method at startup (e.g. "Vulkan 1.x - Forward

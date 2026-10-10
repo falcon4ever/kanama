@@ -129,6 +129,22 @@ segment (`ptr.reinterpret(size)`, offsets relative to it); keep that segment
 local on a hot path, so the JIT removes it. `scripts/check_android_remap_sources.py`
 rejects the idiom in the runtime sources.
 
+A typed signal has to be seen firing on the device, not assumed from the desktop run. On the
+first frame of a debug game run the shared JVM runtime runs `SignalSelfTest`
+(`src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt`, task 138 item 23): `Signal0`..`Signal5`
+emitted from Kotlin with a `Long`, `Double`, `Boolean`, `String`, `Vector3` and an `Object`, received
+by a lambda and by a Callable to a registered class's method, plus a one-shot connection, nested emits
+and the release of everything. A clean run logs
+
+```text
+[kanama] SIGNAL SELFTEST: 24 passed, 0 failed
+```
+
+and `scripts/android_smoke.sh` (like `scripts/runtime_smoke.sh` on the desktop) fails without that
+line or with any `SIGNAL SELFTEST FAIL: <row> got <values>` line. It does not run in release builds or
+the editor (`KANAMA_SIGNAL_SELFTEST=1` / `0` forces it on / off). A new signal path that only the
+device can break belongs here as another row.
+
 ## Implementation Shape
 
 The current Android implementation lives under `android/godot-plugin`, split

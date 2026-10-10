@@ -13,6 +13,7 @@ import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.OwnedReleases
+import net.multigesture.kanama.binding.runtime.SignalSelfTest
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.ffi.GodotFFI
 
@@ -846,6 +847,8 @@ object KanamaScriptLanguage {
     // Owned RefCounted wrappers the GC collected without close() (task 132 D2).
     OwnedReleases.drain()
     KanamaHotReload.frameTick()
+    // The typed-signal self-test, once, on the first frame (task 138 item 23).
+    SignalSelfTest.onFrame()
   }
 
   @JvmStatic
