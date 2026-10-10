@@ -311,8 +311,8 @@ case("check_hand_code_budget.py", py("check_hand_code_budget.py"),
      [Create(f"{IOS}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nfun redRun(): Int = 1\n")],
      "ZzRedRun.kt: hand-written (3 lines) and not on the budget", "a new hand-written file appears under an api/ directory")
 case("check_hand_code_budget.py (ratchet)", py("check_hand_code_budget.py"),
-     [Append(f"{JVM}/net/multigesture/kanama/api/MeshDataTool.kt", "\n// red run: a transitional file grows\n")],
-     "transitional file grew", "a transitional hand file (desktop MeshDataTool.kt) grows past its line ratchet")
+     [Append(f"{JVM}/net/multigesture/kanama/api/DirAccess.kt", "\n// red run: a transitional file grows\n")],
+     "transitional file grew", "a transitional hand file (desktop DirAccess.kt) grows past its line ratchet")
 case("check_hand_code_budget.py (package outside api/)", py("check_hand_code_budget.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRunPkg.kt", "package net.multigesture.kanama.api\n\nfun redRunPkg(): Int = 1\n")],
      "ZzRedRunPkg.kt: hand-written (3 lines) and not on the budget",
@@ -358,6 +358,9 @@ case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
+case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
+     [Edit(f"{JVM}/net/multigesture/kanama/api/FileAccess.kt", "    fun getMd5(path: String): String =", "    fun getMd5RedRun(path: String): String =")],
+     "unannounced source break", "a desktop-only declaration disappears and is not in the common tree (not a move to common, task 129 C)")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
      "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
@@ -418,8 +421,11 @@ case("audit_runtime_node_lookups.py", py("audit_runtime_node_lookups.py", "examp
              'import net.multigesture.kanama.annotations.OnProcess\nclass ZzRedRun {\n  @OnProcess\n  fun tick(delta: Double) {\n    self.requireAs("Child", ::Node)\n  }\n}\n')],
      "runtime_node_lookup] FAIL", "a per-frame callback resolves a node path")
 case("audit_singleton_refcounted_policy.py", py("audit_singleton_refcounted_policy.py"),
-     [Edit(f"{JVM}/net/multigesture/kanama/api/Engine.kt", "fun registerSingleton(name: String, objectArg: GodotHandle)", "fun registerSingletonRedRun(name: String, objectArg: GodotHandle)")],
+     [Edit(f"{COMMON}/api/Engine.kt", "fun registerSingleton(name: String, instance: GodotObject)", "fun registerSingletonRedRun(name: String, instance: GodotObject)")],
      "Engine.registerSingleton wrapper not found", "the Engine wrapper loses registerSingleton")
+case("audit_singleton_refcounted_policy.py", py("audit_singleton_refcounted_policy.py"),
+     [Edit("scripts/generate_api_wrapper.py", 'require(!instance.isClass("RefCounted"))', 'require(!instance.isClass("Node"))')],
+     "METHOD_PRECONDITIONS has no", "the generator's precondition row loses the RefCounted guard")
 case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
      [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- " + BLOCKED_MARKER + " -->")],
      "stale_blockers] FAIL", "a stale-blocker marker whose blocker no longer holds")
@@ -508,6 +514,13 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
 case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
      "missing pattern", "the example script no longer logs its scene-delivered properties",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+JVM_OBJECT_CALLS = "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS, "(BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble()",
+           "(emptyList<Any?>().firstOrNull() as? Number)?.toDouble()"),
+      Edit(JVM_OBJECT_CALLS, '?: error("ResourceLoader.load_threaded_get_status wrote no progress into its out-Array")', "?: 0.0")],
+     "missing pattern", "the threaded-load progress is never read back from Godot's out-Array (a silent 0.0): a LOADED request must report 1.0",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],

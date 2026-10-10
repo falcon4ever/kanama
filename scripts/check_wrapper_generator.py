@@ -467,16 +467,16 @@ def check_ios_policies(output_dir: Path) -> int:
 
     # The collision probe: a class PER_PLATFORM_WRAPPERS marks `collision` on iOS (hand-written
     # inside IosGodotApi.kt or a bespoke file) must NOT be emitted by the iOS renderer, and the
-    # refusal must be reported. ResourceLoader carries the hand-written typed-loader glue
-    # (loadTexture2D/AudioStream/PackedScene). It replaced SceneTree here when SceneTree stopped
-    # being a collision class (task 117 P1'(b1) generates it once into the shared tree).
-    collision = _gen_ios(policy_dir, "ResourceLoader")
-    if (policy_dir / "ResourceLoader.kt").exists():
-        print("[wrapper_generator] FAIL ResourceLoader.kt emitted despite being hand-written "
+    # refusal must be reported. FileAccess (the iOS hand facade + FileAccessHandle glue) is the last
+    # collision class: it replaced ResourceLoader here when task 129 C generated ResourceLoader once,
+    # as ResourceLoader had replaced SceneTree (task 117 P1'(b1)).
+    collision = _gen_ios(policy_dir, "FileAccess")
+    if (policy_dir / "FileAccess.kt").exists():
+        print("[wrapper_generator] FAIL FileAccess.kt emitted despite being hand-written "
               "(collision policy regressed)", file=sys.stderr)
         return 1
-    if "collision: ResourceLoader is hand-written" not in collision.stderr:
-        print("[wrapper_generator] FAIL ResourceLoader collision not reported "
+    if "collision: FileAccess is hand-written" not in collision.stderr:
+        print("[wrapper_generator] FAIL FileAccess collision not reported "
               "(collision policy regressed)", file=sys.stderr)
         return 1
     return 0
@@ -723,8 +723,7 @@ def check_typed_signals() -> int:
     """Task 134 D4: every engine signal in extension_api.json has a typed accessor (`val bodyEntered:
     Signal1<Node2D>`) on its class, with the arity Godot declares, under the name
     signal_accessor_names() chose (the `Signal` suffix on collisions). Object's two signals live on
-    the hand-written GodotObject; Tween and AudioStreamPlayer are hand-shaped per platform and carry
-    theirs by hand, so the gate reads every wrapper source, generated or not."""
+    the hand-written GodotObject, so the gate reads every wrapper source, generated or not."""
     import json
 
     from generate_api_wrapper import signal_accessor_names

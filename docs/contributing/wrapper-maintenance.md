@@ -202,8 +202,8 @@ the `?.takeIf { … }?.let { … }` form for a nullable one (a fourth field rena
 parameter, which only `SceneMultiplayer.fromApi(api:)` needs). `render_factory_helpers`
 owns the body and the comment; the block is appended to the companion object after the
 class's custom section (so iOS `InputEventKey` keeps its Key constants above its
-factories) and before the MethodBinds, and rows of iOS-only generated classes carry no
-`@JvmStatic` (those files compile for iOS alone). `check_factory_helpers` fails the run
+factories) and before the MethodBinds (every generated class is shared since task 129 C, so the
+helpers carry `@JvmStatic` on every platform). `check_factory_helpers` fails the run
 if the key is not a class the generator renders, or if a section still pastes the same
 helper (any visibility or annotation).
 
@@ -236,15 +236,31 @@ of Godot's 28 methods until task 129 A). To generate one once:
    - overloads and helpers both platforms can compile: `SHARED_MEMBER_SECTIONS[<Class>]` (member
      text) or `SHARED_COMPANION_MEMBER_SECTIONS` (companion text); `Tween`'s String-path
      `tweenProperty` and target-plus-method `tweenCallback` / `tweenMethod` are the example;
-   - sugar only one platform can compile: `DESKTOP_EXTENSION_SECTIONS` / `IOS_EXTENSION_SECTIONS`.
+   - sugar only one platform can compile: `DESKTOP_EXTENSION_SECTIONS` / `IOS_EXTENSION_SECTIONS`;
+   - a Godot default the generator does not emit (a `null` Object default, as in
+     `SurfaceTool.commit(existing = null)`): a `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` row;
+   - a rule `extension_api.json` cannot express, checked before Godot sees the call: a
+     `METHOD_PRECONDITIONS` row, Kotlin statements in the method's parameter names emitted after
+     the receiver guard (`Engine.registerSingleton` rejects a `RefCounted`; the
+     `audit_singleton_refcounted_policy.py` gate checks the row and the generated body);
+   - an out-parameter Godot writes into (an `Array` it fills): one `ObjectCalls` helper every
+     platform implements, called from a shared section (`ptrcallLoadStatusWithProgress` for
+     `ResourceLoader.loadThreadedGetStatusWithProgress`), not a per-platform class.
    A member the iOS helper set cannot call yet lands in the class's generated `<Class>.jvm.kt`
    companion by itself (listed in `ios-shape-gap.md`); do not hand-write it.
 4. If a desktop helper the shared tree now calls is missing `actual`, add the modifier (the expect is
    generated from the helpers the tree references). Delete what the old copies called and nothing
    else does: `IosGodot` functions, C shim entry points and their `kanama_ios.h` declarations.
 5. Run `check_public_signature_changes.py`; announce any break in the CHANGELOG, fix the demos in a
-   paired change, then `--write`. Drop the files from `scripts/hand_code_budget.json`
-   (`check_hand_code_budget.py --write`).
+   paired change, then `--write`. A declaration that left `jvm.txt` / `ios.txt` and is in
+   `common.txt` now, unchanged or source-compatibly changed, is reported as moved, not as a break;
+   only what really changed needs a `Source break` line. Drop the files from
+   `scripts/hand_code_budget.json` (`check_hand_code_budget.py --write`); a section the class's
+   sugar moved into is added to its `sections` with a `reason`.
+
+Task 129 C retired 20 classes this way (the hand/generated band, the iOS-hand band,
+`ProjectSettings`, `AudioStreamPlayer`, `ResourceLoader`, `Engine`); `PER_PLATFORM_WRAPPERS` holds
+only `FileAccess` and `DirAccess` now, whose handle model is task 129 parcel 8.
 
 **`GD` is generated from the utility functions (task 129 B).** `render_gd` in
 `scripts/generate_api_wrapper.py` writes `src/commonMain/.../api/GD.kt` at `--write-tree`: one
@@ -277,7 +293,7 @@ hand-written Kotlin file of the API (under an `api/` directory, or declaring the
 `runtime-core` (what `extension_api.json` does not describe), `sugar` (GDScript-syntax sugar written
 once) or `transitional` (should be generated; carries the task-129 parcel that retires it). Every
 file has a line ratchet, and so does the hand Kotlin inside the generator tables (each `*_SECTIONS`
-key here and each Web `CLASS_POLICY` string). The gate fails on an unlisted hand file, a listed file
+key and `METHOD_PRECONDITIONS` row here and each Web `CLASS_POLICY` string). The gate fails on an unlisted hand file, a listed file
 that is gone or generated, and any growth. Only the GENERATED ENUMS regions a generator really
 splices into a file are left out of its count; a GENERATED marker pair in any other API file fails
 the gate. A legitimate seam, runtime-core or sugar change raises its ratchet with
@@ -331,7 +347,7 @@ hand-written `Signal0` … `Signal5` in `src/commonMain/.../api/TypedSignals.kt`
 an ancestor or a descendant already has the name). Each platform decodes the arguments through a
 `SignalArgReader` (`JvmSignalArgReader`, `IosSignalArgReader`). `check_typed_signals` in
 `scripts/check_wrapper_generator.py` fails when an engine signal has no accessor or one with the
-wrong arity; `GodotObject`, `Tween` and `AudioStreamPlayer` carry theirs by hand. Web generates
+wrong arity; `GodotObject` carries its signal accessors by hand. Web generates
 `Signal0`/`Signal1` for its policy signals in `scripts/generate_web_wrappers.py`.
 
 `check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
@@ -651,8 +667,8 @@ in `scripts/check_wrapper_generator.py`:
   hand-written iOS `SceneTree`, which overrode it with the correct `SceneTree.create_tween` bind
   (the FPS F2 fix). Both halves are gone now: `SceneTree` is a generated `MainLoop` since task 117
   P1'(b1), and `Node` is generated into the shared tree since P1'(b2), where `createTween` is a
-  plain generated member since task 129 A generated `Tween` once. Add a real case to the class's `IOS_MEMBER_SECTIONS`
-  entry (or `IOS_EXTENSION_SECTIONS` for a shared class), not by hand-editing the generated file.
+  plain generated member since task 129 A generated `Tween` once. Add a real case to the class's `SHARED_MEMBER_SECTIONS`
+  entry (or `IOS_EXTENSION_SECTIONS` for an iOS-only helper), not by hand-editing the generated file.
 
 - **A custom section that REPLACES a generated member.** A section normally adds members the
   generator cannot emit; when it declares the same Kotlin name AND parameter list as a generated
@@ -668,9 +684,10 @@ in `scripts/check_wrapper_generator.py`:
   `PER_PLATFORM_WRAPPERS` (the `IOS_HANDWRITTEN_COLLISION_CLASSES` view), each with a reason. `--ios-emit-class <that class>` logs a
   `collision:` line and skips it, instead of writing a `<Class>.kt` that duplicate-declares
   the class and breaks the compile. When a class graduates to a real generated wrapper
-  (as `Time`/`InputMap`/`PhysicsServer3D` did), delete its entry so generation is allowed.
-  `FileAccess` lives here: iOS hosts it as a hand-written static facade plus its own
-  `FileAccessHandle` in `src/iosMain/.../api/FileAccess.kt`.
+  (as `Time`/`InputMap`/`PhysicsServer3D` did, and `Engine`, `ProjectSettings`,
+  `ResourceLoader` and `AudioStreamPlayer` in task 129 C), delete its entry so generation is
+  allowed. `FileAccess` is the only one left: iOS hosts it as a hand-written static facade plus
+  its own `FileAccessHandle` in `src/iosMain/.../api/FileAccess.kt`.
 
 - **Explicit uncompilable classes.** The `unsupported` cells of `PER_PLATFORM_WRAPPERS` (the
   `IOS_UNSUPPORTED_CLASSES` view) list the classes whose
@@ -695,9 +712,10 @@ does not drop them), locked by `check_ios_policies`:
 
 - **Composite default-value overrides.** `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` injects a final
   Kotlin default expression by exact `(class, method, arg)`. `Node3D.look_at` and
-  `Node3D.look_at_from_position` (both `up = Vector3.UP`) are the current entries — demos
-  call the short `lookAt(target)` form and rely on it. Kept
-  surgical (per exact arg) so no other method silently gains a default.
+  `Node3D.look_at_from_position` (both `up = Vector3.UP`) — demos call the short
+  `lookAt(target)` form and rely on it — and `SurfaceTool.commit` (`existing = null`, task 129 C)
+  are the current entries. Kept surgical (per exact arg) so no other method silently gains a
+  default.
 - **Non-null factory.** `NON_NULL_FROM_HANDLE_CLASSES` (currently `{Resource}`) emits
   `fromHandle(handle): Resource` (non-null) so a `@ScriptClass(attachTo = "Resource")` script's
   `(GodotHandle) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays on the

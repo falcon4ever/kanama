@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector2i
 
 /**
@@ -21,7 +22,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setImage(image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setImageBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setImageBind, segment, listOf(image?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -35,7 +36,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun update(image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.updateBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.updateBind, segment, listOf(image?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -56,17 +57,17 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: ImageTexture.create_from_image
          */
         fun createFromImage(image: Image?): ImageTexture? {
-            return ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createFromImageBind, MemorySegment.NULL, image?.requireOpenHandle() ?: MemorySegment.NULL))
+            return ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createFromImageBind, NULL_SEGMENT, image?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImageTexture? =
             wrapBorrowed(handle.segment)
 
-        internal fun wrapOwned(handle: MemorySegment): ImageTexture? =
+        internal fun wrapOwned(handle: RawSegment): ImageTexture? =
             if (handle.address() == 0L) null else RefCounted.owned(ImageTexture(GodotHandle(handle)))
 
-        internal fun wrapBorrowed(handle: MemorySegment): ImageTexture? =
+        internal fun wrapBorrowed(handle: RawSegment): ImageTexture? =
             if (handle.address() == 0L) null else ImageTexture(GodotHandle(handle))
     }
 

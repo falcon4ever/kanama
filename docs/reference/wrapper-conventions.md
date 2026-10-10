@@ -445,8 +445,8 @@ names are `expect` declarations (`GodotSignal`, `SignalConnection`, `MainThread`
 `scripts/check_actual_public_surface.py` keeps an `actual` from adding public members its
 `expect` lacks. The exceptions are listed, not silent:
 
-- the classes in `PER_PLATFORM_WRAPPERS`, hand-shaped or generated for one platform with a reason
-  each (for example `FileAccess`, `Engine`, `ResourceLoader`);
+- the classes in `PER_PLATFORM_WRAPPERS`, hand-shaped per platform with a reason each (since task
+  129 C only `FileAccess` and `DirAccess`);
 - members generated for desktop and Android only, in a `<Class>.jvm.kt` companion, while iOS waits
   on a call helper: listed on [iOS Shape Gap](generated/ios-shape-gap.md);
 - the engine-wide name constants ([rule 12](#12-names-as-constants)).

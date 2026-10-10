@@ -664,7 +664,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
             if (!processAlways && isPaused()) {
                 frameSeconds = 0.0
             } else if (!ignoreTimeScale) {
-                frameSeconds *= engineTimeScale().coerceAtLeast(0.0)
+                frameSeconds *= Engine.getTimeScale().coerceAtLeast(0.0)
             }
 
             elapsedSeconds += frameSeconds
@@ -789,26 +789,6 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         // SceneTree itself, which would clash with the instance method of the same JVM signature.
         // A Kotlin caller writes SceneTree.quit() either way; only active() and the two legacy
         // *Handle helpers, which have no instance twin, can stay @JvmStatic.
-        private const val GET_MAIN_LOOP_HASH = 1016888095L
-        private const val GET_TIME_SCALE_HASH = 191475506L
-
-        private val engineSingleton: RawSegment by lazy {
-            ObjectCalls.getSingleton("Engine")
-        }
-
-        private val getMainLoopBind by lazy {
-            ObjectCalls.getMethodBind("Engine", "get_main_loop", GET_MAIN_LOOP_HASH)
-        }
-
-        private val getTimeScaleBind by lazy {
-            ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
-        }
-
-        // Engine.get_time_scale through the singleton above: the desktop `Engine` wrapper has
-        // getTimeScale(), the iOS one does not, and delaySeconds needs it on both.
-        internal fun engineTimeScale(): Double =
-            ObjectCalls.ptrcallNoArgsRetDouble(getTimeScaleBind, engineSingleton)
-
         /**
          * The SceneTree the engine is running, resolved through `Engine.get_main_loop()`.
          *
@@ -816,13 +796,13 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          */
         @JvmStatic
         fun active(): SceneTree {
-            val tree = checkNotNull(wrap(ObjectCalls.ptrcallNoArgsRetObject(getMainLoopBind, engineSingleton))) {
+            val loop = checkNotNull(Engine.getMainLoop()) {
                 "SceneTree.active(): Engine.get_main_loop() returned null - no main loop is running"
             }
-            check(tree.isClass("SceneTree")) {
+            check(loop.isClass("SceneTree")) {
                 "SceneTree.active(): the running main loop is not a SceneTree"
             }
-            return tree
+            return SceneTree(loop.handle)
         }
 
         /** The root `Window` of the running tree. Non-null: a running tree always has one. */

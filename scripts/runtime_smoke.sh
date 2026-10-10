@@ -593,6 +593,7 @@ check "UI wrappers ui_present=true pos=8\\.0,12\\.0 size=260\\.0,120\\.0 min=180
 check "UI metadata option_item=option-meta option_selected=option-meta option_id=10 tab_count=1 tab_title=Alpha tab_metadata=tab-meta line_bidi_options=0"
 check "Dynamic UI label=dynamic label button=dynamic button label_pos=12\\.0,32\\.0 button_pos=12\\.0,56\\.0 child_count=[0-9]+"
 check "OS granted_permissions=[0-9]+ memory_info_keys=[0-9]+"
+check "WrappersOnce threaded_progress_status=3 progress_loaded=true typed_scene=true register_refcounted_rejected=true typed_mismatch_null=true registered=false"
 check "Engine singletons count=[0-9]+ has_os=true version_major=[0-9]+ version_minor=[0-9]+ author_keys=[0-9]+ donor_keys=[0-9]+ license_keys=[0-9]+ copyright_entries=[0-9]+ backtraces=[0-9]+"
 check "Input joypads count=[0-9]+ joy_info_keys=[0-9]+"
 check "Time dictionaries system_dt_year=[0-9]+ system_date_month=[0-9]+ system_time_hour=[0-9]+ unix_dt_year=[0-9]+ unix_date_month=[0-9]+ unix_time_hour=[0-9]+ parsed_weekday=[0-9]+ time_zone_keys=[0-9]+"
