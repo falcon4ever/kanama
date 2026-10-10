@@ -25,6 +25,9 @@ const SETTING_JVM_OPTIONS := "kanama/jvm/options"
 # Read by the Kanama runtime at startup: log each RefCounted the GC released because its owned
 # Kotlin wrapper was never closed, once per creation site (task 132).
 const SETTING_LOG_GC_RELEASES := "kanama/debug/log_gc_releases"
+# A Kanama test hook, off for users: run the typed-signal self-test on the first frame of a debug
+# game run (task 138 item 23). The Kanama smokes switch it on.
+const SETTING_SIGNAL_SELF_TEST := "kanama/debug/signal_self_test"
 const DEFAULT_JDWP_PORT := 5005
 const SYNC_BUTTON_IDLE_TEXT := "Build Scripts"
 const SYNC_BUTTON_BUSY_TEXT := "Building..."
@@ -288,6 +291,9 @@ func _ensure_project_settings() -> void:
         ProjectSettings.set_setting(SETTING_JVM_OPTIONS, "")
     if not ProjectSettings.has_setting(SETTING_LOG_GC_RELEASES):
         ProjectSettings.set_setting(SETTING_LOG_GC_RELEASES, false)
+    if not ProjectSettings.has_setting(SETTING_SIGNAL_SELF_TEST):
+        ProjectSettings.set_setting(SETTING_SIGNAL_SELF_TEST, false)
+    ProjectSettings.set_initial_value(SETTING_SIGNAL_SELF_TEST, false)
     ProjectSettings.set_initial_value(SETTING_LOG_GC_RELEASES, false)
     ProjectSettings.set_initial_value(SETTING_JDWP_ENABLED, false)
     ProjectSettings.set_initial_value(SETTING_JDWP_PORT, DEFAULT_JDWP_PORT)
@@ -331,6 +337,10 @@ func _ensure_project_settings() -> void:
     })
     ProjectSettings.add_property_info({
         "name": SETTING_LOG_GC_RELEASES,
+        "type": TYPE_BOOL,
+    })
+    ProjectSettings.add_property_info({
+        "name": SETTING_SIGNAL_SELF_TEST,
         "type": TYPE_BOOL,
     })
     ProjectSettings.add_property_info({
