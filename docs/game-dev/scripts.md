@@ -315,8 +315,16 @@ Only, then Run in Xcode or `xcodebuild build`). Godot's `.ipa` export and its
 one-click deploy archive the app, which strips it, and report the failing
 callback with line 0. A release build names the class and method with line 0. In an R8-minified Android release
 build a frame without source info is not attributed, and the error names the
-callback that failed instead. The Web backend does not report Kotlin exceptions
-to Godot yet.
+callback that failed instead. On Web the same report reaches the browser console through
+Godot's error log -- `ERROR: SCRIPT ERROR: kotlin.IllegalStateException: no target`, then
+`at: Player._ready (no source line on Wasm)`, then Godot's own `at: push_error (...)` line (the
+report is printed by `push_error`) -- and the callback returns its default while the game runs on.
+A Web export carries no names or source maps, so the report names the script and the callback
+that failed, not a Kotlin file and line. Only an exception from your code is contained: the
+runtime failing around it (a bridge or protocol fault) still ends the page. A call whose return
+type is a typed GDScript value (`Long`, `Double`, `Boolean`, `String`, `Vector2`) answers that
+type's default (`0`, `0.0`, `false`, `""`, zero) where desktop answers `null`; a Vector3, Color or
+other value-type return answers `null` as on desktop.
 
 Calling a method through a wrapper whose object was freed (a node after
 `queueFree()` took effect) is such an error in debug builds — the editor and
@@ -327,7 +335,19 @@ it back to Godot as a value (an exported property, a method's return value, a
 Variant argument) are silent, and Godot receives `null`. A release export does
 not check, and a call is undefined behaviour, so ask `GD.isInstanceValid(node)`
 before using an object that may be gone. Two wrappers of one object are `==`
-(and equal as `Set`/`Map` keys) whatever their class.
+(and equal as `Set`/`Map` keys) whatever their class. On Web a call that returns a value or an object
+(`getName()`, `getParent()`, `getNode(...)`, `getChild(i)`, `getChildCount()`, `emitSignal(...)`,
+`connect(...)` on a freed source or target, a `Control` position or size read, and every other
+query that crosses to Godot) on an object the engine freed (a child freed with its parent, a timer,
+a body) throws the same `IllegalStateException: Invalid access to previously freed instance`,
+naming the handle instead of the class. A call that returns nothing (`node.position = ...`,
+`queueFree()`, `addChild(...)`) is queued and applied with the rest of the frame's batch, so it
+cannot throw at the call. On a freed object that one command is skipped and the batch reports the
+same `IllegalStateException` once as a script error (`SCRIPT ERROR: ... at: Script.<queued
+command>`), the other commands of the batch are applied, and the page keeps running, as on desktop
+where the setter throws and the script carries on; the exception is not catchable at the setter.
+A command that is malformed for a live object (a protocol fault) still ends the page. A position
+read of a `Node2D`/`Node3D` answers the last snapshot it had. Ask `GD.isInstanceValid(node)` first on Web too.
 
 ## Rebuild Required
 

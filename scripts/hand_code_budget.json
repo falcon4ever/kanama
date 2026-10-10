@@ -198,7 +198,10 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebCoroutines.kt": {
       "category": "runtime-core",
-      "lines": 81,
+      "lines": 85,
+      "raises": [
+        "81 -> 85: task 131 item 14: the script scope carries the shared coroutine error handler (WebScriptErrors)"
+      ],
       "reason": "Web coroutine dispatcher"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt": {
@@ -243,9 +246,11 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebSignals.kt": {
       "category": "runtime-core",
-      "lines": 505,
+      "lines": 509,
       "raises": [
-        "456 -> 505: task 134 D1: callback registry for any-arity delivery (dispatchArgs), await watcher release reasons (router vs emitter freed), connectAwait, and the webEmitSignalGeneric expect moved here from the transitional WebGodotApi.kt"
+        "456 -> 505: task 134 D1: callback registry for any-arity delivery (dispatchArgs), await watcher release reasons (router vs emitter freed), connectAwait, and the webEmitSignalGeneric expect moved here from the transitional WebGodotApi.kt",
+        "505 -> 508: task 131 item 12: the registry exposes a per-owner entry count for the leak probe",
+        "508 -> 509: task 131 review fixes: the registry runs the user's lambda through userScript so only user failures are contained"
       ],
       "reason": "Web signal plumbing"
     },

@@ -1,3 +1,5 @@
+// The directory is `scripterrors/` (so the Web build can add just this one source dir to its
+// sourceSets); the package stays `binding.runtime`, where this type lived before it was shared.
 package net.multigesture.kanama.binding.runtime
 
 /**

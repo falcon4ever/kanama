@@ -16,14 +16,16 @@ import net.multigesture.kanama.types.Vector3
  * autoload built a ConfigFile in an initializer and its menu never became ready on Web: the
  * constructor ran before the proxy's callbacks were installed, so the calls had no owner.
  *
- * Main's `init_probe` asks this node for its readback, one bit per row (127 when all worked):
+ * Main's `init_probe` asks this node for its readback, one bit per row (255 when all worked):
  *  - 1: an engine singleton (`RenderingServer.getCurrentRenderingDriverName()`) answered;
  *  - 2: a RefCounted (`ConfigFile.create()`) built in an initializer round-trips a value;
  *  - 4: `@OnReady` ran. A script that failed to construct and was rebuilt later by a lookup never
  *    gets its `_ready`, so this bit is red on a retried construction;
  *  - 8: `self.getTree()` answered; 16: `self.position` read the scene's transform (1, 2, 3);
  *  - 32: `RenderingServer.getCurrentRenderingMethod()` (a handle-keyed snapshot) answered;
- *  - 64: `self.getNodeOrNull("../InitSibling")` resolved a sibling (a node of its own, not ShareTarget).
+ *  - 64: `self.getNodeOrNull("../InitSibling")` resolved a sibling (a node of its own, not ShareTarget);
+ *  - 128: `self.getNodeOrNull("../ShareTarget")` resolved the node the Share* scripts also hold, so
+ *    `share_probe` frees a node with a third holder (task 138 item 18).
  * Each initializer row records its own failure instead of throwing, so one gap shows as one bit.
  */
 @ScriptClass(attachTo = "Node3D")
@@ -34,6 +36,8 @@ class InitProbe(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::
   private val position: Vector3? = runCatching { self.position }.getOrNull()
   private val renderingMethod: String? = runCatching { RenderingServer.getCurrentRenderingMethod() }.getOrNull()
   private val sibling: Node? = runCatching { self.getNodeOrNull("../InitSibling") }.getOrNull()
+  // A third holder of the node ShareA and ShareB share, taken in an initializer (task 138 item 18).
+  private val sharedTarget: Node? = runCatching { self.getNodeOrNull("../ShareTarget") }.getOrNull()
   private var ready = false
 
   @OnReady
@@ -51,6 +55,7 @@ class InitProbe(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::
     if (position == Vector3(1.0, 2.0, 3.0)) mask = mask or 16L
     if (!renderingMethod.isNullOrEmpty()) mask = mask or 32L
     if (sibling != null) mask = mask or 64L
+    if (sharedTarget != null) mask = mask or 128L
     // The RefCounted was built by an initializer, so the script owns its release.
     config.close()
     return mask

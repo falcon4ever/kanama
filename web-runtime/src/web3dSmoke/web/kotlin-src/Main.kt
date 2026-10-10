@@ -1309,6 +1309,154 @@ class Main(godotObject: GodotHandle) :
     return WebExperimentalGenericCall.callImmediate(node, "init_probe", listOf(0L)).asLong()
   }
 
+  private var leakMask = 0L
+
+  /**
+   * Lambda-connection leak probe (task 131 item 12; driver `leak_probe`, then `leak_probe_after`).
+   * LeakProbe connects six lambdas (see LeakProbe) and the Kotlin callback registry must give each
+   * one back with whatever held it. It counts the entries LeakProbe owns, not the whole registry,
+   * which other probes' awaits are still draining. Bits:
+   * - 1: the six connections registered;
+   * - 2: after B's one-shot fired (it was emitted twice) and its normal one fired once, five are left;
+   * - 4: after emitter A (four connections, one of them a never-fired one-shot) was freed by the
+   *   engine, only B's normal lambda is left;
+   * - 8: after the receiver itself was freed, none is left;
+   * - 16: B's lambdas ran exactly as connected (the one-shot once = 100, the normal one once = 1).
+   * A healthy run returns 31 from [leakProbeAfter].
+   */
+  fun leakProbe(value: Long): Long {
+    val registry = net.multigesture.kanama.api.WebSignalCallbackRegistry
+    val receiver = self.requireAs("LeakProbe", ::Node)
+    val emitterA = self.requireAs("LeakEmitterA", ::Node)
+    val owner = receiver.handle.value
+    val call = { method: String ->
+      WebExperimentalGenericCall.callImmediate(receiver, method, listOf(0L)).asLong()
+    }
+    leakMask = 0L
+    call("leak_connect")
+    if (registry.countOwnedBy(owner) == 6) leakMask = leakMask or 1L
+    val fired = call("leak_fire")
+    if (registry.countOwnedBy(owner) == 5) leakMask = leakMask or 2L
+    if (fired == 101L) leakMask = leakMask or 16L
+    emitterA.queueFree()
+    MainThread.postAfterFrames(3) {
+      if (registry.countOwnedBy(owner) == 1) leakMask = leakMask or 4L
+      receiver.queueFree()
+      MainThread.postAfterFrames(3) {
+        if (registry.countOwnedBy(owner) == 0) leakMask = leakMask or 8L
+      }
+    }
+    return 0L
+  }
+
+  private var errorMask = 0L
+
+  /**
+   * Script-error containment probe (task 131 item 14; driver `error_probe`, then `error_probe_after`).
+   * ErrorProbe throws from a registered function, a signal handler, `_process` and a coroutine; each
+   * is reported to Godot's error log and contained. Bits:
+   * - 1: the throwing function call came back (to its default) and the script still answers;
+   * - 2: the throwing signal handler did not stop `emit_signal`, and the script still answers;
+   * - 4: this script was not disturbed: a call after both succeeded.
+   * The `_process` and coroutine throws land on later frames; the driver counts their reports.
+   * A healthy run returns 7 from [errorProbeAfter].
+   */
+  fun errorProbe(value: Long): Long {
+    val node = self.requireAs("ErrorProbe", ::Node)
+    val call = { method: String ->
+      WebExperimentalGenericCall.callImmediate(node, method, listOf(0L)).asLong()
+    }
+    errorMask = 0L
+    runCatching { call("error_throw") }
+    if (call("error_alive") == 1L) errorMask = errorMask or 1L
+    runCatching { call("error_signal") }
+    if (call("error_alive") == 2L) errorMask = errorMask or 2L
+    call("error_arm_process")
+    call("error_coroutine")
+    errorMask = errorMask or 4L
+    return 0L
+  }
+
+  /** Readback of [errorProbe]: 7 once it ran. */
+  fun errorProbeAfter(value: Long): Long = errorMask
+
+  private var freedMask = 0L
+
+  /**
+   * Engine-freed node probe (task 138 item 3; driver `freed_probe`, then `freed_probe_after`).
+   * FreedHolder holds FreedChild; this frees FreedChild's PARENT, so the engine frees the child and
+   * Kotlin never learns of it. Bits:
+   * - 1: the holder looked the child up and reached it;
+   * - 2: using the freed child threw the freed-instance IllegalStateException (not a bridge failure);
+   * - 4: the holder's own node still answers afterwards;
+   * - 8, 16, 32: the object-returning shapes (`getParent`, `getNodeOrNull`, `getChild`) on the freed
+   *   child throw the same error, not a bridge failure and not a silent null;
+   * - 64, 128: `emitSignal` on the freed node and a `Control.position` read on a freed Control (the
+   *   shapes that used to answer a default) throw it too;
+   * - 256: a setter on the freed node came back (it is a queued command; the driver checks that the
+   *   freed-instance error was REPORTED as a script error and no other fault appeared);
+   * - 512: frames kept running after the setter.
+   * A healthy run returns 1023 from [freedProbeAfter].
+   */
+  fun freedProbe(value: Long): Long {
+    val holder = self.requireAs("FreedHolder", ::Node)
+    val parent = self.requireAs("FreedParent", ::Node)
+    val says = { method: String ->
+      WebExperimentalGenericCall.callImmediate(holder, method, listOf(0L)).asLong()
+    }
+    freedMask = 0L
+    if (says("freed_lookup") == 1L) freedMask = freedMask or 1L
+    parent.queueFree()
+    MainThread.postAfterFrames(3) {
+      if (says("freed_name") == 2L) freedMask = freedMask or 2L
+      if (says("freed_self") == 1L) freedMask = freedMask or 4L
+      if (says("freed_get_parent") == 2L) freedMask = freedMask or 8L
+      if (says("freed_get_node_or_null") == 2L) freedMask = freedMask or 16L
+      if (says("freed_get_child") == 2L) freedMask = freedMask or 32L
+      if (says("freed_emit_signal") == 2L) freedMask = freedMask or 64L
+      if (says("freed_control_position") == 2L) freedMask = freedMask or 128L
+      if (says("freed_setter") == 1L) freedMask = freedMask or 256L
+      MainThread.postAfterFrames(3) { freedMask = freedMask or 512L }
+    }
+    return 0L
+  }
+
+  private var freedBatchMask = 0L
+
+  /**
+   * Batch-of-two probe (driver `freed_batch_probe`, then `freed_batch_probe_after`), run after
+   * [freedProbe] has freed the held node. FreedHolder queues, in ONE batch, a setter on that freed
+   * node and then a command on a live node. Bits:
+   * - 1: the live setter after the skipped one took effect (read back);
+   * - 2: the live `queueFree` after a skipped setter freed the node in the engine;
+   * - 4: frames kept running.
+   * The driver also checks the bridge's live-handle count is unchanged once the live node is freed
+   * (its slot was released: the applied commands are not a prefix of the batch).
+   * A healthy run returns 7 from [freedBatchProbeAfter].
+   */
+  fun freedBatchProbe(value: Long): Long {
+    val holder = self.requireAs("FreedHolder", ::Node)
+    val says = { method: String ->
+      WebExperimentalGenericCall.callImmediate(holder, method, listOf(0L)).asLong()
+    }
+    freedBatchMask = 0L
+    if (says("freed_batch") == 1L) freedBatchMask = freedBatchMask or 1L
+    MainThread.postAfterFrames(3) {
+      if (says("freed_batch_gone") == 1L) freedBatchMask = freedBatchMask or 2L
+      MainThread.postAfterFrames(3) { freedBatchMask = freedBatchMask or 4L }
+    }
+    return 0L
+  }
+
+  /** Readback of [freedBatchProbe]: 7 once its frames have passed. */
+  fun freedBatchProbeAfter(value: Long): Long = freedBatchMask
+
+  /** Readback of [freedProbe]: 1023 once its frames have passed. */
+  fun freedProbeAfter(value: Long): Long = freedMask
+
+  /** Readback of [leakProbe]: 31 once its frames have passed. */
+  fun leakProbeAfter(value: Long): Long = leakMask
+
   /** Readback of [shareProbe]: 31 once its frames have passed. */
   fun shareProbeAfter(value: Long): Long = shareMask
 

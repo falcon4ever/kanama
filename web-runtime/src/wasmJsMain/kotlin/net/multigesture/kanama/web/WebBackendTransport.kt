@@ -3,6 +3,7 @@
 package net.multigesture.kanama.web
 
 import kotlin.js.ExperimentalWasmJsInterop
+import kotlin.js.JsException
 
 /**
  * Hand-written Web transport primitives (Task 60a, "Option A").
@@ -13,6 +14,12 @@ import kotlin.js.ExperimentalWasmJsInterop
  * `WebCommonGodotBackend.generated.kt` calls them. Admitting a new call family is a regenerated
  * dispatch diff plus, where a new crossing shape appears, a transport extern added here.
  */
+/**
+ * Task 131 item 14: hands a rendered script-error report to the bridge, which reaches `push_error`.
+ */
+internal fun jsReportScriptError(text: String): Unit =
+  js("globalThis.KanamaWebBridge.reportScriptError(text)")
+
 internal fun immediateWebChildCount(objectId: Int, includeInternal: Boolean): Int =
   js("globalThis.KanamaWebBridge.immediateChildCount(objectId, includeInternal)")
 
@@ -240,3 +247,28 @@ internal fun immediateWebNoArgsVector2Y(): Double =
 
 internal fun immediateWebEmitSignalVector2i(objectId: Int, name: String, x: Int, y: Int): Int =
   js("globalThis.KanamaWebBridge.immediateEmitSignalVector2i(objectId, name, x, y)")
+
+/**
+ * Task 138 item 3: an immediate crossing whose object the engine freed under a script (a child
+ * freed with its parent, a timer, a body) used to fail in the bridge with "callback did not publish
+ * a result". The bridge now says the instance was freed ([FREED_INSTANCE_MESSAGE]); this turns that
+ * into the `IllegalStateException` desktop throws for a freed instance, so a script can catch it
+ * and it reads the same on every platform.
+ *
+ * Applied in ONE place per entry point, not per extern: the generated backend dispatch
+ * (`scripts/generate_web_backend.py` wraps every call shape's body) and the generic-call path
+ * ([WebExperimentalGenericCall.callImmediate]). A new extern above gets it from the dispatch that
+ * calls it. A queued call (`node.position = ...`) does not cross here and does not throw at the
+ * call; see docs/game-dev/scripts.md.
+ */
+internal inline fun <T> webFreedAware(block: () -> T): T =
+  try {
+    block()
+  } catch (error: JsException) {
+    val message = error.message.orEmpty()
+    val at = message.indexOf(FREED_INSTANCE_MESSAGE)
+    if (at < 0) throw error
+    throw IllegalStateException(message.substring(at), error)
+  }
+
+private const val FREED_INSTANCE_MESSAGE = "Invalid access to previously freed instance"

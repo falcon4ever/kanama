@@ -7,6 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import net.multigesture.kanama.web.WebScriptErrors
 
 /** Coroutine surface over the frame scheduler; see `WebFrameScheduler.kt` for the pump itself. */
 internal object WebFrameCoroutineDispatcher : CoroutineDispatcher() {
@@ -46,7 +47,10 @@ internal class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.curr
   CoroutineScope {
   private val job = SupervisorJob()
   override val coroutineContext: CoroutineContext =
-    WebFrameCoroutineDispatcher + job + WebScopeOwner(ownerHandle)
+    WebFrameCoroutineDispatcher +
+      job +
+      WebScopeOwner(ownerHandle) +
+      WebScriptErrors.coroutineHandler
 
   fun cancel() {
     job.cancel()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -8,6 +8,12 @@
 [ext_resource type="Script" path="res://kotlin-src/D1Emitter.kt" id="6_d1emitter"]
 [ext_resource type="Script" path="res://kotlin-src/HandleShare.kt" id="7_share"]
 [ext_resource type="Script" path="res://kotlin-src/InitProbe.kt" id="8_initprobe"]
+[ext_resource type="Script" path="res://kotlin-src/LeakProbe.kt" id="9_leak"]
+[ext_resource type="Script" path="res://kotlin-src/ErrorProbe.kt" id="10_error"]
+[ext_resource type="Script" path="res://kotlin-src/FreedHolder.kt" id="11_freed"]
+[ext_resource type="Script" path="res://kotlin-src/ThrowingConstructor.kt" id="12_tctor"]
+[ext_resource type="Script" path="res://kotlin-src/ThrowingProperty.kt" id="13_tprop"]
+[ext_resource type="Script" path="res://kotlin-src/ThrowingReady.kt" id="14_tready"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -166,6 +172,35 @@ script = ExtResource("7_share")
 
 [node name="ShareB" type="Node" parent="."]
 script = ExtResource("7_share")
+
+[node name="LeakEmitterA" type="Node" parent="."]
+
+[node name="LeakEmitterB" type="Node" parent="."]
+
+[node name="LeakProbe" type="Node" parent="."]
+script = ExtResource("9_leak")
+
+[node name="ErrorProbe" type="Node" parent="."]
+script = ExtResource("10_error")
+
+[node name="FreedParent" type="Node" parent="."]
+
+[node name="FreedChild" type="Node" parent="FreedParent"]
+
+[node name="FreedControl" type="Control" parent="FreedParent"]
+
+[node name="FreedHolder" type="Node" parent="."]
+script = ExtResource("11_freed")
+
+[node name="ThrowingConstructor" type="Node" parent="."]
+script = ExtResource("12_tctor")
+
+[node name="ThrowingProperty" type="Node" parent="."]
+script = ExtResource("13_tprop")
+gate = 5
+
+[node name="ThrowingReady" type="Node" parent="."]
+script = ExtResource("14_tready")
 
 [node name="InitSibling" type="Node" parent="."]
 

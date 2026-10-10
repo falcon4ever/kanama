@@ -219,7 +219,39 @@ export function buildEnvelope({
   const consoleErrors = [];
   const consoleWarnings = [];
   let lastWasWarning = false;
+  // A demo may expect specific console errors its run provokes on purpose (the web3d fixture's
+  // deliberate script errors, task 131 item 14): `{ pattern, count }`. Each match, and the
+  // `at:` line after it, is recorded as an "expected" warning; fewer matches than `count` is a
+  // boundary error, so an error that was supposed to reach Godot's log and did not still fails.
+  const expectedErrors = (demoResult.expectedConsoleErrors ?? []).map((entry) => ({
+    regex: new RegExp(entry.pattern),
+    count: entry.count,
+    seen: 0,
+  }));
+  let lastWasExpected = false;
+  // Local debug-template run (web_export_smoke.sh --debug-template): the debug engine prints a
+  // "GDScript backtrace" block under every engine error or warning; it belongs to that message and
+  // takes its classification.
+  const debugTemplate = process.env.KANAMA_WEB_DEBUG_TEMPLATE === "1";
+  const isBacktraceLine = (text) =>
+    debugTemplate && (/^\s*GDScript backtrace \(most recent call first\):/.test(text) || /^\s+\[\d+\] /.test(text));
   for (const event of consoleEvents) {
+    if (event.type === "console.error" && isBacktraceLine(event.text)) {
+      // A backtrace after an expected error or a warning is that message's; after anything else it
+      // follows an error that was already counted.
+      if (lastWasExpected || lastWasWarning) consoleWarnings.push(`${lastWasExpected ? "expected " : ""}${event.type}: ${event.text}`);
+      else consoleErrors.push(`${event.type}: ${event.text}`);
+      continue;
+    }
+    const expected =
+      event.type === "console.error" ? expectedErrors.find((entry) => entry.regex.test(event.text)) : undefined;
+    if (expected || (lastWasExpected && event.type === "console.error" && /^\s*at: /.test(event.text))) {
+      if (expected) expected.seen += 1;
+      consoleWarnings.push(`expected ${event.type}: ${event.text}`);
+      lastWasExpected = true;
+      continue;
+    }
+    lastWasExpected = false;
     const isWarning =
       (event.type === "console.error" &&
         (event.text.startsWith("WARNING:") || (lastWasWarning && /^\s*at: /.test(event.text)))) ||
@@ -234,6 +266,13 @@ export function buildEnvelope({
     lastWasWarning = isWarning;
   }
   const boundaryErrors = [...(demoResult.boundaryErrors ?? [])];
+  for (const entry of expectedErrors) {
+    if (entry.seen !== entry.count) {
+      boundaryErrors.push(
+        `expected ${entry.count} console error(s) matching /${entry.regex.source}/, saw ${entry.seen}`,
+      );
+    }
+  }
 
   const loaded = demoResult.startup.loaded === true;
   const pass = failed === 0 && loaded && boundaryErrors.length === 0 && consoleErrors.length === 0;

@@ -8,6 +8,7 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsAny
 import kotlin.js.JsName
+import net.multigesture.kanama.api.WebFrameScheduler
 
 @JsName("Int32Array")
 private external class WebInt32Array(length: Int) : JsAny {
@@ -277,8 +278,24 @@ internal class WebCommandBuffer(capacity: Int) {
     // recursively replaying the parent batch.
     clear()
     val applied = flushWebCommands(words, expectedWords, expected)
+    reportFreedCommandSkips()
     check(applied == expected) { "Kanama Web command batch applied $applied of $expected commands" }
     return applied
+  }
+
+  /**
+   * A queued command whose target the engine freed was skipped by the bridge (and counted as
+   * consumed above). Desktop throws at the setter and the script carries on; here the call has
+   * already returned, so the same `IllegalStateException` is reported as a script error instead.
+   */
+  private fun reportFreedCommandSkips() {
+    val messages = takeWebFreedCommandSkips()
+    if (messages.isEmpty()) return
+    val owner = WebFrameScheduler.currentOwnerOrZero()
+    val script = webScriptInstance(owner)?.let { it::class.simpleName } ?: "script"
+    for (message in messages.split('\n')) {
+      WebScriptErrors.report(IllegalStateException(message), "$script.<queued command>")
+    }
   }
 
   private fun reserve(wordsNeeded: Int): Int {
@@ -319,6 +336,9 @@ internal class WebCommandBuffer(capacity: Int) {
 
 private fun flushWebCommands(words: WebInt32Array, wordCount: Int, commandCount: Int): Int =
   js("globalThis.KanamaWebBridge?.flushCommands(words, wordCount, commandCount) ?? commandCount")
+
+private fun takeWebFreedCommandSkips(): String =
+  js("globalThis.KanamaWebBridge?.takeFreedCommandSkips?.() ?? ''")
 
 private fun internWebCommandStringName(value: String): Int =
   js("globalThis.KanamaWebBridge.internCommandStringName(value)")

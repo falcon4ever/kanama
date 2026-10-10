@@ -22,6 +22,13 @@
 #       [--timeout <seconds>] \
 #       [--log-dir <dir>] \
 #       [--driver-cmd "<command>"]   # override driver (scaffold self-test/advanced)
+#       [--debug-template]           # the export was made with Godot's DEBUG template (local only)
+#
+# --debug-template: CI exports release only. A debug export (`-PkanamaWebTemplateDebug=<zip>` on
+# `exportWeb`) runs GDScript's DEBUG_ENABLED checks that a release export never sees (a typed
+# `Object` assignment of a freed instance aborts the function, ...), so a script-facing change is
+# proved in both. The debug template prints a "GDScript backtrace" under every engine error; this
+# flag makes the driver read those lines as part of the error above them, not as errors.
 #
 # Chrome is the intended CI gate; Firefox and Safari are explicit local release
 # gates.
@@ -39,6 +46,7 @@ BROWSER_BINARY=""
 TIMEOUT=300
 LOG_DIR=""
 DRIVER_CMD=""
+DEBUG_TEMPLATE=0
 
 die() {
   echo "web_export_smoke: $*" >&2
@@ -46,7 +54,7 @@ die() {
 }
 
 usage() {
-  sed -n '2,32p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '2,35p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
   exit "${1:-2}"
 }
 
@@ -60,10 +68,13 @@ while [[ $# -gt 0 ]]; do
     --timeout) TIMEOUT="${2:?}"; shift 2 ;;
     --log-dir) LOG_DIR="${2:?}"; shift 2 ;;
     --driver-cmd) DRIVER_CMD="${2:?}"; shift 2 ;;
+    --debug-template) DEBUG_TEMPLATE=1; shift ;;
     -h|--help) usage 0 ;;
     *) die "unknown argument: $1" ;;
   esac
 done
+
+if [[ "$DEBUG_TEMPLATE" == 1 ]]; then export KANAMA_WEB_DEBUG_TEMPLATE=1; fi
 
 [[ -n "$EXPORT_DIR" ]] || die "--export-dir is required"
 [[ -n "$DEMO" ]] || die "--demo is required"

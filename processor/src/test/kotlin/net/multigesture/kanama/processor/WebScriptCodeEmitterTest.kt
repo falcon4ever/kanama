@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 33"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 34"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -169,6 +169,21 @@ class WebScriptCodeEmitterTest {
     assertTrue(install in 0 until snapshot, "snapshots are seeded after the callbacks install")
     assertTrue(snapshot in 0 until construct, "construct must follow the snapshots")
     assertTrue(proxy.source.contains("_kanama_create_failed = true"), "a failed construct sticks")
+    // Task 131 item 12: a lambda connection carries a guard as its last bound argument, so the
+    // emitter's free releases the Kotlin callback entry; the dispatch helpers tolerate it.
+    assertTrue(proxy.source.contains("class _KanamaSignalGuard extends RefCounted:"))
+    // Task 138 item 3 / task 131 item 14: the freed-object query arm and the error-report callback.
+    assertTrue(proxy.source.contains("if opcode == 1004:"), "the freed-handle check arm")
+    assertTrue(proxy.source.contains("func _kanama_report_error(args: Array) -> int:"))
+    assertTrue(
+      proxy.source.contains("installReportCallback(_kanama_handle, _kanama_report_callback)")
+    )
+    assertTrue(proxy.source.contains("callable = callable.bind(callback_id, guard)"))
+    assertTrue(
+      proxy.source.contains(
+        "func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null)"
+      )
+    )
     assertTrue(
       proxy.source.indexOf("if _kanama_create_failed:") in 0 until reserve,
       "a failed construct must not be retried",
@@ -352,7 +367,7 @@ class WebScriptCodeEmitterTest {
         .source
 
     assertTrue(proxy.contains("opcode == 46 and target_object is AudioStreamPlayer"))
-    assertTrue(proxy.contains("_kanama_object_handles.get(stream_handle) as AudioStream"))
+    assertTrue(proxy.contains("_kanama_live_object(stream_handle) as AudioStream"))
     assertTrue(proxy.contains("(target_object as AudioStreamPlayer).set_stream(stream)"))
     assertTrue(proxy.contains("opcode == 47 and target_object is AudioStreamPlayer"))
     assertTrue(proxy.contains("resolveCommandStringName(bus_id)"))
@@ -425,9 +440,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.contains("InputMap.add_action(StringName(String(args[2])))"))
     assertTrue(proxy.contains("elif opcode == 293:"))
     assertTrue(proxy.contains("var add_event_parts := String(args[2]).split(\"\\u001f\")"))
-    assertTrue(
-      proxy.contains("var add_event: Object = _kanama_object_handles.get(add_event_handle)")
-    )
+    assertTrue(proxy.contains("var add_event: Object = _kanama_live_object(add_event_handle)"))
     assertTrue(
       proxy.contains(
         "InputMap.action_add_event(StringName(add_event_parts[0]), add_event as InputEvent)"
@@ -741,10 +754,14 @@ class WebScriptCodeEmitterTest {
     assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_connect(args: Array) -> int:"))
-    assertTrue(mainProxy.contains("callable = callable.bind(int(args[5]))"))
+    assertTrue(mainProxy.contains("callable = callable.bind(callback_id)"))
     assertTrue(mainProxy.contains("func _kanama_signal_emit(args: Array) -> int:"))
     assertTrue(mainProxy.contains("result = value.emit_signal(StringName(String(args[1])))"))
-    assertTrue(mainProxy.contains("func _kanama_web_signal_dispatch0(callback_id: int) -> void:"))
+    assertTrue(
+      mainProxy.contains(
+        "func _kanama_web_signal_dispatch0(callback_id: int, _guard: Variant = null) -> void:"
+      )
+    )
     assertTrue(mainProxy.contains("dispatchSignal0(_kanama_handle, callback_id)"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
     assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, event_handle)"))
@@ -790,7 +807,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 33"))
+    assertTrue(protocol.contains("\"protocolVersion\": 34"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -801,7 +818,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=33\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=34\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1626,7 +1643,9 @@ class WebScriptCodeEmitterTest {
     val proxy = task80Proxy()
     // The one-argument helper carries the payload instead of discarding it.
     assertTrue(
-      proxy.contains("func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int) -> void:"),
+      proxy.contains(
+        "func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null) -> void:"
+      ),
       proxy,
     )
     assertTrue(
@@ -1920,7 +1939,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 33"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 34"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
@@ -2065,5 +2084,79 @@ class WebScriptCodeEmitterTest {
     assertEquals(emptyList(), emitter.degradations())
     assertEquals(1, emitter.degradationReport().size, "a clean script reports only the summary")
     assertFalse(emitter.protocolManifest().contains("dispatchReason"))
+  }
+
+  @Test
+  fun freedObjectsNeverReachATypedObjectRead() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+
+    // The receiver of every bridge callback goes through the freed-aware helper...
+    assertTrue(proxy.contains("func _kanama_live_object(handle: int) -> Object:"))
+    assertTrue(proxy.contains("if not is_instance_valid(held):"))
+    assertFalse(
+      proxy.contains("self if object_handle == _kanama_handle else _kanama_object_handles.get")
+    )
+    // ...the freed check is answered before the typed `value: Object` read, which a debug build
+    // aborts on a freed instance...
+    val query = proxy.substringAfter("func _kanama_object_query(args: Array) -> int:")
+    assertTrue(
+      query.indexOf("var held: Variant") in 0 until query.indexOf("var value: Object ="),
+      "the freed check must come before the typed read",
+    )
+    // ...and the command loop reads a handle's entry as a Variant until it is known to be alive.
+    assertTrue(
+      proxy.contains("var target_held: Variant = _kanama_object_handles.get(object_handle)")
+    )
+    assertTrue(proxy.contains("var target_object: Object = null"))
+  }
+
+  @Test
+  fun aFreedReceiverPublishesNothingAndHandleZeroIsNeverSelf() {
+    val proxy =
+      WebScriptCodeEmitter(listOf(WebScriptInput(model("Main"), "res://kotlin-src/Main.kt")))
+        .proxySources()
+        .single { it.sourceResourcePath.isNotEmpty() }
+        .source
+    fun body(name: String) =
+      proxy.substringAfter("func $name(args: Array) -> int:").substringBefore("\nfunc ")
+
+    // Handle 0 is "no object", not the script itself (a script still constructing has handle 0).
+    val live = proxy.substringAfter("func _kanama_live_object(handle: int) -> Object:")
+    assertTrue(live.indexOf("if handle == 0:") in 0 until live.indexOf("return self"))
+    // Every callback that used to publish a default for a freed receiver returns first, publishing
+    // nothing, so the bridge raises the freed-instance error.
+    for ((name, publish) in
+      listOf(
+        "_kanama_immediate_call" to "recordImmediateChildCount",
+        "_kanama_signal_emit" to "recordImmediateSignalResult",
+        "_kanama_signal_emit_vector2i" to "recordImmediateSignalResult",
+        "_kanama_noargs_vector2" to "recordImmediateVector2",
+        "_kanama_noargs_vector3" to "recordImmediateVector3",
+        "_kanama_connect" to "recordImmediateConnectResult",
+        "_kanama_object_query" to "recordImmediateLongResult",
+      )) {
+      val function = body(name)
+      val gone = function.indexOf("_kanama_handle_gone(")
+      assertTrue(gone >= 0, "$name must test for a gone receiver")
+      assertTrue(gone < function.lastIndexOf(publish), "$name must return before it publishes")
+    }
+    // The script-error sentinel is a constant, not read off the bridge on every return.
+    assertTrue(proxy.contains("const _KANAMA_SCRIPT_ERROR: String ="))
+    assertFalse(proxy.contains("_kanama_bridge.scriptErrorResult"))
+    // The command loop tests the held entry's TYPE, so a freed entry is retired.
+    assertTrue(proxy.contains("if typeof(target_held) == TYPE_OBJECT:"))
+    assertFalse(proxy.contains("if target_held != null:"))
+    // Only a gone BROWSER handle stops the command loop silently; any other unresolvable command
+    // keeps the push_error naming its opcode and handle.
+    assertTrue(
+      proxy.contains(
+        "if target_object == null and (object_handle & 1073741824) != 0 and _kanama_handle_gone(object_handle):"
+      )
+    )
+    assertTrue(proxy.contains("Invalid Kanama Web command opcode/object"))
   }
 }

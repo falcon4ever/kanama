@@ -8,6 +8,7 @@ import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
 import net.multigesture.kanama.web.WebPackedFloats
+import net.multigesture.kanama.web.userScript
 import net.multigesture.kanama.web.webScriptInstance
 
 /**
@@ -94,6 +95,9 @@ internal object WebSignalCallbackRegistry {
     return id
   }
 
+  /** How many entries [ownerHandle]'s script still has registered (the leak probes' view). */
+  fun countOwnedBy(ownerHandle: Int): Int = entries.values.count { it.ownerHandle == ownerHandle }
+
   /** Whether [id] is still registered (a fired one-shot or a released entry is not). */
   fun contains(id: Int): Boolean = id in entries
 
@@ -124,7 +128,7 @@ internal object WebSignalCallbackRegistry {
     val callback =
       entry.argsCallback ?: error("Kanama Web signal callback id=$id does not take the argument list")
     if (entry.oneShot) entries.remove(id)
-    callback(WebSignalArgs(packed))
+    userScript { callback(WebSignalArgs(packed)) }
   }
 
   fun dispatch(ownerHandle: Int, id: Int) {
@@ -132,7 +136,7 @@ internal object WebSignalCallbackRegistry {
     val callback =
       entry.callback ?: error("Kanama Web signal callback id=$id expects an emitted object")
     if (entry.oneShot) entries.remove(id)
-    callback()
+    userScript { callback() }
   }
 
   /**
@@ -150,7 +154,7 @@ internal object WebSignalCallbackRegistry {
       error("Kanama Web signal callback id=$id expects an emitted object")
     }
     if (entry.oneShot) entries.remove(id)
-    if (scalar != null) scalar(packed) else plain!!()
+    userScript { if (scalar != null) scalar(packed) else plain!!() }
   }
 
   fun dispatchObject(ownerHandle: Int, id: Int, argHandle: Int) {
@@ -159,7 +163,7 @@ internal object WebSignalCallbackRegistry {
       entry.objectCallback
         ?: error("Kanama Web signal callback id=$id does not accept an emitted object")
     if (entry.oneShot) entries.remove(id)
-    callback(argHandle)
+    userScript { callback(argHandle) }
   }
 
   private fun requireEntry(ownerHandle: Int, id: Int): Entry {

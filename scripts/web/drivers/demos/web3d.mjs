@@ -40,6 +40,10 @@ async function snapshot(evaluate) {
         maxLiveHandles: bridge.maxLiveBrowserHandles,
         crossings: bridge.kotlinToGodotCalls,
         callbackErrors: bridge.callbackErrors,
+        // Task 131 item 14: the contained script exceptions (a subset of callbackErrors) and the
+        // texts reported to Godot's error log.
+        scriptErrors: bridge.scriptErrors ?? 0,
+        scriptErrorReports: bridge.scriptErrorReports ?? [],
         callbacks: bridge.api.kanamaWebPendingSignalCallbackCount(),
         pending: bridge.api.kanamaWebPendingCoroutineCount(),
         jobs: bridge.api.kanamaWebRegisteredCoroutineJobCount(),
@@ -63,6 +67,7 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
       peak.maxLiveHandles = Math.max(peak.maxLiveHandles, snap.maxLiveHandles);
       peak.crossings = Math.max(peak.crossings, snap.crossings);
       peak.callbackErrors = Math.max(peak.callbackErrors, snap.callbackErrors);
+      peak.scriptErrors = Math.max(peak.scriptErrors, snap.scriptErrors);
       last = snap;
       trace(`process=${snap.processCalls} applied=${snap.appliedCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} errs=${snap.callbackErrors}`);
       if (predicate && predicate(snap, peak)) break;
@@ -214,6 +219,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     maxLiveHandles: ready.maxLiveHandles,
     crossings: ready.crossings,
     callbackErrors: 0,
+    scriptErrors: 0,
   };
   const render = await observe(evaluate, seed, 5_000, deadline, (snap) =>
     snap.processCalls >= ready.processCalls + 10 && snap.appliedCommands >= ready.appliedCommands + 10,
@@ -348,6 +354,28 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("share_probe")}, 0)`,
   );
 
+  // Task 131 item 12: lambda signal connections give their Kotlin callback back with whatever held
+  // them -- a fired one-shot, an emitter freed by the engine, the receiving script freed (see
+  // Main.leak_probe). Armed here, read back after the pumps (healthy = 31).
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe")}, 0)`,
+  );
+
+  // Task 131 item 14: callbacks that throw on purpose -- a function, a signal handler, _process and a
+  // coroutine -- are reported to Godot's error log and contained (see Main.error_probe).
+  const errorProbeFrames = (await snapshot(evaluate))?.processCalls ?? 0;
+  const errorProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("error_probe")}, 0)`,
+    ),
+  );
+  trace(`errorProbe armed: ${errorProbe}`);
+
+  // Task 138 item 3: a node the engine frees under a script that holds it (see Main.freed_probe).
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_probe")}, 0)`,
+  );
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -433,10 +461,87 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     shareProbeAfter = await readShareAfter();
   }
   trace(`shareProbeAfter: ${shareProbeAfter}`);
+  const readFreedAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_probe_after")}, 0)`,
+    ).then(Number);
+  let freedProbeAfter = await readFreedAfter();
+  const freedDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (freedProbeAfter !== 1023 && Date.now() < freedDeadline) {
+    await delay(150);
+    freedProbeAfter = await readFreedAfter();
+  }
+  trace(`freedProbeAfter: ${freedProbeAfter}`);
+  // Batch of two (Main.freed_batch_probe): a setter on the freed node, then a command on a live one,
+  // in one batch. The freed one is skipped and reported; the live command must still apply, and a
+  // live `queueFree` after the skip must release its bridge slot (live handles back to where they
+  // were).
+  const liveBeforeBatch = (await snapshot(evaluate))?.liveHandles;
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_batch_probe")}, 0)`,
+  );
+  const readFreedBatchAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_batch_probe_after")}, 0)`,
+    ).then(Number);
+  let freedBatchAfter = await readFreedBatchAfter();
+  const freedBatchDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (freedBatchAfter !== 7 && Date.now() < freedBatchDeadline) {
+    await delay(150);
+    freedBatchAfter = await readFreedBatchAfter();
+  }
+  const liveAfterBatch = (await snapshot(evaluate))?.liveHandles;
+  trace(`freedBatchAfter: ${freedBatchAfter} liveHandles ${liveBeforeBatch} -> ${liveAfterBatch}`);
+  const readLeakAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
+    ).then(Number);
+  let leakProbeAfter = await readLeakAfter();
+  const leakDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (leakProbeAfter !== 31 && Date.now() < leakDeadline) {
+    await delay(150);
+    leakProbeAfter = await readLeakAfter();
+  }
+  trace(`leakProbeAfter: ${leakProbeAfter}`);
+
+  // The seven deliberate script errors have landed: three at scene load (constructor, property
+  // setter, _ready), the rest when ErrorProbe's calls run (the process and coroutine ones a frame or
+  // two after the arm); and the frame loop went on past them.
+  // Kind -> the containment site the report's `at:` line names (a Wasm trace has no Kotlin frame).
+  const expectedSites = {
+    function: "ErrorProbe.error_throw",
+    signal: "ErrorProbe.<signal handler>",
+    process: "ErrorProbe._process",
+    coroutine: "ErrorProbe.<coroutine>",
+    constructor: "ThrowingConstructor.<init>",
+    property: "ThrowingProperty.gate",
+    ready: "ThrowingReady._ready",
+  };
+  const expectedScriptErrors = Object.keys(expectedSites);
+  // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one) and the
+  // two batches of FreedHolder.freed_batch (one each). Each is reported once as a script error
+  // naming the freed instance, and none is counted among the deliberate throws.
+  const freedSetterReports = 3;
+  const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
+  let errorSnap = null;
+  const errorDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (Date.now() < errorDeadline) {
+    errorSnap = await snapshot(evaluate);
+    if (errorSnap && errorSnap.scriptErrors >= expectedReportTotal) break;
+    await delay(150);
+  }
+  const errorProbeAfter = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("error_probe_after")}, 0)`,
+    ),
+  );
+  const errorReports = errorSnap?.scriptErrorReports ?? [];
+  trace(`errorProbeAfter: ${errorProbeAfter} scriptErrors=${errorSnap?.scriptErrors} frames=${errorProbeFrames}->${errorSnap?.processCalls}`);
+  trace(`errorReports: ${JSON.stringify(errorReports)}`);
 
   // Script-initializer engine calls: InitProbe's property initializers call an engine singleton and
   // construct a RefCounted, read `self`, and run its @OnReady (Main.init_probe reads it back;
-  // healthy = 127: one bit per row, see InitProbe).
+  // healthy = 255: one bit per row, see InitProbe).
   const initProbe = Number(
     await evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("init_probe")}, 0)`,
@@ -454,6 +559,25 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   if (extraPlayMs > 0) {
     trace(`extra play: ${extraPlayMs}ms`);
     await observe(evaluate, peak, extraPlayMs, deadline);
+  }
+
+  // KANAMA_WEB3D_INJECT_RUNTIME_FAULT=1: the red run for the containment boundary (task 131 item 14).
+  // A signal dispatch with a callback id the registry never issued is a RUNTIME invariant failing
+  // inside a boundary, not a script error: it must end the page (a fatal failure naming the id), where
+  // a contained script error carries on. The run is then supposed to fail every other row; the
+  // evidence is `runtimeFaultIsFatal`. Unset = no injection.
+  const injectRuntimeFault = process.env.KANAMA_WEB3D_INJECT_RUNTIME_FAULT === "1";
+  let injectedFailure = null;
+  if (injectRuntimeFault) {
+    await evaluate(
+      "globalThis.KanamaWebBridge.dispatchSignal0(globalThis.KanamaWebBridge.web3dMainHandle, 2147483000); true",
+    );
+    // The page ended (the fatal path sets data-status="fail") and the bridge's last callback error is
+    // the registry's own invariant, not a contained script error.
+    injectedFailure = await evaluate(
+      "document.body.dataset.status === 'fail' ? String(globalThis.KanamaWebBridge.lastCallbackError ?? '') : null",
+    );
+    trace(`injected runtime fault: failure=${injectedFailure?.split("\n")[0]}`);
   }
 
   trace("smoke_teardown");
@@ -526,9 +650,53 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // A plain node's handle shared by two scripts survives the first script's free (owner counting),
     // a later lookup of it works, and a node freed under its owners fails cleanly.
     sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
+    // Task 138 item 3: using a node the engine freed under its holder throws the freed-instance
+    // error (catchable, like desktop's), and the holder keeps working.
+    engineFreedNodeThrowsFreedInstanceError: freedProbeAfter === 1023,
+    // A skipped command (a setter on a freed node) does not hide the commands around it: in a
+    // batch of two the live command still applies, and a live queueFree after the skip releases
+    // its slot (the applied commands are not a prefix of the batch).
+    skippedFreedCommandKeepsTheRestOfTheBatch:
+      freedBatchAfter === 7 && liveBeforeBatch !== undefined && liveAfterBatch === liveBeforeBatch,
+    // Task 131 item 12: a lambda connection's Kotlin callback is dropped with its one-shot firing,
+    // its emitter's free and its receiver's free (desktop's SignalCallbackRegistry rules).
+    lambdaConnectionsReleaseTheirCallbacks: leakProbeAfter === 31,
+    // Task 131 item 14: every deliberate throw (function, signal handler, _process, coroutine) was
+    // contained -- the call came back, the script still answers, the frame loop kept running and no
+    // other bridge fault appeared.
+    scriptErrorsAreContained:
+      errorProbe === 0 &&
+      errorProbeAfter === 7 &&
+      (errorSnap?.scriptErrors ?? 0) === expectedReportTotal &&
+      (errorSnap?.processCalls ?? 0) >= errorProbeFrames + 5,
+    // ...and each was reported to Godot's error log exactly once with the exception type, the
+    // message and the "at:" frame line (the browser console must show the same ones: see
+    // expectedConsoleErrors below).
+    scriptErrorsAreReported:
+      errorReports.length === expectedReportTotal &&
+      // A setter queued on a node the engine freed is reported once as the freed-instance
+      // IllegalStateException (desktop reports and carries on) and the page kept running (the
+      // freed probe's bit 512 is the frames after it).
+      errorReports.filter(
+        (text) =>
+          text.startsWith("SCRIPT ERROR: ") &&
+          text.includes("IllegalStateException") &&
+          text.includes("Invalid access to previously freed instance") &&
+          text.includes("<queued command>"),
+      ).length === freedSetterReports &&
+      expectedScriptErrors.every(
+        (kind) =>
+          errorReports.filter(
+            (text) =>
+              text.startsWith("SCRIPT ERROR: ") &&
+              text.includes("IllegalStateException") &&
+              text.includes(`web3d deliberate script error (${kind})`) &&
+              text.includes(`\n   at: ${expectedSites[kind]} (`),
+          ).length === 1,
+      ),
     // A script whose property initializers call an engine singleton and construct a RefCounted
     // constructs on Web as it does on desktop (the tps-demo Settings autoload's boot failure).
-    scriptInitializersCallEngine: initProbe === 127,
+    scriptInitializersCallEngine: initProbe === 255,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an
@@ -617,11 +785,34 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // not a leftover from startup.
     coroutineProbeArmedByDriver: maskBeforeArm === 0,
     fullTeardownToZero: settled.liveHandles === 0,
-    noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
+    ...(injectRuntimeFault
+      ? {
+          runtimeFaultIsFatal:
+            injectedFailure !== null &&
+            injectedFailure.includes("Stale Kanama Web signal callback id") &&
+            !injectedFailure.includes("script error (contained)"),
+        }
+      : {}),
+    // The deliberate script errors above are counted in callbackErrors too (so every other demo's
+    // zero-errors check sees a throwing script). Exactly those are subtracted -- never every
+    // scriptError -- and the count must be exactly the expected one, so an unexpected script error
+    // (or one fewer) fails here instead of being absorbed.
+    noCallbackFaults:
+      settled.callbackErrors === expectedReportTotal &&
+      settled.scriptErrors === expectedReportTotal &&
+      settled.failure === null,
   };
 
   const boundaryErrors = [];
-  if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
+  // callbackErrors only counts up, so the settled sample covers the whole run.
+  if (settled.callbackErrors !== expectedReportTotal) {
+    boundaryErrors.push(
+      `callbackErrors=${settled.callbackErrors} (expected only the ${expectedScriptErrors.length} deliberate script errors and the ${freedSetterReports} freed-node setter report)`,
+    );
+  }
+  if (settled.scriptErrors !== expectedReportTotal) {
+    boundaryErrors.push(`scriptErrors=${settled.scriptErrors} (expected ${expectedReportTotal})`);
+  }
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
 
   return {
@@ -632,6 +823,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       durationMs: startupDurationMs,
     },
     checks,
+    // The deliberate script errors reach the browser console through Godot's push_error.
+    expectedConsoleErrors: [
+      { pattern: "web3d deliberate script error", count: expectedScriptErrors.length },
+      { pattern: "previously freed instance", count: freedSetterReports },
+    ],
     handles: {
       liveAfterGameplay: peak.maxLiveHandles,
       liveAfterTeardown: settled.liveHandles,
@@ -663,7 +859,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     },
     teardown: {
       outcome:
-        checks.fullTeardownToZero && settled.callbackErrors === 0 && settled.failure === null
+        checks.fullTeardownToZero &&
+        settled.callbackErrors === expectedScriptErrors.length &&
+        settled.scriptErrors === expectedScriptErrors.length &&
+        settled.failure === null
           ? "clean"
           : "incomplete",
       // Task 88: this was `settled.liveHandles <= peak.maxLiveHandles`, which is TRUE BY
