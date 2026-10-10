@@ -1166,6 +1166,24 @@ def pair_compatible(removed: Counter, added: Counter) -> Counter:
     return result
 
 
+# The per-platform surfaces whose declarations every native platform also gets from `common`.
+PLATFORM_SURFACES = ("jvm", "ios")
+
+
+def pair_moved(removed: Counter, common_lines: list[str]) -> Counter:
+    """The [removed] platform lines that are in the current `common` surface, as they were or with a
+    source-compatible change (a default added, made `open`, a supertype added)."""
+    present = Counter(common_lines)
+    by_key: dict[str, list[str]] = {}
+    for line in common_lines:
+        by_key.setdefault(member_key(line), []).append(line)
+    result: Counter = Counter()
+    for line, count in removed.items():
+        if present[line] or any(compatible(line, candidate) for candidate in by_key.get(member_key(line), [])):
+            result[line] = count
+    return result
+
+
 def describe_changes(removed: Counter, added: Counter, compat: Counter, limit: int) -> list[str]:
     removed_by_key: dict[str, list[str]] = {}
     for line in sorted(removed.elements(), key=sort_key):
@@ -1232,19 +1250,27 @@ def main() -> int:
         removed = Counter(snapshot) - Counter(lines)
         added = Counter(lines) - Counter(snapshot)
         compat = pair_compatible(removed, added)
-        surface_breaks = removed - compat
+        moved: Counter = Counter()
+        if surface.name in PLATFORM_SURFACES:
+            # A platform's own class generated once into the common tree (task 129): every platform
+            # still compiles the declaration, so a line that left jvm/ios and is in `common` now
+            # (as it was, or source-compatibly changed) is a move, not a break. The common side
+            # records it as an addition, so `--write` still has to run.
+            moved = pair_moved(removed - compat, current["common"].lines)
+        surface_breaks = removed - compat - moved
         surface_unannounced = Counter({line: n for line, n in surface_breaks.items() if not announced(line, marker_text)})
         if removed or added:
             report.append(
                 f"  {surface.name} ({surface.snapshot}): {sum(surface_breaks.values())} removed/changed "
                 f"({sum(surface_unannounced.values())} unannounced), {sum(compat.values())} compatible change(s), "
                 f"{sum(added.values()) - sum(compat.values())} added"
+                + (f", {sum(moved.values())} moved to common" if moved else "")
             )
-            report += [f"    {line}" for line in describe_changes(removed, added, compat, limit)]
+            report += [f"    {line}" for line in describe_changes(removed - moved, added, compat, limit)]
         breaks += surface_breaks
         unannounced += surface_unannounced
         added_total += sum(added.values()) - sum(compat.values())
-        compatible_total += sum(compat.values())
+        compatible_total += sum(compat.values()) + sum(moved.values())
 
     counts = ", ".join(f"{name} {len(result.lines)}" for name, result in current.items())
     elapsed = f"{time.monotonic() - started:.1f}s"

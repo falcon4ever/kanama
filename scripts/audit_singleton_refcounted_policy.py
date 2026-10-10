@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
-"""Audit singleton lifetime policy for Godot 4.7 RefCounted singleton warnings."""
+"""Audit singleton lifetime policy for Godot 4.7 RefCounted singleton warnings.
+
+`Engine` is generated once into the shared tree (task 129 C). The RefCounted guard on
+`Engine.registerSingleton` is a `METHOD_PRECONDITIONS` row in scripts/generate_api_wrapper.py, the
+generator's precondition hook; this audit checks the row exists and that the generated
+`Engine.registerSingleton` checks it before its ptrcall.
+"""
 
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-ENGINE_WRAPPER = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api/Engine.kt"
+ENGINE_WRAPPER = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api/Engine.kt"
+GENERATOR = ROOT / "scripts/generate_api_wrapper.py"
+REGISTER_SIGNATURE = "fun registerSingleton(name: String, instance: GodotObject)"
 
 
 def load_api() -> tuple[dict[str, dict[str, object]], list[dict[str, object]]]:
@@ -64,11 +73,21 @@ def main() -> int:
     if is_refcounted(script_language_parent, classes):
         errors.append("KanamaScriptLanguage ClassDB parent ScriptLanguageExtension is RefCounted")
 
+    generator = GENERATOR.read_text(encoding="utf-8")
+    row = re.search(r'\("Engine", "register_singleton"\): \((.*?)\n    \),', generator, re.S)
+    if row is None or 'isClass("RefCounted")' not in row.group(1):
+        errors.append(
+            "generate_api_wrapper.METHOD_PRECONDITIONS has no (\"Engine\", \"register_singleton\") row "
+            "rejecting RefCounted instances"
+        )
     engine_source = ENGINE_WRAPPER.read_text(encoding="utf-8")
-    if 'fun registerSingleton(name: String, objectArg: GodotHandle)' not in engine_source:
+    start = engine_source.find(REGISTER_SIGNATURE)
+    if start < 0:
         errors.append("Engine.registerSingleton wrapper not found")
-    if 'isClass("RefCounted")' not in engine_source:
-        errors.append("Engine.registerSingleton must reject RefCounted instances before calling Godot")
+    else:
+        body = engine_source[start : engine_source.find("ObjectCalls.", start)]
+        if 'isClass("RefCounted")' not in body:
+            errors.append("Engine.registerSingleton must reject RefCounted instances before calling Godot")
 
     if errors:
         for error in errors:

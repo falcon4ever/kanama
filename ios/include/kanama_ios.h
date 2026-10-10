@@ -981,20 +981,11 @@ int32_t kanama_ios_godot_instance_lookup_available(void);
 
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
 
-int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint);
-
 /* Task 132: ResourceLoader.load with CACHE_MODE_IGNORE (an owned +1 the caller releases). */
 int64_t kanama_ios_godot_resource_loader_load_uncached(const char *path, const char *type_hint);
 
 /* Task 132 self-test: a Kanama Script object for [path] (refcount 1, the caller's), or 0. */
 int64_t kanama_ios_godot_create_script_object(const char *path);
-
-void kanama_ios_godot_audio_stream_player_set_stream(int64_t player, int64_t stream);
-void kanama_ios_godot_audio_stream_player_set_volume_db(int64_t player, double volume_db);
-void kanama_ios_godot_audio_stream_player_set_pitch_scale(int64_t player, double pitch_scale);
-void kanama_ios_godot_audio_stream_player_set_bus(int64_t player, const char *bus);
-void kanama_ios_godot_audio_stream_player_set_stream_paused(int64_t player, int32_t paused);
-void kanama_ios_godot_audio_stream_player_play(int64_t player, double from_position);
 
 int32_t kanama_ios_godot_object_emit_signal_int(
     int64_t object,

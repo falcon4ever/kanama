@@ -1,9 +1,11 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Generated from Godot docs: SceneMultiplayer
@@ -57,113 +59,128 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
 
     fun setRootPath(path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setRootPathBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setRootPathBind, segment, path)
     }
 
     fun getRootPath(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootPathBind, segment)
     }
 
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     fun disconnectPeer(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(disconnectPeerBind, segment, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.disconnectPeerBind, segment, id)
     }
 
     fun getAuthenticatingPeers(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAuthenticatingPeersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAuthenticatingPeersBind, segment)
     }
 
     fun sendAuth(id: Int, data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(sendAuthBind, segment, id, data))
+        return GodotError(ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(Binds.sendAuthBind, segment, id, data))
     }
 
     fun completeAuth(id: Int): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, segment, id))
+        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.completeAuthBind, segment, id))
     }
 
     fun setAuthCallback(callback: GodotCallable) {
         checkOpen()
-        ObjectCalls.ptrcallWithCallableArg(setAuthCallbackBind, segment, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.setAuthCallbackBind, segment, callback.target.segment, callback.method)
     }
 
     fun getAuthCallback(): GodotCallable? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetCallable(getAuthCallbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetCallable(Binds.getAuthCallbackBind, segment)
     }
 
     fun setAuthTimeout(timeout: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAuthTimeoutBind, segment, timeout)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAuthTimeoutBind, segment, timeout)
     }
 
     fun getAuthTimeout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAuthTimeoutBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAuthTimeoutBind, segment)
     }
 
     fun setRefuseNewConnections(refuse: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setRefuseNewConnectionsBind, segment, refuse)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRefuseNewConnectionsBind, segment, refuse)
     }
 
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isRefusingNewConnectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
     }
 
     fun setAllowObjectDecoding(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowObjectDecodingBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowObjectDecodingBind, segment, enable)
     }
 
     fun isObjectDecodingAllowed(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isObjectDecodingAllowedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isObjectDecodingAllowedBind, segment)
     }
 
     fun setServerRelayEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setServerRelayEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setServerRelayEnabledBind, segment, enabled)
     }
 
     fun isServerRelayEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isServerRelayEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelayEnabledBind, segment)
     }
 
     fun sendBytes(bytes: ByteArray, id: Int = 0, mode: MultiplayerPeer.TransferMode = MultiplayerPeer.TransferMode.RELIABLE, channel: Int = 0): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(sendBytesBind, segment, bytes, id, mode.value, channel))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(Binds.sendBytesBind, segment, bytes, id, mode.value, channel))
     }
 
     fun getMaxSyncPacketSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxSyncPacketSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxSyncPacketSizeBind, segment)
     }
 
     fun setMaxSyncPacketSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxSyncPacketSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxSyncPacketSizeBind, segment, size)
     }
 
     fun getMaxDeltaPacketSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxDeltaPacketSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxDeltaPacketSizeBind, segment)
     }
 
     fun setMaxDeltaPacketSize(size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxDeltaPacketSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxDeltaPacketSizeBind, segment, size)
     }
+
+    /** Signal `peer_authenticating(id: int)`; see [TypedSignal]. */
+    val peerAuthenticating: Signal1<Long>
+        @JvmName("peerAuthenticatingTypedSignal")
+        get() = Signal1(this, "peer_authenticating", SignalArgType.LONG)
+
+    /** Signal `peer_authentication_failed(id: int)`; see [TypedSignal]. */
+    val peerAuthenticationFailed: Signal1<Long>
+        @JvmName("peerAuthenticationFailedTypedSignal")
+        get() = Signal1(this, "peer_authentication_failed", SignalArgType.LONG)
+
+    /** Signal `peer_packet(id: int, packet: PackedByteArray)`; see [TypedSignal]. On iOS a PackedByteArray argument is not delivered yet: a connection reports a script error. */
+    val peerPacket: Signal2<Long, ByteArray>
+        @JvmName("peerPacketTypedSignal")
+        get() = Signal2(this, "peer_packet", SignalArgType.LONG, SignalArgType.valueOf<ByteArray>("PackedByteArray", ByteArray::class))
 
     object Signals {
         const val peerAuthenticating: String = "peer_authenticating"
@@ -174,120 +191,129 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneMultiplayer? =
-            if (handle.segment.address() == 0L) null else SceneMultiplayer(handle)
+            wrapBorrowed(handle.segment)
 
+        internal fun wrapOwned(handle: RawSegment): SceneMultiplayer? =
+            if (handle.address() == 0L) null else RefCounted.owned(SceneMultiplayer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SceneMultiplayer? =
+            if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
+
+        // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).
         @JvmStatic
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
             api?.takeIf { it.isClass("SceneMultiplayer") }?.let { RefCounted.retained(SceneMultiplayer(it.handle)) }
+    }
 
+    private object Binds {
         private const val SET_ROOT_PATH_HASH = 1348162250L
-        private val setRootPathBind by lazy {
+        @JvmField
+        val setRootPathBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_root_path", SET_ROOT_PATH_HASH)
-        }
 
         private const val GET_ROOT_PATH_HASH = 4075236667L
-        private val getRootPathBind by lazy {
+        @JvmField
+        val getRootPathBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_root_path", GET_ROOT_PATH_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "clear", CLEAR_HASH)
-        }
 
         private const val DISCONNECT_PEER_HASH = 1286410249L
-        private val disconnectPeerBind by lazy {
+        @JvmField
+        val disconnectPeerBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "disconnect_peer", DISCONNECT_PEER_HASH)
-        }
 
         private const val GET_AUTHENTICATING_PEERS_HASH = 969006518L
-        private val getAuthenticatingPeersBind by lazy {
+        @JvmField
+        val getAuthenticatingPeersBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_authenticating_peers", GET_AUTHENTICATING_PEERS_HASH)
-        }
 
         private const val SEND_AUTH_HASH = 506032537L
-        private val sendAuthBind by lazy {
+        @JvmField
+        val sendAuthBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "send_auth", SEND_AUTH_HASH)
-        }
 
         private const val COMPLETE_AUTH_HASH = 844576869L
-        private val completeAuthBind by lazy {
+        @JvmField
+        val completeAuthBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "complete_auth", COMPLETE_AUTH_HASH)
-        }
 
         private const val SET_AUTH_CALLBACK_HASH = 1611583062L
-        private val setAuthCallbackBind by lazy {
+        @JvmField
+        val setAuthCallbackBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_auth_callback", SET_AUTH_CALLBACK_HASH)
-        }
 
         private const val GET_AUTH_CALLBACK_HASH = 1307783378L
-        private val getAuthCallbackBind by lazy {
+        @JvmField
+        val getAuthCallbackBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_auth_callback", GET_AUTH_CALLBACK_HASH)
-        }
 
         private const val SET_AUTH_TIMEOUT_HASH = 373806689L
-        private val setAuthTimeoutBind by lazy {
+        @JvmField
+        val setAuthTimeoutBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_auth_timeout", SET_AUTH_TIMEOUT_HASH)
-        }
 
         private const val GET_AUTH_TIMEOUT_HASH = 1740695150L
-        private val getAuthTimeoutBind by lazy {
+        @JvmField
+        val getAuthTimeoutBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_auth_timeout", GET_AUTH_TIMEOUT_HASH)
-        }
 
         private const val SET_REFUSE_NEW_CONNECTIONS_HASH = 2586408642L
-        private val setRefuseNewConnectionsBind by lazy {
+        @JvmField
+        val setRefuseNewConnectionsBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_refuse_new_connections", SET_REFUSE_NEW_CONNECTIONS_HASH)
-        }
 
         private const val IS_REFUSING_NEW_CONNECTIONS_HASH = 36873697L
-        private val isRefusingNewConnectionsBind by lazy {
+        @JvmField
+        val isRefusingNewConnectionsBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "is_refusing_new_connections", IS_REFUSING_NEW_CONNECTIONS_HASH)
-        }
 
         private const val SET_ALLOW_OBJECT_DECODING_HASH = 2586408642L
-        private val setAllowObjectDecodingBind by lazy {
+        @JvmField
+        val setAllowObjectDecodingBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_allow_object_decoding", SET_ALLOW_OBJECT_DECODING_HASH)
-        }
 
         private const val IS_OBJECT_DECODING_ALLOWED_HASH = 36873697L
-        private val isObjectDecodingAllowedBind by lazy {
+        @JvmField
+        val isObjectDecodingAllowedBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "is_object_decoding_allowed", IS_OBJECT_DECODING_ALLOWED_HASH)
-        }
 
         private const val SET_SERVER_RELAY_ENABLED_HASH = 2586408642L
-        private val setServerRelayEnabledBind by lazy {
+        @JvmField
+        val setServerRelayEnabledBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_server_relay_enabled", SET_SERVER_RELAY_ENABLED_HASH)
-        }
 
         private const val IS_SERVER_RELAY_ENABLED_HASH = 36873697L
-        private val isServerRelayEnabledBind by lazy {
+        @JvmField
+        val isServerRelayEnabledBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "is_server_relay_enabled", IS_SERVER_RELAY_ENABLED_HASH)
-        }
 
         private const val SEND_BYTES_HASH = 1307428718L
-        private val sendBytesBind by lazy {
+        @JvmField
+        val sendBytesBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "send_bytes", SEND_BYTES_HASH)
-        }
 
         private const val GET_MAX_SYNC_PACKET_SIZE_HASH = 3905245786L
-        private val getMaxSyncPacketSizeBind by lazy {
+        @JvmField
+        val getMaxSyncPacketSizeBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_max_sync_packet_size", GET_MAX_SYNC_PACKET_SIZE_HASH)
-        }
 
         private const val SET_MAX_SYNC_PACKET_SIZE_HASH = 1286410249L
-        private val setMaxSyncPacketSizeBind by lazy {
+        @JvmField
+        val setMaxSyncPacketSizeBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_max_sync_packet_size", SET_MAX_SYNC_PACKET_SIZE_HASH)
-        }
 
         private const val GET_MAX_DELTA_PACKET_SIZE_HASH = 3905245786L
-        private val getMaxDeltaPacketSizeBind by lazy {
+        @JvmField
+        val getMaxDeltaPacketSizeBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "get_max_delta_packet_size", GET_MAX_DELTA_PACKET_SIZE_HASH)
-        }
 
         private const val SET_MAX_DELTA_PACKET_SIZE_HASH = 1286410249L
-        private val setMaxDeltaPacketSizeBind by lazy {
+        @JvmField
+        val setMaxDeltaPacketSizeBind =
             ObjectCalls.getMethodBind("SceneMultiplayer", "set_max_delta_packet_size", SET_MAX_DELTA_PACKET_SIZE_HASH)
-        }
     }
 }

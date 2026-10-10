@@ -1,10 +1,11 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Generated from Godot docs: NoiseTexture2D
@@ -72,112 +73,112 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
     fun setWidth(width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setWidthBind, segment, width)
     }
 
     fun setHeight(height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHeightBind, segment, height)
     }
 
-    fun setGenerateMipmaps(invert: Boolean) {
+    fun setGenerateMipmaps(generate: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, segment, invert)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGenerateMipmapsBind, segment, generate)
     }
 
     fun isGeneratingMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isGeneratingMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isGeneratingMipmapsBind, segment)
     }
 
     fun setNoise(noise: Noise?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNoise(): Noise? {
         checkOpen()
-        return Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, segment))
+        return Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNoiseBind, segment))
     }
 
     fun setColorRamp(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getColorRamp(): Gradient? {
         checkOpen()
-        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColorRampBind, segment))
     }
 
     fun setSeamless(seamless: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setSeamlessBind, segment, seamless)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSeamlessBind, segment, seamless)
     }
 
     fun getSeamless(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getSeamlessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSeamlessBind, segment)
     }
 
     fun setInvert(invert: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setInvertBind, segment, invert)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setInvertBind, segment, invert)
     }
 
     fun getInvert(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getInvertBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getInvertBind, segment)
     }
 
     fun setIn3dSpace(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setIn3dSpaceBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIn3dSpaceBind, segment, enable)
     }
 
     fun isIn3dSpace(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isIn3dSpaceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIn3dSpaceBind, segment)
     }
 
     fun setAsNormalMap(asNormalMap: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAsNormalMapBind, segment, asNormalMap)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsNormalMapBind, segment, asNormalMap)
     }
 
     fun isNormalMap(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNormalMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalMapBind, segment)
     }
 
     fun setNormalize(normalize: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizeBind, segment, normalize)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizeBind, segment, normalize)
     }
 
     fun isNormalized(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNormalizedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNormalizedBind, segment)
     }
 
     fun setSeamlessBlendSkirt(seamlessBlendSkirt: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSeamlessBlendSkirtBind, segment, seamlessBlendSkirt)
     }
 
     fun getSeamlessBlendSkirt(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSeamlessBlendSkirtBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSeamlessBlendSkirtBind, segment)
     }
 
     fun setBumpStrength(bumpStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBumpStrengthBind, segment, bumpStrength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBumpStrengthBind, segment, bumpStrength)
     }
 
     fun getBumpStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBumpStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBumpStrengthBind, segment)
     }
 
     companion object {
@@ -185,120 +186,132 @@ class NoiseTexture2D(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): NoiseTexture2D? =
             wrapBorrowed(handle.segment)
 
-        internal fun wrapOwned(handle: MemorySegment): NoiseTexture2D? =
+        internal fun wrapOwned(handle: RawSegment): NoiseTexture2D? =
             if (handle.address() == 0L) null else RefCounted.owned(NoiseTexture2D(GodotHandle(handle)))
 
-        internal fun wrapBorrowed(handle: MemorySegment): NoiseTexture2D? =
+        internal fun wrapBorrowed(handle: RawSegment): NoiseTexture2D? =
             if (handle.address() == 0L) null else NoiseTexture2D(GodotHandle(handle))
 
+        // Downcast a GodotObject to NoiseTexture2D (null if not).
+        @JvmStatic
+        fun fromObject(value: GodotObject): NoiseTexture2D? =
+            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle)) else null
+
+        // Downcast a Resource to NoiseTexture2D (null if not).
+        @JvmStatic
+        fun fromResource(value: Resource): NoiseTexture2D? =
+            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle)) else null
+    }
+
+    private object Binds {
         private const val SET_WIDTH_HASH = 1286410249L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 1286410249L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val SET_GENERATE_MIPMAPS_HASH = 2586408642L
-        private val setGenerateMipmapsBind by lazy {
+        @JvmField
+        val setGenerateMipmapsBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_generate_mipmaps", SET_GENERATE_MIPMAPS_HASH)
-        }
 
         private const val IS_GENERATING_MIPMAPS_HASH = 36873697L
-        private val isGeneratingMipmapsBind by lazy {
+        @JvmField
+        val isGeneratingMipmapsBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "is_generating_mipmaps", IS_GENERATING_MIPMAPS_HASH)
-        }
 
         private const val SET_NOISE_HASH = 4135492439L
-        private val setNoiseBind by lazy {
+        @JvmField
+        val setNoiseBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_noise", SET_NOISE_HASH)
-        }
 
         private const val GET_NOISE_HASH = 185851837L
-        private val getNoiseBind by lazy {
+        @JvmField
+        val getNoiseBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "get_noise", GET_NOISE_HASH)
-        }
 
         private const val SET_COLOR_RAMP_HASH = 2756054477L
-        private val setColorRampBind by lazy {
+        @JvmField
+        val setColorRampBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_color_ramp", SET_COLOR_RAMP_HASH)
-        }
 
         private const val GET_COLOR_RAMP_HASH = 132272999L
-        private val getColorRampBind by lazy {
+        @JvmField
+        val getColorRampBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "get_color_ramp", GET_COLOR_RAMP_HASH)
-        }
 
         private const val SET_SEAMLESS_HASH = 2586408642L
-        private val setSeamlessBind by lazy {
+        @JvmField
+        val setSeamlessBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_seamless", SET_SEAMLESS_HASH)
-        }
 
         private const val GET_SEAMLESS_HASH = 2240911060L
-        private val getSeamlessBind by lazy {
+        @JvmField
+        val getSeamlessBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "get_seamless", GET_SEAMLESS_HASH)
-        }
 
         private const val SET_INVERT_HASH = 2586408642L
-        private val setInvertBind by lazy {
+        @JvmField
+        val setInvertBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_invert", SET_INVERT_HASH)
-        }
 
         private const val GET_INVERT_HASH = 36873697L
-        private val getInvertBind by lazy {
+        @JvmField
+        val getInvertBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "get_invert", GET_INVERT_HASH)
-        }
 
         private const val SET_IN_3D_SPACE_HASH = 2586408642L
-        private val setIn3dSpaceBind by lazy {
+        @JvmField
+        val setIn3dSpaceBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_in_3d_space", SET_IN_3D_SPACE_HASH)
-        }
 
         private const val IS_IN_3D_SPACE_HASH = 36873697L
-        private val isIn3dSpaceBind by lazy {
+        @JvmField
+        val isIn3dSpaceBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "is_in_3d_space", IS_IN_3D_SPACE_HASH)
-        }
 
         private const val SET_AS_NORMAL_MAP_HASH = 2586408642L
-        private val setAsNormalMapBind by lazy {
+        @JvmField
+        val setAsNormalMapBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_as_normal_map", SET_AS_NORMAL_MAP_HASH)
-        }
 
         private const val IS_NORMAL_MAP_HASH = 2240911060L
-        private val isNormalMapBind by lazy {
+        @JvmField
+        val isNormalMapBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "is_normal_map", IS_NORMAL_MAP_HASH)
-        }
 
         private const val SET_NORMALIZE_HASH = 2586408642L
-        private val setNormalizeBind by lazy {
+        @JvmField
+        val setNormalizeBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_normalize", SET_NORMALIZE_HASH)
-        }
 
         private const val IS_NORMALIZED_HASH = 36873697L
-        private val isNormalizedBind by lazy {
+        @JvmField
+        val isNormalizedBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "is_normalized", IS_NORMALIZED_HASH)
-        }
 
         private const val SET_SEAMLESS_BLEND_SKIRT_HASH = 373806689L
-        private val setSeamlessBlendSkirtBind by lazy {
+        @JvmField
+        val setSeamlessBlendSkirtBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_seamless_blend_skirt", SET_SEAMLESS_BLEND_SKIRT_HASH)
-        }
 
         private const val GET_SEAMLESS_BLEND_SKIRT_HASH = 191475506L
-        private val getSeamlessBlendSkirtBind by lazy {
+        @JvmField
+        val getSeamlessBlendSkirtBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "get_seamless_blend_skirt", GET_SEAMLESS_BLEND_SKIRT_HASH)
-        }
 
         private const val SET_BUMP_STRENGTH_HASH = 373806689L
-        private val setBumpStrengthBind by lazy {
+        @JvmField
+        val setBumpStrengthBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "set_bump_strength", SET_BUMP_STRENGTH_HASH)
-        }
 
         private const val GET_BUMP_STRENGTH_HASH = 191475506L
-        private val getBumpStrengthBind by lazy {
+        @JvmField
+        val getBumpStrengthBind =
             ObjectCalls.getMethodBind("NoiseTexture2D", "get_bump_strength", GET_BUMP_STRENGTH_HASH)
-        }
     }
 }

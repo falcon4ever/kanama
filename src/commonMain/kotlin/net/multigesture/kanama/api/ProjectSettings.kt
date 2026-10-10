@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Stores globally-accessible variables.
@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: ProjectSettings
  */
 object ProjectSettings {
-    private inline val singleton: MemorySegment
+    private inline val singleton: RawSegment
         get() = Binds.singleton
 
     /**
@@ -357,7 +357,7 @@ object ProjectSettings {
     fun fromHandle(handle: GodotHandle): ProjectSettings? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): ProjectSettings? =
+    internal fun wrap(handle: RawSegment): ProjectSettings? =
         if (handle.address() == 0L) null else this
 
     private object Binds {

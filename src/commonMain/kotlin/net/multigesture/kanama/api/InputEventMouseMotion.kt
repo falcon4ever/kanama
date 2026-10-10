@@ -1,9 +1,11 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.Vector2
 
 /**
  * Represents a mouse or a pen movement.
@@ -62,7 +64,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setTilt(tilt: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setTiltBind, segment, tilt)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setTiltBind, segment, tilt)
     }
 
     /**
@@ -74,7 +76,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getTilt(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTiltBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTiltBind, segment)
     }
 
     /**
@@ -84,7 +86,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setPressure(pressure: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPressureBind, segment, pressure)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPressureBind, segment, pressure)
     }
 
     /**
@@ -94,7 +96,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getPressure(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPressureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPressureBind, segment)
     }
 
     /**
@@ -105,7 +107,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setPenInverted(penInverted: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPenInvertedBind, segment, penInverted)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPenInvertedBind, segment, penInverted)
     }
 
     /**
@@ -116,7 +118,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getPenInverted(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPenInvertedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPenInvertedBind, segment)
     }
 
     /**
@@ -133,7 +135,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setRelativeBind, segment, relative)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setRelativeBind, segment, relative)
     }
 
     /**
@@ -150,7 +152,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRelativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRelativeBind, segment)
     }
 
     /**
@@ -166,7 +168,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setScreenRelative(relative: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenRelativeBind, segment, relative)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenRelativeBind, segment, relative)
     }
 
     /**
@@ -182,7 +184,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getScreenRelative(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenRelativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenRelativeBind, segment)
     }
 
     /**
@@ -197,7 +199,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setVelocityBind, segment, velocity)
     }
 
     /**
@@ -212,7 +214,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getVelocityBind, segment)
     }
 
     /**
@@ -226,7 +228,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun setScreenVelocity(velocity: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setScreenVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScreenVelocityBind, segment, velocity)
     }
 
     /**
@@ -240,7 +242,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      */
     fun getScreenVelocity(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenVelocityBind, segment)
     }
 
     companion object {
@@ -248,84 +250,87 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
         fun fromHandle(handle: GodotHandle): InputEventMouseMotion? =
             wrapBorrowed(handle.segment)
 
+        internal fun wrapOwned(handle: RawSegment): InputEventMouseMotion? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseMotion(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventMouseMotion? =
+            if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
+
+        // Downcast a GodotObject to InputEventMouseMotion (null if not).
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseMotion? =
             if (value.isClass("InputEventMouseMotion")) RefCounted.retained(InputEventMouseMotion(value.handle)) else null
+    }
 
-        internal fun wrapOwned(handle: MemorySegment): InputEventMouseMotion? =
-            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseMotion(GodotHandle(handle)))
-
-        internal fun wrapBorrowed(handle: MemorySegment): InputEventMouseMotion? =
-            if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
-
+    private object Binds {
         private const val SET_TILT_HASH = 743155724L
-        private val setTiltBind by lazy {
+        @JvmField
+        val setTiltBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_tilt", SET_TILT_HASH)
-        }
 
         private const val GET_TILT_HASH = 3341600327L
-        private val getTiltBind by lazy {
+        @JvmField
+        val getTiltBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_tilt", GET_TILT_HASH)
-        }
 
         private const val SET_PRESSURE_HASH = 373806689L
-        private val setPressureBind by lazy {
+        @JvmField
+        val setPressureBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_pressure", SET_PRESSURE_HASH)
-        }
 
         private const val GET_PRESSURE_HASH = 1740695150L
-        private val getPressureBind by lazy {
+        @JvmField
+        val getPressureBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_pressure", GET_PRESSURE_HASH)
-        }
 
         private const val SET_PEN_INVERTED_HASH = 2586408642L
-        private val setPenInvertedBind by lazy {
+        @JvmField
+        val setPenInvertedBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_pen_inverted", SET_PEN_INVERTED_HASH)
-        }
 
         private const val GET_PEN_INVERTED_HASH = 36873697L
-        private val getPenInvertedBind by lazy {
+        @JvmField
+        val getPenInvertedBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_pen_inverted", GET_PEN_INVERTED_HASH)
-        }
 
         private const val SET_RELATIVE_HASH = 743155724L
-        private val setRelativeBind by lazy {
+        @JvmField
+        val setRelativeBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_relative", SET_RELATIVE_HASH)
-        }
 
         private const val GET_RELATIVE_HASH = 3341600327L
-        private val getRelativeBind by lazy {
+        @JvmField
+        val getRelativeBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_relative", GET_RELATIVE_HASH)
-        }
 
         private const val SET_SCREEN_RELATIVE_HASH = 743155724L
-        private val setScreenRelativeBind by lazy {
+        @JvmField
+        val setScreenRelativeBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_screen_relative", SET_SCREEN_RELATIVE_HASH)
-        }
 
         private const val GET_SCREEN_RELATIVE_HASH = 3341600327L
-        private val getScreenRelativeBind by lazy {
+        @JvmField
+        val getScreenRelativeBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_screen_relative", GET_SCREEN_RELATIVE_HASH)
-        }
 
         private const val SET_VELOCITY_HASH = 743155724L
-        private val setVelocityBind by lazy {
+        @JvmField
+        val setVelocityBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_velocity", SET_VELOCITY_HASH)
-        }
 
         private const val GET_VELOCITY_HASH = 3341600327L
-        private val getVelocityBind by lazy {
+        @JvmField
+        val getVelocityBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_velocity", GET_VELOCITY_HASH)
-        }
 
         private const val SET_SCREEN_VELOCITY_HASH = 743155724L
-        private val setScreenVelocityBind by lazy {
+        @JvmField
+        val setScreenVelocityBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "set_screen_velocity", SET_SCREEN_VELOCITY_HASH)
-        }
 
         private const val GET_SCREEN_VELOCITY_HASH = 3341600327L
-        private val getScreenVelocityBind by lazy {
+        @JvmField
+        val getScreenVelocityBind =
             ObjectCalls.getMethodBind("InputEventMouseMotion", "get_screen_velocity", GET_SCREEN_VELOCITY_HASH)
-        }
     }
 }

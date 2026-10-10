@@ -1,16 +1,18 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * A material defined by a custom `Shader` program and the values of its shader parameters.
  *
  * Generated from Godot docs: ShaderMaterial
  */
-class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle) {
-
+class ShaderMaterial(handle: GodotHandle) : Material(handle) {
     var shader: Shader?
         @JvmName("shaderProperty")
         get() = getShader()
@@ -24,11 +26,7 @@ class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle
      */
     fun setShader(shader: Shader?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(
-            setShaderBind,
-            segment,
-            listOf(shader?.requireOpenHandle() ?: MemorySegment.NULL),
-        )
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setShaderBind, segment, listOf(shader?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -38,7 +36,7 @@ class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle
      */
     fun getShader(): Shader? {
         checkOpen()
-        return Shader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, segment))
+        return Shader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShaderBind, segment))
     }
 
     /**
@@ -55,7 +53,7 @@ class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle
      */
     fun setShaderParameter(param: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setShaderParameterBind, segment, param, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setShaderParameterBind, segment, param, value)
     }
 
     /**
@@ -65,7 +63,7 @@ class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle
      */
     fun getShaderParameter(param: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getShaderParameterBind, segment, param)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getShaderParameterBind, segment, param)
     }
 
     companion object {
@@ -73,39 +71,42 @@ class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle
         fun fromHandle(handle: GodotHandle): ShaderMaterial? =
             wrapBorrowed(handle.segment)
 
+        internal fun wrapOwned(handle: RawSegment): ShaderMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(ShaderMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ShaderMaterial? =
+            if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
+
+        // Downcast a GodotObject to ShaderMaterial (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): ShaderMaterial? =
             if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle)) else null
 
+        // Downcast a Resource to ShaderMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ShaderMaterial? =
             if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle)) else null
+    }
 
-        internal fun wrapOwned(handle: MemorySegment): ShaderMaterial? =
-            if (handle.address() == 0L) null else RefCounted.owned(ShaderMaterial(GodotHandle(handle)))
-
-        internal fun wrapBorrowed(handle: MemorySegment): ShaderMaterial? =
-            if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
-
+    private object Binds {
         private const val SET_SHADER_HASH = 3341921675L
-        private const val GET_SHADER_HASH = 2078273437L
-        private const val SET_SHADER_PARAMETER_HASH = 3776071444L
-        private const val GET_SHADER_PARAMETER_HASH = 2760726917L
-
-        private val setShaderBind by lazy {
+        @JvmField
+        val setShaderBind =
             ObjectCalls.getMethodBind("ShaderMaterial", "set_shader", SET_SHADER_HASH)
-        }
 
-        private val getShaderBind by lazy {
+        private const val GET_SHADER_HASH = 2078273437L
+        @JvmField
+        val getShaderBind =
             ObjectCalls.getMethodBind("ShaderMaterial", "get_shader", GET_SHADER_HASH)
-        }
 
-        private val setShaderParameterBind by lazy {
+        private const val SET_SHADER_PARAMETER_HASH = 3776071444L
+        @JvmField
+        val setShaderParameterBind =
             ObjectCalls.getMethodBind("ShaderMaterial", "set_shader_parameter", SET_SHADER_PARAMETER_HASH)
-        }
 
-        private val getShaderParameterBind by lazy {
+        private const val GET_SHADER_PARAMETER_HASH = 2760726917L
+        @JvmField
+        val getShaderParameterBind =
             ObjectCalls.getMethodBind("ShaderMaterial", "get_shader_parameter", GET_SHADER_PARAMETER_HASH)
-        }
     }
 }

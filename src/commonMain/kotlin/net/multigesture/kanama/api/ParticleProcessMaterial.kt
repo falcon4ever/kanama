@@ -1,11 +1,12 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -920,7 +921,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setParamTexture(param: ParticleProcessMaterial.Parameter, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(Binds.setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1097,7 +1098,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setColorRamp(ramp: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1125,7 +1126,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setAlphaCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setAlphaCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setAlphaCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1153,7 +1154,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1181,7 +1182,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setColorInitialRamp(ramp: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1205,7 +1206,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setVelocityLimitCurve(curve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setVelocityLimitCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setVelocityLimitCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1332,7 +1333,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionPointTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionPointTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionPointTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1358,7 +1359,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionNormalTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1386,7 +1387,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setEmissionColorTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionColorTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEmissionColorTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2085,7 +2086,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setRotationVelocity3dCurve(rotationVelocity3dCurve: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setRotationVelocity3dCurveBind, segment, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setRotationVelocity3dCurveBind, segment, listOf(rotationVelocity3dCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2444,10 +2445,10 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         fun fromHandle(handle: GodotHandle): ParticleProcessMaterial? =
             wrapBorrowed(handle.segment)
 
-        internal fun wrapOwned(handle: MemorySegment): ParticleProcessMaterial? =
+        internal fun wrapOwned(handle: RawSegment): ParticleProcessMaterial? =
             if (handle.address() == 0L) null else RefCounted.owned(ParticleProcessMaterial(GodotHandle(handle)))
 
-        internal fun wrapBorrowed(handle: MemorySegment): ParticleProcessMaterial? =
+        internal fun wrapBorrowed(handle: RawSegment): ParticleProcessMaterial? =
             if (handle.address() == 0L) null else ParticleProcessMaterial(GodotHandle(handle))
 
         // Downcast a Resource to ParticleProcessMaterial (null if not).

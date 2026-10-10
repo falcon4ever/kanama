@@ -1,8 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Provides access to engine properties.
@@ -10,9 +12,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  * Generated from Godot docs: Engine
  */
 object Engine {
-    private val singleton: MemorySegment by lazy {
-        ObjectCalls.getSingleton("Engine")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var printErrorMessages: Boolean
         @JvmName("printErrorMessagesProperty")
@@ -79,7 +80,7 @@ object Engine {
      */
     @JvmStatic
     fun setPhysicsTicksPerSecond(physicsTicksPerSecond: Int) {
-        ObjectCalls.ptrcallWithIntArg(setPhysicsTicksPerSecondBind, singleton, physicsTicksPerSecond)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPhysicsTicksPerSecondBind, singleton, physicsTicksPerSecond)
     }
 
     /**
@@ -105,7 +106,7 @@ object Engine {
      */
     @JvmStatic
     fun getPhysicsTicksPerSecond(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsTicksPerSecondBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicsTicksPerSecondBind, singleton)
     }
 
     /**
@@ -121,7 +122,7 @@ object Engine {
      */
     @JvmStatic
     fun setMaxPhysicsStepsPerFrame(maxPhysicsSteps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxPhysicsStepsPerFrameBind, singleton, maxPhysicsSteps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxPhysicsStepsPerFrameBind, singleton, maxPhysicsSteps)
     }
 
     /**
@@ -137,7 +138,7 @@ object Engine {
      */
     @JvmStatic
     fun getMaxPhysicsStepsPerFrame(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPhysicsStepsPerFrameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPhysicsStepsPerFrameBind, singleton)
     }
 
     /**
@@ -153,7 +154,7 @@ object Engine {
      */
     @JvmStatic
     fun setPhysicsJitterFix(physicsJitterFix: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPhysicsJitterFixBind, singleton, physicsJitterFix)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPhysicsJitterFixBind, singleton, physicsJitterFix)
     }
 
     /**
@@ -169,7 +170,7 @@ object Engine {
      */
     @JvmStatic
     fun getPhysicsJitterFix(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsJitterFixBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPhysicsJitterFixBind, singleton)
     }
 
     /**
@@ -180,7 +181,7 @@ object Engine {
      */
     @JvmStatic
     fun getPhysicsInterpolationFraction(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPhysicsInterpolationFractionBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPhysicsInterpolationFractionBind, singleton)
     }
 
     /**
@@ -207,7 +208,7 @@ object Engine {
      */
     @JvmStatic
     fun setMaxFps(maxFps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxFpsBind, singleton, maxFps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxFpsBind, singleton, maxFps)
     }
 
     /**
@@ -234,7 +235,7 @@ object Engine {
      */
     @JvmStatic
     fun getMaxFps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxFpsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxFpsBind, singleton)
     }
 
     /**
@@ -254,7 +255,7 @@ object Engine {
      */
     @JvmStatic
     fun setTimeScale(timeScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTimeScaleBind, singleton, timeScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimeScaleBind, singleton, timeScale)
     }
 
     /**
@@ -274,7 +275,7 @@ object Engine {
      */
     @JvmStatic
     fun getTimeScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimeScaleBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimeScaleBind, singleton)
     }
 
     /**
@@ -286,7 +287,7 @@ object Engine {
      */
     @JvmStatic
     fun getFramesDrawn(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesDrawnBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesDrawnBind, singleton)
     }
 
     /**
@@ -296,7 +297,7 @@ object Engine {
      */
     @JvmStatic
     fun getFramesPerSecond(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFramesPerSecondBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFramesPerSecondBind, singleton)
     }
 
     /**
@@ -307,7 +308,7 @@ object Engine {
      */
     @JvmStatic
     fun getPhysicsFrames(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsFramesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicsFramesBind, singleton)
     }
 
     /**
@@ -319,7 +320,7 @@ object Engine {
      */
     @JvmStatic
     fun getProcessFrames(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessFramesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessFramesBind, singleton)
     }
 
     /**
@@ -331,7 +332,7 @@ object Engine {
      */
     @JvmStatic
     fun getMainLoop(): MainLoop? {
-        return MainLoop.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMainLoopBind, singleton))
+        return MainLoop.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMainLoopBind, singleton))
     }
 
     /**
@@ -351,7 +352,7 @@ object Engine {
      */
     @JvmStatic
     fun getVersionInfo(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getVersionInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getVersionInfoBind, singleton)
     }
 
     /**
@@ -363,7 +364,7 @@ object Engine {
      */
     @JvmStatic
     fun getAuthorInfo(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getAuthorInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getAuthorInfoBind, singleton)
     }
 
     /**
@@ -379,7 +380,7 @@ object Engine {
      */
     @JvmStatic
     fun getCopyrightInfo(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getCopyrightInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getCopyrightInfoBind, singleton)
     }
 
     /**
@@ -391,7 +392,7 @@ object Engine {
      */
     @JvmStatic
     fun getDonorInfo(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getDonorInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getDonorInfoBind, singleton)
     }
 
     /**
@@ -403,7 +404,7 @@ object Engine {
      */
     @JvmStatic
     fun getLicenseInfo(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getLicenseInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getLicenseInfoBind, singleton)
     }
 
     /**
@@ -413,7 +414,7 @@ object Engine {
      */
     @JvmStatic
     fun getLicenseText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLicenseTextBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLicenseTextBind, singleton)
     }
 
     /**
@@ -431,7 +432,7 @@ object Engine {
      */
     @JvmStatic
     fun getArchitectureName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getArchitectureNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getArchitectureNameBind, singleton)
     }
 
     /**
@@ -441,7 +442,7 @@ object Engine {
      */
     @JvmStatic
     fun isInPhysicsFrame(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInPhysicsFrameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInPhysicsFrameBind, singleton)
     }
 
     /**
@@ -452,7 +453,7 @@ object Engine {
      */
     @JvmStatic
     fun hasSingleton(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasSingletonBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasSingletonBind, singleton, name)
     }
 
     /**
@@ -464,7 +465,7 @@ object Engine {
      */
     @JvmStatic
     fun getSingleton(name: String): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSingletonBind, singleton, name))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getSingletonBind, singleton, name))
     }
 
     /**
@@ -474,13 +475,11 @@ object Engine {
      * Generated from Godot docs: Engine.register_singleton
      */
     @JvmStatic
-    fun registerSingleton(name: String, objectArg: GodotHandle) {
-        // Godot 4.7 warns that RefCounted singletons leak/double-free (the singleton table holds no
-        // reference). Reject them here before Godot sees the instance; use an Object-derived singleton.
-        if (objectArg.segment.address() != 0L && GodotObject(objectArg).isClass("RefCounted")) {
-            error("Engine.registerSingleton does not accept RefCounted instances; use an Object-derived singleton")
+    fun registerSingleton(name: String, instance: GodotObject) {
+        require(!instance.isClass("RefCounted")) {
+            "Engine.registerSingleton does not accept RefCounted instances; use an Object-derived singleton"
         }
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(registerSingletonBind, singleton, name, objectArg.segment)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.registerSingletonBind, singleton, name, instance.segment)
     }
 
     /**
@@ -491,7 +490,7 @@ object Engine {
      */
     @JvmStatic
     fun unregisterSingleton(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(unregisterSingletonBind, singleton, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.unregisterSingletonBind, singleton, name)
     }
 
     /**
@@ -501,7 +500,7 @@ object Engine {
      */
     @JvmStatic
     fun getSingletonList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSingletonListBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSingletonListBind, singleton)
     }
 
     /**
@@ -514,7 +513,7 @@ object Engine {
      */
     @JvmStatic
     fun registerScriptLanguage(language: ScriptLanguage): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.segment))
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.registerScriptLanguageBind, singleton, language.segment))
     }
 
     /**
@@ -525,7 +524,7 @@ object Engine {
      */
     @JvmStatic
     fun unregisterScriptLanguage(language: ScriptLanguage): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.segment))
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.unregisterScriptLanguageBind, singleton, language.segment))
     }
 
     /**
@@ -535,7 +534,7 @@ object Engine {
      */
     @JvmStatic
     fun getScriptLanguageCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getScriptLanguageCountBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getScriptLanguageCountBind, singleton)
     }
 
     /**
@@ -545,7 +544,7 @@ object Engine {
      */
     @JvmStatic
     fun getScriptLanguage(index: Int): ScriptLanguage? {
-        return ScriptLanguage.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getScriptLanguageBind, singleton, index))
+        return ScriptLanguage.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getScriptLanguageBind, singleton, index))
     }
 
     /**
@@ -568,7 +567,7 @@ object Engine {
      */
     @JvmStatic
     fun captureScriptBacktraces(includeVariables: Boolean = false): List<ScriptBacktrace> {
-        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(captureScriptBacktracesBind, singleton, includeVariables, ScriptBacktrace::wrapBorrowed)
+        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(Binds.captureScriptBacktracesBind, singleton, includeVariables, ScriptBacktrace::wrapBorrowed)
     }
 
     /**
@@ -578,7 +577,7 @@ object Engine {
      */
     @JvmStatic
     fun isEditorHint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditorHintBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditorHintBind, singleton)
     }
 
     /**
@@ -590,7 +589,7 @@ object Engine {
      */
     @JvmStatic
     fun isEmbeddedInEditor(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddedInEditorBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmbeddedInEditorBind, singleton)
     }
 
     /**
@@ -602,7 +601,7 @@ object Engine {
      */
     @JvmStatic
     fun getWriteMoviePath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getWriteMoviePathBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getWriteMoviePathBind, singleton)
     }
 
     /**
@@ -616,7 +615,7 @@ object Engine {
      */
     @JvmStatic
     fun setPrintToStdout(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPrintToStdoutBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPrintToStdoutBind, singleton, enabled)
     }
 
     /**
@@ -630,7 +629,7 @@ object Engine {
      */
     @JvmStatic
     fun isPrintingToStdout(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPrintingToStdoutBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPrintingToStdoutBind, singleton)
     }
 
     /**
@@ -646,7 +645,7 @@ object Engine {
      */
     @JvmStatic
     fun setPrintErrorMessages(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPrintErrorMessagesBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPrintErrorMessagesBind, singleton, enabled)
     }
 
     /**
@@ -662,218 +661,223 @@ object Engine {
      */
     @JvmStatic
     fun isPrintingErrorMessages(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPrintingErrorMessagesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPrintingErrorMessagesBind, singleton)
     }
 
     @JvmStatic
     fun fromHandle(handle: GodotHandle): Engine? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): Engine? =
+    internal fun wrap(handle: RawSegment): Engine? =
         if (handle.address() == 0L) null else this
 
-    private const val SET_PHYSICS_TICKS_PER_SECOND_HASH = 1286410249L
-    private val setPhysicsTicksPerSecondBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_physics_ticks_per_second", SET_PHYSICS_TICKS_PER_SECOND_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("Engine")
 
-    private const val GET_PHYSICS_TICKS_PER_SECOND_HASH = 3905245786L
-    private val getPhysicsTicksPerSecondBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_physics_ticks_per_second", GET_PHYSICS_TICKS_PER_SECOND_HASH)
-    }
+        private const val SET_PHYSICS_TICKS_PER_SECOND_HASH = 1286410249L
+        @JvmField
+        val setPhysicsTicksPerSecondBind =
+            ObjectCalls.getMethodBind("Engine", "set_physics_ticks_per_second", SET_PHYSICS_TICKS_PER_SECOND_HASH)
 
-    private const val SET_MAX_PHYSICS_STEPS_PER_FRAME_HASH = 1286410249L
-    private val setMaxPhysicsStepsPerFrameBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_max_physics_steps_per_frame", SET_MAX_PHYSICS_STEPS_PER_FRAME_HASH)
-    }
+        private const val GET_PHYSICS_TICKS_PER_SECOND_HASH = 3905245786L
+        @JvmField
+        val getPhysicsTicksPerSecondBind =
+            ObjectCalls.getMethodBind("Engine", "get_physics_ticks_per_second", GET_PHYSICS_TICKS_PER_SECOND_HASH)
 
-    private const val GET_MAX_PHYSICS_STEPS_PER_FRAME_HASH = 3905245786L
-    private val getMaxPhysicsStepsPerFrameBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_max_physics_steps_per_frame", GET_MAX_PHYSICS_STEPS_PER_FRAME_HASH)
-    }
+        private const val SET_MAX_PHYSICS_STEPS_PER_FRAME_HASH = 1286410249L
+        @JvmField
+        val setMaxPhysicsStepsPerFrameBind =
+            ObjectCalls.getMethodBind("Engine", "set_max_physics_steps_per_frame", SET_MAX_PHYSICS_STEPS_PER_FRAME_HASH)
 
-    private const val SET_PHYSICS_JITTER_FIX_HASH = 373806689L
-    private val setPhysicsJitterFixBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_physics_jitter_fix", SET_PHYSICS_JITTER_FIX_HASH)
-    }
+        private const val GET_MAX_PHYSICS_STEPS_PER_FRAME_HASH = 3905245786L
+        @JvmField
+        val getMaxPhysicsStepsPerFrameBind =
+            ObjectCalls.getMethodBind("Engine", "get_max_physics_steps_per_frame", GET_MAX_PHYSICS_STEPS_PER_FRAME_HASH)
 
-    private const val GET_PHYSICS_JITTER_FIX_HASH = 1740695150L
-    private val getPhysicsJitterFixBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_physics_jitter_fix", GET_PHYSICS_JITTER_FIX_HASH)
-    }
+        private const val SET_PHYSICS_JITTER_FIX_HASH = 373806689L
+        @JvmField
+        val setPhysicsJitterFixBind =
+            ObjectCalls.getMethodBind("Engine", "set_physics_jitter_fix", SET_PHYSICS_JITTER_FIX_HASH)
 
-    private const val GET_PHYSICS_INTERPOLATION_FRACTION_HASH = 1740695150L
-    private val getPhysicsInterpolationFractionBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_physics_interpolation_fraction", GET_PHYSICS_INTERPOLATION_FRACTION_HASH)
-    }
+        private const val GET_PHYSICS_JITTER_FIX_HASH = 1740695150L
+        @JvmField
+        val getPhysicsJitterFixBind =
+            ObjectCalls.getMethodBind("Engine", "get_physics_jitter_fix", GET_PHYSICS_JITTER_FIX_HASH)
 
-    private const val SET_MAX_FPS_HASH = 1286410249L
-    private val setMaxFpsBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_max_fps", SET_MAX_FPS_HASH)
-    }
+        private const val GET_PHYSICS_INTERPOLATION_FRACTION_HASH = 1740695150L
+        @JvmField
+        val getPhysicsInterpolationFractionBind =
+            ObjectCalls.getMethodBind("Engine", "get_physics_interpolation_fraction", GET_PHYSICS_INTERPOLATION_FRACTION_HASH)
 
-    private const val GET_MAX_FPS_HASH = 3905245786L
-    private val getMaxFpsBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_max_fps", GET_MAX_FPS_HASH)
-    }
+        private const val SET_MAX_FPS_HASH = 1286410249L
+        @JvmField
+        val setMaxFpsBind =
+            ObjectCalls.getMethodBind("Engine", "set_max_fps", SET_MAX_FPS_HASH)
 
-    private const val SET_TIME_SCALE_HASH = 373806689L
-    private val setTimeScaleBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_time_scale", SET_TIME_SCALE_HASH)
-    }
+        private const val GET_MAX_FPS_HASH = 3905245786L
+        @JvmField
+        val getMaxFpsBind =
+            ObjectCalls.getMethodBind("Engine", "get_max_fps", GET_MAX_FPS_HASH)
 
-    private const val GET_TIME_SCALE_HASH = 191475506L
-    private val getTimeScaleBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
-    }
+        private const val SET_TIME_SCALE_HASH = 373806689L
+        @JvmField
+        val setTimeScaleBind =
+            ObjectCalls.getMethodBind("Engine", "set_time_scale", SET_TIME_SCALE_HASH)
 
-    private const val GET_FRAMES_DRAWN_HASH = 2455072627L
-    private val getFramesDrawnBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_frames_drawn", GET_FRAMES_DRAWN_HASH)
-    }
+        private const val GET_TIME_SCALE_HASH = 191475506L
+        @JvmField
+        val getTimeScaleBind =
+            ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
 
-    private const val GET_FRAMES_PER_SECOND_HASH = 1740695150L
-    private val getFramesPerSecondBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_frames_per_second", GET_FRAMES_PER_SECOND_HASH)
-    }
+        private const val GET_FRAMES_DRAWN_HASH = 2455072627L
+        @JvmField
+        val getFramesDrawnBind =
+            ObjectCalls.getMethodBind("Engine", "get_frames_drawn", GET_FRAMES_DRAWN_HASH)
 
-    private const val GET_PHYSICS_FRAMES_HASH = 3905245786L
-    private val getPhysicsFramesBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_physics_frames", GET_PHYSICS_FRAMES_HASH)
-    }
+        private const val GET_FRAMES_PER_SECOND_HASH = 1740695150L
+        @JvmField
+        val getFramesPerSecondBind =
+            ObjectCalls.getMethodBind("Engine", "get_frames_per_second", GET_FRAMES_PER_SECOND_HASH)
 
-    private const val GET_PROCESS_FRAMES_HASH = 3905245786L
-    private val getProcessFramesBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_process_frames", GET_PROCESS_FRAMES_HASH)
-    }
+        private const val GET_PHYSICS_FRAMES_HASH = 3905245786L
+        @JvmField
+        val getPhysicsFramesBind =
+            ObjectCalls.getMethodBind("Engine", "get_physics_frames", GET_PHYSICS_FRAMES_HASH)
 
-    private const val GET_MAIN_LOOP_HASH = 1016888095L
-    private val getMainLoopBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_main_loop", GET_MAIN_LOOP_HASH)
-    }
+        private const val GET_PROCESS_FRAMES_HASH = 3905245786L
+        @JvmField
+        val getProcessFramesBind =
+            ObjectCalls.getMethodBind("Engine", "get_process_frames", GET_PROCESS_FRAMES_HASH)
 
-    private const val GET_VERSION_INFO_HASH = 3102165223L
-    private val getVersionInfoBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_version_info", GET_VERSION_INFO_HASH)
-    }
+        private const val GET_MAIN_LOOP_HASH = 1016888095L
+        @JvmField
+        val getMainLoopBind =
+            ObjectCalls.getMethodBind("Engine", "get_main_loop", GET_MAIN_LOOP_HASH)
 
-    private const val GET_AUTHOR_INFO_HASH = 3102165223L
-    private val getAuthorInfoBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_author_info", GET_AUTHOR_INFO_HASH)
-    }
+        private const val GET_VERSION_INFO_HASH = 3102165223L
+        @JvmField
+        val getVersionInfoBind =
+            ObjectCalls.getMethodBind("Engine", "get_version_info", GET_VERSION_INFO_HASH)
 
-    private const val GET_COPYRIGHT_INFO_HASH = 3995934104L
-    private val getCopyrightInfoBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_copyright_info", GET_COPYRIGHT_INFO_HASH)
-    }
+        private const val GET_AUTHOR_INFO_HASH = 3102165223L
+        @JvmField
+        val getAuthorInfoBind =
+            ObjectCalls.getMethodBind("Engine", "get_author_info", GET_AUTHOR_INFO_HASH)
 
-    private const val GET_DONOR_INFO_HASH = 3102165223L
-    private val getDonorInfoBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_donor_info", GET_DONOR_INFO_HASH)
-    }
+        private const val GET_COPYRIGHT_INFO_HASH = 3995934104L
+        @JvmField
+        val getCopyrightInfoBind =
+            ObjectCalls.getMethodBind("Engine", "get_copyright_info", GET_COPYRIGHT_INFO_HASH)
 
-    private const val GET_LICENSE_INFO_HASH = 3102165223L
-    private val getLicenseInfoBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_license_info", GET_LICENSE_INFO_HASH)
-    }
+        private const val GET_DONOR_INFO_HASH = 3102165223L
+        @JvmField
+        val getDonorInfoBind =
+            ObjectCalls.getMethodBind("Engine", "get_donor_info", GET_DONOR_INFO_HASH)
 
-    private const val GET_LICENSE_TEXT_HASH = 201670096L
-    private val getLicenseTextBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_license_text", GET_LICENSE_TEXT_HASH)
-    }
+        private const val GET_LICENSE_INFO_HASH = 3102165223L
+        @JvmField
+        val getLicenseInfoBind =
+            ObjectCalls.getMethodBind("Engine", "get_license_info", GET_LICENSE_INFO_HASH)
 
-    private const val GET_ARCHITECTURE_NAME_HASH = 201670096L
-    private val getArchitectureNameBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_architecture_name", GET_ARCHITECTURE_NAME_HASH)
-    }
+        private const val GET_LICENSE_TEXT_HASH = 201670096L
+        @JvmField
+        val getLicenseTextBind =
+            ObjectCalls.getMethodBind("Engine", "get_license_text", GET_LICENSE_TEXT_HASH)
 
-    private const val IS_IN_PHYSICS_FRAME_HASH = 36873697L
-    private val isInPhysicsFrameBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "is_in_physics_frame", IS_IN_PHYSICS_FRAME_HASH)
-    }
+        private const val GET_ARCHITECTURE_NAME_HASH = 201670096L
+        @JvmField
+        val getArchitectureNameBind =
+            ObjectCalls.getMethodBind("Engine", "get_architecture_name", GET_ARCHITECTURE_NAME_HASH)
 
-    private const val HAS_SINGLETON_HASH = 2619796661L
-    private val hasSingletonBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "has_singleton", HAS_SINGLETON_HASH)
-    }
+        private const val IS_IN_PHYSICS_FRAME_HASH = 36873697L
+        @JvmField
+        val isInPhysicsFrameBind =
+            ObjectCalls.getMethodBind("Engine", "is_in_physics_frame", IS_IN_PHYSICS_FRAME_HASH)
 
-    private const val GET_SINGLETON_HASH = 1371597918L
-    private val getSingletonBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_singleton", GET_SINGLETON_HASH)
-    }
+        private const val HAS_SINGLETON_HASH = 2619796661L
+        @JvmField
+        val hasSingletonBind =
+            ObjectCalls.getMethodBind("Engine", "has_singleton", HAS_SINGLETON_HASH)
 
-    private const val REGISTER_SINGLETON_HASH = 965313290L
-    private val registerSingletonBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "register_singleton", REGISTER_SINGLETON_HASH)
-    }
+        private const val GET_SINGLETON_HASH = 1371597918L
+        @JvmField
+        val getSingletonBind =
+            ObjectCalls.getMethodBind("Engine", "get_singleton", GET_SINGLETON_HASH)
 
-    private const val UNREGISTER_SINGLETON_HASH = 3304788590L
-    private val unregisterSingletonBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "unregister_singleton", UNREGISTER_SINGLETON_HASH)
-    }
+        private const val REGISTER_SINGLETON_HASH = 965313290L
+        @JvmField
+        val registerSingletonBind =
+            ObjectCalls.getMethodBind("Engine", "register_singleton", REGISTER_SINGLETON_HASH)
 
-    private const val GET_SINGLETON_LIST_HASH = 1139954409L
-    private val getSingletonListBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_singleton_list", GET_SINGLETON_LIST_HASH)
-    }
+        private const val UNREGISTER_SINGLETON_HASH = 3304788590L
+        @JvmField
+        val unregisterSingletonBind =
+            ObjectCalls.getMethodBind("Engine", "unregister_singleton", UNREGISTER_SINGLETON_HASH)
 
-    private const val REGISTER_SCRIPT_LANGUAGE_HASH = 1850254898L
-    private val registerScriptLanguageBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "register_script_language", REGISTER_SCRIPT_LANGUAGE_HASH)
-    }
+        private const val GET_SINGLETON_LIST_HASH = 1139954409L
+        @JvmField
+        val getSingletonListBind =
+            ObjectCalls.getMethodBind("Engine", "get_singleton_list", GET_SINGLETON_LIST_HASH)
 
-    private const val UNREGISTER_SCRIPT_LANGUAGE_HASH = 1850254898L
-    private val unregisterScriptLanguageBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "unregister_script_language", UNREGISTER_SCRIPT_LANGUAGE_HASH)
-    }
+        private const val REGISTER_SCRIPT_LANGUAGE_HASH = 1850254898L
+        @JvmField
+        val registerScriptLanguageBind =
+            ObjectCalls.getMethodBind("Engine", "register_script_language", REGISTER_SCRIPT_LANGUAGE_HASH)
 
-    private const val GET_SCRIPT_LANGUAGE_COUNT_HASH = 2455072627L
-    private val getScriptLanguageCountBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_script_language_count", GET_SCRIPT_LANGUAGE_COUNT_HASH)
-    }
+        private const val UNREGISTER_SCRIPT_LANGUAGE_HASH = 1850254898L
+        @JvmField
+        val unregisterScriptLanguageBind =
+            ObjectCalls.getMethodBind("Engine", "unregister_script_language", UNREGISTER_SCRIPT_LANGUAGE_HASH)
 
-    private const val GET_SCRIPT_LANGUAGE_HASH = 2151255799L
-    private val getScriptLanguageBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_script_language", GET_SCRIPT_LANGUAGE_HASH)
-    }
+        private const val GET_SCRIPT_LANGUAGE_COUNT_HASH = 2455072627L
+        @JvmField
+        val getScriptLanguageCountBind =
+            ObjectCalls.getMethodBind("Engine", "get_script_language_count", GET_SCRIPT_LANGUAGE_COUNT_HASH)
 
-    private const val CAPTURE_SCRIPT_BACKTRACES_HASH = 873284517L
-    private val captureScriptBacktracesBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "capture_script_backtraces", CAPTURE_SCRIPT_BACKTRACES_HASH)
-    }
+        private const val GET_SCRIPT_LANGUAGE_HASH = 2151255799L
+        @JvmField
+        val getScriptLanguageBind =
+            ObjectCalls.getMethodBind("Engine", "get_script_language", GET_SCRIPT_LANGUAGE_HASH)
 
-    private const val IS_EDITOR_HINT_HASH = 36873697L
-    private val isEditorHintBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "is_editor_hint", IS_EDITOR_HINT_HASH)
-    }
+        private const val CAPTURE_SCRIPT_BACKTRACES_HASH = 873284517L
+        @JvmField
+        val captureScriptBacktracesBind =
+            ObjectCalls.getMethodBind("Engine", "capture_script_backtraces", CAPTURE_SCRIPT_BACKTRACES_HASH)
 
-    private const val IS_EMBEDDED_IN_EDITOR_HASH = 36873697L
-    private val isEmbeddedInEditorBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "is_embedded_in_editor", IS_EMBEDDED_IN_EDITOR_HASH)
-    }
+        private const val IS_EDITOR_HINT_HASH = 36873697L
+        @JvmField
+        val isEditorHintBind =
+            ObjectCalls.getMethodBind("Engine", "is_editor_hint", IS_EDITOR_HINT_HASH)
 
-    private const val GET_WRITE_MOVIE_PATH_HASH = 201670096L
-    private val getWriteMoviePathBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "get_write_movie_path", GET_WRITE_MOVIE_PATH_HASH)
-    }
+        private const val IS_EMBEDDED_IN_EDITOR_HASH = 36873697L
+        @JvmField
+        val isEmbeddedInEditorBind =
+            ObjectCalls.getMethodBind("Engine", "is_embedded_in_editor", IS_EMBEDDED_IN_EDITOR_HASH)
 
-    private const val SET_PRINT_TO_STDOUT_HASH = 2586408642L
-    private val setPrintToStdoutBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_print_to_stdout", SET_PRINT_TO_STDOUT_HASH)
-    }
+        private const val GET_WRITE_MOVIE_PATH_HASH = 201670096L
+        @JvmField
+        val getWriteMoviePathBind =
+            ObjectCalls.getMethodBind("Engine", "get_write_movie_path", GET_WRITE_MOVIE_PATH_HASH)
 
-    private const val IS_PRINTING_TO_STDOUT_HASH = 36873697L
-    private val isPrintingToStdoutBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "is_printing_to_stdout", IS_PRINTING_TO_STDOUT_HASH)
-    }
+        private const val SET_PRINT_TO_STDOUT_HASH = 2586408642L
+        @JvmField
+        val setPrintToStdoutBind =
+            ObjectCalls.getMethodBind("Engine", "set_print_to_stdout", SET_PRINT_TO_STDOUT_HASH)
 
-    private const val SET_PRINT_ERROR_MESSAGES_HASH = 2586408642L
-    private val setPrintErrorMessagesBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "set_print_error_messages", SET_PRINT_ERROR_MESSAGES_HASH)
-    }
+        private const val IS_PRINTING_TO_STDOUT_HASH = 36873697L
+        @JvmField
+        val isPrintingToStdoutBind =
+            ObjectCalls.getMethodBind("Engine", "is_printing_to_stdout", IS_PRINTING_TO_STDOUT_HASH)
 
-    private const val IS_PRINTING_ERROR_MESSAGES_HASH = 36873697L
-    private val isPrintingErrorMessagesBind by lazy {
-        ObjectCalls.getMethodBind("Engine", "is_printing_error_messages", IS_PRINTING_ERROR_MESSAGES_HASH)
+        private const val SET_PRINT_ERROR_MESSAGES_HASH = 2586408642L
+        @JvmField
+        val setPrintErrorMessagesBind =
+            ObjectCalls.getMethodBind("Engine", "set_print_error_messages", SET_PRINT_ERROR_MESSAGES_HASH)
+
+        private const val IS_PRINTING_ERROR_MESSAGES_HASH = 36873697L
+        @JvmField
+        val isPrintingErrorMessagesBind =
+            ObjectCalls.getMethodBind("Engine", "is_printing_error_messages", IS_PRINTING_ERROR_MESSAGES_HASH)
     }
 }

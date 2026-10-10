@@ -1,10 +1,11 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 
 /**
@@ -188,7 +189,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setSkyCover(skyCover: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkyCoverBind, segment, listOf(skyCover?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkyCoverBind, segment, listOf(skyCover?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -396,10 +397,10 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         fun fromHandle(handle: GodotHandle): ProceduralSkyMaterial? =
             wrapBorrowed(handle.segment)
 
-        internal fun wrapOwned(handle: MemorySegment): ProceduralSkyMaterial? =
+        internal fun wrapOwned(handle: RawSegment): ProceduralSkyMaterial? =
             if (handle.address() == 0L) null else RefCounted.owned(ProceduralSkyMaterial(GodotHandle(handle)))
 
-        internal fun wrapBorrowed(handle: MemorySegment): ProceduralSkyMaterial? =
+        internal fun wrapBorrowed(handle: RawSegment): ProceduralSkyMaterial? =
             if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
         // Downcast a Resource to ProceduralSkyMaterial (null if not).

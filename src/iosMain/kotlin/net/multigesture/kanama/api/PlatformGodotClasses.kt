@@ -9,66 +9,15 @@ import kotlin.reflect.KClass
 // without reflection. `GodotClasses` (ScriptAccess.kt) merges the tables.
 internal object PlatformGodotClasses : GodotClassTable() {
     override val classes: Array<KClass<out GodotObject>> = arrayOf(
-        AudioStreamPlayer::class,
-        BoxMesh::class,
-        BoxShape3D::class,
-        ConfigFile::class,
-        ENetMultiplayerPeer::class,
         FileAccessHandle::class,
-        ImageTexture::class,
-        InputEventKey::class,
-        InputEventMouseMotion::class,
-        LightmapGI::class,
-        MeshDataTool::class,
-        NoiseTexture2D::class,
-        OpenXRSpatialAnchorCapability::class,
-        ParticleProcessMaterial::class,
-        ProceduralSkyMaterial::class,
-        SceneMultiplayer::class,
-        ShaderMaterial::class,
-        SurfaceTool::class,
     )
 
     override val names: Array<String> = arrayOf(
-        "AudioStreamPlayer",
-        "BoxMesh",
-        "BoxShape3D",
-        "ConfigFile",
-        "ENetMultiplayerPeer",
         "FileAccess",
-        "ImageTexture",
-        "InputEventKey",
-        "InputEventMouseMotion",
-        "LightmapGI",
-        "MeshDataTool",
-        "NoiseTexture2D",
-        "OpenXRSpatialAnchorCapability",
-        "ParticleProcessMaterial",
-        "ProceduralSkyMaterial",
-        "SceneMultiplayer",
-        "ShaderMaterial",
-        "SurfaceTool",
     )
 
     override fun wrap(index: Int, handle: GodotHandle): GodotObject = when (index) {
-        0 -> AudioStreamPlayer(handle)
-        1 -> BoxMesh(handle)
-        2 -> BoxShape3D(handle)
-        3 -> ConfigFile(handle)
-        4 -> ENetMultiplayerPeer(handle)
-        5 -> FileAccessHandle(handle)
-        6 -> ImageTexture(handle)
-        7 -> InputEventKey(handle)
-        8 -> InputEventMouseMotion(handle)
-        9 -> LightmapGI(handle)
-        10 -> MeshDataTool(handle)
-        11 -> NoiseTexture2D(handle)
-        12 -> OpenXRSpatialAnchorCapability(handle)
-        13 -> ParticleProcessMaterial(handle)
-        14 -> ProceduralSkyMaterial(handle)
-        15 -> SceneMultiplayer(handle)
-        16 -> ShaderMaterial(handle)
-        17 -> SurfaceTool(handle)
+        0 -> FileAccessHandle(handle)
         else -> throw IndexOutOfBoundsException("PlatformGodotClasses has no class at index $index")
     }
 }

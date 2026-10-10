@@ -1,12 +1,15 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * Generate an axis-aligned box `PrimitiveMesh`.
+ *
  * Generated from Godot docs: BoxMesh
  */
 class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
@@ -34,99 +37,142 @@ class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmName("setSubdivideDepthProperty")
         set(value) = setSubdivideDepth(value)
 
+    /**
+     * The box's width, height and depth.
+     *
+     * Generated from Godot docs: BoxMesh.set_size
+     */
     fun setSize(size: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
+    /**
+     * The box's width, height and depth.
+     *
+     * Generated from Godot docs: BoxMesh.get_size
+     */
     fun getSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
-    fun setSubdivideWidth(subdivide: Int) {
+    /**
+     * Number of extra edge loops inserted along the X axis.
+     *
+     * Generated from Godot docs: BoxMesh.set_subdivide_width
+     */
+    fun setSubdivideWidth(subdivideWidth: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideWidthBind, segment, subdivide)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideWidthBind, segment, subdivideWidth)
     }
 
+    /**
+     * Number of extra edge loops inserted along the X axis.
+     *
+     * Generated from Godot docs: BoxMesh.get_subdivide_width
+     */
     fun getSubdivideWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideWidthBind, segment)
     }
 
-    fun setSubdivideHeight(divisions: Int) {
+    /**
+     * Number of extra edge loops inserted along the Y axis.
+     *
+     * Generated from Godot docs: BoxMesh.set_subdivide_height
+     */
+    fun setSubdivideHeight(subdivideHeight: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideHeightBind, segment, divisions)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideHeightBind, segment, subdivideHeight)
     }
 
+    /**
+     * Number of extra edge loops inserted along the Y axis.
+     *
+     * Generated from Godot docs: BoxMesh.get_subdivide_height
+     */
     fun getSubdivideHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideHeightBind, segment)
     }
 
-    fun setSubdivideDepth(divisions: Int) {
+    /**
+     * Number of extra edge loops inserted along the Z axis.
+     *
+     * Generated from Godot docs: BoxMesh.set_subdivide_depth
+     */
+    fun setSubdivideDepth(subdivideDepth: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSubdivideDepthBind, segment, divisions)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSubdivideDepthBind, segment, subdivideDepth)
     }
 
+    /**
+     * Number of extra edge loops inserted along the Z axis.
+     *
+     * Generated from Godot docs: BoxMesh.get_subdivide_depth
+     */
     fun getSubdivideDepth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSubdivideDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSubdivideDepthBind, segment)
     }
 
     companion object {
-        // KANAMA-IOS-SUGAR: [glue] desktop-parity constructor sugar (the desktop wrapper's
-        // MemorySegment constructor is internal, so shared game code uses create()).
-        fun create(): BoxMesh =
-            RefCounted.owned(BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh"))))
-
+        @JvmStatic
         fun fromHandle(handle: GodotHandle): BoxMesh? =
             wrapBorrowed(handle.segment)
 
-        internal fun wrapOwned(handle: MemorySegment): BoxMesh? =
+        internal fun wrapOwned(handle: RawSegment): BoxMesh? =
             if (handle.address() == 0L) null else RefCounted.owned(BoxMesh(GodotHandle(handle)))
 
-        internal fun wrapBorrowed(handle: MemorySegment): BoxMesh? =
+        internal fun wrapBorrowed(handle: RawSegment): BoxMesh? =
             if (handle.address() == 0L) null else BoxMesh(GodotHandle(handle))
 
+        // Instantiate a BoxMesh.
+        @JvmStatic
+        fun create(): BoxMesh =
+            RefCounted.owned(BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh"))))
+    }
+
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("BoxMesh", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("BoxMesh", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_SUBDIVIDE_WIDTH_HASH = 1286410249L
-        private val setSubdivideWidthBind by lazy {
+        @JvmField
+        val setSubdivideWidthBind =
             ObjectCalls.getMethodBind("BoxMesh", "set_subdivide_width", SET_SUBDIVIDE_WIDTH_HASH)
-        }
 
         private const val GET_SUBDIVIDE_WIDTH_HASH = 3905245786L
-        private val getSubdivideWidthBind by lazy {
+        @JvmField
+        val getSubdivideWidthBind =
             ObjectCalls.getMethodBind("BoxMesh", "get_subdivide_width", GET_SUBDIVIDE_WIDTH_HASH)
-        }
 
         private const val SET_SUBDIVIDE_HEIGHT_HASH = 1286410249L
-        private val setSubdivideHeightBind by lazy {
+        @JvmField
+        val setSubdivideHeightBind =
             ObjectCalls.getMethodBind("BoxMesh", "set_subdivide_height", SET_SUBDIVIDE_HEIGHT_HASH)
-        }
 
         private const val GET_SUBDIVIDE_HEIGHT_HASH = 3905245786L
-        private val getSubdivideHeightBind by lazy {
+        @JvmField
+        val getSubdivideHeightBind =
             ObjectCalls.getMethodBind("BoxMesh", "get_subdivide_height", GET_SUBDIVIDE_HEIGHT_HASH)
-        }
 
         private const val SET_SUBDIVIDE_DEPTH_HASH = 1286410249L
-        private val setSubdivideDepthBind by lazy {
+        @JvmField
+        val setSubdivideDepthBind =
             ObjectCalls.getMethodBind("BoxMesh", "set_subdivide_depth", SET_SUBDIVIDE_DEPTH_HASH)
-        }
 
         private const val GET_SUBDIVIDE_DEPTH_HASH = 3905245786L
-        private val getSubdivideDepthBind by lazy {
+        @JvmField
+        val getSubdivideDepthBind =
             ObjectCalls.getMethodBind("BoxMesh", "get_subdivide_depth", GET_SUBDIVIDE_DEPTH_HASH)
-        }
     }
 }

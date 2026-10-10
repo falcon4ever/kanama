@@ -194,8 +194,10 @@ def iter_call_bodies(content: str, name: str) -> list[tuple[str, int]]:
 DELIBERATE_WRONG_HASHES = {("Node3D", "set_visible", 1)}
 
 # Kotlin trees that carry MethodBind hashes -> the least number of hashes the validator must have checked in
-# each (measured 2026-10: commonMain 14.7k, jvmMain 664, iosMain 621; the floors leave room, not an empty tree).
-HASH_FLOORS = {"src/jvmMain/kotlin": 300, "src/commonMain/kotlin": 5000, "src/iosMain/kotlin": 300}
+# each (measured 2026-10-06 after task 129 C generated 20 more per-platform classes once: commonMain 15.3k,
+# jvmMain 136, iosMain 218; the floors leave room, not an empty tree. The jvmMain floor drops again when
+# FileAccess / DirAccess, the last per-platform classes, are generated once).
+HASH_FLOORS = {"src/jvmMain/kotlin": 100, "src/commonMain/kotlin": 5000, "src/iosMain/kotlin": 150}
 
 
 def validate_kotlin_hashes(

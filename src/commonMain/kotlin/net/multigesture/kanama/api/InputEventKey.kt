@@ -1,8 +1,10 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Represents a key on a keyboard being pressed or released.
@@ -47,7 +49,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setPressed(pressed: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
     }
 
     /**
@@ -61,7 +63,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setKeycode(keycode: Key) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setKeycodeBind, segment, keycode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setKeycodeBind, segment, keycode.value)
     }
 
     /**
@@ -75,7 +77,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeycode(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeycodeBind, segment))
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeycodeBind, segment))
     }
 
     /**
@@ -87,7 +89,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setPhysicalKeycode(physicalKeycode: Key) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPhysicalKeycodeBind, segment, physicalKeycode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPhysicalKeycodeBind, segment, physicalKeycode.value)
     }
 
     /**
@@ -99,7 +101,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getPhysicalKeycode(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeBind, segment))
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicalKeycodeBind, segment))
     }
 
     /**
@@ -113,7 +115,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setKeyLabel(keyLabel: Key) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setKeyLabelBind, segment, keyLabel.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setKeyLabelBind, segment, keyLabel.value)
     }
 
     /**
@@ -127,7 +129,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeyLabel(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelBind, segment))
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeyLabelBind, segment))
     }
 
     /**
@@ -141,7 +143,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setUnicode(unicode: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setUnicodeBind, segment, unicode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setUnicodeBind, segment, unicode)
     }
 
     /**
@@ -155,7 +157,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getUnicode(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getUnicodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getUnicodeBind, segment)
     }
 
     /**
@@ -165,7 +167,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setLocation(location: KeyLocation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLocationBind, segment, location.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLocationBind, segment, location.value)
     }
 
     /**
@@ -175,7 +177,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getLocation(): KeyLocation {
         checkOpen()
-        return KeyLocation(ObjectCalls.ptrcallNoArgsRetLong(getLocationBind, segment))
+        return KeyLocation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLocationBind, segment))
     }
 
     /**
@@ -190,7 +192,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun setEcho(echo: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEchoBind, segment, echo)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEchoBind, segment, echo)
     }
 
     /**
@@ -203,7 +205,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeycodeWithModifiers(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeycodeWithModifiersBind, segment))
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeycodeWithModifiersBind, segment))
     }
 
     /**
@@ -216,7 +218,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getPhysicalKeycodeWithModifiers(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeWithModifiersBind, segment))
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPhysicalKeycodeWithModifiersBind, segment))
     }
 
     /**
@@ -229,7 +231,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun getKeyLabelWithModifiers(): Key {
         checkOpen()
-        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelWithModifiersBind, segment))
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(Binds.getKeyLabelWithModifiersBind, segment))
     }
 
     /**
@@ -239,7 +241,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextKeycode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextKeycodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextKeycodeBind, segment)
     }
 
     /**
@@ -249,7 +251,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextPhysicalKeycode(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextPhysicalKeycodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextPhysicalKeycodeBind, segment)
     }
 
     /**
@@ -259,7 +261,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextKeyLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextKeyLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextKeyLabelBind, segment)
     }
 
     /**
@@ -270,7 +272,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      */
     fun asTextLocation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(asTextLocationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.asTextLocationBind, segment)
     }
 
     companion object {
@@ -278,114 +280,117 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         fun fromHandle(handle: GodotHandle): InputEventKey? =
             wrapBorrowed(handle.segment)
 
-        @JvmStatic
-        fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
+        internal fun wrapOwned(handle: RawSegment): InputEventKey? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventKey(GodotHandle(handle)))
 
+        internal fun wrapBorrowed(handle: RawSegment): InputEventKey? =
+            if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
+
+        // Instantiate an InputEventKey.
         @JvmStatic
         fun create(): InputEventKey =
             RefCounted.owned(InputEventKey(GodotHandle(ObjectCalls.constructObject("InputEventKey"))))
 
-        internal fun wrapOwned(handle: MemorySegment): InputEventKey? =
-            if (handle.address() == 0L) null else RefCounted.owned(InputEventKey(GodotHandle(handle)))
+        // Downcast a GodotObject to InputEventKey (null if not).
+        @JvmStatic
+        fun from(value: GodotObject): InputEventKey? =
+            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
+    }
 
-        internal fun wrapBorrowed(handle: MemorySegment): InputEventKey? =
-            if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
-
-
+    private object Binds {
         private const val SET_PRESSED_HASH = 2586408642L
-        private val setPressedBind by lazy {
+        @JvmField
+        val setPressedBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_pressed", SET_PRESSED_HASH)
-        }
 
         private const val SET_KEYCODE_HASH = 888074362L
-        private val setKeycodeBind by lazy {
+        @JvmField
+        val setKeycodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_keycode", SET_KEYCODE_HASH)
-        }
 
         private const val GET_KEYCODE_HASH = 1585896689L
-        private val getKeycodeBind by lazy {
+        @JvmField
+        val getKeycodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_keycode", GET_KEYCODE_HASH)
-        }
 
         private const val SET_PHYSICAL_KEYCODE_HASH = 888074362L
-        private val setPhysicalKeycodeBind by lazy {
+        @JvmField
+        val setPhysicalKeycodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_physical_keycode", SET_PHYSICAL_KEYCODE_HASH)
-        }
 
         private const val GET_PHYSICAL_KEYCODE_HASH = 1585896689L
-        private val getPhysicalKeycodeBind by lazy {
+        @JvmField
+        val getPhysicalKeycodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_physical_keycode", GET_PHYSICAL_KEYCODE_HASH)
-        }
 
         private const val SET_KEY_LABEL_HASH = 888074362L
-        private val setKeyLabelBind by lazy {
+        @JvmField
+        val setKeyLabelBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_key_label", SET_KEY_LABEL_HASH)
-        }
 
         private const val GET_KEY_LABEL_HASH = 1585896689L
-        private val getKeyLabelBind by lazy {
+        @JvmField
+        val getKeyLabelBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_key_label", GET_KEY_LABEL_HASH)
-        }
 
         private const val SET_UNICODE_HASH = 1286410249L
-        private val setUnicodeBind by lazy {
+        @JvmField
+        val setUnicodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_unicode", SET_UNICODE_HASH)
-        }
 
         private const val GET_UNICODE_HASH = 3905245786L
-        private val getUnicodeBind by lazy {
+        @JvmField
+        val getUnicodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_unicode", GET_UNICODE_HASH)
-        }
 
         private const val SET_LOCATION_HASH = 634453155L
-        private val setLocationBind by lazy {
+        @JvmField
+        val setLocationBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_location", SET_LOCATION_HASH)
-        }
 
         private const val GET_LOCATION_HASH = 211810873L
-        private val getLocationBind by lazy {
+        @JvmField
+        val getLocationBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_location", GET_LOCATION_HASH)
-        }
 
         private const val SET_ECHO_HASH = 2586408642L
-        private val setEchoBind by lazy {
+        @JvmField
+        val setEchoBind =
             ObjectCalls.getMethodBind("InputEventKey", "set_echo", SET_ECHO_HASH)
-        }
 
         private const val GET_KEYCODE_WITH_MODIFIERS_HASH = 1585896689L
-        private val getKeycodeWithModifiersBind by lazy {
+        @JvmField
+        val getKeycodeWithModifiersBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_keycode_with_modifiers", GET_KEYCODE_WITH_MODIFIERS_HASH)
-        }
 
         private const val GET_PHYSICAL_KEYCODE_WITH_MODIFIERS_HASH = 1585896689L
-        private val getPhysicalKeycodeWithModifiersBind by lazy {
+        @JvmField
+        val getPhysicalKeycodeWithModifiersBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_physical_keycode_with_modifiers", GET_PHYSICAL_KEYCODE_WITH_MODIFIERS_HASH)
-        }
 
         private const val GET_KEY_LABEL_WITH_MODIFIERS_HASH = 1585896689L
-        private val getKeyLabelWithModifiersBind by lazy {
+        @JvmField
+        val getKeyLabelWithModifiersBind =
             ObjectCalls.getMethodBind("InputEventKey", "get_key_label_with_modifiers", GET_KEY_LABEL_WITH_MODIFIERS_HASH)
-        }
 
         private const val AS_TEXT_KEYCODE_HASH = 201670096L
-        private val asTextKeycodeBind by lazy {
+        @JvmField
+        val asTextKeycodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "as_text_keycode", AS_TEXT_KEYCODE_HASH)
-        }
 
         private const val AS_TEXT_PHYSICAL_KEYCODE_HASH = 201670096L
-        private val asTextPhysicalKeycodeBind by lazy {
+        @JvmField
+        val asTextPhysicalKeycodeBind =
             ObjectCalls.getMethodBind("InputEventKey", "as_text_physical_keycode", AS_TEXT_PHYSICAL_KEYCODE_HASH)
-        }
 
         private const val AS_TEXT_KEY_LABEL_HASH = 201670096L
-        private val asTextKeyLabelBind by lazy {
+        @JvmField
+        val asTextKeyLabelBind =
             ObjectCalls.getMethodBind("InputEventKey", "as_text_key_label", AS_TEXT_KEY_LABEL_HASH)
-        }
 
         private const val AS_TEXT_LOCATION_HASH = 201670096L
-        private val asTextLocationBind by lazy {
+        @JvmField
+        val asTextLocationBind =
             ObjectCalls.getMethodBind("InputEventKey", "as_text_location", AS_TEXT_LOCATION_HASH)
-        }
     }
 }

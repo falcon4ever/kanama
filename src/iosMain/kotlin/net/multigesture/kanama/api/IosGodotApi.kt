@@ -21,13 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_play
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_bus
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_pitch_scale
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_stream
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_stream_paused
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_volume_db
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect_callable
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect_callable
@@ -35,7 +28,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_is_instance_id_valid
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_get_instance_id
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -70,249 +62,6 @@ internal class KanamaScope : CoroutineScope {
     }
 }
 
-class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
-    // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
-    /**
-     * Godot's `AudioStreamPlayer.MixTarget` enum as a typed value: `.value` is the raw number Godot
-     * uses, and the companion holds the named values (`AudioStreamPlayer.MixTarget.<NAME>`).
-     *
-     * Generated from Godot docs: AudioStreamPlayer.MixTarget
-     */
-    value class MixTarget(override val value: Long) : GodotEnumValue {
-        companion object {
-            /**
-             * The audio will be played only on the first channel. This is the default.
-             *
-             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_STEREO
-             */
-            val STEREO: MixTarget get() = MixTarget(0L)
-            /**
-             * The audio will be played on all surround channels.
-             *
-             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_SURROUND
-             */
-            val SURROUND: MixTarget get() = MixTarget(1L)
-            /**
-             * The audio will be played on the second channel, which is usually the center.
-             *
-             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_CENTER
-             */
-            val CENTER: MixTarget get() = MixTarget(2L)
-        }
-    }
-    // ===== END GENERATED ENUMS: AudioStreamPlayer =====
-
-    fun setStreamFromPath(path: String) {
-        ResourceLoader.loadAudioStream(path)?.use { stream ->
-            setStream(stream)
-        }
-    }
-
-    // AudioStreamPlayer.set_stream(stream) — null clears the assigned stream. Mirrors the
-    // generated 2D/3D variants; routed through the existing cinterop glue (0 == null).
-    fun setStream(stream: AudioStream?) {
-        IosGodot.audioStreamPlayerSetStream(segment.address(), stream?.segment?.address() ?: 0L)
-    }
-
-    fun setPitchScale(value: Double) {
-        IosGodot.audioStreamPlayerSetPitchScale(segment.address(), value)
-    }
-
-    fun setVolumeDb(value: Double) {
-        IosGodot.audioStreamPlayerSetVolumeDb(segment.address(), value)
-    }
-
-    fun setBus(value: String) {
-        IosGodot.audioStreamPlayerSetBus(segment.address(), value)
-    }
-
-    fun setStreamPaused(value: Boolean) {
-        IosGodot.audioStreamPlayerSetStreamPaused(segment.address(), value)
-    }
-
-    fun play() {
-        IosGodot.audioStreamPlayerPlay(segment.address(), 0.0)
-    }
-
-    fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
-    }
-
-    /** Signal `finished()`; see [TypedSignal]. */
-    val finished: Signal0
-        @JvmName("finishedTypedSignal")
-        get() = Signal0(this, "finished")
-
-    companion object {
-        private val stopBind by lazy { ObjectCalls.getMethodBind("AudioStreamPlayer", "stop", 3218959716L) }
-
-        fun create(): AudioStreamPlayer =
-            AudioStreamPlayer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer"))))
-    }
-}
-
-// KANAMA-IOS-HANDWRITTEN: [glue] ResourceLoader singleton. Not retired to the generated wrapper:
-// the generated ResourceLoader.load() returns a bare Resource, but demos call the bespoke typed
-// loaders (loadTexture2D/loadAudioStream/loadPackedScene), which pass a type_hint through the C
-// shim and wrap the result to the concrete type. The generator emits no typed-load sugar, so this
-// stays bespoke.
-object ResourceLoader {
-    // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
-    /**
-     * Godot's `ResourceLoader.ThreadLoadStatus` enum as a typed value: `.value` is the raw number
-     * Godot uses, and the companion holds the named values (`ResourceLoader.ThreadLoadStatus.<NAME>`).
-     *
-     * Generated from Godot docs: ResourceLoader.ThreadLoadStatus
-     */
-    value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
-        companion object {
-            /**
-             * The resource is invalid, or has not been loaded with `load_threaded_request`.
-             *
-             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_INVALID_RESOURCE
-             */
-            val INVALID_RESOURCE: ThreadLoadStatus get() = ThreadLoadStatus(0L)
-            /**
-             * The resource is still being loaded.
-             *
-             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_IN_PROGRESS
-             */
-            val IN_PROGRESS: ThreadLoadStatus get() = ThreadLoadStatus(1L)
-            /**
-             * Some error occurred during loading and it failed.
-             *
-             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_FAILED
-             */
-            val FAILED: ThreadLoadStatus get() = ThreadLoadStatus(2L)
-            /**
-             * The resource was loaded successfully and can be accessed via `load_threaded_get`.
-             *
-             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_LOADED
-             */
-            val LOADED: ThreadLoadStatus get() = ThreadLoadStatus(3L)
-        }
-    }
-
-    /**
-     * Godot's `ResourceLoader.CacheMode` enum as a typed value: `.value` is the raw number Godot uses,
-     * and the companion holds the named values (`ResourceLoader.CacheMode.<NAME>`).
-     *
-     * Generated from Godot docs: ResourceLoader.CacheMode
-     */
-    value class CacheMode(override val value: Long) : GodotEnumValue {
-        companion object {
-            /**
-             * Neither the main resource (the one requested to be loaded) nor any of its subresources are
-             * retrieved from cache nor stored into it. Dependencies (external resources) are loaded with
-             * `CacheMode.REUSE`.
-             *
-             * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE
-             */
-            val IGNORE: CacheMode get() = CacheMode(0L)
-            /**
-             * The main resource (the one requested to be loaded), its subresources, and its dependencies
-             * (external resources) are retrieved from cache if present, instead of loaded. Those not cached
-             * are loaded and then stored into the cache. The same rules are propagated recursively down the
-             * tree of dependencies (external resources).
-             *
-             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REUSE
-             */
-            val REUSE: CacheMode get() = CacheMode(1L)
-            /**
-             * Like `CacheMode.REUSE`, but the cache is checked for the main resource (the one requested to be
-             * loaded) as well as for each of its subresources. Those already in the cache, as long as the
-             * loaded and cached types match, have their data refreshed from storage into the already existing
-             * instances. Otherwise, they are recreated as completely new objects.
-             *
-             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE
-             */
-            val REPLACE: CacheMode get() = CacheMode(2L)
-            /**
-             * Like `CacheMode.IGNORE`, but propagated recursively down the tree of dependencies (external
-             * resources).
-             *
-             * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE_DEEP
-             */
-            val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
-            /**
-             * Like `CacheMode.REPLACE`, but propagated recursively down the tree of dependencies (external
-             * resources).
-             *
-             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE_DEEP
-             */
-            val REPLACE_DEEP: CacheMode get() = CacheMode(4L)
-        }
-    }
-    // ===== END GENERATED ENUMS: ResourceLoader =====
-
-    fun load(path: String): Resource? =
-        IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
-            RefCounted.owned(Resource(GodotHandle(MemorySegment.ofAddress(it))))
-        }
-
-    fun loadTexture2D(path: String): Texture2D? =
-        IosGodot.resourceLoaderLoad(path, "Texture2D").takeIf { it != 0L }?.let {
-            RefCounted.owned(Texture2D(GodotHandle(MemorySegment.ofAddress(it))))
-        }
-
-    fun loadAudioStream(path: String): AudioStream? =
-        IosGodot.resourceLoaderLoad(path, "AudioStream").takeIf { it != 0L }?.let {
-            RefCounted.owned(AudioStream(GodotHandle(MemorySegment.ofAddress(it))))
-        }
-
-    fun loadPackedScene(path: String): PackedScene? =
-        IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let {
-            RefCounted.owned(PackedScene(GodotHandle(MemorySegment.ofAddress(it))))
-        }
-
-    fun loadLightmapGIData(path: String): LightmapGIData? =
-        IosGodot.resourceLoaderLoad(path, "LightmapGIData").takeIf { it != 0L }?.let {
-            RefCounted.owned(LightmapGIData(GodotHandle(MemorySegment.ofAddress(it))))
-        }
-
-    /**
-     * [loadThreadedGetStatusWithProgress]'s result (named `ThreadLoadStatus` before task 128 A, when
-     * that name became Godot's enum `ResourceLoader.ThreadLoadStatus`).
-     */
-    data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
-
-    // Threaded loading: the request goes through the generic Variant call path (int return decodes
-    // cleanly). The status poll ptrcalls load_threaded_get_status with the optional progress
-    // out-Array supplied C-side, so progress is a real [0,1] value on iOS too.
-    fun loadThreadedRequest(
-        path: String,
-        typeHint: String = "",
-        useSubThreads: Boolean = false,
-        cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
-    ): GodotError =
-        GodotError((ObjectCalls.callWithVariantArgs(loadThreadedRequestBind, singleton, listOf(path, typeHint, useSubThreads, cacheMode.value)) as? Number)?.toLong()
-            ?: 0L)
-
-    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
-        val (status, progress) = ObjectCalls.ptrcallLoadStatusWithProgress(loadThreadedGetStatusBind, singleton, path)
-        return if (status < 0) {
-            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus.INVALID_RESOURCE, null)
-        } else {
-            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus(status), progress)
-        }
-    }
-
-    // After a threaded load completes the resource is in the ResourceLoader cache, so fetch it
-    // through the same synchronous C-shim as load() (which references the RefCounted resource
-    // correctly). The generic Variant-call path returned a handle whose PackedScene.instantiate()
-    // silently yielded null on device.
-    fun loadThreadedGet(path: String): Resource? =
-        IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let { RefCounted.owned(Resource(GodotHandle(MemorySegment.ofAddress(it)))) }
-
-    fun loadThreadedGetPackedScene(path: String): PackedScene? =
-        IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let { RefCounted.owned(PackedScene(GodotHandle(MemorySegment.ofAddress(it)))) }
-
-    private val singleton by lazy { ObjectCalls.getSingleton("ResourceLoader") }
-    private val loadThreadedRequestBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_request", 3614384323L) }
-    private val loadThreadedGetStatusBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_get_status", 4137685479L) }
-    private val loadThreadedGetBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_get", 1748875256L) }
-}
-
 inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =
     net.multigesture.kanama.ios.iosScriptInstanceForOwner(handle.segment.address()) as? T
 
@@ -321,8 +70,9 @@ inline fun <reified T> Node.kotlinScriptInstance(): T? =
 
 @OptIn(ExperimentalForeignApi::class)
 // KANAMA-IOS-HANDWRITTEN: [seam] thin cinterop facade over the C shim entry points the runtime and
-// the bespoke classes above still call (instance ids, object construction, typed loads, signal
-// connections, AudioStreamPlayer). Task 129 A removed the 53 functions nothing called any more.
+// the generated tree's iOS bodies still call (instance ids, signal connections).
+// Task 129 A removed the 53 functions nothing called any more; task 129 C the typed-load and
+// AudioStreamPlayer ones (both classes are generated once now).
 internal object IosGodot {
     fun objectGetInstanceId(objectHandle: Long): Long =
         kanama_ios_godot_object_get_instance_id(objectHandle)
@@ -332,36 +82,6 @@ internal object IosGodot {
 
     fun objectIsLive(objectHandle: Long, instanceId: Long): Boolean =
         net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_live(objectHandle, instanceId) != 0
-
-    fun resourceLoaderLoad(path: String, typeHint: String): Long =
-        kanama_ios_godot_resource_loader_load(path, typeHint)
-
-    fun constructObject(className: String): Long =
-        kanama_ios_godot_construct_object(className)
-
-    fun audioStreamPlayerSetStream(player: Long, stream: Long) {
-        kanama_ios_godot_audio_stream_player_set_stream(player, stream)
-    }
-
-    fun audioStreamPlayerSetVolumeDb(player: Long, volumeDb: Double) {
-        kanama_ios_godot_audio_stream_player_set_volume_db(player, volumeDb)
-    }
-
-    fun audioStreamPlayerSetPitchScale(player: Long, pitchScale: Double) {
-        kanama_ios_godot_audio_stream_player_set_pitch_scale(player, pitchScale)
-    }
-
-    fun audioStreamPlayerSetBus(player: Long, bus: String) {
-        kanama_ios_godot_audio_stream_player_set_bus(player, bus)
-    }
-
-    fun audioStreamPlayerSetStreamPaused(player: Long, paused: Boolean) {
-        kanama_ios_godot_audio_stream_player_set_stream_paused(player, if (paused) 1 else 0)
-    }
-
-    fun audioStreamPlayerPlay(player: Long, fromPosition: Double) {
-        kanama_ios_godot_audio_stream_player_play(player, fromPosition)
-    }
 
     fun objectEmitSignalInt(objectHandle: Long, signalName: String, value: Long): Int =
         kanama_ios_godot_object_emit_signal_int(objectHandle, signalName, value)

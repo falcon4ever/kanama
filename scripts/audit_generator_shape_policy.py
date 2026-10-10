@@ -960,9 +960,9 @@ RED_RUNS: tuple[tuple[str, str, str], ...] = (
     ("R8 create() without owned", "api/StandardMaterial3D.kt",
      "    companion object {\n        fun create(): StandardMaterial3D =\n"
      "            StandardMaterial3D(GodotHandle(ObjectCalls.constructObject(\"StandardMaterial3D\")))\n    }\n"),
-    ("R9 iOS loader without owned", "api/IosGodotApi.kt",
-     "    fun load(path: String): Resource? =\n        IosGodot.resourceLoaderLoad(path, \"\").takeIf { it != 0L }?.let {\n"
-     "            Resource(GodotHandle(MemorySegment.ofAddress(it)))\n        }\n"),
+    ("R9 typed loader without owned", "api/ResourceLoader.kt",
+     "    fun loadTexture2D(path: String): Texture2D? =\n        Texture2D.wrapBorrowed(\n"
+     "            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(b, singleton, path, \"Texture2D\", 0L),\n        )\n"),
     ("R10 downcast without its own +1", "api/Mesh.kt",
      "    companion object {\n        fun fromObject(value: GodotObject): Mesh? =\n"
      "            if (value.isClass(\"Mesh\")) Mesh(value.handle) else null\n    }\n"),
