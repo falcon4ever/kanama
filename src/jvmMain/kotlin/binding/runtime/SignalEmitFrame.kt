@@ -98,20 +98,17 @@ internal class SignalEmitFrame private constructor() : SignalArgWriter {
       val name = GodotStrings.makeStringName(signal)
       Native.FROM_STRING_NAME.invoke(base, name.address())
       owned = owned or 1
-      val pointers = base + POINTERS_OFFSET
-      for (i in 0..count) {
-        ADDRESS_SPACE.set(JAVA_LONG, pointers + i * 8L, base + i * VARIANT_SIZE)
-      }
-      ADDRESS_SPACE.set(JAVA_INT, base + ERROR_OFFSET, 0)
+      writePointerTable(block, base, count)
+      block.set(JAVA_INT, ERROR_OFFSET, 0)
       Native.METHOD_BIND_CALL.invoke(
         Signals.emitSignalBind.address(),
         instance,
-        pointers,
+        base + POINTERS_OFFSET,
         count + 1L,
         base + RETURN_OFFSET,
         base + ERROR_OFFSET,
       )
-      val error = ADDRESS_SPACE.get(JAVA_INT, base + ERROR_OFFSET)
+      val error = block.get(JAVA_INT, ERROR_OFFSET)
       check(error == 0) { "emit_signal($signal) failed: error_type=$error" }
     } finally {
       for (i in 0..count) {
@@ -146,13 +143,24 @@ internal class SignalEmitFrame private constructor() : SignalArgWriter {
     /** The typed signals have at most five arguments; the name is one more Variant. */
     private const val MAX_ARGUMENTS = 5
     private const val VARIANT_SIZE = 24L
-    private const val POINTERS_OFFSET = (MAX_ARGUMENTS + 1) * VARIANT_SIZE // 144
+    internal const val POINTERS_OFFSET = (MAX_ARGUMENTS + 1) * VARIANT_SIZE // 144
     private const val RETURN_OFFSET = POINTERS_OFFSET + (MAX_ARGUMENTS + 1) * 8L // 192
     private const val ERROR_OFFSET = RETURN_OFFSET + VARIANT_SIZE // 216
     private const val SCRATCH_OFFSET = ERROR_OFFSET + 16L // 232
-    private const val FRAME_SIZE = SCRATCH_OFFSET + 16L
+    internal const val FRAME_SIZE = SCRATCH_OFFSET + 16L
 
-    private val ADDRESS_SPACE = JvmSignalArgReader.ADDRESS_SPACE
+    /**
+     * Fills the frame's `const Variant **` table: entry i points at Variant slot i (slot 0 is the
+     * signal name). Written relative to [block], never at the absolute address `base + …`: on
+     * Android the native heap hands out tagged pointers (top byte `0xB4`), negative as a signed
+     * `long`, so an absolute address is not a valid segment offset (task 138 item 21). [base] is
+     * only the VALUE written, the address Godot reads through.
+     */
+    internal fun writePointerTable(block: MemorySegment, base: Long, count: Int) {
+      for (i in 0..count) {
+        block.set(JAVA_LONG, POINTERS_OFFSET + i * 8L, base + i * VARIANT_SIZE)
+      }
+    }
 
     private val stacks = ThreadLocal.withInitial { Stack() }
 

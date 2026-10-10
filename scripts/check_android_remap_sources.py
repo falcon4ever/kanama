@@ -14,6 +14,13 @@ them), applies the rules line by line to the same two trees (skipping `*.expect.
 does), strips comments, and fails on any forbidden fragment -- the same verdict the Gradle audit
 would reach. Call a function value as `f(args)` or `f?.let { it(args) }`, never `.invoke(`.
 
+It also fails on a whole-address-space segment (`MemorySegment.NULL.reinterpret(...)`, also
+`NULL_SEGMENT`, `ofAddress(0)`/`ofAddress(0x0)`, a wrapped chain, or a same-file `val` alias of
+one; task 138 item 21): such a segment is addressed with ABSOLUTE addresses as offsets, and on Android every
+native heap pointer is tagged (top byte `0xB4`), negative as a signed `long`, so the access throws
+`IndexOutOfBoundsException` on the device while every desktop run passes. Address native memory
+through a segment derived from the pointer (`ptr.reinterpret(size)`, offsets relative to it).
+
 Usage:
     python3 scripts/check_android_remap_sources.py
 """
@@ -29,6 +36,17 @@ REMAP = ROOT / "android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap
 TREES = (ROOT / "src/jvmMain/kotlin", ROOT / "src/commonMain/kotlin")
 EXPECT_SUFFIX = ".expect.kt"
 TAG = "[android-remap-sources]"
+
+# A segment based at address 0 (`MemorySegment.NULL`, Kanama's `NULL_SEGMENT`, `ofAddress(0)`):
+# reinterpreted, its offsets are absolute addresses (task 138 item 21). Matched against the
+# comment-stripped file joined into one string, so a ktfmt-wrapped chain cannot slip past.
+_ZERO_BASE = r"(?:\bNULL\b|\bNULL_SEGMENT\b|\bofAddress\s*\(\s*(?:0[xX]0+|0+)[lL]?\s*\))"
+ADDRESS_SPACE_SEGMENT = re.compile(_ZERO_BASE + r"\s*\??\.\s*reinterpret\s*\(")
+# A `val` aliasing a zero-based segment in the same file (`val n = MemorySegment.NULL`); a use
+# `n.reinterpret(` is the same idiom. An alias in another file is not traced.
+ZERO_BASE_ALIAS = re.compile(
+    r"\bval\s+(\w+)\s*(?::\s*MemorySegment\s*)?=\s*(?:MemorySegment\s*\.\s*)?" + _ZERO_BASE + r"(?!\s*\??\.)"
+)
 
 # Hot call sites that desktop calls with `invokeExact`, which ART rejects (task 131 item 16): the
 # remap must rewrite every one to `invokeWithArguments`. Each file listed here must contain at least
@@ -78,6 +96,15 @@ def strip_comments(lines: list[str]) -> list[str]:
     return out_lines
 
 
+def address_space_segments(text: str) -> list[int]:
+    """Line numbers where [text] (comment-stripped, whole file) reinterprets a zero-based segment."""
+    starts = [m.start() for m in ADDRESS_SPACE_SEGMENT.finditer(text)]
+    for alias in {m.group(1) for m in ZERO_BASE_ALIAS.finditer(text)}:
+        use = re.compile(r"(?<![\w.])" + re.escape(alias) + r"\s*\??\.\s*reinterpret\s*\(")
+        starts += [m.start() for m in use.finditer(text)]
+    return sorted({text.count("\n", 0, start) + 1 for start in starts})
+
+
 def main() -> int:
     rules, fragments = parse_remap(REMAP.read_text(encoding="utf-8"))
     failures: list[str] = []
@@ -94,6 +121,12 @@ def main() -> int:
                     line = line.replace(needle, replacement)
                 remapped.append(line)
             original = strip_comments(path.read_text(encoding="utf-8").splitlines())
+            for number in address_space_segments("\n".join(original)):
+                failures.append(
+                    f"{path.relative_to(ROOT)}:{number}: whole-address-space segment: an Android heap "
+                    "pointer is tagged (top byte 0xB4) and negative as a long, so it is never a valid "
+                    "offset -- address memory through the pointer's own segment (ptr.reinterpret(size))"
+                )
             for number, (before, after) in enumerate(zip(original, strip_comments(remapped)), start=1):
                 if ".invokeExact(" in before:
                     rel = str(path.relative_to(ROOT))
@@ -119,7 +152,7 @@ def main() -> int:
         return 1
     print(
         f"{TAG} PASS {files} file(s) remapped with {len(rules)} rule(s); "
-        f"no forbidden fragment ({len(fragments)} checked); {sum(exact_sites.values())} invokeExact site(s) "
+        f"no forbidden fragment ({len(fragments)} checked), no whole-address-space segment; {sum(exact_sites.values())} invokeExact site(s) "
         f"rewritten ({', '.join(f'{Path(k).name}: {v}' for k, v in sorted(exact_sites.items()))})"
     )
     return 0

@@ -11,8 +11,8 @@ import net.multigesture.kanama.api.SignalArgumentException
 
 /**
  * Reads a signal emission's arguments in place from Godot's `const Variant **` array (task 134 D4).
- * The array and each Variant are addressed as `long`s (one whole-address-space segment reads the
- * pointers, the converters take `long` arguments), and `int`, `float`, `bool`,
+ * The array is read through a short-lived segment based at its pointer, each Variant is addressed
+ * as a `long` (the converters take `long` arguments), and `int`, `float`, `bool`,
  * `String`/`StringName` and objects are converted through one per-thread scratch cell, so reading
  * an argument allocates nothing but the value itself (a String, a wrapper for an object). Every
  * other type goes through [BuiltinTypes.readVariantScalar], the `GodotObject.call` decode.
@@ -29,11 +29,14 @@ internal class JvmSignalArgReader private constructor() : SignalArgReader {
   override val count: Int
     get() = argc
 
-  /** Runs [block] reading the [count] Variants whose pointers are at [args]. */
-  fun dispatch(args: Long, count: Int, block: (SignalArgReader) -> Unit) {
+  /**
+   * Runs [block] reading the [count] Variants whose pointers are at [args] (Godot's zero-length
+   * upcall segment).
+   */
+  fun dispatch(args: MemorySegment, count: Int, block: (SignalArgReader) -> Unit) {
     val savedArgs = argv
     val savedCount = argc
-    argv = args
+    argv = args.address()
     argc = count
     try {
       block(this)
@@ -43,12 +46,18 @@ internal class JvmSignalArgReader private constructor() : SignalArgReader {
     }
   }
 
-  /** The address of argument [index]'s Variant. */
-  private fun variant(index: Int): Long {
+  /**
+   * The address of argument [index]'s Variant. The array is read at an offset relative to a segment
+   * based at [argv], never at its absolute address: an Android heap pointer is tagged (top byte
+   * `0xB4`) and negative as a signed `long`, which no segment offset can be (task 138 item 21;
+   * Godot usually passes a stack array, untagged, but a Kotlin emit passes its heap frame). The
+   * segment is local, never stored, so the JIT removes it (no allocation per read, task 134 D4).
+   */
+  internal fun variant(index: Int): Long {
     if (index < 0 || index >= argc) {
       throw SignalArgumentException("argument ${index + 1} was not emitted ($argc were)")
     }
-    return ADDRESS_SPACE.get(JAVA_LONG, argv + index * 8L)
+    return MemorySegment.ofAddress(argv).reinterpret(argc * 8L).get(JAVA_LONG, index * 8L)
   }
 
   private fun typeOf(variant: Long): Int = Native.GET_TYPE.invoke(variant) as Int
@@ -151,9 +160,6 @@ internal class JvmSignalArgReader private constructor() : SignalArgReader {
     private const val STRING = 4
     private const val STRING_NAME = 21
     private const val OBJECT = 24
-
-    /** The whole address space: reads a pointer at a raw address without a segment per read. */
-    val ADDRESS_SPACE: MemorySegment = MemorySegment.NULL.reinterpret(Long.MAX_VALUE)
 
     private val readers = ThreadLocal.withInitial { JvmSignalArgReader() }
 
