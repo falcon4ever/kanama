@@ -293,7 +293,7 @@ case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sou
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
      "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt", "the remap stops rewriting `.invokeExact(` (the builtin-call downcall would reach ART)")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 33)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 34)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -350,8 +350,14 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 33", "KANAMA_WEB_PROTOCOL_VERSION = 32")],
-     "protocol version disagrees", "the bridge pins protocol 32 while the emitter says 33")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 34", "KANAMA_WEB_PROTOCOL_VERSION = 33")],
+     "protocol version disagrees", "the bridge pins protocol 33 while the emitter says 34")
+case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
+     "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
+case("check_protocol_pins.py (freed-check opcode)", py("check_protocol_pins.py"),
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_OPCODE_FREED_CHECK = 1004;", "KANAMA_WEB_OPCODE_FREED_CHECK = 1005;")],
+     "freed-check opcode", "the bridge asks the freed check on opcode 1005 while the proxy answers 1004")
 case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")
@@ -372,8 +378,8 @@ case("check_unapplied_annotations.py", py("check_unapplied_annotations.py"),
      "imports @OnReady but never applies it", "a lifecycle annotation is imported and never applied")
 case("check_web_callback_flush.py", py("check_web_callback_flush.py"),
      [Edit("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt",
-           "    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)\n    commands.flush()",
-           "    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)")],
+           "    userScript { KanamaWebProjectRegistry.enterTree(record.scriptId, record.script) }\n    commands.flush()",
+           "    userScript { KanamaWebProjectRegistry.enterTree(record.scriptId, record.script) }")],
      "without flushing the command buffer", "a Web callback boundary stops flushing the command buffer")
 case("check_web_callback_flush.py (constructor)", py("check_web_callback_flush.py"),
      [Edit("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt",

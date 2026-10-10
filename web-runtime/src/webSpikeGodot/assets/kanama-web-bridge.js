@@ -9,7 +9,17 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 33;
+  const KANAMA_WEB_PROTOCOL_VERSION = 34;
+  // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
+  const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
+  // Added after the marker when Godot's error log could not be reached (Main.kt
+  // WEB_SCRIPT_ERROR_UNREPORTED): the error is still contained, but no report counted it.
+  const SCRIPT_ERROR_UNREPORTED = "(not reported to Godot)";
+  // Task 138 item 3: the object-query arm that answers whether a browser handle's object is gone.
+  const KANAMA_WEB_OPCODE_FREED_CHECK = 1004;
+  const FREED_INSTANCE_MESSAGE = (handle) =>
+    `Invalid access to previously freed instance (Kanama Web handle=${handle}): the engine freed ` +
+    "the object while a script still held it";
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -236,6 +246,8 @@
     objectQueryCallbacks: new Map(),
     noArgsVector2Callbacks: new Map(),
     noArgsVector3Callbacks: new Map(),
+    // Task 131 item 14: per script, the proxy function that pushes a script error to Godot.
+    reportCallbacks: new Map(),
     signalVector2iCallbacks: new Map(),
     tweenCallbacks: new Map(),
     handleOwners: new Map(),
@@ -301,16 +313,29 @@
     doubleArgCalls: 0,
     packedReturnCalls: 0,
     builtinCalls: 0,
-    releasedSignalWaits: 0,
+    releasedSignalCallbacks: 0,
     addBunnyCalls: 0,
     removeBunnyCalls: 0,
     finishCalls: 0,
     callbackErrors: 0,
     lastCallbackError: null,
+    lastCallbackErrorFatal: false,
+    // What a packed-return callback answers when its script threw (contained) or the page failed:
+    // not a packed value, so the proxy returns the declared type's default instead of parsing it.
+    scriptErrorResult: "\u001fkanama-script-error\u001f",
+    // Commands skipped because their target was freed by the engine (flushCommands): the messages
+    // not yet reported.
+    freedCommandSkips: [],
     // Every boundary failure's message, oldest first, capped: lastCallbackError alone hides the
     // FIRST failure behind whatever it caused (an autoload that failed to construct surfaced only
     // as the later script that read it).
     callbackErrorLog: [],
+    // Task 131 item 14: Kotlin script exceptions that were reported to Godot and contained (they
+    // are also counted in callbackErrors, so a demo run that throws still fails its gate).
+    scriptErrors: 0,
+    scriptErrorLog: [],
+    // The texts handed to Godot's error log, oldest first, capped.
+    scriptErrorReports: [],
     drawCalls: 0,
     drawCommands: 0,
     drawBatches: 0,
@@ -503,6 +528,18 @@
       },
     },
 
+    /**
+     * Counts one failed callback. `lastCallbackError` names the failure that ended the page, so a
+     * contained script error (`fatal` false) never replaces an earlier fatal one; the log keeps
+     * every message either way.
+     */
+    recordCallbackError(message, fatal) {
+      this.callbackErrors += 1;
+      if (fatal || !this.lastCallbackErrorFatal) this.lastCallbackError = message;
+      if (fatal) this.lastCallbackErrorFatal = true;
+      if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(message);
+    },
+
     invoke(handle, callback, member, action, fallback) {
       const previousOwner = this.activeOwnerHandle;
       // A script with its own proxy owns its OWN lifetime, whatever the routing map
@@ -534,9 +571,19 @@
           `Kanama Web boundary failure: handle=${handle}${script ? ` (${script})` : ""} ` +
             `callback=${callback} member=${member}\n${detail}`,
         );
-        this.callbackErrors += 1;
-        this.lastCallbackError = contextual.message;
-        if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(contextual.message);
+        if (message.includes(SCRIPT_ERROR_MARKER)) {
+          // A script exception the Kotlin side already reported to Godot's error log
+          // (reportScriptError counted it) and contained (task 131 item 14): the callback returns
+          // its default and the game runs on. Bridge or protocol faults still end the page below.
+          if (this.scriptErrorLog.length < 8) this.scriptErrorLog.push(contextual.message);
+          if (message.includes(SCRIPT_ERROR_UNREPORTED)) {
+            // reportScriptError never ran, so nothing counted this error: count it here, or a
+            // swallowed failure would leave the run green.
+            this.recordCallbackError(contextual.message, false);
+          }
+          return fallback;
+        }
+        this.recordCallbackError(contextual.message, true);
         globalThis.failKanamaWeb(contextual);
         return fallback;
       } finally {
@@ -927,7 +974,7 @@
         "property_get",
         `property#${propertyId}`,
         () => this.api.kanamaWebGetPackedProperty(handle, propertyId),
-        "",
+        this.scriptErrorResult,
       );
     },
     setLongProperty(handle, propertyId, value) {
@@ -1105,7 +1152,7 @@
         "registered_function",
         `method#${methodId}`,
         () => this.api.kanamaWebCallPacked(handle, methodId),
-        "",
+        this.scriptErrorResult,
       );
     },
     // Task 134 D1: a registered method with arguments AND a return value: the packed argument
@@ -1117,7 +1164,7 @@
         "registered_function",
         `method#${methodId}`,
         () => this.api.kanamaWebCallPackedArgs(handle, methodId, String(value)),
-        "",
+        this.scriptErrorResult,
       );
     },
     bunnymarkMethodId(method) {
@@ -1225,6 +1272,25 @@
       this.tweenCallbacks.set(handle, tween);
       this.noArgsVector3Callbacks.set(handle, noArgsVector3);
     },
+    installReportCallback(handle, report) {
+      this.reportCallbacks.set(handle, report);
+    },
+    /**
+     * Task 131 item 14: hands a Kotlin script error, rendered by the Kotlin side, to Godot's error
+     * log through a proxy's `push_error` (the calling script's own when it has one). Without any
+     * proxy (a constructor that failed before its callbacks were reachable) it is the browser
+     * console, which is where Godot's own error output lands as well.
+     */
+    reportScriptError(text) {
+      this.scriptErrors += 1;
+      this.recordCallbackError(text, false);
+      if (this.scriptErrorReports.length < 16) this.scriptErrorReports.push(text);
+      const callback =
+        this.reportCallbacks.get(this.activeOwnerHandle) ??
+        this.reportCallbacks.values().next().value;
+      if (callback) callback(text);
+      else console.error(text);
+    },
     clearProxyCallbacks(handle) {
       this.applyCallbacks.delete(handle);
       this.immediateCallbacks.delete(handle);
@@ -1242,6 +1308,7 @@
       this.signalVector2iCallbacks.delete(handle);
       this.tweenCallbacks.delete(handle);
       this.noArgsVector3Callbacks.delete(handle);
+      this.reportCallbacks.delete(handle);
       this.handleOwners.delete(handle);
       // A spawned SCRIPTED child is deliberately routed through its instantiator (the
       // immediatePackedSceneInstantiate re-point; task-60h/#125 separated routing from
@@ -1560,7 +1627,7 @@
       this.immediateChildCountResult = null;
       callback(handle, includeInternal);
       if (!Number.isInteger(this.immediateChildCountResult)) {
-        throw new Error("Godot immediate callback did not publish a child count");
+        throw this.unpublishedResult(handle, "Godot immediate callback did not publish a child count");
       }
       return this.immediateChildCountResult;
     },
@@ -1766,7 +1833,7 @@
       this.immediateSignalResult = null;
       callback(handle, name, value);
       if (!Number.isInteger(this.immediateSignalResult)) {
-        throw new Error("Godot signal callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot signal callback did not publish a result");
       }
       return this.immediateSignalResult;
     },
@@ -1777,7 +1844,7 @@
       this.immediateSignalResult = null;
       callback(handle, name);
       if (!Number.isInteger(this.immediateSignalResult)) {
-        throw new Error("Godot no-args signal callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot no-args signal callback did not publish a result");
       }
       if (this.mode === "match3") this.match3NoArgsSignalEmits += 1;
       return this.immediateSignalResult;
@@ -1793,7 +1860,7 @@
       this.immediateSignalResult = null;
       callback(handle, name, x, y);
       if (!Number.isInteger(this.immediateSignalResult)) {
-        throw new Error("Godot Vector2i signal callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot Vector2i signal callback did not publish a result");
       }
       if (this.mode === "match3") this.match3Vector2iSignalEmits += 1;
       return this.immediateSignalResult;
@@ -1851,7 +1918,7 @@
       callback(opcode, handle, `${name}\u001f${resultHandle}`);
       const result = this.immediateLongResult;
       if (!Number.isInteger(result)) {
-        throw new Error("Godot property object query callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot property object query callback did not publish a result");
       }
       if (result !== resultHandle) {
         this.releaseBrowserHandle(resultHandle, "Object");
@@ -1870,6 +1937,15 @@
       this.immediateObjectHandleResult = null;
       callback(handle, resultHandle, path);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "Node");
+        },
+        "Godot node lookup callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const scriptHandle = this.api.kanamaWebIsLive(result) === 1;
         if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
@@ -1925,6 +2001,15 @@
       this.immediateObjectHandleResult = null;
       callback(resourceHandle, proposedHandle, editState);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        resourceHandle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(proposedHandle);
+          this.releaseBrowserHandle(proposedHandle, "Node");
+        },
+        "Godot PackedScene callback did not publish a result",
+      );
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(proposedHandle);
         this.releaseBrowserHandle(proposedHandle, "Node");
@@ -2034,6 +2119,16 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          else this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, kind);
+        },
+        "Godot no-args object callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const liveScript = this.api.kanamaWebIsLive(result) === 1;
         if (!isCollider || (!liveScript && this.isBrowserHandleLive(result) !== 1)) {
@@ -2065,7 +2160,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle);
       if (!Number.isInteger(this.immediateLongResult)) {
-        throw new Error("Godot Tween no-args callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot Tween no-args callback did not publish a result");
       }
       return this.immediateLongResult;
     },
@@ -2073,6 +2168,7 @@
       const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween bool");
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, value);
+      this.rejectUnpublishedObject(this.immediateObjectHandleResult, handle, () => {}, "Godot Tween bool callback did not return its receiver");
       if (this.immediateObjectHandleResult !== handle) {
         throw new Error("Godot Tween bool callback did not return its receiver");
       }
@@ -2082,6 +2178,7 @@
       const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tweener long");
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, value);
+      this.rejectUnpublishedObject(this.immediateObjectHandleResult, handle, () => {}, "Godot Tweener long callback did not return its receiver");
       if (this.immediateObjectHandleResult !== handle) {
         throw new Error("Godot Tweener long callback did not return its receiver");
       }
@@ -2097,6 +2194,15 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle, packed);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
+        },
+        "Godot move-and-collide callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         throw new Error("Godot move-and-collide callback published an invalid handle");
       }
@@ -2106,12 +2212,44 @@
       }
       return result;
     },
+    /**
+     * The error for a callback that did not publish its result. When the cause is an object the
+     * engine freed while a script still held its handle (a child freed with its parent, a timer, a
+     * body), say so, as desktop does: "did not publish a result" names a symptom, and Kotlin turns
+     * this message into the freed-instance IllegalStateException (task 138 item 3).
+     */
+    unpublishedResult(handle, message) {
+      return new Error(this.isHandleFreed(handle) ? FREED_INSTANCE_MESSAGE(handle) : message);
+    },
+    /**
+     * Task 131 item 3 for the object-returning shapes. A callback on a receiver the engine freed
+     * publishes nothing (a debug build aborts the typed read) or 0 (a null receiver); both are
+     * "the object is gone", not a missing node or a bridge fault. `abandon` gives the proposed
+     * result handle back first, so the throw leaks nothing. An unpublished result that is not a
+     * freed receiver keeps its own message. A published 0 for a live receiver is a real null.
+     */
+    rejectUnpublishedObject(result, handle, abandon, message) {
+      if (Number.isInteger(result) && result !== 0) return;
+      const freed = this.isHandleFreed(handle);
+      if (!freed && result === 0) return;
+      abandon();
+      throw new Error(freed ? FREED_INSTANCE_MESSAGE(handle) : message);
+    },
+    isHandleFreed(handle, ownerHandle = this.activeOwnerHandle) {
+      const callback =
+        this.objectQueryCallbacks.get(ownerHandle) ??
+        this.objectQueryCallbacks.values().next().value;
+      if (!callback || (handle & BROWSER_HANDLE_NAMESPACE) === 0) return false;
+      this.immediateLongResult = null;
+      callback(KANAMA_WEB_OPCODE_FREED_CHECK, handle, "");
+      return this.immediateLongResult === 1;
+    },
     immediateStringQuery(opcode, handle, value) {
       const callback = this.callbackFor(this.objectQueryCallbacks, handle, "Godot object query");
       this.immediateStringResult = null;
       callback(opcode, handle, value);
       if (typeof this.immediateStringResult !== "string") {
-        throw new Error("Godot string query callback did not publish a string result");
+        throw this.unpublishedResult(handle, "Godot string query callback did not publish a string result");
       }
       // A generic call's object return that resolved to an already-tracked handle ("o", id,
       // "tracked"): the calling script holds that handle too.
@@ -2154,7 +2292,7 @@
         this.immediateVector3Result === null ||
         !Number.isFinite(this.immediateVector3Result.x)
       ) {
-        throw new Error("Godot Vector2-arg Vector3 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot Vector2-arg Vector3 callback did not publish a finite result");
       }
       return this.immediateVector3Result.x;
     },
@@ -2170,7 +2308,7 @@
         this.immediateVector3Result === null ||
         !Number.isFinite(this.immediateVector3Result.x)
       ) {
-        throw new Error("Godot indexed Vector3 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot indexed Vector3 callback did not publish a finite result");
       }
       return this.immediateVector3Result.x;
     },
@@ -2181,7 +2319,7 @@
       // flags slot carries -1 to select the disconnect arm in the shared connect callback.
       callback(handle, signal, targetHandle, method, -1, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw new Error("Godot bound disconnect callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot bound disconnect callback did not publish a result");
       }
       return this.immediateConnectResult;
     },
@@ -2202,6 +2340,15 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, resultHandle, index);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "Node");
+        },
+        "Godot indexed lookup callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const scriptHandle = this.api.kanamaWebIsLive(result) === 1;
         if (!scriptHandle && this.isBrowserHandleLive(result) !== 1) {
@@ -2225,6 +2372,15 @@
       this.immediateObjectHandleResult = null;
       callback(111, handle, resultHandle, index);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "KinematicCollision3D");
+        },
+        "Godot slide-collision callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         throw new Error("Godot slide-collision callback published an invalid handle");
       }
@@ -2244,6 +2400,15 @@
       this.immediateObjectHandleResult = null;
       callback(133, handle, resultHandle, index);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        handle,
+        () => {
+          this.api.kanamaWebDiscardNodeHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "Node");
+        },
+        "Godot child lookup callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         const liveScript = this.api.kanamaWebIsLive(result) === 1;
         if (!liveScript && this.isBrowserHandleLive(result) !== 1) {
@@ -2263,6 +2428,7 @@
       const callback = this.callbackFor(this.tweenCallbacks, handle, "Godot Tween object");
       this.immediateObjectHandleResult = null;
       callback(opcode, handle, valueId);
+      this.rejectUnpublishedObject(this.immediateObjectHandleResult, handle, () => {}, "Godot Tween object callback did not return its receiver");
       if (this.immediateObjectHandleResult !== handle) {
         throw new Error("Godot Tween object callback did not return its receiver");
       }
@@ -2283,6 +2449,12 @@
       const callback = this.callbackFor(this.tweenCallbacks, objectId, "Godot PropertyTweener color");
       this.immediateObjectHandleResult = null;
       callback(opcode, objectId, 0, 0, "", r, g, b, a);
+      this.rejectUnpublishedObject(
+        this.immediateObjectHandleResult,
+        objectId,
+        () => {},
+        "Godot PropertyTweener color callback did not return its receiver",
+      );
       return this.immediateObjectHandleResult === objectId ? objectId : 0;
     },
     immediateTweenPropertyDouble(opcode, tweenHandle, targetHandle, property, value, duration) {
@@ -2321,6 +2493,15 @@
       this.immediateObjectHandleResult = null;
       callback(opcode, tweenHandle, resultHandle, targetHandle, property, ...values);
       const result = this.immediateObjectHandleResult;
+      this.rejectUnpublishedObject(
+        result,
+        tweenHandle,
+        () => {
+          this.api.kanamaWebDiscardBrowserHandle(resultHandle);
+          this.releaseBrowserHandle(resultHandle, "PropertyTweener");
+        },
+        "Godot Tween property callback did not publish a result",
+      );
       if (result !== 0 && result !== resultHandle) {
         throw new Error("Godot Tween property callback published an invalid handle");
       }
@@ -2364,7 +2545,7 @@
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw new Error("Godot connect callback did not publish a result");
+        throw this.unpublishedResult(this.isHandleFreed(handle) ? handle : targetHandle, "Godot connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
         const sourceKind = this.browserHandleSlot(handle)?.kind;
@@ -2379,7 +2560,7 @@
       this.immediateConnectResult = null;
       callback(handle, signal, targetHandle, method, flags, boundValue);
       if (!Number.isInteger(this.immediateConnectResult)) {
-        throw new Error("Godot bound connect callback did not publish a result");
+        throw this.unpublishedResult(this.isHandleFreed(handle) ? handle : targetHandle, "Godot bound connect callback did not publish a result");
       }
       if (this.immediateConnectResult === 0) {
         const sourceKind = this.browserHandleSlot(handle)?.kind;
@@ -2417,7 +2598,7 @@
     // from the watcher's NOTIFICATION_PREDELETE, so it bypasses `invoke`: the owner may be
     // gone, which Kotlin treats as nothing left to cancel.
     releaseSignalCallback(handle, callbackId) {
-      this.releasedSignalWaits += 1;
+      this.releasedSignalCallbacks += 1;
       return this.api.kanamaWebReleaseSignalCallback(handle, callbackId);
     },
     dispatchSignal0(handle, callbackId) {
@@ -2450,7 +2631,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (!Number.isInteger(this.immediateLongResult)) {
-        throw new Error("Godot object query callback did not publish an integer result");
+        throw this.unpublishedResult(handle, "Godot object query callback did not publish an integer result");
       }
       return this.immediateLongResult;
     },
@@ -2461,7 +2642,7 @@
       this.immediateLongResult = null;
       callback(65, handle, ratio);
       if (this.immediateLongResult !== 1) {
-        throw new Error("Godot set_progress_ratio callback did not confirm application");
+        throw this.unpublishedResult(handle, "Godot set_progress_ratio callback did not confirm application");
       }
       return this.immediateLongResult;
     },
@@ -2473,7 +2654,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (this.immediateLongResult !== 1) {
-        throw new Error("Godot double-query callback did not confirm application");
+        throw this.unpublishedResult(handle, "Godot double-query callback did not confirm application");
       }
       return this.immediateLongResult;
     },
@@ -2487,7 +2668,7 @@
       this.immediateLongResult = null;
       callback(opcode, handle, value);
       if (!Number.isInteger(this.immediateLongResult)) {
-        throw new Error("Godot double-returning query callback did not publish a result");
+        throw this.unpublishedResult(handle, "Godot double-returning query callback did not publish a result");
       }
       return this.immediateLongResult;
     },
@@ -2504,7 +2685,7 @@
         !Number.isFinite(this.immediateVector2Result.x) ||
         !Number.isFinite(this.immediateVector2Result.y)
       ) {
-        throw new Error("Godot Vector2 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot Vector2 callback did not publish a finite result");
       }
       return this.immediateVector2Result.x;
     },
@@ -2540,7 +2721,7 @@
         !Number.isFinite(this.immediateVector3Result.y) ||
         !Number.isFinite(this.immediateVector3Result.z)
       ) {
-        throw new Error("Godot Vector3 callback did not publish a finite result");
+        throw this.unpublishedResult(handle, "Godot Vector3 callback did not publish a finite result");
       }
       return this.immediateVector3Result.x;
     },
@@ -2606,6 +2787,9 @@
       // misparse (a handle read as an opcode). Only surfaces for demos that mutate during a
       // flush, i.e. dodge's mob spawning; match3/bunnymark never re-enter mid-batch.
       words = words.slice(0, wordCount);
+      // A top-level flush starts clean: messages a throw left unreported must not surface against
+      // another script. A nested flush (a callback flushing mid-batch) keeps the outer's.
+      if (this.activeCommandFlushFrame === null) this.freedCommandSkips = [];
       if (this.activeDraw) {
         this.drawBatches += 1;
         this.maxDrawCommands = Math.max(this.maxDrawCommands, commandCount);
@@ -2634,28 +2818,53 @@
       let groupCrossings = 0;
       let scanOffset = 0;
       let applied = 0;
+      let skippedFreed = 0;
+      // Batch indices of the commands skipped because their target was freed: they were consumed
+      // but NOT applied, so the bookkeeping below must not treat them as applied (the applied ones
+      // are no longer a prefix).
+      const skippedIndices = new Set();
+      let groupFirstIndex = 0;
       const flushGroup = () => {
         if (groupCommands === 0) return;
         const callback = this.applyCallbacks.get(groupOwner);
         if (!callback) {
           throw new Error(`Godot command callback is not installed for owner=${groupOwner}`);
         }
-        const parentFrame = this.activeCommandFlushFrame;
-        const frame = { applied: 0 };
-        this.activeCommandFlushFrame = frame;
-        try {
-          // Must be slice(), not subarray(): Godot's js_buffer_to_packed_byte_array reads
-          // from the underlying ArrayBuffer's start and ignores a view's byteOffset, so a
-          // subarray view for any group after the first (non-zero offset) would deliver the
-          // wrong commands to that owner's proxy. slice() copies into a fresh zero-offset
-          // buffer. Single-group batches (match3/bunnymark) start at 0 and were unaffected;
-          // multi-owner batches (e.g. dodge's new_game) require this.
-          callback(words.slice(groupStart, groupStart + groupWords), groupCommands);
-        } finally {
-          this.activeCommandFlushFrame = parentFrame;
+        let from = groupStart;
+        let remaining = groupCommands;
+        while (remaining > 0) {
+          const parentFrame = this.activeCommandFlushFrame;
+          const frame = { applied: 0 };
+          this.activeCommandFlushFrame = frame;
+          try {
+            // Must be slice(), not subarray(): Godot's js_buffer_to_packed_byte_array reads
+            // from the underlying ArrayBuffer's start and ignores a view's byteOffset, so a
+            // subarray view for any group after the first (non-zero offset) would deliver the
+            // wrong commands to that owner's proxy. slice() copies into a fresh zero-offset
+            // buffer. Single-group batches (match3/bunnymark) start at 0 and were unaffected;
+            // multi-owner batches (e.g. dodge's new_game) require this.
+            callback(words.slice(from, groupStart + groupWords), remaining);
+          } finally {
+            this.activeCommandFlushFrame = parentFrame;
+          }
+          applied += frame.applied;
+          groupCrossings += 1;
+          if (frame.applied >= remaining) break;
+          // The proxy stopped at command `frame.applied`. When its target is an object the engine
+          // freed under the script (a setter queued on a freed node), that command alone is
+          // skipped and reported (see takeFreedCommandSkips) and the rest of the group runs;
+          // anything else stays a protocol fault, which Kotlin's applied/expected check ends the
+          // page on.
+          let stop = from;
+          for (let skipped = 0; skipped < frame.applied; skipped += 1) {
+            stop += commandWordCount(words[stop]);
+          }
+          if (!this.skipFreedCommand(words[stop], words[stop + 1], words[stop + 3], groupOwner)) break;
+          skippedFreed += 1;
+          skippedIndices.add(groupFirstIndex + (groupCommands - remaining) + frame.applied);
+          from = stop + commandWordCount(words[stop]);
+          remaining -= frame.applied + 1;
         }
-        applied += frame.applied;
-        groupCrossings += 1;
       };
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[scanOffset];
@@ -2670,6 +2879,7 @@
         if (groupCommands === 0) {
           groupStart = scanOffset;
           groupOwner = owner;
+          groupFirstIndex = commandIndex;
         }
         groupWords += size;
         groupCommands += 1;
@@ -2680,16 +2890,17 @@
       this.kotlinToGodotMs.push(performance.now() - started);
       let wordOffset = 0;
       let positionMutationCount = 0;
+      const appliedAt = (index) => index < applied + skippedFreed && !skippedIndices.has(index);
       const audioOpcodes = [];
       const commandData = new DataView(words.buffer, words.byteOffset, wordCount * 4);
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[wordOffset];
-        if (commandIndex < applied && opcode === 13) {
+        if (appliedAt(commandIndex) && opcode === 13) {
           const childKind = this.browserHandleSlot(words[wordOffset + 2])?.kind;
           if (childKind === "AudioStreamPlayer") this.match3AudioPlayerAdds += 1;
           else this.match3AddChildCommands += 1;
         }
-        if (commandIndex < applied && opcode === 16) {
+        if (appliedAt(commandIndex) && opcode === 16) {
           this.match3TextureAssignments += 1;
           const tileHandle = this.match3TileRootBySprite.get(words[wordOffset + 1]);
           const textureIndex = this.match3TextureIndexByHandle.get(words[wordOffset + 2]);
@@ -2697,22 +2908,22 @@
             this.match3TileTypeByHandle.set(tileHandle, textureIndex);
           }
         }
-        if (commandIndex < applied && opcode === 3) {
+        if (appliedAt(commandIndex) && opcode === 3) {
           this.match3PositionMutations += 1;
           this.match3NodePositions.set(words[wordOffset + 1], {
             x: commandData.getFloat32(wordOffset * 4 + 8, true),
             y: commandData.getFloat32(wordOffset * 4 + 12, true),
           });
         }
-        if (commandIndex < applied && opcode === 30) this.match3ScaleMutations += 1;
-        if (commandIndex < applied && opcode === 32) this.match3ModulateMutations += 1;
-        if (commandIndex < applied && opcode === 43) {
+        if (appliedAt(commandIndex) && opcode === 30) this.match3ScaleMutations += 1;
+        if (appliedAt(commandIndex) && opcode === 32) this.match3ModulateMutations += 1;
+        if (appliedAt(commandIndex) && opcode === 43) {
           this.match3ParticleEmittingCommands += 1;
           const particleHandle = words[wordOffset + 1];
           const snapshot = this.particleSnapshots.get(particleHandle);
           if (snapshot) snapshot.emitting = words[wordOffset + 2] !== 0;
         }
-        if (commandIndex < applied && opcode === 46) {
+        if (appliedAt(commandIndex) && opcode === 46) {
           audioOpcodes.push(opcode);
           const playerHandle = words[wordOffset + 1];
           const streamHandle = words[wordOffset + 2];
@@ -2725,36 +2936,36 @@
           }
           this.match3AudioStreamAssignments += 1;
         }
-        if (commandIndex < applied && opcode === 47) {
+        if (appliedAt(commandIndex) && opcode === 47) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           if (state) state.bus = this.resolveCommandStringName(words[wordOffset + 2]);
           this.match3AudioBusCommands += 1;
         }
-        if (commandIndex < applied && opcode === 48) {
+        if (appliedAt(commandIndex) && opcode === 48) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           if (state) state.volumeDb = commandData.getFloat64(wordOffset * 4 + 8, true);
           this.match3AudioVolumeCommands += 1;
         }
-        if (commandIndex < applied && opcode === 49) {
+        if (appliedAt(commandIndex) && opcode === 49) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           if (state) state.pitchScale = commandData.getFloat64(wordOffset * 4 + 8, true);
           this.match3AudioPitchCommands += 1;
         }
-        if (commandIndex < applied && opcode === 50) {
+        if (appliedAt(commandIndex) && opcode === 50) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           const fromPosition = commandData.getFloat64(wordOffset * 4 + 8, true);
           if (state) state.plays.push(fromPosition);
           this.match3AudioPlayCommands += 1;
         }
-        if (commandIndex < applied && opcode === 52) {
+        if (appliedAt(commandIndex) && opcode === 52) {
           this.match3SceneTreeQuitCommands += 1;
         }
-        if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
-        if (commandIndex < applied && opcode === 15) {
+        if (appliedAt(commandIndex) && opcode === 3) positionMutationCount += 1;
+        if (appliedAt(commandIndex) && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
           const slot = this.browserHandleSlot(this.lastFreedObjectHandle);
           if (slot?.kind === "AudioStreamPlayer") {
@@ -2781,7 +2992,34 @@
         );
         this.lastPositionMutationBatch = positionMutationCount;
       }
-      return applied;
+      // A skipped command was consumed (reported, not lost): Kotlin's applied/expected check
+      // counts it, so only a command that was neither applied nor skipped fails the batch.
+      return applied + skippedFreed;
+    },
+    /**
+     * Whether a command's target handle is an object the engine freed (see flushCommands): if so
+     * records the freed-instance message for [takeFreedCommandSkips] and answers true.
+     */
+    skipFreedCommand(opcode, handle, genericArgsId, ownerHandle) {
+      // Only an engine-freed node: it keeps its bridge slot. A handle with no slot (never minted,
+      // corrupt, or already released) is a protocol fault and stays fatal.
+      if (this.browserHandleSlot(handle) === null) return false;
+      if (!this.isHandleFreed(handle, ownerHandle)) return false;
+      // The skipped command's staged generic-call arguments would never be consumed by its
+      // applier arm; drop them or a per-frame call on a freed node fills the staging map.
+      if (opcode === 1001) this.stagedGenericArgs.delete(genericArgsId);
+      this.freedCommandSkips.push(FREED_INSTANCE_MESSAGE(handle));
+      return true;
+    },
+    /**
+     * The freed-instance messages of the commands [flushCommands] skipped since the last call, one
+     * per line. Kotlin reports each as a script error, so a setter on a freed node is reported and
+     * the page carries on, as it does on desktop.
+     */
+    takeFreedCommandSkips() {
+      const messages = this.freedCommandSkips.join("\n");
+      this.freedCommandSkips = [];
+      return messages;
     },
     recordReady(handle, scriptId, scriptName) {
       this.readyCount += 1;

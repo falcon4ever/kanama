@@ -43,6 +43,45 @@ SITES = [
 ]
 
 
+# Literals the emitter and the bridge each restate and must agree on. (label, emitter pattern, bridge
+# pattern, normaliser applied to the emitter capture). A mismatch is silent at build time: a contained
+# script error's sentinel that differs makes a typed return parse the sentinel as a value; a freed-check
+# opcode that differs turns every freed object into a generic "did not publish" fault.
+LITERAL_PAIRS = [
+    (
+        "script-error sentinel (_KANAMA_SCRIPT_ERROR / scriptErrorResult)",
+        re.compile(r'_KANAMA_SCRIPT_ERROR: String = \\"(.*?)\\"'),
+        re.compile(r'scriptErrorResult: "(.*?)",'),
+        lambda text: text.replace("\\\\", "\\"),
+    ),
+    (
+        "freed-check opcode (FREED_CHECK_OPCODE / KANAMA_WEB_OPCODE_FREED_CHECK)",
+        re.compile(r"const val FREED_CHECK_OPCODE = (\d+)"),
+        re.compile(r"const KANAMA_WEB_OPCODE_FREED_CHECK = (\d+);"),
+        lambda text: text,
+    ),
+    (
+        "browser-handle namespace (BROWSER_HANDLE_NAMESPACE)",
+        re.compile(r"const val BROWSER_HANDLE_NAMESPACE = (0x[0-9A-Fa-f]+)"),
+        re.compile(r"const BROWSER_HANDLE_NAMESPACE = (0x[0-9A-Fa-f]+);"),
+        lambda text: text,
+    ),
+]
+
+
+def check_literal_pairs() -> int:
+    for label, emitter_pattern, bridge_pattern, normalise in LITERAL_PAIRS:
+        emitter = emitter_pattern.search(EMITTER.read_text(encoding="utf-8"))
+        bridge = bridge_pattern.search(BRIDGE.read_text(encoding="utf-8"))
+        if emitter is None or bridge is None:
+            print(f"[protocol_pins] FAIL no match for {label} -- the pattern has drifted, so it is no longer checked")
+            return 2
+        if normalise(emitter.group(1)) != bridge.group(1):
+            print(f"[protocol_pins] FAIL {label} disagrees: emitter {emitter.group(1)!r} vs bridge {bridge.group(1)!r}")
+            return 1
+    return 0
+
+
 def main() -> int:
     found: list[tuple[str, int, str]] = []
     for path, pattern, label in SITES:
@@ -68,8 +107,13 @@ def main() -> int:
         print("  never finishes booting and the smoke reports 'scene did not become ready'.")
         return 1
 
+    literal_rc = check_literal_pairs()
+    if literal_rc != 0:
+        return literal_rc
+
     version = versions.pop()
-    print(f"[protocol_pins] PASS protocol {version} agrees across {len(found)} pins")
+    print(f"[protocol_pins] PASS protocol {version} agrees across {len(found)} pins; "
+          f"{len(LITERAL_PAIRS)} shared literals agree")
     return 0
 
 

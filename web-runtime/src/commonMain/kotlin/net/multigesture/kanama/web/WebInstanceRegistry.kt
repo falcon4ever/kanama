@@ -59,7 +59,9 @@ internal class WebInstanceRegistry(
           else "Kanama Web handle=$handle was not reserved"
         )
     try {
-      val script = around { WebFrameScheduler.withOwner(handle) { createScript(scriptId, handle) } }
+      val script = around {
+        WebFrameScheduler.withOwner(handle) { userScript { createScript(scriptId, handle) } }
+      }
       slot.record = WebScriptRecord(scriptId, script)
       slot.pendingScriptId = null
     } catch (error: Throwable) {
@@ -117,6 +119,11 @@ internal class WebInstanceRegistry(
   }
 
   private fun liveSlot(handle: Int): Slot? {
+    // A browser-owned handle (bit 30 set) has the same slot/generation layout, and the generation
+    // mask drops bit 30: without this a browser handle whose slot and generation equal a live
+    // script's read as that script (task 138 item 18: the shared ShareTarget node, slot 7, was
+    // "live" because the 7th script was) and was never reported stale.
+    if (handle <= 0 || handle and BROWSER_NAMESPACE != 0) return null
     val slotIndex = slotIndex(handle)
     if (slotIndex == 0 || slotIndex >= slots.size) return null
     val slot = slots[slotIndex]
@@ -135,5 +142,7 @@ internal class WebInstanceRegistry(
     const val SLOT_BITS = 16
     const val SLOT_MASK = 0xffff
     const val GENERATION_MASK = 0x3fff
+    /** Bit 30: the browser-handle namespace (`BROWSER_HANDLE_NAMESPACE` in the bridge). */
+    const val BROWSER_NAMESPACE = 0x40000000
   }
 }

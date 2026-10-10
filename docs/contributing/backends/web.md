@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 33); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 34); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -386,6 +386,82 @@ A node freed from Kotlin (`queueFree`) stays a script error for every holder (`I
 Stale Kanama Web browser handle=...`, catchable in the script). Signal arguments are not shared:
 each dispatch mints transient handles that the dispatching proxy owns and releases right after.
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
+
+**A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,
+`connectObject` and the other typed overloads register a callback in `WebSignalCallbackRegistry` and
+connect the receiving script's proxy to the emitter with the callback id bound. The entry is dropped
+when its receiver script is freed (`kanamaWebFree`), when its one-shot fires, on `close()`, and --
+the case that leaked before protocol 34 -- when the *emitter* is freed by the engine: the proxy binds
+a `_KanamaSignalGuard` (a `RefCounted` held only by the connection) as the last bound argument, and
+its `NOTIFICATION_PREDELETE` calls `releaseSignalCallback`, as desktop's custom Callable `free_func`
+does. `close()` marks the guard done before disconnecting so it does not report. The web3d
+fixture's `LeakProbe` pins each case (`leak_probe`).
+
+**Script errors are contained and reported.** `webCallbackBoundary` catches an exception from user
+code (and only that: the registry/project call into user code runs through `userScript`, which
+records the exception that escaped it, and the boundary contains exactly that exception -- the
+registry's invariants, `WebFrameScheduler.withOwner`, the boundary's own flush and an untranslated
+bridge `JsException` stay fatal, and `kanamaWebFree` therefore never skips its release),
+`WebScriptErrors` builds the shared `ScriptErrorReport` (type, message, frame; the same source
+as desktop and iOS) and hands it to the bridge's `reportScriptError`, which the proxy's
+`_kanama_report_error` turns into `push_error("SCRIPT ERROR: ...\n   at: ...")`; the boundary then
+throws an exception with a marker prefix that `invoke` recognises, so the callback returns its
+fallback instead of ending the page (a bridge or protocol fault still does). Coroutines
+(`CoroutineExceptionHandler`) and frame-scheduler tasks (a per-task catch) report the same way, and a
+script constructor that throws is reported, its half-built script torn down. What Wasm provides: the
+trace is the JS `Error.stack` -- `kotlin.createJsError` then anonymous `wasm-function[n]:0xoffset`
+frames; the production build has no name section and no source map, so no game frame can be named
+and the report's function is the containment site (`Script.callback`, `<signal handler>`,
+`<coroutine>`). A build that keeps names is parsed (`WebScriptErrors.parseFrame`) and picks the
+game frame. Reported errors are counted in `callbackErrors` as well (and in `scriptErrors`), so a
+demo that throws still fails its zero-errors check; the web3d driver expects exactly its seven
+deliberate ones (`scriptErrors === 7`, four from `ErrorProbe`, three thrown at scene load by the
+`Throwing*` scripts), subtracts only those from `callbackErrors`, and lists them as
+`expectedConsoleErrors`, which the envelope verifies reach the console. A call whose script threw
+answers the bridge's `scriptErrorResult` sentinel instead of a packed value, which the proxy turns
+into the declared type's default (Variant returns: `null`) before any parse. Red run for the
+boundary: `KANAMA_WEB3D_INJECT_RUNTIME_FAULT=1` dispatches a callback id the registry never issued
+and expects the page to end (`runtimeFaultIsFatal`).
+
+**A freed object is a freed-object error.** A browser handle's object the engine frees (not
+Kotlin's `queueFree`, which retires the Kotlin-side handle at once) leaves the handle live in Kotlin.
+When a bridge callback then cannot publish its result, `unpublishedResult` asks the proxy
+(`FREED_CHECK_OPCODE` 1004) whether the object is gone and throws "Invalid access to previously freed
+instance"; `webFreedAware` turns that `JsException` into the `IllegalStateException` desktop throws,
+once per entry point -- the generated backend dispatch wraps every call shape's body
+(`generate_web_backend.py`), so a new extern gets it for free, as does `WebExperimentalGenericCall`.
+The object-returning shapes (node lookups, `getParent`, `getChild`, indexed lookups, tween and
+collision returns) go through `rejectUnpublishedObject`, which also hands back the result handle it
+had allocated. Every proxy callback reads its receiver through `_kanama_live_object`, never a typed
+`var x: Object = handles.get(...)`: a debug build aborts the function on assigning a freed
+instance to a typed Object, and a cast or call on one is undefined behaviour in a release build.
+A callback whose receiver is gone publishes NOTHING (the proxy tests `_kanama_handle_gone` before
+it publishes a default), so the same `unpublishedResult` path raises the error for every shape, the
+value shapes (signal emit, child count, `Control` position, connect) included.
+Queued calls (setters, `queueFree`) do not cross here and do not throw at the call: when the proxy's
+command loop stops on a target the engine freed (a browser handle that still has its bridge slot),
+`flushCommands` asks the same freed check, skips that one command (dropping a skipped generic call's
+staged arguments), applies the rest of the group and records the freed-instance message; the
+telemetry that follows tests each command as applied AND not skipped, since the applied ones are no
+longer a prefix;
+`WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A command that
+stops the loop for any other reason is a protocol fault and ends the page through the
+applied/expected check.
+
+**Proving a script-facing change in a DEBUG export.** CI exports release only; GDScript's
+`DEBUG_ENABLED` checks (the typed-Object abort above) only exist in the debug template. Locally:
+`./gradlew :web-runtime:exportWeb -PkanamaWebDemo=web3d ... -PkanamaWebTemplateDebug=<...>/web_nothreads_debug.zip`
+(it exports with `--export-debug`), then `scripts/web_export_smoke.sh ... --debug-template`, which
+reads the debug engine's "GDScript backtrace" lines as part of the error above them. Run web3d
+in both.
+
+**Lambda connections never coalesce.** The unique callback id is bound into the connection's
+`Callable`, so two connects of the same lambda are two connections (`CONNECT_REFERENCE_COUNTED`
+included), each with its own guard and registry entry. A user `disconnectBound` keeps Godot's own
+error for a connection that is not there; only `SignalConnection.close()` is quiet about one that
+is already gone.
+The handle namespaces are disjoint (bit 30): `WebInstanceRegistry` used to mask bit 30 away, so a
+browser handle with the slot and generation of a live script read as that script (task 138 item 18).
 
 ### RefCounted resource ownership (create/close on the handle bridge)
 
