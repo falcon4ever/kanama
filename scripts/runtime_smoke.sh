@@ -25,6 +25,10 @@ case "$UNAME_S" in
 esac
 
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
+# task 138 item 23 -- the typed-signal self-test is opt-in (project setting kanama/debug/signal_self_test,
+# off for users); every Godot run below switches it on through its environment override. The setting
+# path itself (on and off) is checked separately further down.
+export KANAMA_SIGNAL_SELFTEST=1
 # task 37 (issue #39) — the editor scan must register @GlobalClass Kotlin scripts
 # in the global class list (feeds the Create New Resource dialog and typed-slot
 # matching). Clear the cache first so the check exercises a fresh scan, not a
@@ -116,6 +120,17 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 cat "$OWNED_RELEASE_GREEN_LOG" >>"$LOG_FILE"
 rm -f "$OWNED_RELEASE_OVERRIDE"
 KANAMA_GC_RELEASES=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://owned_release_smoke.tscn --quit-after 600 >"$OWNED_RELEASE_RED_LOG" 2>&1
+
+# task 138 item 23 -- the project setting alone (no environment override) opts a debug game run in, and
+# without it nothing runs: users pay nothing for the self-test. Own logs; override.cfg is transient.
+SIGNAL_SETTING_ON_LOG="${LOG_FILE}.signal_setting_on"
+SIGNAL_SETTING_OFF_LOG="${LOG_FILE}.signal_setting_off"
+SIGNAL_SETTING_OVERRIDE="$PROJECT_DIR/override.cfg"
+trap 'rm -f "$OWNED_RELEASE_OVERRIDE" "$SIGNAL_SETTING_OVERRIDE"' EXIT
+printf '[kanama]\n\ndebug/signal_self_test=true\n' >"$SIGNAL_SETTING_OVERRIDE"
+env -u KANAMA_SIGNAL_SELFTEST "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$SIGNAL_SETTING_ON_LOG" 2>&1
+rm -f "$SIGNAL_SETTING_OVERRIDE"
+env -u KANAMA_SIGNAL_SELFTEST "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$SIGNAL_SETTING_OFF_LOG" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -369,6 +384,19 @@ check_absent "Invalid call\. Nonexistent function"
 # after the object is freed. Before task 131 equal=false and set_size=3.
 # task 131 item 2 (F2) -- the editor binary is a debug build, so the freed-object check is on.
 check "\[kanama:kt\] freed-object checks: on"
+# task 138 item 23 -- the typed-signal self-test (SignalSelfTest.kt) runs on the first frame of every
+# debug game run: Signal0..Signal5 emitted from Kotlin and received by lambdas and by a registered
+# class's methods, one-shot, nested emits, release. A run that printed no pass line, or any FAIL
+# line or a non-zero failed count, fails here (the same check gates every Android demo smoke).
+check "\[kanama\] SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed"
+check_absent "SIGNAL SELFTEST FAIL"
+check_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
+if ! grep -Eq "\[kanama\] SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed" "$SIGNAL_SETTING_ON_LOG"; then
+  smoke_fail "the kanama/debug/signal_self_test setting did not run the self-test" "$SIGNAL_SETTING_ON_LOG"
+fi
+if grep -q "SIGNAL SELFTEST" "$SIGNAL_SETTING_OFF_LOG"; then
+  smoke_fail "the self-test ran without the setting or the environment override" "$SIGNAL_SETTING_OFF_LOG"
+fi
 # task 132 -- the GC fallback release: 10,000 dropped owned Resources are gone again after GC +
 # drain (object count back to the baseline), and a getter's +1 that was closed and then collected
 # is released once (the mesh keeps exactly its two references).
