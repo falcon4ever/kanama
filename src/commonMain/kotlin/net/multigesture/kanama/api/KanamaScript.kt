@@ -83,7 +83,7 @@ abstract class KanamaScript<Self : Any>(
       scopeOrNull?.let {
         return it
       }
-      val scope = ScriptRuntime.newScriptScope()
+      val scope = KanamaScope()
       if (scopeDisposed) scope.cancel()
       scopeOrNull = scope
       return scope

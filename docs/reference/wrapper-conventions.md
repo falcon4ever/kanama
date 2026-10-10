@@ -433,8 +433,8 @@ timer.connect(Timer.Signals.timeout, self, "onTimeout")
 ```
 
 Engine-wide `MethodName`, `PropertyName` and `SignalName` (`scripts/generate_name_constants.py`)
-exist on **desktop and Android only** today: they are generated into `src/jvmMain`, not into the
-shared tree, so iOS and Web scripts use string literals or `X.Signals`.
+are generated into `src/commonMain` (desktop, Android and iOS since task 129 D); Web scripts use
+string literals or `X.Signals`.
 
 ## 13. Platform parity
 
@@ -445,11 +445,12 @@ names are `expect` declarations (`GodotSignal`, `SignalConnection`, `MainThread`
 `scripts/check_actual_public_surface.py` keeps an `actual` from adding public members its
 `expect` lacks. The exceptions are listed, not silent:
 
-- the classes in `PER_PLATFORM_WRAPPERS`, hand-shaped per platform with a reason each (since task
-  129 C only `FileAccess` and `DirAccess`);
+- the classes in `PER_PLATFORM_WRAPPERS`, hand-shaped per platform with a reason each (none since
+  task 129 D generated `FileAccess` and `DirAccess` once);
 - members generated for desktop and Android only, in a `<Class>.jvm.kt` companion, while iOS waits
   on a call helper: listed on [iOS Shape Gap](generated/ios-shape-gap.md);
-- the engine-wide name constants ([rule 12](#12-names-as-constants)).
+- iOS-only sugar in a generated `<Class>.ios.kt` (`IOS_EXTENSION_SECTIONS`: today
+  `PhysicsDirectSpaceState3D.intersectRay`'s nullable-argument form over the raycast C shim).
 
 **Web** is a separate generated surface (`scripts/generate_web_wrappers.py`, one file per class
 under `web-runtime/.../api/generated/`): it carries the members the Web call contract supports,

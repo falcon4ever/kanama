@@ -34,7 +34,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 90 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 78 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -492,6 +492,12 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: ByteArray,
   ): List<Any?>
+
+  fun ptrcallWithByteArrayArgRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: ByteArray,
+  ): Boolean
 
   fun ptrcallWithByteArrayArgRetByteArray(
     methodBind: RawSegment,
@@ -2780,6 +2786,15 @@ expect object ObjectCalls {
     boolValue: Boolean,
   )
 
+  fun ptrcallWithLongTwoStringBoolArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Long,
+    firstString: String,
+    secondString: String,
+    flag: Boolean,
+  ): RawSegment
+
   fun ptrcallWithLongTwoStringColorObjectVariantIntArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -3937,6 +3952,13 @@ expect object ObjectCalls {
     instance: RawSegment,
     values: List<Long>,
   )
+
+  fun ptrcallWithPackedStringListAndStringArgsRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    values: List<String>,
+    delimiter: String,
+  ): Boolean
 
   fun ptrcallWithPackedStringListArg(
     methodBind: RawSegment,
@@ -6925,6 +6947,13 @@ expect object ObjectCalls {
     value: Long,
   ): String
 
+  fun ptrcallWithStringAndLongArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    value: Long,
+  ): RawSegment
+
   fun ptrcallWithStringAndObjectArg(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -7326,6 +7355,15 @@ expect object ObjectCalls {
     enabled: Boolean,
   )
 
+  fun ptrcallWithStringLongByteArrayByteArrayArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    value: Long,
+    firstBytes: ByteArray,
+    secondBytes: ByteArray,
+  ): RawSegment
+
   fun ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -7369,6 +7407,14 @@ expect object ObjectCalls {
     value: Long,
     second: String,
   )
+
+  fun ptrcallWithStringLongStringArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    firstString: String,
+    value: Long,
+    secondString: String,
+  ): RawSegment
 
   fun ptrcallWithStringNameAndBoolArg(
     methodBind: RawSegment,
@@ -8214,6 +8260,14 @@ expect object ObjectCalls {
     second: Long,
   ): Long
 
+  fun ptrcallWithStringTwoLongArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    firstValue: Long,
+    secondValue: Long,
+  ): RawSegment
+
   fun ptrcallWithStringUInt32TwoIntArgsRetVector2i(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -8392,6 +8446,14 @@ expect object ObjectCalls {
     second: String,
     third: String,
   )
+
+  fun ptrcallWithThreeStringArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    third: String,
+  ): Long
 
   fun ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(
     methodBind: RawSegment,
@@ -9663,6 +9725,14 @@ expect object ObjectCalls {
     value: Boolean,
   )
 
+  fun ptrcallWithTwoStringAndByteArrayArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    third: ByteArray,
+  ): Long
+
   fun ptrcallWithTwoStringAndIntArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -9670,6 +9740,14 @@ expect object ObjectCalls {
     second: String,
     value: Int,
   )
+
+  fun ptrcallWithTwoStringAndIntArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    value: Int,
+  ): Long
 
   fun ptrcallWithTwoStringAndLongArgRetPackedInt32List(
     methodBind: RawSegment,
@@ -9725,6 +9803,13 @@ expect object ObjectCalls {
     first: String,
     second: String,
   ): Boolean
+
+  fun ptrcallWithTwoStringArgsRetByteArray(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+  ): ByteArray
 
   fun ptrcallWithTwoStringArgsRetDictionary(
     methodBind: RawSegment,
@@ -10567,6 +10652,13 @@ expect object ObjectCalls {
     value: Any?,
     boolArg: Boolean,
   )
+
+  fun ptrcallWithVariantAndBoolArgRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Any?,
+    boolArg: Boolean,
+  ): Boolean
 
   fun ptrcallWithVariantAndBoolArgRetLong(
     methodBind: RawSegment,

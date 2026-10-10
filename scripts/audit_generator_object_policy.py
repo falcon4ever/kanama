@@ -16,7 +16,6 @@ from pathlib import Path
 from generate_api_shell_wrappers import UNSAFE_DEFAULT_EXCLUDES
 from generate_api_wrapper import (
     OWNERSHIP_SENSITIVE_OBJECT_TYPES,
-    SPECIAL_OBJECT_WRAPPER_TYPES,
     api_object_wrapper_type,
     kotlin_return_type,
     kotlin_type,
@@ -81,7 +80,7 @@ def check_object_type(
         return errors
 
     wrapper_type = api_object_wrapper_type(type_name, wrapper_classes)
-    expected_wrapper = SPECIAL_OBJECT_WRAPPER_TYPES.get(type_name, type_name)
+    expected_wrapper = type_name
     if wrapper_type != expected_wrapper:
         errors.append(f"{prefix} would widen to {wrapper_type or 'no wrapper'} instead of a concrete wrapper")
         return errors
@@ -138,7 +137,7 @@ def check_rendered_kotlin_type(
     if rendered_type in forbidden_tokens:
         errors.append(f"{prefix} rendered as unsafe/widened Kotlin type {rendered_type}")
 
-    expected_concrete_type = SPECIAL_OBJECT_WRAPPER_TYPES.get(concrete_type, concrete_type)
+    expected_concrete_type = concrete_type
     expected = f"List<{expected_concrete_type}>" if array_element else expected_concrete_type
     if rendered_type not in {expected, f"{expected}?"}:
         errors.append(f"{prefix} rendered as {rendered_type}, expected {expected} or {expected}?")

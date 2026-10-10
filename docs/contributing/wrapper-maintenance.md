@@ -42,8 +42,9 @@ signature may name is `GodotHandle` (the opaque wrapper/script handle, task 104)
 dynamic because the engine itself does not promise a more specific type.
 Ownership-sensitive namespace-style types use explicit policy before default
 generation. `Callable` stays blocked unless a helper has a bounded ownership
-shape; `DirAccess` and `FileAccess` use dedicated handle aliases
-where factory methods return nullable object handles. (`SceneTree` had one,
+shape. `DirAccess` and `FileAccess` are ordinary generated `RefCounted` classes since task 129 D
+(their hand `DirAccessHandle` / `FileAccessHandle` aliases are gone; see "FileAccess and DirAccess"
+below). (`SceneTree` had a handle alias,
 `SceneTreeHandle`, until task 117 P1'(b1) generated `SceneTree` itself into the
 shared tree as `SceneTree : MainLoop`; `Node.getTree(): SceneTree?` names it directly now.)
 
@@ -177,7 +178,10 @@ page lists the whole gap. When a helper lands on iOS the next regen moves the me
 back into the shared file. Because those members are extensions, a script that calls
 one needs the member imported by name (`import net.multigesture.kanama.api.<member>`), not only
 the class import. iOS-only sugar on a shared class (`IOS_EXTENSION_SECTIONS`) is
-generated the same way into `src/iosMain/.../api/<Class>.ios.kt`.
+generated the same way into `src/iosMain/.../api/<Class>.ios.kt`. Sugar every platform compiles
+but callers import by name (top-level extensions) goes in `SHARED_EXTENSION_SECTIONS` instead: its
+text is appended to the shared `<Class>.kt` after the class (the `AnimationMixer.setParameter` /
+`getParameter` / `getStateMachinePlayback` helpers, one copy since task 129 D).
 
 Hand-written members a generated wrapper must carry live in the **custom-section
 tables** of `scripts/generate_api_wrapper.py`, keyed by class: `SHARED_MEMBER_SECTIONS`
@@ -216,7 +220,7 @@ inside `IosGodotApi.kt` or a bespoke file, or `unsupported`). `DESKTOP_HANDSHAPE
 views of that table. A class is per-platform only when the platforms genuinely host it
 differently, and a `hand` cell is the only thing the gate exempts; a class joins that
 table only when the generator genuinely cannot reproduce it on both platforms. Non-API
-files (`Mathf`, `DirAccessHandle`, …) are auto-excluded, and so are the hand-written roots
+files (`Mathf`, `KanamaScript`, …) are auto-excluded, and so are the hand-written roots
 described next.
 
 **Retiring a per-platform class: a table row, not a hand class (task 129).** Every
@@ -236,6 +240,7 @@ of Godot's 28 methods until task 129 A). To generate one once:
    - overloads and helpers both platforms can compile: `SHARED_MEMBER_SECTIONS[<Class>]` (member
      text) or `SHARED_COMPANION_MEMBER_SECTIONS` (companion text); `Tween`'s String-path
      `tweenProperty` and target-plus-method `tweenCallback` / `tweenMethod` are the example;
+   - top-level extension sugar callers import by name: `SHARED_EXTENSION_SECTIONS`;
    - sugar only one platform can compile: `DESKTOP_EXTENSION_SECTIONS` / `IOS_EXTENSION_SECTIONS`;
    - a Godot default the generator does not emit (a `null` Object default, as in
      `SurfaceTool.commit(existing = null)`): a `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` row;
@@ -259,8 +264,22 @@ of Godot's 28 methods until task 129 A). To generate one once:
    sugar moved into is added to its `sections` with a `reason`.
 
 Task 129 C retired 20 classes this way (the hand/generated band, the iOS-hand band,
-`ProjectSettings`, `AudioStreamPlayer`, `ResourceLoader`, `Engine`); `PER_PLATFORM_WRAPPERS` holds
-only `FileAccess` and `DirAccess` now, whose handle model is task 129 parcel 8.
+`ProjectSettings`, `AudioStreamPlayer`, `ResourceLoader`, `Engine`) and task 129 D the last two,
+`FileAccess` and `DirAccess`: `PER_PLATFORM_WRAPPERS` is empty.
+
+**FileAccess and DirAccess (task 129 D).** Both are generated `RefCounted` classes with Godot's
+statics in the companion, the shape GDScript and godot-dotnet give them (`FileAccess.Open(...)`
+returns a `FileAccess` instance there too). `open` / `openCompressed` / `openEncrypted*` /
+`createTemp` return an owned `FileAccess?` (task 132): `close()` / `use { }` release it, and
+releasing the last reference closes the file in Godot's destructor. Godot's own `close()` method is
+renamed `closeFile()` (`METHOD_NAME_OVERRIDES`) because `close()` is `RefCounted`'s `AutoCloseable`
+release. What used to make them hand-written is data now: the `FileAccess`-returning static call
+shapes are a `call_shape` table, and `open_encrypted`'s empty `iv` default a
+`KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` row. The desktop hand files' 38 `FileAccess` path one-shot
+helpers (`get8At(path)`, `writeString(path, text)`, ...) and 23 `DirAccess` `*At(directory, ...)`
+helpers were removed rather than generated: GDScript has none of them (it opens the file or
+directory and calls the instance method), and Godot's whole-file statics (`getFileAsString`,
+`getFileAsBytes`, `getFilesAt`, ...) are generated. The CHANGELOG lists each with its migration.
 
 **`GD` is generated from the utility functions (task 129 B).** `render_gd` in
 `scripts/generate_api_wrapper.py` writes `src/commonMain/.../api/GD.kt` at `--write-tree`: one
@@ -404,7 +423,8 @@ gate all import it.
 - **Enum-only expects.** A per-platform owner whose enum a shared signature names
   (`PropertyTweener.setTrans(trans: Tween.TransitionType)`, `ZIPPacker.startFile(permissions:
   FileAccess.UnixPermissionFlags)`) cannot be seen from common code, so the generator finds such
-  owners in the rendered shared tree (`find_expect_enum_owners`; today `Tween` and `FileAccess`) and
+  owners in the rendered shared tree (`find_expect_enum_owners`; none since task 129 D generated
+  `FileAccess` once, `Tween` went in task 129 A) and
   emits `src/commonMain/.../api/<Class>.expect.kt` declaring only the nested enums; the platform
   regions become their `actual`s (one `actual` per line, so the Android copy strips them).
   `scripts/check_actual_public_surface.py` scopes the rest of those hand-written classes
@@ -637,7 +657,8 @@ Validated by the `ClassDB instantiate ownership` and `ClassDB class_call_static
 ownership` probes in `scripts/runtime_smoke.sh`.
 
 Engine-wide `MethodName`, `PropertyName`, and `SignalName` constants are
-generated from `extension_api.json` separately from the class wrapper drafts:
+generated from `extension_api.json` separately from the class wrapper drafts, into
+`src/commonMain/.../api` (every platform; desktop-only until task 129 D):
 
 ```sh
 python3 scripts/generate_name_constants.py
@@ -685,16 +706,15 @@ in `scripts/check_wrapper_generator.py`:
   `collision:` line and skips it, instead of writing a `<Class>.kt` that duplicate-declares
   the class and breaks the compile. When a class graduates to a real generated wrapper
   (as `Time`/`InputMap`/`PhysicsServer3D` did, and `Engine`, `ProjectSettings`,
-  `ResourceLoader` and `AudioStreamPlayer` in task 129 C), delete its entry so generation is
-  allowed. `FileAccess` is the only one left: iOS hosts it as a hand-written static facade plus
-  its own `FileAccessHandle` in `src/iosMain/.../api/FileAccess.kt`.
+  `ResourceLoader` and `AudioStreamPlayer` in task 129 C, `FileAccess` in task 129 D), delete its
+  entry so generation is allowed. None is left.
 
 - **Explicit uncompilable classes.** The `unsupported` cells of `PER_PLATFORM_WRAPPERS` (the
   `IOS_UNSUPPORTED_CLASSES` view) list the classes whose
-  generated draft cannot compile on iOS, each with its reason: `DirAccess` (its draft
-  references the hand-authored `DirAccessHandle` desktop policy class iOS does not
-  carry) is the only one left — `MethodTweener` sat here until task 117 P2' retired the
-  hand-written iOS `Tweener` glue its fluent methods clashed with.
+  generated draft cannot compile on iOS, each with its reason. None is left: `DirAccess` (its
+  draft referenced the hand-authored desktop `DirAccessHandle`) was the last, until task 129 D;
+  `MethodTweener` sat here until task 117 P2' retired the hand-written iOS `Tweener` glue its
+  fluent methods clashed with.
   `--ios-emit-class <that class>` logs an
   `unsupported:` line and skips it. Together with the collision registry these are the only
   by-design exceptions to iOS class-set parity with desktop (task 30); retire an entry by

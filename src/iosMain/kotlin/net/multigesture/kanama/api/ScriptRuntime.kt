@@ -1,8 +1,10 @@
 package net.multigesture.kanama.api
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import net.multigesture.kanama.binding.runtime.IosScriptErrors
 
-// KANAMA-IOS-HANDWRITTEN: [platform] iOS actual of the script-authoring seam (ScriptRuntime.expect.kt, task 133): the runtime's script-instance table, the typed-loader ResourceLoader and Engine singletons.
+// KANAMA-IOS-HANDWRITTEN: [platform] iOS actual of the script-authoring seam (ScriptRuntime.expect.kt, task 133): the runtime's script-instance table, the main dispatcher and the script-error report.
 internal actual object ScriptRuntime {
   actual fun scriptInstanceOf(owner: GodotObject): Any? =
     net.multigesture.kanama.ios.iosScriptInstanceForOwner(owner.handle.segment.address())
@@ -11,7 +13,11 @@ internal actual object ScriptRuntime {
 
   actual fun isEditorHint(): Boolean = Engine.isEditorHint()
 
-  actual fun newScriptScope(): CoroutineScope = KanamaScope()
+  actual fun mainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+  actual fun reportCoroutineFailure(throwable: Throwable, where: String) {
+    IosScriptErrors.report(throwable, where)
+  }
 
   actual fun platformClasses(): GodotClassTable = PlatformGodotClasses
 }

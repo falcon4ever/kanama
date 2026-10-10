@@ -43,6 +43,7 @@ import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GPUParticles3D
 import net.multigesture.kanama.api.GeometryInstance3D
+import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Input
@@ -74,6 +75,7 @@ import net.multigesture.kanama.api.Time
 import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Tween
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.builtins.md5Text
 import net.multigesture.kanama.generated.HelloScriptNames
 import net.multigesture.kanama.generated.HelloScriptSignals
 import net.multigesture.kanama.types.AABB
@@ -93,6 +95,16 @@ import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.types.Vector3i
 import net.multigesture.kanama.types.Vector4
 import net.multigesture.kanama.types.Vector4i
+
+// Task 129 D: FileAccess / DirAccess are RefCounted classes like in GDScript; `open()` returns an
+// owned wrapper that `use { }` releases (which closes the file).
+private fun <T> readFile(path: String, block: (FileAccess) -> T): T? =
+  FileAccess.open(path, FileAccess.ModeFlags.READ)?.use(block)
+
+private fun writeFile(path: String, block: (FileAccess) -> Boolean): Boolean =
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use(block) ?: false
+
+private fun <T> dirAt(path: String, block: (DirAccess) -> T): T? = DirAccess.open(path)?.use(block)
 
 enum class SmokeDifficulty {
   EASY,
@@ -368,15 +380,16 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val fileExtendedAttrs = FileAccess.getExtendedAttributesList("res://HelloScript.kt")
     val sourceHasClass =
       FileAccess.getFileAsString("res://HelloScript.kt").contains("class HelloScript")
-    val fileOpenPath = FileAccess.getPathFor("res://HelloScript.kt")
-    val fileOpenAbsolutePath = FileAccess.getPathAbsoluteFor("res://HelloScript.kt")
-    val fileOpenIsOpen = FileAccess.isOpenFor("res://HelloScript.kt")
-    val fileOpenPosition = FileAccess.getPositionFor("res://HelloScript.kt")
-    val fileOpenLength = FileAccess.getLengthFor("res://HelloScript.kt")
-    val fileOpenEof = FileAccess.eofReachedFor("res://HelloScript.kt")
-    val fileOpenLine = FileAccess.getLineFor("res://HelloScript.kt")
-    val fileOpenText = FileAccess.getAsText("res://HelloScript.kt")
-    val fileOpenError = FileAccess.getErrorFor("res://HelloScript.kt")
+    val fileOpenPath = readFile("res://HelloScript.kt") { it.getPath() }.orEmpty()
+    val fileOpenAbsolutePath = readFile("res://HelloScript.kt") { it.getPathAbsolute() }.orEmpty()
+    val fileOpenIsOpen = readFile("res://HelloScript.kt") { it.isOpen() } ?: false
+    val fileOpenPosition = readFile("res://HelloScript.kt") { it.getPosition() } ?: 0L
+    val fileOpenLength = readFile("res://HelloScript.kt") { it.getLength() } ?: 0L
+    val fileOpenEof = readFile("res://HelloScript.kt") { it.eofReached() } ?: false
+    val fileOpenLine = readFile("res://HelloScript.kt") { it.getLine() }.orEmpty()
+    val fileOpenText = readFile("res://HelloScript.kt") { it.getAsText() }.orEmpty()
+    val fileOpenError =
+      readFile("res://HelloScript.kt") { it.getError() } ?: FileAccess.getOpenError()
     val directFile = FileAccess.open("res://HelloScript.kt", FileAccess.ModeFlags.READ)
     val directFilePresent = directFile != null
     val directFileOpen = directFile?.isOpen() ?: false
@@ -392,80 +405,95 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val tempFileStoreOk = tempFile?.storeString("temp-handle") ?: false
     tempFile?.flush()
     tempFile?.close()
-    val fileByte = FileAccess.get8At("res://HelloScript.kt")
-    val fileWord = FileAccess.get16At("res://HelloScript.kt")
-    val fileDword = FileAccess.get32At("res://HelloScript.kt")
-    val fileQword = FileAccess.get64At("res://HelloScript.kt")
-    val fileFloatTextLength = FileAccess.getFloatAt("res://HelloScript.kt").toString().length
-    val fileDoubleTextLength = FileAccess.getDoubleAt("res://HelloScript.kt").toString().length
-    val fileHalfTextLength = FileAccess.getHalfAt("res://HelloScript.kt").toString().length
-    val fileRealTextLength = FileAccess.getRealAt("res://HelloScript.kt").toString().length
-    val fileBigEndian = FileAccess.isBigEndianFor("res://HelloScript.kt")
-    val fileCsvColumns = FileAccess.getCsvLineAt("res://HelloScript.kt").size
+    val fileByte = readFile("res://HelloScript.kt") { it.get8() } ?: 0
+    val fileWord = readFile("res://HelloScript.kt") { it.get16() } ?: 0
+    val fileDword = readFile("res://HelloScript.kt") { it.get32() } ?: 0L
+    val fileQword = readFile("res://HelloScript.kt") { it.get64() } ?: 0L
+    val fileFloatTextLength =
+      (readFile("res://HelloScript.kt") { it.getFloat() } ?: 0.0).toString().length
+    val fileDoubleTextLength =
+      (readFile("res://HelloScript.kt") { it.getDouble() } ?: 0.0).toString().length
+    val fileHalfTextLength =
+      (readFile("res://HelloScript.kt") { it.getHalf() } ?: 0.0).toString().length
+    val fileRealTextLength =
+      (readFile("res://HelloScript.kt") { it.getReal() } ?: 0.0).toString().length
+    val fileBigEndian = readFile("res://HelloScript.kt") { it.isBigEndian() } ?: false
+    val fileCsvColumns = (readFile("res://HelloScript.kt") { it.getCsvLine() }.orEmpty()).size
     val fileWritePath = "res://.kanama_file_write_smoke.txt"
     val fileWriteAbsolutePath = ProjectSettings.globalizePath(fileWritePath)
     DirAccess.removeAbsolute(fileWriteAbsolutePath)
-    val fileWriteStringOk = FileAccess.writeString(fileWritePath, "alpha")
+    val fileWriteStringOk = writeFile(fileWritePath) { it.storeString("alpha") }
     val fileWriteStringText = FileAccess.getFileAsString(fileWritePath)
-    val fileWriteLineOk = FileAccess.writeLine(fileWritePath, "beta")
+    val fileWriteLineOk = writeFile(fileWritePath) { it.storeLine("beta") }
     val fileWriteLineText = FileAccess.getFileAsString(fileWritePath)
-    val fileResizeError = FileAccess.resizeFile(fileWritePath, 2)
+    val fileResizeError =
+      FileAccess.open(fileWritePath, FileAccess.ModeFlags.READ_WRITE)?.use { it.resize(2) }
+        ?: FileAccess.getOpenError()
     val fileResizeText = FileAccess.getFileAsString(fileWritePath)
     val fileWriteCleanupError = DirAccess.removeAbsolute(fileWriteAbsolutePath)
     val fileSourceBytes = FileAccess.getFileAsBytes("res://HelloScript.kt")
-    val fileBuffer = FileAccess.getBufferAt("res://HelloScript.kt", 8)
+    val fileBuffer = readFile("res://HelloScript.kt") { it.getBuffer(8) } ?: ByteArray(0)
     val fileBytesPath = "res://.kanama_file_bytes_smoke.bin"
     val fileBytesAbsolutePath = ProjectSettings.globalizePath(fileBytesPath)
     DirAccess.removeAbsolute(fileBytesAbsolutePath)
-    val fileWriteBytesOk = FileAccess.writeBytes(fileBytesPath, byteArrayOf(75, 84))
+    val fileWriteBytesOk = writeFile(fileBytesPath) { it.storeBuffer(byteArrayOf(75, 84)) }
     val fileWrittenBytes = FileAccess.getFileAsBytes(fileBytesPath)
     val fileBytesCleanupError = DirAccess.removeAbsolute(fileBytesAbsolutePath)
     val fileNumericPath = "res://.kanama_file_numeric_smoke.bin"
     val fileNumericAbsolutePath = ProjectSettings.globalizePath(fileNumericPath)
     DirAccess.removeAbsolute(fileNumericAbsolutePath)
-    val fileWrite8Ok = FileAccess.write8(fileNumericPath, 0x7f)
-    val fileRead8 = FileAccess.get8At(fileNumericPath)
-    val fileWrite16Ok = FileAccess.write16(fileNumericPath, 0x1234, bigEndian = true)
-    val fileRead16Bytes = FileAccess.getBufferAt(fileNumericPath, 2).map { it.toInt() and 0xff }
-    val fileWrite32Ok = FileAccess.write32(fileNumericPath, 0x01020304)
-    val fileRead32 = FileAccess.get32At(fileNumericPath)
-    val fileWrite64Ok = FileAccess.write64(fileNumericPath, 0x0102030405060708L)
-    val fileRead64 = FileAccess.get64At(fileNumericPath)
-    val fileWriteDoubleOk = FileAccess.writeDouble(fileNumericPath, 12.5)
-    val fileReadDouble = FileAccess.getDoubleAt(fileNumericPath)
-    val fileWriteFloatOk = FileAccess.writeFloat(fileNumericPath, 3.5)
-    val fileReadFloat = FileAccess.getFloatAt(fileNumericPath)
-    val fileWriteHalfOk = FileAccess.writeHalf(fileNumericPath, 1.5)
-    val fileReadHalf = FileAccess.getHalfAt(fileNumericPath)
-    val fileWriteRealOk = FileAccess.writeReal(fileNumericPath, 2.25)
-    val fileReadReal = FileAccess.getRealAt(fileNumericPath)
+    val fileWrite8Ok = writeFile(fileNumericPath) { it.store8(0x7f) }
+    val fileRead8 = readFile(fileNumericPath) { it.get8() } ?: 0
+    val fileWrite16Ok =
+      writeFile(fileNumericPath) {
+        it.setBigEndian(true)
+        it.store16(0x1234)
+      }
+    val fileRead16Bytes =
+      (readFile(fileNumericPath) { it.getBuffer(2) } ?: ByteArray(0)).map { it.toInt() and 0xff }
+    val fileWrite32Ok = writeFile(fileNumericPath) { it.store32(0x01020304L) }
+    val fileRead32 = readFile(fileNumericPath) { it.get32() } ?: 0L
+    val fileWrite64Ok = writeFile(fileNumericPath) { it.store64(0x0102030405060708L) }
+    val fileRead64 = readFile(fileNumericPath) { it.get64() } ?: 0L
+    val fileWriteDoubleOk = writeFile(fileNumericPath) { it.storeDouble(12.5) }
+    val fileReadDouble = readFile(fileNumericPath) { it.getDouble() } ?: 0.0
+    val fileWriteFloatOk = writeFile(fileNumericPath) { it.storeFloat(3.5) }
+    val fileReadFloat = readFile(fileNumericPath) { it.getFloat() } ?: 0.0
+    val fileWriteHalfOk = writeFile(fileNumericPath) { it.storeHalf(1.5) }
+    val fileReadHalf = readFile(fileNumericPath) { it.getHalf() } ?: 0.0
+    val fileWriteRealOk = writeFile(fileNumericPath) { it.storeReal(2.25) }
+    val fileReadReal = readFile(fileNumericPath) { it.getReal() } ?: 0.0
     val fileNumericCleanupError = DirAccess.removeAbsolute(fileNumericAbsolutePath)
     val filePascalPath = "res://.kanama_file_pascal_smoke.bin"
     val filePascalAbsolutePath = ProjectSettings.globalizePath(filePascalPath)
     DirAccess.removeAbsolute(filePascalAbsolutePath)
-    val filePascalWriteOk = FileAccess.writePascalString(filePascalPath, "kanama")
-    val filePascalRead = FileAccess.getPascalStringFor(filePascalPath)
+    val filePascalWriteOk = writeFile(filePascalPath) { it.storePascalString("kanama") }
+    val filePascalRead = readFile(filePascalPath) { it.getPascalString() }
     val filePascalCleanupError = DirAccess.removeAbsolute(filePascalAbsolutePath)
     val fileCsvPath = "res://.kanama_file_csv_smoke.csv"
     val fileCsvAbsolutePath = ProjectSettings.globalizePath(fileCsvPath)
     DirAccess.removeAbsolute(fileCsvAbsolutePath)
-    val fileCsvWriteOk = FileAccess.writeCsvLine(fileCsvPath, listOf("alpha", "beta"))
-    val fileCsvRead = FileAccess.getCsvLineAt(fileCsvPath)
-    val fileCsvEndPosition = FileAccess.getPositionFromEnd(fileCsvPath)
+    val fileCsvWriteOk = writeFile(fileCsvPath) { it.storeCsvLine(listOf("alpha", "beta")) }
+    val fileCsvRead = readFile(fileCsvPath) { it.getCsvLine() }.orEmpty()
+    val fileCsvEndPosition =
+      readFile(fileCsvPath) {
+        it.seekEnd()
+        it.getPosition()
+      } ?: 0L
     val fileCsvSize = FileAccess.getSize(fileCsvPath)
     val fileCsvCleanupError = DirAccess.removeAbsolute(fileCsvAbsolutePath)
     val fileVarPath = "res://.kanama_file_var_smoke.bin"
     val fileVarAbsolutePath = ProjectSettings.globalizePath(fileVarPath)
     DirAccess.removeAbsolute(fileVarAbsolutePath)
-    val fileVarWriteOk = FileAccess.writeVar(fileVarPath, "variant-smoke")
-    val fileVarRead = FileAccess.getVarAt(fileVarPath) as? String
+    val fileVarWriteOk = writeFile(fileVarPath) { it.storeVar("variant-smoke") }
+    val fileVarRead = readFile(fileVarPath) { it.getVar() } as? String
     val fileVarCleanupError = DirAccess.removeAbsolute(fileVarAbsolutePath)
     val fileAttrPath = "res://.kanama_file_attr_smoke.txt"
     val fileAttrAbsolutePath = ProjectSettings.globalizePath(fileAttrPath)
     val fileAttrStringName = "user.kanama.smoke"
     val fileAttrBytesName = "user.kanama.bytes"
     DirAccess.removeAbsolute(fileAttrAbsolutePath)
-    FileAccess.writeString(fileAttrPath, "attrs")
+    writeFile(fileAttrPath) { it.storeString("attrs") }
     val fileAttrStringSetError =
       FileAccess.setExtendedAttributeString(fileAttrPath, fileAttrStringName, "value")
     val fileAttrStringRead = FileAccess.getExtendedAttributeString(fileAttrPath, fileAttrStringName)
@@ -487,6 +515,39 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       FileAccess.setUnixPermissions(fileAttrPath, FileAccess.UnixPermissionFlags(420L))
     val fileAttrPermissions = FileAccess.getUnixPermissions(fileAttrPath)
     val fileAttrCleanupError = DirAccess.removeAbsolute(fileAttrAbsolutePath)
+    val userDir = "user://kanama_file_smoke"
+    val userPath = "$userDir/notes.txt"
+    val userMakeError = DirAccess.makeDirRecursiveAbsolute(userDir)
+    val userWriteOk =
+      FileAccess.open(userPath, FileAccess.ModeFlags.WRITE)?.use { file ->
+        file.storeString("alpha") && file.storeLine("beta")
+      } ?: false
+    val userFile = FileAccess.open(userPath, FileAccess.ModeFlags.READ)
+    val userLength = userFile?.getLength() ?: -1L
+    val userLine = userFile?.getLine().orEmpty()
+    userFile?.close()
+    val userMissing = FileAccess.open("$userDir/missing.txt", FileAccess.ModeFlags.READ)
+    val userMissingError = FileAccess.getOpenError()
+    userMissing?.close()
+    val userText = FileAccess.getFileAsString(userPath)
+    val userMd5Matches = FileAccess.getMd5(userPath) == "alphabeta\n".md5Text()
+    val userListed = DirAccess.getFilesAt(userDir)
+    val userWalk =
+      dirAt(userDir) { dir ->
+          val names = mutableListOf<String>()
+          if (dir.listDirBegin() == GodotError.OK) {
+            while (true) {
+              val name = dir.getNext()
+              if (name.isEmpty()) break
+              names += name
+            }
+            dir.listDirEnd()
+          }
+          names
+        }
+        .orEmpty()
+    val userFileCleanup = DirAccess.removeAbsolute(userPath)
+    val userDirCleanup = DirAccess.removeAbsolute(userDir)
     val selfNode = self
     val selfAsViaHelper = selfAs(::Node)
     val selfAsHelperMatches = selfAsViaHelper.getInstanceId() == Node(godotObject).getInstanceId()
@@ -1460,22 +1521,46 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val dirFiles = DirAccess.getFilesAt("res://")
     val dirDirectories = DirAccess.getDirectoriesAt("res://")
     val driveCount = DirAccess.getDriveCount()
-    val dirFileExists = DirAccess.fileExistsAt("res://", "HelloScript.kt")
-    val dirDirExists = DirAccess.dirExistsAt("res://", "addons")
-    val dirCurrentDrive = DirAccess.getCurrentDriveAt("res://")
-    val dirCurrentDir = DirAccess.getCurrentDirAt("res://")
-    val dirSpaceLeft = DirAccess.getSpaceLeftAt("res://")
-    val dirFilesWithOptions = DirAccess.getFilesAt("res://", includeHidden = true)
-    val dirDirectoriesWithOptions = DirAccess.getDirectoriesAt("res://", includeHidden = true)
-    val dirIncludeHidden = DirAccess.getIncludeHiddenAt("res://")
-    val dirIncludeNavigational = DirAccess.getIncludeNavigationalAt("res://")
-    val dirEntries = DirAccess.listEntriesAt("res://")
-    val dirFilesystemType = DirAccess.getFilesystemTypeAt("res://")
-    val dirIsLink = DirAccess.isLinkAt("res://", "HelloScript.kt")
-    val dirReadLink = DirAccess.readLinkAt("res://", "HelloScript.kt")
-    val dirIsBundle = DirAccess.isBundleAt("res://", "HelloScript.kt")
-    val dirCaseSensitive = DirAccess.isCaseSensitiveAt("res://", "HelloScript.kt")
-    val dirEquivalent = DirAccess.isEquivalentAt("res://", "HelloScript.kt", "HelloScript.kt")
+    val dirFileExists = dirAt("res://") { it.fileExists("HelloScript.kt") } ?: false
+    val dirDirExists = dirAt("res://") { it.dirExists("addons") } ?: false
+    val dirCurrentDrive = dirAt("res://") { it.getCurrentDrive() } ?: -1
+    val dirCurrentDir = dirAt("res://") { it.getCurrentDir() }.orEmpty()
+    val dirSpaceLeft = dirAt("res://") { it.getSpaceLeft() } ?: 0L
+    val dirFilesWithOptions =
+      dirAt("res://") {
+          it.setIncludeHidden(true)
+          it.getFiles()
+        }
+        .orEmpty()
+    val dirDirectoriesWithOptions =
+      dirAt("res://") {
+          it.setIncludeHidden(true)
+          it.getDirectories()
+        }
+        .orEmpty()
+    val dirIncludeHidden = dirAt("res://") { it.getIncludeHidden() } ?: false
+    val dirIncludeNavigational = dirAt("res://") { it.getIncludeNavigational() } ?: false
+    val dirEntries =
+      dirAt("res://") { dir ->
+          val entries = mutableListOf<Pair<String, Boolean>>()
+          if (dir.listDirBegin() == GodotError.OK) {
+            while (true) {
+              val name = dir.getNext()
+              if (name.isEmpty()) break
+              entries += name to dir.currentIsDir()
+            }
+            dir.listDirEnd()
+          }
+          entries
+        }
+        .orEmpty()
+    val dirFilesystemType = dirAt("res://") { it.getFilesystemType() }.orEmpty()
+    val dirIsLink = dirAt("res://") { it.isLink("HelloScript.kt") } ?: false
+    val dirReadLink = dirAt("res://") { it.readLink("HelloScript.kt") }.orEmpty()
+    val dirIsBundle = dirAt("res://") { it.isBundle("HelloScript.kt") } ?: false
+    val dirCaseSensitive = dirAt("res://") { it.isCaseSensitive("HelloScript.kt") } ?: false
+    val dirEquivalent =
+      dirAt("res://") { it.isEquivalent("HelloScript.kt", "HelloScript.kt") } ?: false
     val directDir = DirAccess.open("res://")
     val directDirPresent = directDir != null
     val directDirFileExists = directDir?.fileExists("HelloScript.kt") ?: false
@@ -1523,28 +1608,34 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     DirAccess.removeAbsolute(ProjectSettings.globalizePath("res://.kanama_dir_instance_smoke"))
     DirAccess.removeAbsolute(ProjectSettings.globalizePath("res://.kanama_dir_instance_copy.kt"))
     DirAccess.removeAbsolute(ProjectSettings.globalizePath("res://.kanama_dir_instance_rename.kt"))
-    val dirChangeError = DirAccess.changeDirAt("res://", "addons")
-    val dirInstanceMakeError = DirAccess.makeDirAt("res://", ".kanama_dir_instance_smoke")
+    val dirChangeError = dirAt("res://") { it.changeDir("addons") } ?: DirAccess.getOpenError()
+    val dirInstanceMakeError =
+      dirAt("res://") { it.makeDir(".kanama_dir_instance_smoke") } ?: DirAccess.getOpenError()
     val dirInstanceMakeExists =
       DirAccess.dirExistsAbsolute(ProjectSettings.globalizePath("res://.kanama_dir_instance_smoke"))
     val dirInstanceRecursiveError =
-      DirAccess.makeDirRecursiveAt("res://", ".kanama_dir_instance_smoke/nested")
+      dirAt("res://") { it.makeDirRecursive(".kanama_dir_instance_smoke/nested") }
+        ?: DirAccess.getOpenError()
     val dirInstanceRecursiveExists =
       DirAccess.dirExistsAbsolute(
         ProjectSettings.globalizePath("res://.kanama_dir_instance_smoke/nested")
       )
     val dirInstanceNestedCleanupError =
-      DirAccess.removeAt("res://", ".kanama_dir_instance_smoke/nested")
-    val dirInstanceCleanupError = DirAccess.removeAt("res://", ".kanama_dir_instance_smoke")
+      dirAt("res://") { it.remove(".kanama_dir_instance_smoke/nested") } ?: DirAccess.getOpenError()
+    val dirInstanceCleanupError =
+      dirAt("res://") { it.remove(".kanama_dir_instance_smoke") } ?: DirAccess.getOpenError()
     val dirInstanceCopyError =
-      DirAccess.copyAt("res://", "HelloScript.kt", ".kanama_dir_instance_copy.kt")
+      dirAt("res://") { it.copy("HelloScript.kt", ".kanama_dir_instance_copy.kt") }
+        ?: DirAccess.getOpenError()
     val dirInstanceCopyExists = FileAccess.fileExists("res://.kanama_dir_instance_copy.kt")
     val dirInstanceRenameError =
-      DirAccess.renameAt("res://", ".kanama_dir_instance_copy.kt", ".kanama_dir_instance_rename.kt")
+      dirAt("res://") {
+        it.rename(".kanama_dir_instance_copy.kt", ".kanama_dir_instance_rename.kt")
+      } ?: DirAccess.getOpenError()
     val dirInstanceRenameExists = FileAccess.fileExists("res://.kanama_dir_instance_rename.kt")
     val dirInstanceRenameOldMissing = !FileAccess.fileExists("res://.kanama_dir_instance_copy.kt")
     val dirInstanceRenameCleanupError =
-      DirAccess.removeAt("res://", ".kanama_dir_instance_rename.kt")
+      dirAt("res://") { it.remove(".kanama_dir_instance_rename.kt") } ?: DirAccess.getOpenError()
     DirAccess.removeAbsolute(ProjectSettings.globalizePath("res://.kanama_dir_instance_copy.kt"))
     val displayName = DisplayServer.getName()
     val screenCount = DisplayServer.getScreenCount()
@@ -1713,6 +1804,13 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         "string_text=$fileWriteStringText line_ok=$fileWriteLineOk " +
         "line_text=${fileWriteLineText.trim()} resize_error=${fileResizeError.value} " +
         "resize_text=$fileResizeText cleanup_error=${fileWriteCleanupError.value}"
+    )
+    System.err.println(
+      "[kanama:kt] FileAccess user_file make_error=${userMakeError.value} write_ok=$userWriteOk " +
+        "length=$userLength line=$userLine text_matches=${userText == "alphabeta\n"} md5_matches=$userMd5Matches " +
+        "missing_null=${userMissing == null} missing_error=${userMissingError.value} " +
+        "files=${userListed.joinToString(",")} walk=${userWalk.joinToString(",")} " +
+        "cleanup=${userFileCleanup.value},${userDirCleanup.value}"
     )
     System.err.println(
       "[kanama:kt] FileAccess byte_fixture source_bytes_positive=${fileSourceBytes.isNotEmpty()} " +
@@ -2020,7 +2118,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     System.err.println(
       "[kanama:kt] DirAccess list_controls files_has_hello=${dirFilesWithOptions.contains("HelloScript.kt")} " +
         "dirs_has_addons=${dirDirectoriesWithOptions.contains("addons")} include_hidden=$dirIncludeHidden " +
-        "include_nav=$dirIncludeNavigational entries_has_hello=${dirEntries.any { it.name == "HelloScript.kt" && !it.isDirectory }}"
+        "include_nav=$dirIncludeNavigational entries_has_hello=${dirEntries.any { it.first == "HelloScript.kt" && !it.second }}"
     )
     System.err.println(
       "[kanama:kt] DirAccess write_fixture make_error=${dirMakeError.value} make_exists=$dirMakeExists " +

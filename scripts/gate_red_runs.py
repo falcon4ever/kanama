@@ -323,8 +323,11 @@ case("check_hand_code_budget.py", py("check_hand_code_budget.py"),
      [Create(f"{IOS}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nfun redRun(): Int = 1\n")],
      "ZzRedRun.kt: hand-written (3 lines) and not on the budget", "a new hand-written file appears under an api/ directory")
 case("check_hand_code_budget.py (ratchet)", py("check_hand_code_budget.py"),
-     [Append(f"{JVM}/net/multigesture/kanama/api/DirAccess.kt", "\n// red run: a transitional file grows\n")],
-     "transitional file grew", "a transitional hand file (desktop DirAccess.kt) grows past its line ratchet")
+     [Append(f"{IOS}/api/IosGodotApi.kt", "\n// red run: a transitional file grows\n")],
+     "transitional file grew", "a transitional hand file (iOS IosGodotApi.kt) grows past its line ratchet")
+case("check_hand_code_budget.py (shared extension section)", py("check_hand_code_budget.py"),
+     [Edit("scripts/generate_api_wrapper.py", "fun AnimationMixer.getParameter(path: String): Any? =\n    getIndexed(path)", "fun AnimationMixer.getParameter(path: String): Any? =\n    // red run\n    getIndexed(path)")],
+     "SHARED_EXTENSION_SECTIONS[AnimationMixer]: grew to", "the shared extension section (task 129 D) grows past its ratchet")
 case("check_hand_code_budget.py (package outside api/)", py("check_hand_code_budget.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRunPkg.kt", "package net.multigesture.kanama.api\n\nfun redRunPkg(): Int = 1\n")],
      "ZzRedRunPkg.kt: hand-written (3 lines) and not on the budget",
@@ -377,7 +380,7 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
-     [Edit(f"{JVM}/net/multigesture/kanama/api/FileAccess.kt", "    fun getMd5(path: String): String =", "    fun getMd5RedRun(path: String): String =")],
+     [Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "inline fun <reified T : Any> newScriptInstance(): OwnedScriptResource<T> {", "inline fun <reified T : Any> newScriptInstanceRedRun(): OwnedScriptResource<T> {")],
      "unannounced source break", "a desktop-only declaration disappears and is not in the common tree (not a move to common, task 129 C)")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],

@@ -56,9 +56,8 @@ EXCLUDED = {
 # generated once. Their `actual` members must still pair with the expect (parse errors stay errors);
 # only the public members the expect does not declare are scoped out -- and listed, per platform, as
 # the cross-platform gap task 129 closes.
-HAND_SURFACE_SCOPED = {
-    "FileAccess": "hand-written per-platform API; removed by task 129 (generated once)",
-}
+# Empty since task 129 D generated FileAccess once (its enum-only expect is gone with it).
+HAND_SURFACE_SCOPED: dict[str, str] = {}
 # Expect classifiers whose actual is a `typealias` to an existing type: the aliased type's
 # surface is not something the actual declares, so there is nothing to compare.
 TYPEALIAS_ACTUALS = {

@@ -8,7 +8,7 @@ without being listed here, so we don't repeat the deep-dive bugs from unwired
 annotations/signals. `scripts/check_ios_no_silent_stubs.py` fails CI on an
 un-annotated bare-default return.
 
-Totals: **0 STUB** · **7 HANDWRITTEN** · **0 SUGAR** (7 marked sites).
+Totals: **0 STUB** · **5 HANDWRITTEN** · **0 SUGAR** (5 marked sites).
 
 ## STUB
 
@@ -22,13 +22,11 @@ _Intentionally bespoke — not generatable from extension_api.json; correct as-i
 
 | Location | Note |
 |---|---|
-| `src/iosMain/kotlin/net/multigesture/kanama/api/FileAccess.kt:7` | [glue] FileAccess static facade. The desktop shape is hand-shaped |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt:5` | [runtime] signal/connect/emitSignal/await use the custom GDExtension |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:45` | [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json. |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:72` | [seam] thin cinterop facade over the C shim entry points the runtime and |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:32` | [seam] thin cinterop facade over the C shim entry points the runtime and |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt:9` | [platform] MainThread.post/runOnMainThread run inline (Kotlin/Native scripts already run on the engine main thread); the frame queues are pumped by KanamaIosRuntime.frame(), not a JVM executor. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt:6` | [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime. |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt:5` | [platform] iOS actual of the script-authoring seam (ScriptRuntime.expect.kt, task 133): the runtime's script-instance table, the typed-loader ResourceLoader and Engine singletons. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt:7` | [platform] iOS actual of the script-authoring seam (ScriptRuntime.expect.kt, task 133): the runtime's script-instance table, the main dispatcher and the script-error report. |
 
 ## SUGAR
 

@@ -4,7 +4,9 @@ import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.AudioStreamWAV
 import net.multigesture.kanama.api.BoxMesh
 import net.multigesture.kanama.api.BoxShape3D
+import net.multigesture.kanama.api.DirAccess
 import net.multigesture.kanama.api.Engine
+import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -23,6 +25,7 @@ import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.ResourceSaver
 import net.multigesture.kanama.api.ShaderMaterial
 import net.multigesture.kanama.api.SurfaceTool
+import net.multigesture.kanama.builtins.md5Text
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import platform.posix.usleep
@@ -318,7 +321,93 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
   )
   mismatch?.close()
 
+  fileAccessRows(check)
+
   check("wrappers-once(no kanama_ios_fault raised)", ObjectCalls.faultCount() == faultsBefore)
+}
+
+/**
+ * Task 129 D: FileAccess and DirAccess are generated RefCounted classes with companion statics on
+ * every platform. iOS had 11 FileAccess members and no DirAccess before; these rows go through the
+ * generated instance methods, the statics and the owned `open()` result (closed by `use { }`).
+ */
+private fun fileAccessRows(check: (String, Boolean) -> Unit) {
+  val dir = "user://kanama_selftest_files"
+  val path = "$dir/notes.txt"
+  val made = DirAccess.makeDirRecursiveAbsolute(dir)
+  val wrote =
+    FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use { file ->
+      file.storeString("alpha") && file.storeLine("beta")
+    } ?: false
+  val read =
+    FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { file ->
+      Triple(file.getLength(), file.getLine(), file.getAsText())
+    }
+  checkParts(
+    check,
+    "file-access(open user:// WRITE storeString+storeLine, use{} closes; READ getLength 10, getLine alphabeta, getAsText)",
+    "makeDir" to ((made == GodotError.OK) to "$made"),
+    "write" to (wrote to "$wrote"),
+    "length" to ((read?.first == 10L) to "${read?.first}"),
+    "line" to ((read?.second == "alphabeta") to "${read?.second}"),
+    "text" to ((read?.third == "alphabeta\n") to "${read?.third}"),
+  )
+
+  val missing = FileAccess.open("$dir/missing.txt", FileAccess.ModeFlags.READ)
+  val openError = FileAccess.getOpenError()
+  checkParts(
+    check,
+    "file-access(open of a missing file -> null, getOpenError ERR_FILE_NOT_FOUND)",
+    "null" to ((missing == null) to "$missing"),
+    "error" to ((openError == GodotError.ERR_FILE_NOT_FOUND) to "$openError"),
+  )
+  missing?.close()
+
+  val md5 = FileAccess.getMd5(path)
+  checkParts(
+    check,
+    "file-access(statics fileExists, getFileAsString, getFileAsBytes 10, getSize 10, getMd5 == md5Text)",
+    "exists" to (FileAccess.fileExists(path) to "false"),
+    "string" to
+      ((FileAccess.getFileAsString(path) == "alphabeta\n") to FileAccess.getFileAsString(path)),
+    "bytes" to
+      ((FileAccess.getFileAsBytes(path).size == 10) to "${FileAccess.getFileAsBytes(path).size}"),
+    "size" to ((FileAccess.getSize(path) == 10L) to "${FileAccess.getSize(path)}"),
+    "md5" to ((md5 == "alphabeta\n".md5Text()) to md5),
+  )
+
+  val walked = mutableListOf<String>()
+  val listed =
+    DirAccess.open(dir)?.use { d ->
+      if (d.listDirBegin() == GodotError.OK) {
+        while (true) {
+          val name = d.getNext()
+          if (name.isEmpty()) break
+          walked += name
+        }
+        d.listDirEnd()
+      }
+      d.getFiles() to d.fileExists("notes.txt")
+    }
+  checkParts(
+    check,
+    "dir-access(open -> getFiles, listDirBegin/getNext walk and DirAccess.getFilesAt all list notes.txt)",
+    "getFiles" to ((listed?.first == listOf("notes.txt")) to "${listed?.first}"),
+    "fileExists" to ((listed?.second == true) to "${listed?.second}"),
+    "walk" to (("notes.txt" in walked) to "$walked"),
+    "getFilesAt" to
+      ((DirAccess.getFilesAt(dir) == listOf("notes.txt")) to "${DirAccess.getFilesAt(dir)}"),
+  )
+
+  val removedFile = DirAccess.removeAbsolute(path)
+  val removedDir = DirAccess.removeAbsolute(dir)
+  checkParts(
+    check,
+    "dir-access(removeAbsolute file and dir -> OK, dirExistsAbsolute false after)",
+    "file" to ((removedFile == GodotError.OK) to "$removedFile"),
+    "dir" to ((removedDir == GodotError.OK) to "$removedDir"),
+    "gone" to ((!DirAccess.dirExistsAbsolute(dir)) to "true"),
+  )
 }
 
 private fun <T : RefCounted> newRef(className: String, wrap: (GodotHandle) -> T): T =

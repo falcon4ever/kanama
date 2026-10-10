@@ -456,7 +456,7 @@ def _enum_name_maps() -> dict[str, dict[str, str]]:
 
 TOP_LEVEL_RE = re.compile(r"^(?:(?:public|internal|actual|expect|open|abstract|sealed|data)\s+)*(?:class|object)\s+(\w+)")
 # Kotlin owner names that are not their Godot class's name.
-KOTLIN_TO_GODOT = {"GodotObject": "Object", "FileAccessHandle": "FileAccess", "DirAccessHandle": "DirAccess"}
+KOTLIN_TO_GODOT = {"GodotObject": "Object"}
 
 
 def collect_enum_value_replacements(

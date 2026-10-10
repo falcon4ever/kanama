@@ -63,6 +63,78 @@ the setting (an environment variable cannot reach an Android app). Both require 
 FAIL line, so a demo smoke fails when typed signals do not work on the device. `gate_red_runs.py` has a
 slow case that makes `emit` skip the call.
 
+### Changed — `FileAccess` and `DirAccess` are RefCounted classes, as in GDScript (task 129 D) — BREAKING
+
+Desktop, Android and iOS. The last two per-platform classes are generated once from
+`extension_api.json`, like the other 1,032: `FileAccess` and `DirAccess` are `RefCounted` classes
+with Godot's statics in their companion. `FileAccess.open(path, flags)` returns an owned
+`FileAccess?` (`null` and `FileAccess.getOpenError()` when it fails); close it with `close()` or
+`use { }` like every other `RefCounted` you receive. Releasing the last reference closes the file
+(Godot's destructor), so `use { }` is the idiom; Godot's own `close()` method is `closeFile()`, for a
+file something else still references.
+
+```kotlin
+FileAccess.open("user://save.txt", FileAccess.ModeFlags.WRITE)?.use { it.storeLine("score=42") }
+val text = FileAccess.getFileAsString("user://save.txt")
+DirAccess.open("user://")?.use { dir -> dir.getFiles() }
+```
+
+- **iOS gains** all of `FileAccess` (68 Godot methods: `open`, `openCompressed`, `openEncrypted`,
+  `createTemp`, every `get*`/`store*`, `seek`, `getCsvLine`, `getVar`/`storeVar`, the `getMd5` /
+  `getSha256` / `getModifiedTime` / attribute statics, ...; it had 11) and all of `DirAccess` (it had
+  none).
+- **Source break:** `FileAccessHandle` and `DirAccessHandle` are gone. `FileAccess.open`,
+  `openEncrypted`, `openEncryptedWithPass`, `openCompressed` and `createTemp` return `FileAccess?`,
+  `DirAccess.open` and `createTemp` return `DirAccess?`, with the same member names (`getAsText`,
+  `getLine`, `storeString`, `getFiles`, `fileExists`, ...). Migrate: write `FileAccess` /
+  `DirAccess` where you named the handle type, and `FileAccess.fromHandle(h)` for
+  `FileAccessHandle.fromHandle(h)`. No deprecated alias: no known code names the handle types, and an
+  alias would keep a type Godot does not have.
+- **Source break:** the 38 `FileAccess` path one-shot helpers (desktop only) are removed: `getPathFor`,
+  `getPathAbsoluteFor`, `isOpenFor`, `getPositionFor`, `getLengthFor`, `eofReachedFor`, `getLineFor`,
+  `getAsText(path)`, `getErrorFor`, `get8At` ... `get64At`, `getFloatAt`, `getDoubleAt`,
+  `getHalfAt`, `getRealAt`, `isBigEndianFor`, `getCsvLineAt`, `getPascalStringFor`, `getBufferAt`,
+  `getVarAt`, `getPositionFromEnd`, `resizeFile`, and `writeString`, `writeLine`, `writeBytes`,
+  `write8` ... `write64`, `writeFloat`, `writeDouble`, `writeHalf`, `writeReal`,
+  `writePascalString`, `writeCsvLine`, `writeVar`. Open the file as in GDScript:
+  `FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.get32() }`,
+  `FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use { it.storeString(text) }` (big-endian:
+  `it.bigEndian = true` first; resize: open `READ_WRITE` and `it.resize(n)`). Whole-file reads keep
+  Godot's statics `getFileAsString(path)` / `getFileAsBytes(path)`.
+- **Source break:** the 23 `DirAccess` per-call helpers (desktop only) are removed: `fileExistsAt`,
+  `dirExistsAt`, `changeDirAt`, `getCurrentDriveAt`, `getCurrentDirAt`, `getSpaceLeftAt`,
+  `getIncludeHiddenAt`, `getIncludeNavigationalAt`, `getFilesystemTypeAt`, `isLinkAt`, `readLinkAt`,
+  `isBundleAt`, `isCaseSensitiveAt`, `isEquivalentAt`, `makeDirAt`, `makeDirRecursiveAt`, `removeAt`,
+  `copyAt`, `renameAt`, `createLinkAt`, `listEntriesAt` with its `DirAccess.Entry`, and the
+  `getFilesAt` / `getDirectoriesAt` overloads taking `includeHidden`. Use an opened directory:
+  `DirAccess.open(path)?.use { it.fileExists(name) }`; hidden files: `it.includeHidden = true` before
+  `it.getFiles()`; a walk with "is directory": `listDirBegin()` / `getNext()` / `currentIsDir()` /
+  `listDirEnd()`, as in GDScript. Godot's statics stay: `getFilesAt(path)`, `getDirectoriesAt(path)`,
+  `makeDirAbsolute`, `makeDirRecursiveAbsolute`, `removeAbsolute`, `copyAbsolute`, `renameAbsolute`,
+  `dirExistsAbsolute`, `getDriveCount`, `getDriveName`, `getOpenError`.
+- **Source break:** generated `FileAccess` / `DirAccess` signatures follow Godot's types and
+  parameter names: `DirAccess.getDriveCount()` returns `Int` (was `Long`) and
+  `getDriveName(idx: Int)` (was `index: Long`); `FileAccess.get8()` / `get16()` return `Int` and
+  `store8` / `store16` take `Int`; the `FileAccess` statics name their path `file` (was `path`) in
+  `getModifiedTime`, `getAccessTime`, `getSize`, `getUnixPermissions`, `setUnixPermissions`,
+  `getHiddenAttribute`, `setHiddenAttribute`, `getReadOnlyAttribute`, `setReadOnlyAttribute` (`ro`,
+  was `readOnly`) and the extended-attribute functions (`attributeName` / `data`, was `attribute` /
+  `bytes` / `value`); `storeString(string)` (was `text`). Only named-argument calls notice a rename.
+  `FileAccess` is a class now, not an object: `is FileAccess` tests a file instance.
+- **Source break:** iOS only: `ShapeCast3D.getCollisionPoint(index: Long)` (an iOS-only overload) is
+  removed, pass an `Int` (`getCollisionCount()` returns `Int`); `PhysicsRayQueryParameters3D.create`
+  is the generated static on iOS too and returns `PhysicsRayQueryParameters3D?` (the iOS extension
+  returned non-null): add `?: return` or `!!`. Desktop gains `create(from, to)` (an `exclude =
+  emptyList()` default).
+- **Source break:** (top-level) `Node.kotlinScriptInstance<T>()` is merged into the common
+  `GodotObject.kotlinScriptInstance<T>()`; a call on a `Node` compiles unchanged.
+- Written once in common now (task 129 parcel 9): `KanamaScope` and `KanamaDispatchers` (iOS gains
+  `KanamaDispatchers.Main` / `Default`), `kotlinScriptInstance`, the deprecated
+  `ManualGodotLifetimeApi` and `selfAs(godotObject, ctor)` (iOS gains the latter), the
+  `AnimationMixer.setParameter` / `getParameter` / `getStateMachinePlayback` helpers (one copy; iOS
+  goes through `setIndexed` / `getIndexed` like desktop), and the engine-wide `MethodName`,
+  `PropertyName` and `SignalName` constants (iOS gains them). `PER_PLATFORM_WRAPPERS` is empty.
+
 ### Fixed — Android: a typed signal `emit` failed on the device (task 138 item 21)
 
 On an arm64 Android device (Android 11+ tags heap pointers; seen on the Pixel 7) every typed
@@ -134,7 +206,7 @@ generated on iOS (`ConfigFile`, `ENetMultiplayerPeer`, `InputEventKey`, `InputEv
 on both (`BoxMesh`, `BoxShape3D`, `AudioStreamPlayer`, `ResourceLoader`, `Engine`). Each is now
 generated once into the shared API from `extension_api.json`, like the other 1,012 classes, so a
 member compiles on every native platform or on none; the desktop names, overloads and factories
-are kept. Only `FileAccess` and `DirAccess` are still per-platform (task 129 parcel 8).
+are kept. `FileAccess` and `DirAccess` followed in task 129 D.
 
 - **iOS gains what it lacked:** `AudioStreamPlayer` 35 members (every getter, `isPlaying`, `seek`,
   `setPlaying`, `setAutoplay`, `setMixTarget`, `setMaxPolyphony`, `setPlaybackType`,

@@ -889,3 +889,23 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
             ObjectCalls.getMethodBind("AnimationMixer", "find_animation_library", FIND_ANIMATION_LIBRARY_HASH)
     }
 }
+
+// Sugar over the class, every platform (SHARED_EXTENSION_SECTIONS['AnimationMixer']).
+/** Sets the AnimationTree parameter at [path] (`parameters/...`), like GDScript's `tree.set(path, value)`. */
+fun AnimationMixer.setParameter(path: String, value: Any?) {
+    setIndexed(path, value)
+}
+
+/** The AnimationTree parameter at [path] (`parameters/...`). */
+fun AnimationMixer.getParameter(path: String): Any? =
+    getIndexed(path)
+
+/** The state-machine playback at [path] (`parameters/playback`); fails loudly when it is something else. */
+fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
+    val playback = when (val value = getParameter(path)) {
+        is AnimationNodeStateMachinePlayback -> value
+        is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
+        else -> null
+    }
+    return playback ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
+}

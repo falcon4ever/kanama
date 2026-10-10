@@ -121,8 +121,6 @@ class KanamaScriptTemplateTest {
     // FACTORY_BASES or ANCESTOR_FALLBACK, or a New Script on it would not compile.
     val nonEngine =
       setOf(
-        "FileAccessHandle",
-        "DirAccessHandle",
         "OwnedScriptResource",
         "SignalConnection",
         "GodotSignal",

@@ -260,7 +260,7 @@ def main() -> int:
         return found
 
     # Kotlin owner names that are not their Godot class's name.
-    kotlin_to_godot = {"GodotObject": "Object", "FileAccessHandle": "FileAccess", "DirAccessHandle": "DirAccess"}
+    kotlin_to_godot = {"GodotObject": "Object"}
 
     def godot_method_named(cls: str, kotlin_name: str) -> str | None:
         """The Godot method of [cls] or an ancestor whose wrapper name is [kotlin_name]."""

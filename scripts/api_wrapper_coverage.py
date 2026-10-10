@@ -83,7 +83,7 @@ def platform_class_set_lines(classes: dict[str, ApiClass], wrapper_classes: set[
     api_names = set(classes)
     shared = len({p.stem for p in SHARED_API_DIR.glob("*.kt")} & api_names)
     companions = len([p for p in DESKTOP_API_DIR.glob("*.jvm.kt") if is_companion_file(p)])
-    unsupported = ", ".join(f"`{name}`" for name in sorted(IOS_UNSUPPORTED_CLASSES))
+    unsupported = ", ".join(f"`{name}`" for name in sorted(IOS_UNSUPPORTED_CLASSES)) or "none"
     return [
         "### Per-Platform Class Sets",
         "",
@@ -96,7 +96,7 @@ def platform_class_set_lines(classes: dict[str, ApiClass], wrapper_classes: set[
         f"- Per-platform (`PER_PLATFORM_WRAPPERS`, {len(PER_PLATFORM_WRAPPERS)} classes): desktop generates "
         f"{len(DESKTOP_ONLY_GENERATED)} and hand-shapes {len(DESKTOP_HANDSHAPED)}; iOS generates "
         f"{len(IOS_ONLY_GENERATED)}, hand-shapes {len(IOS_HANDSHAPED)}, hand-writes "
-        f"{len(IOS_HANDWRITTEN_COLLISION_CLASSES)} collision classes, and does not host {unsupported}. "
+        f"{len(IOS_HANDWRITTEN_COLLISION_CLASSES)} collision classes, and does not host: {unsupported}. "
         "Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative "
         "(un-audited marshalling shapes become desktop companions with report entries, never stubs).",
         "",
