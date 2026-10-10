@@ -116,6 +116,19 @@ the exported game runs on ART and PanamaPort, not on a desktop JVM. The
 versions are in [Version Support → Requirements](../../reference/version-support.md#requirements)
 and the [Android toolchain table](../../exporting/android.md#toolchain).
 
+Native heap pointers on Android are tagged: the top byte is `0xB4` (Android 11+
+pointer tagging), so a `malloc`ed address is negative as a signed `long`. Pass
+it to native code as a value freely, but never use it as a segment offset: a
+whole-address-space segment (`MemorySegment.NULL.reinterpret(Long.MAX_VALUE)`)
+addressed with absolute addresses works on the desktop and throws
+`IndexOutOfBoundsException` on the device (task 138 item 21: every typed signal
+`emit` failed this way, through its heap-allocated frame; the signal-lambda
+argument reads and call-error writes, which Godot usually hands stack pointers,
+were changed too as hardening). Read and write through the pointer's own
+segment (`ptr.reinterpret(size)`, offsets relative to it); keep that segment
+local on a hot path, so the JIT removes it. `scripts/check_android_remap_sources.py`
+rejects the idiom in the runtime sources.
+
 ## Implementation Shape
 
 The current Android implementation lives under `android/godot-plugin`, split

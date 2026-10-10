@@ -38,6 +38,22 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — Android: a typed signal `emit` failed on the device (task 138 item 21)
+
+On an arm64 Android device (Android 11+ tags heap pointers; seen on the Pixel 7) every typed
+`emit(...)` (`Signal0`..`Signal5`) failed with `IndexOutOfBoundsException: Out of bound access on
+segment ... at offset -5476...`, reported as a script error, so the signal never fired. The emit
+frame wrote its argument table through a segment that spans the whole address space, using the
+frame's absolute address as the offset; Android's native heap hands out tagged pointers (top byte
+`0xB4`), which are negative as a signed `long`, so no segment offset can express them. Desktop heap
+addresses are small and positive, so no desktop run saw it. The emit frame now writes relative to
+its own block. The emit path was the observed failure; as hardening, the typed signal lambda's
+argument reader and its call-error writes are relative too (Godot usually passes them stack
+pointers, which are untagged, but a Kotlin emit hands a lambda its heap frame).
+`check_android_remap_sources.py` now fails on a whole-address-space segment
+(`MemorySegment.NULL`/`NULL_SEGMENT`/`ofAddress(0)` reinterpreted, wrapped or through a `val`
+alias) in the runtime sources.
+
 ### Fixed — Web: a lambda signal connection no longer leaks its callback (protocol 34, task 131 item 12)
 
 - A Kotlin lambda connected to a signal on Web (`signal.connect(this) { ... }`, the typed
