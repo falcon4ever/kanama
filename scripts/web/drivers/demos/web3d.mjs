@@ -472,6 +472,26 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     freedProbeAfter = await readFreedAfter();
   }
   trace(`freedProbeAfter: ${freedProbeAfter}`);
+  // Batch of two (Main.freed_batch_probe): a setter on the freed node, then a command on a live one,
+  // in one batch. The freed one is skipped and reported; the live command must still apply, and a
+  // live `queueFree` after the skip must release its bridge slot (live handles back to where they
+  // were).
+  const liveBeforeBatch = (await snapshot(evaluate))?.liveHandles;
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_batch_probe")}, 0)`,
+  );
+  const readFreedBatchAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_batch_probe_after")}, 0)`,
+    ).then(Number);
+  let freedBatchAfter = await readFreedBatchAfter();
+  const freedBatchDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (freedBatchAfter !== 7 && Date.now() < freedBatchDeadline) {
+    await delay(150);
+    freedBatchAfter = await readFreedBatchAfter();
+  }
+  const liveAfterBatch = (await snapshot(evaluate))?.liveHandles;
+  trace(`freedBatchAfter: ${freedBatchAfter} liveHandles ${liveBeforeBatch} -> ${liveAfterBatch}`);
   const readLeakAfter = () =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
@@ -498,9 +518,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ready: "ThrowingReady._ready",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
-  // ...plus the one queued setter on a node the engine freed (FreedHolder.freed_setter): reported
-  // once as a script error naming the freed instance, not counted among the deliberate throws.
-  const freedSetterReports = 1;
+  // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one) and the
+  // two batches of FreedHolder.freed_batch (one each). Each is reported once as a script error
+  // naming the freed instance, and none is counted among the deliberate throws.
+  const freedSetterReports = 3;
   const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
@@ -632,6 +653,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 138 item 3: using a node the engine freed under its holder throws the freed-instance
     // error (catchable, like desktop's), and the holder keeps working.
     engineFreedNodeThrowsFreedInstanceError: freedProbeAfter === 1023,
+    // A skipped command (a setter on a freed node) does not hide the commands around it: in a
+    // batch of two the live command still applies, and a live queueFree after the skip releases
+    // its slot (the applied commands are not a prefix of the batch).
+    skippedFreedCommandKeepsTheRestOfTheBatch:
+      freedBatchAfter === 7 && liveBeforeBatch !== undefined && liveAfterBatch === liveBeforeBatch,
     // Task 131 item 12: a lambda connection's Kotlin callback is dropped with its one-shot firing,
     // its emitter's free and its receiver's free (desktop's SignalCallbackRegistry rules).
     lambdaConnectionsReleaseTheirCallbacks: leakProbeAfter === 31,

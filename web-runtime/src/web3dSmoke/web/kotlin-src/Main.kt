@@ -1421,6 +1421,36 @@ class Main(godotObject: GodotHandle) :
     return 0L
   }
 
+  private var freedBatchMask = 0L
+
+  /**
+   * Batch-of-two probe (driver `freed_batch_probe`, then `freed_batch_probe_after`), run after
+   * [freedProbe] has freed the held node. FreedHolder queues, in ONE batch, a setter on that freed
+   * node and then a command on a live node. Bits:
+   * - 1: the live setter after the skipped one took effect (read back);
+   * - 2: the live `queueFree` after a skipped setter freed the node in the engine;
+   * - 4: frames kept running.
+   * The driver also checks the bridge's live-handle count is unchanged once the live node is freed
+   * (its slot was released: the applied commands are not a prefix of the batch).
+   * A healthy run returns 7 from [freedBatchProbeAfter].
+   */
+  fun freedBatchProbe(value: Long): Long {
+    val holder = self.requireAs("FreedHolder", ::Node)
+    val says = { method: String ->
+      WebExperimentalGenericCall.callImmediate(holder, method, listOf(0L)).asLong()
+    }
+    freedBatchMask = 0L
+    if (says("freed_batch") == 1L) freedBatchMask = freedBatchMask or 1L
+    MainThread.postAfterFrames(3) {
+      if (says("freed_batch_gone") == 1L) freedBatchMask = freedBatchMask or 2L
+      MainThread.postAfterFrames(3) { freedBatchMask = freedBatchMask or 4L }
+    }
+    return 0L
+  }
+
+  /** Readback of [freedBatchProbe]: 7 once its frames have passed. */
+  fun freedBatchProbeAfter(value: Long): Long = freedBatchMask
+
   /** Readback of [freedProbe]: 1023 once its frames have passed. */
   fun freedProbeAfter(value: Long): Long = freedMask
 

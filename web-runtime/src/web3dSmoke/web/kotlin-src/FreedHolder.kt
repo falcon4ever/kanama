@@ -1,7 +1,9 @@
 package web3d
 
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.Camera3D
 import net.multigesture.kanama.api.Control
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
@@ -73,6 +75,29 @@ class FreedHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     held?.setProcessMode(Node.ProcessMode.DISABLED)
     return 1L
   }
+
+  private var batchLive: Camera3D? = null
+
+  /**
+   * A batch of two commands per flush, the first on the freed node: the freed one is skipped and
+   * reported, the live one after it must still be applied. First batch: a setter on the freed node
+   * then a setter on a live node, read back (the read flushes). Second batch: a setter on the freed
+   * node then `queueFree` on the live node, which must release the live node's bridge slot. 1 when
+   * the first batch's live setter took effect.
+   */
+  fun freedBatch(value: Long): Long {
+    val live = Camera3D.create()
+    held?.setProcessMode(Node.ProcessMode.DISABLED)
+    live.setProcessMode(Node.ProcessMode.DISABLED)
+    val applied = if (live.getProcessMode() == Node.ProcessMode.DISABLED) 1L else 0L
+    held?.setProcessMode(Node.ProcessMode.DISABLED)
+    live.queueFree()
+    batchLive = live
+    return applied
+  }
+
+  /** 1 once the live node of [freedBatch] is gone from the engine. */
+  fun freedBatchGone(value: Long): Long = if (GD.isInstanceValid(batchLive)) 0L else 1L
 
   /** 1 when this script's own node still answers after the held one was freed. */
   fun freedSelf(value: Long): Long = if (self.getName().toString() == "FreedHolder") 1L else 0L

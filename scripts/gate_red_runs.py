@@ -352,6 +352,12 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 34", "KANAMA_WEB_PROTOCOL_VERSION = 33")],
      "protocol version disagrees", "the bridge pins protocol 33 while the emitter says 34")
+case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
+     "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
+case("check_protocol_pins.py (freed-check opcode)", py("check_protocol_pins.py"),
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_OPCODE_FREED_CHECK = 1004;", "KANAMA_WEB_OPCODE_FREED_CHECK = 1005;")],
+     "freed-check opcode", "the bridge asks the freed check on opcode 1005 while the proxy answers 1004")
 case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")

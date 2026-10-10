@@ -439,8 +439,11 @@ A callback whose receiver is gone publishes NOTHING (the proxy tests `_kanama_ha
 it publishes a default), so the same `unpublishedResult` path raises the error for every shape, the
 value shapes (signal emit, child count, `Control` position, connect) included.
 Queued calls (setters, `queueFree`) do not cross here and do not throw at the call: when the proxy's
-command loop stops on a target the engine freed, `flushCommands` asks the same freed check, skips
-that one command, applies the rest of the group and records the freed-instance message;
+command loop stops on a target the engine freed (a browser handle that still has its bridge slot),
+`flushCommands` asks the same freed check, skips that one command (dropping a skipped generic call's
+staged arguments), applies the rest of the group and records the freed-instance message; the
+telemetry that follows tests each command as applied AND not skipped, since the applied ones are no
+longer a prefix;
 `WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A command that
 stops the loop for any other reason is a protocol fault and ends the page through the
 applied/expected check.

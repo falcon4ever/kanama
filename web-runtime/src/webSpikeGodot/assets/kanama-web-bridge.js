@@ -2787,6 +2787,9 @@
       // misparse (a handle read as an opcode). Only surfaces for demos that mutate during a
       // flush, i.e. dodge's mob spawning; match3/bunnymark never re-enter mid-batch.
       words = words.slice(0, wordCount);
+      // A top-level flush starts clean: messages a throw left unreported must not surface against
+      // another script. A nested flush (a callback flushing mid-batch) keeps the outer's.
+      if (this.activeCommandFlushFrame === null) this.freedCommandSkips = [];
       if (this.activeDraw) {
         this.drawBatches += 1;
         this.maxDrawCommands = Math.max(this.maxDrawCommands, commandCount);
@@ -2816,6 +2819,11 @@
       let scanOffset = 0;
       let applied = 0;
       let skippedFreed = 0;
+      // Batch indices of the commands skipped because their target was freed: they were consumed
+      // but NOT applied, so the bookkeeping below must not treat them as applied (the applied ones
+      // are no longer a prefix).
+      const skippedIndices = new Set();
+      let groupFirstIndex = 0;
       const flushGroup = () => {
         if (groupCommands === 0) return;
         const callback = this.applyCallbacks.get(groupOwner);
@@ -2851,8 +2859,9 @@
           for (let skipped = 0; skipped < frame.applied; skipped += 1) {
             stop += commandWordCount(words[stop]);
           }
-          if (!this.skipFreedCommand(words[stop + 1], groupOwner)) break;
+          if (!this.skipFreedCommand(words[stop], words[stop + 1], words[stop + 3], groupOwner)) break;
           skippedFreed += 1;
+          skippedIndices.add(groupFirstIndex + (groupCommands - remaining) + frame.applied);
           from = stop + commandWordCount(words[stop]);
           remaining -= frame.applied + 1;
         }
@@ -2870,6 +2879,7 @@
         if (groupCommands === 0) {
           groupStart = scanOffset;
           groupOwner = owner;
+          groupFirstIndex = commandIndex;
         }
         groupWords += size;
         groupCommands += 1;
@@ -2880,16 +2890,17 @@
       this.kotlinToGodotMs.push(performance.now() - started);
       let wordOffset = 0;
       let positionMutationCount = 0;
+      const appliedAt = (index) => index < applied + skippedFreed && !skippedIndices.has(index);
       const audioOpcodes = [];
       const commandData = new DataView(words.buffer, words.byteOffset, wordCount * 4);
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[wordOffset];
-        if (commandIndex < applied && opcode === 13) {
+        if (appliedAt(commandIndex) && opcode === 13) {
           const childKind = this.browserHandleSlot(words[wordOffset + 2])?.kind;
           if (childKind === "AudioStreamPlayer") this.match3AudioPlayerAdds += 1;
           else this.match3AddChildCommands += 1;
         }
-        if (commandIndex < applied && opcode === 16) {
+        if (appliedAt(commandIndex) && opcode === 16) {
           this.match3TextureAssignments += 1;
           const tileHandle = this.match3TileRootBySprite.get(words[wordOffset + 1]);
           const textureIndex = this.match3TextureIndexByHandle.get(words[wordOffset + 2]);
@@ -2897,22 +2908,22 @@
             this.match3TileTypeByHandle.set(tileHandle, textureIndex);
           }
         }
-        if (commandIndex < applied && opcode === 3) {
+        if (appliedAt(commandIndex) && opcode === 3) {
           this.match3PositionMutations += 1;
           this.match3NodePositions.set(words[wordOffset + 1], {
             x: commandData.getFloat32(wordOffset * 4 + 8, true),
             y: commandData.getFloat32(wordOffset * 4 + 12, true),
           });
         }
-        if (commandIndex < applied && opcode === 30) this.match3ScaleMutations += 1;
-        if (commandIndex < applied && opcode === 32) this.match3ModulateMutations += 1;
-        if (commandIndex < applied && opcode === 43) {
+        if (appliedAt(commandIndex) && opcode === 30) this.match3ScaleMutations += 1;
+        if (appliedAt(commandIndex) && opcode === 32) this.match3ModulateMutations += 1;
+        if (appliedAt(commandIndex) && opcode === 43) {
           this.match3ParticleEmittingCommands += 1;
           const particleHandle = words[wordOffset + 1];
           const snapshot = this.particleSnapshots.get(particleHandle);
           if (snapshot) snapshot.emitting = words[wordOffset + 2] !== 0;
         }
-        if (commandIndex < applied && opcode === 46) {
+        if (appliedAt(commandIndex) && opcode === 46) {
           audioOpcodes.push(opcode);
           const playerHandle = words[wordOffset + 1];
           const streamHandle = words[wordOffset + 2];
@@ -2925,36 +2936,36 @@
           }
           this.match3AudioStreamAssignments += 1;
         }
-        if (commandIndex < applied && opcode === 47) {
+        if (appliedAt(commandIndex) && opcode === 47) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           if (state) state.bus = this.resolveCommandStringName(words[wordOffset + 2]);
           this.match3AudioBusCommands += 1;
         }
-        if (commandIndex < applied && opcode === 48) {
+        if (appliedAt(commandIndex) && opcode === 48) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           if (state) state.volumeDb = commandData.getFloat64(wordOffset * 4 + 8, true);
           this.match3AudioVolumeCommands += 1;
         }
-        if (commandIndex < applied && opcode === 49) {
+        if (appliedAt(commandIndex) && opcode === 49) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           if (state) state.pitchScale = commandData.getFloat64(wordOffset * 4 + 8, true);
           this.match3AudioPitchCommands += 1;
         }
-        if (commandIndex < applied && opcode === 50) {
+        if (appliedAt(commandIndex) && opcode === 50) {
           audioOpcodes.push(opcode);
           const state = this.audioPlayerStates.get(words[wordOffset + 1]);
           const fromPosition = commandData.getFloat64(wordOffset * 4 + 8, true);
           if (state) state.plays.push(fromPosition);
           this.match3AudioPlayCommands += 1;
         }
-        if (commandIndex < applied && opcode === 52) {
+        if (appliedAt(commandIndex) && opcode === 52) {
           this.match3SceneTreeQuitCommands += 1;
         }
-        if (commandIndex < applied && opcode === 3) positionMutationCount += 1;
-        if (commandIndex < applied && opcode === 15) {
+        if (appliedAt(commandIndex) && opcode === 3) positionMutationCount += 1;
+        if (appliedAt(commandIndex) && opcode === 15) {
           this.lastFreedObjectHandle = words[wordOffset + 1];
           const slot = this.browserHandleSlot(this.lastFreedObjectHandle);
           if (slot?.kind === "AudioStreamPlayer") {
@@ -2989,8 +3000,14 @@
      * Whether a command's target handle is an object the engine freed (see flushCommands): if so
      * records the freed-instance message for [takeFreedCommandSkips] and answers true.
      */
-    skipFreedCommand(handle, ownerHandle) {
+    skipFreedCommand(opcode, handle, genericArgsId, ownerHandle) {
+      // Only an engine-freed node: it keeps its bridge slot. A handle with no slot (never minted,
+      // corrupt, or already released) is a protocol fault and stays fatal.
+      if (this.browserHandleSlot(handle) === null) return false;
       if (!this.isHandleFreed(handle, ownerHandle)) return false;
+      // The skipped command's staged generic-call arguments would never be consumed by its
+      // applier arm; drop them or a per-frame call on a freed node fills the staging map.
+      if (opcode === 1001) this.stagedGenericArgs.delete(genericArgsId);
       this.freedCommandSkips.push(FREED_INSTANCE_MESSAGE(handle));
       return true;
     },

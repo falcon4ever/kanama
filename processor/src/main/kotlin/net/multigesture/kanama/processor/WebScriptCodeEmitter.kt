@@ -219,6 +219,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * Task 138 item 3: the object-query arm that says a handle's object was freed by the engine.
      */
     internal const val FREED_CHECK_OPCODE = 1004
+    /** Bit 30, the browser-handle namespace: `BROWSER_HANDLE_NAMESPACE` in the bridge. */
+    internal const val BROWSER_HANDLE_NAMESPACE = 0x40000000
     internal const val BUILTIN_CALL = "_kanama_web_builtin_call"
     /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
     internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
@@ -3592,7 +3594,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // instance (desktop's setter throws and the script carries on) and applies the rest. Any other
     // unresolvable command is a protocol fault: reported here, and Kotlin's applied/expected check
     // ends the page.
-    appendLine("\t\t\tif target_object == null and _kanama_handle_gone(object_handle):")
+    appendLine(
+      "\t\t\tif target_object == null and (object_handle & $BROWSER_HANDLE_NAMESPACE) != 0 and _kanama_handle_gone(object_handle):"
+    )
     appendLine("\t\t\t\tbreak")
     appendLine(
       "\t\t\tpush_error(\"Invalid Kanama Web command opcode/object: %d/%d\" % [opcode, object_handle])"

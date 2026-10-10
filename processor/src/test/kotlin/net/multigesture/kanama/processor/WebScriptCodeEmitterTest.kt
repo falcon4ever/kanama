@@ -2150,5 +2150,13 @@ class WebScriptCodeEmitterTest {
     // The command loop tests the held entry's TYPE, so a freed entry is retired.
     assertTrue(proxy.contains("if typeof(target_held) == TYPE_OBJECT:"))
     assertFalse(proxy.contains("if target_held != null:"))
+    // Only a gone BROWSER handle stops the command loop silently; any other unresolvable command
+    // keeps the push_error naming its opcode and handle.
+    assertTrue(
+      proxy.contains(
+        "if target_object == null and (object_handle & 1073741824) != 0 and _kanama_handle_gone(object_handle):"
+      )
+    )
+    assertTrue(proxy.contains("Invalid Kanama Web command opcode/object"))
   }
 }
