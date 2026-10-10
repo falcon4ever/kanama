@@ -296,6 +296,14 @@ case("check_android_remap_sources.py (address space)", py("check_android_remap_s
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt",
              "package net.multigesture.kanama\nval zz = MemorySegment.NULL.reinterpret(Long.MAX_VALUE)\n")],
      "whole-address-space segment", "a runtime source addresses native memory by absolute address (fails on Android's tagged heap pointers)")
+case("check_android_remap_sources.py (address space, wrapped)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt",
+             "package net.multigesture.kanama\nval zz =\n  MemorySegment.NULL\n    .reinterpret(Long.MAX_VALUE)\n")],
+     "ZzRedRun.kt:3: whole-address-space segment", "a ktfmt-wrapped `MemorySegment.NULL⏎.reinterpret(` chain")
+case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt",
+             "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
+     "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 34)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
