@@ -29,25 +29,35 @@ import net.multigesture.kanama.types.Vector3
 /**
  * A typed-signal self-test that runs on the device (task 138 item 23), in the shared
  * desktop/Android JVM code: the Android-only typed-emit failure of task 138 item 21 (tagged heap
- * pointers) lived five days because no Android smoke required a typed signal to fire. The self-test
- * makes every demo smoke require it.
+ * pointers) lived five days because no Android smoke required a typed signal to fire. The Kanama
+ * smokes (`runtime_smoke.sh`, `android_smoke.sh`) switch it on and require its verdict.
  *
- * Runs once, on the first frame of the main loop ([onFrame], called from the script language's
- * `frame()`), in debug builds that are not the editor (`OS.is_debug_build()`, as the freed-object
- * checks and the iOS `OBJECTCALLS SELFTEST` are gated). `KANAMA_SIGNAL_SELFTEST=1` forces it on
- * (also in the editor), `0` off. It prints `[kanama] SIGNAL SELFTEST: <n> passed, <m> failed` and
- * one `[kanama] SIGNAL SELFTEST FAIL: <row> got <values>` line per failed row.
+ * A Kanama test hook, OFF for users: it costs about 15-20 ms and a hundred classes on the first
+ * frame and registers an extension class ([RECEIVER_CLASS]) that stays until shutdown. It runs
+ * once, on the first frame of the main loop ([onFrame], called from the script language's
+ * `frame()`), only when the project setting [SETTING] (`kanama/debug/signal_self_test`, default
+ * false) is true in a debug build that is not the editor. `KANAMA_SIGNAL_SELFTEST=1` forces it on
+ * (also in a release build and in the editor), `0` off. It prints `[kanama] SIGNAL SELFTEST: <n>
+ * passed, <m> failed in <ms> ms` and one `[kanama] SIGNAL SELFTEST FAIL: <row> got <values>` line
+ * per failed row.
  *
  * What it covers: `Signal0` … `Signal5` emitted from Kotlin with mixed argument types (Long,
  * Double, Boolean, String, Vector3, Object), each received by a Kotlin lambda connection and by a
- * Callable to a method of an extension class registered here (the path of a `@Function`,
- * `call_func` with the emitted Variants); a one-shot connection; an emit from inside a handler,
- * three levels deep (the emit-frame pool) with the outer handler's own arguments checked after the
- * nested emits returned; and the release of every connection, registry entry and object afterwards.
+ * Callable to a method of an extension class registered here (Godot's half of the `@Function` path:
+ * `Callable` → `GDExtensionMethodBind::call` → `call_func` with the emitted Variants; the
+ * receiver's upcalls decode through [JvmSignalArgReader], not the decoder KSP generates for a
+ * `@Function`); a one-shot connection; an emit from inside a handler, three levels deep (the
+ * emit-frame pool) with the outer handler's own arguments checked after the nested emits returned;
+ * and the release of every connection, closure and object of its own afterwards.
  */
 internal object SignalSelfTest {
-  /** `1`/`true`/`on` force the self-test on, `0`/`false`/`off` off; unset: debug builds. */
+  /** `1`/`true`/`on` force the self-test on, `0`/`false`/`off` off; unset: [SETTING] decides. */
   const val ENVIRONMENT_VARIABLE: String = "KANAMA_SIGNAL_SELFTEST"
+
+  /**
+   * The project setting that opts a debug build in (default false; the Android smoke writes it).
+   */
+  const val SETTING: String = "kanama/debug/signal_self_test"
 
   private const val RECEIVER_CLASS = "KanamaSignalSelfTestReceiver"
   private const val CALL_ERROR_SIZE = 12L
@@ -56,8 +66,16 @@ internal object SignalSelfTest {
 
   @Volatile private var done = false
 
-  /** Whether the self-test runs for [override] (the environment value); pure, for unit tests. */
-  fun decide(override: String, debugBuild: () -> Boolean, editorHint: () -> Boolean): Boolean =
+  /**
+   * Whether the self-test runs for [override] (the environment value) and [setting]; pure, for unit
+   * tests. Without an override it needs the setting, a debug build and a game (not the editor).
+   */
+  fun decide(
+    override: String,
+    setting: () -> Boolean,
+    debugBuild: () -> Boolean,
+    editorHint: () -> Boolean,
+  ): Boolean =
     when (override.trim().lowercase()) {
       "1",
       "true",
@@ -65,8 +83,13 @@ internal object SignalSelfTest {
       "0",
       "false",
       "off" -> false
-      else -> debugBuild() && !editorHint()
+      else -> setting() && debugBuild() && !editorHint()
     }
+
+  private fun boolSetting(name: String): Boolean {
+    val settings = GodotObject(GodotHandle(ObjectCalls.getSingleton("ProjectSettings")))
+    return settings.call("has_setting", name) == true && settings.call("get_setting", name) == true
+  }
 
   /** Called on every main-loop frame; does its work on the first one only. */
   fun onFrame() {
@@ -76,12 +99,14 @@ internal object SignalSelfTest {
       runCatching {
           decide(
             OS.getEnvironment(ENVIRONMENT_VARIABLE),
+            setting = { boolSetting(SETTING) },
             debugBuild = { OS.isDebugBuild() },
             editorHint = { Engine.isEditorHint() },
           )
         }
         .getOrDefault(false)
     if (!enabled) return
+    val started = System.nanoTime()
     val run = Run()
     try {
       run.execute()
@@ -89,7 +114,10 @@ internal object SignalSelfTest {
       run.fail("exception", "${t::class.qualifiedName}: ${t.message}")
       t.printStackTrace(System.err)
     }
-    System.err.println("[kanama] SIGNAL SELFTEST: ${run.passed} passed, ${run.failed} failed")
+    val ms = (System.nanoTime() - started) / 1_000_000
+    System.err.println(
+      "[kanama] SIGNAL SELFTEST: ${run.passed} passed, ${run.failed} failed in $ms ms"
+    )
   }
 
   // ---- the receiver class: six methods taking the emitted Variants --------------------------
@@ -210,10 +238,14 @@ internal object SignalSelfTest {
 
   private object ReceiverSentinel
 
+  /** The [ObjectRegistry] handle of the newest receiver instance (the free callback drops it). */
+  @Volatile private var receiverHandle = 0L
+
   @JvmStatic
   fun createInstance(userdata: MemorySegment, notifyPostinitialize: Byte): MemorySegment {
     val obj = ObjectCalls.constructObject("Object")
     val handle = ObjectRegistry.register(ReceiverSentinel)
+    receiverHandle = handle
     GodotFFI.lookup("object_set_instance", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS))
       .invoke(obj, checkNotNull(receiverClass).className, MemorySegment.ofAddress(handle))
     return obj
@@ -371,17 +403,29 @@ internal object SignalSelfTest {
       System.err.println("[kanama] SIGNAL SELFTEST FAIL: $row got $values")
     }
 
+    /** The live lambda closures whose receiver is the test's holder object. */
+    private fun ownClosures(holderInstanceId: Long) =
+      SignalCallbackRegistry.connectionsTo(setOf(holderInstanceId))
+
     fun execute() {
-      val registryBaseline = SignalCallbackRegistry.size
-      val objectBaseline = ObjectRegistry.size()
-      current = this
-      registerReceiverClass()
-      val emitter = GodotObject(GodotHandle(ObjectCalls.constructObject("Object")))
-      val holder = GodotObject(GodotHandle(ObjectCalls.constructObject("Object")))
-      val receiver = newReceiver()
+      var emitterOut: GodotObject? = null
+      var holderOut: GodotObject? = null
+      var receiverOut: GodotObject? = null
+      var holderInstanceId = 0L
+      var receiverRegistryHandle = 0L
       val connections = mutableListOf<SignalConnection>()
       val methodConnects = mutableListOf<Pair<String, String>>()
       try {
+        current = this
+        registerReceiverClass()
+        val emitter = GodotObject(GodotHandle(ObjectCalls.constructObject("Object")))
+        emitterOut = emitter
+        val holder = GodotObject(GodotHandle(ObjectCalls.constructObject("Object")))
+        holderOut = holder
+        holderInstanceId = holder.instanceId
+        val receiver = newReceiver()
+        receiverOut = receiver
+        receiverRegistryHandle = receiverHandle
         for (n in 0..5) emitter.addUserSignal("st$n")
         for (name in listOf("outer", "inner", "deep")) emitter.addUserSignal("st_$name")
 
@@ -488,6 +532,14 @@ internal object SignalSelfTest {
         )
         check("nested outer method sees its argument", listOf(fmt1(77L + BIG)), methodLog[1])
 
+        // Every lambda connection but the fired one-shot is registered (the rows below count the
+        // holder's entries, so they must see them).
+        check(
+          "lambda closures registered",
+          connections.size - 1,
+          ownClosures(holderInstanceId).size,
+        )
+
         // Disconnect everything: nothing is delivered any more, no connection or closure is left.
         for (connection in connections) connection.close()
         connections.clear()
@@ -507,19 +559,30 @@ internal object SignalSelfTest {
           0,
           lambdaLog.sumOf { it.size } + methodLog.sumOf { it.size } + trace.size - received,
         )
-        check("closure entries left", registryBaseline, SignalCallbackRegistry.size)
+        check("closure entries left", emptyMap<Long, Any>(), ownClosures(holderInstanceId))
       } finally {
-        for (connection in connections) runCatching { connection.close() }
-        for ((signal, method) in methodConnects) {
-          runCatching { emitter.disconnect(signal, receiver, method) }
+        val liveEmitter = emitterOut
+        val liveReceiver = receiverOut
+        if (liveEmitter != null && liveReceiver != null) {
+          for (connection in connections) runCatching { connection.close() }
+          for ((signal, method) in methodConnects) {
+            runCatching { liveEmitter.disconnect(signal, liveReceiver, method) }
+          }
         }
-        ObjectCalls.destroyObject(emitter.handle.segment)
-        ObjectCalls.destroyObject(holder.handle.segment)
-        ObjectCalls.destroyObject(receiver.handle.segment)
+        for (obj in listOf(emitterOut, holderOut, receiverOut)) {
+          if (obj != null) ObjectCalls.destroyObject(obj.handle.segment)
+        }
         current = null
       }
-      check("closure entries left after free", registryBaseline, SignalCallbackRegistry.size)
-      check("registered objects left after free", objectBaseline, ObjectRegistry.size())
+      // Only this test's own entries are counted (the registries are process-global, and another
+      // thread may create instances during the first frame): the lambda closures connected to the
+      // holder, and the receiver's registry handle.
+      check("closure entries left after free", emptyMap<Long, Any>(), ownClosures(holderInstanceId))
+      check(
+        "receiver registry entry left after free",
+        null,
+        if (receiverRegistryHandle == 0L) null else ObjectRegistry.get(receiverRegistryHandle),
+      )
     }
   }
 }

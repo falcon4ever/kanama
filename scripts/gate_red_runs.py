@@ -542,7 +542,11 @@ case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
-     "SIGNAL SELFTEST: [0-9]+ passed, 0 failed", "a typed `emit(...)` never reaches Godot (the emit frame skips emit_signal): the first-frame self-test must report failures, not pass",
+     "SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed", "a typed `emit(...)` never reaches Godot (the emit frame skips emit_signal): the first-frame self-test must report failures, not pass",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (self-test setting)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit("src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt", "setting = { boolSetting(SETTING) },", "setting = { false },")],
+     "did not run the self-test", "the kanama/debug/signal_self_test project setting stops opting a run in (the Android smoke can only use the setting)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],

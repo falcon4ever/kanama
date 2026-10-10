@@ -38,21 +38,30 @@ only `--write`.
 
 ## Unreleased
 
-### Added — a typed-signal self-test on every debug run, desktop and Android (task 138 item 23)
+### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
-The Android-only typed-emit failure above lived five days because no Android smoke needed a typed
-signal to fire (squash emits only when the player dies or squashes a mob). On the first frame of a
-debug game run, desktop and Android now run `SignalSelfTest` (shared JVM code, like the iOS
-`OBJECTCALLS SELFTEST`): it emits `Signal0`..`Signal5` from Kotlin with mixed arguments (`Long`,
-`Double`, `Boolean`, `String`, `Vector3`, an `Object`) and checks that a Kotlin lambda connection and a
-Callable to a method of a small registered class (the path of an `@Function`) each received exactly
-those values, then a one-shot connection, an emit from inside a handler three levels deep (the outer
-handler's own arguments checked after the nested emits returned), the release of every connection and
-closure, and the objects. It prints `[kanama] SIGNAL SELFTEST: <n> passed, 0 failed` and one
-`[kanama] SIGNAL SELFTEST FAIL: <row> got <values>` line per failure. It is off in release builds and
-in the editor; `KANAMA_SIGNAL_SELFTEST=1` forces it on, `0` off. `scripts/runtime_smoke.sh` and
-`scripts/android_smoke.sh` now require the pass line and no FAIL line, so a demo smoke fails when typed
-signals do not work on the device; `gate_red_runs.py` has a slow case that makes `emit` skip the call.
+The Android-only typed-emit failure below lived five days because no Android smoke needed a typed
+signal to fire (squash emits only when the player dies or squashes a mob). `SignalSelfTest` (shared
+JVM code, like the iOS `OBJECTCALLS SELFTEST`) runs on the first frame of a debug game run and emits
+`Signal0`..`Signal5` from Kotlin with mixed arguments (`Long`, `Double`, `Boolean`, `String`,
+`Vector3`, an `Object`). It checks that a Kotlin lambda connection and a Callable to a method of a
+small registered class each received exactly those values. The class covers Godot's half of the
+`@Function` path (`Callable` → method bind → `call_func` with the emitted Variants), not the
+decoder KSP generates for a `@Function`. It also checks a one-shot connection, an emit from inside a
+handler three levels deep (the outer handler's own arguments checked after the nested emits
+returned), and the release of its own connections, closures and objects. It prints
+`[kanama] SIGNAL SELFTEST: <n> passed, 0 failed in <ms> ms` and one
+`[kanama] SIGNAL SELFTEST FAIL: <row> got <values>` line per failure.
+
+It is a Kanama test hook and **off for users**: it costs about 15-20 ms and a hundred classes on the
+first frame and registers an extension class. It runs only when the project setting
+`kanama/debug/signal_self_test` (default false) is true in a debug game run (not the editor, not a
+release build); `KANAMA_SIGNAL_SELFTEST=1` forces it on, `0` off. `scripts/runtime_smoke.sh` sets the
+environment variable and also checks the setting alone turns it on and that nothing prints without it;
+`scripts/android_smoke.sh` backs up and restores the demo's `project.godot` on every run and writes
+the setting (an environment variable cannot reach an Android app). Both require the pass line and no
+FAIL line, so a demo smoke fails when typed signals do not work on the device. `gate_red_runs.py` has a
+slow case that makes `emit` skip the call.
 
 ### Fixed — Android: a typed signal `emit` failed on the device (task 138 item 21)
 

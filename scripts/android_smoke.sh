@@ -144,14 +144,48 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# The demo's project.godot is backed up on every run and restored on exit: the typed-signal self-test
+# is a project setting (an environment variable cannot reach an Android app), written below, and the
+# renderer override edits the same file.
+PROJECT_GODOT="$DEMO_DIR/project.godot"
+if [[ ! -f "$PROJECT_GODOT" ]]; then
+  echo "[android_smoke] demo has no project.godot: $PROJECT_GODOT" >&2
+  exit 1
+fi
+PROJECT_GODOT_BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_project_godot.XXXXXX")"
+cp "$PROJECT_GODOT" "$PROJECT_GODOT_BACKUP"
+
+# Task 138 item 23: opt the demo's debug build into the typed-signal self-test (SignalSelfTest.kt;
+# off for users). The setting sits under [kanama]; an existing key is replaced, a missing section added.
+python3 - "$PROJECT_GODOT" <<'PY'
+import re
+import sys
+
+path = sys.argv[1]
+key = "debug/signal_self_test"
+line = key + "=true"
+with open(path, encoding="utf-8") as fh:
+    text = fh.read()
+if re.search(r"^" + re.escape(key) + r"=.*$", text, re.M):
+    text = re.sub(r"^" + re.escape(key) + r"=.*$", line, text, flags=re.M)
+elif re.search(r"^\[kanama\]\s*$", text, re.M):
+    text = re.sub(r"^(\[kanama\]\s*)$", lambda m: m.group(1) + "\n" + line + "\n", text, count=1, flags=re.M)
+else:
+    text = text.rstrip("\n") + "\n\n[kanama]\n\n" + line + "\n"
+with open(path, "w", encoding="utf-8") as fh:
+    fh.write(text)
+PY
+grep -q '^debug/signal_self_test=true$' "$PROJECT_GODOT" || {
+  echo "[android_smoke] could not write kanama/debug/signal_self_test into $PROJECT_GODOT" >&2
+  exit 1
+}
+echo "[android_smoke] typed-signal self-test enabled for this run (kanama/debug/signal_self_test=true)"
+
 if [[ -n "$RENDERER_OVERRIDE" ]]; then
-  PROJECT_GODOT="$DEMO_DIR/project.godot"
   if ! grep -q '^renderer/rendering_method.mobile=' "$PROJECT_GODOT"; then
     echo "[android_smoke] demo has no renderer/rendering_method.mobile setting to override: $PROJECT_GODOT" >&2
     exit 1
   fi
-  PROJECT_GODOT_BACKUP="$(mktemp "${TMPDIR:-/tmp}/kanama_project_godot.XXXXXX")"
-  cp "$PROJECT_GODOT" "$PROJECT_GODOT_BACKUP"
   /usr/bin/sed -i '' \
     "s|^renderer/rendering_method.mobile=.*|renderer/rendering_method.mobile=\"$RENDERER_OVERRIDE\"|" \
     "$PROJECT_GODOT"
@@ -353,11 +387,12 @@ check_log "ResourceFormatLoader\\._load bound kotlinClass="
 # real, non-placeholder instance, so the construct line itself is the equivalent proof.)
 check_log "KanamaScript\\.construct kotlinClass="
 check_log "OnGodotMainLoopStarted"
-# task 138 item 23 -- the typed-signal self-test (SignalSelfTest.kt, shared desktop/Android code)
-# runs on the first frame of a debug build and prints its verdict. An Android-only typed-emit
+# task 138 item 23 -- the typed-signal self-test (SignalSelfTest.kt, shared desktop/Android code),
+# switched on above through the project setting, runs on the first frame of the debug build and prints
+# its verdict. An Android-only typed-emit
 # failure (tagged heap pointers, task 138 item 21) lived five days because no smoke required a
 # typed signal to fire; now a demo smoke fails if signals do not work on the device.
-check_log "\\[kanama\\] SIGNAL SELFTEST: [0-9]+ passed, 0 failed"
+check_log "\\[kanama\\] SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed"
 check_log_absent "SIGNAL SELFTEST FAIL"
 check_log_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
 

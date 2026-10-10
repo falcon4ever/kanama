@@ -129,21 +129,30 @@ segment (`ptr.reinterpret(size)`, offsets relative to it); keep that segment
 local on a hot path, so the JIT removes it. `scripts/check_android_remap_sources.py`
 rejects the idiom in the runtime sources.
 
-A typed signal has to be seen firing on the device, not assumed from the desktop run. On the
-first frame of a debug game run the shared JVM runtime runs `SignalSelfTest`
-(`src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt`, task 138 item 23): `Signal0`..`Signal5`
-emitted from Kotlin with a `Long`, `Double`, `Boolean`, `String`, `Vector3` and an `Object`, received
-by a lambda and by a Callable to a registered class's method, plus a one-shot connection, nested emits
-and the release of everything. A clean run logs
+A typed signal has to be seen firing on the device, not assumed from the desktop run. Kanama's own
+smokes therefore switch on a test hook, `SignalSelfTest`
+(`src/jvmMain/kotlin/binding/runtime/SignalSelfTest.kt`, task 138 item 23; shared JVM runtime code).
+It is **off for users**: it costs about 15-20 ms and a hundred classes on the first frame and
+registers an extension class, so it runs only when the project setting
+`kanama/debug/signal_self_test` is true in a debug build (`KANAMA_SIGNAL_SELFTEST=1` / `0` forces it
+on / off on the desktop, where an environment variable can be set; an Android app needs the
+setting). `scripts/android_smoke.sh` backs up the demo's `project.godot`, writes the setting for the
+run and restores the file on exit, so `android_smoke_all.sh` gets it on every demo.
+
+On the first frame it emits `Signal0`..`Signal5` from Kotlin with a `Long`, `Double`, `Boolean`,
+`String`, `Vector3` and an `Object`, received by a lambda and by a Callable to a method of a
+registered class (Godot's half of the `@Function` path: Callable, method bind, `call_func`; not the
+decoder KSP generates for a `@Function`), plus a one-shot connection, nested emits and the release
+of everything it created. A clean run logs
 
 ```text
-[kanama] SIGNAL SELFTEST: 24 passed, 0 failed
+[kanama] SIGNAL SELFTEST: <n> passed, 0 failed in <ms> ms
 ```
 
-and `scripts/android_smoke.sh` (like `scripts/runtime_smoke.sh` on the desktop) fails without that
-line or with any `SIGNAL SELFTEST FAIL: <row> got <values>` line. It does not run in release builds or
-the editor (`KANAMA_SIGNAL_SELFTEST=1` / `0` forces it on / off). A new signal path that only the
-device can break belongs here as another row.
+and `scripts/android_smoke.sh` (like `scripts/runtime_smoke.sh` on the desktop) fails without a
+line with a non-zero pass count and `0 failed`, or with any
+`SIGNAL SELFTEST FAIL: <row> got <values>` line. The `<ms>` is the cost of the test on the device. A
+new signal path that only the device can break belongs here as another row.
 
 ## Implementation Shape
 
