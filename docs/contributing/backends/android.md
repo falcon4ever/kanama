@@ -121,10 +121,13 @@ pointer tagging), so a `malloc`ed address is negative as a signed `long`. Pass
 it to native code as a value freely, but never use it as a segment offset: a
 whole-address-space segment (`MemorySegment.NULL.reinterpret(Long.MAX_VALUE)`)
 addressed with absolute addresses works on the desktop and throws
-`IndexOutOfBoundsException` on the device (task 138 item 21). Read and write
-through the pointer's own segment (`ptr.reinterpret(size)`, offsets relative to
-it). `scripts/check_android_remap_sources.py` rejects the idiom in the runtime
-sources.
+`IndexOutOfBoundsException` on the device (task 138 item 21: every typed signal
+`emit` failed this way, through its heap-allocated frame; the signal-lambda
+argument reads and call-error writes, which Godot usually hands stack pointers,
+were changed too as hardening). Read and write through the pointer's own
+segment (`ptr.reinterpret(size)`, offsets relative to it); keep that segment
+local on a hot path, so the JIT removes it. `scripts/check_android_remap_sources.py`
+rejects the idiom in the runtime sources.
 
 ## Implementation Shape
 

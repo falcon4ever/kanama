@@ -205,9 +205,9 @@ object SignalCallables {
     rReturn: MemorySegment,
     rError: MemorySegment,
   ) {
-    // GDExtensionCallError {error, argument, expected}, written at offsets relative to rError,
-    // never
-    // at its absolute address: an Android heap pointer is tagged and negative (task 138 item 21).
+    // GDExtensionCallError {error, argument, expected}, written relative to rError, never at its
+    // absolute address: an Android heap pointer is tagged and negative (task 138 item 21; Godot
+    // passes a stack struct, untagged, so this is hardening).
     val error = rError.reinterpret(CALL_ERROR_SIZE)
     error.set(JAVA_INT, 0, CALL_OK)
     error.set(JAVA_INT, 4, 0)
