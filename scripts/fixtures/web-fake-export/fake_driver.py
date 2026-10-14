@@ -19,6 +19,8 @@ Modes:
   below-floor      a passing envelope from a browser below the declared floor
   over-budget      a passing envelope whose per-tick crossings blow the budget
   over-builtin-budget  a passing envelope whose per-tick builtin calls blow the budget
+  slow-host        a passing envelope from a slow host: many builtin calls per TICK (3.0) but few per
+                   simulated second (9.0), because each tick advanced more simulated time (task 138 item 33)
 """
 
 from __future__ import annotations
@@ -45,6 +47,7 @@ def _envelope(
     user_agent: str = MODERN_USER_AGENT,
     crossings_per_tick: float = 2.0,
     builtin_calls_per_tick: float = 0.0,
+    sim_seconds: float = 2.0,
 ) -> dict:
     failed = 0 if passing else 1
     checks = {"fakeStartup": True, "fakeGameplay": passing, "fakeTeardown": True}
@@ -83,7 +86,7 @@ def _envelope(
             "ticksObserved": 120,
             "processTicks": 120,
             "physicsTicks": 0,
-            "simSeconds": 2.0,
+            "simSeconds": sim_seconds,
             "kotlinToGodotCalls": 240,
             "appliedCommands": 240,
             "crossingsPerTick": crossings_per_tick,
@@ -145,9 +148,15 @@ def main(argv: list[str]) -> int:
     crossings_per_tick = 9999.0 if args.mode == "over-budget" else 2.0
     # Task 129 E review B1: few batched crossings, but a synchronous builtin call every tick.
     builtin_calls_per_tick = 50.0 if args.mode == "over-builtin-budget" else 0.0
+    sim_seconds = 2.0
+    if args.mode == "slow-host":
+        # Task 138 item 33: the same calls per simulated second as a fast host would make, but each tick
+        # advanced 20x more simulated time (a larger delta under load), so calls per TICK are high.
+        builtin_calls_per_tick, sim_seconds = 3.0, 40.0
     envelope = _envelope(
         args.demo, checksum, passing=passing, user_agent=user_agent,
         crossings_per_tick=crossings_per_tick, builtin_calls_per_tick=builtin_calls_per_tick,
+        sim_seconds=sim_seconds,
     )
     with open(args.result, "w", encoding="utf-8") as handle:
         json.dump(envelope, handle, indent=2)

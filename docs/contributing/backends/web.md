@@ -305,7 +305,7 @@ to the engine for its error and answer. The rest (printing, Variant text and ser
 identity, RNG) ride the builtin opcode's utility form (static flag `2`, one cached `Expression` per
 name and arity). The web3d twin (`gd_twin.gd`, `BundleProbe.gdRows`) holds the local results to the
 engine's within each row's bound, and the budget gate counts every remaining synchronous builtin or
-utility crossing per tick (`maxBuiltinCallsPerTick`).
+utility crossing per simulated second (`maxBuiltinCallsPerSimSecond`; per tick it moved with the host).
 
 RNG (decision 2026-10-14): the `GD` random functions (`randf`, `randi`, `randfRange`, `randiRange`,
 `randfn`, `seed`, `randomize`, `randFromSeed`) use Godot's global generator on every platform, like
@@ -314,8 +314,8 @@ call crosses the bridge (about 10-30 us): there is no Web-local generator (the o
 gone; the `UTILITY_RANDOMIZE` / `UTILITY_RANDI` / `UTILITY_RANDF` backend arms call `GD`, and the
 rows sit in `WEB_ENGINE_UTILITIES` with that reason). For strict determinism a script uses a
 dedicated `RandomNumberGenerator` with its own seed; the global generator is shared with anything
-else that draws from it. `bunnymark` draws about 5 numbers per tick, which is why its
-`maxBuiltinCallsPerTick` ceiling stays above the default.
+else that draws from it. `bunnymark` draws about 285 numbers per simulated second (about 5 per tick), which
+is why its `maxBuiltinCallsPerSimSecond` ceiling stays above the default.
 
 **Objects in results keep their handles** (review B2). An object inside a builtin, utility or
 generic-call result (`GD.instanceFromId`, an Array of nodes, a Callable's target) resolves like a

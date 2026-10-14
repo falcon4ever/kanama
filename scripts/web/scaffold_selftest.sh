@@ -100,6 +100,9 @@ run_case over-budget       1 over-budget
 # Few batched crossings but a synchronous builtin / utility call every tick: the
 # builtin-calls budget must reject it (task 129 E review B1).
 run_case over-builtin-budget 1 over-builtin-budget
+# The same builtin calls per simulated second on a slow host (3.0 per tick, 9.0 per simulated second,
+# ceiling 25): the gate is per simulated second, so load must not turn it red (task 138 item 33).
+run_case slow-host         0 slow-host
 
 # Success case must yield a schema-valid result on disk.
 if [[ -f "$WORK/success/result.json" ]] \

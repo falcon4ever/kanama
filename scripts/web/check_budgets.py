@@ -71,7 +71,7 @@ def engine_limits(limits: dict, engine: str | None) -> dict:
     merged = dict(limits)
     per_engine = (limits.get("engines") or {}).get(engine or "")
     if per_engine:
-        for key in ("maxCrossingsPerTick", "minTicksForVerdict", "tickRatioNotApplicable", "maxBuiltinCallsPerTick"):
+        for key in ("maxCrossingsPerTick", "minTicksForVerdict", "tickRatioNotApplicable", "maxBuiltinCallsPerSimSecond"):
             if key in per_engine:
                 merged[key] = per_engine[key]
     return merged
@@ -86,6 +86,7 @@ def measurements(envelope: dict) -> dict:
         "payloadBytes": artifact.get("totalBytes"),
         "startupMs": startup.get("durationMs"),
         "crossingsPerTick": performance.get("crossingsPerTick"),
+        "builtinCalls": performance.get("builtinCalls"),
         "builtinCallsPerTick": performance.get("builtinCallsPerTick"),
         "ticksObserved": performance.get("ticksObserved"),
         "simSeconds": performance.get("simSeconds"),
@@ -174,39 +175,62 @@ def check(demo: str, measured: dict, budgets: dict, engine: str | None = None) -
 
 
 def check_builtin_calls(demo: str, measured: dict, budgets: dict, limits: dict) -> list[str]:
-    """Task 129 E review B1: immediate builtin / utility crossings per tick.
+    """Task 129 E review B1: immediate builtin / utility crossings per SIMULATED second.
 
     A value-type method or GD utility the engine runs is one synchronous bridge round trip
     (10-30 us), not a batched command, so `crossingsPerTick` never sees it. Every demo is gated:
-    its own `maxBuiltinCallsPerTick` (per engine like the crossings) or the corpus-wide
-    `defaultMaxBuiltinCallsPerTick`.
+    its own `maxBuiltinCallsPerSimSecond` (per engine like the crossings) or the corpus-wide
+    `defaultMaxBuiltinCallsPerSimSecond`.
+
+    Why simulated seconds and not ticks (task 138 item 33): these calls follow simulated time (a
+    spawn rate, a timer), and the tick count in a fixed-length run does not -- bunnymark's run is
+    ~190 ticks whatever the host, but a slower host advances more simulated time per tick (a larger
+    delta), so calls per TICK rose with load (the 10.52 ceiling tripped at ~29 ticks per simulated
+    second) while calls per simulated SECOND stayed within a few percent (282-305 over seven runs).
+    `builtinCalls / simSeconds` comes straight from the envelope's performance section.
     """
-    if "maxBuiltinCallsPerTick" not in limits and limits.get("maxCrossingsPerTick") is None:
+    if "maxBuiltinCallsPerSimSecond" not in limits and limits.get("maxCrossingsPerTick") is None:
         # A demo whose tick ratio is exempt (an input-driven run, `tickRatioNotApplicable`) has no
-        # meaningful per-tick denominator for builtin calls either, unless it declares a ceiling.
-        print(f"web_export_smoke: {demo} builtin calls/tick not applicable -- {limits.get('tickRatioNotApplicable')}")
+        # meaningful run length for builtin calls either, unless it declares a ceiling.
+        print(f"web_export_smoke: {demo} builtin calls/sim-second not applicable -- {limits.get('tickRatioNotApplicable')}")
         return []
-    ceiling = limits.get("maxBuiltinCallsPerTick", budgets.get("defaultMaxBuiltinCallsPerTick"))
+    ceiling = limits.get("maxBuiltinCallsPerSimSecond", budgets.get("defaultMaxBuiltinCallsPerSimSecond"))
     if ceiling is None:
         raise BudgetError(
-            f"{demo}: no maxBuiltinCallsPerTick and no defaultMaxBuiltinCallsPerTick in budgets.json"
+            f"{demo}: no maxBuiltinCallsPerSimSecond and no defaultMaxBuiltinCallsPerSimSecond in budgets.json"
         )
-    per_tick = measured.get("builtinCallsPerTick")
+    calls = measured.get("builtinCalls")
+    sim = measured.get("simSeconds")
     ticks = measured.get("ticksObserved")
-    if per_tick is None:
+    if calls is None or sim is None:
         return [
-            "builtin calls per tick were NOT MEASURED (no builtinCallsPerTick in the performance "
-            "section) -- the driver could not read the bridge's builtinCalls counter"
+            "builtin calls per simulated second were NOT MEASURED (no builtinCalls / simSeconds in the "
+            "performance section) -- the driver could not read the bridge's counters"
         ]
     if ticks is not None and ticks < limits.get("minTicksForVerdict", 30):
         return []  # the crossings check above already reports too few ticks
-    if per_tick > ceiling:
+    floor = budgets.get("minSimSecondsForVerdict", 0.25)
+    if sim < floor:
         return [
-            f"builtin calls/tick {per_tick} exceeds budget {ceiling} (over {ticks} ticks) -- "
-            f"a per-tick value-type method or GD utility is crossing to the engine instead of "
-            f"running in Kotlin"
+            f"only {sim}s of simulated time observed; too few to judge builtin calls per simulated "
+            f"second (need {floor}s)"
+        ]
+    rate = calls / sim
+    if rate > ceiling:
+        return [
+            f"builtin calls/sim-second {rate:.2f} exceeds budget {ceiling} ({calls} calls over "
+            f"{sim}s simulated, {ticks} ticks) -- a per-tick value-type method or GD utility is "
+            f"crossing to the engine instead of running in Kotlin"
         ]
     return []
+
+
+def _per_sim_second(measured: dict) -> str:
+    """The gated builtin-call rate for a report line, `unmeasured` when the envelope lacks the inputs."""
+    calls, sim = measured.get("builtinCalls"), measured.get("simSeconds")
+    if calls is None or not sim:
+        return "unmeasured"
+    return f"{calls / sim:.2f}"
 
 
 def main(argv: list[str]) -> int:
@@ -258,6 +282,7 @@ def main(argv: list[str]) -> int:
             f"startup={measured['startupMs']}ms "
             f"crossings/tick={measured['crossingsPerTick']} "
             f"builtins/tick={measured['builtinCallsPerTick']} "
+            f"builtins/sim-s={_per_sim_second(measured)} "
             f"(ticks={measured['ticksObserved']}, sim={measured['simSeconds']}s)"
         )
         return 0
@@ -282,7 +307,7 @@ def main(argv: list[str]) -> int:
         f"{measured['crossingsPerTick']} crossings/tick"
         if limits.get("maxCrossingsPerTick") is not None
         else "crossings/tick exempt"
-    ) + f", {measured['builtinCallsPerTick']} builtin calls/tick"
+    ) + f", {_per_sim_second(measured)} builtin calls/sim-second"
     print(
         f"web_export_smoke: {demo} within budget "
         f"(payload {measured['payloadBytes'] / 1e6:.1f}MB, "
