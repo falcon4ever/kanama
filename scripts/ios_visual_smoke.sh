@@ -1353,7 +1353,7 @@ class Match3IosSmoke(godotObject: GodotHandle) : KanamaScript<Control>(godotObje
     }
 
     private fun spawnAt(column: Int, row: Int, fromAbove: Boolean = false) {
-        val sprite = Sprite2D(ObjectCalls.constructObject("Sprite2D"))
+        val sprite = Sprite2D.create()
         val type = chooseType(column, row)
         sprite.setTexture(textures[type])
         sprite.scale = Vector2(tileScale, tileScale)
