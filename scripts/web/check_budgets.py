@@ -225,15 +225,15 @@ def check_builtin_calls(demo: str, measured: dict, budgets: dict, limits: dict) 
     the per-tick cap unless it declares a per-simulated-second ceiling (per engine like the crossings).
 
     Why the per-tick cap stays (task 138 item 33 review): per tick is what caught the fps regression
-    (1.06 calls per tick against the 0.5 cap, 2.1x), and most demos' calls are a fixed startup count or
-    a tiny rate whose per-second figure would be dominated by how long the run happened to be (web3d: 82-87
-    calls whether the run is 20 s on Firefox or 40 s on Chrome, so 4.3 vs 2.2 per second, 0.09 vs 0.06 per tick).
+    (1.06 calls per tick against the 0.5 cap, 2.1x), and most demos' calls are a fixed startup count or a
+    small rate per dispatch, so a per-second figure reads how long the run was (web3d: 87 calls whether the
+    run is 1.2 s of game time on Firefox or 2.7 s on Chrome, so 72.5 vs 31.8 per second, 0.09 vs 0.06 per tick).
 
     Why bunnymark uses simulated seconds instead: its calls are GD.randf draws on a spawn, which follows
     SIMULATED time, while a fixed-length run's tick count does not -- a slower host advances more simulated
     time per tick (a larger delta), so calls per TICK rose with load (the old 10.5 ceiling tripped at ~29
-    ticks per simulated second; a Mac runs ~55) while calls per simulated SECOND stayed within a few percent
-    (282-307 over seven distinct Chrome and Firefox runs). `builtinCalls / simSeconds` comes straight from the
+    ticks per simulated second; a Mac runs ~55) while calls per simulated SECOND stayed within ~10%
+    (283-315 over twelve Chrome and Firefox runs). `builtinCalls / simSeconds` comes straight from the
     envelope's performance section.
     """
     kind, ceiling = builtin_gate(demo, limits, budgets)
@@ -330,12 +330,14 @@ def run_self_test(budgets: dict) -> int:
     fps_prefix = _builtin_measured(408, 386, 48.92)["builtinCallsPerTick"]
     if fps_prefix < 2 * default_tick:
         failures.append(f"the pre-fix fps envelope ({fps_prefix} per tick) must exceed the per-tick cap {default_tick} by 2x or more")
-    # Measured runs of the shipped build (macOS arm64, 2026-10-14): green on both engines.
+    # Measured runs of the shipped build (macOS arm64, Chrome 155 / Firefox 157, 2026-10-14, after the simSeconds
+    # fix): green on both engines.
     for demo, engine, calls, ticks, sim in (
-        ("fps", "chrome", 122, 497, 62.22), ("fps", "firefox", 71, 471, 16.79),
-        ("web3d", "chrome", 87, 1452, 39.57), ("web3d", "firefox", 87, 955, 20.42),
-        ("dodge", "firefox", 16, 3557, 60.67), ("squash", "firefox", 24, 4030, 49.5),
-        ("bunnymark", "chrome", 1036, 191, 3.45), ("bunnymark", "firefox", 1002, 191, 3.26),
+        ("fps", "chrome", 93, 464, 2.93), ("fps", "chrome", 122, 497, 62.22), ("fps", "firefox", 65, 426, 0.83),
+        ("web3d", "chrome", 87, 1447, 2.74), ("web3d", "firefox", 87, 974, 1.2),
+        ("dodge", "chrome", 64, 4003, 10.57), ("dodge", "firefox", 40, 3634, 10.8), ("squash", "firefox", 18, 2150, 3.17),
+        ("tpsdemo", "firefox", 30, 1008, 2.36),
+        ("bunnymark", "chrome", 1278, 186, 4.06), ("bunnymark", "chrome", 979, 192, 3.46), ("bunnymark", "firefox", 1009, 191, 3.27),
         # a slow CI host: ~30 ticks per simulated second (166 ticks over 5.54 s) at the same 300 calls per second
         ("bunnymark", "chrome", 1662, 166, 5.54),
     ):
@@ -369,7 +371,12 @@ def run_self_test(budgets: dict) -> int:
     merged = engine_limits({"maxBuiltinCallsPerSimSecond": 5.0, "engines": {"firefox": {"maxBuiltinCallsPerTick": 1.0}}}, "firefox")
     if "maxBuiltinCallsPerSimSecond" in merged:
         failures.append("an engine naming the per-tick cap must drop the demo-level per-simulated-second ceiling")
-    # every ceiling is at least 2x the highest measured run recorded for it (the numbers above are those runs)
+    # every ceiling is at least 2x the highest measured run recorded for it
+    bunnymark_ceiling = budgets["demos"]["bunnymark"]["maxBuiltinCallsPerSimSecond"]
+    if bunnymark_ceiling < 2 * 314.78:
+        failures.append(f"bunnymark's ceiling {bunnymark_ceiling} per simulated second is under 2x the highest measured run (314.78)")
+    if default_tick < 2 * 0.245:
+        failures.append(f"the per-tick default {default_tick} is under 2x the highest measured run (fps on Chrome, 0.245)")
     if failures:
         print("check_budgets --self-test FAIL:", file=sys.stderr)
         for failure in failures:
