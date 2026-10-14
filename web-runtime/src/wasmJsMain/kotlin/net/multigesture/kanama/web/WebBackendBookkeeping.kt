@@ -227,6 +227,9 @@ internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
 }
 
 internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandleKind) {
+  // Every release of a handle token (queue_free, resource / collision / constructed / tracked
+  // object release) drops what the wrappers kept per token, which may later name another object.
+  WebHandleCache.forget(handle)
   val actual = browserHandles.remove(handle)
   check(actual == expectedKind) {
     "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"

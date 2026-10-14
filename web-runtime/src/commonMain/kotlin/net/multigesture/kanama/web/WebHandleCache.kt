@@ -22,6 +22,9 @@ internal object WebHandleCache {
     values.remove(token)
   }
 
+  /** True when [token] has a kept value (tests). */
+  fun contains(token: Int): Boolean = token in values
+
   /** The number of handles with a kept value (tests). */
   val size: Int
     get() = values.size
