@@ -291,6 +291,29 @@ memory layout and runs:
   parameter types, so the generated `WebBuiltinSignatures.kt` (`generate_builtin_ops.py`) supplies
   them.
 
+**Utility functions (the shared `GD`) run in Kotlin first.** `BuiltinFrame.callUtility` and
+`UtilityCalls.call` ask the generated `WebLocalUtilities` (rows in `scripts/web_local_utilities.py`,
+rendered by `generate_web_wrappers.py`, whose `--check` also requires every utility in
+`extension_api.json` to be in exactly one table) by an id each `UtilityFunction` gets at
+construction. The arithmetic, rounding and interpolation utilities are Godot's formulas, bit for
+bit; the transcendental ones (`sin` … `pow`, `ease`, `db_to_linear`) carry a 1-ulp bound with the
+libm reason; a float-to-int whose result is NaN or outside int64, or `posmod` by zero, still goes
+to the engine for its error and answer. The rest (printing, Variant text and serialization, object
+identity, RNG) ride the builtin opcode's utility form (static flag `2`, one cached `Expression` per
+name and arity). The web3d twin (`gd_twin.gd`, `BundleProbe.gdRows`) holds the local results to the
+engine's within each row's bound, and the budget gate counts every remaining synchronous builtin or
+utility crossing per tick (`maxBuiltinCallsPerTick`).
+
+**Objects in results keep their handles** (review B2). An object inside a builtin, utility or
+generic-call result (`GD.instanceFromId`, an Array of nodes, a Callable's target) resolves like a
+generic call's object return: its script handle, else the handle already tracking it (retained for
+the calling script, `retainSharedHandle`), else a handle of its kind minted for the calling script
+and released with it. A repeated query reuses one handle and keeps identity
+(`call("get_children")[i] == getChild(i)`). A lambda connection's guard is held weakly, so a
+`getConnections()` answer does not keep it (or its Kotlin callback) alive. A fresh RefCounted
+result (`GD.weakref`) is a new object each call and keeps its handle until the calling script is
+freed.
+
 **One Variant text format.** `<Variant.Type>:<payload>` (`WebPackedValues.encodeVariant` /
 `decodeVariant`, the proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool
 `1`/`0`, an int as a decimal, a float (and every decimal value-type component) as its IEEE-754
@@ -450,7 +473,9 @@ longer a prefix;
 (`WebInstanceRegistry.wasFreed`: a minted slot that is no longer live; not "Stale Kanama Web browser
 handle"), and `flushCommands` skips and reports a command queued on it before the free, both when
 its script was already gone at the scan (`kanamaWebIsFreedScriptHandle`) and when an earlier group
-of the same batch freed it (its owner's apply callback is gone; task 138 item 22). A command that
+of the same batch freed it (its owner's apply callback is gone; task 138 item 22; a command that
+group owned on another, live object is reported as dropped with its script, not as a freed
+instance). A command that
 stops the loop for any other reason is a protocol fault and ends the page through the
 applied/expected check.
 
@@ -467,8 +492,9 @@ signal (the second connect answered "already connected", task 138 item 20). Each
 therefore targets its own `_KanamaSignalGuard` (`Callable(guard, "fire")`, the callback id and the
 guard bound), whose `fire` forwards to the receiving proxy's dispatch method: two connects of the
 same lambda, or two lambdas, are two connections (`CONNECT_REFERENCE_COUNTED` included), each with
-its own guard and registry entry. A receiver freed before its emitter no longer takes the connection
-with it; the guard's next `fire` finds the receiver gone and disconnects itself. A user `disconnectBound` keeps Godot's own
+its own guard and registry entry. A receiver freed before its emitter ends its lambda connections
+with it, as Godot ends a connection whose target is freed: its proxy's teardown marks each of its
+guards done and disconnects it (`_kanama_drop_routed_guards`, next to the routed awaits). A user `disconnectBound` keeps Godot's own
 error for a connection that is not there; only `SignalConnection.close()` is quiet about one that
 is already gone.
 The handle namespaces are disjoint (bit 30): `WebInstanceRegistry` used to mask bit 30 away, so a

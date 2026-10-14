@@ -206,7 +206,10 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebImportCompat.kt": {
       "category": "sugar",
-      "lines": 20,
+      "lines": 29,
+      "raises": [
+        "20 -> 29: task 129 E review S3: the GodotObject.call / callDeferred import-compat extensions (kanama-demos third-person imports net.multigesture.kanama.api.call) now forward to desktop's Variant members"
+      ],
       "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {

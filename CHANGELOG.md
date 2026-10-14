@@ -213,9 +213,10 @@ Behaviour changes on Web, from the shared code:
   are kept. `Window` on Web is a generated `Viewport` subclass (its `handle` is the inherited
   `GodotObject.handle`; see below).
 - **Source break:** `GodotObject` and `top-level` on Web: the typed `call` / `callDeferred`
-  overloads above and their top-level `GodotObject.call` / `GodotObject.callDeferred` extensions
-  are removed; the Variant `call(method, vararg args): Any?` and
-  `callDeferred(method, vararg args): Any?` take those calls, as on desktop.
+  overloads above are removed, and the Variant `call(method, vararg args): Any?` and
+  `callDeferred(method, vararg args): Any?` take those calls, as on desktop. The top-level
+  `GodotObject.call` / `GodotObject.callDeferred` extensions Web sources import by name are kept,
+  in the Variant form.
 
 ### Changed — Web `Window` is a generated `Viewport` subclass (task 129 E, inventory row 10)
 

@@ -18,3 +18,12 @@ typealias Basis = net.multigesture.kanama.types.Basis
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun GD.radToDeg(radians: Double): Double = radToDeg(radians)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun GD.pushError(message: Any?): Unit = pushError(message)
+
+// Import-compat (task 129 E review S3): the Web tree used to emit `GodotObject.call` /
+// `callDeferred` extensions for its queued typed overloads, and Web sources import them by name
+// (`import net.multigesture.kanama.api.call`). They now forward to desktop's Variant members.
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun GodotObject.call(method: String, vararg args: Any?): Any? = call(method, *args)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun GodotObject.callDeferred(method: String, vararg args: Any?): Any? = callDeferred(method, *args)

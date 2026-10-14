@@ -181,6 +181,11 @@ def check_builtin_calls(demo: str, measured: dict, budgets: dict, limits: dict) 
     its own `maxBuiltinCallsPerTick` (per engine like the crossings) or the corpus-wide
     `defaultMaxBuiltinCallsPerTick`.
     """
+    if "maxBuiltinCallsPerTick" not in limits and limits.get("maxCrossingsPerTick") is None:
+        # A demo whose tick ratio is exempt (an input-driven run, `tickRatioNotApplicable`) has no
+        # meaningful per-tick denominator for builtin calls either, unless it declares a ceiling.
+        print(f"web_export_smoke: {demo} builtin calls/tick not applicable -- {limits.get('tickRatioNotApplicable')}")
+        return []
     ceiling = limits.get("maxBuiltinCallsPerTick", budgets.get("defaultMaxBuiltinCallsPerTick"))
     if ceiling is None:
         raise BudgetError(
