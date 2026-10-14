@@ -325,7 +325,7 @@ object BuiltinTypes {
 
   /** The checked cast behind [readVariantValue]; separate so a host test can drive it directly. */
   fun <T : Any> decodeVariantValue(value: Any?, expected: Class<T>, what: String): T {
-    if (expected.isInstance(value)) return expected.cast(value)
+    @Suppress("UNCHECKED_CAST") if (expected.isInstance(value)) return value as T
     val actual =
       when (value) {
         null -> "null (Nil)"
