@@ -134,6 +134,52 @@ custom Callable; `MainThread` is an `expect object` whose iOS actual
 queues from `KanamaIosRuntime.frame()`. The compiler holds both to the desktop public surface
 (task 117 P4′).
 
+Four rules of the bridge (three about ownership), each with its self-test rows:
+
+- **A lambda's closure lives as long as any Callable of it (task 113).** The shim creates a custom
+  Callable per connect and per disconnect (the temp that `Object.disconnect` compares), and
+  reports each creation (`kanama_ios_runtime_callable_created`) and each `free_func`
+  (`kanama_ios_runtime_callable_freed`) to `IosCallableLifetimes`, which drops the
+  `IosCallableRegistry` entry when the last one is freed. Releasing on the first free dropped the
+  closure of a connection Godot still held (a refused second connect, a
+  `CONNECT_REFERENCE_COUNTED` connect). `SignalConnection.close()` is a no-op once the entry is gone
+  (a fired one-shot), so it never asks Godot to disconnect a connection it already dropped. The
+  `callable-lifetime row=1..7` rows cover every connect/disconnect/emit/free order.
+- **The RefCounted elements of an `Object.call` container result are owned (task 122 item 3).**
+  `kanama_ios_godot_object_call`'s `own_elements` (set by `callWithVariantArgs` and
+  `callWithVariantArgsOwned`, not by the Variant getters routed through the same body) makes the
+  blob encoder retain each RefCounted element while the return Variant still holds it, in its one
+  encode pass. Whether an element is a RefCounted comes from its ObjectID (bit 63,
+  `variant_get_object_instance_id`), never from the stored pointer, which is stale for a freed
+  Node. Its record gains a ninth payload byte (1 = owned) and `ContainerBlob.record()` mints
+  `RefCounted.owned(...)`. The blob lists what it retained until Kotlin has the bytes: an OOM blob
+  and a parked blob dropped undrained release them. No other container path sets the flag (the
+  generated `*RetArray` wrappers and the measure-then-fill path stay borrowed). Desktop does the
+  same in `BuiltinTypes.readVariantScalar(..., ownElements = true)`. `callv` takes this path too
+  (`callWithVariantArgs` with Godot's `Object.callv` bind). Rows (frame 1, `RegEx.search_all`):
+  `call-container-elements`, `callv-container-elements`, and `call-container-elements-parked`
+  (100 matches: the blob outgrows the 1024-byte inline buffer and takes the park -> take path with
+  its retained list).
+- **Inbound arguments decode like returns (task 122 item 4).** `kanama_ios_marshal_variant_args`
+  (a signal lambda's trampoline and a script method call) puts scalars, strings and value types in
+  their cells and a container (Array, Dictionary, Packed*Array) in one blob record tagged
+  `PT_VARIANT_RECORD`, which `decodeIosCallArg` reads with the container-return reader
+  (`ObjectCalls.decodeVariantRecord`); its Object elements stay borrowed (the caller's Variant holds
+  them for the call). A type with no cell (Callable, Signal) arrives tagged
+  `KANAMA_IOS_ARG_UNMARSHALLED_BASE + type` and the decode throws naming it, never a silent null;
+  a container whose blob cannot be allocated arrives tagged `KANAMA_IOS_ARG_ENCODE_OOM_BASE + type`
+  and the decode reports the out-of-memory. Limits of the shared blob encoder (it also encodes
+  container returns): a container nested more than `KANAMA_IOS_BLOB_MAX_DEPTH` (8) levels, and an
+  element type it has no case for (a Vector3i inside an Array, ...), are encoded with byteLen 0 and
+  arrive as `null` inside the container. This is documented, not loud: making it loud means a
+  fault flag on the blob and a Kotlin error path shared with the returns.
+  Rows: `lambda-args(...)` (scene init: String, Vector3, Color, Array, Dictionary, Vector3i).
+- **A script property's default is its initializer (task 138 item 8).** The iOS registry carries
+  `KanamaIosScriptProperty.defaultValue`, emitted by KSP from the literal desktop's registrar
+  declares as `default<Name>` and converted like `getProperty`; `Script._has/_get_property_default_value`
+  answer it through `kanama_ios_runtime_script_resource_property_default`. Host test:
+  `IosScriptPropertyParityTest.scalarDefaultsReachTheIosRegistry`.
+
 ```
 extension_api.json
    │  generate_api_wrapper.py (+ iOS emission target)
@@ -355,8 +401,9 @@ Both summary lines therefore end with `faults=<count> expected=7`:
 (The counter is never reset, so the frame-1 phase — which raises no faults of its own — reprints
 the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
 above `runFaultProbes` with a comment listing the seven, so the number and the things it counts
-are one screen apart and cannot drift. Change it only when you change the probes. Release builds
-run no self-test and print neither summary line.
+are one screen apart and cannot drift. Change it only when you change the probes. Only a debug
+build made with `-PkanamaIosSelfTest=true` runs the self-test (see below); every other build prints
+neither summary line.
 
 **The sink marks the probes, not the lines around them.** `runFaultProbes` calls
 `kanama_ios_fault_set_probe(1)` before the first probe and `kanama_ios_fault_set_probe(0)` after the
@@ -499,6 +546,16 @@ the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a l
   (use values where a wrong width fails — a small value can mask it, as the int bug
   showed). The matrix + ObjectCalls probe are the ptrcall path's only runtime check
   (`check_call_error`/`check_variant_arg` only cover the Variant path).
+- **The self-test is a Kanama test hook, compiled only on request (task 138 item 24).** It is
+  not part of a user's game: `build.gradle.kts` compiles every `*SelfTest.kt` (the OBJECTCALLS rows
+  live in `ObjectCallsSelfTest.kt`) and the script-error probe only into a build made with
+  `-PkanamaIosSelfTest=true`, and defines `KANAMA_IOS_SELFTEST=1` (the C ptrcall matrix and the
+  calls into the Kotlin phases) only for that build's DEBUG shim; a release xcframework never
+  carries the C side. Kanama's device runners pass the property (`scripts/ios_visual_smoke.sh`, the
+  demos' `scripts/ios_device_run.sh`; `scripts/ios_device_gate.sh` refuses a demos checkout whose
+  runner does not) and REQUIRE all three summary lines with `0 failed`, so a runner build that lost
+  the flag fails rather than passing on silence. `ios_visual_smoke.sh --check-selftest-log LOG` and
+  the demos' `ios_device_run.sh --self-test-console-checks` run that verdict without a device.
 - **The on-device self-test runs in two phases, and a row must sit in the right one.**
   The C ptrcall matrix and the Kotlin `kanamaIosRuntimeObjectCallsSelfTest` both run at
   SCENE-level extension init and print

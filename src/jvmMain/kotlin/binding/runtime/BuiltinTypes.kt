@@ -300,9 +300,16 @@ object BuiltinTypes {
     }
   }
 
-  /** Decode the scalar Variant return types supported by the public call path. */
-  fun readVariantScalar(variant: MemorySegment, arena: Arena): Any? =
-    variantToScalar(variant, arena)
+  /**
+   * Decode the scalar Variant return types supported by the public call path. [ownElements] (the
+   * `Object.call` family, task 122 item 3): every RefCounted element of a container result, nested
+   * ones included, is retained while the Variant is alive and comes back as an owning [RefCounted]
+   * wrapper (`close()` releases it, or the garbage collector does). Without it the elements are
+   * borrowed views, which die with the Variant when the container held their only reference
+   * (`call("make_items")` returning fresh resources).
+   */
+  fun readVariantScalar(variant: MemorySegment, arena: Arena, ownElements: Boolean = false): Any? =
+    variantToScalar(variant, arena, ownElements)
 
   /**
    * Owned scalar decode for calls that mint a fresh object whose sole reference lives in the return
@@ -312,8 +319,12 @@ object BuiltinTypes {
    * convention). Non-RefCounted objects stay borrowed [GodotObject]: the caller owns those through
    * the scene tree / `free()`.
    */
-  fun readVariantScalarOwned(variant: MemorySegment, arena: Arena): Any? {
-    val value = variantToScalar(variant, arena)
+  fun readVariantScalarOwned(
+    variant: MemorySegment,
+    arena: Arena,
+    ownElements: Boolean = false,
+  ): Any? {
+    val value = variantToScalar(variant, arena, ownElements)
     if (value is GodotObject && value.isClass("RefCounted")) {
       ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.referenceBind, value.segment)
       return RefCounted.owned(RefCounted(value.handle))
@@ -1246,8 +1257,10 @@ object BuiltinTypes {
     }
   }
 
-  /** Read an initialized Array as scalar Kotlin values. */
-  fun readArrayScalars(src: MemorySegment): List<Any?> {
+  /**
+   * Read an initialized Array as scalar Kotlin values; [ownElements] as for [readVariantScalar].
+   */
+  fun readArrayScalars(src: MemorySegment, ownElements: Boolean = false): List<Any?> {
     val sizeHash = 3173160232L
     val getHash = 708700221L
     Arena.ofConfined().use { arena ->
@@ -1277,7 +1290,7 @@ object BuiltinTypes {
           rReturn = valueVariant,
         )
         try {
-          values += variantToScalar(valueVariant, arena)
+          values += elementToScalar(valueVariant, arena, ownElements)
         } finally {
           variantDestroy.invoke(valueVariant)
         }
@@ -1596,7 +1609,11 @@ object BuiltinTypes {
       value as? Map<String, Any?>
     }
 
-  fun readDictionaryScalars(src: MemorySegment): Map<String, Any?> {
+  /**
+   * Read an initialized Dictionary's String-keyed entries as scalar Kotlin values; [ownElements] as
+   * for [readVariantScalar].
+   */
+  fun readDictionaryScalars(src: MemorySegment, ownElements: Boolean = false): Map<String, Any?> {
     val keysHash = 4144163970L
     val arraySizeHash = 3173160232L
     val arrayGetHash = 708700221L
@@ -1651,7 +1668,7 @@ object BuiltinTypes {
                 args = listOf(keyVariant, defaultVariant),
                 rReturn = valueVariant,
               )
-              result[key] = variantToScalar(valueVariant, arena)
+              result[key] = elementToScalar(valueVariant, arena, ownElements)
             } finally {
               variantDestroy.invoke(valueVariant)
               variantDestroy.invoke(defaultVariant)
@@ -2101,7 +2118,25 @@ object BuiltinTypes {
     }
   }
 
-  private fun variantToScalar(variant: MemorySegment, arena: Arena): Any? =
+  /**
+   * One container element: [variantToScalar], and with [ownElements] a RefCounted element is
+   * retained while [variant] still holds it and returned as an owning [RefCounted] wrapper. Whether
+   * it is RefCounted comes from the Variant's instance id (Godot sets bit 63 for a RefCounted), not
+   * from the object: a container can hold a freed Node, whose pointer must not be dereferenced.
+   */
+  private fun elementToScalar(variant: MemorySegment, arena: Arena, ownElements: Boolean): Any? {
+    val value = variantToScalar(variant, arena, ownElements)
+    if (!ownElements || value !is GodotObject) return value
+    if (VariantConverters.objectInstanceIdOf(variant) >= 0L) return value
+    ObjectCalls.ptrcallNoArgsRetBool(RefCountedBinds.referenceBind, value.segment)
+    return RefCounted.owned(RefCounted(value.handle))
+  }
+
+  private fun variantToScalar(
+    variant: MemorySegment,
+    arena: Arena,
+    ownElements: Boolean = false,
+  ): Any? =
     when (VariantConverters.variantTypeOf(variant)) {
       VariantType.NIL -> null
       VariantType.STRING -> {
@@ -2500,7 +2535,7 @@ object BuiltinTypes {
         val scratch = arena.allocate(8L, 8L)
         VariantConverters.variantToType(VariantType.ARRAY).invoke(scratch, variant)
         try {
-          readArrayScalars(scratch)
+          readArrayScalars(scratch, ownElements)
         } finally {
           destroyTyped(VariantType.ARRAY, scratch)
         }
@@ -2510,7 +2545,7 @@ object BuiltinTypes {
         val scratch = arena.allocate(8L, 8L)
         VariantConverters.variantToType(VariantType.DICTIONARY).invoke(scratch, variant)
         try {
-          readDictionaryScalars(scratch)
+          readDictionaryScalars(scratch, ownElements)
         } finally {
           destroyTyped(VariantType.DICTIONARY, scratch)
         }

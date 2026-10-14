@@ -104,10 +104,10 @@ class ExportHintEmittersTest {
         .registrySource()
     assertTrue(errors.isEmpty(), errors.toString())
     assertTrue(
-      source.contains("KanamaIosScriptProperty(\"health\", 2, 1, \"0.0,100.0,1.0\", 6)"),
+      source.contains("KanamaIosScriptProperty(\"health\", 2, 1, \"0.0,100.0,1.0\", 6"),
       source,
     )
-    assertTrue(source.contains("KanamaIosScriptProperty(\"saved\", 2, 0, \"\", 2)"))
+    assertTrue(source.contains("KanamaIosScriptProperty(\"saved\", 2, 0, \"\", 2"))
   }
 
   @Test

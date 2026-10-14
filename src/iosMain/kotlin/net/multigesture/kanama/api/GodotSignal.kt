@@ -128,13 +128,16 @@ actual class SignalConnection internal constructor(
     // Disconnect the lambda Callable. The C path recreates the identity-equal custom Callable
     // (call_func + callback_id, bound to the same receiver) and Object.disconnects it; the
     // connection's free_func then releases the registry entry. No-op if the connect failed or
-    // close() was already called. (A CONNECT_ONE_SHOT connection auto-disconnects when it fires;
-    // calling close() afterwards is a benign redundant disconnect.) Phase 4.1b.
+    // close() was already called, and when Godot already dropped the connection (a fired
+    // CONNECT_ONE_SHOT, a freed receiver): its last Callable released the entry, and
+    // Object.disconnect would only print "Attempt to disconnect a nonexistent connection" (task
+    // 113 row 6). Phase 4.1b.
     actual override fun close() {
         if (closed || error != GodotError.OK || owner == null || callbackId == 0L) {
             return
         }
         closed = true
+        if (IosCallableRegistry.entry(callbackId) == null) return
         // A freed emitter already dropped the connection and must not be called (desktop guards the
         // same way); the receiver's address only identifies the Callable, so a freed one is fine.
         if (!IosGodot.isInstanceIdValid(owner.instanceId)) return

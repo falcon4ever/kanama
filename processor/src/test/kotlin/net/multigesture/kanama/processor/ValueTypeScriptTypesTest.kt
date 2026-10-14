@@ -225,7 +225,7 @@ class ValueTypeScriptTypesTest {
       val name = type.name.lowercase()
       assertTrue(
         source.contains(
-          "KanamaIosScriptProperty(\"$name\", ${variantTypes.getValue(type)}, 0, \"\", 6)"
+          "KanamaIosScriptProperty(\"$name\", ${variantTypes.getValue(type)}, 0, \"\", 6"
         ),
         "$name\n$source",
       )

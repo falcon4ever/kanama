@@ -64,8 +64,9 @@ internal object IosGodot {
 // callback here and passes the integer id to the C shim, which binds it to a
 // custom Godot Callable. When the signal fires the shim calls back into
 // kanamaIosRuntimeDispatchCallable with the arguments as PT-tagged cells; when Godot drops the
-// connection it calls kanamaIosRuntimeReleaseCallable so the entry can be collected. Since task 134
-// D4 an entry reads its arguments through a [SignalArgReader] (typed signals, no argument cap).
+// connection, the free of its last Callable releases the entry (IosCallableLifetimes, task 113).
+// Since task 134 D4 an entry reads its arguments through a [SignalArgReader] (typed signals, no
+// argument cap).
 internal object IosCallableRegistry {
     class Entry(
         val argumentCount: Int,
@@ -123,10 +124,4 @@ fun kanamaIosRuntimeDispatchCallable(
         IosScriptErrors.report(t, "signal lambda")
     }
     return 0
-}
-
-@OptIn(ExperimentalNativeApi::class)
-@CName("kanama_ios_runtime_release_callable")
-fun kanamaIosRuntimeReleaseCallable(callbackId: Long) {
-    IosCallableRegistry.release(callbackId)
 }
