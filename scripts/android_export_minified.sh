@@ -19,6 +19,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=scripts/gate_skip.sh
 source "$ROOT_DIR/scripts/gate_skip.sh"
+# shellcheck source=scripts/portable.sh
+source "$ROOT_DIR/scripts/portable.sh"
 # shellcheck source=scripts/android_apk_id.sh
 source "$ROOT_DIR/scripts/android_apk_id.sh"
 ANDROID_TAG="[android_minified]"
@@ -145,7 +147,7 @@ rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
 # patch; strip our previous block (marker -> EOF) and re-append.
 MARKER="kanama-r8-minify"
 if grep -q "$MARKER" "$BUILD_GRADLE"; then
-  /usr/bin/sed -i '' "/=== $MARKER /,\$d" "$BUILD_GRADLE"
+  sed_inplace "$BUILD_GRADLE" "/=== $MARKER /,\$d"
 fi
 echo "[android_minified] patching $BUILD_GRADLE (enable R8 on release)"
 cat >>"$BUILD_GRADLE" <<'GRADLE'

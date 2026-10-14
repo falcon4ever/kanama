@@ -669,6 +669,51 @@ case("check_shell_lint.sh", ["bash", "scripts/check_shell_lint.sh"],
      "zz_redrun.sh", "a new gate script carries a shellcheck warning (unquoted variable, unchecked cd)")
 
 
+# ---- script portability (task 138 item 34): one case per shape ---------------------------------------------------
+def portability_case(name, body, expect, how, path="scripts/zz_redrun_portability.sh"):
+    case(f"check_script_portability.py ({name})", py("check_script_portability.py"),
+         [Create(path, "#!/usr/bin/env bash\n" + body)], expect, how)
+
+
+portability_case("rg", "rg -q foo file\n", "[banned-tool] `rg`", "a script calls ripgrep, which the CI runner does not have (kanama#328)")
+portability_case("rg probe", "if command -v rg >/dev/null; then :; fi\n", "[banned-tool] `rg`", "a script probes for ripgrep: a conditional convenience tool is two paths, each machine exercises one")
+portability_case("gsed", "gsed -n 1p file\n", "[banned-tool] `gsed`", "a script calls the Homebrew GNU tool name")
+portability_case("unlisted command", "sha256sum file\n", "[unlisted-command] `sha256sum`", "a script calls a command outside the portable list (not on a stock macOS)")
+portability_case("grep -P", "grep -oP 'a\\K.*' file\n", "[grep-P]", "a script uses PCRE grep, which BSD grep lacks")
+portability_case("sed -i", "sed -i 's/a/b/' file\n", "[sed-i] `sed -i` differs", "a script edits in place with GNU-only sed -i (outside scripts/portable.sh)")
+portability_case("sed -i ''", "sed -i '' 's/a/b/' file\n", "[sed-i] `sed -i ''` is the BSD spelling", "a script edits in place with the BSD-only spelling")
+portability_case("declare -A", "declare -A map\n", "[bash4] `declare -A`", "a script uses an associative array (bash 4; macOS ships 3.2)")
+portability_case("mapfile", "mapfile -t lines < file\n", "[bash4] `mapfile`", "a script uses mapfile (bash 4)")
+portability_case("case modification", 'name="${1,,}"\n', "[bash4] case-modifying", "a script lower-cases with ${x,,} (bash 4)")
+portability_case("pipe-ampersand", "cat file |& grep x\n", "[bash4] `|&`", "a script pipes stderr with |& (bash 4)")
+portability_case("coproc", "coproc cat\n", "[bash4] `coproc`", "a script uses coproc (bash 4)")
+portability_case("macOS-only command", "xcrun simctl list\n", "[macos-only] `xcrun`", "a CI-invocable script calls a macOS-only command outside a DEVICE_ONLY script")
+portability_case("stat -f", "stat -f %m file\n", "[macos-only]", "a script reads a modification time with BSD stat")
+portability_case("date -j", "date -j -f %s 0\n", "[macos-only]", "a script parses a date with BSD date")
+portability_case("GNU-only option", "date -d yesterday +%s\n", "[gnu-only]", "a script uses GNU date -d")
+case("check_script_portability.py (python subprocess)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["rg", "x"])\n')],
+     "[banned-tool] `rg`", "a Python gate shells out to ripgrep")
+case("check_script_portability.py (workflow step)", py("check_script_portability.py"),
+     [Edit(".github/workflows/ci.yml", "          scripts/local_ci.sh --skip-docs", "          rg --version\n          scripts/local_ci.sh --skip-docs")],
+     ".github/workflows/ci.yml", "a CI workflow step calls ripgrep")
+case("check_script_portability.py (selftest mode)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", "selftest_verdict() {\n", "selftest_verdict() {\n  rg -q x /dev/null\n")],
+     "scripts/ios_visual_smoke.sh", "ripgrep returns to the CI-invocable --check-selftest-log path of the macOS smoke (the kanama#328 failure)")
+case("check_script_portability.py (device path)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", "selftest_verdict() {\n", "selftest_verdict() {\n  xcrun simctl list >/dev/null\n")],
+     "[macos-only] `xcrun`", "a macOS-only command moves above the device-only marker into the CI-invocable --check-selftest-log path")
+case("check_script_portability.py (stale device marker)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", "# portability: device-only below", "# portability: device-only marker removed")],
+     "[device-marker]", "a DEVICE_ONLY script loses its marker line (every macOS-only command in it would be unexplained)")
+case("check_script_portability.py --self-test", py("check_script_portability.py", "--self-test"),
+     [Edit("scripts/portable.sh", '  rm -f "${file}.portable-bak"\n', "  :\n")],
+     "sed_inplace:", "sed_inplace leaves its backup file behind")
+case("check_script_portability.py --self-test (tokeniser)", py("check_script_portability.py", "--self-test"),
+     [Edit("scripts/check_script_portability.py", 'self.add(line, "banned-tool", f"', 'self.add(line, "banned-tool-off", f"')],
+     "--self-test FAIL", "the gate stops classifying a banned tool (its own shape table must say so)")
+
+
 # ---- web gate self-test: break the gate, its own --self-test must go red ------------------------------------
 case("check_no_local_paths.py --self-test", py("web/check_no_local_paths.py", "--self-test"),
      [Edit("scripts/web/check_no_local_paths.py", "                for offset in _hits(data, needle):", "                for offset in []:")],

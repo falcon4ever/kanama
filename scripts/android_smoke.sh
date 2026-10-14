@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=scripts/gate_skip.sh
 source "$ROOT_DIR/scripts/gate_skip.sh"
+# shellcheck source=scripts/portable.sh
+source "$ROOT_DIR/scripts/portable.sh"
 # shellcheck source=scripts/android_apk_id.sh
 source "$ROOT_DIR/scripts/android_apk_id.sh"
 ANDROID_TAG="[android_smoke]"
@@ -158,9 +160,8 @@ if [[ -n "$RENDERER_OVERRIDE" ]]; then
     echo "[android_smoke] demo has no renderer/rendering_method.mobile setting to override: $PROJECT_GODOT" >&2
     exit 1
   fi
-  /usr/bin/sed -i '' \
-    "s|^renderer/rendering_method.mobile=.*|renderer/rendering_method.mobile=\"$RENDERER_OVERRIDE\"|" \
-    "$PROJECT_GODOT"
+  sed_inplace "$PROJECT_GODOT" \
+    "s|^renderer/rendering_method.mobile=.*|renderer/rendering_method.mobile=\"$RENDERER_OVERRIDE\"|"
   echo "[android_smoke] renderer override for this run: rendering_method.mobile=\"$RENDERER_OVERRIDE\""
 fi
 
@@ -179,7 +180,7 @@ set_gradle_property "$DEMO_DIR/android/build/gradle.properties" \
 
 MARKER="kanama-local-maven"
 if grep -q "$MARKER" "$BUILD_GRADLE"; then
-  /usr/bin/sed -i '' "/=== $MARKER /,\$d" "$BUILD_GRADLE"
+  sed_inplace "$BUILD_GRADLE" "/=== $MARKER /,\$d"
 fi
 cat >>"$BUILD_GRADLE" <<'GRADLE'
 

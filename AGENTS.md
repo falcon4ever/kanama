@@ -163,6 +163,9 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
   `KANAMA-BLOCKED` marker instead — `scripts/audit_stale_blockers.py` fails
   the build when the blocker is lifted. See "Documented Limitations" in
   `CONTRIBUTING.md`.
+- Scripts CI can invoke (any mode) stay on the tools a Mac and the ubuntu runner both have: no `rg`, no `grep -P`,
+  no bash 4+, `sed_inplace` from `scripts/portable.sh` instead of `sed -i`; macOS-only commands only in the device
+  scripts `scripts/check_script_portability.py` lists. The gate runs in `local_ci.sh`.
 - Do not widen ABI-sensitive types to make wrappers generate. Add exact helper
   shapes and audits first.
 - Prefer generated wrappers and focused policy fixes over ad hoc hand wrappers.

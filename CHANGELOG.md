@@ -39,6 +39,18 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
+
+Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now
+also covers the classes a Godot module defines (`ZIPReader`/`ZIPPacker`, `WebSocket*`, `WebRTC*`, `CSG*`,
+`GLTF*`, `OpenXR*`, `ENet*`, ...): the sync reads `modules/*/doc_classes` beside `doc/classes`. A new
+gate, `scripts/check_script_portability.py` (in `local_ci.sh`), holds every script CI can invoke to the
+tools a Mac and the ubuntu runner both have: no `rg`/`fd`/`gsed`, no `grep -P`, no bash 4+, `sed -i` only
+through `sed_inplace` in `scripts/portable.sh`, macOS-only commands only in the listed device scripts
+(the 87 `rg` calls became `grep -E`; CI no longer installs ripgrep). `scripts/ios_handwritten_report.py`
+has a `--check` mode in `local_ci.sh` (the generated page was already stale on main), and the Android remap
+audit tracks `${...}` template nesting, so `"${"/*"}"` no longer hides the lines after it.
+
 ### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
 
 The iOS self-tests (the C `PTRCALL SELFTEST MATRIX` and the Kotlin `OBJECTCALLS SELFTEST` rows at

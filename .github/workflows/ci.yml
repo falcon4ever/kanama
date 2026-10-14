@@ -39,14 +39,6 @@ jobs:
           java-version: "25"
           cache: gradle
 
-      - name: Install CLI dependencies
-        shell: bash
-        run: |
-          # local_ci.sh and the smoke scripts shell out to ripgrep (`rg`), which
-          # is not preinstalled on ubuntu-24.04 runners.
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ripgrep
-
       - name: Cache Godot binary
         id: godot-cache
         uses: actions/cache@v4

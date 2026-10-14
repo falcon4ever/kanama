@@ -100,7 +100,8 @@ EOF
 # self-tests are compiled only into a -PkanamaIosSelfTest=true build, which this script makes; a console
 # without them means the build lost the flag or the app never reached its first frame, and fails.
 # `--check-selftest-log LOG` runs only this check on a saved console log (its red runs need no device).
-# It uses grep -E, not rg: CI runs those red runs on Linux, which has no ripgrep.
+# It uses grep -E, not rg: CI runs those red runs on Linux, which has no ripgrep (and the whole script
+# stays on the portable vocabulary, scripts/check_script_portability.py).
 selftest_verdict() {
   if grep -Eq 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [1-9][0-9]* failed' "$@"; then
     echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
@@ -128,6 +129,10 @@ if [[ "${1:-}" == "--check-selftest-log" ]]; then
   selftest_verdict "$2" && exit 0
   exit 1
 fi
+
+# portability: device-only below -- everything past this line drives a Mac, Xcode and a simulator or an
+# iPhone (xcrun, xcodebuild, PlistBuddy); CI never gets here (its only mode, --check-selftest-log, exited
+# above). scripts/check_script_portability.py holds the lines above this one to the portable vocabulary.
 
 godot_bin="${KANAMA_GODOT_BIN:-/Applications/Godot.app/Contents/MacOS/Godot}"
 xcode_developer_dir="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
@@ -457,7 +462,7 @@ ensure_project_setting() {
   local value="$3"
   local project_file="$project_dir/project.godot"
 
-  if rg -q -F "$key=" "$project_file"; then
+  if grep -qF "$key=" "$project_file"; then
     return
   fi
 
@@ -2316,51 +2321,51 @@ ensure_project_setting application run/low_processor_mode false
 ensure_project_setting application run/low_processor_mode_sleep_usec 0
 
 if [[ -n "$godot_project_baseline_dir" || "$godot_fps_probe" -eq 1 || "$kanama_match3_probe" -eq 1 || "$kanama_platformer3d_probe" -eq 1 || "$kanama_dodge_probe" -eq 1 || "$kanama_squash_probe" -eq 1 || "$kanama_fps_probe" -eq 1 || "$kanama_racing_probe" -eq 1 || "$kanama_character_probe" -eq 1 || "$kanama_thirdperson_probe" -eq 1 ]]; then
-  if ! rg -q '^\[display\]' "$project_dir/project.godot"; then
+  if ! grep -Eq '^\[display\]' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 
 [display]
 EOF
   fi
-  if ! rg -q '^window/size/viewport_width=' "$project_dir/project.godot"; then
+  if ! grep -Eq '^window/size/viewport_width=' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 window/size/viewport_width=720
 EOF
   fi
-  if ! rg -q '^window/size/viewport_height=' "$project_dir/project.godot"; then
+  if ! grep -Eq '^window/size/viewport_height=' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 window/size/viewport_height=1280
 EOF
   fi
-  if ! rg -q '^window/stretch/mode=' "$project_dir/project.godot"; then
+  if ! grep -Eq '^window/stretch/mode=' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 window/stretch/mode="canvas_items"
 EOF
   fi
-  if ! rg -q '^window/stretch/aspect=' "$project_dir/project.godot"; then
+  if ! grep -Eq '^window/stretch/aspect=' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 window/stretch/aspect="expand"
 EOF
   fi
-  if ! rg -q '^window/handheld/orientation=' "$project_dir/project.godot"; then
+  if ! grep -Eq '^window/handheld/orientation=' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 window/handheld/orientation=1
 EOF
   fi
-  if ! rg -q '^window/vsync/vsync_mode=' "$project_dir/project.godot"; then
+  if ! grep -Eq '^window/vsync/vsync_mode=' "$project_dir/project.godot"; then
     cat >>"$project_dir/project.godot" <<'EOF'
 window/vsync/vsync_mode=1
 EOF
   fi
 fi
 
-if ! rg -q '^\[rendering\]' "$project_dir/project.godot"; then
+if ! grep -Eq '^\[rendering\]' "$project_dir/project.godot"; then
   cat >>"$project_dir/project.godot" <<'EOF'
 
 [rendering]
 EOF
 fi
-if ! rg -q '^textures/vram_compression/import_etc2_astc=' "$project_dir/project.godot"; then
+if ! grep -Eq '^textures/vram_compression/import_etc2_astc=' "$project_dir/project.godot"; then
   cat >>"$project_dir/project.godot" <<'EOF'
 textures/vram_compression/import_etc2_astc=true
 EOF
@@ -2645,7 +2650,7 @@ if [[ "$physical_device" -eq 1 ]]; then
   waited=0
   while [[ "$waited" -lt "$launch_timeout" ]]; do
     # justified: a poll loop; the logs may not exist yet. The loader/self-test assertions after the loop decide.
-    if rg -q 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then
+    if grep -Eq 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then
       break
     fi
     sleep 2
@@ -2717,9 +2722,9 @@ fi
 
 if [[ -n "$godot_project_baseline_dir" ]]; then
   echo "[ios_visual_smoke] Godot-only baseline; no Kanama loader log expected"
-elif [[ -f "$stderr_log" ]] && rg -q '\[kanama\]\[ios\]' "$stderr_log"; then
+elif [[ -f "$stderr_log" ]] && grep -Eq '\[kanama\]\[ios\]' "$stderr_log"; then
   echo "[ios_visual_smoke] Kanama iOS loader log detected in stderr"
-elif [[ -f "$stdout_log" ]] && rg -q '\[kanama\]\[ios\]' "$stdout_log"; then
+elif [[ -f "$stdout_log" ]] && grep -Eq '\[kanama\]\[ios\]' "$stdout_log"; then
   echo "[ios_visual_smoke] Kanama iOS loader log detected in stdout"
 elif [[ "$physical_device" -eq 1 ]]; then
   # On hardware a missing loader line means the addon did not run (bad install / signing /
@@ -2730,7 +2735,7 @@ else
   echo "[ios_visual_smoke] warning: no Kanama iOS loader log captured from simctl stdout/stderr" >&2
 fi
 
-if rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout_log"; then
+if grep -Eq 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout_log"; then
   echo "[ios_visual_smoke] script error detected in launch logs" >&2
   exit 1
 fi
@@ -2750,7 +2755,7 @@ if [[ "$physical_device" -eq 0 && -n "$godot_project_baseline_dir" ]]; then
 fi
 
 if [[ "$kanama_probe" -eq 1 ]]; then
-  if rg -q 'updated grouped probe label' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'updated grouped probe label' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] grouped probe label update log detected"
   else
     echo "[ios_visual_smoke] grouped probe label update log missing" >&2
@@ -2759,7 +2764,7 @@ if [[ "$kanama_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_script_probe" -eq 1 ]]; then
-  if rg -q 'script instance ready' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'script instance ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] script instance ready log detected"
   else
     echo "[ios_visual_smoke] script instance ready log missing" >&2
@@ -2768,7 +2773,7 @@ if [[ "$kanama_script_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_user_script_probe" -eq 1 ]]; then
-  if rg -q 'project script method call.*_ready' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'project script method call.*_ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script ready log detected"
   else
     echo "[ios_visual_smoke] project script ready log missing" >&2
@@ -2776,7 +2781,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   fi
   # Value-type @Export delivery: the scene stores view = NodePath("../Background"); the
   # probe logs the NodePath that arrived. Confirms scene-driven value-type set-property end to end.
-  if rg -q 'value-type property view=\.\./Background' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'value-type property view=\.\./Background' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script value-type NodePath property delivered"
   else
     echo "[ios_visual_smoke] project script value-type NodePath property missing" >&2
@@ -2784,15 +2789,15 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   fi
   # Task 106: the scene-stored PackedScene @Export survived the export's text->binary
   # re-pack and reached the script before _ready (Match3's tile_scene shape).
-  if rg -q 'task106 resource property probe_scene delivered=true instantiated=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'task106 resource property probe_scene delivered=true instantiated=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script Resource-typed (PackedScene) property delivered before _ready"
   else
     echo "[ios_visual_smoke] project script Resource-typed (PackedScene) property missing or null at _ready (task 106)" >&2
     exit 1
   fi
-  if rg -q 'task39 property initial float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
-    && rg -q 'task39 property roundtrip float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
-    && rg -q 'task39 property engine get float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'task39 property initial float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
+    && grep -Eq 'task39 property roundtrip float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
+    && grep -Eq 'task39 property engine get float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] task 39 narrow/enum property conversions delivered and round-tripped"
   else
     echo "[ios_visual_smoke] task 39 property conversion probe failed" >&2
@@ -2801,7 +2806,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # Data @Export get parity: Vector2/Vector3/String/NodePath read back through the engine
   # getter (the path MultiplayerSynchronizer uses on the authority peer). Regression for the
   # write-only data-type getProperty bug that broke iOS multiplayer movement/shooting.
-  if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true tags=true tagsSet=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'datatype property engine get vector2=true vector3=true string=true nodepath=true tags=true tagsSet=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] data @Export get parity (Vector2/Vector3/String/NodePath/List<String>, incl. a List<String> set through Object.set) round-tripped"
   else
     echo "[ios_visual_smoke] data @Export get parity probe failed" >&2
@@ -2810,14 +2815,14 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # Task 115: an Object-typed @Export set through Object.set reads back through Object.get
   # as the same instance (the third-person bullet's `shooter`). Regression for the iOS getProperty
   # object-ref gap that answered nil.
-  if rg -q 'task115 object property engine get fieldSet=true same=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'task115 object property engine get fieldSet=true same=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Object-typed @Export set via Object.set reads back through Object.get (task 115)"
   else
     echo "[ios_visual_smoke] Object-typed @Export engine get probe failed (task 115)" >&2
     exit 1
   fi
   # Phase 3.3: an arg-bearing virtual dispatched through the generic callV path.
-  if rg -q '_process dispatched argc=1 delta>0=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq '_process dispatched argc=1 delta>0=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script arg-bearing callV dispatch confirmed"
   else
     echo "[ios_visual_smoke] project script arg-bearing callV dispatch missing" >&2
@@ -2826,8 +2831,8 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # Task 46b — iOS ProcessDisableSmoke twin: a script that disables processing in _ready must NOT have
   # _process fire afterward (the iOS lifecycle notification must not re-enable it — the host-drives-all
   # bug). Mirrors the JVM runtime_smoke ProcessDisableSmoke check + check_absent.
-  if rg -q 'ProcessDisableProbe ready processing=false' "$stderr_log" "$stdout_log" \
-    && ! rg -q 'ProcessDisableProbe unexpected process' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'ProcessDisableProbe ready processing=false' "$stderr_log" "$stdout_log" \
+    && ! grep -Eq 'ProcessDisableProbe unexpected process' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] lifecycle: setProcess(false) in _ready survived notifications (no _process)"
   else
     echo "[ios_visual_smoke] lifecycle probe failed: _process re-enabled after _ready disabled it" >&2
@@ -2835,7 +2840,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   fi
   # Task 47 — replication-shaped @Export read: a MultiplayerSynchronizer reads its replicated
   # Vector2/Vector3/bool properties back through the engine getter (the authority-peer serialize path).
-  if rg -q 'ReplicationProbe engine get motion=true shoot_target=true shooting=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'ReplicationProbe engine get motion=true shoot_target=true shooting=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] replication: MultiplayerSynchronizer @Export read-back round-tripped"
   else
     echo "[ios_visual_smoke] replication probe failed: value-type @Export read back wrong via engine" >&2
@@ -2844,7 +2849,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # task 64 iOS mirror — PropertyInfo.class_name on object-typed exports: GDScript reads the
   # engine-visible property list and must see class_name=AudioStream on smoke_stream (the new
   # bridge + shim StringName cache) while the value-typed `view` stays empty.
-  if rg -q 'property class_name smoke_stream=AudioStream view_empty=true' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'property class_name smoke_stream=AudioStream view_empty=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] object-typed @Export class_name delivered (task 64 iOS mirror)"
   else
     echo "[ios_visual_smoke] class_name probe failed: object-typed export missing PropertyInfo.class_name" >&2
@@ -2856,22 +2861,22 @@ if [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
   bunnymark_add_calls="$(
     {
       # justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict.
-      rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" || true
+      grep -ahE 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" || true
     } | wc -l | tr -d '[:space:]'
   )"
   if [[ "$bunnymark_add_calls" -lt 25 ]]; then
     echo "[ios_visual_smoke] Bunnymark add_bunny call count too low: $bunnymark_add_calls" >&2
     exit 1
   fi
-  if ! rg -q 'bunnymark process frame=3' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'bunnymark process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Bunnymark process log missing" >&2
     exit 1
   fi
-  if ! rg -q 'project script method call.*method=finish' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'project script method call.*method=finish' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Bunnymark finish log missing" >&2
     exit 1
   fi
-  if rg -q 'bunnymark signal ack' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'bunnymark signal ack' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Bunnymark add/process/finish/signal logs detected"
   else
     echo "[ios_visual_smoke] Bunnymark signal ack log missing" >&2
@@ -2880,11 +2885,11 @@ if [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_match3_probe" -eq 1 ]]; then
-  if ! rg -q 'match3 smoke ready tiles=64' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'match3 smoke ready tiles=64' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Match3 ready log missing" >&2
     exit 1
   fi
-  if rg -q 'match3 smoke process frame=10' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'match3 smoke process frame=10' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Match3 ready/process logs detected"
   else
     echo "[ios_visual_smoke] Match3 process log missing" >&2
@@ -2893,11 +2898,11 @@ if [[ "$kanama_match3_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_platformer3d_probe" -eq 1 ]]; then
-  if ! rg -q 'platformer3d smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'platformer3d smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] 3D platformer ready log missing" >&2
     exit 1
   fi
-  if rg -q 'platformer3d smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'platformer3d smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] 3D platformer ready/process logs detected"
   else
     echo "[ios_visual_smoke] 3D platformer process log missing" >&2
@@ -2906,11 +2911,11 @@ if [[ "$kanama_platformer3d_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_dodge_probe" -eq 1 ]]; then
-  if ! rg -q 'dodge smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'dodge smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Dodge ready log missing" >&2
     exit 1
   fi
-  if rg -q 'dodge smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'dodge smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Dodge ready/process logs detected"
   else
     echo "[ios_visual_smoke] Dodge process log missing" >&2
@@ -2919,11 +2924,11 @@ if [[ "$kanama_dodge_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_squash_probe" -eq 1 ]]; then
-  if ! rg -q 'squash smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'squash smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Squash ready log missing" >&2
     exit 1
   fi
-  if rg -q 'squash smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'squash smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Squash ready/process logs detected"
   else
     echo "[ios_visual_smoke] Squash process log missing" >&2
@@ -2932,11 +2937,11 @@ if [[ "$kanama_squash_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_fps_probe" -eq 1 ]]; then
-  if ! rg -q 'fps smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'fps smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] FPS ready log missing" >&2
     exit 1
   fi
-  if rg -q 'fps smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'fps smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] FPS ready/process logs detected"
   else
     echo "[ios_visual_smoke] FPS process log missing" >&2
@@ -2945,11 +2950,11 @@ if [[ "$kanama_fps_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_racing_probe" -eq 1 ]]; then
-  if ! rg -q 'racing smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'racing smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Racing ready log missing" >&2
     exit 1
   fi
-  if rg -q 'racing smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'racing smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Racing ready/process logs detected"
   else
     echo "[ios_visual_smoke] Racing process log missing" >&2
@@ -2958,11 +2963,11 @@ if [[ "$kanama_racing_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_character_probe" -eq 1 ]]; then
-  if ! rg -q 'character smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'character smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Character-controller ready log missing" >&2
     exit 1
   fi
-  if rg -q 'character smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'character smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Character-controller ready/process logs detected"
   else
     echo "[ios_visual_smoke] Character-controller process log missing" >&2
@@ -2971,11 +2976,11 @@ if [[ "$kanama_character_probe" -eq 1 ]]; then
 fi
 
 if [[ "$kanama_thirdperson_probe" -eq 1 ]]; then
-  if ! rg -q 'thirdperson smoke ready' "$stderr_log" "$stdout_log"; then
+  if ! grep -Eq 'thirdperson smoke ready' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Third-person ready log missing" >&2
     exit 1
   fi
-  if rg -q 'thirdperson smoke process frame=3' "$stderr_log" "$stdout_log"; then
+  if grep -Eq 'thirdperson smoke process frame=3' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] Third-person ready/process logs detected"
   else
     echo "[ios_visual_smoke] Third-person process log missing" >&2

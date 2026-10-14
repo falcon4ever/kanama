@@ -459,6 +459,14 @@ stage "iOS PT tag table parity (five copies, task 119 item 30)"
 # only at the shim's tag dispatch on a phone. This gate is the comparison.
 python3 "$ROOT_DIR/scripts/check_pt_tag_tables.py"
 
+stage "script portability (task 138 item 34)"
+# Every script CI can invoke, in any mode, uses the tools both a Mac and the ubuntu runner have: no `rg`/`fd`/`gsed`,
+# no `grep -P`, no `sed -i` outside scripts/portable.sh, no bash 4+, no macOS-only command outside the listed device
+# paths. kanama#328 failed on `rg: command not found` in a Linux-run mode of a macOS script. --self-test first: it
+# proves the tokeniser sees each shape (and ignores comments, quoted text and here-documents) and sed_inplace works.
+python3 "$ROOT_DIR/scripts/check_script_portability.py" --self-test
+python3 "$ROOT_DIR/scripts/check_script_portability.py"
+
 stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself
 # prints install instructions and exits 2 when shellcheck is absent.
@@ -479,35 +487,35 @@ stage "JDK install-location table parity (kanama#277)"
 python3 "$ROOT_DIR/scripts/check_jdk_locations_parity.py"
 
 stage "JDWP bootstrap/project-setting guard"
-if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+if ! grep -Eq 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] JDWP project setting is not wired through bootstrap and editor tools" >&2
   exit 1
 fi
-if ! rg -q 'debug/jdwp_enabled' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+if ! grep -Eq 'debug/jdwp_enabled' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] JDWP enable setting is not wired through bootstrap and editor tools" >&2
   exit 1
 fi
-if rg -q 'debug/jdwp_port_editor' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+if grep -Eq 'debug/jdwp_port_editor' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] obsolete JDWP editor project setting should not be registered" >&2
   exit 1
 fi
-if rg -q 'set_initial_value\([^,]+,[^,]+,' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+if grep -Eq 'set_initial_value\([^,]+,[^,]+,' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] Godot plugin set_initial_value must use the GDScript two-argument form" >&2
   exit 1
 fi
-if ! rg -q 'is_editor_process' "$ROOT_DIR/bootstrap/bootstrap.c"; then
+if ! grep -Eq 'is_editor_process' "$ROOT_DIR/bootstrap/bootstrap.c"; then
   echo "[local_ci] JDWP editor/game-runner split guard is missing" >&2
   exit 1
 fi
-if ! rg -q 'KANAMA_JDWP_PORT' "$ROOT_DIR/bootstrap/bootstrap.c"; then
+if ! grep -Eq 'KANAMA_JDWP_PORT' "$ROOT_DIR/bootstrap/bootstrap.c"; then
   echo "[local_ci] JDWP environment override is missing" >&2
   exit 1
 fi
-if ! rg -q 'tools/java_preflight_enabled' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
+if ! grep -Eq 'tools/java_preflight_enabled' "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] Java runtime preflight setting is not registered in editor tools" >&2
   exit 1
 fi
-if ! rg -Fq 'libjvm not found. Kanama desktop runtime requires a JDK 25+' "$ROOT_DIR/bootstrap/bootstrap.c"; then
+if ! grep -Fq 'libjvm not found. Kanama desktop runtime requires a JDK 25+' "$ROOT_DIR/bootstrap/bootstrap.c"; then
   echo "[local_ci] native bootstrap missing clear libjvm diagnostic" >&2
   exit 1
 fi
@@ -535,15 +543,15 @@ if [[ ! -f "$default_probe_registrar" ]]; then
   echo "[local_ci] missing generated default-probe registrar" >&2
   exit 1
 fi
-if ! rg -q 'private var defaultAmount: Long = 250' "$default_probe_registrar"; then
+if ! grep -Eq 'private var defaultAmount: Long = 250' "$default_probe_registrar"; then
   echo "[local_ci] generated default-probe amount did not use the source literal" >&2
   exit 1
 fi
-if ! rg -q 'private var defaultTarget: net\.multigesture\.kanama\.types\.NodePath = net\.multigesture\.kanama\.types\.NodePath\("\.\./SceneTarget3D"\)' "$default_probe_registrar"; then
+if ! grep -Eq 'private var defaultTarget: net\.multigesture\.kanama\.types\.NodePath = net\.multigesture\.kanama\.types\.NodePath\("\.\./SceneTarget3D"\)' "$default_probe_registrar"; then
   echo "[local_ci] generated default-probe NodePath did not use the source literal" >&2
   exit 1
 fi
-if rg -q 'val defaults = DefaultProbeScript\(.*MemorySegment\.NULL' "$default_probe_registrar"; then
+if grep -Eq 'val defaults = DefaultProbeScript\(.*MemorySegment\.NULL' "$default_probe_registrar"; then
   echo "[local_ci] default-probe registrar still constructs a NULL-handle default instance" >&2
   exit 1
 fi
@@ -552,32 +560,32 @@ if [[ ! -f "$hello_script_registrar" ]]; then
   echo "[local_ci] missing generated hello-script registrar" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("Smoke Properties", VariantType\.NIL, 0, "", 64\)' "$hello_script_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("Smoke Properties", VariantType\.NIL, 0, "", 64\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property export group is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("Runtime", VariantType\.NIL, 0, "", 256\)' "$hello_script_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("Runtime", VariantType\.NIL, 0, "", 256\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property export subgroup is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_scene", VariantType\.OBJECT, 17, "PackedScene", 6, "PackedScene"\)' "$hello_script_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_scene", VariantType\.OBJECT, 17, "PackedScene", 6, "PackedScene"\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property PackedScene export metadata is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_textures", VariantType\.ARRAY, 23, "24/17:Texture2D", 6\)' "$hello_script_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_textures", VariantType\.ARRAY, 23, "24/17:Texture2D", 6\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property typed Texture2D array metadata is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$hello_script_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property custom Resource metadata is missing" >&2
   exit 1
 fi
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_resources", VariantType\.ARRAY, 23, "24/17:SmokeResource", 6\)' "$hello_script_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_resources", VariantType\.ARRAY, 23, "24/17:SmokeResource", 6\)' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property custom Resource array metadata is missing" >&2
   exit 1
 fi
 resource_owner_registrar="$(find_project_script_registrar "ResourceOwnerSmokeScriptRegistrar.kt")"
-if ! rg -q 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$resource_owner_registrar"; then
+if ! grep -Eq 'ClassDB\.PropertySpec\("smoke_resource", VariantType\.OBJECT, 17, "SmokeResource", 6, "SmokeResource"\)' "$resource_owner_registrar"; then
   echo "[local_ci] generated script-property custom Resource metadata is missing" >&2
   exit 1
 fi
@@ -586,7 +594,7 @@ if [[ ! -f "$self_smoke_registrar" ]]; then
   echo "[local_ci] missing generated self-smoke registrar" >&2
   exit 1
 fi
-if ! rg -q 'val kt = SelfSmoke\(net\.multigesture\.kanama\.api\.GodotHandle\(godotObject\)\)' "$self_smoke_registrar"; then
+if ! grep -Eq 'val kt = SelfSmoke\(net\.multigesture\.kanama\.api\.GodotHandle\(godotObject\)\)' "$self_smoke_registrar"; then
   echo "[local_ci] generated self-smoke registrar does not construct the KanamaScript base-class example" >&2
   exit 1
 fi
@@ -597,67 +605,67 @@ fi
 # (smoke_mutable_textures), and issue #40 typed Map exports (smoke_scalar_map,
 # smoke_region_map, smoke_enum_map, smoke_vector_key_map, smoke_vector_resource_map,
 # smoke_mutable_map, smoke_nullable_scalar_map). Bump when the example gains/loses one.
-if ! rg -q 'propertyCount = 25' "$hello_script_registrar"; then
+if ! grep -Eq 'propertyCount = 25' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property list count does not include metadata/tool-button entries" >&2
   exit 1
 fi
 # Task 132: a setter's references belong to the owner's property (the runtime registry), not to the
 # Kotlin object, so free releases them after the GC collected it. The Kotlin object releases none.
 for retained_property in smoke_scene smoke_resource smoke_resources; do
-  if ! rg -Fq "ScriptBridge.retainScriptProperty(godotObject, \"$retained_property\"," "$hello_script_registrar"; then
+  if ! grep -Fq "ScriptBridge.retainScriptProperty(godotObject, \"$retained_property\"," "$hello_script_registrar"; then
     echo "[local_ci] generated setter of $retained_property does not register its references (ScriptBridge.retainScriptProperty)" >&2
     exit 1
   fi
 done
-if rg -q 'releaseRefCounted' "$hello_script_registrar"; then
+if grep -Eq 'releaseRefCounted' "$hello_script_registrar"; then
   echo "[local_ci] generated registrar still releases setter references through the Kotlin object" >&2
   exit 1
 fi
-if ! rg -q 'cleanup = \{ cleanupKanamaOwnedProperties\(kt\) \}' "$hello_script_registrar"; then
+if ! grep -Eq 'cleanup = \{ cleanupKanamaOwnedProperties\(kt\) \}' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property cleanup hook is missing" >&2
   exit 1
 fi
-if ! rg -q 'closeKanamaOwned\("smoke_scene", kt\.smokeScene\)' "$hello_script_registrar"; then
+if ! grep -Eq 'closeKanamaOwned\("smoke_scene", kt\.smokeScene\)' "$hello_script_registrar"; then
   echo "[local_ci] generated free-path close of a script-assigned resource is missing" >&2
   exit 1
 fi
-if rg -Fq 'SmokeResourceScriptRegistrar.cleanupKanamaOwnedProperties' "$hello_script_registrar"; then
+if grep -Fq 'SmokeResourceScriptRegistrar.cleanupKanamaOwnedProperties' "$hello_script_registrar"; then
   echo "[local_ci] generated custom Resource cleanup must not recursively clean child script properties" >&2
   exit 1
 fi
-if ! rg -q 'BuiltinTypes\.initVariantDictionary\(ret, mapOf\(' "$hello_script_registrar"; then
+if ! grep -Eq 'BuiltinTypes\.initVariantDictionary\(ret, mapOf\(' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC config must return a Variant-wrapped Dictionary" >&2
   exit 1
 fi
-if ! rg -q 'object HelloScriptMethods' "$hello_script_registrar"; then
+if ! grep -Eq 'object HelloScriptMethods' "$hello_script_registrar"; then
   echo "[local_ci] generated method helper object is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun greet\(instance: HelloScript, name: String\): String =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun greet\(instance: HelloScript, name: String\): String =' "$hello_script_registrar"; then
   echo "[local_ci] generated direct method helper is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun greet\(target: net\.multigesture\.kanama\.api\.GodotObject, name: String\): String\? =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun greet\(target: net\.multigesture\.kanama\.api\.GodotObject, name: String\): String\? =' "$hello_script_registrar"; then
   echo "[local_ci] generated GodotObject method helper is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun resetHealth\(target: net\.multigesture\.kanama\.api\.GodotObject\): Boolean' "$hello_script_registrar"; then
+if ! grep -Eq 'fun resetHealth\(target: net\.multigesture\.kanama\.api\.GodotObject\): Boolean' "$hello_script_registrar"; then
   echo "[local_ci] generated Unit-returning GodotObject method helper is missing" >&2
   exit 1
 fi
-if ! rg -q 'object HelloScriptRpcs' "$hello_script_registrar"; then
+if ! grep -Eq 'object HelloScriptRpcs' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC sender helper object is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun rpcReplaceSmokeScene\(instance: HelloScript\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun rpcReplaceSmokeScene\(instance: HelloScript\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC sender helper is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun rpcIdReplaceSmokeScene\(instance: HelloScript, peerId: Long\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
+if ! grep -Eq 'fun rpcIdReplaceSmokeScene\(instance: HelloScript, peerId: Long\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC peer-targeted sender helper is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_script_registrar"; then
+if ! grep -Eq 'fun callLocalReplaceSmokeScene\(instance: HelloScript\)' "$hello_script_registrar"; then
   echo "[local_ci] generated call-local RPC sender helper is missing" >&2
   exit 1
 fi
@@ -707,7 +715,7 @@ if [[ "$HOST_UNAME" == "Linux" ]]; then
     gate_skip linux-readelf "readelf not found; Linux dynamic-section preflight not run" || exit 1
   fi
 fi
-if ! rg -q '^res://addons/kanama/kanama\.gdextension$' "$install_check_dir/.godot/extension_list.cfg"; then
+if ! grep -Eq '^res://addons/kanama/kanama\.gdextension$' "$install_check_dir/.godot/extension_list.cfg"; then
   echo "[local_ci] installAddonJar did not enable the Kanama gdextension" >&2
   exit 1
 fi
