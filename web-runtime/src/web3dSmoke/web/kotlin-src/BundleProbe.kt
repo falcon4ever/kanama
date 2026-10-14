@@ -20,6 +20,11 @@ import net.multigesture.kanama.web.WebExperimentalGenericCall
  * Harness-only (task 129 E, task 138 items 2 and 20): the Web parity rows of the web bundle. Main's
  * `bundle_probe` / `bundle_probe_after` call these and fold the masks for the driver.
  */
+/** The stated bounds of the composite sweeps (scripts/web_local_utilities.py). */
+private const val EASE_ABS_BOUND = 2.220446049250313e-16
+
+private const val LINEAR_TO_DB_ULPS = 2L
+
 @ScriptClass(attachTo = "Node")
 class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
   @Signal("pair") fun pair(value: Long) = Unit
@@ -135,8 +140,11 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
    * Task 129 E: the shared GD on Web against its GDScript twin. Web runs the arithmetic utilities
    * in Kotlin (task 129 E review B1, scripts/web_local_utilities.py) and the twin asks the engine:
    * each row is (ulp bound, Kotlin call), the bound the row's utility carries in that table (0:
-   * bit-exact; 1: a libm transcendental). Bit 0 = every row within its bound (a mismatch prints
-   * the row), bit 1 = str, bit 2 = isInstanceValid / instanceFromId.
+   * bit-exact; 1: a libm transcendental; 2: linear_to_db; `ease`'s table bound is absolute, so its
+   * rows keep the 1 ulp these inputs reach and [sweepsWithinBounds] checks the table's). Bit 0 = every
+   * row within its bound, no row but the engine-RNG one reaching the bridge's builtin-call channel,
+   * and the composite sweeps within their bounds (a mismatch prints the row), bit 1 = str, bit 2 =
+   * isInstanceValid / instanceFromId.
    */
   fun gdRows(value: Long): Long {
     val rows: List<Pair<Int, () -> Double>> =
@@ -170,7 +178,7 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         1 to { GD.asinh(1.3) },
         1 to { GD.acosh(2.4) },
         1 to { GD.atanh(0.45) },
-        1 to { GD.linearToDb(0.3) },
+        2 to { GD.linearToDb(0.3) },
         1 to { GD.ease(0.7, -2.4) },
         1 to { GD.ease(0.2, 0.4) },
         0 to { GD.cubicInterpolate(1.0, 4.0, -2.0, 7.0, 0.3) },
@@ -199,15 +207,25 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         0 to { (GD.min(4L, -2L, 9L) as Long).toDouble() },
       )
     var mask = 1L
+    // The rows that still cross by design: 8 (`GD.seed` + `GD.randf`, the engine RNG). Every other
+    // row must not reach the bridge's builtin-call channel at all (fix round 2: a silent crossing).
+    val engineCalls = mapOf(8 to 2L)
     rows.forEachIndexed { index, (bound, case) ->
       val twin = WebExperimentalGenericCall.callImmediate(twin(), "gd_value", listOf(index.toLong())).asDouble()
+      val callsBefore = twinLong("builtin_calls")
       val local = case()
+      val crossed = twinLong("builtin_calls") - callsBefore
       val ulps = kotlin.math.abs(local.toRawBits() - twin.toRawBits())
       if (ulps > bound) {
         mask = mask and 1L.inv()
         GD.print("gd twin row $index: Kotlin $local vs engine $twin ($ulps ulps, bound $bound)")
       }
+      if (crossed != (engineCalls[index] ?: 0L)) {
+        mask = mask and 1L.inv()
+        GD.print("gd twin row $index: $crossed builtin calls, expected ${engineCalls[index] ?: 0L}")
+      }
     }
+    if (!sweepsWithinBounds()) mask = mask and 1L.inv()
     if (GD.str(1L, "a", 2.5) == twinText(1)) mask = mask or 2L
     if (
       GD.isInstanceValid(self) &&
@@ -217,6 +235,38 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     }
     return mask
   }
+
+  /**
+   * Fix round 2: the composite utilities against the engine over a sweep, each within the bound
+   * scripts/web_local_utilities.py states for it (the twin builds the same inputs with the same
+   * IEEE operations). `ease` is `1 - (1 - x)^(1/c)` or `(1 - (...)^c) / 2 + 1/2` on some branches:
+   * the subtraction cancels, so its bound is absolute (one ulp of 1.0), not in ulps of the result.
+   */
+  private fun sweepsWithinBounds(): Boolean {
+    var ok = true
+    val check = { kind: Long, name: String, local: List<Double>, ulpBound: Long, absBound: Double ->
+      @Suppress("UNCHECKED_CAST")
+      val engine = twin().call("sweep", kind) as List<Double>
+      var worstUlps = 0L
+      var worstAbs = 0.0
+      engine.forEachIndexed { index, value ->
+        worstUlps = maxOf(worstUlps, kotlin.math.abs(local[index].toRawBits() - value.toRawBits()))
+        worstAbs = maxOf(worstAbs, kotlin.math.abs(local[index] - value))
+      }
+      if (engine.size != local.size || worstUlps > ulpBound || worstAbs > absBound) {
+        ok = false
+        GD.print("gd sweep $name: ${engine.size} points, worst $worstUlps ulps / $worstAbs (bound $ulpBound ulps / $absBound)")
+      }
+    }
+    val curves = listOf(-4.8, -3.0, -2.4, -1.0, -0.5, -0.2, 0.2, 0.4, 0.7, 1.5, 2.0, 4.8)
+    check(0L, "ease", curves.flatMap { c -> (0..256).map { GD.ease(it / 256.0, c) } }, Long.MAX_VALUE, EASE_ABS_BOUND)
+    check(1L, "linear_to_db", (0 until 2048).map { GD.linearToDb(sweepLinear(it)) }, LINEAR_TO_DB_ULPS, Double.MAX_VALUE)
+    check(2L, "db_to_linear", (0 until 2048).map { GD.dbToLinear((it - 1024) / 16.0) }, 1L, Double.MAX_VALUE)
+    return ok
+  }
+
+  private fun sweepLinear(i: Int): Double =
+    if (i < 1024) (i + 1).toDouble() / 1024.0 * 4.0 else 1.0 + (i - 1536).toDouble() / 1048576.0
 
   /**
    * Task 129 E review B2: objects in a call's result keep the handle that already tracks them. 1 =

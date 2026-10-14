@@ -8,7 +8,8 @@ the engine (10-30 us a crossing), it asks the generated `WebLocalUtilities` (ren
 ONE of the tables below, so a new Godot utility is a reviewed row, never a silent crossing:
 
 * `WEB_LOCAL_UTILITIES`: a port of Godot 4.7.2's formula (core/variant/variant_utility.cpp ->
-  core/math/math_funcs.h), with ONE ulp bound per row. 0 is bit-exact and is only allowed for a
+  core/math/math_funcs.h), with ONE bound per row: ulps, or a stated absolute bound for a
+  composite whose subtraction cancels (`ease`). 0 is bit-exact and is only allowed for a
   body with no libm transcendental (`check_web_local_utilities`); a transcendental row carries the
   libm reason (the WEB_LOCAL_FACADE precedent, scripts/generate_builtin_ops.py). An optional guard
   sends the inputs a port does not cover (a NaN or out-of-range float->int, posmod by zero) to the
@@ -30,13 +31,17 @@ import json
 import re
 from pathlib import Path
 
-LIBM = "libm's last bit differs by platform and from Kotlin/Wasm's kotlin.math (the engine on Web is emscripten's musl)"
+LIBM = (
+    "libm's last bit differs by platform and from Kotlin/Wasm's kotlin.math, which is Kotlin's own fdlibm port "
+    "(the engine on Web is emscripten's musl)"
+)
 
-# name -> (ulp bound, reason, Kotlin expression over a1..aN (Double / Long / Boolean as declared),
+# name -> (ulp bound -- or a text bound where ulps of the result are not bounded --, reason, Kotlin
+#          expression over a1..aN (Double / Long / Boolean as declared),
 #          guard over a1..aN or "" (false: the engine runs it)).
 # A float->int row ("floori") states its body as the Double Godot converts; the generator adds
 # the int64 range guard (C++'s int64_t(double) is undefined outside it; NaN included).
-WEB_LOCAL_UTILITIES: dict[str, tuple[int, str, str, str]] = {
+WEB_LOCAL_UTILITIES: dict[str, tuple[int | str, str, str, str]] = {
     # Bit-exact: IEEE arithmetic, sqrt, fmod and comparisons only.
     "absf": (0, "", "kotlin.math.abs(a1)", ""),
     "absi": (0, "", "kotlin.math.abs(a1)", ""),
@@ -103,9 +108,13 @@ WEB_LOCAL_UTILITIES: dict[str, tuple[int, str, str, str]] = {
     "pow": (1, "pow: " + LIBM, "a1.pow(a2)", ""),
     "log": (1, "log: " + LIBM, "kotlin.math.ln(a1)", ""),
     "exp": (1, "exp: " + LIBM, "kotlin.math.exp(a1)", ""),
-    "ease": (1, "pow: " + LIBM + "; on the twin's inputs the result stays within 1 ulp", "ease(a1, a2)", ""),
+    # Composites (measured over the web3d sweep, BundleProbe.sweepsWithinBounds): `ease` subtracts a pow
+    # from 1 on some branches, so a 1-ulp pow near 1 is an absolute error, unbounded in ulps of a small
+    # result (worst over 12 curves x 257 points: 1.1e-16, 8 ulps).
+    "ease": ("2^-52 absolute", "pow: " + LIBM + "; 1 - pow(...) cancels", "ease(a1, a2)", ""),
     "db_to_linear": (1, "exp: " + LIBM, "kotlin.math.exp(a1 * 0.11512925464970228420089957273422)", ""),
-    "linear_to_db": (1, "log: " + LIBM, "kotlin.math.ln(a1) * 8.6858896380650365530225783783321", ""),
+    "linear_to_db": (2, "log: " + LIBM + "; the product rounds once more (worst over 2048 points: 2)",
+                     "kotlin.math.ln(a1) * 8.6858896380650365530225783783321", ""),
 }
 
 # The float->int rows: Godot converts the Double body with int64_t(...).
@@ -404,7 +413,8 @@ def render_web_local_utilities(api_path: Path, header: str) -> str:
         bound, _reason, body, guard = WEB_LOCAL_UTILITIES[name]
         fn = functions[name]
         args = fn.get("arguments", [])
-        lines = [f"      {ids[name]} -> {{ // {name}" + (f", within {bound} ulp" if bound else "")]
+        within = f", within {bound} ulp" if isinstance(bound, int) else f", within {bound}"
+        lines = [f"      {ids[name]} -> {{ // {name}" + (within if bound else "")]
         for i, arg in enumerate(args, start=1):
             if f"a{i}" in body or f"a{i}" in guard:
                 lines.append(f"        val a{i} = {_READ[arg['type']].format(i=i)}")

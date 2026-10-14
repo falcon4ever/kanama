@@ -315,11 +315,12 @@ open class GodotObject(godotObject: GodotHandle) {
     webGenericCall(this, "get_method_argument_count", listOf(method)) as Long
 
   /**
-   * The engine instance id, read once and then kept (desktop captures it at construction), so it
-   * still answers after the object is freed.
+   * The engine instance id, read once per handle and then kept (desktop captures it at
+   * construction): every wrapper of the handle answers without crossing again, also after the
+   * object is freed.
    */
   val instanceId: Long
-    get() = cachedInstanceId ?: (webGenericCall(this, "get_instance_id", emptyList()) as Long).also { cachedInstanceId = it }
+    get() = cachedInstanceId ?: (net.multigesture.kanama.web.WebHandleCache.read(handle.value, "get_instance_id") { webGenericCall(this, "get_instance_id", emptyList()) } as Long).also { cachedInstanceId = it }
 
   private var cachedInstanceId: Long? = null
 

@@ -266,6 +266,7 @@ fun kanamaWebIsFreedScriptHandle(handle: Int): Int = if (instances.wasFreed(hand
 @JsExport
 fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
   clearWebPositionSnapshot(objectHandle)
+  WebHandleCache.forget(objectHandle)
   unregisterWebBrowserHandle(objectHandle, WebBrowserHandleKind.NODE)
   return 1
 }

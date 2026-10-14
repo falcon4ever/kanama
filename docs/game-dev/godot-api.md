@@ -728,8 +728,10 @@ also has a `Float` overload that computes in `Double`.
 Web compiles the same `GD` and `Mathf`, and runs the math utilities in Kotlin, with no bridge
 call: everything `Mathf` has, and `GD`'s arithmetic, rounding, interpolation and transcendental
 functions (`sin`, `pow`, `exp`, `ease`, `dbToLinear`, ...). The arithmetic ones return GDScript's
-double bit for bit; the transcendental ones can differ from the engine's in the last bit (the
-browser's math library is not the engine's). The rest of `GD` runs in the engine: printing and
+double bit for bit; the transcendental ones can differ from the engine's in the last bit or two
+(Kotlin/Wasm computes `kotlin.math` with its own fdlibm port, not the engine's libm; `ease` is
+within 2^-52 absolute, since some of its branches subtract from 1). The rest of `GD` runs in the
+engine: printing and
 `pushError`, `str` and the `varTo*` / `bytesTo*` conversions, `typeOf`, `hash`, `weakref`,
 `instanceFromId`, and the random functions, which use Godot's global generator on every platform,
 so `GD.seed(n)` reproduces GDScript's sequence on Web too; each of those is one engine call there.

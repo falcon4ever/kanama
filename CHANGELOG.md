@@ -176,7 +176,9 @@ math utilities run in Kotlin, with no bridge crossing: every `Mathf` member and 
 rounding, interpolation and transcendental functions (`GD.lerpf`, `GD.floori`, `GD.sin`, `GD.pow`,
 `GD.ease`, `GD.dbToLinear`, ...; the Variant forms `GD.abs`, `GD.max`, `GD.clamp`, ... on `Double`
 or `Long` arguments). The arithmetic ones return GDScript's double bit for bit; the transcendental
-ones are within one ulp of the engine's (the browser's math library is not the engine's libm).
+ones are within one ulp of the engine's (Kotlin/Wasm computes `kotlin.math` with its own fdlibm port,
+the engine with emscripten's libm), except the composites: `linearToDb` (a logarithm times a constant)
+within two ulps, and `ease`, whose `1 - (1 - x)^(1/c)` branches cancel, within 2^-52 absolute.
 `scripts/web_local_utilities.py` lists which utility runs where. The rest crosses the bridge, one
 synchronous call each (10-30 us): printing, `pushError` / `pushWarning`, `str`, `varToStr` and the
 other conversions, `typeOf`, `hash`, `weakref`, `instanceFromId`, `isInstanceIdValid`, the RID
@@ -188,9 +190,10 @@ builtin and utility calls per engine tick (`maxBuiltinCallsPerTick`). The web3d 
 `getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,
 `hasConnections`, `getObject`, `getObjectId`, `disconnect` and `emit`, and `GodotObject` gains the
 Variant `call(method, vararg args)`, `callv`, `callDeferred(method, vararg args)`,
-`getMethodArgumentCount` and `instanceId` (read once, then kept, as desktop keeps the id it
-captured). The Web bridge now carries a `List` / `Map` argument (`godotFormat`) and an `Array` /
-`Dictionary` / `Callable` / `Signal` result; an object in a result keeps the handle that already
+`getMethodArgumentCount` and `instanceId` (read once per handle, then kept by every wrapper of
+it, so `getChild(0).instanceId` each frame does not cross and a read after the object is freed
+answers, as desktop keeps the id it captured). The Web bridge now carries a `List` / `Map`
+argument (`godotFormat`) and an `Array` / `Dictionary` / `Callable` / `Signal` result; an object in a result keeps the handle that already
 tracks it, so a repeated `GD.instanceFromId` or `call("get_children")` neither grows the handle
 table nor changes identity (`call("get_children")[0] == getChild(0)`). An object a signal handler
 (or `_input`) receives stays valid after the handler returns once a result named it

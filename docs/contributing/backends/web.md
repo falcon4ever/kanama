@@ -296,8 +296,11 @@ memory layout and runs:
 rendered by `generate_web_wrappers.py`, whose `--check` also requires every utility in
 `extension_api.json` to be in exactly one table) by an id each `UtilityFunction` gets at
 construction. The arithmetic, rounding and interpolation utilities are Godot's formulas, bit for
-bit; the transcendental ones (`sin` … `pow`, `ease`, `db_to_linear`) carry a 1-ulp bound with the
-libm reason; a float-to-int whose result is NaN or outside int64, or `posmod` by zero, still goes
+bit; the transcendental ones (`sin` … `pow`, `db_to_linear`) carry a 1-ulp bound with the libm
+reason (Kotlin/Wasm's own fdlibm port of `kotlin.math` against the engine's emscripten libm), the
+composites a measured one: `linear_to_db` 2 ulps, `ease` 2^-52 absolute (its `1 - (...)` branches
+cancel, so ulps of a small result are not bounded; the web3d sweep's worst is 1.1e-16, 8 ulps); a
+float-to-int whose result is NaN or outside int64, or `posmod` by zero, still goes
 to the engine for its error and answer. The rest (printing, Variant text and serialization, object
 identity, RNG) ride the builtin opcode's utility form (static flag `2`, one cached `Expression` per
 name and arity). The web3d twin (`gd_twin.gd`, `BundleProbe.gdRows`) holds the local results to the

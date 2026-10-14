@@ -95,3 +95,33 @@ func emit_ping(rounds: int) -> int:
 		ping.emit(_lent)
 		ping2.emit(_lent, round)
 	return rounds
+
+## Fix round 2: the bridge's synchronous builtin / utility calls so far (BundleProbe.gdRows asserts
+## the Kotlin-local rows do not cross).
+func builtin_calls(_unused: int) -> int:
+	return int(JavaScriptBridge.eval("globalThis.KanamaWebBridge.builtinCalls"))
+
+## Fix round 2: the engine side of the composite sweeps (BundleProbe.sweepInputs builds the same
+## inputs with the same IEEE operations). 0 = ease over 11 curves x 257 points, 1 = linear_to_db,
+## 2 = db_to_linear.
+const SWEEP_CURVES := [-4.8, -3.0, -2.4, -1.0, -0.5, -0.2, 0.2, 0.4, 0.7, 1.5, 2.0, 4.8]
+
+func sweep(kind: int) -> PackedFloat64Array:
+	var out := PackedFloat64Array()
+	match kind:
+		0:
+			for curve in SWEEP_CURVES:
+				for i in 257:
+					out.append(ease(float(i) / 256.0, curve))
+		1:
+			for i in 2048:
+				out.append(linear_to_db(_sweep_linear(i)))
+		2:
+			for i in 2048:
+				out.append(db_to_linear(float(i - 1024) / 16.0))
+	return out
+
+func _sweep_linear(i: int) -> float:
+	if i < 1024:
+		return float(i + 1) / 1024.0 * 4.0
+	return 1.0 + float(i - 1536) / 1048576.0

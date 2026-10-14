@@ -264,6 +264,7 @@ internal fun onWebQueueFree(objectId: Int) {
 
 internal fun discardWebBrowserHandle(handle: Int): Boolean {
   clearWebPositionSnapshot(handle)
+  WebHandleCache.forget(handle)
   return browserHandles.remove(handle) != null
 }
 

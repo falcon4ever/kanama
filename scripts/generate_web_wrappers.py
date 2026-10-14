@@ -1936,15 +1936,15 @@ def emit_release(godot_name: str, class_policy: dict) -> list[str]:
 # the rest are its arguments, one immediate generic call (it flushes the queue and returns the
 # decoded Variant); "immediate" -- the method itself as one immediate generic call; "queued" -- one
 # queued generic call (runs after the batch; answers null, as Godot's deferred call does);
-# "cached" -- a property read with one immediate call the first time, then kept (desktop captures
-# it at construction, so it still answers after the object is freed).
+# "cached" -- a property read with one immediate call the first time per handle, then kept
+# (WebHandleCache; desktop captures it at construction, so it still answers after the object is freed).
 WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] = {
     "Object": {
         "call": ("forward", "call", {}, "Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as\n   * a List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first."),
         "callv": ("forward", "callv", {"arg_array": "arguments"}, "Desktop's `callv`: [call] with the arguments as one list."),
         "call_deferred": ("queued", "callDeferred", {}, "Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch."),
         "get_method_argument_count": ("immediate", "getMethodArgumentCount", {}, ""),
-        "get_instance_id": ("cached", "instanceId", {}, "The engine instance id, read once and then kept (desktop captures it at construction), so it\n   * still answers after the object is freed."),
+        "get_instance_id": ("cached", "instanceId", {}, "The engine instance id, read once per handle and then kept (desktop captures it at\n   * construction): every wrapper of the handle answers without crossing again, also after the\n   * object is freed."),
     },
     # Review N2: Godot's own answer (a popup's window too), one immediate call.
     "Node": {
@@ -2005,7 +2005,10 @@ def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
                 raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: a cached property takes no arguments")
             field = f"cached{kotlin[0].upper()}{kotlin[1:]}"
             lines.append(f"  val {kotlin}: {ret}")
-            lines.append(f'    get() = {field} ?: (webGenericCall(this, "{godot}", emptyList()){cast}).also {{ {field} = it }}')
+            # Fix round 2: kept per handle (WebHandleCache), so a fresh wrapper of the handle does
+            # not cross again; the wrapper's own field still answers after the handle is released.
+            read = f'net.multigesture.kanama.web.WebHandleCache.read(handle.value, "{godot}") {{ webGenericCall(this, "{godot}", emptyList()) }}'
+            lines.append(f"    get() = {field} ?: ({read}{cast}).also {{ {field} = it }}")
             lines.append("")
             lines.append(f"  private var {field}: {ret}? = null")
         else:

@@ -360,7 +360,7 @@ internal object WebLocalUtilities {
         f.ret[0] = Mathf.degToRad(a1)
         f.retType = 3
       }
-      24 -> { // ease, within 1 ulp
+      24 -> { // ease, within 2^-52 absolute
         val a1 = f.slots[1][0]
         val a2 = f.slots[2][0]
         f.ret[0] = ease(a1, a2)
@@ -442,7 +442,7 @@ internal object WebLocalUtilities {
         f.ret[0] = Mathf.lerp(a1, a2, a3)
         f.retType = 3
       }
-      38 -> { // linear_to_db, within 1 ulp
+      38 -> { // linear_to_db, within 2 ulp
         val a1 = f.slots[1][0]
         f.ret[0] = kotlin.math.ln(a1) * 8.6858896380650365530225783783321
         f.retType = 3

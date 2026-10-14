@@ -19,6 +19,8 @@ internal class WebInstanceRegistry(
     var generation: Int = 0,
     var record: WebScriptRecord? = null,
     var pendingScriptId: Int? = null,
+    /** True once the 14-bit generation wrapped: every generation of the slot was minted. */
+    var wrapped: Boolean = false,
   )
 
   private val slots = mutableListOf(Slot()) // slot zero is never a valid handle
@@ -36,6 +38,7 @@ internal class WebInstanceRegistry(
   fun reserve(scriptId: Int): Int {
     val slotIndex = if (freeSlots.isEmpty()) allocateSlot() else freeSlots.removeLast()
     val slot = slots[slotIndex]
+    if (slot.generation >= GENERATION_MASK) slot.wrapped = true
     slot.generation = nextGeneration(slot.generation)
     slot.pendingScriptId = scriptId
     return encode(slotIndex, slot.generation)
@@ -104,14 +107,16 @@ internal class WebInstanceRegistry(
    * True for a script handle whose script was freed (task 138 item 22): a script-namespace handle
    * of a slot this registry minted that is no longer live or constructing. A browser handle, 0, a
    * slot this registry never had, or a generation the slot has not reached yet (never minted, so a
-   * corrupt handle, which stays fatal) is not one.
+   * corrupt handle, which stays fatal) is not one. Once the slot's generation wrapped (fix round
+   * 2), every generation was minted, so a stale handle from before the wrap reads as freed.
    */
   fun wasFreed(handle: Int): Boolean {
     if (handle <= 0 || handle and BROWSER_NAMESPACE != 0) return false
     val slotIndex = slotIndex(handle)
     if (slotIndex == 0 || slotIndex >= slots.size) return false
     val generation = generation(handle)
-    if (generation == 0 || generation > slots[slotIndex].generation) return false
+    val slot = slots[slotIndex]
+    if (generation == 0 || (generation > slot.generation && !slot.wrapped)) return false
     return !isLiveOrConstructing(handle)
   }
 
@@ -121,6 +126,7 @@ internal class WebInstanceRegistry(
     val slot = liveSlot(handle) ?: return false
     if (slot.record == null && slot.pendingScriptId == null) return false
     slot.record?.script?.close()
+    WebHandleCache.forget(handle)
     slot.record = null
     slot.pendingScriptId = null
     freeSlots += slotIndex
