@@ -47,6 +47,11 @@ async function snapshot(evaluate) {
         mobReady: classCount(".Mob"),
         mobInstantiations: bridge.match3PackedSceneInstantiations,
         mobAddChildCommands: bridge.match3AddChildCommands,
+        // Main.game_over dispatches so far (the player was hit; MobTimer is stopped).
+        gameOvers: (() => {
+          const main = Object.entries(bridge.exercisedMembers ?? {}).find(([n]) => n.endsWith(".Main"));
+          return main?.[1]?.["method#" + bridge.dodgeMethodId("game_over")] ?? 0;
+        })(),
         liveHandles: bridge.liveBrowserHandleCount,
         // Live handles broken down by kind. A per-entity leak is a RATIO -- handles
         // retained per entity created -- and a ratio needs no long window: one
@@ -128,7 +133,7 @@ async function callTeardown(evaluate, exportDir) {
 
 // Polls the snapshot until `predicate` holds or the window elapses, tracking the
 // running peak and returning { last, peak }. Robust to the page briefly returning null.
-async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
+async function observe(evaluate, seedPeak, windowMs, deadline, predicate, onSample = null) {
   const peak = { mobFrees: 0, ...seedPeak };
   let last = null;
   let prevLive = seedPeak.maxLiveHandles;
@@ -148,6 +153,12 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
       // window below is a generous ceiling rather than a fixed duration.
       if (snap.liveHandles < prevLive) peak.mobFrees += 1;
       prevLive = snap.liveHandles;
+      // A round restart queue_frees the whole mobs group: re-baseline so those drops are
+      // not counted as off-screen frees.
+      if (onSample && (await onSample(snap, peak))) {
+        await delay(300);
+        prevLive = (await snapshot(evaluate))?.liveHandles ?? prevLive;
+      }
       last = snap;
       trace(`mobs=${snap.mobInstantiations} addChild=${snap.mobAddChildCommands} live=${snap.liveHandles} max=${snap.maxLiveHandles} frees=${peak.mobFrees} crossings=${snap.crossings} errs=${snap.callbackErrors} canvas=${snap.canvasW}x${snap.canvasH} frames=${snap.frames} sim=${snap.simSeconds}s mobs@ ${snap.mobPositions}`);
       if (predicate && predicate(snap, peak)) break;
@@ -210,7 +221,31 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   // have actually been freed, which on a workstation is a few seconds. It is generous
   // because a software-GL host simulates less game time per wall-clock second, and the
   // assertion should wait for the evidence rather than be graded on the host's speed.
-  const gameplay = await observe(evaluate, seedPeak, 45_000, deadline, (snap, p) => p.mobFrees >= 2);
+  // Dodge is a real game: the player stands still at the start position and a mob can hit
+  // it within a second of the first spawn (Main.game_over stops MobTimer). How many mobs
+  // spawn before that is decided by the engine RNG, which Godot seeds randomly at startup.
+  // A hit is gameplay, not a bridge fault, so when the round ends before enough mobs have
+  // spawned, start another round (new_game) and keep counting -- the instantiation counter
+  // is cumulative across rounds.
+  let gameOversSeen = 0;
+  let roundRestarts = 0;
+  const restartAfterEarlyGameOver = async (snap, p) => {
+    if (snap.gameOvers <= gameOversSeen) return false;
+    gameOversSeen = snap.gameOvers;
+    if (p.mobInstantiations >= 4 || roundRestarts >= 3) return false;
+    roundRestarts += 1;
+    trace(`game over after ${p.mobInstantiations} mob(s): new round ${roundRestarts}`);
+    await callMain(evaluate, "new_game");
+    return true;
+  };
+  const gameplay = await observe(
+    evaluate,
+    seedPeak,
+    45_000,
+    deadline,
+    (snap, p) => p.mobFrees >= 2 && p.mobInstantiations >= 4,
+    restartAfterEarlyGameOver,
+  );
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
   trace(`gameplay: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);
