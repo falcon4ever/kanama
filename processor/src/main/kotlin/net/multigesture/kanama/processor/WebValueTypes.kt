@@ -266,6 +266,9 @@ internal object WebValueTypes {
       "\t# handle the dispatch releases; a call's result (task 129 E review B2) gets a handle"
     )
     appendLine("\t# of its kind owned by this script, as a generic call's object return does.")
+    appendLine(
+      "\t# A result naming a handle a dispatch lent (transient) promotes it: the dispatch keeps it."
+    )
     appendLine("\tif value == null:")
     appendLine("\t\treturn 0")
     appendLine("\tif value.has_method(\"_kanama_ensure_created\"):")
@@ -277,6 +280,8 @@ internal object WebValueTypes {
     appendLine("\t\tif held is Array:")
     appendLine("\t\t\theld = held[0].get_ref()")
     appendLine("\t\tif is_same(held, value):")
+    appendLine("\t\t\tif result:")
+    appendLine("\t\t\t\t_kanama_promote_handle(int(existing), value)")
     appendLine("\t\t\t_kanama_bridge.retainSharedHandle(int(existing), _kanama_handle)")
     appendLine("\t\t\treturn int(existing)")
     appendLine("\tif not result:")

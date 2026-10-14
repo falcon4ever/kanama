@@ -78,3 +78,20 @@ func live_handles(_unused: int) -> int:
 ## Task 129 E review S1: the live lambda-connection guards.
 func guard_count(_unused: int) -> int:
 	return KanamaWebHandles.signal_guards.size()
+
+## Task 129 E fix 2: an engine object no script tracks, handed to Kotlin by a signal dispatch
+## (`ping` rides the one-object arm, `ping2` the packed-arguments arm).
+signal ping(obj: Object)
+signal ping2(obj: Object, round: int)
+
+var _lent: Node
+
+func emit_ping(rounds: int) -> int:
+	if _lent == null:
+		_lent = Node.new()
+		_lent.name = "LentPing"
+		add_child(_lent)
+	for round in rounds:
+		ping.emit(_lent)
+		ping2.emit(_lent, round)
+	return rounds

@@ -407,7 +407,16 @@ proxies' shared `_kanama_object_handles` dictionary (through any installed proxy
 callback), so a later lookup of the same object mints a fresh handle instead of finding a dead one.
 A node freed from Kotlin (`queueFree`) stays a script error for every holder (`IllegalStateException:
 Stale Kanama Web browser handle=...`, catchable in the script). Signal arguments are not shared:
-each dispatch mints transient handles that the dispatching proxy owns and releases right after.
+each dispatch (a signal, `_input`, an object argument of a script method) lends Kotlin a transient
+handle that the dispatching proxy owns and releases right after (`_kanama_transient_handle` /
+`_kanama_release_transient`; the lent handles are `KanamaWebHandles.transient`). A call's result that
+names a lent object (`GD.instanceFromId(arg.instanceId)`, an element of `call("get_children")`, a
+`Callable`) promotes the handle instead: the dispatch no longer releases it, it stays with the
+dispatching script like a minted generic result, and a later dispatch of the same object lends the
+same handle (`KanamaWebHandles.promoted`), so the kept result stays valid and `== arg`. Typed lookups
+(`getNode`, `getChild`, colliders, group and child scans) skip lent and promoted handles and mint one
+of their own kind, since an Object handle carries no node snapshots. The web3d check
+`lentHandlesSurviveTheirDispatch` pins it.
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 
 **A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,

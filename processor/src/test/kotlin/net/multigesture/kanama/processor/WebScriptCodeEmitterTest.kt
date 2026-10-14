@@ -770,7 +770,12 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(mainProxy.contains("func _kanama_node_lookup(args: Array) -> int:"))
     assertTrue(mainProxy.contains("recordImmediateObjectHandle(script_handle)"))
-    assertTrue(mainProxy.contains("if is_same(_kanama_object_handles[existing_handle], value):"))
+    // Task 129 E fix 2: a typed lookup skips a handle a dispatch lent (it mints its own kind).
+    assertTrue(
+      mainProxy.contains(
+        "if is_same(_kanama_object_handles[existing_handle], value) and not _kanama_loose_handle(existing_handle):"
+      )
+    )
     assertTrue(mainProxy.contains("refreshNode2DSnapshot(result_handle,"))
     assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
@@ -1721,12 +1726,14 @@ class WebScriptCodeEmitterTest {
     assertFalse(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 7,"), proxy)
     assertFalse(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 8,"), proxy)
 
-    // Every transient handle the call minted is erased and released after the crossing.
+    // Every transient handle the call minted is erased and released after the crossing, unless a
+    // call's result promoted it (task 129 E fix 2).
     assertTrue(proxy.contains("for _kanama_packed_handle in _kanama_packed_transient:"), proxy)
-    assertTrue(
-      proxy.contains("\t\t_kanama_bridge.releaseTransientObjectHandle(_kanama_packed_handle)"),
-      proxy,
-    )
+    assertTrue(proxy.contains("\t\t_kanama_release_transient(_kanama_packed_handle)"), proxy)
+    assertTrue(proxy.contains("func _kanama_release_transient(handle: int) -> void:"), proxy)
+    assertTrue(proxy.contains("\tif KanamaWebHandles.transient.erase(handle):"), proxy)
+    assertTrue(proxy.contains("\t\t_kanama_bridge.releaseTransientObjectHandle(handle)"), proxy)
+    assertTrue(proxy.contains("func _kanama_promote_handle(handle: int, value: Object) -> void:"))
 
     // The helpers: the escape must be the SAME spelling the generic-call transport uses, and a
     // Kanama-scripted argument must cross as its script handle so Kotlin can resolve it.

@@ -684,7 +684,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // shared GD (Web-local utilities) against its GDScript twin within each row's ulp bound, str,
     // and isInstanceValid / instanceFromId (bits 64-256); review B2: objects in results keep their
     // tracked handle -- no growth over twenty rounds, and identity holds (bits 512-2048).
-    bundleContainersAndGd: bundleValues === 4095,
+    bundleContainersAndGd: (bundleValues & 4095) === 4095,
+    // Task 129 E fix 2: a result naming the object a signal dispatch lent Kotlin (instanceFromId,
+    // call("get_children")) keeps its handle after the handler -- it still answers (bit 4096), the
+    // result == the argument in every round on both dispatch arms (8192), and twenty more rounds
+    // leave the live handles where one left them (16384).
+    lentHandlesSurviveTheirDispatch: bundleValues >> 12 === 7,
     // callDeferred ran (1); task 138 item 22: a freed script-backed node throws desktop's
     // freed-instance error (2), and its late queued setter was skipped and reported (counted in
     // freedSetterReports); frames kept running (4); review S1: a lambda connection ended with its

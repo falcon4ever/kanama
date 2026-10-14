@@ -6,10 +6,13 @@ import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.GodotSignal
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Signal2
+import net.multigesture.kanama.api.SignalArgType
 import net.multigesture.kanama.builtins.godotFormat
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 
@@ -241,6 +244,57 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val kids = parent.call("get_children") as List<*>
     val index = kids.indexOfFirst { it == twin }
     if (index >= 0 && kids[index] == parent.getChild(index)) mask = mask or 4L
+    return mask
+  }
+
+  /**
+   * Task 129 E fix 2: a call's result naming the object a signal dispatch lent Kotlin keeps that
+   * handle after the handler returns (the dispatch used to release it under the kept result). Both
+   * dispatch arms (`ping`: the one-object arm, `ping2`: packed arguments) receive a node no script
+   * tracks; each handler keeps `GD.instanceFromId(arg.instanceId)` and the matching element of
+   * `call("get_children")`. 1 = every kept result still answers after the dispatches; 2 = in every
+   * round both results `==` the argument; 4 = twenty more rounds leave the live browser handles
+   * where the first round left them.
+   */
+  fun lentRows(value: Long): Long {
+    val twin = twin()
+    val kept = mutableListOf<GodotObject>()
+    var rounds = 0
+    var same = 0
+    val keep = { arg: GodotObject ->
+      rounds++
+      val found = GD.instanceFromId(arg.instanceId)
+      val child = (twin.call("get_children") as List<*>).firstOrNull { it == arg }
+      if (found != null) kept += found
+      if (child is GodotObject) kept += child
+      if (found == arg && child == arg) same++
+    }
+    val one = twin.signal("ping").connectObject(self) { keep(it) }
+    val packed =
+      Signal2(twin, "ping2", SignalArgType.VARIANT, SignalArgType.LONG).connect(self) { arg, _ ->
+        keep(arg as GodotObject)
+      }
+    WebExperimentalGenericCall.callImmediate(twin, "emit_ping", listOf(1L))
+    val before = twinLong("live_handles")
+    WebExperimentalGenericCall.callImmediate(twin, "emit_ping", listOf(20L))
+    val after = twinLong("live_handles")
+    one?.close()
+    packed.close()
+    var mask = 0L
+    val answering =
+      kept.count {
+        try {
+          GD.isInstanceValid(it) && it.call("get_name") == "LentPing"
+        } catch (e: Throwable) {
+          false
+        }
+      }
+    if (kept.size == 4 * 21 && answering == kept.size) mask = mask or 1L
+    else GD.print("lent rows: ${kept.size} kept, $answering answer")
+    if (rounds == 2 * 21 && same == rounds) mask = mask or 2L
+    else GD.print("lent rows: $same of $rounds rounds kept identity")
+    if (after == before) mask = mask or 4L
+    else GD.print("lent rows: live handles $before -> $after")
     return mask
   }
 

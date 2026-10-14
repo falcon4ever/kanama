@@ -192,7 +192,10 @@ Variant `call(method, vararg args)`, `callv`, `callDeferred(method, vararg args)
 captured). The Web bridge now carries a `List` / `Map` argument (`godotFormat`) and an `Array` /
 `Dictionary` / `Callable` / `Signal` result; an object in a result keeps the handle that already
 tracks it, so a repeated `GD.instanceFromId` or `call("get_children")` neither grows the handle
-table nor changes identity (`call("get_children")[0] == getChild(0)`).
+table nor changes identity (`call("get_children")[0] == getChild(0)`). An object a signal handler
+(or `_input`) receives stays valid after the handler returns once a result named it
+(`kept = GD.instanceFromId(arg.instanceId)`, an element of `call("get_children")`), and that result
+`== arg`, as on desktop.
 
 Behaviour changes on Web, from the shared code:
 - `Mathf.inverseLerp(from, to, weight)` with `to == from` answers Godot's NaN / infinity (it
