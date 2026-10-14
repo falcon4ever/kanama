@@ -710,6 +710,16 @@ def main() -> int:
         f"[sync_kdoc] godot docs {args.godot_docs}: {len(module_dirs)} module doc dir(s) "
         f"({'modules/*/doc_classes' if source_layout else 'not a doc/classes source layout: module docs are not searched'})"
     )
+    if args.scope in ("all", "api") and not source_layout:
+        # rc stays 0 (a docs directory copied out of a checkout is a legitimate input for the core classes), but the
+        # run must not read as a full check: the wrappers of module-defined classes get no verdict at all.
+        print(
+            f"[sync_kdoc] WARNING: {args.godot_docs} is not shaped `<godot>/doc/classes`, so the engine-module classes "
+            f"(ZIPReader, ZIPPacker, WebSocketPeer, WebRTC*, CSG*, ...; documented under `<godot>/modules/*/doc_classes`) "
+            f"are NOT checked: their KDoc is neither verified nor synced. Point --godot-docs / GODOT_DOCS at "
+            f"`<godot checkout>/doc/classes` for the full check.",
+            file=sys.stderr,
+        )
     if args.scope in ("all", "api") and source_layout and not module_dirs:
         print(
             f"[sync_kdoc] FAIL: {args.godot_docs} looks like a Godot source checkout's doc/classes but 0 module doc dirs "
