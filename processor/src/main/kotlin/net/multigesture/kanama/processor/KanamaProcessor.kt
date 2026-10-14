@@ -2905,7 +2905,7 @@ private fun StringBuilder.appendMethodHelpers(simpleName: String, methods: List<
       appendLine("        $instance.${method.kotlinName}($directArgs)")
       appendLine()
       appendLine(
-        "    fun ${method.kotlinName}($target: net.multigesture.kanama.api.GodotObject$params): $returnType? ="
+        "    fun ${method.kotlinName}($target: net.multigesture.kanama.api.GodotObject$params): ${method.nullableReturnKotlinType} ="
       )
       appendLine(
         "        $target.kotlinScriptInstance<$simpleName>()?.let { ${method.kotlinName}(it$helperArgs) }"
@@ -5459,8 +5459,9 @@ internal class ScriptCodeEmitter(
       // Variant is a virtual RETURN shape (task 13); the raw decoded Any? is the natural read.
       TypeMapping.VARIANT ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) }"
-      // task 29 return-only shapes: never validated as args, but the when must be exhaustive —
-      // decode via readVariantScalar with the family's typed cast (a mismatch is an error naming
+      // task 29 return-only shapes (packed arrays, Dictionary): never validated as args, but the
+      // when must be exhaustive — decode via readVariantScalar with the family's typed cast; a
+      // mismatch falls back to an empty value (unlike the value types below, which error naming
       // the property/argument).
       TypeMapping.PACKED_BYTE_ARRAY ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? ByteArray ?: ByteArray(0) }"
@@ -5587,11 +5588,11 @@ internal class ScriptCodeEmitter(
    * a stale `.tscn` saved before the types changed. The decode must not `ClassCastException`: that
    * escapes an FFM upcall and aborts the process (the very hole task 50's containment now catches,
    * but containment is defence in depth — the read is fail-soft here *by construction*, like
-   * `variantReadExpr`'s `as?`/fallback and the typed-array/`readDictionaryScalars` drops). A key
-   * that can't be decoded skips the entry; a value that can't be decoded is nulled for a nullable
-   * `V?` (C#-parity: preserve the key) or drops the entry for a non-null `V` (Kotlin cannot hold
-   * the null). Nullable *object* values are rejected earlier in KSP, so only scalar/value/enum
-   * values reach the nullable-preserving branch.
+   * `variantReadExpr`'s `as?`/empty fallback for the packed-array / Array / Dictionary shapes, and
+   * the typed-array/`readDictionaryScalars` drops). A key that can't be decoded skips the entry; a
+   * value that can't be decoded is nulled for a nullable `V?` (C#-parity: preserve the key) or
+   * drops the entry for a non-null `V` (Kotlin cannot hold the null). Nullable *object* values are
+   * rejected earlier in KSP, so only scalar/value/enum values reach the nullable-preserving branch.
    */
   private fun mapReadPropertyExpr(
     property: ScriptPropertyModel,

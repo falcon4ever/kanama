@@ -55,9 +55,18 @@ internal data class MethodModel(
     get() =
       returnGodotEnum?.kotlinFqName
         ?: returnType?.kotlinType?.let {
-          if (returnNullable && returnType == TypeMapping.OBJECT) "$it?" else it
+          if (returnNullable && returnType == TypeMapping.OBJECT) it.asNullableType() else it
         }
+
+  /** [returnKotlinType] as the nullable type the `target:` helper returns, or null for `Unit`. */
+  val nullableReturnKotlinType: String?
+    get() = returnKotlinType?.asNullableType()
 }
+
+/**
+ * Appends `?` unless the type already ends in one (`GodotObject?` must not become `GodotObject??`).
+ */
+internal fun String.asNullableType(): String = if (endsWith("?")) this else "$this?"
 
 internal data class RpcModel(
   val mode: Int,

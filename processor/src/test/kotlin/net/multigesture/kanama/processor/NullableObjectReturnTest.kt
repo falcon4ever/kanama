@@ -49,4 +49,34 @@ class NullableObjectReturnTest {
     assertTrue(source.contains("fun pick(instance: ObjProbe): $godotObject? ="), source)
     assertFalse(source.contains("fun pick(instance: ObjProbe): $godotObject ="), source)
   }
+
+  @Test
+  fun theTargetHelperDoesNotDoubleTheQuestionMarkOnDesktop() {
+    for (nullable in listOf(true, false)) {
+      val source = ScriptCodeEmitter(model(nullable), "ObjProbeScriptRegistrar").emit()
+      assertFalse(source.contains("??"), source)
+      assertTrue(source.contains("fun pick(target: $godotObject): $godotObject? ="), source)
+    }
+  }
+
+  @Test
+  fun theWebMethodHelpersDoNotDoubleTheQuestionMark() {
+    for (nullable in listOf(true, false)) {
+      val emitter =
+        WebScriptCodeEmitter(listOf(WebScriptInput(model(nullable), "res://ObjProbe.kt")))
+      val constants = emitter.constantsSource()
+      assertFalse(constants.contains("??"), constants)
+      assertTrue(constants.contains("fun pick(target: $godotObject): $godotObject? ="), constants)
+      assertEquals(
+        nullable,
+        constants.contains(
+          "fun pick(instance: net.multigesture.kanama.test.ObjProbe): $godotObject? ="
+        ),
+        constants,
+      )
+      val registry = emitter.registrySource()
+      assertFalse(registry.contains("??"), registry)
+      emitter.proxySources().forEach { assertFalse(it.source.contains("??"), it.source) }
+    }
+  }
 }
