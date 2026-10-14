@@ -1903,6 +1903,13 @@ GD_ENTRIES: list[tuple[str, str, str]] = [
     ("GD.min", "GD.min(2.5, -1.0, 7.0)", "min(2.5, -1.0, 7.0)"),
     ("GD.lerp", "GD.lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25)", "lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25)"),
     ("GD.clamp", "GD.clamp(7L, 0L, 5L)", "clamp(7, 0, 5)"),
+    # min > max: the untyped clamp is the Variant one (`< min` then `> max`, so max wins); the typed
+    # clampf / clampi keep Godot's typed result (min wins).
+    ("GD.clamp(Double, min>max)", "GD.clamp(0.0, 3.0, 1.0)", "clamp(0.0, 3.0, 1.0)"),
+    ("GD.clamp(Long, min>max)", "GD.clamp(0L, 3L, 1L)", "clamp(0, 3, 1)"),
+    ("GD.clamp(Int, min>max)", "GD.clamp(0, 3, 1)", "clamp(0, 3, 1)"),
+    ("GD.clampf(min>max)", "GD.clampf(0.0, 3.0, 1.0)", "clampf(0.0, 3.0, 1.0)"),
+    ("GD.clampi(min>max)", "GD.clampi(0L, 3L, 1L)", "clampi(0, 3, 1)"),
     ("GD.abs", "GD.abs(-3L)", "abs(-3)"),
     ("GD.abs(Vector3i)", "GD.abs(Vector3i(-1, 2, -3))", "abs(Vector3i(-1, 2, -3))"),
     ("GD.max(Double)", "GD.max(1.5, 2.0)", "max(1.5, 2.0)"),

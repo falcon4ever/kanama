@@ -39,6 +39,14 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — `GD.clamp` on numbers matches GDScript when `min` is greater than `max`
+
+`GD.clamp(Double, Double, Double)` (and the `Long` and `Int` overloads) called the typed `clampf` /
+`clampi`, so `GD.clamp(0.0, 3.0, 1.0)` was `3.0` in Kotlin and `1.0` in GDScript. GDScript's `clamp`
+sets the value to `min` if it is less, then to `max` if it is greater; the three overloads now do the
+same, in Kotlin on every platform (no engine call). `clampf` and `clampi` keep Godot's typed result.
+Both are pinned against GDScript in the runtime smoke's parity rows.
+
 ### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
 
 Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now

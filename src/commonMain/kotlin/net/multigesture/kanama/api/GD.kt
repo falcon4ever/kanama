@@ -289,6 +289,11 @@ object GD {
      * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
      * values that can be compared with the less than and greater than operators will work.
      *
+     * The `Double`, `Long` and `Int` overloads do the same in Kotlin on every platform: `value` is set
+     * to `min` if it is less, then to `max` if it is greater, so with `min > max` the result is `max`
+     * and `clamp(0.0, 3.0, 1.0)` is `1.0`, as in GDScript. `clampf` and `clampi` keep Godot's typed
+     * result (`3.0` there).
+     *
      * Generated from Godot docs: @GlobalScope.clamp
      */
     fun clamp(value: Any?, min: Any?, max: Any?): Any? =
@@ -298,25 +303,55 @@ object GD {
      * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
      * values that can be compared with the less than and greater than operators will work.
      *
+     * The `Double`, `Long` and `Int` overloads do the same in Kotlin on every platform: `value` is set
+     * to `min` if it is less, then to `max` if it is greater, so with `min > max` the result is `max`
+     * and `clamp(0.0, 3.0, 1.0)` is `1.0`, as in GDScript. `clampf` and `clampi` keep Godot's typed
+     * result (`3.0` there).
+     *
      * Generated from Godot docs: @GlobalScope.clamp
      */
-    fun clamp(value: Double, min: Double, max: Double): Double = clampf(value, min, max)
+    fun clamp(value: Double, min: Double, max: Double): Double {
+        var result = value
+        if (result < min) result = min
+        if (result > max) result = max
+        return result
+    }
 
     /**
      * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
      * values that can be compared with the less than and greater than operators will work.
      *
+     * The `Double`, `Long` and `Int` overloads do the same in Kotlin on every platform: `value` is set
+     * to `min` if it is less, then to `max` if it is greater, so with `min > max` the result is `max`
+     * and `clamp(0.0, 3.0, 1.0)` is `1.0`, as in GDScript. `clampf` and `clampi` keep Godot's typed
+     * result (`3.0` there).
+     *
      * Generated from Godot docs: @GlobalScope.clamp
      */
-    fun clamp(value: Long, min: Long, max: Long): Long = clampi(value, min, max)
+    fun clamp(value: Long, min: Long, max: Long): Long {
+        var result = value
+        if (result < min) result = min
+        if (result > max) result = max
+        return result
+    }
 
     /**
      * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
      * values that can be compared with the less than and greater than operators will work.
      *
+     * The `Double`, `Long` and `Int` overloads do the same in Kotlin on every platform: `value` is set
+     * to `min` if it is less, then to `max` if it is greater, so with `min > max` the result is `max`
+     * and `clamp(0.0, 3.0, 1.0)` is `1.0`, as in GDScript. `clampf` and `clampi` keep Godot's typed
+     * result (`3.0` there).
+     *
      * Generated from Godot docs: @GlobalScope.clamp
      */
-    fun clamp(value: Int, min: Int, max: Int): Int = clampi(value.toLong(), min.toLong(), max.toLong()).toInt()
+    fun clamp(value: Int, min: Int, max: Int): Int {
+        var result = value
+        if (result < min) result = min
+        if (result > max) result = max
+        return result
+    }
 
     /**
      * Clamps the `value`, returning a `float` not less than `min` and not more than `max`.
