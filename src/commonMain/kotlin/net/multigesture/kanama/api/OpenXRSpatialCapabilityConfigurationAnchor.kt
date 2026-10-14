@@ -6,9 +6,17 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Configuration header for spatial anchors.
+ *
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAnchor
  */
 class OpenXRSpatialCapabilityConfigurationAnchor(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
+    /**
+     * Returns the components enabled by this configuration. Note: Only valid after this configuration
+     * was used to create a spatial context.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAnchor.get_enabled_components
+     */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)

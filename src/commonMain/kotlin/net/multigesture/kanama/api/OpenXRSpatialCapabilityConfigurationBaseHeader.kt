@@ -6,14 +6,28 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Wrapper base class for OpenXR Spatial Capability Configuration headers.
+ *
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationBaseHeader
  */
 open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Returns `true` if this object contains a valid configuration that can be used when calling
+     * `OpenXRSpatialEntityExtension.create_spatial_context`.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationBaseHeader.has_valid_configuration
+     */
     fun hasValidConfiguration(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasValidConfigurationBind, segment)
     }
 
+    /**
+     * Gets a pointer to the `XrSpatialCapabilityConfigurationBaseHeaderEXT` struct. Note: This method
+     * is intended to be used from GDExtensions.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationBaseHeader.get_configuration
+     */
     fun getConfiguration(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getConfigurationBind, segment)

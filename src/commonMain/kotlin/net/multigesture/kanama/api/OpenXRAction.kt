@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * An OpenXR action.
+ *
  * Generated from Godot docs: OpenXRAction
  */
 class OpenXRAction(handle: GodotHandle) : Resource(handle) {
@@ -29,41 +31,93 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
         @JvmName("setToplevelPathsProperty")
         set(value) = setToplevelPaths(value)
 
+    /**
+     * The localized description of this action.
+     *
+     * Generated from Godot docs: OpenXRAction.set_localized_name
+     */
     fun setLocalizedName(localizedName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLocalizedNameBind, segment, localizedName)
     }
 
+    /**
+     * The localized description of this action.
+     *
+     * Generated from Godot docs: OpenXRAction.get_localized_name
+     */
     fun getLocalizedName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
     }
 
+    /**
+     * The type of action.
+     *
+     * Generated from Godot docs: OpenXRAction.set_action_type
+     */
     fun setActionType(actionType: OpenXRAction.ActionType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setActionTypeBind, segment, actionType.value)
     }
 
+    /**
+     * The type of action.
+     *
+     * Generated from Godot docs: OpenXRAction.get_action_type
+     */
     fun getActionType(): OpenXRAction.ActionType {
         checkOpen()
         return OpenXRAction.ActionType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getActionTypeBind, segment))
     }
 
+    /**
+     * A collections of toplevel paths to which this action can be bound.
+     *
+     * Generated from Godot docs: OpenXRAction.set_toplevel_paths
+     */
     fun setToplevelPaths(toplevelPaths: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setToplevelPathsBind, segment, toplevelPaths)
     }
 
+    /**
+     * A collections of toplevel paths to which this action can be bound.
+     *
+     * Generated from Godot docs: OpenXRAction.get_toplevel_paths
+     */
     fun getToplevelPaths(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getToplevelPathsBind, segment)
     }
 
+    /**
+     * Godot's `OpenXRAction.ActionType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`OpenXRAction.ActionType.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRAction.ActionType
+     */
     @JvmInline
     value class ActionType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * This action provides a boolean value.
+             *
+             * Generated from Godot docs: OpenXRAction.OPENXR_ACTION_BOOL
+             */
             val BOOL: ActionType get() = ActionType(0L)
+            /**
+             * This action provides a float value between `0.0` and `1.0` for any analog input such as
+             * triggers.
+             *
+             * Generated from Godot docs: OpenXRAction.OPENXR_ACTION_FLOAT
+             */
             val FLOAT: ActionType get() = ActionType(1L)
+            /**
+             * This action provides a `Vector2` value and can be bound to embedded trackpads and joysticks.
+             *
+             * Generated from Godot docs: OpenXRAction.OPENXR_ACTION_VECTOR2
+             */
             val VECTOR2: ActionType get() = ActionType(2L)
             val POSE: ActionType get() = ActionType(3L)
         }

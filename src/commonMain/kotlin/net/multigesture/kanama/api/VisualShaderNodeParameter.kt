@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A base type for the parameters within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeParameter
  */
 open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -29,43 +31,108 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
         @JvmName("setInstanceIndexProperty")
         set(value) = setInstanceIndex(value)
 
+    /**
+     * Name of the parameter, by which it can be accessed through the `ShaderMaterial` properties.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.set_parameter_name
+     */
     fun setParameterName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setParameterNameBind, segment, name)
     }
 
+    /**
+     * Name of the parameter, by which it can be accessed through the `ShaderMaterial` properties.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.get_parameter_name
+     */
     fun getParameterName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)
     }
 
+    /**
+     * Defines the scope of the parameter.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.set_qualifier
+     */
     fun setQualifier(qualifier: VisualShaderNodeParameter.Qualifier) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setQualifierBind, segment, qualifier.value)
     }
 
+    /**
+     * Defines the scope of the parameter.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.get_qualifier
+     */
     fun getQualifier(): VisualShaderNodeParameter.Qualifier {
         checkOpen()
         return VisualShaderNodeParameter.Qualifier(ObjectCalls.ptrcallNoArgsRetLong(Binds.getQualifierBind, segment))
     }
 
+    /**
+     * The index within 0-15 range, which is used to avoid clashes when shader used on multiple
+     * materials.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.set_instance_index
+     */
     fun setInstanceIndex(instanceIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInstanceIndexBind, segment, instanceIndex)
     }
 
+    /**
+     * The index within 0-15 range, which is used to avoid clashes when shader used on multiple
+     * materials.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.get_instance_index
+     */
     fun getInstanceIndex(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstanceIndexBind, segment)
     }
 
+    /**
+     * Godot's `VisualShaderNodeParameter.Qualifier` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeParameter.Qualifier.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeParameter.Qualifier
+     */
     @JvmInline
     value class Qualifier(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * The parameter will be tied to the `ShaderMaterial` using this shader.
+             *
+             * Generated from Godot docs: VisualShaderNodeParameter.QUAL_NONE
+             */
             val NONE: Qualifier get() = Qualifier(0L)
+            /**
+             * The parameter will use a global value, defined in Project Settings.
+             *
+             * Generated from Godot docs: VisualShaderNodeParameter.QUAL_GLOBAL
+             */
             val GLOBAL: Qualifier get() = Qualifier(1L)
+            /**
+             * The parameter will be tied to the node with attached `ShaderMaterial` using this shader.
+             *
+             * Generated from Godot docs: VisualShaderNodeParameter.QUAL_INSTANCE
+             */
             val INSTANCE: Qualifier get() = Qualifier(2L)
+            /**
+             * The parameter will be tied to the node with attached `ShaderMaterial` using this shader. Enables
+             * setting a `instance_index` property.
+             *
+             * Generated from Godot docs: VisualShaderNodeParameter.QUAL_INSTANCE_INDEX
+             */
             val INSTANCE_INDEX: Qualifier get() = Qualifier(3L)
+            /**
+             * Represents the size of the `Qualifier` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeParameter.QUAL_MAX
+             */
             val MAX: Qualifier get() = Qualifier(4L)
         }
     }

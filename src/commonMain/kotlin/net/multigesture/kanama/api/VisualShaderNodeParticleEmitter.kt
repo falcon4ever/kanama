@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A base class for particle emitters.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleEmitter
  */
 open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -16,11 +18,23 @@ open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNo
         @JvmName("setMode2dProperty")
         set(value) = setMode2d(value)
 
+    /**
+     * If `true`, the result of this emitter is projected to 2D space. By default it is `false` and
+     * meant for use in 3D space.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleEmitter.set_mode_2d
+     */
     fun setMode2d(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setMode2dBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the result of this emitter is projected to 2D space. By default it is `false` and
+     * meant for use in 3D space.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleEmitter.is_mode_2d
+     */
     fun isMode2d(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMode2dBind, segment)

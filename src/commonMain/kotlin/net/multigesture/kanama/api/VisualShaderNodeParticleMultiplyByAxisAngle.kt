@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader helper node for multiplying position and rotation of particles.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleMultiplyByAxisAngle
  */
 class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -16,11 +18,21 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
         @JvmName("setDegreesModeProperty")
         set(value) = setDegreesMode(value)
 
+    /**
+     * If `true`, the angle will be interpreted in degrees instead of radians.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMultiplyByAxisAngle.set_degrees_mode
+     */
     fun setDegreesMode(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDegreesModeBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the angle will be interpreted in degrees instead of radians.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMultiplyByAxisAngle.is_degrees_mode
+     */
     fun isDegreesMode(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDegreesModeBind, segment)

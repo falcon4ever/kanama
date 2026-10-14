@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A `Cubemap` sampling node to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeCubemap
  */
 class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -30,51 +32,133 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setTextureTypeProperty")
         set(value) = setTextureType(value)
 
+    /**
+     * Defines which source should be used for the sampling.
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.set_source
+     */
     fun setSource(value: VisualShaderNodeCubemap.Source) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
     }
 
+    /**
+     * Defines which source should be used for the sampling.
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.get_source
+     */
     fun getSource(): VisualShaderNodeCubemap.Source {
         checkOpen()
         return VisualShaderNodeCubemap.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
     }
 
+    /**
+     * The `Cubemap` texture to sample when using `Source.TEXTURE` as `source`.
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.set_cube_map
+     */
     fun setCubeMap(value: TextureLayered?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setCubeMapBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The `Cubemap` texture to sample when using `Source.TEXTURE` as `source`.
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.get_cube_map
+     */
     fun getCubeMap(): TextureLayered? {
         checkOpen()
         return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCubeMapBind, segment))
     }
 
+    /**
+     * Defines the type of data provided by the source texture.
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.set_texture_type
+     */
     fun setTextureType(value: VisualShaderNodeCubemap.TextureType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setTextureTypeBind, segment, value.value)
     }
 
+    /**
+     * Defines the type of data provided by the source texture.
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.get_texture_type
+     */
     fun getTextureType(): VisualShaderNodeCubemap.TextureType {
         checkOpen()
         return VisualShaderNodeCubemap.TextureType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureTypeBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeCubemap.Source` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VisualShaderNodeCubemap.Source.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.Source
+     */
     @JvmInline
     value class Source(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Use the `Cubemap` set via `cube_map`. If this is set to `source`, the `samplerCube` port is
+             * ignored.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.SOURCE_TEXTURE
+             */
             val TEXTURE: Source get() = Source(0L)
+            /**
+             * Use the `Cubemap` sampler reference passed via the `samplerCube` port. If this is set to
+             * `source`, the `cube_map` texture is ignored.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.SOURCE_PORT
+             */
             val PORT: Source get() = Source(1L)
+            /**
+             * Represents the size of the `Source` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.SOURCE_MAX
+             */
             val MAX: Source get() = Source(2L)
         }
     }
 
+    /**
+     * Godot's `VisualShaderNodeCubemap.TextureType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeCubemap.TextureType.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeCubemap.TextureType
+     */
     @JvmInline
     value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * No hints are added to the uniform declaration.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.TYPE_DATA
+             */
             val DATA: TextureType get() = TextureType(0L)
+            /**
+             * Adds `source_color` as hint to the uniform declaration for proper conversion from nonlinear sRGB
+             * encoding to linear encoding.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.TYPE_COLOR
+             */
             val COLOR: TextureType get() = TextureType(1L)
+            /**
+             * Adds `hint_normal` as hint to the uniform declaration, which internally converts the texture for
+             * proper usage as normal map.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.TYPE_NORMAL_MAP
+             */
             val NORMAL_MAP: TextureType get() = TextureType(2L)
+            /**
+             * Represents the size of the `TextureType` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeCubemap.TYPE_MAX
+             */
             val MAX: TextureType get() = TextureType(3L)
         }
     }

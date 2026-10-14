@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Returns the length of a `Vector3` within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeVectorLen
  */
 class VisualShaderNodeVectorLen(handle: GodotHandle) : VisualShaderNodeVectorBase(handle) {

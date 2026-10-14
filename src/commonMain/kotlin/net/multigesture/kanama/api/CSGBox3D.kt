@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * A CSG Box shape.
+ *
  * Generated from Godot docs: CSGBox3D
  */
 class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
@@ -24,18 +26,38 @@ class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
 
+    /**
+     * The box's width, height and depth.
+     *
+     * Generated from Godot docs: CSGBox3D.set_size
+     */
     fun setSize(size: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
+    /**
+     * The box's width, height and depth.
+     *
+     * Generated from Godot docs: CSGBox3D.get_size
+     */
     fun getSize(): Vector3 {
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
+    /**
+     * The material used to render the box.
+     *
+     * Generated from Godot docs: CSGBox3D.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The material used to render the box.
+     *
+     * Generated from Godot docs: CSGBox3D.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }

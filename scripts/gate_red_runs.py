@@ -653,6 +653,9 @@ case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_she
 case("sync_kdoc_from_godot_docs.py --check", py("sync_kdoc_from_godot_docs.py", "--godot-docs", os.environ.get("GODOT_DOCS", "/nonexistent"), "--check"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun getParent(): Node? {", "    /** red run: a KDoc block the Godot class docs do not contain */\n    fun getParent(): Node? {")],
      "changed_files=1", "a wrapper KDoc block differs from the Godot class docs", requires_env="GODOT_DOCS")
+case("sync_kdoc_from_godot_docs.py --check (module class)", py("sync_kdoc_from_godot_docs.py", "--godot-docs", os.environ.get("GODOT_DOCS", "/nonexistent"), "--check"),
+     [Edit(f"{COMMON}/api/ZIPReader.kt", " * Opens the zip archive at the given `path` and reads its file index.", " * Opens the zip archive (red run: hand-edited KDoc).")],
+     "changed_files=1", "a KDoc block of a module-defined class (ZIPReader, documented under modules/zip/doc_classes) is hand-edited (task 138 item 25)", requires_env="GODOT_DOCS")
 
 # ---- shell gates ---------------------------------------------------------------------------------------------
 case("audit_swallowed_failures.py", py("audit_swallowed_failures.py"),

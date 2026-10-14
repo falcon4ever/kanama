@@ -8,13 +8,25 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Binding modifier editor.
+ *
  * Generated from Godot docs: OpenXRBindingModifierEditor
  */
 class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) {
+    /**
+     * Returns the `OpenXRBindingModifier` currently being edited.
+     *
+     * Generated from Godot docs: OpenXRBindingModifierEditor.get_binding_modifier
+     */
     fun getBindingModifier(): OpenXRBindingModifier? {
         return OpenXRBindingModifier.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getBindingModifierBind, segment))
     }
 
+    /**
+     * Setup this editor for the provided `action_map` and `binding_modifier`.
+     *
+     * Generated from Godot docs: OpenXRBindingModifierEditor.setup
+     */
     fun setup(actionMap: OpenXRActionMap?, bindingModifier: OpenXRBindingModifier?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, bindingModifier?.requireOpenHandle() ?: NULL_SEGMENT)
     }

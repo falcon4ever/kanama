@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that represents a "varying" shader value.
+ *
  * Generated from Godot docs: VisualShaderNodeVarying
  */
 open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -22,21 +24,41 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
         @JvmName("setVaryingTypeProperty")
         set(value) = setVaryingType(value)
 
+    /**
+     * Name of the variable. Must be unique.
+     *
+     * Generated from Godot docs: VisualShaderNodeVarying.set_varying_name
+     */
     fun setVaryingName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setVaryingNameBind, segment, name)
     }
 
+    /**
+     * Name of the variable. Must be unique.
+     *
+     * Generated from Godot docs: VisualShaderNodeVarying.get_varying_name
+     */
     fun getVaryingName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getVaryingNameBind, segment)
     }
 
+    /**
+     * Type of the variable. Determines where the variable can be accessed.
+     *
+     * Generated from Godot docs: VisualShaderNodeVarying.set_varying_type
+     */
     fun setVaryingType(type: VisualShader.VaryingType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVaryingTypeBind, segment, type.value)
     }
 
+    /**
+     * Type of the variable. Determines where the variable can be accessed.
+     *
+     * Generated from Godot docs: VisualShaderNodeVarying.get_varying_type
+     */
     fun getVaryingType(): VisualShader.VaryingType {
         checkOpen()
         return VisualShader.VaryingType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVaryingTypeBind, segment))

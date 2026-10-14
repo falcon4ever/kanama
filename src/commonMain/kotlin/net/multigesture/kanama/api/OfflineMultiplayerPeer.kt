@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A `MultiplayerPeer` which is always connected and acts as a server.
+ *
  * Generated from Godot docs: OfflineMultiplayerPeer
  */
 class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {

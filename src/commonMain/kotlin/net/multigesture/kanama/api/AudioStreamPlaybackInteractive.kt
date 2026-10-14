@@ -6,19 +6,37 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Playback component of `AudioStreamInteractive`.
+ *
  * Generated from Godot docs: AudioStreamPlaybackInteractive
  */
 class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(handle) {
+    /**
+     * Switch to a clip (by name).
+     *
+     * Generated from Godot docs: AudioStreamPlaybackInteractive.switch_to_clip_by_name
+     */
     fun switchToClipByName(clipName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameArg(Binds.switchToClipByNameBind, segment, clipName)
     }
 
+    /**
+     * Switch to a clip (by index).
+     *
+     * Generated from Godot docs: AudioStreamPlaybackInteractive.switch_to_clip
+     */
     fun switchToClip(clipIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.switchToClipBind, segment, clipIndex)
     }
 
+    /**
+     * Return the index of the currently playing clip. You can use this to get the name of the
+     * currently playing clip with `AudioStreamInteractive.get_clip_name`.
+     *
+     * Generated from Godot docs: AudioStreamPlaybackInteractive.get_current_clip_index
+     */
     fun getCurrentClipIndex(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentClipIndexBind, segment)

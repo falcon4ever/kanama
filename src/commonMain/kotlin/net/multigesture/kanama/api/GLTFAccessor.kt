@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents a glTF accessor.
+ *
  * Generated from Godot docs: GLTFAccessor
  */
 class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
@@ -102,193 +104,509 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSparseValuesByteOffsetProperty")
         set(value) = setSparseValuesByteOffset(value)
 
+    /**
+     * Serializes this GLTFAccessor instance into a `Dictionary`.
+     *
+     * Generated from Godot docs: GLTFAccessor.to_dictionary
+     */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
+    /**
+     * The index of the buffer view this accessor is referencing. If `-1`, this accessor is not
+     * referencing any buffer view.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_buffer_view
+     */
     fun getBufferView(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferViewBind, segment)
     }
 
+    /**
+     * The index of the buffer view this accessor is referencing. If `-1`, this accessor is not
+     * referencing any buffer view.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_buffer_view
+     */
     fun setBufferView(bufferView: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBufferViewBind, segment, bufferView)
     }
 
+    /**
+     * The offset relative to the start of the buffer view in bytes.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_byte_offset
+     */
     fun getByteOffset(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
     }
 
+    /**
+     * The offset relative to the start of the buffer view in bytes.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_byte_offset
+     */
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteOffsetBind, segment, byteOffset)
     }
 
+    /**
+     * The glTF component type as an enum. See `GLTFComponentType` for possible values. Within the core
+     * glTF specification, a value of 5125 or "UNSIGNED_INT" must not be used for any accessor that is
+     * not referenced by mesh.primitive.indices.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_component_type
+     */
     fun getComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
         return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment))
     }
 
+    /**
+     * The glTF component type as an enum. See `GLTFComponentType` for possible values. Within the core
+     * glTF specification, a value of 5125 or "UNSIGNED_INT" must not be used for any accessor that is
+     * not referenced by mesh.primitive.indices.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_component_type
+     */
     fun setComponentType(componentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setComponentTypeBind, segment, componentType.value)
     }
 
+    /**
+     * Specifies whether integer data values are normalized before usage.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_normalized
+     */
     fun getNormalized(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizedBind, segment)
     }
 
+    /**
+     * Specifies whether integer data values are normalized before usage.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_normalized
+     */
     fun setNormalized(normalized: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizedBind, segment, normalized)
     }
 
+    /**
+     * The number of elements referenced by this accessor.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_count
+     */
     fun getCount(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCountBind, segment)
     }
 
+    /**
+     * The number of elements referenced by this accessor.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_count
+     */
     fun setCount(count: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCountBind, segment, count)
     }
 
+    /**
+     * The glTF accessor type, as an enum.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_accessor_type
+     */
     fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
         return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
     }
 
+    /**
+     * The glTF accessor type, as an enum.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_accessor_type
+     */
     fun setAccessorType(accessorType: GLTFAccessor.GLTFAccessorType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAccessorTypeBind, segment, accessorType.value)
     }
 
+    /**
+     * The glTF accessor type, as an `int`. Possible values are `0` for "SCALAR", `1` for "VEC2", `2`
+     * for "VEC3", `3` for "VEC4", `4` for "MAT2", `5` for "MAT3", and `6` for "MAT4".
+     *
+     * Generated from Godot docs: GLTFAccessor.get_type
+     */
     fun getType(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTypeBind, segment)
     }
 
+    /**
+     * The glTF accessor type, as an `int`. Possible values are `0` for "SCALAR", `1` for "VEC2", `2`
+     * for "VEC3", `3` for "VEC4", `4` for "MAT2", `5` for "MAT3", and `6` for "MAT4".
+     *
+     * Generated from Godot docs: GLTFAccessor.set_type
+     */
     fun setType(type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setTypeBind, segment, type)
     }
 
+    /**
+     * Minimum value of each component in this accessor.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_min
+     */
     fun getMin(): List<Double> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMinBind, segment)
     }
 
+    /**
+     * Minimum value of each component in this accessor.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_min
+     */
     fun setMin(min: List<Double>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat64ListArg(Binds.setMinBind, segment, min)
     }
 
+    /**
+     * Maximum value of each component in this accessor.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_max
+     */
     fun getMax(): List<Double> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedFloat64List(Binds.getMaxBind, segment)
     }
 
+    /**
+     * Maximum value of each component in this accessor.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_max
+     */
     fun setMax(max: List<Double>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedFloat64ListArg(Binds.setMaxBind, segment, max)
     }
 
+    /**
+     * Number of deviating accessor values stored in the sparse array.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_sparse_count
+     */
     fun getSparseCount(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseCountBind, segment)
     }
 
+    /**
+     * Number of deviating accessor values stored in the sparse array.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_sparse_count
+     */
     fun setSparseCount(sparseCount: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseCountBind, segment, sparseCount)
     }
 
+    /**
+     * The index of the buffer view with sparse indices. The referenced buffer view MUST NOT have its
+     * target or byteStride properties defined. The buffer view and the optional byteOffset MUST be
+     * aligned to the componentType byte length.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_sparse_indices_buffer_view
+     */
     fun getSparseIndicesBufferView(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseIndicesBufferViewBind, segment)
     }
 
+    /**
+     * The index of the buffer view with sparse indices. The referenced buffer view MUST NOT have its
+     * target or byteStride properties defined. The buffer view and the optional byteOffset MUST be
+     * aligned to the componentType byte length.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_sparse_indices_buffer_view
+     */
     fun setSparseIndicesBufferView(sparseIndicesBufferView: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSparseIndicesBufferViewBind, segment, sparseIndicesBufferView)
     }
 
+    /**
+     * The offset relative to the start of the buffer view in bytes.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_sparse_indices_byte_offset
+     */
     fun getSparseIndicesByteOffset(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesByteOffsetBind, segment)
     }
 
+    /**
+     * The offset relative to the start of the buffer view in bytes.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_sparse_indices_byte_offset
+     */
     fun setSparseIndicesByteOffset(sparseIndicesByteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseIndicesByteOffsetBind, segment, sparseIndicesByteOffset)
     }
 
+    /**
+     * The indices component data type as an enum. Possible values are 5121 for "UNSIGNED_BYTE", 5123
+     * for "UNSIGNED_SHORT", and 5125 for "UNSIGNED_INT".
+     *
+     * Generated from Godot docs: GLTFAccessor.get_sparse_indices_component_type
+     */
     fun getSparseIndicesComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
         return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseIndicesComponentTypeBind, segment))
     }
 
+    /**
+     * The indices component data type as an enum. Possible values are 5121 for "UNSIGNED_BYTE", 5123
+     * for "UNSIGNED_SHORT", and 5125 for "UNSIGNED_INT".
+     *
+     * Generated from Godot docs: GLTFAccessor.set_sparse_indices_component_type
+     */
     fun setSparseIndicesComponentType(sparseIndicesComponentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType.value)
     }
 
+    /**
+     * The index of the bufferView with sparse values. The referenced buffer view MUST NOT have its
+     * target or byteStride properties defined.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_sparse_values_buffer_view
+     */
     fun getSparseValuesBufferView(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSparseValuesBufferViewBind, segment)
     }
 
+    /**
+     * The index of the bufferView with sparse values. The referenced buffer view MUST NOT have its
+     * target or byteStride properties defined.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_sparse_values_buffer_view
+     */
     fun setSparseValuesBufferView(sparseValuesBufferView: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSparseValuesBufferViewBind, segment, sparseValuesBufferView)
     }
 
+    /**
+     * The offset relative to the start of the bufferView in bytes.
+     *
+     * Generated from Godot docs: GLTFAccessor.get_sparse_values_byte_offset
+     */
     fun getSparseValuesByteOffset(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getSparseValuesByteOffsetBind, segment)
     }
 
+    /**
+     * The offset relative to the start of the bufferView in bytes.
+     *
+     * Generated from Godot docs: GLTFAccessor.set_sparse_values_byte_offset
+     */
     fun setSparseValuesByteOffset(sparseValuesByteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSparseValuesByteOffsetBind, segment, sparseValuesByteOffset)
     }
 
+    /**
+     * Godot's `GLTFAccessor.GLTFAccessorType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GLTFAccessor.GLTFAccessorType.<NAME>`).
+     *
+     * Generated from Godot docs: GLTFAccessor.GLTFAccessorType
+     */
     @JvmInline
     value class GLTFAccessorType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Accessor type "SCALAR". For the glTF object model, this can be used to map to a single float,
+             * int, or bool value, or a float array.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_SCALAR
+             */
             val SCALAR: GLTFAccessorType get() = GLTFAccessorType(0L)
+            /**
+             * Accessor type "VEC2". For the glTF object model, this maps to "float2", represented in the glTF
+             * JSON as an array of two floats.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_VEC2
+             */
             val VEC2: GLTFAccessorType get() = GLTFAccessorType(1L)
+            /**
+             * Accessor type "VEC3". For the glTF object model, this maps to "float3", represented in the glTF
+             * JSON as an array of three floats.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_VEC3
+             */
             val VEC3: GLTFAccessorType get() = GLTFAccessorType(2L)
+            /**
+             * Accessor type "VEC4". For the glTF object model, this maps to "float4", represented in the glTF
+             * JSON as an array of four floats.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_VEC4
+             */
             val VEC4: GLTFAccessorType get() = GLTFAccessorType(3L)
+            /**
+             * Accessor type "MAT2". For the glTF object model, this maps to "float2x2", represented in the
+             * glTF JSON as an array of four floats.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_MAT2
+             */
             val MAT2: GLTFAccessorType get() = GLTFAccessorType(4L)
+            /**
+             * Accessor type "MAT3". For the glTF object model, this maps to "float3x3", represented in the
+             * glTF JSON as an array of nine floats.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_MAT3
+             */
             val MAT3: GLTFAccessorType get() = GLTFAccessorType(5L)
+            /**
+             * Accessor type "MAT4". For the glTF object model, this maps to "float4x4", represented in the
+             * glTF JSON as an array of sixteen floats.
+             *
+             * Generated from Godot docs: GLTFAccessor.TYPE_MAT4
+             */
             val MAT4: GLTFAccessorType get() = GLTFAccessorType(6L)
         }
     }
 
+    /**
+     * Godot's `GLTFAccessor.GLTFComponentType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GLTFAccessor.GLTFComponentType.<NAME>`).
+     *
+     * Generated from Godot docs: GLTFAccessor.GLTFComponentType
+     */
     @JvmInline
     value class GLTFComponentType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Component type "NONE". This is not a valid component type, and is used to indicate that the
+             * component type is not set.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_NONE
+             */
             val NONE: GLTFComponentType get() = GLTFComponentType(0L)
+            /**
+             * Component type "BYTE". The value is `0x1400` which comes from OpenGL. This indicates data is
+             * stored in 1-byte or 8-bit signed integers. This is a core part of the glTF specification.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_SIGNED_BYTE
+             */
             val SIGNED_BYTE: GLTFComponentType get() = GLTFComponentType(5120L)
+            /**
+             * Component type "UNSIGNED_BYTE". The value is `0x1401` which comes from OpenGL. This indicates
+             * data is stored in 1-byte or 8-bit unsigned integers. This is a core part of the glTF
+             * specification.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_UNSIGNED_BYTE
+             */
             val UNSIGNED_BYTE: GLTFComponentType get() = GLTFComponentType(5121L)
+            /**
+             * Component type "SHORT". The value is `0x1402` which comes from OpenGL. This indicates data is
+             * stored in 2-byte or 16-bit signed integers. This is a core part of the glTF specification.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_SIGNED_SHORT
+             */
             val SIGNED_SHORT: GLTFComponentType get() = GLTFComponentType(5122L)
+            /**
+             * Component type "UNSIGNED_SHORT". The value is `0x1403` which comes from OpenGL. This indicates
+             * data is stored in 2-byte or 16-bit unsigned integers. This is a core part of the glTF
+             * specification.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_UNSIGNED_SHORT
+             */
             val UNSIGNED_SHORT: GLTFComponentType get() = GLTFComponentType(5123L)
+            /**
+             * Component type "INT". The value is `0x1404` which comes from OpenGL. This indicates data is
+             * stored in 4-byte or 32-bit signed integers. This is NOT a core part of the glTF specification,
+             * and may not be supported by all glTF importers. May be used by some extensions including
+             * `KHR_interactivity`.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_SIGNED_INT
+             */
             val SIGNED_INT: GLTFComponentType get() = GLTFComponentType(5124L)
+            /**
+             * Component type "UNSIGNED_INT". The value is `0x1405` which comes from OpenGL. This indicates
+             * data is stored in 4-byte or 32-bit unsigned integers. This is a core part of the glTF
+             * specification.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_UNSIGNED_INT
+             */
             val UNSIGNED_INT: GLTFComponentType get() = GLTFComponentType(5125L)
+            /**
+             * Component type "FLOAT". The value is `0x1406` which comes from OpenGL. This indicates data is
+             * stored in 4-byte or 32-bit floating-point numbers. This is a core part of the glTF
+             * specification.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_SINGLE_FLOAT
+             */
             val SINGLE_FLOAT: GLTFComponentType get() = GLTFComponentType(5126L)
+            /**
+             * Component type "DOUBLE". The value is `0x140A` which comes from OpenGL. This indicates data is
+             * stored in 8-byte or 64-bit floating-point numbers. This is NOT a core part of the glTF
+             * specification, and may not be supported by all glTF importers. May be used by some extensions
+             * including `KHR_interactivity`.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_DOUBLE_FLOAT
+             */
             val DOUBLE_FLOAT: GLTFComponentType get() = GLTFComponentType(5130L)
+            /**
+             * Component type "HALF_FLOAT". The value is `0x140B` which comes from OpenGL. This indicates data
+             * is stored in 2-byte or 16-bit floating-point numbers. This is NOT a core part of the glTF
+             * specification, and may not be supported by all glTF importers. May be used by some extensions
+             * including `KHR_interactivity`.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_HALF_FLOAT
+             */
             val HALF_FLOAT: GLTFComponentType get() = GLTFComponentType(5131L)
+            /**
+             * Component type "LONG". The value is `0x140E` which comes from OpenGL. This indicates data is
+             * stored in 8-byte or 64-bit signed integers. This is NOT a core part of the glTF specification,
+             * and may not be supported by all glTF importers. May be used by some extensions including
+             * `KHR_interactivity`.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_SIGNED_LONG
+             */
             val SIGNED_LONG: GLTFComponentType get() = GLTFComponentType(5134L)
+            /**
+             * Component type "UNSIGNED_LONG". The value is `0x140F` which comes from OpenGL. This indicates
+             * data is stored in 8-byte or 64-bit unsigned integers. This is NOT a core part of the glTF
+             * specification, and may not be supported by all glTF importers. May be used by some extensions
+             * including `KHR_interactivity`.
+             *
+             * Generated from Godot docs: GLTFAccessor.COMPONENT_TYPE_UNSIGNED_LONG
+             */
             val UNSIGNED_LONG: GLTFComponentType get() = GLTFComponentType(5135L)
         }
     }
 
     companion object {
+        /**
+         * Creates a new GLTFAccessor instance by parsing the given `Dictionary`.
+         *
+         * Generated from Godot docs: GLTFAccessor.from_dictionary
+         */
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
             return GLTFAccessor.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }

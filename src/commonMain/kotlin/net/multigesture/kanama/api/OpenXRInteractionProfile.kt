@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Suggested bindings object for OpenXR.
+ *
  * Generated from Godot docs: OpenXRInteractionProfile
  */
 class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
@@ -28,51 +30,101 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
         @JvmName("setBindingModifiersProperty")
         set(value) = setBindingModifiers(value)
 
+    /**
+     * The interaction profile path identifying the XR device.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.set_interaction_profile_path
+     */
     fun setInteractionProfilePath(interactionProfilePath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInteractionProfilePathBind, segment, interactionProfilePath)
     }
 
+    /**
+     * The interaction profile path identifying the XR device.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_interaction_profile_path
+     */
     fun getInteractionProfilePath(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getInteractionProfilePathBind, segment)
     }
 
+    /**
+     * Get the number of bindings in this interaction profile.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_binding_count
+     */
     fun getBindingCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingCountBind, segment)
     }
 
+    /**
+     * Retrieve the binding at this index.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_binding
+     */
     fun getBinding(index: Int): OpenXRIPBinding? {
         checkOpen()
         return OpenXRIPBinding.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingBind, segment, index))
     }
 
+    /**
+     * Action bindings for this interaction profile.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.set_bindings
+     */
     fun setBindings(bindings: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBindingsBind, segment, bindings)
     }
 
+    /**
+     * Action bindings for this interaction profile.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_bindings
+     */
     fun getBindings(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingsBind, segment)
     }
 
+    /**
+     * Get the number of binding modifiers in this interaction profile.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_binding_modifier_count
+     */
     fun getBindingModifierCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
     }
 
+    /**
+     * Get the `OpenXRBindingModifier` at this index.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_binding_modifier
+     */
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
         checkOpen()
         return OpenXRIPBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
     }
 
+    /**
+     * Binding modifiers for this interaction profile.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.set_binding_modifiers
+     */
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBindingModifiersBind, segment, bindingModifiers)
     }
 
+    /**
+     * Binding modifiers for this interaction profile.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfile.get_binding_modifiers
+     */
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)

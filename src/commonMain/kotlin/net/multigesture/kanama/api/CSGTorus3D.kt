@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A CSG Torus shape.
+ *
  * Generated from Godot docs: CSGTorus3D
  */
 class CSGTorus3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
@@ -47,50 +49,112 @@ class CSGTorus3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
 
+    /**
+     * The inner radius of the torus.
+     *
+     * Generated from Godot docs: CSGTorus3D.set_inner_radius
+     */
     fun setInnerRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerRadiusBind, segment, radius)
     }
 
+    /**
+     * The inner radius of the torus.
+     *
+     * Generated from Godot docs: CSGTorus3D.get_inner_radius
+     */
     fun getInnerRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerRadiusBind, segment)
     }
 
+    /**
+     * The outer radius of the torus.
+     *
+     * Generated from Godot docs: CSGTorus3D.set_outer_radius
+     */
     fun setOuterRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterRadiusBind, segment, radius)
     }
 
+    /**
+     * The outer radius of the torus.
+     *
+     * Generated from Godot docs: CSGTorus3D.get_outer_radius
+     */
     fun getOuterRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterRadiusBind, segment)
     }
 
+    /**
+     * The number of slices the torus is constructed of.
+     *
+     * Generated from Godot docs: CSGTorus3D.set_sides
+     */
     fun setSides(sides: Int) {
         ObjectCalls.ptrcallWithIntArg(Binds.setSidesBind, segment, sides)
     }
 
+    /**
+     * The number of slices the torus is constructed of.
+     *
+     * Generated from Godot docs: CSGTorus3D.get_sides
+     */
     fun getSides(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSidesBind, segment)
     }
 
+    /**
+     * The number of edges each ring of the torus is constructed of.
+     *
+     * Generated from Godot docs: CSGTorus3D.set_ring_sides
+     */
     fun setRingSides(sides: Int) {
         ObjectCalls.ptrcallWithIntArg(Binds.setRingSidesBind, segment, sides)
     }
 
+    /**
+     * The number of edges each ring of the torus is constructed of.
+     *
+     * Generated from Godot docs: CSGTorus3D.get_ring_sides
+     */
     fun getRingSides(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingSidesBind, segment)
     }
 
+    /**
+     * The material used to render the torus.
+     *
+     * Generated from Godot docs: CSGTorus3D.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The material used to render the torus.
+     *
+     * Generated from Godot docs: CSGTorus3D.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
+    /**
+     * If `true` the normals of the torus are set to give a smooth effect making the torus seem
+     * rounded. If `false` the torus will have a flat shaded look.
+     *
+     * Generated from Godot docs: CSGTorus3D.set_smooth_faces
+     */
     fun setSmoothFaces(smoothFaces: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothFacesBind, segment, smoothFaces)
     }
 
+    /**
+     * If `true` the normals of the torus are set to give a smooth effect making the torus seem
+     * rounded. If `false` the torus will have a flat shaded look.
+     *
+     * Generated from Godot docs: CSGTorus3D.get_smooth_faces
+     */
     fun getSmoothFaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSmoothFacesBind, segment)
     }

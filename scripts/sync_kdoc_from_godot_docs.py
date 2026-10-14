@@ -152,10 +152,32 @@ def drop_dangling_lead_in(text: str) -> str:
     return text[: boundary + 1]
 
 
+def module_doc_dirs(docs_dir: Path) -> list[Path]:
+    """The class docs of the engine modules next to [docs_dir] (task 138 item 25).
+
+    In a Godot source checkout the core classes are documented in `doc/classes` and the classes a
+    module defines (ZIPReader/ZIPPacker, WebSocket*, WebRTC*, CSG*, ...) in
+    `modules/<module>/doc_classes`; `--godot-docs` names the first, the second set is found from it.
+    A docs directory outside that layout has no module docs."""
+    docs_dir = docs_dir.resolve()
+    if docs_dir.name != "classes" or docs_dir.parent.name != "doc":
+        return []
+    return sorted(path for path in (docs_dir.parent.parent / "modules").glob("*/doc_classes") if path.is_dir())
+
+
+def find_class_doc_file(docs_dir: Path, class_name: str) -> Path | None:
+    """`doc/classes/<class>.xml` first, then the first module's `doc_classes/<class>.xml`."""
+    for directory in (docs_dir, *module_doc_dirs(docs_dir)):
+        path = directory / f"{class_name}.xml"
+        if path.exists():
+            return path
+    return None
+
+
 def load_godot_docs(docs_dir: Path, class_name: str) -> GodotClassDocs | None:
     global _DOC_CONTEXT_CLASS
-    path = docs_dir / f"{class_name}.xml"
-    if not path.exists():
+    path = find_class_doc_file(docs_dir, class_name)
+    if path is None:
         return None
     _DOC_CONTEXT_CLASS = None if class_name == GLOBAL_SCOPE_DOCS else class_name
     root = ET.parse(path).getroot()

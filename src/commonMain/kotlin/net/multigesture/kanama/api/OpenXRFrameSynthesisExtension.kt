@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * The OpenXR Frame synthesis extension allows for advanced reprojection at low(er) framerates.
+ *
  * Generated from Godot docs: OpenXRFrameSynthesisExtension
  */
 class OpenXRFrameSynthesisExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
@@ -22,26 +24,64 @@ class OpenXRFrameSynthesisExtension(handle: GodotHandle) : OpenXRExtensionWrappe
         @JvmName("setRelaxFrameIntervalProperty")
         set(value) = setRelaxFrameInterval(value)
 
+    /**
+     * Returns `true` if frame synthesis is enabled in the project settings and the current XR runtime
+     * supports frame synthesis. The value returned will only be valid once OpenXR has been
+     * initialized.
+     *
+     * Generated from Godot docs: OpenXRFrameSynthesisExtension.is_available
+     */
     fun isAvailable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAvailableBind, segment)
     }
 
+    /**
+     * Enable frame synthesis. When `true` motion vector and depth data is provided to the XR runtime.
+     *
+     * Generated from Godot docs: OpenXRFrameSynthesisExtension.is_enabled
+     */
     fun isEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
+    /**
+     * Enable frame synthesis. When `true` motion vector and depth data is provided to the XR runtime.
+     *
+     * Generated from Godot docs: OpenXRFrameSynthesisExtension.set_enabled
+     */
     fun setEnabled(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enable)
     }
 
+    /**
+     * If `true` this informs the XR runtime we will be providing frames at a greatly reduced rate.
+     * Enable this when you expect your application to run at low framerates and wish to inject
+     * multiple reprojected frames.
+     *
+     * Generated from Godot docs: OpenXRFrameSynthesisExtension.get_relax_frame_interval
+     */
     fun getRelaxFrameInterval(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getRelaxFrameIntervalBind, segment)
     }
 
+    /**
+     * If `true` this informs the XR runtime we will be providing frames at a greatly reduced rate.
+     * Enable this when you expect your application to run at low framerates and wish to inject
+     * multiple reprojected frames.
+     *
+     * Generated from Godot docs: OpenXRFrameSynthesisExtension.set_relax_frame_interval
+     */
     fun setRelaxFrameInterval(relaxFrameInterval: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setRelaxFrameIntervalBind, segment, relaxFrameInterval)
     }
 
+    /**
+     * Queues the next frame to be skipped when supplying motion vector and depth data. Call this after
+     * teleporting your player or a similar action has moved the player to prevent incorrect
+     * reprojection results due to this movement.
+     *
+     * Generated from Godot docs: OpenXRFrameSynthesisExtension.skip_next_frame
+     */
     fun skipNextFrame() {
         ObjectCalls.ptrcallNoArgs(Binds.skipNextFrameBind, segment)
     }

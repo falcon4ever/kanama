@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A Fresnel effect to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeFresnel
  */
 class VisualShaderNodeFresnel(handle: GodotHandle) : VisualShaderNode(handle) {

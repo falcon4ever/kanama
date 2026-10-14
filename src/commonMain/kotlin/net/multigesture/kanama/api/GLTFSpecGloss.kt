@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 
 /**
+ * Archived glTF extension for specular/glossy materials.
+ *
  * Generated from Godot docs: GLTFSpecGloss
  */
 class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
@@ -42,51 +44,101 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSpecGlossImgProperty")
         set(value) = setSpecGlossImg(value)
 
+    /**
+     * The diffuse texture.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.get_diffuse_img
+     */
     fun getDiffuseImg(): Image? {
         checkOpen()
         return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDiffuseImgBind, segment))
     }
 
+    /**
+     * The diffuse texture.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.set_diffuse_img
+     */
     fun setDiffuseImg(diffuseImg: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setDiffuseImgBind, segment, listOf(diffuseImg?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The reflected diffuse factor of the material.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.get_diffuse_factor
+     */
     fun getDiffuseFactor(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDiffuseFactorBind, segment)
     }
 
+    /**
+     * The reflected diffuse factor of the material.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.set_diffuse_factor
+     */
     fun setDiffuseFactor(diffuseFactor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setDiffuseFactorBind, segment, diffuseFactor)
     }
 
+    /**
+     * The glossiness or smoothness of the material.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.get_gloss_factor
+     */
     fun getGlossFactor(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlossFactorBind, segment)
     }
 
+    /**
+     * The glossiness or smoothness of the material.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.set_gloss_factor
+     */
     fun setGlossFactor(glossFactor: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setGlossFactorBind, segment, glossFactor)
     }
 
+    /**
+     * The specular RGB color of the material. The alpha channel is unused.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.get_specular_factor
+     */
     fun getSpecularFactor(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSpecularFactorBind, segment)
     }
 
+    /**
+     * The specular RGB color of the material. The alpha channel is unused.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.set_specular_factor
+     */
     fun setSpecularFactor(specularFactor: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setSpecularFactorBind, segment, specularFactor)
     }
 
+    /**
+     * The specular-glossiness texture.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.get_spec_gloss_img
+     */
     fun getSpecGlossImg(): Image? {
         checkOpen()
         return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpecGlossImgBind, segment))
     }
 
+    /**
+     * The specular-glossiness texture.
+     *
+     * Generated from Godot docs: GLTFSpecGloss.set_spec_gloss_img
+     */
     fun setSpecGlossImg(specGlossImg: Image?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSpecGlossImgBind, segment, listOf(specGlossImg?.requireOpenHandle() ?: NULL_SEGMENT))

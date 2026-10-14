@@ -6,14 +6,27 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Object for storing OpenXR spatial entity component data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentData
  */
 open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Sets the expected capacity as provided by the spatial entities query system. Buffers should be
+     * initialized with the correct storage.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentData.set_capacity
+     */
     fun setCapacity(capacity: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setCapacityBind, segment, capacity)
     }
 
+    /**
+     * Gets this `OpenXRSpatialComponentData`'s `XrSpatialComponentTypeEXT`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentData.get_component_type
+     */
     fun getComponentType(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getComponentTypeBind, segment)

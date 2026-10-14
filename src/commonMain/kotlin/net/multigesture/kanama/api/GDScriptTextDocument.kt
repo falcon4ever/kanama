@@ -6,6 +6,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Document related language server functionality.
+ *
  * Generated from Godot docs: GDScriptTextDocument
  */
 class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {

@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Playback class used for `AudioStreamOggVorbis`.
+ *
  * Generated from Godot docs: AudioStreamPlaybackOggVorbis
  */
 class AudioStreamPlaybackOggVorbis(handle: GodotHandle) : AudioStreamPlaybackResampled(handle) {

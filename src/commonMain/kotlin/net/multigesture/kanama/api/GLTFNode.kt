@@ -12,6 +12,8 @@ import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * glTF node class.
+ *
  * Generated from Godot docs: GLTFNode
  */
 class GLTFNode(handle: GodotHandle) : Resource(handle) {
@@ -99,161 +101,353 @@ class GLTFNode(handle: GodotHandle) : Resource(handle) {
         @JvmName("setVisibleProperty")
         set(value) = setVisible(value)
 
+    /**
+     * The original name of the node.
+     *
+     * Generated from Godot docs: GLTFNode.get_original_name
+     */
     fun getOriginalName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
     }
 
+    /**
+     * The original name of the node.
+     *
+     * Generated from Godot docs: GLTFNode.set_original_name
+     */
     fun setOriginalName(originalName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOriginalNameBind, segment, originalName)
     }
 
+    /**
+     * The index of the parent node in the `GLTFState`. If -1, this node is a root node.
+     *
+     * Generated from Godot docs: GLTFNode.get_parent
+     */
     fun getParent(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getParentBind, segment)
     }
 
+    /**
+     * The index of the parent node in the `GLTFState`. If -1, this node is a root node.
+     *
+     * Generated from Godot docs: GLTFNode.set_parent
+     */
     fun setParent(parent: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setParentBind, segment, parent)
     }
 
+    /**
+     * How deep into the node hierarchy this node is. A root node will have a height of 0, its children
+     * will have a height of 1, and so on. If -1, the height has not been calculated.
+     *
+     * Generated from Godot docs: GLTFNode.get_height
+     */
     fun getHeight(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
     }
 
+    /**
+     * How deep into the node hierarchy this node is. A root node will have a height of 0, its children
+     * will have a height of 1, and so on. If -1, the height has not been calculated.
+     *
+     * Generated from Godot docs: GLTFNode.set_height
+     */
     fun setHeight(height: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHeightBind, segment, height)
     }
 
+    /**
+     * The transform of the glTF node relative to its parent. This property is usually unused since the
+     * position, rotation, and scale properties are preferred.
+     *
+     * Generated from Godot docs: GLTFNode.get_xform
+     */
     fun getXform(): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getXformBind, segment)
     }
 
+    /**
+     * The transform of the glTF node relative to its parent. This property is usually unused since the
+     * position, rotation, and scale properties are preferred.
+     *
+     * Generated from Godot docs: GLTFNode.set_xform
+     */
     fun setXform(xform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setXformBind, segment, xform)
     }
 
+    /**
+     * If this glTF node is a mesh, the index of the `GLTFMesh` in the `GLTFState` that describes the
+     * mesh's properties. If -1, this node is not a mesh.
+     *
+     * Generated from Godot docs: GLTFNode.get_mesh
+     */
     fun getMesh(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMeshBind, segment)
     }
 
+    /**
+     * If this glTF node is a mesh, the index of the `GLTFMesh` in the `GLTFState` that describes the
+     * mesh's properties. If -1, this node is not a mesh.
+     *
+     * Generated from Godot docs: GLTFNode.set_mesh
+     */
     fun setMesh(mesh: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMeshBind, segment, mesh)
     }
 
+    /**
+     * If this glTF node is a camera, the index of the `GLTFCamera` in the `GLTFState` that describes
+     * the camera's properties. If `-1`, this node is not a camera.
+     *
+     * Generated from Godot docs: GLTFNode.get_camera
+     */
     fun getCamera(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCameraBind, segment)
     }
 
+    /**
+     * If this glTF node is a camera, the index of the `GLTFCamera` in the `GLTFState` that describes
+     * the camera's properties. If `-1`, this node is not a camera.
+     *
+     * Generated from Godot docs: GLTFNode.set_camera
+     */
     fun setCamera(camera: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setCameraBind, segment, camera)
     }
 
+    /**
+     * If this glTF node has a skin, the index of the `GLTFSkin` in the `GLTFState` that describes the
+     * skin's properties. If -1, this node does not have a skin.
+     *
+     * Generated from Godot docs: GLTFNode.get_skin
+     */
     fun getSkin(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkinBind, segment)
     }
 
+    /**
+     * If this glTF node has a skin, the index of the `GLTFSkin` in the `GLTFState` that describes the
+     * skin's properties. If -1, this node does not have a skin.
+     *
+     * Generated from Godot docs: GLTFNode.set_skin
+     */
     fun setSkin(skin: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSkinBind, segment, skin)
     }
 
+    /**
+     * If this glTF node has a skeleton, the index of the `GLTFSkeleton` in the `GLTFState` that
+     * describes the skeleton's properties. If -1, this node does not have a skeleton.
+     *
+     * Generated from Godot docs: GLTFNode.get_skeleton
+     */
     fun getSkeleton(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSkeletonBind, segment)
     }
 
+    /**
+     * If this glTF node has a skeleton, the index of the `GLTFSkeleton` in the `GLTFState` that
+     * describes the skeleton's properties. If -1, this node does not have a skeleton.
+     *
+     * Generated from Godot docs: GLTFNode.set_skeleton
+     */
     fun setSkeleton(skeleton: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSkeletonBind, segment, skeleton)
     }
 
+    /**
+     * The position of the glTF node relative to its parent.
+     *
+     * Generated from Godot docs: GLTFNode.get_position
+     */
     fun getPosition(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getPositionBind, segment)
     }
 
+    /**
+     * The position of the glTF node relative to its parent.
+     *
+     * Generated from Godot docs: GLTFNode.set_position
+     */
     fun setPosition(position: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setPositionBind, segment, position)
     }
 
+    /**
+     * The rotation of the glTF node relative to its parent.
+     *
+     * Generated from Godot docs: GLTFNode.get_rotation
+     */
     fun getRotation(): Quaternion {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getRotationBind, segment)
     }
 
+    /**
+     * The rotation of the glTF node relative to its parent.
+     *
+     * Generated from Godot docs: GLTFNode.set_rotation
+     */
     fun setRotation(rotation: Quaternion) {
         checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(Binds.setRotationBind, segment, rotation)
     }
 
+    /**
+     * The scale of the glTF node relative to its parent.
+     *
+     * Generated from Godot docs: GLTFNode.get_scale
+     */
     fun getScale(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getScaleBind, segment)
     }
 
+    /**
+     * The scale of the glTF node relative to its parent.
+     *
+     * Generated from Godot docs: GLTFNode.set_scale
+     */
     fun setScale(scale: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setScaleBind, segment, scale)
     }
 
+    /**
+     * The indices of the child nodes in the `GLTFState`. If this glTF node has no children, this will
+     * be an empty array.
+     *
+     * Generated from Godot docs: GLTFNode.get_children
+     */
     fun getChildren(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getChildrenBind, segment)
     }
 
+    /**
+     * The indices of the child nodes in the `GLTFState`. If this glTF node has no children, this will
+     * be an empty array.
+     *
+     * Generated from Godot docs: GLTFNode.set_children
+     */
     fun setChildren(children: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setChildrenBind, segment, children)
     }
 
+    /**
+     * Appends the given child node index to the `children` array.
+     *
+     * Generated from Godot docs: GLTFNode.append_child_index
+     */
     fun appendChildIndex(childIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.appendChildIndexBind, segment, childIndex)
     }
 
+    /**
+     * If this glTF node is a light, the index of the `GLTFLight` in the `GLTFState` that describes the
+     * light's properties. If -1, this node is not a light.
+     *
+     * Generated from Godot docs: GLTFNode.get_light
+     */
     fun getLight(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLightBind, segment)
     }
 
+    /**
+     * If this glTF node is a light, the index of the `GLTFLight` in the `GLTFState` that describes the
+     * light's properties. If -1, this node is not a light.
+     *
+     * Generated from Godot docs: GLTFNode.set_light
+     */
     fun setLight(light: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setLightBind, segment, light)
     }
 
+    /**
+     * If `true`, the GLTF node is visible. If `false`, the GLTF node is not visible. This is converted
+     * to the `Node3D.visible` property in the Godot scene, and is exported to `KHR_node_visibility`
+     * when `false`.
+     *
+     * Generated from Godot docs: GLTFNode.get_visible
+     */
     fun getVisible(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getVisibleBind, segment)
     }
 
+    /**
+     * If `true`, the GLTF node is visible. If `false`, the GLTF node is not visible. This is converted
+     * to the `Node3D.visible` property in the Godot scene, and is exported to `KHR_node_visibility`
+     * when `false`.
+     *
+     * Generated from Godot docs: GLTFNode.set_visible
+     */
     fun setVisible(visible: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, visible)
     }
 
+    /**
+     * Gets additional arbitrary data in this `GLTFNode` instance. This can be used to keep per-node
+     * state data in `GLTFDocumentExtension` classes, which is important because they are stateless.
+     * The argument should be the `GLTFDocumentExtension` name (does not have to match the extension
+     * name in the glTF file), and the return value can be anything you set. If nothing was set, the
+     * return value is `null`.
+     *
+     * Generated from Godot docs: GLTFNode.get_additional_data
+     */
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
     }
 
+    /**
+     * Sets additional arbitrary data in this `GLTFNode` instance. This can be used to keep per-node
+     * state data in `GLTFDocumentExtension` classes, which is important because they are stateless.
+     * The first argument should be the `GLTFDocumentExtension` name (does not have to match the
+     * extension name in the glTF file), and the second argument can be anything you want.
+     *
+     * Generated from Godot docs: GLTFNode.set_additional_data
+     */
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
+    /**
+     * Returns the `NodePath` that this GLTF node will have in the Godot scene tree after being
+     * imported. This is useful when importing glTF object model pointers with
+     * `GLTFObjectModelProperty`, for handling extensions such as `KHR_animation_pointer` or
+     * `KHR_interactivity`. If `handle_skeletons` is `true`, paths to skeleton bone glTF nodes will be
+     * resolved properly. For example, a path that would be `^"A/B/C/Bone1/Bone2/Bone3"` if `false`
+     * will become `^"A/B/C/Skeleton3D:Bone3"`.
+     *
+     * Generated from Godot docs: GLTFNode.get_scene_node_path
+     */
     fun getSceneNodePath(gltfState: GLTFState?, handleSkeletons: Boolean = true): NodePath {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetNodePath(Binds.getSceneNodePathBind, segment, gltfState?.requireOpenHandle() ?: NULL_SEGMENT, handleSkeletons)

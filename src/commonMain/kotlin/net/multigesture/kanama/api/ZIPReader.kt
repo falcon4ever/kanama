@@ -6,34 +6,68 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Allows reading the content of a ZIP file.
+ *
  * Generated from Godot docs: ZIPReader
  */
 class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Opens the zip archive at the given `path` and reads its file index.
+     *
+     * Generated from Godot docs: ZIPReader.open
+     */
     fun open(path: String): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.openBind, segment, path))
     }
 
+    /**
+     * Closes the underlying resources used by this instance.
+     *
+     * Generated from Godot docs: ZIPReader.close
+     */
     fun closeArchive(): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeArchiveBind, segment))
     }
 
+    /**
+     * Returns the list of names of all files in the loaded archive. Must be called after `open`.
+     *
+     * Generated from Godot docs: ZIPReader.get_files
+     */
     fun getFiles(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getFilesBind, segment)
     }
 
+    /**
+     * Loads the whole content of a file in the loaded zip archive into memory and returns it. Must be
+     * called after `open`.
+     *
+     * Generated from Godot docs: ZIPReader.read_file
+     */
     fun readFile(path: String, caseSensitive: Boolean = true): ByteArray {
         checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetByteArray(Binds.readFileBind, segment, path, caseSensitive)
     }
 
+    /**
+     * Returns `true` if the file exists in the loaded zip archive. Must be called after `open`.
+     *
+     * Generated from Godot docs: ZIPReader.file_exists
+     */
     fun fileExists(path: String, caseSensitive: Boolean = true): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetBool(Binds.fileExistsBind, segment, path, caseSensitive)
     }
 
+    /**
+     * Returns the compression level of the file in the loaded zip archive. Returns `-1` if the file
+     * doesn't exist or any other error occurs. Must be called after `open`.
+     *
+     * Generated from Godot docs: ZIPReader.get_compression_level
+     */
     fun getCompressionLevel(path: String, caseSensitive: Boolean = true): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithStringAndBoolArgRetInt(Binds.getCompressionLevelBind, segment, path, caseSensitive)

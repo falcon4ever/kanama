@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that modifies the rotation of the object using a rotation matrix.
+ *
  * Generated from Godot docs: VisualShaderNodeRotationByAxis
  */
 class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(handle) {

@@ -9,14 +9,26 @@ import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * Object for storing the queries polygon2d result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentPolygon2DList
  */
 class OpenXRSpatialComponentPolygon2DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the transform for positioning our polygon for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentPolygon2DList.get_transform
+     */
     fun getTransform(index: Long): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
     }
 
+    /**
+     * Returns the polygon vertices for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentPolygon2DList.get_vertices
+     */
     fun getVertices(snapshot: RID, index: Long): List<Vector2> {
         checkOpen()
         return ObjectCalls.ptrcallWithRIDAndLongArgRetPackedVector2List(Binds.getVerticesBind, segment, snapshot, index)

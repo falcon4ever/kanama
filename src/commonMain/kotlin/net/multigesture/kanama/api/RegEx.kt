@@ -7,55 +7,129 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Class for searching text for patterns using regular expressions.
+ *
  * Generated from Godot docs: RegEx
  */
 class RegEx(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * This method resets the state of the object, as if it was freshly created. Namely, it unassigns
+     * the regular expression of this object.
+     *
+     * Generated from Godot docs: RegEx.clear
+     */
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
+    /**
+     * Compiles and assign the search pattern to use. Returns `GodotError.OK` if the compilation is
+     * successful. If compilation fails, returns `GodotError.FAILED` and when `show_error` is `true`,
+     * details are printed to standard output.
+     *
+     * Generated from Godot docs: RegEx.compile
+     */
     fun compile(pattern: String, showError: Boolean = true): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.compileBind, segment, pattern, showError))
     }
 
+    /**
+     * Searches the text for the compiled pattern. Returns a `RegExMatch` container of the first
+     * matching result if found, otherwise `null`. The region to search within can be specified with
+     * `offset` and `end`. This is useful when searching for another match in the same `subject` by
+     * calling this method again after a previous success. Note that setting these parameters differs
+     * from passing over a shortened string. For example, the start anchor `^` is not affected by
+     * `offset`, and the character before `offset` will be checked for the word boundary `\b`.
+     *
+     * Generated from Godot docs: RegEx.search
+     */
     fun search(subject: String, offset: Int = 0, end: Int = -1): RegExMatch? {
         checkOpen()
         return RegExMatch.wrapOwned(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(Binds.searchBind, segment, subject, offset, end))
     }
 
+    /**
+     * Searches the text for the compiled pattern. Returns an array of `RegExMatch` containers for each
+     * non-overlapping result. If no results were found, an empty array is returned instead. The region
+     * to search within can be specified with `offset` and `end`. This is useful when searching for
+     * another match in the same `subject` by calling this method again after a previous success. Note
+     * that setting these parameters differs from passing over a shortened string. For example, the
+     * start anchor `^` is not affected by `offset`, and the character before `offset` will be checked
+     * for the word boundary `\b`.
+     *
+     * Generated from Godot docs: RegEx.search_all
+     */
     fun searchAll(subject: String, offset: Int = 0, end: Int = -1): List<RegExMatch> {
         checkOpen()
         return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(Binds.searchAllBind, segment, subject, offset, end, RegExMatch::wrapBorrowed)
     }
 
+    /**
+     * Searches the text for the compiled pattern and replaces it with the specified string. Escapes
+     * and backreferences such as `$1` and `$name` are expanded and resolved. By default, only the
+     * first instance is replaced, but it can be changed for all instances (global replacement). The
+     * region to search within can be specified with `offset` and `end`. This is useful when searching
+     * for another match in the same `subject` by calling this method again after a previous success.
+     * Note that setting these parameters differs from passing over a shortened string. For example,
+     * the start anchor `^` is not affected by `offset`, and the character before `offset` will be
+     * checked for the word boundary `\b`.
+     *
+     * Generated from Godot docs: RegEx.sub
+     */
     fun sub(subject: String, replacement: String, all: Boolean = false, offset: Int = 0, end: Int = -1): String {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoStringBoolTwoIntArgsRetString(Binds.subBind, segment, subject, replacement, all, offset, end)
     }
 
+    /**
+     * Returns whether this object has a valid search pattern assigned.
+     *
+     * Generated from Godot docs: RegEx.is_valid
+     */
     fun isValid(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidBind, segment)
     }
 
+    /**
+     * Returns the original search pattern that was compiled.
+     *
+     * Generated from Godot docs: RegEx.get_pattern
+     */
     fun getPattern(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getPatternBind, segment)
     }
 
+    /**
+     * Returns the number of capturing groups in compiled pattern.
+     *
+     * Generated from Godot docs: RegEx.get_group_count
+     */
     fun getGroupCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupCountBind, segment)
     }
 
+    /**
+     * Returns an array of names of named capturing groups in the compiled pattern. They are ordered by
+     * appearance.
+     *
+     * Generated from Godot docs: RegEx.get_names
+     */
     fun getNames(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getNamesBind, segment)
     }
 
     companion object {
+        /**
+         * Creates and compiles a new `RegEx` object. See also `compile`.
+         *
+         * Generated from Godot docs: RegEx.create_from_string
+         */
         fun createFromString(pattern: String, showError: Boolean = true): RegEx? {
             return RegEx.wrapOwned(ObjectCalls.ptrcallWithStringAndBoolArgRetObject(Binds.createFromStringBind, NULL_SEGMENT, pattern, showError))
         }

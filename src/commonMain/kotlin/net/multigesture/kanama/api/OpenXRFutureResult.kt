@@ -8,29 +8,59 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Result object tracking the asynchronous result of an OpenXR Future object.
+ *
  * Generated from Godot docs: OpenXRFutureResult
  */
 class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Returns the status of this result.
+     *
+     * Generated from Godot docs: OpenXRFutureResult.get_status
+     */
     fun getStatus(): OpenXRFutureResult.ResultStatus {
         checkOpen()
         return OpenXRFutureResult.ResultStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
     }
 
+    /**
+     * Return the `XrFutureEXT` value this result relates to.
+     *
+     * Generated from Godot docs: OpenXRFutureResult.get_future
+     */
     fun getFuture(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getFutureBind, segment)
     }
 
+    /**
+     * Cancel this future, this will interrupt and stop the asynchronous function.
+     *
+     * Generated from Godot docs: OpenXRFutureResult.cancel_future
+     */
     fun cancelFuture() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.cancelFutureBind, segment)
     }
 
+    /**
+     * Stores the result value we expose to the user. Note: This method should only be called by an
+     * OpenXR extension that implements an asynchronous function.
+     *
+     * Generated from Godot docs: OpenXRFutureResult.set_result_value
+     */
     fun setResultValue(resultValue: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.setResultValueBind, segment, resultValue)
     }
 
+    /**
+     * Returns the result value of our asynchronous function (if set by the extension). The type of
+     * this result value depends on the function being called. Consult the documentation of the
+     * relevant function.
+     *
+     * Generated from Godot docs: OpenXRFutureResult.get_result_value
+     */
     fun getResultValue(): Any? {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getResultValueBind, segment)
@@ -45,11 +75,32 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
         const val completed: String = "completed"
     }
 
+    /**
+     * Godot's `OpenXRFutureResult.ResultStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`OpenXRFutureResult.ResultStatus.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRFutureResult.ResultStatus
+     */
     @JvmInline
     value class ResultStatus(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * The asynchronous function is running.
+             *
+             * Generated from Godot docs: OpenXRFutureResult.RESULT_RUNNING
+             */
             val RUNNING: ResultStatus get() = ResultStatus(0L)
+            /**
+             * The asynchronous function has finished.
+             *
+             * Generated from Godot docs: OpenXRFutureResult.RESULT_FINISHED
+             */
             val FINISHED: ResultStatus get() = ResultStatus(1L)
+            /**
+             * The asynchronous function has been cancelled.
+             *
+             * Generated from Godot docs: OpenXRFutureResult.RESULT_CANCELLED
+             */
             val CANCELLED: ResultStatus get() = ResultStatus(2L)
         }
     }

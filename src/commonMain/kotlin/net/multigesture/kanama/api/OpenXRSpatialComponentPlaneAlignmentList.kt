@@ -7,20 +7,54 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Object for storing the queries plane alignment result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList
  */
 class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the plane alignment for the parent entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList.get_plane_alignment
+     */
     fun getPlaneAlignment(index: Long): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
         return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneAlignmentBind, segment, index))
     }
 
+    /**
+     * Godot's `OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment` enum as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment
+     */
     @JvmInline
     value class PlaneAlignment(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Plane is facing upward.
+             *
+             * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList.PLANE_ALIGNMENT_HORIZONTAL_UPWARD
+             */
             val HORIZONTAL_UPWARD: PlaneAlignment get() = PlaneAlignment(0L)
+            /**
+             * Plane is facing downwards.
+             *
+             * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList.PLANE_ALIGNMENT_HORIZONTAL_DOWNWARD
+             */
             val HORIZONTAL_DOWNWARD: PlaneAlignment get() = PlaneAlignment(1L)
+            /**
+             * Plane is vertically aligned.
+             *
+             * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList.PLANE_ALIGNMENT_VERTICAL
+             */
             val VERTICAL: PlaneAlignment get() = PlaneAlignment(2L)
+            /**
+             * Plane has an arbitrary alignment.
+             *
+             * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList.PLANE_ALIGNMENT_ARBITRARY
+             */
             val ARBITRARY: PlaneAlignment get() = PlaneAlignment(3L)
         }
     }

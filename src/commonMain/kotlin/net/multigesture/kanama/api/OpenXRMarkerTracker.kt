@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * Spatial entity tracker for our spatial entity marker tracking extension.
+ *
  * Generated from Godot docs: OpenXRMarkerTracker
  */
 class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handle) {
@@ -29,41 +31,84 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         @JvmName("setMarkerIdProperty")
         set(value) = setMarkerId(value)
 
+    /**
+     * The bounds size for this marker.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.set_bounds_size
+     */
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setBoundsSizeBind, segment, boundsSize)
     }
 
+    /**
+     * The bounds size for this marker.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.get_bounds_size
+     */
     fun getBoundsSize(): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
     }
 
+    /**
+     * The type of marker.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.set_marker_type
+     */
     fun setMarkerType(markerType: OpenXRSpatialComponentMarkerList.MarkerType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setMarkerTypeBind, segment, markerType.value)
     }
 
+    /**
+     * The type of marker.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.get_marker_type
+     */
     fun getMarkerType(): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
         return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMarkerTypeBind, segment))
     }
 
+    /**
+     * The marker ID for this marker, this is only returned for Aruco and April Tag markers. Call
+     * `get_marker_data` for QRCode markers.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.set_marker_id
+     */
     fun setMarkerId(markerId: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setMarkerIdBind, segment, markerId)
     }
 
+    /**
+     * The marker ID for this marker, this is only returned for Aruco and April Tag markers. Call
+     * `get_marker_data` for QRCode markers.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.get_marker_id
+     */
     fun getMarkerId(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMarkerIdBind, segment)
     }
 
+    /**
+     * Sets the marker data for this marker. Note: This should only be set by marker discovery logic.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.set_marker_data
+     */
     fun setMarkerData(markerData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithVariantArg(Binds.setMarkerDataBind, segment, markerData)
     }
 
+    /**
+     * Returns the marker data for this marker. This can return a `String` or `PackedByteArray`. Only
+     * applicable to QR Code based markers.
+     *
+     * Generated from Godot docs: OpenXRMarkerTracker.get_marker_data
+     */
     fun getMarkerData(): Any? {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getMarkerDataBind, segment)

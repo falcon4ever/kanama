@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Performs an SDF (signed-distance field) texture lookup within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTextureSDF
  */
 class VisualShaderNodeTextureSDF(handle: GodotHandle) : VisualShaderNode(handle) {

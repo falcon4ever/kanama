@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents a glTF texture sampler
+ *
  * Generated from Godot docs: GLTFTextureSampler
  */
 class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
@@ -34,41 +36,85 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
         @JvmName("setWrapTProperty")
         set(value) = setWrapT(value)
 
+    /**
+     * Texture's magnification filter, used when texture appears larger on screen than the source
+     * image.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.get_mag_filter
+     */
     fun getMagFilter(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMagFilterBind, segment)
     }
 
+    /**
+     * Texture's magnification filter, used when texture appears larger on screen than the source
+     * image.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.set_mag_filter
+     */
     fun setMagFilter(filterMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMagFilterBind, segment, filterMode)
     }
 
+    /**
+     * Texture's minification filter, used when the texture appears smaller on screen than the source
+     * image.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.get_min_filter
+     */
     fun getMinFilter(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinFilterBind, segment)
     }
 
+    /**
+     * Texture's minification filter, used when the texture appears smaller on screen than the source
+     * image.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.set_min_filter
+     */
     fun setMinFilter(filterMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMinFilterBind, segment, filterMode)
     }
 
+    /**
+     * Wrapping mode to use for S-axis (horizontal) texture coordinates.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.get_wrap_s
+     */
     fun getWrapS(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapSBind, segment)
     }
 
+    /**
+     * Wrapping mode to use for S-axis (horizontal) texture coordinates.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.set_wrap_s
+     */
     fun setWrapS(wrapMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWrapSBind, segment, wrapMode)
     }
 
+    /**
+     * Wrapping mode to use for T-axis (vertical) texture coordinates.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.get_wrap_t
+     */
     fun getWrapT(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWrapTBind, segment)
     }
 
+    /**
+     * Wrapping mode to use for T-axis (vertical) texture coordinates.
+     *
+     * Generated from Godot docs: GLTFTextureSampler.set_wrap_t
+     */
     fun setWrapT(wrapMode: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setWrapTBind, segment, wrapMode)

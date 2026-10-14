@@ -6,27 +6,51 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * GDScript language server.
+ *
  * Generated from Godot docs: GDScriptLanguageProtocol
  */
 object GDScriptLanguageProtocol {
     private inline val singleton: RawSegment
         get() = Binds.singleton
 
+    /**
+     * Returns the language server's `GDScriptTextDocument` instance.
+     *
+     * Generated from Godot docs: GDScriptLanguageProtocol.get_text_document
+     */
     @JvmStatic
     fun getTextDocument(): GDScriptTextDocument? {
         return GDScriptTextDocument.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextDocumentBind, singleton))
     }
 
+    /**
+     * Returns the language server's `GDScriptWorkspace` instance.
+     *
+     * Generated from Godot docs: GDScriptLanguageProtocol.get_workspace
+     */
     @JvmStatic
     fun getWorkspace(): GDScriptWorkspace? {
         return GDScriptWorkspace.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getWorkspaceBind, singleton))
     }
 
+    /**
+     * Returns `true` if the language server is providing the smart resolve feature, `false` otherwise.
+     * The feature can be configured through the editor settings.
+     *
+     * Generated from Godot docs: GDScriptLanguageProtocol.is_smart_resolve_enabled
+     */
     @JvmStatic
     fun isSmartResolveEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSmartResolveEnabledBind, singleton)
     }
 
+    /**
+     * Returns `true` if the language server was initialized by a language server client, `false`
+     * otherwise.
+     *
+     * Generated from Godot docs: GDScriptLanguageProtocol.is_initialized
+     */
     @JvmStatic
     fun isInitialized(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInitializedBind, singleton)

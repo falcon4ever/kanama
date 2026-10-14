@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 
 /**
+ * A frame other visual shader nodes can be attached to for better organization.
+ *
  * Generated from Godot docs: VisualShaderNodeFrame
  */
 open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizableBase(handle) {
@@ -41,61 +43,123 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
         @JvmName("setAttachedNodesProperty")
         set(value) = setAttachedNodes(value)
 
+    /**
+     * The title of the node.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.set_title
+     */
     fun setTitle(title: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, title)
     }
 
+    /**
+     * The title of the node.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.get_title
+     */
     fun getTitle(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
     }
 
+    /**
+     * If `true`, the frame will be tinted with the color specified in `tint_color`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.set_tint_color_enabled
+     */
     fun setTintColorEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setTintColorEnabledBind, segment, enable)
     }
 
+    /**
+     * If `true`, the frame will be tinted with the color specified in `tint_color`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.is_tint_color_enabled
+     */
     fun isTintColorEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTintColorEnabledBind, segment)
     }
 
+    /**
+     * The color of the frame when `tint_color_enabled` is `true`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.set_tint_color
+     */
     fun setTintColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setTintColorBind, segment, color)
     }
 
+    /**
+     * The color of the frame when `tint_color_enabled` is `true`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.get_tint_color
+     */
     fun getTintColor(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintColorBind, segment)
     }
 
+    /**
+     * If `true`, the frame will automatically resize to enclose all attached nodes.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.set_autoshrink_enabled
+     */
     fun setAutoshrinkEnabled(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAutoshrinkEnabledBind, segment, enable)
     }
 
+    /**
+     * If `true`, the frame will automatically resize to enclose all attached nodes.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.is_autoshrink_enabled
+     */
     fun isAutoshrinkEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoshrinkEnabledBind, segment)
     }
 
+    /**
+     * Adds a node to the list of nodes attached to the frame. Should not be called directly, use the
+     * `VisualShader.attach_node_to_frame` method instead.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.add_attached_node
+     */
     fun addAttachedNode(node: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.addAttachedNodeBind, segment, node)
     }
 
+    /**
+     * Removes a node from the list of nodes attached to the frame. Should not be called directly, use
+     * the `VisualShader.detach_node_from_frame` method instead.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.remove_attached_node
+     */
     fun removeAttachedNode(node: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeAttachedNodeBind, segment, node)
     }
 
+    /**
+     * The list of nodes attached to the frame.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.set_attached_nodes
+     */
     fun setAttachedNodes(attachedNodes: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setAttachedNodesBind, segment, attachedNodes)
     }
 
+    /**
+     * The list of nodes attached to the frame.
+     *
+     * Generated from Godot docs: VisualShaderNodeFrame.get_attached_nodes
+     */
     fun getAttachedNodes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAttachedNodesBind, segment)

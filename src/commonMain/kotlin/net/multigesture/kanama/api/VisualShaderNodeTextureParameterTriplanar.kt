@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Performs a uniform texture lookup with triplanar within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTextureParameterTriplanar
  */
 class VisualShaderNodeTextureParameterTriplanar(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {

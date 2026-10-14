@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A base node for nodes which samples 3D textures in the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeSample3D
  */
 open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,21 +19,52 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
         @JvmName("setSourceProperty")
         set(value) = setSource(value)
 
+    /**
+     * An input source type.
+     *
+     * Generated from Godot docs: VisualShaderNodeSample3D.set_source
+     */
     fun setSource(value: VisualShaderNodeSample3D.Source) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSourceBind, segment, value.value)
     }
 
+    /**
+     * An input source type.
+     *
+     * Generated from Godot docs: VisualShaderNodeSample3D.get_source
+     */
     fun getSource(): VisualShaderNodeSample3D.Source {
         checkOpen()
         return VisualShaderNodeSample3D.Source(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSourceBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeSample3D.Source` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`VisualShaderNodeSample3D.Source.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeSample3D.Source
+     */
     @JvmInline
     value class Source(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Creates internal uniform and provides a way to assign it within node.
+             *
+             * Generated from Godot docs: VisualShaderNodeSample3D.SOURCE_TEXTURE
+             */
             val TEXTURE: Source get() = Source(0L)
+            /**
+             * Use the uniform texture from sampler port.
+             *
+             * Generated from Godot docs: VisualShaderNodeSample3D.SOURCE_PORT
+             */
             val PORT: Source get() = Source(1L)
+            /**
+             * Represents the size of the `Source` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeSample3D.SOURCE_MAX
+             */
             val MAX: Source get() = Source(2L)
         }
     }

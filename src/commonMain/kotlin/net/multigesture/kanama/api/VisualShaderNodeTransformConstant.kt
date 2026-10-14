@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * A `Transform3D` constant for use within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTransformConstant
  */
 class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
@@ -17,11 +19,21 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
         @JvmName("setConstantProperty")
         set(value) = setConstant(value)
 
+    /**
+     * A `Transform3D` constant which represents the state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformConstant.set_constant
+     */
     fun setConstant(constant: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setConstantBind, segment, constant)
     }
 
+    /**
+     * A `Transform3D` constant which represents the state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformConstant.get_constant
+     */
     fun getConstant(): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getConstantBind, segment)

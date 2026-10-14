@@ -6,9 +6,17 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Virtual class to define custom `VisualShaderNode`s for use in the Visual Shader Editor.
+ *
  * Generated from Godot docs: VisualShaderNodeCustom
  */
 class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
+    /**
+     * Returns the selected index of the drop-down list option within a graph. You may use this
+     * function to define the specific behavior in the `_get_code` or `_get_global_code`.
+     *
+     * Generated from Godot docs: VisualShaderNodeCustom.get_option_index
+     */
     fun getOptionIndex(option: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOptionIndexBind, segment, option)

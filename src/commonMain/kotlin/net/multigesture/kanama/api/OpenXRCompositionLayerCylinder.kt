@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * An OpenXR composition layer that is rendered as an internal slice of a cylinder.
+ *
  * Generated from Godot docs: OpenXRCompositionLayerCylinder
  */
 class OpenXRCompositionLayerCylinder(handle: GodotHandle) : OpenXRCompositionLayer(handle) {
@@ -34,34 +36,74 @@ class OpenXRCompositionLayerCylinder(handle: GodotHandle) : OpenXRCompositionLay
         @JvmName("setFallbackSegmentsProperty")
         set(value) = setFallbackSegments(value)
 
+    /**
+     * The radius of the cylinder.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
+    /**
+     * The radius of the cylinder.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
+    /**
+     * The aspect ratio of the slice. Used to set the height relative to the width.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.set_aspect_ratio
+     */
     fun setAspectRatio(aspectRatio: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAspectRatioBind, segment, aspectRatio)
     }
 
+    /**
+     * The aspect ratio of the slice. Used to set the height relative to the width.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.get_aspect_ratio
+     */
     fun getAspectRatio(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAspectRatioBind, segment)
     }
 
+    /**
+     * The central angle of the cylinder. Used to set the width.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.set_central_angle
+     */
     fun setCentralAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCentralAngleBind, segment, angle)
     }
 
+    /**
+     * The central angle of the cylinder. Used to set the width.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.get_central_angle
+     */
     fun getCentralAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCentralAngleBind, segment)
     }
 
+    /**
+     * The number of segments to use in the fallback mesh.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.set_fallback_segments
+     */
     fun setFallbackSegments(segments: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setFallbackSegmentsBind, segment, segments)
     }
 
+    /**
+     * The number of segments to use in the fallback mesh.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerCylinder.get_fallback_segments
+     */
     fun getFallbackSegments(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFallbackSegmentsBind, segment)
     }

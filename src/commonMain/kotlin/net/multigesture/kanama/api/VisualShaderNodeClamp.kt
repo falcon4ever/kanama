@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Clamps a value within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeClamp
  */
 class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,25 +19,76 @@ class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setOpTypeProperty")
         set(value) = setOpType(value)
 
+    /**
+     * A type of operands and returned value.
+     *
+     * Generated from Godot docs: VisualShaderNodeClamp.set_op_type
+     */
     fun setOpType(opType: VisualShaderNodeClamp.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, opType.value)
     }
 
+    /**
+     * A type of operands and returned value.
+     *
+     * Generated from Godot docs: VisualShaderNodeClamp.get_op_type
+     */
     fun getOpType(): VisualShaderNodeClamp.OpType {
         checkOpen()
         return VisualShaderNodeClamp.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeClamp.OpType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VisualShaderNodeClamp.OpType.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeClamp.OpType
+     */
     @JvmInline
     value class OpType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * A floating-point scalar.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_FLOAT
+             */
             val FLOAT: OpType get() = OpType(0L)
+            /**
+             * An integer scalar.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_INT
+             */
             val INT: OpType get() = OpType(1L)
+            /**
+             * An unsigned integer scalar.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_UINT
+             */
             val UINT: OpType get() = OpType(2L)
+            /**
+             * A 2D vector type.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_VECTOR_2D
+             */
             val VECTOR_2D: OpType get() = OpType(3L)
+            /**
+             * A 3D vector type.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_VECTOR_3D
+             */
             val VECTOR_3D: OpType get() = OpType(4L)
+            /**
+             * A 4D vector type.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_VECTOR_4D
+             */
             val VECTOR_4D: OpType get() = OpType(5L)
+            /**
+             * Represents the size of the `OpType` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeClamp.OP_TYPE_MAX
+             */
             val MAX: OpType get() = OpType(6L)
         }
     }

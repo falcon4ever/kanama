@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Returns the vector that points in the direction of refraction. For use within the visual shader
+ * graph.
+ *
  * Generated from Godot docs: VisualShaderNodeVectorRefract
  */
 class VisualShaderNodeVectorRefract(handle: GodotHandle) : VisualShaderNodeVectorBase(handle) {

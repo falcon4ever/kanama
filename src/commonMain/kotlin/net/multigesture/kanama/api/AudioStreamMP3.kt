@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * MP3 audio stream driver.
+ *
  * Generated from Godot docs: AudioStreamMP3
  */
 class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
@@ -47,71 +49,154 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
         @JvmName("setLoopOffsetProperty")
         set(value) = setLoopOffset(value)
 
+    /**
+     * Contains the audio data in bytes. You can load a file without having to import it beforehand
+     * using the code snippet below. Keep in mind that this snippet loads the whole file into memory
+     * and may not be ideal for huge files (hundreds of megabytes or more).
+     *
+     * Generated from Godot docs: AudioStreamMP3.set_data
+     */
     fun setData(data: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataBind, segment, data)
     }
 
+    /**
+     * Contains the audio data in bytes. You can load a file without having to import it beforehand
+     * using the code snippet below. Keep in mind that this snippet loads the whole file into memory
+     * and may not be ideal for huge files (hundreds of megabytes or more).
+     *
+     * Generated from Godot docs: AudioStreamMP3.get_data
+     */
     fun getData(): ByteArray {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
     }
 
+    /**
+     * If `true`, the stream will play again from the specified `loop_offset` once it reaches the end
+     * of the audio track, or once it reaches the end of the last beat according to the amount
+     * specified in `beat_count`. Useful for ambient sounds and background music.
+     *
+     * Generated from Godot docs: AudioStreamMP3.set_loop
+     */
     fun setLoop(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, enable)
     }
 
+    /**
+     * If `true`, the stream will play again from the specified `loop_offset` once it reaches the end
+     * of the audio track, or once it reaches the end of the last beat according to the amount
+     * specified in `beat_count`. Useful for ambient sounds and background music.
+     *
+     * Generated from Godot docs: AudioStreamMP3.has_loop
+     */
     fun hasLoop(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
     }
 
+    /**
+     * Time in seconds at which the stream starts after being looped.
+     *
+     * Generated from Godot docs: AudioStreamMP3.set_loop_offset
+     */
     fun setLoopOffset(seconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLoopOffsetBind, segment, seconds)
     }
 
+    /**
+     * Time in seconds at which the stream starts after being looped.
+     *
+     * Generated from Godot docs: AudioStreamMP3.get_loop_offset
+     */
     fun getLoopOffset(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLoopOffsetBind, segment)
     }
 
+    /**
+     * The tempo of the audio track, measured in beats per minute.
+     *
+     * Generated from Godot docs: AudioStreamMP3.set_bpm
+     */
     fun setBpm(bpm: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBpmBind, segment, bpm)
     }
 
+    /**
+     * The tempo of the audio track, measured in beats per minute.
+     *
+     * Generated from Godot docs: AudioStreamMP3.get_bpm
+     */
     fun getBpm(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
     }
 
+    /**
+     * The length of the audio track, in beats. The actual duration of the audio file might be longer
+     * than what is indicated by this property. It defines the end of the audio for looping,
+     * `AudioStreamPlaylist`, and `AudioStreamInteractive`.
+     *
+     * Generated from Godot docs: AudioStreamMP3.set_beat_count
+     */
     fun setBeatCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBeatCountBind, segment, count)
     }
 
+    /**
+     * The length of the audio track, in beats. The actual duration of the audio file might be longer
+     * than what is indicated by this property. It defines the end of the audio for looping,
+     * `AudioStreamPlaylist`, and `AudioStreamInteractive`.
+     *
+     * Generated from Godot docs: AudioStreamMP3.get_beat_count
+     */
     fun getBeatCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBeatCountBind, segment)
     }
 
+    /**
+     * The number of beats within a single bar in the audio track.
+     *
+     * Generated from Godot docs: AudioStreamMP3.set_bar_beats
+     */
     fun setBarBeats(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBarBeatsBind, segment, count)
     }
 
+    /**
+     * The number of beats within a single bar in the audio track.
+     *
+     * Generated from Godot docs: AudioStreamMP3.get_bar_beats
+     */
     fun getBarBeats(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBarBeatsBind, segment)
     }
 
     companion object {
+        /**
+         * Creates a new `AudioStreamMP3` instance from the given buffer. The buffer must contain MP3 data.
+         *
+         * Generated from Godot docs: AudioStreamMP3.load_from_buffer
+         */
         fun loadFromBuffer(streamData: ByteArray): AudioStreamMP3? {
             return AudioStreamMP3.wrapOwned(ObjectCalls.ptrcallWithByteArrayArgRetObject(Binds.loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
+        /**
+         * Creates a new `AudioStreamMP3` instance from the given file path. The file must be in MP3
+         * format.
+         *
+         * Generated from Godot docs: AudioStreamMP3.load_from_file
+         */
         fun loadFromFile(path: String): AudioStreamMP3? {
             return AudioStreamMP3.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadFromFileBind, NULL_SEGMENT, path))
         }

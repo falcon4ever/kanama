@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Base class for CSG primitives.
+ *
  * Generated from Godot docs: CSGPrimitive3D
  */
 open class CSGPrimitive3D(handle: GodotHandle) : CSGShape3D(handle) {
@@ -16,10 +18,22 @@ open class CSGPrimitive3D(handle: GodotHandle) : CSGShape3D(handle) {
         @JvmName("setFlipFacesProperty")
         set(value) = setFlipFaces(value)
 
+    /**
+     * If set, the order of the vertices in each triangle are reversed resulting in the backside of the
+     * mesh being drawn.
+     *
+     * Generated from Godot docs: CSGPrimitive3D.set_flip_faces
+     */
     fun setFlipFaces(flipFaces: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setFlipFacesBind, segment, flipFaces)
     }
 
+    /**
+     * If set, the order of the vertices in each triangle are reversed resulting in the backside of the
+     * mesh being drawn.
+     *
+     * Generated from Godot docs: CSGPrimitive3D.get_flip_faces
+     */
     fun getFlipFaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipFacesBind, segment)
     }

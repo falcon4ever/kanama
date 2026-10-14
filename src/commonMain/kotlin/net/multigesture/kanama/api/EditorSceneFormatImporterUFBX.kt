@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Import FBX files using the ufbx library.
+ *
  * Generated from Godot docs: EditorSceneFormatImporterUFBX
  */
 class EditorSceneFormatImporterUFBX(handle: GodotHandle) : EditorSceneFormatImporter(handle) {

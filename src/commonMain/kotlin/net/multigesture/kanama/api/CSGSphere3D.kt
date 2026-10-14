@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A CSG Sphere shape.
+ *
  * Generated from Godot docs: CSGSphere3D
  */
 class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
@@ -41,42 +43,94 @@ class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
 
+    /**
+     * Radius of the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
+    /**
+     * Radius of the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
+    /**
+     * Number of vertical slices for the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.set_radial_segments
+     */
     fun setRadialSegments(radialSegments: Int) {
         ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, radialSegments)
     }
 
+    /**
+     * Number of vertical slices for the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.get_radial_segments
+     */
     fun getRadialSegments(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
     }
 
+    /**
+     * Number of horizontal slices for the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.set_rings
+     */
     fun setRings(rings: Int) {
         ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
     }
 
+    /**
+     * Number of horizontal slices for the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.get_rings
+     */
     fun getRings(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
     }
 
+    /**
+     * If `true` the normals of the sphere are set to give a smooth effect making the sphere seem
+     * rounded. If `false` the sphere will have a flat shaded look.
+     *
+     * Generated from Godot docs: CSGSphere3D.set_smooth_faces
+     */
     fun setSmoothFaces(smoothFaces: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothFacesBind, segment, smoothFaces)
     }
 
+    /**
+     * If `true` the normals of the sphere are set to give a smooth effect making the sphere seem
+     * rounded. If `false` the sphere will have a flat shaded look.
+     *
+     * Generated from Godot docs: CSGSphere3D.get_smooth_faces
+     */
     fun getSmoothFaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSmoothFacesBind, segment)
     }
 
+    /**
+     * The material used to render the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The material used to render the sphere.
+     *
+     * Generated from Godot docs: CSGSphere3D.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }

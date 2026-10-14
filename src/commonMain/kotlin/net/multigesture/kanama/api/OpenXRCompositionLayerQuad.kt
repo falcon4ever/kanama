@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * An OpenXR composition layer that is rendered as a quad.
+ *
  * Generated from Godot docs: OpenXRCompositionLayerQuad
  */
 class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(handle) {
@@ -17,10 +19,20 @@ class OpenXRCompositionLayerQuad(handle: GodotHandle) : OpenXRCompositionLayer(h
         @JvmName("setQuadSizeProperty")
         set(value) = setQuadSize(value)
 
+    /**
+     * The dimensions of the quad.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerQuad.set_quad_size
+     */
     fun setQuadSize(size: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(Binds.setQuadSizeBind, segment, size)
     }
 
+    /**
+     * The dimensions of the quad.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerQuad.get_quad_size
+     */
     fun getQuadSize(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getQuadSizeBind, segment)
     }

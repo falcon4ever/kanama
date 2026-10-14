@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A custom global visual shader graph expression written in Godot Shading Language.
+ *
  * Generated from Godot docs: VisualShaderNodeGlobalExpression
  */
 class VisualShaderNodeGlobalExpression(handle: GodotHandle) : VisualShaderNodeExpression(handle) {

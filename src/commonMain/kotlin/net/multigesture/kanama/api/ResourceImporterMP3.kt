@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Imports an MP3 audio file for playback.
+ *
  * Generated from Godot docs: ResourceImporterMP3
  */
 class ResourceImporterMP3(handle: GodotHandle) : ResourceImporter(handle) {

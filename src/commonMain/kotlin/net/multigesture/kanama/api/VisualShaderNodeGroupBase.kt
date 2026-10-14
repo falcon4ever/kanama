@@ -6,109 +6,222 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Base class for a family of nodes with variable number of input and output ports within the
+ * visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeGroupBase
  */
 open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResizableBase(handle) {
+    /**
+     * Defines all input ports using a `String` formatted as a colon-separated list: `id,type,name;`
+     * (see `add_input_port`).
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.set_inputs
+     */
     fun setInputs(inputs: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInputsBind, segment, inputs)
     }
 
+    /**
+     * Returns a `String` description of the input ports as a colon-separated list using the format
+     * `id,type,name;` (see `add_input_port`).
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.get_inputs
+     */
     fun getInputs(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputsBind, segment)
     }
 
+    /**
+     * Defines all output ports using a `String` formatted as a colon-separated list: `id,type,name;`
+     * (see `add_output_port`).
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.set_outputs
+     */
     fun setOutputs(outputs: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOutputsBind, segment, outputs)
     }
 
+    /**
+     * Returns a `String` description of the output ports as a colon-separated list using the format
+     * `id,type,name;` (see `add_output_port`).
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.get_outputs
+     */
     fun getOutputs(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getOutputsBind, segment)
     }
 
+    /**
+     * Returns `true` if the specified port name does not override an existed port name and is valid
+     * within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.is_valid_port_name
+     */
     fun isValidPortName(name: String): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(Binds.isValidPortNameBind, segment, name)
     }
 
+    /**
+     * Adds an input port with the specified `type` (see `VisualShaderNode.PortType`) and `name`.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.add_input_port
+     */
     fun addInputPort(id: Int, type: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.addInputPortBind, segment, id, type, name)
     }
 
+    /**
+     * Removes the specified input port.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.remove_input_port
+     */
     fun removeInputPort(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeInputPortBind, segment, id)
     }
 
+    /**
+     * Returns the number of input ports in use. Alternative for `get_free_input_port_id`.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.get_input_port_count
+     */
     fun getInputPortCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputPortCountBind, segment)
     }
 
+    /**
+     * Returns `true` if the specified input port exists.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.has_input_port
+     */
     fun hasInputPort(id: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasInputPortBind, segment, id)
     }
 
+    /**
+     * Removes all previously specified input ports.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.clear_input_ports
+     */
     fun clearInputPorts() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearInputPortsBind, segment)
     }
 
+    /**
+     * Adds an output port with the specified `type` (see `VisualShaderNode.PortType`) and `name`.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.add_output_port
+     */
     fun addOutputPort(id: Int, type: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.addOutputPortBind, segment, id, type, name)
     }
 
+    /**
+     * Removes the specified output port.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.remove_output_port
+     */
     fun removeOutputPort(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.removeOutputPortBind, segment, id)
     }
 
+    /**
+     * Returns the number of output ports in use. Alternative for `get_free_output_port_id`.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.get_output_port_count
+     */
     fun getOutputPortCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputPortCountBind, segment)
     }
 
+    /**
+     * Returns `true` if the specified output port exists.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.has_output_port
+     */
     fun hasOutputPort(id: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasOutputPortBind, segment, id)
     }
 
+    /**
+     * Removes all previously specified output ports.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.clear_output_ports
+     */
     fun clearOutputPorts() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearOutputPortsBind, segment)
     }
 
+    /**
+     * Renames the specified input port.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.set_input_port_name
+     */
     fun setInputPortName(id: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setInputPortNameBind, segment, id, name)
     }
 
+    /**
+     * Sets the specified input port's type (see `VisualShaderNode.PortType`).
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.set_input_port_type
+     */
     fun setInputPortType(id: Int, type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setInputPortTypeBind, segment, id, type)
     }
 
+    /**
+     * Renames the specified output port.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.set_output_port_name
+     */
     fun setOutputPortName(id: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(Binds.setOutputPortNameBind, segment, id, name)
     }
 
+    /**
+     * Sets the specified output port's type (see `VisualShaderNode.PortType`).
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.set_output_port_type
+     */
     fun setOutputPortType(id: Int, type: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setOutputPortTypeBind, segment, id, type)
     }
 
+    /**
+     * Returns a free input port ID which can be used in `add_input_port`.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.get_free_input_port_id
+     */
     fun getFreeInputPortId(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFreeInputPortIdBind, segment)
     }
 
+    /**
+     * Returns a free output port ID which can be used in `add_output_port`.
+     *
+     * Generated from Godot docs: VisualShaderNodeGroupBase.get_free_output_port_id
+     */
     fun getFreeOutputPortId(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFreeOutputPortIdBind, segment)
