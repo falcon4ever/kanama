@@ -1230,6 +1230,14 @@ actual object ObjectCalls {
     }
   }
 
+  /**
+   * One whole blob record (`[int32 variant_type][int32 byteLen][payload]`), decoded as a container
+   * return is: the inbound container argument of a signal lambda or a script method (task 122 item
+   * 4, `KANAMA_IOS_PT_VARIANT_RECORD`). Object elements are borrowed wrappers.
+   */
+  internal fun decodeVariantRecord(record: ByteArray): Any? =
+    if (record.size >= 8) ContainerBlob(record, 0).record() else null
+
   private fun MemScope.ptrcallContainerBlob(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -27444,22 +27452,6 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
-  }
-
-  actual fun ptrcallWithStringNameArrayArgsRetVariantScalar(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    method: String,
-    arguments: List<Any?>,
-  ): Any? = memScoped {
-    val c1 = packArrayBlob(arguments)
-    val types = allocArray<IntVar>(2)
-    types[0] = PT_STRING_NAME
-    types[1] = PT_ARRAY
-    val ptrs = allocArray<COpaquePointerVar>(2)
-    ptrs[0] = method.cstr.ptr.reinterpret<CPointed>()
-    ptrs[1] = c1.reinterpret<CPointed>()
-    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
   actual fun ptrcallWithStringNameArrayBoolArgs(

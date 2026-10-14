@@ -38161,26 +38161,6 @@ actual object ObjectCalls {
     }
   }
 
-  actual fun ptrcallWithStringNameArrayArgsRetVariantScalar(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    method: String,
-    arguments: List<Any?>,
-  ): Any? {
-    Arena.ofConfined().use { arena ->
-      val argumentsCell = arena.allocate(8L, 8L)
-      try {
-        BuiltinTypes.initArray(argumentsCell, arguments)
-        val args = arena.allocate(ADDRESS, 2)
-        args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(method))
-        args.setAtIndex(ADDRESS, 1, argumentsCell)
-        return readVariantReturn(methodBind, instance, args, arena)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.ARRAY, argumentsCell)
-      }
-    }
-  }
-
   actual fun ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,

@@ -134,7 +134,7 @@ custom Callable; `MainThread` is an `expect object` whose iOS actual
 queues from `KanamaIosRuntime.frame()`. The compiler holds both to the desktop public surface
 (task 117 P4′).
 
-Three ownership rules of the bridge, each with its self-test rows:
+Four rules of the bridge (three about ownership), each with its self-test rows:
 
 - **A lambda's closure lives as long as any Callable of it (task 113).** The shim creates a custom
   Callable per connect and per disconnect (the temp that `Object.disconnect` compares), and
@@ -155,8 +155,19 @@ Three ownership rules of the bridge, each with its self-test rows:
   `RefCounted.owned(...)`. The blob lists what it retained until Kotlin has the bytes: an OOM blob
   and a parked blob dropped undrained release them. No other container path sets the flag (the
   generated `*RetArray` wrappers and the measure-then-fill path stay borrowed). Desktop does the
-  same in `BuiltinTypes.readVariantScalar(..., ownElements = true)`. Row:
-  `call-container-elements` (frame 1, `RegEx.search_all`).
+  same in `BuiltinTypes.readVariantScalar(..., ownElements = true)`. `callv` takes this path too
+  (`callWithVariantArgs` with Godot's `Object.callv` bind). Rows (frame 1, `RegEx.search_all`):
+  `call-container-elements`, `callv-container-elements`, and `call-container-elements-parked`
+  (100 matches: the blob outgrows the 1024-byte inline buffer and takes the park -> take path with
+  its retained list).
+- **Inbound arguments decode like returns (task 122 item 4).** `kanama_ios_marshal_variant_args`
+  (a signal lambda's trampoline and a script method call) puts scalars, strings and value types in
+  their cells and a container (Array, Dictionary, Packed*Array) in one blob record tagged
+  `PT_VARIANT_RECORD`, which `decodeIosCallArg` reads with the container-return reader
+  (`ObjectCalls.decodeVariantRecord`); its Object elements stay borrowed (the caller's Variant holds
+  them for the call). A type with no cell (Callable, Signal) arrives tagged
+  `KANAMA_IOS_ARG_UNMARSHALLED_BASE + type` and the decode throws naming it, never a silent null.
+  Rows: `lambda-args(...)` (scene init: String, Vector3, Color, Array, Dictionary, Vector3i).
 - **A script property's default is its initializer (task 138 item 8).** The iOS registry carries
   `KanamaIosScriptProperty.defaultValue`, emitted by KSP from the literal desktop's registrar
   declares as `default<Name>` and converted like `getProperty`; `Script._has/_get_property_default_value`

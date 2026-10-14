@@ -109,7 +109,7 @@
       "lines": 151,
       "raises": [
         "137 -> 148: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
-        "148 -> 151: task 122 item 3 (call() owns RefCounted container elements, documented on GodotObject.call) and task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)"
+        "148 -> 151: task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)"
       ],
       "reason": "signal plumbing actual"
     },
@@ -126,7 +126,7 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt": {
       "category": "runtime-core",
-      "lines": 99,
+      "lines": 97,
       "reason": "iOS device self-test of the script-access paths"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {

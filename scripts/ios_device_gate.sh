@@ -200,8 +200,12 @@ if [[ "$CONSOLE_SECONDS" -gt 0 && "$RUN_DEMOS" -eq 1 ]]; then
   fi
 fi
 # Task 138 item 24: the runtime self-tests are compiled only into a -PkanamaIosSelfTest=true build. A demos
-# runner that does not pass it builds apps without them, and its console check would have nothing to verify.
-if [[ "$RUN_DEMOS" -eq 1 ]] && ! grep -q -- "-PkanamaIosSelfTest=true" "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
+# runner that does not pass it builds apps without them, and its console check would have nothing to verify. The
+# match is the argument itself: a continuation line holding only it, or a gradlew command line outside quotes. The
+# runner's comments and messages name the flag too, so a plain grep would accept a runner that only mentions it.
+if [[ "$RUN_DEMOS" -eq 1 ]] &&
+   ! grep -Eq -- '^[[:space:]]*-PkanamaIosSelfTest=true[[:space:]]*\\?$|^[^#"'"'"']*gradlew[^#"'"'"']*[[:space:]]-PkanamaIosSelfTest=true([[:space:]]|$)' \
+     "$DEMOS_ROOT/scripts/ios_device_run.sh"; then
   echo "[ios_device_gate] the demos checkout's scripts/ios_device_run.sh does not build the runtime self-tests (-PkanamaIosSelfTest=true, kanama task 138 item 24); update kanama-demos." >&2
   exit 2
 fi

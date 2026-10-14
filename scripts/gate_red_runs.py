@@ -398,6 +398,22 @@ case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],
      "dispatcher-no-static", "a static call is routed through a guarded iOS entry point")
+# The iOS self-test verdict (task 138 item 24) on a saved console log: the fixture is a clean three-summary run, the
+# red runs drop or fail a summary. No device: the same selftest_verdict a device run applies to its console.
+IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
+IOS_SELFTEST_CHECK = ["bash", "scripts/ios_visual_smoke.sh", "--check-selftest-log", IOS_SELFTEST_LOG]
+IOS_SELFTEST_SUMMARIES = ("[kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed\n"
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7\n"
+                          "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7\n")
+case("ios_visual_smoke.sh --check-selftest-log (no self-test)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, IOS_SELFTEST_SUMMARIES, "")],
+     "summary missing: /PTRCALL SELFTEST MATRIX", "a console with no self-test lines at all (a build without -PkanamaIosSelfTest=true) must fail, not pass as clean")
+case("ios_visual_smoke.sh --check-selftest-log (no frame 1)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7\n", "")],
+     "summary missing: /OBJECTCALLS SELFTEST \\(frame 1\\)", "the app never reached its first frame: the frame-1 summary is missing while the other two passed")
+case("ios_visual_smoke.sh --check-selftest-log (1 failed)", IOS_SELFTEST_CHECK,
+     [Edit(IOS_SELFTEST_LOG, "(frame 1): 25 passed, 0 failed", "(frame 1): 24 passed, 1 failed")],
+     "runtime self-test reported failures", "a summary reports `N passed, 1 failed` with no FAIL line")
 case("check_jdk_locations_parity.py", py("check_jdk_locations_parity.py"),
      [Edit("bootstrap/bootstrap.c", '{"linux", "/usr/lib64/jvm", "", ""},', '{"linux", "/usr/lib65/jvm", "", ""},')],
      "differs from bootstrap/bootstrap.c", "one JDK location row differs between bootstrap.c and the plugins")

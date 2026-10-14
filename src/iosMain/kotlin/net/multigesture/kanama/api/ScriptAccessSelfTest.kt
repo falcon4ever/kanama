@@ -2,10 +2,10 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.ios.KanamaIosRuntime
+import net.multigesture.kanama.ios.ScopeProbeScript
 
 // KANAMA-IOS-HANDWRITTEN: [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime.
 private class ScriptAccessSelfTestScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
-
 
 /**
  * Task 133 self-test rows, run by `kanamaIosRuntimeObjectCallsSelfTestFrame` once the SceneTree is
@@ -82,7 +82,7 @@ internal fun scriptAccessSelfTestRows(check: (String, Boolean) -> Unit) {
   val scopeOwner = ObjectCalls.constructObject("Node")
   val scopeScript = KanamaIosRuntime.createScriptResource(KanamaIosRuntime.SCOPE_PROBE_SCRIPT_PATH)
   val scopeInstance = KanamaIosRuntime.createScriptInstance(scopeScript, scopeOwner.address())
-  val probe = KanamaIosRuntime.scriptInstanceForOwner(scopeOwner.address()) as? net.multigesture.kanama.ios.ScopeProbeScript
+  val probe = KanamaIosRuntime.scriptInstanceForOwner(scopeOwner.address()) as? ScopeProbeScript
   check("scope-probe script instanced", scopeInstance != 0L && probe != null)
   if (scopeInstance != 0L && probe != null) {
     val generation = probe.readyGeneration

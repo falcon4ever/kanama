@@ -5,7 +5,6 @@
 # Sources (recursive): src/iosMain/kotlin/net/multigesture/kanama/api
 <top-level>: fun PhysicsDirectSpaceState3D.intersectRay(parameters: PhysicsRayQueryParameters3D?): Map<String, Any?>
 <top-level>: fun kanamaIosRuntimeDispatchCallable(callbackId: Long, argumentTags: CPointer<IntVar>?, argumentPtrs: CPointer<COpaquePointerVar>?, argumentCount: Int): Int
-<top-level>: fun kanamaIosRuntimeReleaseCallable(callbackId: Long)
 <top-level>: inline fun <reified T: Any> newScriptInstance(): OwnedScriptResource<T>
 GodotSignal: class GodotSignal
 MainThread: object MainThread

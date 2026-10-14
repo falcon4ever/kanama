@@ -53,14 +53,26 @@ verdict on a saved console log.
 
 ### Fixed — RefCounted elements of an `Object.call` container result survive the call (task 122 item 3)
 
-`node.call("make_items")` (any `Object.call`-family call: `call`, `callDeferred`, `callThreadSafe`,
-`callGroup`, `GDScript.new`, `ClassDB.classCallStatic`) returning an `Array` or `Dictionary` whose
+`node.call("make_items")` (any `Object.call`-family call: `call`, `callv`, `callDeferred`,
+`callThreadSafe`, `callGroup`, `GDScript.new`, `ClassDB.classCallStatic`, and `GodotCallable.call`/
+`callv`) returning an `Array` or `Dictionary` whose
 `RefCounted` elements had their only reference in that container (`RegEx.search_all`, a factory)
 handed back views of objects already freed, on desktop and iOS. Those elements are now owning
 `RefCounted` wrappers, one reference each, released by `close()` or by the garbage collector, like
 the elements of a typed `Array` a generated method returns. An object result itself keeps its
 documented contract (a borrowed view for `call`). Property reads (`get`, `getMeta`) keep borrowed
-elements: the object still holds them.
+elements: the object still holds them. `callv` now takes the same path as `call`: it used to keep
+borrowed elements, so `obj.callv("make_items", emptyList())` returned freed handles where
+`obj.call("make_items")` did not.
+
+Each owned element costs a `reference()` and a garbage-collector registration, like any owned
+wrapper. A `call()` made every frame that returns hundreds of resources piles up registrations
+faster than the collector releases them and approaches the cap of 100,000 live registrations; past
+it, new elements are no longer registered and stay alive until you `close()` them (a one-time
+warning says so). `close()` such elements (or `use { }`) rather than leave them to the collector.
+Elements of a `call()` made off the main thread get no garbage
+collector fallback (the release must run on the main thread): close them yourself, the same rule as
+for the elements of a typed `Array` returned off the main thread.
 
 ### Fixed — iOS: script properties report their default value (task 138 item 8)
 
@@ -80,6 +92,22 @@ was freed, so a closure connected twice with `CONNECT_REFERENCE_COUNTED` and dis
 whose second connect Godot refused) left a live connection that fired nothing; it is now released
 with the last one. `GodotSignal.connect` registers a new closure per connect, so only the bridge's
 own callers could reach the second one.
+
+- **Source break:** `top-level` `kanamaIosRuntimeReleaseCallable` (iOS) is removed: the C shim's
+  export it implemented had no caller left once the Callable free counts lifetimes
+  (`kanamaIosRuntimeCallableFreed`). It was never meant to be called from a script.
+
+### Fixed — iOS: a signal lambda receives Array, Dictionary and Packed*Array arguments (task 122 item 4)
+
+A `GodotSignal.connect(target, n) { args -> ... }` lambda on iPhone could not receive a container
+argument: an emitted `Array`, `Dictionary` or `Packed*Array` failed the
+call with "Variant type 28 is not marshalled on iOS yet" (and, before task 134, every argument but
+bool / int / float / Object arrived as `null`). Container arguments now cross as the record a
+container return uses and decode with the same reader, so the lambda receives the `List` / `Map` /
+packed list desktop delivers. A script method's `Any?` parameter receives them the same way. Object
+elements of such an argument are borrowed (the emitter's Variant holds them for the call), as on
+desktop. Self-test rows `lambda-args(...)` cover String, Vector3, Color, Array, Dictionary and a
+value type (`Vector3i`).
 
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 

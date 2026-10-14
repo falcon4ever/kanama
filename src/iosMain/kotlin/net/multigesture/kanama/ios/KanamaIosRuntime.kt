@@ -1667,6 +1667,8 @@ private const val IOS_PT_ARRAY = 30
 // BUILD-tagged Variant ARG (task 100, parcel 7): the desc {tag, ptr} boxed by the dispatch. Must
 // match KANAMA_IOS_PT_VARIANT (38) at the end of the C PT enum and PT_VARIANT in the generator.
 internal const val IOS_PT_VARIANT = 38
+// Inbound-only container argument cell, one blob record (task 122 item 4).
+private const val IOS_PT_VARIANT_RECORD = 42
 private const val IOS_PT_PACKED_BYTE_ARRAY = 31
 private const val IOS_PT_PACKED_INT32_ARRAY = 32
 private const val IOS_PT_PACKED_INT64_ARRAY = 33
@@ -1834,9 +1836,10 @@ internal fun encodeIosRawValue(value: Any?, out: CPointer<ByteVar>): Int {
 
 // Decodes one PT-tagged inbound call arg (see kanama_ios_script_instance_call). OBJECT yields the
 // raw int64 handle; the generated callV branch wraps it in the declared GodotObject subtype. A
-// Variant type the shim does not marshal (an `Any?` parameter receiving a Dictionary, task 131 N7)
-// throws, naming the type, like a typed signal argument does: the call is reported as a script
-// error instead of the method silently seeing null.
+// container (an `Any?` parameter receiving a Dictionary, task 131 N7) arrives as one blob record
+// since task 122 item 4. A Variant type the shim still does not marshal (Callable, Signal) throws,
+// naming the type, like a typed signal argument does: the call is reported as a script error
+// instead of the method silently seeing null.
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
   if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
@@ -1873,6 +1876,12 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     IOS_PT_NODE_PATH -> NodePath(ptr.toKString())
     // Task 131 N7: a RID argument of a script method (typed signals read it the same way).
     IOS_PT_RID -> RID(ptr.reinterpret<LongVar>()[0])
+    // Task 122 item 4: an Array/Dictionary/Packed*Array argument, one blob record decoded by the
+    // container-return reader (its 8-byte header carries the payload length).
+    IOS_PT_VARIANT_RECORD -> {
+      val n = ptr.reinterpret<IntVar>()
+      ObjectCalls.decodeVariantRecord(ptr.readBytes(8 + n[1]))
+    }
     else -> decodeIosRawValue(tag, ptr)
   }
 }

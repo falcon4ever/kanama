@@ -4339,22 +4339,68 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       )
 
       // emitSignal with two arguments takes the Variant path (Object.call("emit_signal", ...)).
-      // The iOS lambda trampoline (kanamaIosRuntimeDispatchCallable in IosGodotApi.kt) decodes
-      // only bool / int / float / Object arguments and hands every other type over as null, so
-      // the String "a" arrives as null on iOS (desktop delivers "a"); the row asserts the arity
-      // and the int, which the no-op path cannot produce.
+      // The lambda trampoline (kanama_ios_callable_trampoline -> kanama_ios_marshal_variant_args
+      // -> IosSignalArgReader) once decoded only bool / int / float / Object and handed the String
+      // over as null; since task 134 D4 the cells carry Strings, and the row asserts both values.
       var pairArgs: List<Any?>? = null
       val pairConnection =
         root.signal("kanama_p3_args").connect(target, 2) { args -> pairArgs = args }
       root.emitSignal("kanama_p3_args", "a", 2L)
       val receivedPair = pairArgs
       check(
-        "root(emitSignal two args, Variant path -> lambda received (_, 2))",
+        "root(emitSignal two args, Variant path -> lambda received (a, 2))",
         pairConnection.error == net.multigesture.kanama.api.GodotError.OK &&
           receivedPair != null &&
           receivedPair.size == 2 &&
+          receivedPair[0] == "a" &&
           (receivedPair[1] as? Number)?.toLong() == 2L,
       )
+
+      // Task 122 item 4: every argument type a lambda can receive arrives with its value, desktop
+      // parity, one row per type so a failure names it. String, Vector3, Color and Vector3i (a
+      // task-133 raw value type) cross as their cells; Array and Dictionary as one blob record
+      // (PT_VARIANT_RECORD), decoded by the container-return reader. Before, every type but bool
+      // / int / float / Object reached the lambda as null.
+      root.addUserSignal("kanama_122_args", emptyList())
+      var typedArgs: List<Any?>? = null
+      val typedConnection =
+        root.signal("kanama_122_args").connect(target, 6) { args -> typedArgs = args }
+      root.emitSignal(
+        "kanama_122_args",
+        "text",
+        Vector3(1.0, 2.0, 3.0),
+        Color(0.25, 0.5, 0.75, 1.0),
+        listOf(1L, "two", Vector2(3.0, 4.0)),
+        mapOf("k" to 5L, "nested" to listOf("x")),
+        Vector3i(6, 7, 8),
+      )
+      val got = typedArgs
+      fun lambdaArg(index: Int): Any? = got?.getOrNull(index)
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST lambda-args " +
+          "count=${got?.size} values=${got?.joinToString(" | ")}"
+      )
+      check(
+        "lambda-args(emitSignal six args -> lambda called with 6)",
+        typedConnection.error == net.multigesture.kanama.api.GodotError.OK && got?.size == 6,
+      )
+      check("lambda-args(String -> \"text\")", lambdaArg(0) == "text")
+      check("lambda-args(Vector3 -> (1, 2, 3))", lambdaArg(1) == Vector3(1.0, 2.0, 3.0))
+      check(
+        "lambda-args(Color -> (0.25, 0.5, 0.75, 1))",
+        lambdaArg(2) == Color(0.25, 0.5, 0.75, 1.0),
+      )
+      check(
+        "lambda-args(Array -> [1, two, (3, 4)])",
+        lambdaArg(3) == listOf(1L, "two", Vector2(3.0, 4.0)),
+      )
+      check(
+        "lambda-args(Dictionary -> {k: 5, nested: [x]})",
+        lambdaArg(4) == mapOf("k" to 5L, "nested" to listOf("x")),
+      )
+      check("lambda-args(Vector3i value type -> (6, 7, 8))", lambdaArg(5) == Vector3i(6, 7, 8))
+      typedConnection.close()
+      root.removeUserSignal("kanama_122_args")
 
       // Close both lambda connections; "no connections" is admissible only because the two rows
       // above proved each connection delivered.
@@ -4456,11 +4502,20 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
   // come back as owning wrappers: alive (get_string answers), one reference each (ours), and freed
   // by their one close(). Before, they were borrowed handles of objects already freed. A frame-1
   // row: RegEx is a module class, fully registered once the main loop runs.
-  run {
+  // Three rows share the body: `call` (inline blob), `callv` (same owned path as `call` since the
+  // task-122 review; it used to keep borrowed elements), and `call` over 100 matches, whose blob
+  // (>= 13 bytes per OBJECT record) is larger than the 1024-byte inline buffer, so it takes the
+  // park -> take path with its retained list.
+  fun callContainerElementsRow(
+    row: String,
+    subject: String,
+    invoke: (net.multigesture.kanama.api.RegEx, String) -> Any?,
+  ) {
     val regex = net.multigesture.kanama.api.RegEx.createFromString("\\d")
-    check("call-container-elements(RegEx compiled)", regex != null)
-    if (regex == null) return@run
-    val matches = regex.call("search_all", "a1b2c3") as? List<*> ?: emptyList<Any?>()
+    check("$row(RegEx compiled)", regex != null)
+    if (regex == null) return
+    val expected = subject.filter { it.isDigit() }.map { it.toString() }
+    val matches = invoke(regex, subject) as? List<*> ?: emptyList<Any?>()
     val owned = matches.isNotEmpty() && matches.all { it is RefCounted }
     val strings =
       if (owned) matches.map { (it as GodotObject).call("get_string", 0) } else emptyList()
@@ -4470,19 +4525,38 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     if (owned) matches.forEach { (it as RefCounted).close() }
     val released = ids.isNotEmpty() && ids.none { IosGodot.isInstanceIdValid(it) }
     regex.close()
+    val shown = if (matches.size <= 3) strings.joinToString(",") else "${strings.size} strings"
+    val counts =
+      if (matches.size <= 3) refcounts.joinToString(",")
+      else
+        refcounts
+          .groupingBy { it }
+          .eachCount()
+          .entries
+          .joinToString(",") { "${it.key}x${it.value}" }
     println(
-      "[kanama][ios][kn] OBJECTCALLS SELFTEST call-container-elements count=${matches.size} " +
-        "owned=$owned strings=${strings.joinToString(",")} refcounts=${refcounts.joinToString(",")} " +
-        "released=$released"
+      "[kanama][ios][kn] OBJECTCALLS SELFTEST $row count=${matches.size} " +
+        "owned=$owned strings=$shown refcounts=$counts released=$released"
     )
     check(
-      "call-container-elements(3 owned RefCounted elements, alive after the call)",
-      matches.size == 3 && owned && strings == listOf("1", "2", "3"),
+      "$row(${expected.size} owned RefCounted elements, alive after the call)",
+      matches.size == expected.size && owned && strings == expected,
     )
     check(
-      "call-container-elements(one reference each, freed by their one close())",
-      refcounts == listOf(1, 1, 1) && released,
+      "$row(one reference each, freed by their one close())",
+      refcounts.size == expected.size && refcounts.all { it == 1 } && released,
     )
+  }
+  callContainerElementsRow("call-container-elements", "a1b2c3") { regex, subject ->
+    regex.call("search_all", subject)
+  }
+  callContainerElementsRow("callv-container-elements", "a1b2c3") { regex, subject ->
+    regex.callv("search_all", listOf(subject))
+  }
+  callContainerElementsRow("call-container-elements-parked", "0123456789".repeat(10)) {
+    regex,
+    subject ->
+    regex.call("search_all", subject)
   }
 
   // Task 129 A — a Signal ARGUMENT through the generated ptrcallWithSignalArgRetObject (PT_SIGNAL:

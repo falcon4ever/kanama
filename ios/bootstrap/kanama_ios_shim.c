@@ -200,7 +200,6 @@ extern int32_t kanama_ios_runtime_dispatch_callable(
     const void *const *argument_ptrs,
     int32_t argument_count
 );
-extern void kanama_ios_runtime_release_callable(int64_t callback_id);
 // Task 113: one call per custom Callable created for callback_id (connect, and the disconnect
 // temp) and one per Callable freed (kanama_ios_callable_free); the runtime releases the closure
 // when the LAST Callable of its id is gone, not the first (a refused second connect's temp, a
@@ -806,6 +805,13 @@ enum {
     // name; the dispatch builds Signal(Object, StringName) (constructor index 2) into a cell, passes
     // it to ptrcall and destroys it after the call. Append-only — never renumber.
     KANAMA_IOS_PT_SIGNAL,               // 41
+    // INBOUND-only (task 122 item 4): a container argument handed to Kotlin by
+    // kanama_ios_marshal_variant_args (a signal lambda's or a script method's Array, Dictionary or
+    // Packed*Array). The cell is one blob record [int32 variant_type][int32 byteLen][payload], the
+    // encoding a container return uses (kanama_ios_blob_encode_variant), decoded by the same Kotlin
+    // reader. Never a ptrcall argument tag. Value (42) must match IOS_PT_VARIANT_RECORD in
+    // KanamaIosRuntime.kt. Append-only — never renumber.
+    KANAMA_IOS_PT_VARIANT_RECORD,       // 42
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -8683,9 +8689,10 @@ static void kanama_ios_variant_to_vector2i(GDExtensionConstVariantPtr variant, i
 // PT-tagged cells for Variant arguments handed to Kotlin: a script method call
 // (kanama_ios_script_instance_call) and a signal lambda's Callable (kanama_ios_callable_trampoline)
 // marshal the same way. POD goes in the i64/f64/fvec/ivec cells; String, StringName and NodePath
-// are extracted to a utf8 cell freed by kanama_ios_free_arg_cells. Unaudited Variant types are
-// PT_VOID (the Kotlin decode yields null) so an unsupported arg can't silently route to the wrong
-// typed call.
+// are extracted to a utf8 cell, containers (Array, Dictionary, Packed*Array) to one blob record
+// (PT_VARIANT_RECORD, task 122 item 4), both freed by kanama_ios_free_arg_cells. A Variant type with
+// no cell (Callable, Signal) is tagged KANAMA_IOS_ARG_UNMARSHALLED_BASE + type, and the Kotlin
+// decode fails naming that type instead of reading null.
 #define KANAMA_IOS_ARG_UNMARSHALLED_BASE 1000
 
 typedef struct {
@@ -8834,6 +8841,34 @@ static void kanama_ios_marshal_variant_args(
                 tags[i] = KANAMA_IOS_PT_OBJECT;
                 ptrs[i] = &i64[i];
                 break;
+            case KANAMA_IOS_VARIANT_TYPE_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_DICTIONARY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_INT32_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_INT64_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT64_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
+            case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY: {
+                // Task 122 item 4: a container crosses as one blob record, the encoding (and the
+                // Kotlin reader) of a container return. Object elements stay borrowed handles: the
+                // caller's Variant holds them for the whole call (desktop: readArrayScalars).
+                KanamaIosBlob b = { NULL, 0, 0, 0 };
+                kanama_ios_blob_encode_variant(&b, (uint8_t *)(intptr_t)v, 0);
+                if (b.oom || b.buf == NULL) {
+                    free(b.buf);
+                    // No cell: the Kotlin decode names the type instead of reading a null.
+                    tags[i] = KANAMA_IOS_ARG_UNMARSHALLED_BASE + (int32_t)vt;
+                    break;
+                }
+                strs[i] = b.buf; // freed by kanama_ios_free_arg_cells
+                tags[i] = KANAMA_IOS_PT_VARIANT_RECORD;
+                ptrs[i] = b.buf;
+                break;
+            }
             case KANAMA_IOS_VARIANT_TYPE_NIL:
                 break;
             default: {
