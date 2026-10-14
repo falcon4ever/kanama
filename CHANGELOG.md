@@ -113,6 +113,22 @@ On iOS a container nested more than 8 levels deep, or holding an element type th
 encoder does not carry (a `Vector3i` inside an `Array`), delivers `null` for that element; and a
 container the shim cannot allocate is reported as out of memory rather than "not marshalled".
 
+### Changed — wrapper and Android gates hold what they claimed to (task 119 batch B)
+
+Gate and tooling fixes, no change to the API a script sees. The drift gate compares the iOS
+`ObjectCalls` GENERATED MEMBERS region by content (comments, spacing, `;` and trailing commas
+normalised) instead of by member names, so a body-only or `PT_*` tag change is drift, and
+`--write-tree` writes it. `ObjectCalls.expect.kt` is generated, excluded from ktfmt and byte-compared by
+the drift gate. A file in `src/jvmMain/.../api` or `src/iosMain/.../api` that is neither generated, nor a
+`PER_PLATFORM_WRAPPERS` class, nor a listed hand file (a retired wrapper restored by a merge) fails the
+drift gate. The generator, the parity gate and the expect writer share one parameter parser
+(`split_params`, `parameter_names`). The Android remap audit (`KanamaAndroidRemap.strippedSourceLines`
+and its mirror in `check_android_remap_sources.py`) knows string literals, so a block-comment opener
+inside a string no longer blinds it for the rest of the file. `scripts/android_smoke.sh` and
+`scripts/android_export_minified.sh` share `scripts/android_common.sh` (log checks, demo-script build,
+desktop addon, build-template install) instead of two drifting copies. Each has a case in
+`scripts/gate_red_runs.py`.
+
 ### Fixed — Desktop: a script property or argument of the wrong Variant type is an error, not a zero value (task 138 item 9)
 
 A `@RegisterProperty`/`@RegisterFunction` value of type `Quaternion`, `Basis`, `Rect2`, `Rect2i`,

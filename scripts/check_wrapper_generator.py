@@ -564,6 +564,13 @@ def check_single_tree(tree: TreeResult) -> int:
         rc = 1
         print(f"[wrapper_generator] FAIL {len(ios_copies)} shared classes also have an iOS copy under {_rel(IOS_API_DIR)}: {ios_copies[:20]}", file=sys.stderr)
 
+    unexplained = unexplained_platform_files(tree)
+    if unexplained:
+        rc = 1
+        print(f"[wrapper_generator] FAIL {len(unexplained)} unexplained file(s) in a platform api directory:", file=sys.stderr)
+        for problem in unexplained:
+            print(f"    {problem}", file=sys.stderr)
+
     stale_roots = stale_hand_root_copies()
     if stale_roots:
         rc = 1
@@ -614,6 +621,46 @@ _ROOT_DECLARATION_RE = re.compile(
     + "|".join(SHARED_HAND_ROOT_FILES)
     + r")\b"
 )
+
+
+# The hand-written files that may sit in a platform's api directory (task 119 finding 34). A wrapper
+# class is generated once into the shared tree, or listed in PER_PLATFORM_WRAPPERS; everything else
+# here is platform glue with a stated job. A file in neither list (a retired wrapper restored by a
+# merge, a copy pasted back) compiled and passed every gate before this check.
+PLATFORM_HAND_FILES: dict[str, dict[str, str]] = {
+    "desktop": {
+        "GodotSignal": "actual of the shared GodotSignal expect",
+        "MainThread": "actual of the shared MainThread expect",
+        "ScriptResources": "desktop's script-resource wrappers",
+        "ScriptRuntime": "desktop's script runtime seam",
+    },
+    "iOS": {
+        "GodotSignal": "actual of the shared GodotSignal expect",
+        "MainThread": "actual of the shared MainThread expect",
+        "IosGodotApi": "the iOS host's entry glue",
+        "ScriptAccessSelfTest": "the iOS script-access self-test",
+        "ScriptResources": "iOS's script-resource wrappers",
+        "ScriptRuntime": "iOS's script runtime seam",
+    },
+}
+
+
+def unexplained_platform_files(tree: TreeResult) -> list[str]:
+    """Files in a platform api directory that are neither generated (`tree.files`), nor a
+    PER_PLATFORM_WRAPPERS class, nor a listed hand file (task 119 finding 34)."""
+    problems: list[str] = []
+    for label, directory in (("desktop", DESKTOP_API_DIR), ("iOS", IOS_API_DIR)):
+        for path in sorted(directory.glob("*.kt")):
+            if _rel(path) in tree.files or path.stem in PER_PLATFORM_WRAPPERS:
+                continue
+            if path.stem in PLATFORM_HAND_FILES[label]:
+                continue
+            problems.append(
+                f"{_rel(path)}: not generated, not in PER_PLATFORM_WRAPPERS and not a listed "
+                f"{label} hand file (PLATFORM_HAND_FILES in scripts/check_wrapper_generator.py) "
+                "-- a stale copy of a retired wrapper? delete it"
+            )
+    return problems
 
 
 def stale_hand_root_copies() -> list[str]:

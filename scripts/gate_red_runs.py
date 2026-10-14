@@ -485,6 +485,9 @@ case("check_wrapper_generator.py", py("check_wrapper_generator.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode ) {")],
      "single-tree drift-gate", "a generated wrapper is hand-edited (one stray space)")
 
+case("check_wrapper_generator.py (stale platform file)", py("check_wrapper_generator.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/api/SceneTreeHandle.kt", "package net.multigesture.kanama.api\n\nclass SceneTreeHandle\n")],
+     "unexplained file(s) in a platform api directory", "a retired per-platform wrapper is restored under src/jvmMain/.../api: it compiles, but nothing generates or lists it (task 119 finding 34)")
 case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RID, ret.ptr)\n      RID(ret.value)",
            "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT, ret.ptr)\n      RID(ret.value)")],
