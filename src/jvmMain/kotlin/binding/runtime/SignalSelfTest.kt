@@ -505,7 +505,8 @@ internal object SignalSelfTest {
         check("one-shot", listOf(expected[1](3)), oneShot)
         check("one-shot leaves the permanent lambda", 4, lambdaLog[1].size)
 
-        // Task 138 item 20: a second permanent lambda from the same holder on the same signal is its
+        // Task 138 item 20: a second permanent lambda from the same holder on the same signal is
+        // its
         // own connection (Godot keys a signal's slots by the base callable; each lambda's callable
         // carries its own callback id as userdata), and both receive.
         val second = mutableListOf<String>()

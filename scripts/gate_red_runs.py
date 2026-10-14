@@ -432,8 +432,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 34", "KANAMA_WEB_PROTOCOL_VERSION = 33")],
-     "protocol version disagrees", "the bridge pins protocol 33 while the emitter says 34")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 35", "KANAMA_WEB_PROTOCOL_VERSION = 34")],
+     "protocol version disagrees", "the bridge pins protocol 34 while the emitter says 35")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
      "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
@@ -586,6 +586,10 @@ for name, args, target, expect, how in [
 case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
      [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
      "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")
+
+case("generate_web_wrappers.py --check (inert facades)", py("generate_web_wrappers.py", "--check"),
+     [Append("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt", "\nobject Marshalls\n")],
+     "declares Godot class Marshalls", "a hand-written Web file declares a Godot class WEB_INERT_FACADES does not list (task 129 E)")
 case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_shell_wrappers.py", "--from-skip-report", "build/wrapper-generator/skips.txt", "--dry-run", "--fail-if-candidates"),
      [Delete(f"{COMMON}/api/Curve2D.kt"),
       Append("build/wrapper-generator/skips.txt", "\nCurve2D.foo object return wrapper is missing for Curve2D\n")],
