@@ -466,7 +466,19 @@ case("check_public_signature_changes.py (annotations)", py("check_public_signatu
 case("check_public_signature_changes.py (Web parity)", py("check_public_signature_changes.py"),
      [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/GodotObject.kt",
            "  internal fun callQueued(method: String, value: Double) {", "  fun call(method: String, value: Double) {")],
-     "WEB_PARITY_MEMBERS", "Web declares a `call` overload desktop does not have (a Unit-returning queued call hides the Variant `call`, task 129 E review S3)")
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only GodotObject: fun call(method: String, value: Double)",
+     "Web declares a `call` overload desktop does not have (a Unit-returning queued call hides the Variant `call`, task 129 E review S3)")
+case("check_public_signature_changes.py (Web GodotObject extension)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun GodotObject.get(property: String): Long = 0L")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun GodotObject.get(property: String): Long",
+     "a Web-only top-level extension on GodotObject takes a call desktop sends to another member (fix round 2)")
+case("check_public_signature_changes.py (Web drift list stale)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this", "")],
+     "stale WEB_GODOT_OBJECT_DRIFT entry (the drift is gone; delete it): web-only <top-level>: fun GodotObject.asObject(): GodotObject",
+     "a known Web drift is gone but its WEB_GODOT_OBJECT_DRIFT entry stays (the list must shrink)")
 case("check_typed_enums.py", py("check_typed_enums.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Long) {")],
      "typed_enums] FAIL", "an enum parameter goes back to a raw Long")

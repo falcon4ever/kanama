@@ -1233,23 +1233,139 @@ def describe_changes(removed: Counter, added: Counter, compat: Counter, limit: i
     return out
 
 
-# Members Web must declare exactly as the common (desktop/Android/iOS) tree does (task 129 E review
-# S3): same overload set, same parameter and return types. A Web-only overload of one of these names
-# would silently take a call that compiles on desktop and give it other semantics (a Unit return).
-WEB_PARITY_MEMBERS: dict[str, tuple[str, ...]] = {
-    "GodotObject": ("fun call", "fun callv", "fun callDeferred", "fun getMethodArgumentCount", "property instanceId"),
+# Task 129 E fix round 2: Web's `GodotObject` against desktop's, member by member, and the top-level
+# extensions on `GodotObject` too. Every declaration one side has and the other lacks (or declares
+# differently) must be listed here with the reason it is accepted; anything else is NEW drift and
+# fails, and an entry whose drift is gone fails as stale, so the list only shrinks. Desktop is the
+# common tree plus its desktop/Android half (`jvm`). The dangerous kind is a Web-only overload of a
+# desktop name: a call that compiles on both silently takes it, with other semantics (task 129 E
+# review S3: Unit-returning queued `call` overloads hid the Variant `call`).
+_NOT_ON_WEB = (
+    "not on Web yet: Web's GodotObject is a hand-shaped facade that has not grown this member; a desktop "
+    "call fails to compile on Web (loud), it is never rerouted"
+)
+_WEB_SET = (
+    "Web's typed set(propertyPath, ...) runs Object.set_indexed and returns Unit; desktop's set(property, Any?) "
+    "runs Object.set and returns the Error, so set(\"position:x\", 5.0) writes the component on Web and "
+    "nothing on desktop"
+)
+_WEB_SET_DEFERRED = "Web's setDeferred takes only a Boolean (its one queued arm); desktop's takes any Variant"
+_WEB_EMIT = (
+    "Web's typed emit_signal arms (one crossing each, no Variant packing); desktop's vararg emitSignal takes "
+    "the same calls with the same effect"
+)
+_WEB_TYPED_READ = (
+    "a Web-only typed property read from the early Web ports; desktop reads through get(property): Any?"
+)
+WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
+    **{
+        f"desktop-only GodotObject: {decl}": _NOT_ON_WEB
+        for decl in (
+            "fun addUserSignal(signal: String, arguments: List<Map<String, Any>> = ...)",
+            "fun canTranslateMessages(): Boolean",
+            "fun cancelFree()",
+            "fun connect(signal: String, target: GodotObject, method: String, flags: GodotObject.ConnectFlags = ...): GodotError",
+            "fun disconnect(signal: String, target: GodotObject, method: String)",
+            "fun getClassName(): String",
+            "fun getIncomingConnections(): List<Map<String, Any?>>",
+            "fun getIndexed(propertyPath: NodePath): Any?",
+            "fun getIndexed(propertyPath: String): Any?",
+            "fun getInstanceId(): Long",
+            "fun getMeta(name: String, defaultValue: Any? = ...): Any?",
+            "fun getMetaList(): List<String>",
+            "fun getMethodList(): List<Map<String, Any?>>",
+            "fun getPropertyList(): List<Map<String, Any?>>",
+            "fun getScript(): Any?",
+            "fun getSignalConnectionList(signal: String): List<Map<String, Any?>>",
+            "fun getSignalList(): List<Map<String, Any?>>",
+            "fun getTranslationDomain(): String",
+            "fun hasConnections(signal: String): Boolean",
+            "fun hasMeta(name: String): Boolean",
+            "fun hasUserSignal(signal: String): Boolean",
+            "fun isBlockingSignals(): Boolean",
+            "fun isConnected(signal: String, target: GodotObject, method: String): Boolean",
+            "fun notification(what: Int, reversed: Boolean = ...)",
+            "fun notifyPropertyListChanged()",
+            "fun propertyCanRevert(property: String): Boolean",
+            "fun propertyGetRevert(property: String): Any?",
+            "fun removeMeta(name: String)",
+            "fun removeUserSignal(signal: String)",
+            "fun setBlockSignals(enable: Boolean)",
+            "fun setIndexed(propertyPath: NodePath, value: Any?)",
+            "fun setIndexed(propertyPath: String, value: Any?)",
+            "fun setMessageTranslation(enable: Boolean)",
+            "fun setMeta(name: String, value: Any?)",
+            "fun setScript(script: Resource?)",
+            "fun setTranslationDomain(domain: String)",
+            "fun tr(message: String, context: String = ...): String",
+            "fun trN(message: String, pluralMessage: String, n: Int, context: String = ...): String",
+        )
+    },
+    "desktop-only GodotObject: fun get(property: String): Any?":
+        "Web has no Variant get(property): only the typed reads (getVector2, getObjectProperty)",
+    "desktop-only GodotObject: fun set(property: String, value: Any?): Long": _WEB_SET,
+    **{f"web-only GodotObject: fun set(propertyPath: String, value: {t})": _WEB_SET
+       for t in ("Double", "GodotEnumValue", "Long", "String", "Vector2")},
+    "desktop-only GodotObject: fun setDeferred(property: String, value: Any?)": _WEB_SET_DEFERRED,
+    "web-only GodotObject: fun setDeferred(property: String, value: Boolean)": _WEB_SET_DEFERRED,
+    **{f"web-only GodotObject: fun emitSignal({params})": _WEB_EMIT
+       for params in ("signal: String", "signal: String, value: GodotObject", "signal: String, value: Int",
+                      "signal: String, value: String", "signal: String, value: Vector2i")},
+    "web-only GodotObject: fun getObjectProperty(property: String): GodotObject?": _WEB_TYPED_READ,
+    "web-only GodotObject: fun getVector2(property: String): Vector2": _WEB_TYPED_READ,
+    "desktop-only GodotObject: constructor(handle: GodotHandle)":
+        "the Web constructor's parameter is named godotObject: only a named-argument call differs",
+    "web-only GodotObject: constructor(godotObject: GodotHandle)":
+        "the Web constructor's parameter is named godotObject: only a named-argument call differs",
+    "desktop-only GodotObject: final override fun equals(other: Any?): Boolean":
+        "desktop compares the instance id (final); Web compares handle tokens, see GodotObject.equals on Web",
+    "desktop-only GodotObject: final override fun hashCode(): Int":
+        "desktop hashes the instance id (final); Web hashes the handle token",
+    "web-only GodotObject: override fun equals(other: Any?): Boolean":
+        "Web compares handle tokens: two tokens for one object are not equal (GodotObject.equals KDoc)",
+    "web-only GodotObject: override fun hashCode(): Int": "Web hashes the handle token",
+    "desktop-only GodotObject: override fun toString(): String":
+        "desktop names the class and instance id; Web keeps Any.toString",
+    "desktop-only <top-level>: inline fun <reified T: GodotObject> GodotObject.cast(): T":
+        "desktop's ClassDB-checked reified cast; Web re-types with a wrapper constructor",
+    "desktop-only <top-level>: inline fun <reified T: GodotObject> GodotObject.castOrNull(): T?":
+        "desktop's ClassDB-checked reified cast; Web re-types with a wrapper constructor",
+    "desktop-only <top-level>: inline fun <reified T> GodotObject.kotlinScriptInstance(): T?":
+        "Web bounds T: Any; only an explicit nullable type argument compiles on desktop alone",
+    "web-only <top-level>: inline fun <reified T: Any> GodotObject.kotlinScriptInstance(): T?":
+        "Web bounds T: Any; only an explicit nullable type argument compiles on desktop alone",
+    "web-only <top-level>: fun GodotObject.asObject(): GodotObject":
+        "a Web-only identity helper (WebFacades.kt) the early Web ports import; it answers the receiver",
 }
 
 
+def _godot_object_declarations(lines: list[str]) -> tuple[set[str], set[str]]:
+    """GodotObject's members and the top-level extensions on GodotObject, as declarations."""
+    members = {line.split(": ", 1)[1] for line in lines if line.startswith("GodotObject: ")}
+    extensions = {
+        line.split(": ", 1)[1]
+        for line in lines
+        if line.startswith("<top-level>: ") and "GodotObject." in line.split("(", 1)[0]
+    }
+    return members, extensions
+
+
 def web_parity_problems(current: dict[str, "SurfaceResult"]) -> list[str]:
-    problems: list[str] = []
-    for owner, members in WEB_PARITY_MEMBERS.items():
-        for member in members:
-            key = f"{owner}: {member}"
-            common = sorted(line for line in current["common"].lines if member_key(line) == key)
-            web = sorted(line for line in current["web"].lines if member_key(line) == key)
-            if common != web:
-                problems.append(f"{key}: common declares {common or 'nothing'}, Web declares {web or 'nothing'}")
+    desktop_members, desktop_extensions = _godot_object_declarations(
+        current["common"].lines + current["jvm"].lines)
+    web_members, web_extensions = _godot_object_declarations(current["web"].lines)
+    # A Web extension a Web member shadows with the same declaration is an import-compat name: the
+    # member always wins, so it adds no behaviour (it still counts if desktop has neither).
+    shadowed = {ext for ext in web_extensions if ext.replace("GodotObject.", "", 1) in web_members}
+    drift = (
+        {f"desktop-only GodotObject: {d}" for d in desktop_members - web_members}
+        | {f"web-only GodotObject: {d}" for d in web_members - desktop_members}
+        | {f"desktop-only <top-level>: {d}" for d in desktop_extensions - web_extensions}
+        | {f"web-only <top-level>: {d}" for d in web_extensions - desktop_extensions - shadowed}
+    )
+    problems = [f"new drift (not in WEB_GODOT_OBJECT_DRIFT): {line}" for line in sorted(drift - WEB_GODOT_OBJECT_DRIFT.keys())]
+    problems += [f"stale WEB_GODOT_OBJECT_DRIFT entry (the drift is gone; delete it): {line}"
+                 for line in sorted(WEB_GODOT_OBJECT_DRIFT.keys() - drift)]
     return problems
 
 
@@ -1270,8 +1386,8 @@ def main() -> int:
         return 1
     parity = web_parity_problems(current)
     if parity:
-        print(f"{TAG} FAIL the Web surface differs from the common one where it must match "
-              "(WEB_PARITY_MEMBERS):", file=sys.stderr)
+        print(f"{TAG} FAIL Web's GodotObject differs from desktop's outside the known drift "
+              "(WEB_GODOT_OBJECT_DRIFT):", file=sys.stderr)
         for line in parity:
             print(f"    {line}", file=sys.stderr)
         return 1
