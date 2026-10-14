@@ -11,6 +11,13 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 /**
  * Provides methods for file reading and writing operations.
  *
+ * In Kanama, `FileAccess.open(...)` returns an owned `FileAccess?`. `close()` closes the file, as
+ * GDScript's `file.close()` does, and releases your reference; `use { }` calls it, so
+ * `FileAccess.open(path, mode)?.use { ... }` is the idiom. A file you neither close nor `use`
+ * stays open, and its writes unflushed, until the garbage collector drops the wrapper and the next
+ * frame releases it on the main thread. `closeFile()` is Godot's `close()` alone: it closes the
+ * file and keeps the wrapper's reference.
+ *
  * Generated from Godot docs: FileAccess
  */
 class FileAccess(handle: GodotHandle) : RefCounted(handle) {
@@ -542,9 +549,34 @@ class FileAccess(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getPascalStringBind, segment)
     }
 
+    /**
+     * Closes the currently opened file and prevents subsequent read/write operations. Use `flush` to
+     * persist the data to disk without closing the file. Note: `FileAccess` will automatically close
+     * when it's freed, which happens when it goes out of scope or when it gets assigned with `null`.
+     * In C# the reference must be disposed after we are done using it, this can be done with the
+     * `using` statement or calling the `Dispose` method directly.
+     *
+     * Generated from Godot docs: FileAccess.close
+     */
     fun closeFile() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeFileBind, segment)
+    }
+
+    private var fileClosed = false
+
+    /**
+     * Closes the file, as GDScript's `file.close()` does (Godot's `close()`, here [closeFile]), then
+     * releases this wrapper's reference like `RefCounted.close()`. The file is closed even when this
+     * is a borrowed view (`fromHandle`, a `FileAccess` passed in from GDScript), which releases
+     * nothing, or when something else still references the object. `use { }` calls this.
+     */
+    override fun close() {
+        if (!fileClosed) {
+            fileClosed = true
+            if (isOpen()) closeFile()
+        }
+        if (owned) super.close()
     }
 
     /**

@@ -25,6 +25,7 @@ import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.ResourceSaver
 import net.multigesture.kanama.api.ShaderMaterial
 import net.multigesture.kanama.api.SurfaceTool
+import net.multigesture.kanama.api.castOrNull
 import net.multigesture.kanama.builtins.md5Text
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -367,7 +368,7 @@ private fun fileAccessRows(check: (String, Boolean) -> Unit) {
   checkParts(
     check,
     "file-access(statics fileExists, getFileAsString, getFileAsBytes 10, getSize 10, getMd5 == md5Text)",
-    "exists" to (FileAccess.fileExists(path) to "false"),
+    "exists" to (FileAccess.fileExists(path) to "${FileAccess.fileExists(path)}"),
     "string" to
       ((FileAccess.getFileAsString(path) == "alphabeta\n") to FileAccess.getFileAsString(path)),
     "bytes" to
@@ -399,6 +400,9 @@ private fun fileAccessRows(check: (String, Boolean) -> Unit) {
       ((DirAccess.getFilesAt(dir) == listOf("notes.txt")) to "${DirAccess.getFilesAt(dir)}"),
   )
 
+  fileAccessCloseRows(check, path)
+  fileAccessIoRows(check, dir)
+
   val removedFile = DirAccess.removeAbsolute(path)
   val removedDir = DirAccess.removeAbsolute(dir)
   checkParts(
@@ -406,8 +410,130 @@ private fun fileAccessRows(check: (String, Boolean) -> Unit) {
     "dir-access(removeAbsolute file and dir -> OK, dirExistsAbsolute false after)",
     "file" to ((removedFile == GodotError.OK) to "$removedFile"),
     "dir" to ((removedDir == GodotError.OK) to "$removedDir"),
-    "gone" to ((!DirAccess.dirExistsAbsolute(dir)) to "true"),
+    "gone" to
+      DirAccess.dirExistsAbsolute(dir).let { exists -> !exists to "dirExistsAbsolute=$exists" },
   )
+}
+
+/**
+ * Task 129 D: `FileAccess.close()` closes the file as GDScript's `file.close()` does, also through
+ * a borrowed `fromHandle` view and while a second reference (`castOrNull`) keeps the object alive.
+ */
+private fun fileAccessCloseRows(check: (String, Boolean) -> Unit, path: String) {
+  val owner = FileAccess.open(path, FileAccess.ModeFlags.WRITE)
+  owner?.storeString("gamma")
+  owner?.let { FileAccess.fromHandle(it.handle) }?.close()
+  val viewClosed = owner?.isOpen()
+  val viewText = FileAccess.getFileAsString(path)
+  owner?.close()
+  checkParts(
+    check,
+    "file-access(close() on a borrowed fromHandle view closes the file: owner isOpen false, write flushed)",
+    "opened" to ((owner != null) to "$owner"),
+    "isOpen" to ((viewClosed == false) to "$viewClosed"),
+    "text" to ((viewText == "gamma") to viewText),
+  )
+
+  val first = FileAccess.open(path, FileAccess.ModeFlags.WRITE)
+  first?.storeString("delta")
+  val second = first?.castOrNull<FileAccess>()
+  val refs = first?.getReferenceCount()
+  second?.close()
+  val secondClosed = first?.isOpen()
+  val secondText = FileAccess.getFileAsString(path)
+  first?.close()
+  checkParts(
+    check,
+    "file-access(close() while a second reference holds the object closes the file: refs 2, isOpen false, write flushed)",
+    "refs" to ((refs == 2) to "$refs"),
+    "isOpen" to ((secondClosed == false) to "$secondClosed"),
+    "text" to ((secondText == "delta") to secondText),
+  )
+}
+
+/** Task 129 D: FileAccess members iOS gained (it had 11 of Godot's 68), write then read back. */
+private fun fileAccessIoRows(check: (String, Boolean) -> Unit, dir: String) {
+  val path = "$dir/io.bin"
+  val bytes = byteArrayOf(1, 2, 3, 4)
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use { it.storeBuffer(bytes) }
+  val readBytes = FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.getBuffer(4L) }
+  checkParts(
+    check,
+    "file-access(storeBuffer/getBuffer round trip of 4 bytes)",
+    "bytes" to ((readBytes?.contentEquals(bytes) == true) to "${readBytes?.toList()}"),
+  )
+
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use {
+    it.storeVar("variant-smoke")
+    it.storeVar(42L)
+  }
+  val vars = FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.getVar() to it.getVar() }
+  checkParts(
+    check,
+    "file-access(storeVar/getVar round trip of a String and an int)",
+    "string" to ((vars?.first == "variant-smoke") to "${vars?.first}"),
+    "int" to ((vars?.second == 42L) to "${vars?.second}"),
+  )
+
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use {
+    it.storeCsvLine(listOf("alpha", "beta"))
+  }
+  val csv = FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.getCsvLine() }
+  checkParts(
+    check,
+    "file-access(storeCsvLine/getCsvLine round trip alpha,beta)",
+    "csv" to ((csv == listOf("alpha", "beta")) to "$csv"),
+  )
+
+  val temp = FileAccess.createTemp(FileAccess.ModeFlags.WRITE_READ, "kanama", "txt")
+  val tempPath = temp?.getPathAbsolute().orEmpty()
+  val tempStored = temp?.storeString("temp") ?: false
+  temp?.seek(0L)
+  val tempText = temp?.getAsText().orEmpty()
+  temp?.close()
+  checkParts(
+    check,
+    "file-access(createTemp WRITE_READ: open, path set, storeString then getAsText reads it back)",
+    "opened" to ((temp != null) to "$temp"),
+    "path" to (tempPath.isNotEmpty() to tempPath),
+    "store" to (tempStored to "$tempStored"),
+    "text" to ((tempText == "temp") to tempText),
+  )
+
+  val compressed = "$dir/compressed.bin"
+  val compressedWrote =
+    FileAccess.openCompressed(compressed, FileAccess.ModeFlags.WRITE)?.use {
+      it.storeString("packed")
+    }
+  val compressedText =
+    FileAccess.openCompressed(compressed, FileAccess.ModeFlags.READ)?.use { it.getAsText() }
+  val compressedCleanup = DirAccess.removeAbsolute(compressed)
+  checkParts(
+    check,
+    "file-access(openCompressed WRITE then READ round trip, FASTLZ)",
+    "write" to ((compressedWrote == true) to "$compressedWrote"),
+    "text" to ((compressedText == "packed") to "$compressedText"),
+    "cleanup" to ((compressedCleanup == GodotError.OK) to "$compressedCleanup"),
+  )
+
+  val encrypted = "$dir/encrypted.bin"
+  val encryptedWrote =
+    FileAccess.openEncryptedWithPass(encrypted, FileAccess.ModeFlags.WRITE, "kanama-pass")?.use {
+      it.storeString("secret")
+    }
+  val encryptedText =
+    FileAccess.openEncryptedWithPass(encrypted, FileAccess.ModeFlags.READ, "kanama-pass")?.use {
+      it.getAsText()
+    }
+  val encryptedCleanup = DirAccess.removeAbsolute(encrypted)
+  checkParts(
+    check,
+    "file-access(openEncryptedWithPass WRITE then READ round trip)",
+    "write" to ((encryptedWrote == true) to "$encryptedWrote"),
+    "text" to ((encryptedText == "secret") to "$encryptedText"),
+    "cleanup" to ((encryptedCleanup == GodotError.OK) to "$encryptedCleanup"),
+  )
+  DirAccess.removeAbsolute(path)
 }
 
 private fun <T : RefCounted> newRef(className: String, wrap: (GodotHandle) -> T): T =

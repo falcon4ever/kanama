@@ -483,7 +483,8 @@ silently: every break gets an entry in `CHANGELOG.md` under `## Unreleased` that
 and how to migrate, with a line that starts with the marker below (it may be indented, as a nested
 bullet) and **names the owner of every declaration it breaks**: the class or object (`Node`, or
 `Node.removeChild`), or `top-level` for a top-level declaration (an extension may name its receiver
-class instead). Names match as whole words, so `Node` does not announce `Node3D`.
+class instead). Names match as whole words, so `Node` does not announce `Node3D`, and a qualified
+name announces that member only: `Node.removeChild` does not announce `Node.setProcessMode`.
 
 ```text
 - **Source break:** `Node.removeChild` takes a nullable `Node?` ...

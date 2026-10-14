@@ -406,7 +406,13 @@ Same call, different outcome, because the number of other owners differs.
 Files and directories follow the same rule. `FileAccess` and `DirAccess` are
 `RefCounted` classes, as in GDScript: `FileAccess.open(...)` and
 `DirAccess.open(...)` return an owned object (or `null`, with the reason in
-`getOpenError()`), and releasing it closes the file:
+`getOpenError()`). `close()` on a `FileAccess` closes the file, as GDScript's
+`file.close()` does, and releases your reference; it closes the file on a
+borrowed view too. **Always `use { }` (or `close()`) a file you open.** Unlike
+GDScript, where a file closes as soon as its variable goes out of scope, a file
+you don't close stays open, and its writes unflushed, until the garbage
+collector drops the wrapper and the next frame releases it, and that release
+only ever happens on the main thread:
 
 ```kotlin
 FileAccess.open("user://save.txt", FileAccess.ModeFlags.WRITE)?.use { it.storeLine("score=42") }
@@ -414,8 +420,10 @@ val text = FileAccess.getFileAsString("user://save.txt")     // a whole-file sta
 val saves = DirAccess.getFilesAt("user://")
 ```
 
-Godot's `file.close()` is `closeFile()` in Kotlin, for a file something else
-still references; `close()` / `use { }` is the usual way.
+Godot's own `close()` method is `closeFile()` in Kotlin: it closes the file and
+keeps your reference (the object stays usable for `isOpen()`, `getError()`).
+`DirAccess` has no file to close (`listDirEnd()` ends a listing), so its
+`close()` only releases your reference.
 
 ### Which category is it?
 

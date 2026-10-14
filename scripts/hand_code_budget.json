@@ -66,14 +66,17 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",
-      "lines": 242,
+      "lines": 244,
+      "raises": [
+        "242 -> 244: task 129 D: `owned` is internal (private set) so the generated FileAccess.close() closes the file on a borrowed view without RefCounted's borrowed-close warning"
+      ],
       "reason": "lifetime root RefCounted (SHARED_HAND_ROOTS)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptAccess.kt": {
       "category": "sugar",
       "lines": 381,
       "raises": [
-        "375 -> 381: task 129 D: KanamaScope and kotlinScriptInstance are written once in common; the main dispatcher and the coroutine-error report moved behind the ScriptRuntime seam (the per-platform KanamaScope copies, ScriptInstances.kt and the iOS IosGodotApi.kt block are gone)"
+        "375 -> 381: task 129 D: GodotObject.kotlinScriptInstance<T>() (one line plus KDoc), the common replacement of the desktop ScriptInstances.kt and the iOS IosGodotApi.kt copy"
       ],
       "reason": "checked casts and node lookup by class token (GDScript `as` / `is`), written once"
     },
@@ -81,7 +84,7 @@
       "category": "runtime-core",
       "lines": 40,
       "raises": [
-        "37 -> 40: task 129 D: KanamaScope and kotlinScriptInstance are written once in common; the main dispatcher and the coroutine-error report moved behind the ScriptRuntime seam (the per-platform KanamaScope copies, ScriptInstances.kt and the iOS IosGodotApi.kt block are gone)"
+        "37 -> 40: task 129 D: the seam declares mainDispatcher() and reportCoroutineFailure() in place of newScriptScope(), so KanamaScope itself is written once in common"
       ],
       "reason": "script runtime expect"
     },
@@ -109,7 +112,7 @@
     "src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt": {
       "category": "transitional",
       "lines": 132,
-      "parcel": "129 parcel 9 (KanamaScope, kotlinScriptInstance); what stays is the IosGodot cinterop seam and IosCallableRegistry",
+      "parcel": "none left in task 129: what stays is the IosGodot cinterop seam, IosCallableRegistry and the C-shim callable entry points (task 129 D moved KanamaScope, kotlinScriptInstance and ManualGodotLifetimeApi to common)",
       "reason": "per-platform hand file the generator should emit"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
@@ -131,7 +134,7 @@
       "category": "runtime-core",
       "lines": 23,
       "raises": [
-        "17 -> 23: task 129 D: KanamaScope and kotlinScriptInstance are written once in common; the main dispatcher and the coroutine-error report moved behind the ScriptRuntime seam (the per-platform KanamaScope copies, ScriptInstances.kt and the iOS IosGodotApi.kt block are gone)"
+        "17 -> 23: task 129 D: the iOS actuals of mainDispatcher() and reportCoroutineFailure(), replacing the KanamaScope block removed from IosGodotApi.kt"
       ],
       "reason": "script runtime actual"
     },
@@ -157,7 +160,7 @@
       "category": "runtime-core",
       "lines": 37,
       "raises": [
-        "18 -> 37: task 129 D: KanamaScope and kotlinScriptInstance are written once in common; the main dispatcher and the coroutine-error report moved behind the ScriptRuntime seam (the per-platform KanamaScope copies, ScriptInstances.kt and the iOS IosGodotApi.kt block are gone)"
+        "18 -> 37: task 129 D: the desktop actuals of the two new seam members, mainDispatcher() (the engine main-thread dispatcher) and reportCoroutineFailure() (a script error for an escaped coroutine exception), which the common KanamaScope uses instead of the deleted desktop KanamaCoroutines.kt"
       ],
       "reason": "script runtime actual"
     },
@@ -271,6 +274,10 @@
     "generate_api_wrapper.SHARED_MEMBER_SECTIONS[AudioStreamPlayer]": {
       "lines": 7,
       "reason": "task 129 C: setStreamFromPath, the one member of the deleted hand AudioStreamPlayer copies (476 desktop + 80 iOS lines) Godot does not have"
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[FileAccess]": {
+      "lines": 15,
+      "reason": "FileAccess.close() closes the file (GDScript file.close(), the retired FileAccessHandle.close()) before releasing the reference, also on a borrowed view; task 129 D"
     },
     "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Node]": {
       "lines": 136

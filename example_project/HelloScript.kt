@@ -546,6 +546,22 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
           names
         }
         .orEmpty()
+    // close() closes the file as GDScript's file.close() does (task 129 D), also through a borrowed
+    // view and while a second reference keeps the object alive; the write is flushed either way.
+    val viewOwner = FileAccess.open(userPath, FileAccess.ModeFlags.WRITE)
+    viewOwner?.storeString("gamma")
+    viewOwner?.let { FileAccess.fromHandle(it.handle) }?.close()
+    val viewClosed = viewOwner?.isOpen() == false
+    val viewText = FileAccess.getFileAsString(userPath)
+    viewOwner?.close()
+    val extraOwner = FileAccess.open(userPath, FileAccess.ModeFlags.WRITE)
+    extraOwner?.storeString("delta")
+    val extraRef = extraOwner?.castOrNull<FileAccess>()
+    val extraRefs = extraOwner?.getReferenceCount() ?: -1
+    extraRef?.close()
+    val extraClosed = extraOwner?.isOpen() == false
+    val extraText = FileAccess.getFileAsString(userPath)
+    extraOwner?.close()
     val userFileCleanup = DirAccess.removeAbsolute(userPath)
     val userDirCleanup = DirAccess.removeAbsolute(userDir)
     val selfNode = self
@@ -1811,6 +1827,10 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         "missing_null=${userMissing == null} missing_error=${userMissingError.value} " +
         "files=${userListed.joinToString(",")} walk=${userWalk.joinToString(",")} " +
         "cleanup=${userFileCleanup.value},${userDirCleanup.value}"
+    )
+    System.err.println(
+      "[kanama:kt] FileAccess close_closes view_closed=$viewClosed view_text=$viewText " +
+        "extra_refs=$extraRefs extra_closed=$extraClosed extra_text=$extraText"
     )
     System.err.println(
       "[kanama:kt] FileAccess byte_fixture source_bytes_positive=${fileSourceBytes.isNotEmpty()} " +

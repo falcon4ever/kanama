@@ -14,8 +14,9 @@ compiling (a removed or renamed member or parameter, a changed type or nullabili
 default) is allowed when it serves the API's long-term shape, but never silently. Its entry under
 `## Unreleased` says what changed and how to migrate, and carries a line that starts with
 `- **Source break:**` (indented as a nested bullet is fine) and names the owner of every
-declaration it breaks: the class or object (`Node`, `Node.removeChild`), or `top-level`. Keep a
-`## Unreleased` section, even an empty one, at all times.
+declaration it breaks: the class or object (`Node`, `Node.removeChild`), or `top-level`. A
+qualified name announces that member only: `Node.removeChild` does not announce a change to
+`Node.setProcessMode`. Keep a `## Unreleased` section, even an empty one, at all times.
 
 `scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares every public
 declaration of the API (the shared native tree, the native and Web value types, each platform's own
@@ -89,7 +90,10 @@ DirAccess.open("user://")?.use { dir -> dir.getFiles() }
   `getLine`, `storeString`, `getFiles`, `fileExists`, ...). Migrate: write `FileAccess` /
   `DirAccess` where you named the handle type, and `FileAccess.fromHandle(h)` for
   `FileAccessHandle.fromHandle(h)`. No deprecated alias: no known code names the handle types, and an
-  alias would keep a type Godot does not have.
+  alias would keep a type Godot does not have. `FileAccess.close()` closes the file and then releases
+  your reference, as `FileAccessHandle.close()` did (also on a borrowed view); `closeFile()` is
+  Godot's `close()` alone. `DirAccess.close()` only releases the reference: Godot's `DirAccess` has
+  no close (`listDirEnd()` ends a listing).
 - **Source break:** the 38 `FileAccess` path one-shot helpers (desktop only) are removed: `getPathFor`,
   `getPathAbsoluteFor`, `isOpenFor`, `getPositionFor`, `getLengthFor`, `eofReachedFor`, `getLineFor`,
   `getAsText(path)`, `getErrorFor`, `get8At` ... `get64At`, `getFloatAt`, `getDoubleAt`,
@@ -99,7 +103,10 @@ DirAccess.open("user://")?.use { dir -> dir.getFiles() }
   `writePascalString`, `writeCsvLine`, `writeVar`. Open the file as in GDScript:
   `FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.get32() }`,
   `FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use { it.storeString(text) }` (big-endian:
-  `it.bigEndian = true` first; resize: open `READ_WRITE` and `it.resize(n)`). Whole-file reads keep
+  `it.bigEndian = true` first; resize: open `READ_WRITE` and `it.resize(n)`). The forms that took a
+  `position` (`get8At(path, position)` ... `getRealAt`, `getBufferAt(path, length, position)`) become
+  `it.seek(position)` before the read: `FileAccess.open(path, READ)?.use { it.seek(16L); it.get32() }`;
+  `getPositionFromEnd(path, p)` becomes `it.seekEnd(p); it.getPosition()`. Whole-file reads keep
   Godot's statics `getFileAsString(path)` / `getFileAsBytes(path)`.
 - **Source break:** the 23 `DirAccess` per-call helpers (desktop only) are removed: `fileExistsAt`,
   `dirExistsAt`, `changeDirAt`, `getCurrentDriveAt`, `getCurrentDirAt`, `getSpaceLeftAt`,
@@ -126,8 +133,9 @@ DirAccess.open("user://")?.use { dir -> dir.getFiles() }
   is the generated static on iOS too and returns `PhysicsRayQueryParameters3D?` (the iOS extension
   returned non-null): add `?: return` or `!!`. Desktop gains `create(from, to)` (an `exclude =
   emptyList()` default).
-- **Source break:** (top-level) `Node.kotlinScriptInstance<T>()` is merged into the common
-  `GodotObject.kotlinScriptInstance<T>()`; a call on a `Node` compiles unchanged.
+- **Source break:** (top-level) the per-platform `kotlinScriptInstance<T>()` extension on nodes
+  is merged into the common `GodotObject.kotlinScriptInstance<T>()`; a call on a node compiles
+  unchanged.
 - Written once in common now (task 129 parcel 9): `KanamaScope` and `KanamaDispatchers` (iOS gains
   `KanamaDispatchers.Main` / `Default`), `kotlinScriptInstance`, the deprecated
   `ManualGodotLifetimeApi` and `selfAs(godotObject, ctor)` (iOS gains the latter), the

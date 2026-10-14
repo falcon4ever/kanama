@@ -108,6 +108,11 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         ObjectCalls.ptrcallNoArgs(Binds.makeVisibleBind, segment)
     }
 
+    /**
+     * Closes the dock, making its tab hidden.
+     *
+     * Generated from Godot docs: EditorDock.close
+     */
     fun closeDock() {
         ObjectCalls.ptrcallNoArgs(Binds.closeDockBind, segment)
     }

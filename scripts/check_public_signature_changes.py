@@ -51,7 +51,8 @@ Comparison with the snapshot:
   * a signature REMOVED or CHANGED is a source break. Every break must be announced: its owner (the
     outermost class or object, or `top-level` / the receiver class for a top-level declaration) must
     be named, as a whole word, in a line of `CHANGELOG.md`'s `## Unreleased` section that starts with
-    the marker `- **Source break:**` (indented, as a nested bullet, is fine). An unannounced break
+    the marker `- **Source break:**` (indented, as a nested bullet, is fine). A qualified mention
+    (`Node.removeChild`) announces only that member or nested owner. An unannounced break
     FAILS, naming each one (`was` / `now`); an announced one FAILS until the snapshot is rewritten
     with `--write` (so the snapshot diff is part of the change under review);
   * a source-compatible change -- a parameter gains a default, a declaration becomes `open`, a class
@@ -1098,8 +1099,23 @@ def owners_of(line: str) -> list[str]:
     return [outer]
 
 
+DECL_NAME_RE = re.compile(r"\b(?:fun|val|var|class|object|interface|typealias)\s+(?:<[^>]*>\s*)?(?:[\w.<>?, ]+\.)?(\w+)")
+
+
 def announced(line: str, marker_text: str) -> bool:
-    return any(re.search(rf"(?<![\w-]){re.escape(name)}(?![\w-])", marker_text) for name in owners_of(line))
+    """A marker announces [line] when it names the owner on its own (`` `Engine` ``, `Node —`), or
+    qualified with the changed member or a nested owner (`Node.setProcessMode`, `Node.ProcessMode`):
+    `Node.kotlinScriptInstance` announces that member, not every `Node` change."""
+    scope, _, decl = line.partition(": ")
+    decl_name = DECL_NAME_RE.search(decl)
+    qualifiers = {part for part in scope.split(".") if part != "Companion"}
+    if decl_name:
+        qualifiers.add(decl_name.group(1))
+    for name in owners_of(line):
+        for mention in re.finditer(rf"(?<![\w-]){re.escape(name)}(?![\w-])(\.(\w+))?", marker_text):
+            if mention.group(1) is None or mention.group(2) in qualifiers:
+                return True
+    return False
 
 
 DEFAULT = " = ..."

@@ -9,15 +9,12 @@ import kotlin.reflect.KClass
 // without reflection. `GodotClasses` (ScriptAccess.kt) merges the tables.
 internal object PlatformGodotClasses : GodotClassTable() {
     override val classes: Array<KClass<out GodotObject>> = arrayOf(
-
     )
 
     override val names: Array<String> = arrayOf(
-
     )
 
     override fun wrap(index: Int, handle: GodotHandle): GodotObject = when (index) {
-
         else -> throw IndexOutOfBoundsException("PlatformGodotClasses has no class at index $index")
     }
 }

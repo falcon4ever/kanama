@@ -270,10 +270,15 @@ Task 129 C retired 20 classes this way (the hand/generated band, the iOS-hand ba
 **FileAccess and DirAccess (task 129 D).** Both are generated `RefCounted` classes with Godot's
 statics in the companion, the shape GDScript and godot-dotnet give them (`FileAccess.Open(...)`
 returns a `FileAccess` instance there too). `open` / `openCompressed` / `openEncrypted*` /
-`createTemp` return an owned `FileAccess?` (task 132): `close()` / `use { }` release it, and
-releasing the last reference closes the file in Godot's destructor. Godot's own `close()` method is
-renamed `closeFile()` (`METHOD_NAME_OVERRIDES`) because `close()` is `RefCounted`'s `AutoCloseable`
-release. What used to make them hand-written is data now: the `FileAccess`-returning static call
+`createTemp` return an owned `FileAccess?` (task 132). Godot's own `close()` method is renamed
+`closeFile()` (`METHOD_NAME_OVERRIDES`) because `close()` is `RefCounted`'s `AutoCloseable`
+release, and a `SHARED_MEMBER_SECTIONS["FileAccess"]` override makes `close()` call it first: like
+GDScript's `file.close()` (and the retired `FileAccessHandle.close()`), `close()` / `use { }` close
+the file even on a borrowed view or while another reference holds the object, then release this
+wrapper's reference. `DirAccess` keeps `RefCounted.close()`: Godot's `DirAccess` has no close
+(`listDirEnd()` ends a listing, the destructor the rest). `sync_kdoc_from_godot_docs.py` documents
+a renamed method from Godot's doc of the original (`closeFile()` gets `FileAccess.close`'s), and its
+`CLASS_KDOC_NOTES` adds the Kotlin lifetime paragraph to the `FileAccess` class KDoc. What used to make them hand-written is data now: the `FileAccess`-returning static call
 shapes are a `call_shape` table, and `open_encrypted`'s empty `iv` default a
 `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES` row. The desktop hand files' 38 `FileAccess` path one-shot
 helpers (`get8At(path)`, `writeString(path, text)`, ...) and 23 `DirAccess` `*At(directory, ...)`

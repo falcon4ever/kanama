@@ -293,6 +293,7 @@ check "FileAccess handle open_present=true open_is_open=true path_len=[0-9]+ lin
 check "FileAccess primitive byte_positive=true word_nonnegative=true dword_nonnegative=true qword_nonnegative=true float_text_len=[0-9]+ double_text_len=[0-9]+ half_text_len=[0-9]+ real_text_len=[0-9]+ big_endian=(true|false) csv_cols=[0-9]+"
 check "FileAccess write_fixture string_ok=true string_text=alpha line_ok=true line_text=beta resize_error=0 resize_text=be cleanup_error=0"
 check "FileAccess user_file make_error=0 write_ok=true length=10 line=alphabeta text_matches=true md5_matches=true missing_null=true missing_error=7 files=notes.txt walk=notes.txt cleanup=0,0"
+check "FileAccess close_closes view_closed=true view_text=gamma extra_refs=2 extra_closed=true extra_text=delta"
 check "FileAccess byte_fixture source_bytes_positive=true buffer_len=8 write_bytes_ok=true written_len=2 first=75 second=84 cleanup_error=0"
 check "FileAccess numeric_fixture write8=true read8=127 write16=true be16=18-52 write32=true read32=16909060 write64=true read64=72623859790382856 write_double=true read_double=12\\.5 write_float=true read_float=3\\.5 write_half=true read_half_text_len=[0-9]+ write_real=true read_real_text_len=[0-9]+ cleanup_error=0"
 check "FileAccess string_fixture pascal_write=true pascal_read=kanama pascal_cleanup=0 csv_write=true csv_cols=2 csv_first=alpha csv_end_matches=true csv_cleanup=0 var_write=true var_read=variant-smoke var_cleanup=0"

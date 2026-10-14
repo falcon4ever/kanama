@@ -27,11 +27,22 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
         return GodotError(ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(Binds.bindBind, segment, port, bindAddress, recvBufSize))
     }
 
+    /**
+     * Closes the `PacketPeerUDP`'s underlying UDP socket.
+     *
+     * Generated from Godot docs: PacketPeerUDP.close
+     */
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
     }
 
+    /**
+     * Waits for a packet to arrive on the bound address. See `bind`. Note: `wait` can't be interrupted
+     * once it has been called.
+     *
+     * Generated from Godot docs: PacketPeerUDP.wait
+     */
     fun waitBlocking(): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.waitBlockingBind, segment))

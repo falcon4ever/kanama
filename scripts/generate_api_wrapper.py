@@ -891,6 +891,26 @@ METHOD_VISIBILITY_OVERRIDES: dict[tuple[str, str], str] = {}
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    # Task 129 D: close() closes the file, as GDScript's `file.close()` (and the retired desktop
+    # FileAccessHandle.close()) did, then releases this wrapper's reference -- also on a borrowed view
+    # or while something else still references the object, where releasing alone would leave it open.
+    "FileAccess": """
+    private var fileClosed = false
+
+    /**
+     * Closes the file, as GDScript's `file.close()` does (Godot's `close()`, here [closeFile]), then
+     * releases this wrapper's reference like `RefCounted.close()`. The file is closed even when this
+     * is a borrowed view (`fromHandle`, a `FileAccess` passed in from GDScript), which releases
+     * nothing, or when something else still references the object. `use { }` calls this.
+     */
+    override fun close() {
+        if (!fileClosed) {
+            fileClosed = true
+            if (isOpen()) closeFile()
+        }
+        if (owned) super.close()
+    }
+""".strip("\n"),
     # Task 129 C: the one member of the retired hand AudioStreamPlayer copies Godot does not have.
     "AudioStreamPlayer": """
     /**
@@ -1504,12 +1524,12 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
 # copies of the AnimationMixer helpers here (desktop's set_indexed spelling; iOS's typed-value branch).
 SHARED_EXTENSION_SECTIONS: dict[str, str] = {
     "AnimationMixer": """
-/** Sets the AnimationTree parameter at [path] (`parameters/...`), like GDScript's `tree.set(path, value)`. */
+/** Sets the AnimationTree parameter at [path] (`parameters/...`) with `setIndexed`, GDScript's `tree.set_indexed(path, value)`. */
 fun AnimationMixer.setParameter(path: String, value: Any?) {
     setIndexed(path, value)
 }
 
-/** The AnimationTree parameter at [path] (`parameters/...`). */
+/** The AnimationTree parameter at [path] (`parameters/...`) via `getIndexed`, GDScript's `tree.get_indexed(path)`. */
 fun AnimationMixer.getParameter(path: String): Any? =
     getIndexed(path)
 
@@ -5119,9 +5139,10 @@ def class_token_entries_platform(directory: Path, singleton_names: set[str]) -> 
 
 
 def render_class_tokens(object_name: str, entries: list[tuple[str, str]], scope: str) -> str:
-    classes = "\n".join(f"        {kotlin}::class," for _, kotlin in entries)
-    names = "\n".join(f'        "{godot}",' for godot, _ in entries)
-    branches = "\n".join(f"        {i} -> {kotlin}(handle)" for i, (_, kotlin) in enumerate(entries))
+    # One line per entry, each ending in a newline: an empty table renders `arrayOf(\n    )`.
+    classes = "".join(f"        {kotlin}::class,\n" for _, kotlin in entries)
+    names = "".join(f'        "{godot}",\n' for godot, _ in entries)
+    branches = "".join(f"        {i} -> {kotlin}(handle)\n" for i, (_, kotlin) in enumerate(entries))
     return f"""package net.multigesture.kanama.api
 
 import kotlin.reflect.KClass
@@ -5133,16 +5154,13 @@ import kotlin.reflect.KClass
 // without reflection. `GodotClasses` (ScriptAccess.kt) merges the tables.
 internal object {object_name} : GodotClassTable() {{
     override val classes: Array<KClass<out GodotObject>> = arrayOf(
-{classes}
-    )
+{classes}    )
 
     override val names: Array<String> = arrayOf(
-{names}
-    )
+{names}    )
 
     override fun wrap(index: Int, handle: GodotHandle): GodotObject = when (index) {{
-{branches}
-        else -> throw IndexOutOfBoundsException("{object_name} has no class at index $index")
+{branches}        else -> throw IndexOutOfBoundsException("{object_name} has no class at index $index")
     }}
 }}
 """

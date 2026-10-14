@@ -11,6 +11,11 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: Semaphore
  */
 class Semaphore(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Waits for the `Semaphore`, if its value is zero, blocks until non-zero.
+     *
+     * Generated from Godot docs: Semaphore.wait
+     */
     fun waitBlocking() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.waitBlockingBind, segment)

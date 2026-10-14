@@ -891,12 +891,12 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
 }
 
 // Sugar over the class, every platform (SHARED_EXTENSION_SECTIONS['AnimationMixer']).
-/** Sets the AnimationTree parameter at [path] (`parameters/...`), like GDScript's `tree.set(path, value)`. */
+/** Sets the AnimationTree parameter at [path] (`parameters/...`) with `setIndexed`, GDScript's `tree.set_indexed(path, value)`. */
 fun AnimationMixer.setParameter(path: String, value: Any?) {
     setIndexed(path, value)
 }
 
-/** The AnimationTree parameter at [path] (`parameters/...`). */
+/** The AnimationTree parameter at [path] (`parameters/...`) via `getIndexed`, GDScript's `tree.get_indexed(path)`. */
 fun AnimationMixer.getParameter(path: String): Any? =
     getIndexed(path)
 

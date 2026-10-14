@@ -16,6 +16,20 @@ from pathlib import Path
 DEFAULT_GODOT_DOCS = Path(os.environ.get("GODOT_DOCS", "godot/doc/classes"))
 from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, wrapper_source_files
 from godot_enum_model import GLOBAL_ENUM_RENAMES, enum_value_name, load_enums, read_lock
+from generate_api_wrapper import METHOD_NAME_OVERRIDES  # noqa: E402
+
+# A Kanama paragraph after Godot's class description, for a class whose Kotlin lifetime differs from
+# what Godot's own prose tells a GDScript user (kept here, beside the prose this script owns).
+CLASS_KDOC_NOTES: dict[str, str] = {
+    "FileAccess": (
+        "In Kanama, `FileAccess.open(...)` returns an owned `FileAccess?`. `close()` closes the file, "
+        "as GDScript's `file.close()` does, and releases your reference; `use { }` calls it, so "
+        "`FileAccess.open(path, mode)?.use { ... }` is the idiom. A file you neither close nor `use` "
+        "stays open, and its writes unflushed, until the garbage collector drops the wrapper and the "
+        "next frame releases it on the main thread. `closeFile()` is Godot's `close()` alone: it "
+        "closes the file and keeps the wrapper's reference."
+    ),
+}
 
 # The api scope covers the shared wrapper tree plus the desktop per-platform files and their
 # generated companions (task 103); pass --api-dir to sync one directory only.
@@ -191,8 +205,23 @@ def load_godot_docs(docs_dir: Path, class_name: str) -> GodotClassDocs | None:
     )
 
 
-def kdoc_block(indent: str, description: str, source: str, *, ktfmt_width: bool = False) -> list[str]:
+def kdoc_block(
+    indent: str, description: str, source: str, *, ktfmt_width: bool = False, note: str | None = None
+) -> list[str]:
     lines = [f"{indent}/**\n"]
+    paragraphs = [description] + ([note] if note else [])
+    for number, paragraph in enumerate(paragraphs):
+        if number:
+            lines.append(f"{indent} *\n")
+        lines.extend(_kdoc_paragraph(indent, paragraph, ktfmt_width))
+    lines.append(f"{indent} *\n")
+    lines.append(f"{indent} * {GENERATED_MARKER} {source}\n")
+    lines.append(f"{indent} */\n")
+    return lines
+
+
+def _kdoc_paragraph(indent: str, description: str, ktfmt_width: bool) -> list[str]:
+    lines: list[str] = []
     words = description.split(" ")
     current = ""
     # api/ wrappers keep the historical fixed 96-char content width: they are excluded from
@@ -222,9 +251,6 @@ def kdoc_block(indent: str, description: str, source: str, *, ktfmt_width: bool 
             current = candidate
     if current:
         lines.append(f"{indent} * {current}\n")
-    lines.append(f"{indent} *\n")
-    lines.append(f"{indent} * {GENERATED_MARKER} {source}\n")
-    lines.append(f"{indent} */\n")
     return lines
 
 
@@ -318,6 +344,13 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
     wrapped_methods = scan_wrapper_methods("".join(lines), docs.class_name)
     method_docs = {snake_to_camel(name): (name, doc) for name, doc in docs.methods.items()}
     method_docs.update({snake_to_camel(name): (name, doc) for name, doc in docs.accessors.items()})
+    # A method the generator renames (`FileAccess.close` -> `closeFile`, METHOD_NAME_OVERRIDES)
+    # keeps Godot's doc under its Kotlin name; the plain camel name is not that method.
+    for (owner, godot_name), kotlin_name in METHOD_NAME_OVERRIDES.items():
+        if owner == docs.class_name and godot_name in docs.methods:
+            if method_docs.get(snake_to_camel(godot_name), ("",))[0] == godot_name:
+                del method_docs[snake_to_camel(godot_name)]
+            method_docs[kotlin_name] = (godot_name, docs.methods[godot_name])
     if docs.class_name == GLOBAL_SCOPE_DOCS:
         # GD: the file's own table maps each Kotlin member to its utility function.
         method_docs = {
@@ -337,7 +370,12 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
                 Replacement(
                     start=find_class_replacement_start(lines, index),
                     end=insert_at,
-                    lines=kdoc_block(class_match.group(1), docs.class_doc, docs.class_name),
+                    lines=kdoc_block(
+                        class_match.group(1),
+                        docs.class_doc,
+                        docs.class_name,
+                        note=CLASS_KDOC_NOTES.get(docs.class_name),
+                    ),
                 ),
             )
             continue
