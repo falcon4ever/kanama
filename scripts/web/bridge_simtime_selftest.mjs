@@ -34,9 +34,12 @@ async function loadBridge() {
   context.globalThis = context;
   context.window = context;
   vm.createContext(context);
-  vm.runInContext(fs.readFileSync(bridgePath, "utf8"), context, { filename: bridgePath });
+  const bridgeSource = fs.readFileSync(bridgePath, "utf8");
+  const protocolVersion = Number(/const KANAMA_WEB_PROTOCOL_VERSION = (\d+);/.exec(bridgeSource)?.[1]);
+  vm.runInContext(bridgeSource, context, { filename: bridgePath });
   const api = {
-    kanamaWebProtocolVersion: () => 35,
+    // the version the bridge itself pins: this test is not about the protocol, so it must not go stale when the protocol moves
+    kanamaWebProtocolVersion: () => protocolVersion,
     kanamaWebProcess: () => 0,
     kanamaWebPhysicsProcess: () => 0,
   };

@@ -98,9 +98,8 @@ internal object WebValueTypes {
   /**
    * The proxy's value and Variant helpers: `_kanama_web_pack_value(value)` /
    * `_kanama_web_unpack_value(type, packed)` (a value type as its components) and
-   * `_kanama_web_pack_variant(value, transient)` / `_kanama_web_unpack_variant(text)` (any
-   * deliverable Variant as `<Variant.Type>:<payload>`, the runtime's
-   * `WebPackedValues.encodeVariant` format).
+   * `_kanama_web_pack_variant(value, result)` / `_kanama_web_unpack_variant(text)` (any deliverable
+   * Variant as `<Variant.Type>:<payload>`, the runtime's `WebPackedValues.encodeVariant` format).
    */
   fun gdHelpers(): String = buildString {
     appendLine("func $PACK(value: Variant) -> String:")
@@ -128,9 +127,7 @@ internal object WebValueTypes {
     }
     appendLine("\treturn null")
     appendLine()
-    appendLine(
-      "func $PACK_VARIANT(value: Variant, transient: Array[int], result := false) -> String:"
-    )
+    appendLine("func $PACK_VARIANT(value: Variant, result := false) -> String:")
     appendLine("\t# Task 134 D1: one Variant as `<Variant.Type>:<payload>` (a signal argument, a")
     appendLine("\t# builtin call's result); an object crosses as its bridge handle id. A call's")
     appendLine("\t# [result] keeps the handles of the objects in it (see $PACK_HELD_OBJECT).")
@@ -150,8 +147,8 @@ internal object WebValueTypes {
     appendLine("\t\t\treturn \"23:%d\" % value.get_id()")
     appendLine("\t\tTYPE_OBJECT:")
     appendLine("\t\t\tif result:")
-    appendLine("\t\t\t\treturn \"24:%d\" % $PACK_HELD_OBJECT(value, transient, true)")
-    appendLine("\t\t\treturn \"24:%d\" % _kanama_web_pack_object(value, transient)")
+    appendLine("\t\t\t\treturn \"24:%d\" % $PACK_HELD_OBJECT(value, true)")
+    appendLine("\t\t\treturn \"24:%d\" % _kanama_web_pack_object(value)")
     // Task 134 D2: the packed returns of the String / PackedByteArray builtin methods.
     appendLine("\t\tTYPE_PACKED_BYTE_ARRAY:")
     appendLine("\t\t\treturn \"29:\" + value.hex_encode()")
@@ -171,21 +168,21 @@ internal object WebValueTypes {
     appendLine("\t\tTYPE_ARRAY:")
     appendLine("\t\t\tvar items := PackedStringArray([str(value.size())])")
     appendLine("\t\t\tfor item in value:")
-    appendLine("\t\t\t\titems.append($NEST($PACK_VARIANT(item, transient, result)))")
+    appendLine("\t\t\t\titems.append($NEST($PACK_VARIANT(item, result)))")
     appendLine("\t\t\treturn \"28:\" + \",\".join(items)")
     appendLine("\t\tTYPE_DICTIONARY:")
     appendLine("\t\t\tvar entries := PackedStringArray([str(value.size())])")
     appendLine("\t\t\tfor key in value:")
-    appendLine("\t\t\t\tentries.append($NEST($PACK_VARIANT(key, transient, result)))")
-    appendLine("\t\t\t\tentries.append($NEST($PACK_VARIANT(value[key], transient, result)))")
+    appendLine("\t\t\t\tentries.append($NEST($PACK_VARIANT(key, result)))")
+    appendLine("\t\t\t\tentries.append($NEST($PACK_VARIANT(value[key], result)))")
     appendLine("\t\t\treturn \"27:\" + \",\".join(entries)")
     appendLine("\t\tTYPE_CALLABLE:")
     appendLine(
-      "\t\t\treturn \"25:%d,%s\" % [$PACK_HELD_OBJECT(value.get_object(), transient, result), $NEST(String(value.get_method()))]"
+      "\t\t\treturn \"25:%d,%s\" % [$PACK_HELD_OBJECT(value.get_object(), result), $NEST(String(value.get_method()))]"
     )
     appendLine("\t\tTYPE_SIGNAL:")
     appendLine(
-      "\t\t\treturn \"26:%d,%s\" % [$PACK_HELD_OBJECT(value.get_object(), transient, result), $NEST(String(value.get_name()))]"
+      "\t\t\treturn \"26:%d,%s\" % [$PACK_HELD_OBJECT(value.get_object(), result), $NEST(String(value.get_name()))]"
     )
     appendLine("\t\tTYPE_PACKED_INT64_ARRAY:")
     appendLine("\t\t\tvar ints := PackedStringArray()")
@@ -252,40 +249,39 @@ internal object WebValueTypes {
       "\treturn text.replace(\"%1F\", \"\\u001f\").replace(\"%2C\", \",\").replace(\"%25\", \"%\")"
     )
     appendLine()
+    appendLine("func $PACK_HELD_OBJECT(value: Object, result := false) -> int:")
     appendLine(
-      "func $PACK_HELD_OBJECT(value: Object, transient: Array[int], result := false) -> int:"
+      "\t# Any object in a Variant: its script handle, else the handle already tracking it, so a"
     )
     appendLine(
-      "\t# Any object in a Variant: its script handle, else the handle already tracking it"
-    )
-    appendLine("\t# (which this script now holds too), so a repeated query reuses one handle and")
-    appendLine(
-      "\t# keeps the object's identity. An untracked one: a signal argument rides a transient"
+      "\t# repeated query reuses one handle and keeps the object's identity. A signal argument is"
     )
     appendLine(
-      "\t# handle the dispatch releases; a call's result (task 129 E review B2) gets a handle"
+      "\t# lent like a direct one (task 138 item 32, _kanama_lend); a call's result (task 129 E"
     )
-    appendLine("\t# of its kind owned by this script, as a generic call's object return does.")
     appendLine(
-      "\t# A result naming a handle a dispatch lent (transient) promotes it: the dispatch keeps it."
+      "\t# review B2) is held by this script too, or gets a handle of its kind owned by this"
     )
+    appendLine(
+      "\t# script, as a generic call's object return does. A result naming a lent object keeps it"
+    )
+    appendLine("\t# lent (a RefCounted becomes owned by this script, like any object result).")
     appendLine("\tif value == null:")
     appendLine("\t\treturn 0")
     appendLine("\tif value.has_method(\"_kanama_ensure_created\"):")
     appendLine("\t\tvar script_handle := int(value.call(\"_kanama_ensure_created\"))")
     appendLine("\t\tif script_handle != 0:")
     appendLine("\t\t\treturn script_handle")
-    appendLine("\tfor existing in _kanama_object_handles:")
-    appendLine("\t\tvar held: Variant = _kanama_object_handles[existing]")
-    appendLine("\t\tif held is Array:")
-    appendLine("\t\t\theld = held[0].get_ref()")
-    appendLine("\t\tif is_same(held, value):")
-    appendLine("\t\t\tif result:")
-    appendLine("\t\t\t\t_kanama_promote_handle(int(existing), value)")
-    appendLine("\t\t\t_kanama_bridge.retainSharedHandle(int(existing), _kanama_handle)")
-    appendLine("\t\t\treturn int(existing)")
     appendLine("\tif not result:")
-    appendLine("\t\treturn _kanama_web_pack_object(value, transient)")
+    appendLine("\t\treturn _kanama_web_pack_object(value)")
+    appendLine("\tvar existing := _kanama_tracked_handle(value)")
+    appendLine("\tif existing != 0:")
+    appendLine("\t\tif KanamaWebHandles.lent.has(existing):")
+    appendLine("\t\t\tif value is RefCounted:")
+    appendLine("\t\t\t\t_kanama_own_lent(existing, value)")
+    appendLine("\t\telse:")
+    appendLine("\t\t\t_kanama_bridge.retainSharedHandle(existing, _kanama_handle)")
+    appendLine("\t\treturn existing")
     appendLine("\tvar kind := \"object\"")
     appendLine("\tif value is Node:")
     appendLine("\t\tkind = \"node\"")
@@ -300,7 +296,7 @@ internal object WebValueTypes {
     )
     appendLine("\t# and its Kotlin callback, alive.")
     appendLine("\tvar guard := \"router_handle\" in value and \"callback_id\" in value")
-    appendLine("\t_kanama_object_handles[minted] = [weakref(value)] if guard else value")
+    appendLine("\t_kanama_track(minted, [weakref(value)] if guard else value)")
     appendLine("\treturn minted")
     appendLine()
     appendLine("func _kanama_web_unpack_text(value: String) -> String:")

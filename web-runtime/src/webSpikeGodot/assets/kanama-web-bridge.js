@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 35;
+  const KANAMA_WEB_PROTOCOL_VERSION = 36;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Added after the marker when Godot's error log could not be reached (Main.kt
@@ -20,6 +20,9 @@
   const FREED_INSTANCE_MESSAGE = (handle) =>
     `Invalid access to previously freed instance (Kanama Web handle=${handle}): the engine freed ` +
     "the object while a script still held it";
+  // Task 138 item 32: how many engine-freed lent handles the bridge (and Kotlin) remember, so a later
+  // use of one reads as a freed instance. Bounded: one int each.
+  const FREED_HANDLES_REMEMBERED = 4096;
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -296,6 +299,25 @@
     objectFrees: 0,
     liveBrowserHandleCount: 0,
     maxLiveBrowserHandles: 0,
+    // The handles lent to Kotlin for a dispatch's object arguments (a signal argument, `_input`'s
+    // event, a method's object argument), held for the object's lifetime (task 138 item 32):
+    // minted, taken over from a lookup, released (all), released because the engine freed the
+    // object (swept), handed to a script as an owned result, live now and at most, and the
+    // GDScript->JS calls the lending made (the dispatch-cost measure; the dispatch itself is not
+    // counted). Every driver's performance section reports them.
+    lentMints: 0,
+    lentAdopts: 0,
+    lentReleases: 0,
+    lentSwept: 0,
+    lentOwned: 0,
+    liveLent: 0,
+    maxLiveLent: 0,
+    lendBridgeCalls: 0,
+    // The handles whose object the engine freed (the sweep released them), most recent last: a
+    // later use of one is the freed-instance error, not "no proxy owns handle". A handle carries
+    // its slot's generation, so a reused slot's new handle never matches. Capped (the oldest goes):
+    // a use of a handle freed FREED_HANDLES_REMEMBERED sweeps ago reads as a stale handle.
+    freedHandles: new Set(),
     lastConstructedObjectHandle: 0,
     lastFreedObjectHandle: 0,
     objectHandleGenerationAdvanced: false,
@@ -1239,7 +1261,9 @@
       const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
       if (childNodeHandles) {
         for (const childHandle of childNodeHandles) {
-          if (this.browserHandleSlot(childHandle)?.kind !== "Node") continue;
+          const childSlot = this.browserHandleSlot(childHandle);
+          // A lent handle lives with its object, not with the script that looked it up.
+          if (childSlot?.kind !== "Node" || childSlot.lent) continue;
           if (stillHeld.has(childHandle)) continue;
           this.eraseObjectHandleEntry(childHandle, handle);
           this.api.kanamaWebDiscardNodeHandle(childHandle);
@@ -1356,6 +1380,10 @@
     },
     ownerForHandle(handle) {
       const owner = this.handleOwners.get(handle);
+      if (!owner && this.freedHandles.has(handle)) {
+        // A lent handle the sweep released because the engine freed its object.
+        throw new Error(FREED_INSTANCE_MESSAGE(handle));
+      }
       if (!owner) {
         // handle=0 is "no script is running". A script's own constructor and property initializers
         // are NOT that case (they run with their handle active, see construct above). What remains
@@ -1414,25 +1442,114 @@
         slot.generation >= BROWSER_HANDLE_GENERATION_MASK ? 1 : slot.generation + 1;
       slot.kind = kind;
       slot.live = true;
+      slot.lent = false;
+      slot.snapshots = false;
+      slot.freeQueued = false;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
+      this.freedHandles.delete(handle);
       this.handleOwners.set(handle, owner);
       this.liveBrowserHandleCount += 1;
       this.maxLiveBrowserHandles = Math.max(this.maxLiveBrowserHandles, this.liveBrowserHandleCount);
       return handle;
     },
-    allocateTransientObjectHandle(owner) {
-      const handle = this.allocateBrowserHandle("Object", owner);
-      this.api.kanamaWebAdoptObjectHandle(handle);
+    /**
+     * Task 138 item 32: a dispatch hands Kotlin an object argument (`_kanama_lend` in the proxy).
+     * One call per lend at most: `handle` 0 mints a slot for the object's lifetime (flags 1: a Node,
+     * adopted as NODE so its snapshot and `queueFree` work, otherwise OBJECT); flags 2 takes over
+     * a handle a lookup or a result already tracks (its holders no longer matter); flags 4 / 8
+     * refresh a Node2D-or-Control / Node3D snapshot from the nine values. A lent handle is
+     * released when the engine frees its object (releaseFreedHandles), never when the dispatch
+     * returns; its owner is only the proxy its calls route through (releaseBrowserHandlesOwnedBy
+     * re-routes it).
+     */
+    lendHandle(owner, handle, flags, a0, a1, a2, a3, a4, a5, a6, a7, a8) {
+      this.lendBridgeCalls += 1;
+      if (handle === 0) {
+        const node = (flags & 1) !== 0;
+        handle = this.allocateBrowserHandle(node ? "Node" : "Object", owner);
+        if (node) this.api.kanamaWebAdoptNodeHandle(handle);
+        else this.api.kanamaWebAdoptObjectHandle(handle);
+        this.countLent(handle, this.browserHandleSlot(handle));
+        this.lentMints += 1;
+      } else if ((flags & 2) !== 0) {
+        const slot = this.browserHandleSlot(handle);
+        if (slot && !slot.lent) {
+          this.forgetSharedHandle(handle);
+          this.countLent(handle, slot);
+          this.lentAdopts += 1;
+        }
+      }
+      // A snapshot needs a handle Kotlin knows as a NODE (whatever the bridge's own kind label: a
+      // lookup's "Node", a constructed "Sprite2D" or "MeshInstance3D"); any other keeps none.
+      if ((flags & 12) !== 0 && this.browserHandleSlot(handle)?.snapshots) {
+        if ((flags & 8) !== 0) this.refreshNode3DSnapshot(handle, a0, a1, a2, a3, a4, a5, a6, a7, a8);
+        else this.refreshNode2DSnapshot(handle, a0, a1, a2, a3, a4, a5, a6, a7, a8);
+      }
       return handle;
     },
-    releaseTransientObjectHandle(handle) {
-      // The dispatched callback may have torn down the handle's owner (ui_accept retry
-      // reloads the scene, freeing every node and releasing the owner's handles — this
-      // transient among them). Already-released is fine; only release a live handle.
+    /**
+     * A slot now holds a lent handle: counted until it is retired, however it is retired. Kotlin
+     * marks it too (its `queueFree()` then keeps the handle until the engine frees the node) and
+     * says whether it is a NODE, the handles whose transform snapshot a lend refreshes.
+     */
+    countLent(handle, slot) {
+      slot.lent = true;
+      slot.snapshots = this.api.kanamaWebSetLentHandle(handle, 1) === 1;
+      this.liveLent += 1;
+      this.maxLiveLent = Math.max(this.maxLiveLent, this.liveLent);
+    },
+    uncountLent(handle, slot) {
+      if (!slot.lent) return;
+      slot.lent = false;
+      this.api.kanamaWebSetLentHandle(handle, 0);
+      this.lentReleases += 1;
+      this.liveLent -= 1;
+    },
+    /**
+     * A call's result named a lent RefCounted: like any object result it is owned by the calling
+     * script from now on (released with it), no longer by the object's lifetime.
+     */
+    ownLentHandle(handle, owner) {
       const slot = this.browserHandleSlot(handle);
-      if (!slot || slot.kind !== "Object") return;
-      this.api.kanamaWebDiscardBrowserHandle(handle);
-      this.releaseBrowserHandle(handle, "Object");
+      if (!slot?.lent) return;
+      slot.lent = false;
+      this.api.kanamaWebSetLentHandle(handle, 0);
+      this.liveLent -= 1;
+      this.lentOwned += 1;
+      this.handleOwners.set(handle, owner);
+    },
+    /**
+     * The proxy's sweep found these lent handles' objects freed by the engine (comma-separated; it
+     * already erased their entries): release each slot, tell Kotlin the object was FREED (its later
+     * use reads "previously freed instance", as desktop's does), and remember it here for the
+     * calls that reach the bridge without Kotlin's check.
+     */
+    releaseFreedHandles(csv) {
+      this.lendBridgeCalls += 1;
+      for (const text of String(csv).split(",")) {
+        const handle = Number(text);
+        const slot = this.browserHandleSlot(handle);
+        if (!slot) continue;
+        // A node freed by a queued `queueFree()` had its per-kind state dropped when that applied.
+        if (!slot.freeQueued) {
+          if (slot.kind === "Sprite2D") this.objectFrees += 1;
+          this.forgetHandleKindState(handle, slot, this.handleOwners.get(handle));
+        }
+        this.api.kanamaWebDiscardFreedHandle(handle);
+        this.retireBrowserSlot(handle, slot);
+        this.freedHandles.add(handle);
+        if (this.freedHandles.size > FREED_HANDLES_REMEMBERED) {
+          this.freedHandles.delete(this.freedHandles.values().next().value);
+        }
+        this.lentSwept += 1;
+      }
+    },
+    /** The proxy (other than `leaving`) a lent handle's calls can route through instead. */
+    lentRouteOtherThan(leaving) {
+      for (const owner of this.applyCallbacks.keys()) {
+        if (owner !== leaving) return owner;
+      }
+      return 0;
     },
     browserHandleSlot(handle) {
       if ((handle & BROWSER_HANDLE_NAMESPACE) === 0 || handle < 0) return null;
@@ -1455,6 +1572,11 @@
       if (kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
         this.sceneTreeHandlesByOwner.delete(owner);
       }
+      this.retireBrowserSlot(handle, slot);
+    },
+    /** Frees a live slot: the one place a browser handle stops being live. */
+    retireBrowserSlot(handle, slot) {
+      this.uncountLent(handle, slot);
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
@@ -1464,8 +1586,9 @@
     },
     retainSharedHandle(handle, holder) {
       // A lookup answered with an EXISTING tracked handle instead of its proposed one: `holder`
-      // now holds it too. A script handle (not a browser handle) has its own lifetime.
-      if (!holder || !this.browserHandleSlot(handle)) return;
+      // now holds it too. A script handle (not a browser handle) has its own lifetime, and so has
+      // a lent one (its object's: task 138 item 32).
+      if (!holder || !this.browserHandleSlot(handle) || this.browserHandleSlot(handle).lent) return;
       let holders = this.sharedHandleOwners.get(handle);
       if (!holders) {
         const first = this.firstHolderByHandle.get(handle) ?? this.handleOwners.get(handle);
@@ -1557,28 +1680,37 @@
         const slot = this.browserHandleSlot(handle);
         if (!slot) continue;
         if (this.rerouteSharedHandle(handle, owner)) continue;
-        if (slot.kind === "Sprite2D") this.objectFrees += 1;
-        if (slot.kind === "AudioStreamPlayer") {
-          this.audioPlayerStates.delete(handle);
-          this.match3AudioPlayerFrees += 1;
+        if (slot.lent) {
+          // Task 138 item 32: a lent handle lives with its object, so a copy another script stored
+          // stays valid: its calls route through another proxy. The last proxy releases it.
+          const route = this.lentRouteOtherThan(owner);
+          if (route !== 0) {
+            this.handleOwners.set(handle, route);
+            continue;
+          }
         }
-        if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
-        if (
-          slot.kind === "SceneTree" &&
-          this.sceneTreeHandlesByOwner.get(handleOwner) === handle
-        ) {
-          this.sceneTreeHandlesByOwner.delete(handleOwner);
-        }
+        // A lent node whose queue_free applied was counted then (opcode 15): not again here.
+        if (slot.kind === "Sprite2D" && !slot.freeQueued) this.objectFrees += 1;
+        this.forgetHandleKindState(handle, slot, handleOwner, slot.freeQueued === true);
         this.eraseObjectHandleEntry(handle, owner);
         this.api.kanamaWebDiscardBrowserHandle(handle);
-        slot.live = false;
-        slot.kind = null;
-        this.handleOwners.delete(handle);
-        this.forgetSharedHandle(handle);
-        this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
-        this.liveBrowserHandleCount -= 1;
+        this.retireBrowserSlot(handle, slot);
       }
       this.sceneTreeHandlesByOwner.delete(owner);
+    },
+    /**
+     * The per-kind state a released browser handle leaves behind: the owner teardown's release and
+     * the sweep's release of an engine-freed (possibly adopted lookup) handle both drop it.
+     */
+    forgetHandleKindState(handle, slot, owner, freeCounted = false) {
+      if (slot.kind === "AudioStreamPlayer") {
+        this.audioPlayerStates.delete(handle);
+        if (!freeCounted) this.match3AudioPlayerFrees += 1;
+      }
+      if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
+      if (slot.kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
+        this.sceneTreeHandlesByOwner.delete(owner);
+      }
     },
     isBrowserHandleLive(handle) {
       return this.browserHandleSlot(handle) ? 1 : 0;
@@ -3034,7 +3166,15 @@
             this.audioPlayerStates.delete(this.lastFreedObjectHandle);
             this.match3AudioPlayerFrees += 1;
           }
-          if (slot) this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
+          if (slot?.lent) {
+            // Task 138 item 32: a lent node lives with its object. The node stays callable to the
+            // end of the frame (a second dispatch of it this frame reads it, as on desktop), so its
+            // slot -- and Kotlin's registration -- stay until the engine frees it and the sweep
+            // releases the handle as freed (a later use: "previously freed instance").
+            slot.freeQueued = true;
+          } else if (slot) {
+            this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
+          }
           this.objectFrees += 1;
         }
         wordOffset += commandWordCount(opcode);
@@ -3384,6 +3524,14 @@
         objectFrees: this.objectFrees,
         maxLiveBrowserHandles: this.maxLiveBrowserHandles,
         liveBrowserHandles: this.liveBrowserHandleCount,
+        lentMints: this.lentMints,
+        lentAdopts: this.lentAdopts,
+        lentReleases: this.lentReleases,
+        lentSwept: this.lentSwept,
+        lentOwned: this.lentOwned,
+        liveLent: this.liveLent,
+        maxLiveLent: this.maxLiveLent,
+        lendBridgeCalls: this.lendBridgeCalls,
         lastConstructedObjectHandle: this.lastConstructedObjectHandle,
         lastFreedObjectHandle: this.lastFreedObjectHandle,
         objectHandleGenerationAdvanced: this.objectHandleGenerationAdvanced,

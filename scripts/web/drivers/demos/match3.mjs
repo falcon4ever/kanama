@@ -55,6 +55,8 @@ async function snapshot(evaluate) {
       sceneTreeHandlesCreated: bridge.match3SceneTreeHandlesCreated,
       sceneTreeHandleReuses: bridge.match3SceneTreeHandleReuses,
       liveHandles: bridge.liveBrowserHandleCount,
+      // The InputEvents the pointer probes lent Kotlin (held 2 frames, then swept).
+      liveLent: bridge.liveLent ?? 0,
       callbacks: bridge.api.kanamaWebPendingSignalCallbackCount(),
       pending: bridge.api.kanamaWebPendingCoroutineCount(),
       jobs: bridge.api.kanamaWebRegisteredCoroutineJobCount(),
@@ -300,6 +302,7 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
     30_000,
   );
   matrixFrom(afterSwap.tileGrid);
+  trace(`swap: live ${beforeSwap.liveHandles} (lent ${beforeSwap.liveLent}) -> ${afterSwap.liveHandles} (lent ${afterSwap.liveLent}) callbacks=${afterSwap.callbacks}`);
 
   const firstTeardown = await teardownCurrentRun(evaluate, exportDir);
   const secondRun = await navigateAndSettle(navigate, evaluate, url, "restart");
@@ -335,8 +338,12 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
       afterSwap.audioResourceLoadFailures === 0 &&
       afterSwap.playCommands > beforeSwap.playCommands &&
       secondTeardown.afterAudio.liveHandles === 0,
+    // No handle growth over the swap; only a lent handle may be gone after it (a pointer event a
+    // dispatch lent Kotlin lives for its frame plus 2: the probe click's may be live at `beforeSwap`).
     boundedAfterGameplay:
-      afterSwap.liveHandles === beforeSwap.liveHandles && afterSwap.callbacks === 12 &&
+      afterSwap.liveHandles <= beforeSwap.liveHandles &&
+      afterSwap.liveHandles >= beforeSwap.liveHandles - beforeSwap.liveLent &&
+      afterSwap.callbacks === 12 &&
       afterSwap.pending === 0 && afterSwap.jobs === 0,
     firstFullTeardown: teardownClean(firstTeardown),
     restartRecreatesOriginalShape:

@@ -1363,6 +1363,8 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/ThrowingReady.kt",
                 "res://kotlin-src/BundleProbe.kt",
                 "res://kotlin-src/FreedScriptTarget.kt",
+                "res://kotlin-src/LentProbe.kt",
+                "res://kotlin-src/LentKeeper.kt",
             )
         val mappings =
             manifest

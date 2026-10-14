@@ -1496,6 +1496,31 @@ class Main(godotObject: GodotHandle) :
    */
   fun bundleProbeAfter(value: Long): Long = bundleAfterMask
 
+  /**
+   * The lent-argument rows (see LentProbe): the objects a dispatch hands Kotlin, stored, compared,
+   * freed and counted. [lentProbe] arms them; they run over the next frames, [lentProbeDone] says
+   * when, then [lentMaskA] (65535), [lentMaskB] (65535), [lentMaskC] (511) and [lentCost] are the
+   * results.
+   */
+  fun lentProbe(value: Long): Long =
+    WebExperimentalGenericCall.callImmediate(lentProbeNode(), "lent_arm", listOf(0L)).asLong()
+
+  fun lentProbeDone(value: Long): Long = lentSays("lent_done", 0L)
+
+  fun lentMaskA(value: Long): Long = lentSays("lent_mask_a", 0L)
+
+  fun lentMaskB(value: Long): Long = lentSays("lent_mask_b", 0L)
+
+  fun lentMaskC(value: Long): Long = lentSays("lent_mask_c", 0L)
+
+  /** 0/1: lend calls per 1000 dispatches of a seen Node / Node3D; 2/3: microseconds per 1000. */
+  fun lentCost(value: Long): Long = lentSays("lent_cost", value)
+
+  private fun lentProbeNode(): Node = self.requireAs("LentProbe", ::Node)
+
+  private fun lentSays(method: String, value: Long): Long =
+    WebExperimentalGenericCall.callImmediate(lentProbeNode(), method, listOf(value)).asLong()
+
   /** Readback of [freedBatchProbe]: 7 once its frames have passed. */
   fun freedBatchProbeAfter(value: Long): Long = freedBatchMask
 

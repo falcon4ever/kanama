@@ -54,6 +54,34 @@ handed, and lists the tools only one platform has (`cygpath`, `cmake`, `shellche
 has a `--check` mode in `local_ci.sh` (the generated page was already stale on main), and the Android remap
 audit tracks `${...}` template nesting, so `"${"/*"}"` no longer hides the lines after it.
 
+### Fixed — Web: an object a handler receives can be kept, and it is the object
+
+On Web, an object a signal handler, `_input` / `_unhandled_input` or a script method received as an
+argument was valid only while the handler ran: kept (`lastHit = body`) and used a frame later, it
+failed with "No Kanama Web proxy owns handle". And `body == player` could be `false` for one node,
+because the argument and a lookup of the node were two handles. Web now follows the rule desktop,
+Android and iOS already follow: a Godot object you receive (an argument, a lookup, a call's result)
+is one value per object, valid for as long as the object lives. A kept `Node` or plain `Object`
+argument answers until the node is freed, then a use throws "Invalid access to previously freed
+instance", as on desktop; `body.position` inside a handler reads the node's position (it used to
+fail with "Missing Web Node3D.get_position snapshot"), and `body.queueFree()` on an argument works
+(it used to fail a handle-kind check) and leaves the node usable to the end of the frame, as on
+desktop (a node you looked up or got as a call's result is still released at once by its
+`queueFree()` on Web, see below). Handing over an object a script already saw costs no extra bridge call (a Node2D / Node3D /
+Control: one, its transform), where every dispatch used to cost two.
+
+Web limits remain, documented in [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive).
+A node you looked up (`getNode`) or got as a call's result and then `queueFree()` is released at
+once on Web: using that value afterwards, even in the same frame, throws "Stale Kanama Web browser
+handle", where desktop keeps it usable until the end of the frame (read what you need first, or
+`queueFree()` last). A `RefCounted` argument (an `InputEvent`, a `Resource`) that only your Kotlin
+code keeps stays valid for the call and the next 2 frames, then lives only while Godot holds it;
+desktop keeps it until you `close()` it. Keep a Godot reference to it, or
+`GD.instanceFromId(event.instanceId)` inside the handler (an owned result, which then lives until
+the script is freed: resolve only what you keep), to keep it longer. A `RefCounted` another of your
+scripts owns is valid while that script holds it. Lifting these is tracked in
+[#332](https://github.com/falcon4ever/kanama/issues/332). The Web bridge protocol is 36.
+
 ### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
 
 The iOS self-tests (the C `PTRCALL SELFTEST MATRIX` and the Kotlin `OBJECTCALLS SELFTEST` rows at

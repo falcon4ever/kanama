@@ -31,14 +31,7 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
  * See docs/contributing/backends/web.md ("Backend-dispatch codegen").
  */
 internal object WebCommonGodotBackend : GodotBackendSpi {
-  override fun requireLive(handle: GodotHandle) {
-    val token = handle.webId()
-    if (!instances.isLiveOrConstructing(token)) {
-      // Task 138 item 22: a freed script-backed object reads like desktop's freed instance.
-      check(!instances.wasFreed(token)) { webFreedScriptMessage(token) }
-      check(containsWebBrowserHandle(token)) { "Stale Kanama Web browser handle=$token" }
-    }
-  }
+  override fun requireLive(handle: GodotHandle) = requireLiveWebHandle(handle.webId())
 
   override fun resolve(descriptor: GodotCallDescriptor): GodotCallSite =
     GodotCallSite.fromBackendToken(descriptor.opcode.toLong())

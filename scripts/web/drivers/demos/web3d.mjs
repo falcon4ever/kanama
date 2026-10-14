@@ -510,6 +510,27 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     bundleAfter = await readBundleAfter();
   }
   trace(`bundle: probe=${bundleProbe} values=${bundleValues} after=${bundleAfter}`);
+  // The objects a dispatch lends Kotlin (see LentProbe): stored arguments stay valid, are one value
+  // per object, fail as freed instances once the engine frees them, stay bounded, and a RefCounted
+  // only Kotlin keeps lives for the dispatch plus 2 frames. The rows run over ~25 frames.
+  const callMain = (name, value = 0) =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId(name)}, ${value})`,
+    ).then(Number);
+  await callMain("lent_probe");
+  let lentDone = await callMain("lent_probe_done");
+  const lentDeadline = Math.min(deadline, Date.now() + 15_000);
+  while (lentDone !== 1 && Date.now() < lentDeadline) {
+    await delay(150);
+    lentDone = await callMain("lent_probe_done");
+  }
+  const lentA = await callMain("lent_mask_a");
+  const lentB = await callMain("lent_mask_b");
+  const lentC = await callMain("lent_mask_c");
+  const lentCost = [];
+  for (let index = 0; index < 4; index += 1) lentCost.push(await callMain("lent_cost", index));
+  trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} maskC=${lentC} cost=${lentCost.join(",")}`);
+  trace(`lent notes: ${await evaluate("String(globalThis.KanamaWebLentNotes ?? '')")}`);
   const readLeakAfter = () =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
@@ -538,9 +559,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   const expectedScriptErrors = Object.keys(expectedSites);
   // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one), the
   // two batches of FreedHolder.freed_batch (one each) and FreedHolder.freed_script_late's setter on
-  // a script-backed node freed in the same batch (one). Each is reported once as a script error
-  // naming the freed instance, and none is counted among the deliberate throws.
-  const freedSetterReports = 4;
+  // a script-backed node freed in the same batch (one), and LentProbe's setter on a lent node the
+  // engine freed in the same frame (one, L5). Each is reported once as a script error naming the
+  // freed instance, and none is counted among the deliberate throws.
+  const freedSetterReports = 5;
   const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
@@ -690,6 +712,61 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // result == the argument in every round on both dispatch arms (8192), and twenty more rounds
     // leave the live handles where one left them (16384).
     lentHandlesSurviveTheirDispatch: bundleValues >> 12 === 7,
+    // L1: an argument a handler stored still answers 2 frames later, and 8 frames later, on every
+    // dispatch path: the one-object signal arm, the packed arm, a method's object argument, a packed
+    // method argument, `_input` and `_unhandled_input`.
+    lentStoredArgumentStaysValid: lentDone === 1 && (lentA & 127) === 127,
+    // L2: the argument == a typed lookup (before and inside the handler), GD.instanceFromId, the
+    // get_children element; every arm hands over one value; a later dispatch == the stored one.
+    lentArgumentIdentity: (lentA & 8064) === 8064,
+    // L3: a nested dispatch of the same object hands over the same value.
+    lentNestedDispatchIdentity: (lentA & 24576) === 24576,
+    // L4: a value stored by the script that received it outlives that script.
+    lentArgumentOutlivesItsReceiver: (lentA & 32768) === 32768,
+    // L5: once the engine frees it (free / queue_free), a use throws desktop's "previously freed
+    // instance", and the handles are back where they were, even when a setter was queued on the
+    // freed node in the frame it was freed.
+    lentEngineFreeIsFreedInstance: (lentB & 15) === 15,
+    // L6: 500 create / hand over / free rounds stay bounded and drain; one node handed over 1000
+    // times mints one handle.
+    lentHandlesBounded: (lentB & 112) === 112,
+    // L7: a RefCounted only Kotlin keeps answers during the dispatch and the next 2 frames...
+    lentRefCountedGracePeriod: (lentB & 128) === 128,
+    // ...then it is freed (a use throws the freed-instance error); one Godot holds stays valid
+    // until Godot drops it; one the handler resolved to an owned reference stays valid.
+    lentRefCountedExpiry: (lentB & 34560) === 34560,
+    // L8: a Node3D argument's `position` reads the node's current value.
+    lentNodeSnapshotReads: (lentB & 6144) === 6144,
+    // L9: `queueFree()` on an argument works; a later use throws "previously freed instance".
+    lentKotlinQueueFree: (lentB & 24576) === 24576,
+    // L11: after a handler's `queueFree()`, a second dispatch of the node in the same frame reads it
+    // (the node lives to the end of the frame, as on desktop).
+    lentQueueFreedNodeLivesToFrameEnd: (lentC & 1) === 1,
+    // L12: a use of a handle freed more than the 4096 remembered frees ago still throws an
+    // IllegalStateException (typed and through call), not a bridge error.
+    lentLongFreedHandleIsIllegalState: (lentC & 2) === 2,
+    // L13: a new dispatch of a RefCounted renews its 2 frames.
+    lentRefCountedGraceRenewed: (lentC & 4) === 4,
+    // L14: 256 nodes handed over then freed at once drain within K + 3 frames (32 checked a frame,
+    // K = ceil(lent / 32)).
+    lentBurstDrains: (lentC & 8) === 8,
+    // L15: freed objects are released and RefCounted demoted while the tree is paused.
+    lentSweepRunsWhilePaused: (lentC & 16) === 16,
+    // L16: a handle a script created and a dispatch takes over refreshes its snapshot (a Sprite2D's
+    // position reads the moved value) and is the created value.
+    lentAdoptedNodeSnapshot: (lentC & 32) === 32,
+    // L17: once the engine frees a taken-over AudioStreamPlayer, its release drops the bridge's
+    // audio state, and a use throws the freed-instance error.
+    lentAdoptedReleaseDropsKindState: (lentC & 64) === 64,
+    // L18: the proxy that made the sweep's connection (the first to lend) is freed; a node lent
+    // before is freed later and its handle is still released (a processing proxy connects again).
+    lentSweepSurvivesItsHookHolder: (lentC & 128) === 128,
+    // L19: a takeover (not a mint) of a handle a script created connects the sweep when nothing
+    // else does: the tree is paused, and the freed node's handle is released while paused.
+    lentTakeoverConnectsSweep: (lentC & 256) === 256,
+    // L10: handing over an already-seen object costs no GDScript->JS call for a plain Node and one
+    // (its transform snapshot) for a Node3D; the old lending cost two for every dispatch.
+    lentDispatchCost: lentCost[0] <= 10 && lentCost[1] <= 1010,
     // callDeferred ran (1); task 138 item 22: a freed script-backed node throws desktop's
     // freed-instance error (2), and its late queued setter was skipped and reported (counted in
     // freedSetterReports); frames kept running (4); review S1: a lambda connection ended with its
@@ -773,7 +850,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     genericHostileStringRoundTrip: generic.hostileRoundTrip === true,
     // (c) Object returns resolve to ALREADY-TRACKED handles first: a script-backed node
     // (spinner.get_parent() -> Main, kind "script") and a tracked engine node
-    // (main.get_node("Spinner"), kind "tracked" via the is_same scan).
+    // (main.get_node("Spinner"), kind "tracked" via the instance-id index).
     genericObjectReturnsTrackedHandles:
       generic.parentTag === "o" &&
       generic.parentKind === "script" &&
@@ -878,6 +955,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       genericProbeIterations: generic.iterations,
       genericImmediateMsX1000: Math.max(0, Math.round(generic.genericMs * 1000)),
       typedImmediateMsX1000: Math.max(0, Math.round(generic.typedMs * 1000)),
+      // L10: the lending's GDScript->JS calls and microseconds per 1000 dispatches of a seen plain
+      // Node and Node3D.
+      lentCallsPer1000PlainNode: Math.max(0, lentCost[0]),
+      lentCallsPer1000Node3D: Math.max(0, lentCost[1]),
+      lentMicrosPer1000PlainNode: Math.max(0, lentCost[2]),
+      lentMicrosPer1000Node3D: Math.max(0, lentCost[3]),
       genericVsTypedRatioX100:
         generic.typedMs > 0 ? Math.max(0, Math.round((generic.genericMs / generic.typedMs) * 100)) : 0,
     },
