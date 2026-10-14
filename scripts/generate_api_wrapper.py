@@ -153,10 +153,6 @@ def render_class_enums(godot_class: str, indent: str = "    ", mode: str = "plai
 
 
 OWNERSHIP_SENSITIVE_OBJECT_TYPES = {"Callable"}
-SPECIAL_OBJECT_WRAPPER_TYPES = {
-    "DirAccess": "DirAccessHandle",
-    "FileAccess": "FileAccessHandle",
-}
 OWNERSHIP_SENSITIVE_METHODS = {
     ("RefCounted", "init_ref"),
     ("RefCounted", "reference"),
@@ -521,10 +517,6 @@ def _mode(ios: bool, emit_classes: set[str] | None = None):
 # drift gate (scripts/check_wrapper_generator.py) checks every "generated" cell against a fresh
 # regen and only exempts the "hand" cells. Retire an entry by teaching the generator to emit the
 # class losslessly on both platforms (custom section) and deleting it here.
-# FileAccess sat in the unsupported list until iOS grew its own FileAccessHandle (2026-07-13), and
-# the docs still described it as uncompilable four weeks later. The marker below makes
-# scripts/audit_stale_blockers.py go red the day DirAccess gets the same treatment.
-# KANAMA-BLOCKED(since:2026-07-13, symbol:DirAccessHandle@ios): iOS carries no DirAccessHandle policy class
 @dataclass(frozen=True)
 class WrapperHome:
     desktop: str
@@ -533,17 +525,9 @@ class WrapperHome:
 
 
 PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
-    # Task 129 C left these two; their handle model (a generated RefCounted class with companion
-    # statics instead of the hand-shaped *Handle policy classes) is task 129 parcel 8.
-    "DirAccess": WrapperHome("hand", "unsupported",
-        "desktop: hand-written static facade plus the DirAccessHandle lifetime/handle class the "
-        "generator does not emit; iOS: not hosted, the generated draft references DirAccessHandle, "
-        "which iOS does not carry (task 129 parcel 8 decides the handle model)"),
-    "FileAccess": WrapperHome("hand", "collision",
-        "desktop: hand-written static facade plus the FileAccessHandle lifetime/handle class and the "
-        "path one-shot helpers the generator does not emit; iOS: a hand-written subset facade with "
-        "its own FileAccessHandle in FileAccess.kt, so the generated draft would clash (task 129 "
-        "parcel 8 decides the handle model)"),
+    # Empty since task 129 D: every class is generated once into the shared tree (FileAccess and
+    # DirAccess, the last two, are generated RefCounted classes with companion statics). The table
+    # stays as the documented home for a class the two platforms genuinely must host differently.
 }
 
 # Godot classes whose wrapper is written ONCE, by hand, in the shared tree (task 117 P3', D20):
@@ -785,6 +769,10 @@ IOS_PROPERTY_SUPPRESS: set[tuple[str, str]] = set()
 METHOD_NAME_OVERRIDES = {
     ("Curve3D", "set_closed"): "setCurveClosed",
     ("EditorDock", "close"): "closeDock",
+    # `close()` is RefCounted's AutoCloseable release (task 132); releasing the last reference closes
+    # the file too (Godot's FileAccess destructor), so `use { }` is the idiom and this is the explicit
+    # GDScript `file.close()` for a file someone else still references.
+    ("FileAccess", "close"): "closeFile",
     ("HTTPClient", "close"): "closeConnection",
     ("MultiplayerPeer", "close"): "closeConnection",
     ("OccluderPolygon2D", "is_closed"): "isPolygonClosed",
@@ -865,6 +853,12 @@ KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
     # in general, but the desktop hand SurfaceTool had `commit()` and the iOS copy an overload for it
     # (task 129 C: generated once, the default keeps both call shapes).
     ("SurfaceTool", "commit", "existing"): "null",
+    # Godot's `create(from, to, collision_mask = 0xFFFFFFFF, exclude = [])`: the empty typed Array
+    # default, so `create(from, to)` compiles everywhere (task 129 D; it was an iOS-only extension).
+    ("PhysicsRayQueryParameters3D", "create", "exclude"): "emptyList()",
+    # Godot's `open_encrypted(path, mode_flags, key, iv = PackedByteArray())`: the desktop hand
+    # FileAccess had the empty default (task 129 D generates the class once and keeps it).
+    ("FileAccess", "open_encrypted", "iv"): "ByteArray(0)",
 }
 # (class, method, argument) object parameters that accept Kotlin `null` even though they are not
 # Resource/RefCounted-derived (which are nullable by legacy policy) and are not marked
@@ -897,6 +891,26 @@ METHOD_VISIBILITY_OVERRIDES: dict[tuple[str, str], str] = {}
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    # Task 129 D: close() closes the file, as GDScript's `file.close()` (and the retired desktop
+    # FileAccessHandle.close()) did, then releases this wrapper's reference -- also on a borrowed view
+    # or while something else still references the object, where releasing alone would leave it open.
+    "FileAccess": """
+    private var fileClosed = false
+
+    /**
+     * Closes the file, as GDScript's `file.close()` does (Godot's `close()`, here [closeFile]), then
+     * releases this wrapper's reference like `RefCounted.close()`. The file is closed even when this
+     * is a borrowed view (`fromHandle`, a `FileAccess` passed in from GDScript), which releases
+     * nothing, or when something else still references the object. `use { }` calls this.
+     */
+    override fun close() {
+        if (!fileClosed) {
+            fileClosed = true
+            if (isOpen()) closeFile()
+        }
+        if (owned) super.close()
+    }
+""".strip("\n"),
     # Task 129 C: the one member of the retired hand AudioStreamPlayer copies Godot does not have.
     "AudioStreamPlayer": """
     /**
@@ -1504,20 +1518,25 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "SurfaceTool": FactorySpec(True),
 }
 
-# Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
-DESKTOP_EXTENSION_SECTIONS = {
+# Sugar over a SHARED class written as top-level extensions, appended to the shared file after the
+# class (so every platform compiles it once). Extensions, not members, because callers import them by
+# name (`import net.multigesture.kanama.api.setParameter`). Task 129 D merged the desktop and iOS
+# copies of the AnimationMixer helpers here (desktop's set_indexed spelling; iOS's typed-value branch).
+SHARED_EXTENSION_SECTIONS: dict[str, str] = {
     "AnimationMixer": """
+/** Sets the AnimationTree parameter at [path] (`parameters/...`) with `setIndexed`, GDScript's `tree.set_indexed(path, value)`. */
 fun AnimationMixer.setParameter(path: String, value: Any?) {
     setIndexed(path, value)
 }
 
+/** The AnimationTree parameter at [path] (`parameters/...`) via `getIndexed`, GDScript's `tree.get_indexed(path)`. */
 fun AnimationMixer.getParameter(path: String): Any? =
     getIndexed(path)
 
+/** The state-machine playback at [path] (`parameters/playback`); fails loudly when it is something else. */
 fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
-    val value = getParameter(path)
-    val playback = when (value) {
-        is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
+    val playback = when (val value = getParameter(path)) {
+        is AnimationNodeStateMachinePlayback -> value
         is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
         else -> null
     }
@@ -1526,31 +1545,15 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
 """.strip("\n"),
 }
 
+# Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`. Empty since task
+# 129 D (its AnimationMixer entry is in SHARED_EXTENSION_SECTIONS); kept as the documented home for
+# sugar only desktop/Android can compile.
+DESKTOP_EXTENSION_SECTIONS: dict[str, str] = {}
+
 # iOS-only sugar on SHARED classes, emitted as extensions into `<Class>.ios.kt`. Each entry is
 # (extra imports, text); ObjectCalls, MemorySegment and the binding.runtime helpers are imported
 # by the companion header.
 IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
-    "AnimationMixer": ((), """
-// AnimationTree parameters are exposed as `parameters/...` engine properties, so route through
-// set()/get() (no NodePath set_indexed needed). Matches the desktop AnimationMixer helpers.
-fun AnimationMixer.setParameter(path: String, value: Any?) {
-    set(path, value)
-}
-
-fun AnimationMixer.getParameter(path: String): Any? =
-    get(path)
-
-fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback {
-    val value = getParameter(path)
-    val playback = when (value) {
-        is AnimationNodeStateMachinePlayback -> value
-        is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
-        is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
-        else -> null
-    }
-    return playback ?: error("AnimationMixer parameter '$path' is not an AnimationNodeStateMachinePlayback")
-}
-""".strip("\n")),
     "PhysicsDirectSpaceState3D": ((), """
 // intersect_ray returns a Godot Dictionary, decoded via the fixed-schema raycast C-shim
 // (kanama_ios_godot_ptrcall_ret_raycast_dict). Empty map = no hit. "collider" is wrapped from the
@@ -1568,28 +1571,6 @@ private const val INTERSECT_RAY_HASH = 3957970750L
 private val intersectRayBind by lazy {
     ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_ray", INTERSECT_RAY_HASH)
 }
-""".strip("\n")),
-    "PhysicsRayQueryParameters3D": (("net.multigesture.kanama.types.RID", "net.multigesture.kanama.types.Vector3"), """
-// Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
-// (marshalled through the Array[RID] C-shim so intersect_ray skips the caster's own collider).
-fun PhysicsRayQueryParameters3D.Companion.create(
-    from: Vector3,
-    to: Vector3,
-    collisionMask: Long = 4294967295L,
-    exclude: List<RID> = emptyList(),
-): PhysicsRayQueryParameters3D {
-    val query = RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))))
-    query.from = from
-    query.to = to
-    query.collisionMask = collisionMask
-    if (exclude.isNotEmpty()) query.setExclude(exclude)
-    return query
-}
-""".strip("\n")),
-    "ShapeCast3D": (("net.multigesture.kanama.types.Vector3",), """
-// Long-index overload (desktop ShapeCast3D exposes both Int and Long), so loops over the now-Long
-// getCollisionCount() (`for (i in 0 until getCollisionCount())`) pass a Long index straight through.
-fun ShapeCast3D.getCollisionPoint(index: Long): Vector3 = getCollisionPoint(index.toInt())
 """.strip("\n")),
 }
 
@@ -1659,6 +1640,7 @@ def check_section_tables(shared_classes: set[str]) -> None:
     for table_name, table, allowed in (
         ("SHARED_MEMBER_SECTIONS", SHARED_MEMBER_SECTIONS, shared_classes),
         ("SHARED_COMPANION_MEMBER_SECTIONS", SHARED_COMPANION_MEMBER_SECTIONS, shared_classes),
+        ("SHARED_EXTENSION_SECTIONS", SHARED_EXTENSION_SECTIONS, shared_classes),
         ("DESKTOP_EXTENSION_SECTIONS", DESKTOP_EXTENSION_SECTIONS, shared_classes),
         ("IOS_EXTENSION_SECTIONS", IOS_EXTENSION_SECTIONS, shared_classes),
         ("TYPED_LOADERS", TYPED_LOADERS, shared_classes),
@@ -1729,9 +1711,6 @@ def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
 def api_object_wrapper_type(type_name: str, wrapper_classes: set[str]) -> str | None:
     if type_name == "Object":
         return "GodotObject"
-    special_wrapper = SPECIAL_OBJECT_WRAPPER_TYPES.get(type_name)
-    if special_wrapper in wrapper_classes:
-        return special_wrapper
     if type_name in wrapper_classes:
         return type_name
     return None
@@ -2400,7 +2379,7 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # no-arg / StringName-arg getters and the owned ClassDB.instantiate decode keep their bodies.
     # PackedInt32Array read-back is wired only for the no-arg getter
     # (ptrcallNoArgsRetPackedInt32List → List<Int> via the size + operator_index_const C
-    # helper, two-call length protocol). Other shapes share the "List<Int>" return token
+    # helper, one ptrcall since task 129 D). Other shapes share the "List<Int>" return token
     # (arg-bearing PackedInt32 returns) but route through helpers not audited yet.
     if not packed_return and not array_blob_return and shape.kotlin_return == "List<Int>" and shape.function != "ptrcallNoArgsRetPackedInt32List":
         return False
@@ -4608,6 +4587,14 @@ def render_shared_class(
             shared_content, _ios_skips = render_draft(
                 cls, object_types, wrapper_classes, api_classes, api_dir, singleton_names
             )
+            extension = SHARED_EXTENSION_SECTIONS.get(cls.name)
+            if extension is not None:
+                shared_content = (
+                    shared_content.rstrip("\n")
+                    + f"\n\n// Sugar over the class, every platform (SHARED_EXTENSION_SECTIONS[{cls.name!r}]).\n"
+                    + extension
+                    + "\n"
+                )
             shared_ok = {
                 id(method)
                 for method_list in cls.methods.values()
@@ -5117,9 +5104,8 @@ def render_global_enums() -> str:
 # (PER_PLATFORM_WRAPPERS); `GodotClasses` in the hand-written ScriptAccess.kt merges them.
 CLASS_TOKENS_SHARED_PATH = SHARED_API_DIR / "GodotClasses.kt"
 CLASS_TOKENS_PLATFORM_FILE = "PlatformGodotClasses.kt"
-# Hand-written wrappers whose Kotlin class name is not the Godot class name: the root, and the
-# per-platform handle classes behind the FileAccess / DirAccess static facades.
-CLASS_TOKEN_KOTLIN_NAMES = {"Object": "GodotObject", "FileAccess": "FileAccessHandle", "DirAccess": "DirAccessHandle"}
+# Hand-written wrappers whose Kotlin class name is not the Godot class name: the root.
+CLASS_TOKEN_KOTLIN_NAMES = {"Object": "GodotObject"}
 _HANDLE_CLASS_RE = r"(?m)^(?:(?:open|actual|abstract)\s+)*class\s+{name}\s*(?:internal\s+constructor\s*)?\(\s*handle\s*:\s*GodotHandle\s*\)"
 
 
@@ -5153,9 +5139,10 @@ def class_token_entries_platform(directory: Path, singleton_names: set[str]) -> 
 
 
 def render_class_tokens(object_name: str, entries: list[tuple[str, str]], scope: str) -> str:
-    classes = "\n".join(f"        {kotlin}::class," for _, kotlin in entries)
-    names = "\n".join(f'        "{godot}",' for godot, _ in entries)
-    branches = "\n".join(f"        {i} -> {kotlin}(handle)" for i, (_, kotlin) in enumerate(entries))
+    # One line per entry, each ending in a newline: an empty table renders `arrayOf(\n    )`.
+    classes = "".join(f"        {kotlin}::class,\n" for _, kotlin in entries)
+    names = "".join(f'        "{godot}",\n' for godot, _ in entries)
+    branches = "".join(f"        {i} -> {kotlin}(handle)\n" for i, (_, kotlin) in enumerate(entries))
     return f"""package net.multigesture.kanama.api
 
 import kotlin.reflect.KClass
@@ -5167,16 +5154,13 @@ import kotlin.reflect.KClass
 // without reflection. `GodotClasses` (ScriptAccess.kt) merges the tables.
 internal object {object_name} : GodotClassTable() {{
     override val classes: Array<KClass<out GodotObject>> = arrayOf(
-{classes}
-    )
+{classes}    )
 
     override val names: Array<String> = arrayOf(
-{names}
-    )
+{names}    )
 
     override fun wrap(index: Int, handle: GodotHandle): GodotObject = when (index) {{
-{branches}
-        else -> throw IndexOutOfBoundsException("{object_name} has no class at index $index")
+{branches}        else -> throw IndexOutOfBoundsException("{object_name} has no class at index $index")
     }}
 }}
 """

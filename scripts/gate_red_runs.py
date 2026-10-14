@@ -323,8 +323,11 @@ case("check_hand_code_budget.py", py("check_hand_code_budget.py"),
      [Create(f"{IOS}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nfun redRun(): Int = 1\n")],
      "ZzRedRun.kt: hand-written (3 lines) and not on the budget", "a new hand-written file appears under an api/ directory")
 case("check_hand_code_budget.py (ratchet)", py("check_hand_code_budget.py"),
-     [Append(f"{JVM}/net/multigesture/kanama/api/DirAccess.kt", "\n// red run: a transitional file grows\n")],
-     "transitional file grew", "a transitional hand file (desktop DirAccess.kt) grows past its line ratchet")
+     [Append(f"{IOS}/api/IosGodotApi.kt", "\n// red run: a transitional file grows\n")],
+     "transitional file grew", "a transitional hand file (iOS IosGodotApi.kt) grows past its line ratchet")
+case("check_hand_code_budget.py (shared extension section)", py("check_hand_code_budget.py"),
+     [Edit("scripts/generate_api_wrapper.py", "fun AnimationMixer.getParameter(path: String): Any? =\n    getIndexed(path)", "fun AnimationMixer.getParameter(path: String): Any? =\n    // red run\n    getIndexed(path)")],
+     "SHARED_EXTENSION_SECTIONS[AnimationMixer]: grew to", "the shared extension section (task 129 D) grows past its ratchet")
 case("check_hand_code_budget.py (package outside api/)", py("check_hand_code_budget.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRunPkg.kt", "package net.multigesture.kanama.api\n\nfun redRunPkg(): Int = 1\n")],
      "ZzRedRunPkg.kt: hand-written (3 lines) and not on the budget",
@@ -343,6 +346,54 @@ case("check_hand_copies.py", py("check_hand_copies.py"),
 case("check_ios_shim_faults.py", py("check_ios_shim_faults.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c", '        kanama_ios_fault(__func__, "api-unresolved", NULL);', "        /* red run: guard returns silently */")],
      "returns without calling kanama_ios_fault", "a guarded early return in the iOS shim stops reporting its fault")
+case("check_ios_single_call_returns.py", py("check_ios_single_call_returns.py"),
+     [Create(f"{IOS}/binding/runtime/ZzRedRunReadBack.kt",
+             "package net.multigesture.kanama.binding.runtime\n\n"
+             "private fun redRunDispatch(buf: Long): Long = buf\n\n"
+             "internal fun redRunReadBack(): Long {\n  val len = redRunDispatch(0L)\n  return redRunDispatch(len)\n}\n")],
+     "double-call", "an iOS read-back measures with one call and fills with a second (the method runs twice)")
+case("check_ios_single_call_returns.py (loop)", py("check_ios_single_call_returns.py"),
+     [Create(f"{IOS}/binding/runtime/ZzRedRunReadBack.kt",
+             "package net.multigesture.kanama.binding.runtime\n\n"
+             "private fun redRunDispatch(buf: Long): Long = buf\n\n"
+             "internal fun redRunReadBack(): Long {\n  var cap = 0L\n  while (cap < 4L) {\n    cap = redRunDispatch(cap + 1L)\n  }\n  return cap\n}\n")],
+     "loop-call", "an iOS read-back grows its buffer and calls the entry point again in a loop")
+def _single_call_case(label, body, expected, desc):
+    """A red run of check_ios_single_call_returns.py: [body] is the Kotlin that runs the engine method twice."""
+    case(f"check_ios_single_call_returns.py ({label})", py("check_ios_single_call_returns.py"),
+         [Create(f"{IOS}/binding/runtime/ZzRedRunBypass.kt",
+                 "package net.multigesture.kanama.binding.runtime\n\n"
+                 "private fun redRunDispatch(buf: Long): Long = buf\n\n" + body)],
+         expected, desc)
+
+
+_single_call_case(
+    "higher-level helper twice",
+    "internal fun redRunTwice(): String {\n"
+    "  val first = ObjectCalls.ptrcallRetUtf8(0L, 0L, 0L, 0L)\n  return first + ObjectCalls.ptrcallRetUtf8(0L, 0L, 0L, 0L)\n}\n"
+    "internal fun redRunTwiceNoArgs(m: RawSegment, i: RawSegment): String =\n"
+    "  ObjectCalls.ptrcallNoArgsRetString(m, i) + ObjectCalls.ptrcallNoArgsRetString(m, i)\n",
+    "double-call", "a higher-level single-call helper (ptrcallRetUtf8 / ptrcallNoArgsRetString) is called twice in one function")
+_single_call_case(
+    "List(n) lambda",
+    "internal fun redRunList(n: Int): List<Long> = List(n) { redRunDispatch(it.toLong()) }\n",
+    "loop-call", "an entry point runs inside a List(n) { .. } initializer lambda")
+_single_call_case(
+    "map lambda",
+    "internal fun redRunMap(n: Int): List<Long> = (0 until n).map { redRunDispatch(it.toLong()) }\n"
+    "internal fun redRunMapIndexed(n: Int) = (0 until n).mapIndexed { i, _ -> redRunDispatch(i.toLong()) }\n"
+    "internal fun redRunForEach(n: Int) { (0 until n).forEach { redRunDispatch(it.toLong()) } }\n"
+    "internal fun redRunRepeat(n: Int) { repeat(n) { redRunDispatch(1L) } }\n",
+    "inside a lambda of", "an entry point runs inside a map / mapIndexed / forEach / repeat lambda")
+_single_call_case(
+    "brace-less loops",
+    "internal fun redRunFor(n: Int) {\n  for (i in 0 until n) redRunDispatch(i.toLong())\n}\n"
+    "internal fun redRunWhile(n: Int) {\n  var i = 0\n  while (i < n)\n    i += redRunDispatch(1L).toInt()\n}\n",
+    "inside a for loop", "an entry point is the body of a brace-less for / while")
+_single_call_case(
+    "callable-reference alias",
+    "internal fun redRunAlias() {\n  val call = ::redRunDispatch\n  call(1L)\n  call(2L)\n}\n",
+    "alias ", "an entry point is aliased with a callable reference and called twice through the alias")
 case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],
@@ -375,9 +426,16 @@ case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
+     "unannounced source break", "a public signature of Node changes without a CHANGELOG `Source break` line")
+case("check_public_signature_changes.py (qualified owner)", py("check_public_signature_changes.py"),
+     [Edit("CHANGELOG.md", "\n## Unreleased\n", "\n## Unreleased\n\n- **Source break:** red run: `Node.getChildCount` changed.\n"),
+      Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
+     "unannounced source break", "a marker naming `Node.getChildCount` announces that member only, not a Node.setProcessMode change")
+case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
+     [Edit(f"{COMMON}/api/Label.kt", "    fun setText(text: String) {", "    fun setText(text: String, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
-     [Edit(f"{JVM}/net/multigesture/kanama/api/FileAccess.kt", "    fun getMd5(path: String): String =", "    fun getMd5RedRun(path: String): String =")],
+     [Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "    val resource: Resource,", "    val resourceRedRun: Resource,")],
      "unannounced source break", "a desktop-only declaration disappears and is not in the common tree (not a move to common, task 129 C)")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],

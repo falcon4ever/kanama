@@ -1,6 +1,6 @@
 package net.multigesture.kanama.api
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 
 /**
  * The platform-bound half of the script-authoring API (task 133): `KanamaScript`, the node, script
@@ -11,8 +11,8 @@ import kotlinx.coroutines.CoroutineScope
  * - [loadResource]: `ResourceLoader.load(path)`, an owned `+1` reference (`ResourceLoader` is a
  *   per-platform singleton);
  * - [isEditorHint]: `Engine.is_editor_hint()` (`Engine` is per-platform too);
- * - [newScriptScope]: a script's coroutine scope on the engine main thread, which reports an escaped
- *   exception as a Godot script error (the platform's `KanamaScope`);
+ * - [mainDispatcher] / [reportCoroutineFailure]: what the common `KanamaScope` dispatches on and how
+ *   it reports an exception that escaped a script coroutine (a Godot script error);
  * - [platformClasses]: the generated class-token table of the classes this platform hosts outside
  *   the shared tree (`PER_PLATFORM_WRAPPERS`).
  *
@@ -29,8 +29,11 @@ internal expect object ScriptRuntime {
   /** `Engine.is_editor_hint()`. */
   fun isEditorHint(): Boolean
 
-  /** A new coroutine scope on the engine main thread, for one script instance. */
-  fun newScriptScope(): CoroutineScope
+  /** The coroutine dispatcher of the engine main thread (`KanamaDispatchers.Main`). */
+  fun mainDispatcher(): CoroutineDispatcher
+
+  /** Reports [throwable], which escaped a script coroutine ([where] names it), as a script error. */
+  fun reportCoroutineFailure(throwable: Throwable, where: String)
 
   /** The class tokens of the wrappers this platform declares outside the shared tree. */
   fun platformClasses(): GodotClassTable

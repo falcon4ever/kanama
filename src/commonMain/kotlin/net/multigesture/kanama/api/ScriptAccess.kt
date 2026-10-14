@@ -200,6 +200,12 @@ inline fun <reified T : Any> GodotObject.isScript(): Boolean = scriptInstanceOf(
 /** The Kotlin script of type [T] attached to this object, or `null`: GDScript's `body as Player`. */
 inline fun <reified T : Any> GodotObject.asScript(): T? = scriptInstanceOf(this) as? T
 
+/**
+ * The Kotlin object backing this object's Kanama script instance, when it has one: [asScript]
+ * under its older name (common since task 129 D; it was written once per platform before).
+ */
+inline fun <reified T> GodotObject.kotlinScriptInstance(): T? = scriptInstanceOf(this) as? T
+
 // ── Instancing (F12) ────────────────────────────────────────────────────────────────────────────
 
 /**

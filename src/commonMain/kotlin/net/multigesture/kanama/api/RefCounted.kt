@@ -38,8 +38,10 @@ open class RefCounted internal constructor(
     // True while this wrapper holds a +1 of its own (task 132 D1): set when it is built over a
     // returned or constructing +1 ([owned], `wrapOwned`) or takes one ([retainForKotlinWrapper],
     // [retained]); cleared when close() releases it. Tracked whether or not the GC fallback is on,
-    // so close() on a borrowed view never releases a reference the view did not take.
-    private var owned = false
+    // so close() on a borrowed view never releases a reference the view did not take. Internal for
+    // FileAccess.close(), which closes the file on a borrowed view without the borrowed-close warning.
+    internal var owned = false
+        private set
 
     // The fallback release of that +1 (task 132 D2): null for a borrowed view, once close()
     // released it, while the fallback is off, or for a wrapper built off the main thread.

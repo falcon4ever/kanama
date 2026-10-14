@@ -145,6 +145,12 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
     }
 
+    /**
+     * Immediately close the multiplayer peer returning to the state `ConnectionStatus.DISCONNECTED`.
+     * Connected peers will be dropped without emitting `peer_disconnected`.
+     *
+     * Generated from Godot docs: MultiplayerPeer.close
+     */
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)

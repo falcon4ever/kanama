@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.Camera3D
-import net.multigesture.kanama.api.FileAccessHandle
+import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.GodotClasses
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -53,10 +53,10 @@ class ClassTokenTableTest {
         Timer::class to "Timer",
         Camera3D::class to "Camera3D",
         PackedScene::class to "PackedScene",
-        // per-platform classes, from the desktop table
+        // once per-platform classes (task 129 A/C/D), now in the shared table
         AudioStreamPlayer::class to "AudioStreamPlayer",
         Tween::class to "Tween",
-        FileAccessHandle::class to "FileAccess",
+        FileAccess::class to "FileAccess",
       )
     for ((type, godotName) in expected) {
       assertEquals(godotName, GodotClasses.token(type).godotName, "token of ${type.simpleName}")

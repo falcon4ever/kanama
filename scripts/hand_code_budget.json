@@ -34,6 +34,11 @@
       ],
       "reason": "signal plumbing expect"
     },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/KanamaCoroutines.kt": {
+      "category": "runtime-core",
+      "lines": 53,
+      "reason": "KanamaDispatchers and the script coroutine scope, written once (task 129 D); the dispatcher and the error report come from the ScriptRuntime seam"
+    },
     "src/commonMain/kotlin/net/multigesture/kanama/api/KanamaScript.kt": {
       "category": "sugar",
       "lines": 278,
@@ -49,6 +54,11 @@
       "lines": 37,
       "reason": "main-thread queue expect"
     },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/ManualGodotLifetimeApi.kt": {
+      "category": "sugar",
+      "lines": 21,
+      "reason": "deprecated opt-in annotation kept so old @OptIn uses compile; written once in common (task 129 D)"
+    },
     "src/commonMain/kotlin/net/multigesture/kanama/api/Mathf.kt": {
       "category": "sugar",
       "lines": 316,
@@ -56,18 +66,32 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",
-      "lines": 242,
+      "lines": 244,
+      "raises": [
+        "242 -> 244: task 129 D: `owned` is internal (private set) so the generated FileAccess.close() closes the file on a borrowed view without RefCounted's borrowed-close warning"
+      ],
       "reason": "lifetime root RefCounted (SHARED_HAND_ROOTS)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptAccess.kt": {
       "category": "sugar",
-      "lines": 375,
+      "lines": 381,
+      "raises": [
+        "375 -> 381: task 129 D: GodotObject.kotlinScriptInstance<T>() (one line plus KDoc), the common replacement of the desktop ScriptInstances.kt and the iOS IosGodotApi.kt copy"
+      ],
       "reason": "checked casts and node lookup by class token (GDScript `as` / `is`), written once"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.expect.kt": {
       "category": "runtime-core",
-      "lines": 37,
+      "lines": 40,
+      "raises": [
+        "37 -> 40: task 129 D: the seam declares mainDispatcher() and reportCoroutineFailure() in place of newScriptScope(), so KanamaScope itself is written once in common"
+      ],
       "reason": "script runtime expect"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/Self.kt": {
+      "category": "sugar",
+      "lines": 13,
+      "reason": "deprecated selfAs(godotObject, ctor) kept for old scripts; written once in common (task 129 D)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/TypedSignals.kt": {
       "category": "runtime-core",
@@ -76,12 +100,6 @@
         "524 -> 530: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
       ],
       "reason": "typed signal classes Signal0..Signal5 (task 134 D4)"
-    },
-    "src/iosMain/kotlin/net/multigesture/kanama/api/FileAccess.kt": {
-      "category": "transitional",
-      "lines": 99,
-      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
-      "reason": "per-platform hand file the generator should emit"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
@@ -93,8 +111,8 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt": {
       "category": "transitional",
-      "lines": 172,
-      "parcel": "129 parcel 9 (KanamaScope, kotlinScriptInstance); what stays is the IosGodot cinterop seam and IosCallableRegistry",
+      "lines": 132,
+      "parcel": "none left in task 129: what stays is the IosGodot cinterop seam, IosCallableRegistry and the C-shim callable entry points (task 129 D moved KanamaScope, kotlinScriptInstance and ManualGodotLifetimeApi to common)",
       "reason": "per-platform hand file the generator should emit"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
@@ -114,32 +132,11 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
       "category": "runtime-core",
-      "lines": 17,
+      "lines": 23,
+      "raises": [
+        "17 -> 23: task 129 D: the iOS actuals of mainDispatcher() and reportCoroutineFailure(), replacing the KanamaScope block removed from IosGodotApi.kt"
+      ],
       "reason": "script runtime actual"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/DirAccess.kt": {
-      "category": "transitional",
-      "lines": 574,
-      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
-      "reason": "per-platform hand file the generator should emit"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/DirAccessHandle.kt": {
-      "category": "transitional",
-      "lines": 50,
-      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
-      "reason": "per-platform hand file the generator should emit"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/FileAccess.kt": {
-      "category": "transitional",
-      "lines": 1007,
-      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
-      "reason": "per-platform hand file the generator should emit"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/FileAccessHandle.kt": {
-      "category": "transitional",
-      "lines": 102,
-      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
-      "reason": "per-platform hand file the generator should emit"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
@@ -149,26 +146,10 @@
       ],
       "reason": "signal plumbing actual"
     },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/KanamaCoroutines.kt": {
-      "category": "runtime-core",
-      "lines": 65,
-      "reason": "coroutine dispatcher on the Godot main thread"
-    },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
       "category": "runtime-core",
       "lines": 104,
       "reason": "main-thread queue actual"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/ManualGodotLifetimeApi.kt": {
-      "category": "transitional",
-      "lines": 21,
-      "parcel": "129 parcel 9 (per-platform sugar consolidated into common)",
-      "reason": "per-platform hand file the generator should emit"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptInstances.kt": {
-      "category": "runtime-core",
-      "lines": 15,
-      "reason": "script instance lookup (until it goes through ObjectRuntime)"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {
       "category": "runtime-core",
@@ -177,14 +158,11 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
       "category": "runtime-core",
-      "lines": 18,
+      "lines": 37,
+      "raises": [
+        "18 -> 37: task 129 D: the desktop actuals of the two new seam members, mainDispatcher() (the engine main-thread dispatcher) and reportCoroutineFailure() (a script error for an escaped coroutine exception), which the common KanamaScope uses instead of the deleted desktop KanamaCoroutines.kt"
+      ],
       "reason": "script runtime actual"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/Self.kt": {
-      "category": "transitional",
-      "lines": 13,
-      "parcel": "129 parcel 9 (per-platform sugar consolidated into common)",
-      "reason": "per-platform hand file the generator should emit"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/GodotHandle.kt": {
       "category": "seam",
@@ -273,26 +251,14 @@
     }
   },
   "sections": {
-    "generate_api_wrapper.DESKTOP_EXTENSION_SECTIONS[AnimationMixer]": {
-      "lines": 16
-    },
     "generate_api_wrapper.GD_MEMBER_SECTIONS[GD]": {
       "lines": 9
     },
     "generate_api_wrapper.GD_MEMBER_SECTIONS[is_instance_valid]": {
       "lines": 7
     },
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[AnimationMixer]": {
-      "lines": 19
-    },
     "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": {
       "lines": 16
-    },
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsRayQueryParameters3D]": {
-      "lines": 15
-    },
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[ShapeCast3D]": {
-      "lines": 3
     },
     "generate_api_wrapper.METHOD_PRECONDITIONS[Engine.register_singleton]": {
       "lines": 3,
@@ -301,9 +267,17 @@
     "generate_api_wrapper.SHARED_COMPANION_MEMBER_SECTIONS[SceneTree]": {
       "lines": 174
     },
+    "generate_api_wrapper.SHARED_EXTENSION_SECTIONS[AnimationMixer]": {
+      "lines": 18,
+      "reason": "AnimationTree parameter helpers callers import by name (setParameter/getParameter/getStateMachinePlayback); one copy for every platform since task 129 D"
+    },
     "generate_api_wrapper.SHARED_MEMBER_SECTIONS[AudioStreamPlayer]": {
       "lines": 7,
       "reason": "task 129 C: setStreamFromPath, the one member of the deleted hand AudioStreamPlayer copies (476 desktop + 80 iOS lines) Godot does not have"
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[FileAccess]": {
+      "lines": 15,
+      "reason": "FileAccess.close() closes the file (GDScript file.close(), the retired FileAccessHandle.close()) before releasing the reference, also on a borrowed view; task 129 D"
     },
     "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Node]": {
       "lines": 136
