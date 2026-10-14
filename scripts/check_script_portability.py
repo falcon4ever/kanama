@@ -20,21 +20,24 @@ except the generated `gradlew`), the `run:` blocks of `.github/workflows/*.yml` 
 itself invokes), and the command names the tracked Python scripts hand to `subprocess`,
 `os.system` or `shutil.which`. Shell is tokenised, not grepped: comments, quoted text and
 here-document bodies are not commands; the string a shell is handed (`bash -c '...'`, `sh -lc "..."`,
-`eval "..."`, Python `shell=True`, `["bash", "-c", "..."]`, `os.system`) is scanned as a script; a command
-wrapper (`timeout`, `stdbuf`, `nohup`, `nice`, `sudo`, `env`, `xargs`) is judged itself before the gate looks at
-the command it wraps. Failures (each has a red run in `scripts/gate_red_runs.py`):
+`eval "..."`, Python `shell=True`, `["bash", "-c", "..."]`, `os.system`; options may come before `-c`:
+`bash -o pipefail -c '...'`, `bash -O extglob -c "..."`) is scanned as a script; a command wrapper (`timeout`,
+`stdbuf`, `nohup`, `nice`, `sudo`, `env`, `xargs`) is judged itself before the gate looks at the command it wraps
+(skipping the options that take a value: `env -C DIR cmd`, `sudo -u USER cmd`), and so is the command a
+`find -exec CMD ... \\;` / `+` runs. Failures (each has a red run in `scripts/gate_red_runs.py`):
 
 * a command that is not in ALLOWED_COMMANDS (`rg`, `fd`, `gsed`, `gawk`, `sha256sum`, `timeout`, `stdbuf`, ...),
   also when it is only probed (`command -v rg`) or only a wrapper (`timeout 5 cmd`);
 * a NOT_EVERYWHERE tool (`cygpath`, `cmake`, `shellcheck`, `mkdocs`, `ktfmt`) outside a guarded use listed in
-  PLATFORM_ONLY_USES with its reason;
+  PLATFORM_ONLY_USES with its reason; each entry pins how many uses the guard covers, so one more use of the tool
+  in a listed script fails (`platform-use-count`), and so does a pin above the real count;
 * `grep -P` / `--perl-regexp`;
 * `sed -i` (any form) outside `scripts/portable.sh`;
 * bash 4+: `declare -A`/`-n`/`-g`, `mapfile`/`readarray`, `coproc`, `${x,,}` / `${x^^}` / `${x@U}`,
   `|&`, `&>>`, `;&`, `;;&`, `[[ -v x ]]`, `wait -n`, `shopt -s globstar`, `$EPOCHSECONDS`, ...;
 * macOS-only commands (`xcrun`, `devicectl`, `defaults`, `pmset`, `security`, `plutil`, `stat -f`,
   `date -j`, `sed -i ''`, ...) outside a DEVICE_ONLY script's device paths;
-* GNU-only options of allowed commands (`date -d`, `xargs -r`, `readlink -f`, `stat -c`, ...).
+* GNU-only options of allowed commands (`date -d`, `xargs -r`, `readlink -f`, `stat -c`, `env -C`, ...).
 
 Usage:
     python3 scripts/check_script_portability.py              # the gate
@@ -126,6 +129,20 @@ MACOS_ONLY_COMMANDS = frozenset(
 MACOS_ONLY_PATHS = ("/usr/libexec/", "/System/", "/Applications/", "/Library/", "/usr/bin/xcrun")
 # Wrappers whose next word is the command that runs.
 WRAPPERS = frozenset("sudo env exec command nohup xargs timeout time nice stdbuf builtin".split())
+# The options of each wrapper that take their value as the NEXT word (`env -C DIR cmd`, `sudo -u USER cmd`): without
+# this the value is read as the command, and the command it wraps is never judged.
+WRAPPER_OPTIONS_WITH_ARG = {
+    "xargs": frozenset(["-I", "-n", "-P", "-L", "-s", "-E", "-d", "-a"]),
+    "env": frozenset(["-u", "-C", "-S", "--unset", "--chdir", "--split-string"]),
+    "nice": frozenset(["-n"]),
+    "stdbuf": frozenset(["-i", "-o", "-e"]),
+    "sudo": frozenset(["-u", "-g", "-p", "-C", "-r", "-t", "-U", "-D", "-R", "-T", "--user", "--group"]),
+    "timeout": frozenset(["-k", "-s"]),
+}
+# `find` actions that run a command: `-exec CMD ... \;` / `+`.
+FIND_EXEC_ACTIONS = frozenset(["-exec", "-execdir", "-ok", "-okdir"])
+# Options of a shell that take their value as the next word (`bash -o pipefail -c '...'`, `bash -O extglob -c '...'`).
+SHELL_OPTIONS_WITH_ARG = frozenset(["-o", "+o", "-O", "+O", "--rcfile", "--init-file"])
 
 # ---- device scripts ----------------------------------------------------------------------------------------
 # path -> (reason, marker, ci_block). A device script may use MACOS_ONLY_COMMANDS only AFTER the line carrying
@@ -154,27 +171,30 @@ DEVICE_ONLY: dict[str, tuple[str, str | None, str | None]] = {
 }
 
 # Platform-specific commands a CI-invoked script reaches only behind a platform guard (a `uname` test, a
-# `case` arm, a macOS export target): (script, command) -> why that use is not a portability bug. Anything
-# not listed here fails; a new entry needs a reason a reviewer can check against the guard.
-PLATFORM_ONLY_USES: dict[tuple[str, str], str] = {
-    ("scripts/local_ci.sh", "ldd"): "Linux native bootstrap preflight, inside the `uname -s` = Linux branch (macOS has otool -L)",
-    ("scripts/local_ci.sh", "readelf"): "same Linux-only preflight; probed with `command -v` because binutils may be absent",
-    ("scripts/package_install_smoke.sh", "xattr"): "inside the `Darwin)` arm of the platform `case`: clears the macOS quarantine flag",
-    ("scripts/export_game_assemble.sh", "codesign"): "re-seals a macOS .app after the export; reached only for a macOS export target",
-    ("scripts/check_bootstrap_jdk_resolution.sh", "/usr/libexec/java_home"): "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)",
-    ("scripts/check_jdk_lookup_parity.sh", "/usr/libexec/java_home"): "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)",
+# `case` arm, a macOS export target): (script, command) -> (uses, why that use is not a portability bug). Anything
+# not listed here fails; a new entry needs a reason a reviewer can check against the guard. `uses` PINS how many
+# times the script runs the command (probes like `command -v cygpath` count): the reason vouches for those uses only,
+# so one more use of the same tool in the script (an unguarded `shellcheck`, `cmake`, `mkdocs`, `cygpath`) fails as
+# `platform-use-count` until a reviewer checks its guard and raises the pin. A pin above the real count is stale.
+PLATFORM_ONLY_USES: dict[tuple[str, str], tuple[int, str]] = {
+    ("scripts/local_ci.sh", "ldd"): (2, "Linux native bootstrap preflight, inside the `uname -s` = Linux branch (macOS has otool -L)"),
+    ("scripts/local_ci.sh", "readelf"): (4, "same Linux-only preflight; probed with `command -v` because binutils may be absent"),
+    ("scripts/package_install_smoke.sh", "xattr"): (2, "inside the `Darwin)` arm of the platform `case`: clears the macOS quarantine flag"),
+    ("scripts/export_game_assemble.sh", "codesign"): (2, "re-seals a macOS .app after the export; reached only for a macOS export target"),
+    ("scripts/check_bootstrap_jdk_resolution.sh", "/usr/libexec/java_home"): (1, "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)"),
+    ("scripts/check_jdk_lookup_parity.sh", "/usr/libexec/java_home"): (1, "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)"),
     # NOT_EVERYWHERE tools (task 138 item 34 review N3): each use names the guard that makes it safe.
-    ("scripts/local_ci.sh", "cygpath"): "inside the `MINGW*|MSYS*|CYGWIN*)` arm of the host `case`, behind `command -v cygpath`: converts Windows paths for Git-Bash",
-    ("scripts/export_game_smoke.sh", "cygpath"): "only in the `Windows Desktop` preset branch, with a `|| printf` fallback to the native path",
-    ("scripts/hot_reload_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
-    ("scripts/hot_reload_in_process_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
-    ("scripts/package_install_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
-    ("scripts/runtime_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
-    ("scripts/tool_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
-    ("scripts/local_ci.sh", "cmake"): "behind `command -v cmake`; absent cmake is a named gate_skip (bootstrap-cmake), never a silent pass",
-    ("scripts/local_ci.sh", "mkdocs"): "behind `command -v mkdocs`; absent mkdocs is a named gate_skip (mkdocs), never a silent pass",
-    ("scripts/check_bootstrap_jdk_resolution.sh", "cmake"): "the gate's whole job is the cmake configure; it probes `command -v cmake` first and exits 2 with install instructions",
-    ("scripts/check_shell_lint.sh", "shellcheck"): "the lint gate probes `command -v shellcheck` first and fails with install instructions (the ubuntu runner ships it)",
+    ("scripts/local_ci.sh", "cygpath"): (2, "inside the `MINGW*|MSYS*|CYGWIN*)` arm of the host `case`, behind `command -v cygpath`: converts Windows paths for Git-Bash"),
+    ("scripts/export_game_smoke.sh", "cygpath"): (2, "only in the `Windows Desktop` preset branch, with a `|| printf` fallback to the native path"),
+    ("scripts/hot_reload_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
+    ("scripts/hot_reload_in_process_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
+    ("scripts/package_install_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
+    ("scripts/runtime_smoke.sh", "cygpath"): (3, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
+    ("scripts/tool_smoke.sh", "cygpath"): (6, "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary"),
+    ("scripts/local_ci.sh", "cmake"): (3, "behind `command -v cmake`; absent cmake is a named gate_skip (bootstrap-cmake), never a silent pass"),
+    ("scripts/local_ci.sh", "mkdocs"): (2, "behind `command -v mkdocs`; absent mkdocs is a named gate_skip (mkdocs), never a silent pass"),
+    ("scripts/check_bootstrap_jdk_resolution.sh", "cmake"): (3, "the gate's whole job is the cmake configure; it probes `command -v cmake` first and exits 2 with install instructions"),
+    ("scripts/check_shell_lint.sh", "shellcheck"): (3, "the lint gate probes `command -v shellcheck` first and fails with install instructions (the ubuntu runner ships it)"),
 }
 
 # ---- bash 4+ -----------------------------------------------------------------------------------------------
@@ -194,6 +214,7 @@ GNU_ONLY_OPTION_MESSAGES = {
     ("sort", "h"): "`sort -h` is GNU-only",
     ("find", "printf"): "`find -printf` is GNU-only; use python3",
     ("find", "regextype"): "`find -regextype` is GNU-only",
+    ("env", "C"): "`env -C DIR` / `env --chdir` is GNU-only (BSD env has no -C); `cd DIR && cmd` in a subshell instead",
 }
 
 
@@ -604,6 +625,29 @@ KEYWORD_PREFIXES = frozenset("if then else elif while until do { } ! time".split
 SHELL_INTERPRETERS = frozenset("bash sh dash zsh ksh".split())
 
 
+def shell_script_index(texts: list[str], expands: list[bool]) -> int | None:
+    """Index, in the arguments of a shell (`bash`, `sh`, ...), of the `-c` script: the word after the options, where
+    `-o`/`-O`/`+o`/`+O` and `--rcfile`/`--init-file` take a value (`bash -o pipefail -c '...'`). None when the shell
+    runs a script file instead (the first non-option word) or has no `-c`."""
+    index = 0
+    while index < len(texts):
+        text = texts[index]
+        if not text.startswith(("-", "+")):
+            return None  # the first non-option word is a script file: no -c script
+        if text == "--":
+            return None
+        if text in SHELL_OPTIONS_WITH_ARG:
+            index += 2
+            continue
+        if not text.startswith("--") and not text.startswith("+") and "c" in text[1:] and not expands[index]:
+            return index + 1 if index + 1 < len(texts) else None
+        if not text.startswith("--") and not text.startswith("+") and text[-1] in "oO" and len(text) > 1 and not expands[index]:
+            index += 2  # a cluster ending in o/O (`-eo pipefail`): its value is the next word
+            continue
+        index += 1
+    return None
+
+
 def inner_scripts(name_word: Word, args: list[Word]) -> list[tuple[str, int]]:
     """(script text, line) the command hands to a shell to run: `bash -c '...'`, `sh -lc "..."`, `eval "..."`."""
     if name_word.quoted and name_word.expands:
@@ -614,16 +658,45 @@ def inner_scripts(name_word: Word, args: list[Word]) -> list[tuple[str, int]]:
         return [(text, name_word.line)] if text.strip() else []
     if base not in SHELL_INTERPRETERS:
         return []
-    for index, word in enumerate(args):
-        if word.text == "--" or not word.text.startswith("-"):
-            if not word.text.startswith("-"):
-                break  # the first non-option word is a script file: no -c script
+    index = shell_script_index([w.text for w in args], [w.expands for w in args])
+    return [] if index is None else [(args[index].text, args[index].line)]
+
+
+def skip_wrapper_options(wrapper: str, texts: list[str], raws: list[str], expands: list[bool], start: int) -> int:
+    """Index of the word that follows [wrapper]'s own options (and `env`'s assignments, `timeout`'s duration, `nice`'s
+    level), scanning from [start]; the options that take a value skip it (WRAPPER_OPTIONS_WITH_ARG)."""
+    with_arg = WRAPPER_OPTIONS_WITH_ARG.get(wrapper, frozenset())
+    j = start
+    while j < len(texts):
+        nxt = texts[j]
+        if nxt.startswith("-") and not expands[j]:
+            j += 2 if nxt in with_arg else 1
             continue
-        if not word.text.startswith("--") and "c" in word.text[1:] and not word.expands:
-            if index + 1 < len(args):
-                return [(args[index + 1].text, args[index + 1].line)]
-            break
-    return []
+        if wrapper == "env" and ASSIGNMENT_RE.match(raws[j]):
+            j += 1
+            continue
+        if wrapper == "timeout" and re.fullmatch(r"[0-9.]+[smhd]?", nxt):
+            j += 1
+            continue
+        if wrapper == "nice" and re.fullmatch(r"[0-9]+", nxt):
+            j += 1
+            continue
+        break
+    return min(j, len(texts))
+
+
+def find_exec_commands(texts: list[str]) -> list[list[int]]:
+    """Index lists of each command a `find` runs: the words after `-exec`/`-execdir`/`-ok`/`-okdir` up to the `;` or `+`."""
+    found: list[list[int]] = []
+    for index, text in enumerate(texts):
+        if text not in FIND_EXEC_ACTIONS:
+            continue
+        end = index + 1
+        while end < len(texts) and texts[end] not in (";", "+"):
+            end += 1
+        if end > index + 1:
+            found.append(list(range(index + 1, end)))
+    return found
 
 
 def flag_chars(args: list[Word]) -> set[str]:
@@ -660,24 +733,7 @@ def resolve_command(words: list[Word], functions: set[str]) -> tuple[Word, list[
     while words[i].text in WRAPPERS and not words[i].quoted:
         wrapper = words[i].text
         wrappers.append(words[i])
-        j = i + 1
-        while j < len(words):
-            nxt = words[j].text
-            if nxt.startswith("-") and not words[j].expands:
-                j += 1
-                if wrapper in ("xargs", "env", "nice", "stdbuf") and nxt in ("-I", "-n", "-P", "-L", "-s", "-u", "-i", "-o", "-e"):
-                    j += 1  # an option with its own argument
-                continue
-            if wrapper == "env" and ASSIGNMENT_RE.match(words[j].raw):
-                j += 1
-                continue
-            if wrapper == "timeout" and re.fullmatch(r"[0-9.]+[smhd]?", nxt):
-                j += 1
-                continue
-            if wrapper == "nice" and re.fullmatch(r"[0-9]+", nxt):
-                j += 1
-                continue
-            break
+        j = skip_wrapper_options(wrapper, [w.text for w in words], [w.raw for w in words], [w.expands for w in words], i + 1)
         if wrapper == "command" and j > i + 1 and words[i + 1].text in ("-v", "-V", "-p"):
             # `command -v X` probes X: X must be a portable tool too
             if words[i + 1].text in ("-v", "-V") and j < len(words):
@@ -696,6 +752,7 @@ class ShellCheck:
     functions: set[str] = field(default_factory=set)  # shell functions defined anywhere in the repo's scripts
     runner_steps: bool = False  # a workflow `run:` block: it runs on ONE runner, whose own tools (apt-get, gh) are fine
     findings: list[Finding] = field(default_factory=list)
+    platform_uses: dict = field(default_factory=lambda: defaultdict(list))  # (script, command) -> lines of the uses PLATFORM_ONLY_USES exempts
 
     def add(self, line: int, rule: str, message: str) -> None:
         self.findings.append(Finding(self.path, line, rule, message))
@@ -708,22 +765,29 @@ class ShellCheck:
         """Judge every command in [text]; the string a `bash -c` / `eval` hands to a shell is scanned the same way."""
         scanner = ShellScanner(text, line0)
         scanner.scan()
-        is_helper = self.path == HELPER
         for command in scanner.commands:
-            resolved = resolve_command(command.words, functions)
-            if resolved is None:
-                continue
-            name_word, args, wrappers = resolved
-            self.check_wrapper_options(command.words)
-            for wrapper in wrappers:
-                self.check_wrapper(wrapper)
-            self.check_command(name_word, args, functions, is_helper)
-            if depth < 4:
-                for inner, inner_line in inner_scripts(name_word, args):
-                    self.scan_text(inner, inner_line, functions, depth + 1)
+            self.judge(command.words, functions, depth)
         for line, operator in scanner.operator_hits:
             self.add(line, "bash4", f"`{operator}` needs bash 4+ (macOS ships bash 3.2)")
         self.check_bash4_text(scanner)
+
+    def judge(self, words: list[Word], functions: set[str], depth: int) -> None:
+        """Judge one simple command: its wrappers, the command, the script a shell is handed and the commands a `find` runs."""
+        resolved = resolve_command(words, functions)
+        if resolved is None:
+            return
+        name_word, args, wrappers = resolved
+        self.check_wrapper_options(words, wrappers)
+        for wrapper in wrappers:
+            self.check_wrapper(wrapper)
+        self.check_command(name_word, args, functions, self.path == HELPER)
+        if depth < 4:
+            for inner, inner_line in inner_scripts(name_word, args):
+                self.scan_text(inner, inner_line, functions, depth + 1)
+            if not name_word.expands and name_word.text.rsplit("/", 1)[-1] == "find":
+                # `find . -exec CMD ... \;` runs CMD: a banned tool hidden behind it is still the script's command
+                for indexes in find_exec_commands([w.text for w in args]):
+                    self.judge([args[i] for i in indexes], functions, depth + 1)
 
     def check_wrapper(self, word: Word) -> None:
         """A wrapper (`timeout 5 cmd`, `stdbuf -oL cmd`, `nohup cmd`) is a command in its own right: the gate used to
@@ -731,6 +795,7 @@ class ShellCheck:
         base = word.text.rsplit("/", 1)[-1]
         line = word.line
         if (self.path, base) in PLATFORM_ONLY_USES:
+            self.platform_uses[(self.path, base)].append(line)
             return
         if base in BANNED_TOOLS:
             self.add(line, "banned-tool", f"`{base}`: {BANNED_TOOLS[base]}")
@@ -739,8 +804,9 @@ class ShellCheck:
         elif not self.runner_steps:  # a workflow step runs on one runner, whose own `sudo` is fine
             self.add(line, "unlisted-command", f"`{base}` (a command wrapper) is not in the portable command list (ALLOWED_COMMANDS in {Path(__file__).name}); use a tool both macOS and the ubuntu runner have, or add it with a reason")
 
-    def check_wrapper_options(self, words: list[Word]) -> None:
-        """GNU-only options of `xargs` itself (-r, -d): the command it runs is checked separately."""
+    def check_wrapper_options(self, words: list[Word], wrappers: list[Word]) -> None:
+        """GNU-only options of the wrappers themselves: `xargs -r` / `-d`, `env -C` / `--chdir`. The command a wrapper
+        runs is checked separately."""
         for index, word in enumerate(words):
             if word.text != "xargs" or word.quoted:
                 continue
@@ -753,6 +819,16 @@ class ShellCheck:
                 self.add(word.line, "gnu-only", GNU_ONLY_OPTION_MESSAGES[("xargs", "r")])
             if "d" in flag_chars(letters):
                 self.add(word.line, "gnu-only", GNU_ONLY_OPTION_MESSAGES[("xargs", "d")])
+        for wrapper in wrappers:
+            if wrapper.text != "env" or wrapper.quoted:
+                continue
+            index = next(i for i, w in enumerate(words) if w is wrapper)
+            j = index + 1
+            while j < len(words) and words[j].text.startswith("-") and not words[j].expands:
+                option = words[j].text
+                if option == "-C" or option.startswith("-C") and not option.startswith("--") or option == "--chdir" or option.startswith("--chdir="):
+                    self.add(wrapper.line, "gnu-only", GNU_ONLY_OPTION_MESSAGES[("env", "C")])
+                j += 2 if option in WRAPPER_OPTIONS_WITH_ARG["env"] else 1
 
     def device_allowed(self, line: int) -> bool:
         return self.device_from_line is not None and line >= self.device_from_line
@@ -765,8 +841,10 @@ class ShellCheck:
             self.check_builtin_options(name, args, line)
             return
         base = name.rsplit("/", 1)[-1]
-        if (self.path, name) in PLATFORM_ONLY_USES or (self.path, base) in PLATFORM_ONLY_USES:
-            return
+        for key in ((self.path, name), (self.path, base)):
+            if key in PLATFORM_ONLY_USES:
+                self.platform_uses[key].append(line)
+                return
         if "/" in name:
             if name.startswith(MACOS_ONLY_PATHS):
                 if not self.device_allowed(line):
@@ -882,9 +960,16 @@ def device_from_line(path: str, text: str) -> int | None:
     return None
 
 
-def check_shell_file(path: str, text: str, functions: set[str]) -> list[Finding]:
+def merge_uses(into: dict | None, uses: dict) -> None:
+    if into is not None:
+        for key, lines in uses.items():
+            into.setdefault(key, []).extend(lines)
+
+
+def check_shell_file(path: str, text: str, functions: set[str], uses: dict | None = None) -> list[Finding]:
     check = ShellCheck(path, text, device_from_line(path, text), functions)
     check.run()
+    merge_uses(uses, check.platform_uses)
     findings = check.findings
     entry = DEVICE_ONLY.get(path)
     if entry and entry[1] is not None and check.device_from_line is None:
@@ -945,11 +1030,12 @@ def workflow_run_blocks(text: str) -> list[tuple[int, str]]:
     return [(line, re.sub(r"\$\{\{.*?\}\}", "${GH_EXPR}", block)) for line, block in blocks]
 
 
-def check_workflow(path: str, text: str, functions: set[str]) -> list[Finding]:
+def check_workflow(path: str, text: str, functions: set[str], uses: dict | None = None) -> list[Finding]:
     findings: list[Finding] = []
     for first_line, block in workflow_run_blocks(text):
         check = ShellCheck(path, block, None, functions, runner_steps=True)
         check.run()
+        merge_uses(uses, {key: [line + first_line - 1 for line in lines] for key, lines in check.platform_uses.items()})
         for finding in check.findings:
             findings.append(Finding(path, finding.line + first_line - 1, finding.rule, finding.message))
     return findings
@@ -985,6 +1071,32 @@ class PyCommand:
     shell: str | None = None  # a shell command line (os.system, shell=True, ["bash", "-c", "<this>"])
 
 
+def argv_commands(argv: list[str], line: int, texts: list[str | None] | None = None, depth: int = 0) -> list[PyCommand]:
+    """The commands a literal argv runs: itself, the `-c` script of a shell (after `-o pipefail`-style options), the command
+    a wrapper runs (after its options and their values) and each command a `find -exec` runs."""
+    found = [PyCommand(line, argv=argv)]
+    if depth >= 4 or not argv:
+        return found
+    base = argv[0].rsplit("/", 1)[-1]
+    if base in SHELL_INTERPRETERS:
+        # [texts] keeps the positions of f-string pieces that are not literal (None): the script is the word after -c
+        words = texts[1:] if texts is not None and len(texts) == len(argv) else list(argv[1:])
+        literal = [w if w is not None else "${PY}" for w in words]
+        index = shell_script_index(literal, [False] * len(literal))
+        if index is not None and words[index] is not None:
+            found.append(PyCommand(line, shell=words[index]))
+    elif base in WRAPPERS and len(argv) > 1:
+        rest = skip_wrapper_options(base, argv, argv, [False] * len(argv), 1)
+        if base == "env" and any(a in ("-C", "--chdir") or a.startswith("--chdir=") for a in argv[1:rest]):
+            found.append(PyCommand(line, argv=["env", "-C"]))  # judged by check_python_file as a GNU-only option
+        if rest < len(argv):
+            found.extend(argv_commands(argv[rest:], line, None, depth + 1))
+    elif base == "find":
+        for indexes in find_exec_commands(argv):
+            found.extend(argv_commands([argv[i] for i in indexes], line, None, depth + 1))
+    return found
+
+
 def python_command_names(tree: ast.AST) -> list[PyCommand]:
     """Each command a script hands to subprocess/os.system/which: its literal argv, and every shell command line."""
     found: list[PyCommand] = []
@@ -1006,24 +1118,7 @@ def python_command_names(tree: ast.AST) -> list[PyCommand]:
                 continue
             if not isinstance(first.elts[0], ast.Constant):
                 continue
-            argv = [t for t in texts if t is not None]
-            found.append(PyCommand(node.lineno, argv=argv))
-            base = argv[0].rsplit("/", 1)[-1]
-            if base in SHELL_INTERPRETERS:
-                for index, arg in enumerate(argv[1:], 1):
-                    if arg.startswith("-") and not arg.startswith("--") and "c" in arg[1:] and index + 1 < len(texts):
-                        script = texts[index + 1]
-                        if script is not None:
-                            found.append(PyCommand(node.lineno, shell=script))
-                        break
-                    if not arg.startswith("-"):
-                        break
-            elif base in WRAPPERS:
-                for arg in argv[1:]:  # `["env", "FOO=1", "rg", ...]`: the wrapped command is judged too
-                    if arg.startswith("-") or ASSIGNMENT_RE.match(arg) or re.fullmatch(r"[0-9.]+[smhd]?", arg):
-                        continue
-                    found.append(PyCommand(node.lineno, argv=[arg]))
-                    break
+            found.extend(argv_commands([t for t in texts if t is not None], node.lineno, texts))
             continue
         text = literal_text(first)
         if text is None:
@@ -1035,7 +1130,7 @@ def python_command_names(tree: ast.AST) -> list[PyCommand]:
     return found
 
 
-def check_python_file(path: str, text: str, functions: set[str] | None = None) -> list[Finding]:
+def check_python_file(path: str, text: str, functions: set[str] | None = None, uses: dict | None = None) -> list[Finding]:
     try:
         tree = ast.parse(text)
     except SyntaxError as error:  # justified: reported as a `parse` finding (the return value), the gate stays red
@@ -1047,6 +1142,7 @@ def check_python_file(path: str, text: str, functions: set[str] | None = None) -
             # a shell command line (os.system, shell=True, ["bash", "-c", ...]): judged like a script's own text
             check = ShellCheck(path, command.shell, 1 if path in DEVICE_ONLY_PY else None, functions or set())
             check.run()
+            merge_uses(uses, {key: [line + f_line - 1 for f_line in lines] for key, lines in check.platform_uses.items()})
             findings += [Finding(path, line + f.line - 1, f.rule, f.message) for f in check.findings]
             continue
         argv = command.argv
@@ -1054,6 +1150,7 @@ def check_python_file(path: str, text: str, functions: set[str] | None = None) -
             continue
         base = argv[0].rsplit("/", 1)[-1]
         if (path, base) in PLATFORM_ONLY_USES:
+            merge_uses(uses, {(path, base): [line]})
             continue
         if base in BANNED_TOOLS:
             findings.append(Finding(path, line, "banned-tool", f"`{base}`: {BANNED_TOOLS[base]}"))
@@ -1061,6 +1158,8 @@ def check_python_file(path: str, text: str, functions: set[str] | None = None) -
             findings.append(Finding(path, line, "macos-only", f"`{base}` exists on macOS only; allowed only in a DEVICE_ONLY_PY script"))
         elif base in NOT_EVERYWHERE:
             findings.append(Finding(path, line, "platform-only", f"`{base}` is not on every platform: {NOT_EVERYWHERE[base]}; list a guarded use in PLATFORM_ONLY_USES with its reason"))
+        elif base == "env" and argv[1:] == ["-C"]:
+            findings.append(Finding(path, line, "gnu-only", GNU_ONLY_OPTION_MESSAGES[("env", "C")]))
         elif base == "sed" and any(a.startswith("-i") for a in argv[1:]):
             findings.append(Finding(path, line, "sed-i", f"`sed -i` differs between BSD and GNU sed; edit the file in python3"))
         elif base in ("grep", "egrep") and any(a.startswith("-") and not a.startswith("--") and "P" in a for a in argv[1:]):
@@ -1217,12 +1316,74 @@ SELF_TESTS: list[tuple[str, str, str, list[str]]] = [
     ("python env wrapper", "scripts/x.py", 'import subprocess\nsubprocess.run(["env", "A=1", "rg", "x"])\n', ["banned-tool"]),
     ("python timeout", "scripts/x.py", 'import subprocess\nsubprocess.run(["timeout", "5", "sleep", "1"])\n', ["banned-tool"]),
     ("python stdbuf", "scripts/x.py", 'import subprocess\nsubprocess.run(["stdbuf", "-oL", "cat"])\n', ["banned-tool"]),
+    # options before -c, find -exec, wrappers with valued options (review round 2)
+    ("bash -o pipefail -c", "scripts/x.sh", "bash -o pipefail -c 'rg x f'\n", ["banned-tool"]),
+    ("bash -O extglob -c double-quoted", "scripts/x.sh", 'bash -O extglob -c "cat f | rg x"\n', ["banned-tool"]),
+    ("bash -eo pipefail -c", "scripts/x.sh", "bash -eo pipefail -c 'rg x f'\n", ["banned-tool"]),
+    ("bash --norc -o pipefail -lc", "scripts/x.sh", "bash --norc -o pipefail -lc 'gsed -n 1p f'\n", ["banned-tool"]),
+    ("bash +o history -c", "scripts/x.sh", "bash +o history -c 'rg x f'\n", ["banned-tool"]),
+    ("env bash -o pipefail -c", "scripts/x.sh", "env A=1 bash -o pipefail -c 'rg x'\n", ["banned-tool"]),
+    ("bash -o pipefail script.sh is a script file", "scripts/x.sh", "bash -o pipefail script.sh -c rg\n", []),
+    ("bash -o pipefail -c from a variable", "scripts/x.sh", 'bash -o pipefail -c "$cmd"\n', []),
+    ("bash -o pipefail -c portable", "scripts/x.sh", "bash -o pipefail -c 'grep -E x f | sort'\n", []),
+    ("find -exec banned tool", "scripts/x.sh", "find . -name '*.kt' -exec rg x {} \\;\n", ["banned-tool"]),
+    ("find -exec + form", "scripts/x.sh", "find . -type f -exec rg x {} +\n", ["banned-tool"]),
+    ("find -execdir through env", "scripts/x.sh", "find . -execdir env A=1 rg x {} \\;\n", ["banned-tool"]),
+    ("find -exec sh -c script", "scripts/x.sh", "find . -exec sh -c 'rg x \"$1\"' _ {} \\;\n", ["banned-tool"]),
+    ("find -exec sed -i", "scripts/x.sh", "find . -exec sed -i s/a/b/ {} \\;\n", ["sed-i"]),
+    ("find -exec a portable command", "scripts/x.sh", "find . -exec grep -lE x {} \\; | sort\n", []),
+    ("find -ok unlisted command", "scripts/x.sh", "find . -ok sha256sum {} \\;\n", ["unlisted-command"]),
+    ("find without -exec", "scripts/x.sh", "find . -name rg -print\n", []),
+    ("echo find -exec is not find", "scripts/x.sh", "echo find . -exec rg x {} \\;\n", []),
+    ("env -C is GNU-only", "scripts/x.sh", "env -C /tmp ls\n", ["gnu-only"]),
+    ("env -C then a banned tool", "scripts/x.sh", "env -C /tmp rg x\n", ["gnu-only", "banned-tool"]),
+    ("env --chdir", "scripts/x.sh", "env --chdir=/tmp ls\n", ["gnu-only"]),
+    ("env -u NAME cmd", "scripts/x.sh", "env -u FOO ls\nenv -u FOO rg x\n", ["banned-tool"]),
+    ("env -i and assignments", "scripts/x.sh", "env -i A=1 B=2 ls\n", []),
+    ("sudo -u USER banned tool", "scripts/x.sh", "sudo -u root rg x\n", ["unlisted-command", "banned-tool"]),
+    ("sudo -u USER portable tool", "scripts/x.sh", "sudo -u root ls\n", ["unlisted-command"]),
+    ("sudo -u USER in a workflow step", ".github/workflows/x.yml", "jobs:\n  a:\n    steps:\n      - run: sudo -u root rg x\n", ["banned-tool"]),
+    ("nice -n N banned tool", "scripts/x.sh", "nice -n 5 rg x\n", ["banned-tool"]),
+    ("xargs -n N banned tool", "scripts/x.sh", "ls | xargs -n 1 rg x\n", ["banned-tool"]),
+    ("python bash -o pipefail -c", "scripts/x.py", 'import subprocess\nsubprocess.run(["bash", "-o", "pipefail", "-c", "rg x f"])\n', ["banned-tool"]),
+    ("python bash -O extglob -c", "scripts/x.py", 'import subprocess\nsubprocess.run(["bash", "-O", "extglob", "-c", "rg x f"])\n', ["banned-tool"]),
+    ("python bash -o pipefail script", "scripts/x.py", 'import subprocess\nsubprocess.run(["bash", "-o", "pipefail", "scripts/x.sh", "-c"])\n', []),
+    ("python env -C", "scripts/x.py", 'import subprocess\nsubprocess.run(["env", "-C", "/tmp", "ls"])\n', ["gnu-only"]),
+    ("python env -C banned tool", "scripts/x.py", 'import subprocess\nsubprocess.run(["env", "-C", "/tmp", "rg", "x"])\n', ["gnu-only", "banned-tool"]),
+    ("python sudo -u USER banned tool", "scripts/x.py", 'import subprocess\nsubprocess.run(["sudo", "-u", "root", "rg", "x"])\n', ["banned-tool"]),
+    ("python find -exec", "scripts/x.py", 'import subprocess\nsubprocess.run(["find", ".", "-exec", "rg", "x", "{}", ";"])\n', ["banned-tool"]),
+    ("python find -exec +", "scripts/x.py", 'import subprocess\nsubprocess.run(["find", ".", "-exec", "gsed", "-n", "1p", "{}", "+"])\n', ["banned-tool"]),
+    ("python find -exec portable", "scripts/x.py", 'import subprocess\nsubprocess.run(["find", ".", "-exec", "grep", "-l", "x", "{}", ";"])\n', []),
+    ("python env assignment", "scripts/x.py", 'import subprocess\nsubprocess.run(["env", "A=1", "ls"])\n', []),
     ("python shell string, multi-line line numbers", "scripts/x.py", 'import subprocess\nsubprocess.run("""\necho ok\nrg x\n""", shell=True)\n', ["banned-tool"]),
+]
+
+
+# The pinned use counts of PLATFORM_ONLY_USES (review round 2): (name, script, command, uses in the text, rules that must be reported).
+# The pins are the real ones, so the counts below are generated against the entry for that script and command.
+PIN_SELF_TESTS: list[tuple[str, str, str, int, list[str]]] = [
+    ("shellcheck at its pinned count", "scripts/check_shell_lint.sh", "shellcheck", 3, []),
+    ("one more shellcheck in a listed script", "scripts/check_shell_lint.sh", "shellcheck", 4, ["platform-use-count"]),
+    ("a stale pin (the guarded use is gone)", "scripts/check_shell_lint.sh", "shellcheck", 2, ["platform-use-count"]),
+    ("cygpath at its pinned count", "scripts/tool_smoke.sh", "cygpath", 6, []),
+    ("one more cygpath in a listed script", "scripts/tool_smoke.sh", "cygpath", 7, ["platform-use-count"]),
+    ("cmake at its pinned count", "scripts/local_ci.sh", "cmake", 3, []),
+    ("one more cmake in a listed script", "scripts/local_ci.sh", "cmake", 4, ["platform-use-count"]),
+    ("one more mkdocs in a listed script", "scripts/local_ci.sh", "mkdocs", 3, ["platform-use-count"]),
 ]
 
 
 def run_self_test() -> int:
     failures: list[str] = []
+    for name, path, command, count, expected in PIN_SELF_TESTS:
+        uses: dict = {}
+        text = "".join(f"{command} --check x{n}\n" for n in range(count))
+        # only the pin is under test here: the other entries of the script are not part of the text
+        found = [f for f in check_shell_file(path, text, {"sed_inplace"}, uses) if f.rule != "device-marker"]
+        found += [f for f in pin_findings(uses, {path}) if f"`{command}`" in f.message]
+        rules = sorted(f.rule for f in found)
+        if rules != sorted(expected):
+            failures.append(f"{name}: expected {sorted(expected)}, got {rules}" + "".join(f"\n      {f}" for f in found))
     for name, path, text, expected in SELF_TESTS:
         if path.endswith(".py"):
             found = check_python_file(path, text)
@@ -1251,7 +1412,7 @@ def run_self_test() -> int:
         for failure in failures:
             print(f"  {failure}", file=sys.stderr)
         return 1
-    print(f"{TAG} --self-test PASS {len(SELF_TESTS)} shapes classified as expected; sed_inplace edits in place and leaves no backup")
+    print(f"{TAG} --self-test PASS {len(SELF_TESTS)} shapes and {len(PIN_SELF_TESTS)} pin cases classified as expected; sed_inplace edits in place and leaves no backup")
     return 0
 
 
@@ -1302,15 +1463,16 @@ def repo_functions(files: list[str]) -> set[str]:
 def check_files(files: list[str], functions: set[str]) -> tuple[list[Finding], dict[str, Counter]]:
     findings: list[Finding] = []
     inventory: dict[str, Counter] = defaultdict(Counter)
+    uses: dict = {}
     for rel in files:
         text = read_text(rel)
         if text is None:
             continue
         head = text[:200]
         if rel.startswith(".github/workflows/") and rel.endswith((".yml", ".yaml")):
-            findings += check_workflow(rel, text, functions)
+            findings += check_workflow(rel, text, functions, uses)
         elif is_shell_script(rel, head):
-            findings += check_shell_file(rel, text, functions)
+            findings += check_shell_file(rel, text, functions, uses)
             scanner = ShellScanner(text)
             scanner.scan()
             known = functions | set(FUNCTION_DEF_RE.findall(text))
@@ -1319,8 +1481,36 @@ def check_files(files: list[str], functions: set[str]) -> tuple[list[Finding], d
                 if resolved and not resolved[0].expands and resolved[0].text not in SHELL_WORDS | known:
                     inventory[rel][resolved[0].text] += 1
         elif rel.endswith(".py") and rel != "scripts/check_script_portability.py":
-            findings += check_python_file(rel, text, functions)
+            findings += check_python_file(rel, text, functions, uses)
+    findings += pin_findings(uses, set(files))
     return findings, inventory
+
+
+def pin_findings(uses: dict, scanned: set[str], pins: dict | None = None) -> list[Finding]:
+    """PLATFORM_ONLY_USES exempts one guarded use per pinned count: an additional use of the same tool in an already
+    listed script (an unguarded `shellcheck`, `cmake`, `mkdocs`, `cygpath`) is not covered by the guard the entry
+    names, so it fails until a reviewer lists it (and bumps the pin); a pin the script no longer reaches is stale."""
+    pins = PLATFORM_ONLY_USES if pins is None else pins
+    findings: list[Finding] = []
+    for (path, command), (expected, _reason) in sorted(pins.items()):
+        if path not in scanned:
+            continue  # an explicit file subset: only the scripts that were scanned are judged
+        lines = uses.get((path, command), [])
+        if len(lines) > expected:
+            findings.append(
+                Finding(
+                    path,
+                    sorted(lines)[expected],
+                    "platform-use-count",
+                    f"`{command}` is used {len(lines)} times here but PLATFORM_ONLY_USES pins {expected} guarded use(s): "
+                    f"the extra use is not covered by the listed guard; guard it and raise the pin with the reason, or remove it",
+                )
+            )
+        elif len(lines) < expected:
+            findings.append(
+                Finding(path, 1, "platform-use-count", f"`{command}` is used {len(lines)} time(s) here but PLATFORM_ONLY_USES pins {expected}: lower the pin or delete the stale entry")
+            )
+    return findings
 
 
 def check_registry(files: list[str]) -> list[Finding]:
@@ -1333,6 +1523,10 @@ def check_registry(files: list[str]) -> list[Finding]:
     ] + [
         Finding(rel, 1, "device-registry", "listed in DEVICE_ONLY_PY but is not a tracked script")
         for rel in DEVICE_ONLY_PY
+        if rel not in tracked
+    ] + [
+        Finding(rel, 1, "device-registry", f"`{command}` is listed in PLATFORM_ONLY_USES but the script is not tracked; remove or rename the entry")
+        for rel, command in sorted(PLATFORM_ONLY_USES)
         if rel not in tracked
     ]
 
@@ -1369,7 +1563,7 @@ def main(argv: list[str]) -> int:
     print(
         f"{TAG} PASS {shell} shell script(s), {workflows} workflow file(s) and {pythons} Python file(s) scanned; "
         f"no unlisted command, grep -P, stray sed -i, bash 4+ construct or macOS-only command outside "
-        f"{len(DEVICE_ONLY)} DEVICE_ONLY script(s) and {len(PLATFORM_ONLY_USES)} listed platform-guarded use(s)"
+        f"{len(DEVICE_ONLY)} DEVICE_ONLY script(s) and {len(PLATFORM_ONLY_USES)} listed platform-guarded use(s) at their pinned counts"
     )
     return 0
 

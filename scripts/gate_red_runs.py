@@ -708,6 +708,22 @@ portability_case("eval", 'eval "rg x file"\n', "[banned-tool] `rg`", "ripgrep in
 portability_case("one-line case", "case $1 in a) rg x file;; esac\n", "[banned-tool] `rg`", "ripgrep in a single-line `case $x in a) cmd;; esac` clause (the scanner used to swallow it)")
 portability_case("cygpath unguarded", 'p="$(cygpath -u "$1")"\n', "[platform-only] `cygpath`", "a script calls the Windows-only cygpath outside a listed guarded use (review N3)")
 portability_case("cmake unguarded", "cmake -S . -B build\n", "[platform-only] `cmake`", "a script calls cmake (a toolchain install, not on every machine) outside a listed guarded use")
+portability_case("bash -o pipefail -c", "bash -o pipefail -c 'rg x file'\n", "[banned-tool] `rg`", "ripgrep inside a `bash -o pipefail -c '...'` string: options before -c no longer hide the script (review round 2)")
+portability_case("bash -O extglob -c", 'bash -O extglob -c "cat file | rg x"\n', "[banned-tool] `rg`", "ripgrep inside a `bash -O extglob -c \"...\"` string")
+portability_case("find -exec", "find . -name '*.kt' -exec rg x {} \\;\n", "[banned-tool] `rg`", "ripgrep run by `find -exec ... \\;` (review round 2)")
+portability_case("find -exec +", "find . -type f -exec rg x {} +\n", "[banned-tool] `rg`", "ripgrep run by `find -exec ... +`")
+portability_case("env -C", "env -C /tmp ls\n", "[gnu-only] `env -C DIR`", "a script changes directory with GNU-only `env -C` (BSD env has no -C)")
+portability_case("env -C wrapped tool", "env -C /tmp rg x\n", "[banned-tool] `rg`", "the command behind `env -C DIR` is judged, not the directory")
+portability_case("sudo -u wrapped tool", "sudo -u root rg x\n", "[banned-tool] `rg`", "the command behind `sudo -u USER` is judged, not the user name")
+case("check_script_portability.py (extra guarded-tool use)", py("check_script_portability.py"),
+     [Append("scripts/check_shell_lint.sh", "\nshellcheck --version >/dev/null\n")],
+     "[platform-use-count] `shellcheck`", "one more `shellcheck` in a script whose listed use is guarded: the entry pins its use count, so the extra, unguarded use fails (review round 2)")
+case("check_script_portability.py (python bash -o pipefail -c)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["bash", "-o", "pipefail", "-c", "rg x"])\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep in a [\"bash\", \"-o\", \"pipefail\", \"-c\", ...] command line")
+case("check_script_portability.py (python find -exec)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["find", ".", "-exec", "rg", "x", "{}", ";"])\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep behind `find -exec`")
 case("check_script_portability.py (python shell=True)", py("check_script_portability.py"),
      [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run("ls | rg x", shell=True)\n')],
      "[banned-tool] `rg`", "a Python gate hides ripgrep in a shell=True command line (review N1)")
