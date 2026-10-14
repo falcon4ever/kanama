@@ -288,6 +288,9 @@ case("check_actual_public_surface.py", py("check_actual_public_surface.py"),
 case("check_android_remap_sources.py", py("check_android_remap_sources.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", "package net.multigesture.kanama\nfun zz() = Files.readString(x)\n")],
      "forbidden after the Android remap", "a runtime source uses a fragment the Android remap cannot compile")
+case("check_android_remap_sources.py (string literal)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", 'package net.multigesture.kanama\nval zzText: String = "a block-comment opener inside a string: /*"\nfun zz() = Files.readString(x)\n')],
+     "forbidden after the Android remap", "a string literal holding a block-comment opener no longer blinds the audit to the rest of the file (task 119 finding 13)")
 case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sources.py"),
      [Edit("android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap.kt",
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],

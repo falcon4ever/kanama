@@ -4237,7 +4237,7 @@ def desktop_objectcalls_declarations() -> list[tuple[str, str]]:
     member needs. Both ObjectCalls files are ktfmt-formatted, so a member starts at exactly two
     spaces (see `check_objectcalls_parity.py`, which relies on the same invariant).
     """
-    src = DESKTOP_OBJECTCALLS.read_text(encoding="utf-8")
+    src = strip_comments(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))
     out: list[tuple[str, str]] = []
     for match in re.finditer(
         r"^  (?:actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", src, re.MULTILINE
@@ -4370,13 +4370,7 @@ def expect_member_keys(members: list[str]) -> set[tuple[str, tuple[str, ...]]]:
         match = re.match(r"\s*fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", member)
         if match is None:
             raise SystemExit(f"cannot key expect member: {member[:80]}")
-        params = _split_top_level(_read_parens(member, match.end() - 1))
-        keys.add(
-            (
-                match.group(1),
-                tuple(p.split(":", 1)[0].strip().split()[-1] for p in params if p.strip()),
-            )
-        )
+        keys.add((match.group(1), parameter_names(member, match.end() - 1)))
     return keys
 
 
@@ -4392,11 +4386,7 @@ def mark_actual_members(text: str, keys: set[tuple[str, tuple[str, ...]]]) -> tu
     position = 0
     for match in re.finditer(r"^  fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", text, re.MULTILINE):
         open_paren = match.end() - 1
-        params = _split_top_level(_read_parens(text, open_paren))
-        key = (
-            match.group(1),
-            tuple(p.split(":", 1)[0].strip().split()[-1] for p in params if p.strip()),
-        )
+        key = (match.group(1), parameter_names(text, open_paren))
         if key not in keys:
             continue
         out.append(text[position : match.start() + 2])
@@ -4467,15 +4457,14 @@ def desktop_objectcalls_signatures() -> dict[str, tuple[str, ...]]:
     worse trade. Overloads that disagree on names are dropped rather than guessed at; the parity
     gate (scripts/check_objectcalls_parity.py) reports whatever this cannot resolve.
     """
-    src = DESKTOP_OBJECTCALLS.read_text(encoding="utf-8")
+    src = strip_comments(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))
     signatures: dict[str, tuple[str, ...]] = {}
     ambiguous: set[str] = set()
     for match in re.finditer(
         r"^  (?:actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", src, re.MULTILINE
     ):
         name = match.group(1)
-        params = _split_top_level(_read_parens(src, match.end() - 1))
-        signature = tuple(param.split(":", 1)[0].strip().split()[-1] for param in params if param)
+        signature = parameter_names(src, match.end() - 1)
         if name in signatures and signatures[name] != signature:
             ambiguous.add(name)
         signatures[name] = signature
@@ -4485,35 +4474,62 @@ def desktop_objectcalls_signatures() -> dict[str, tuple[str, ...]]:
 
 
 def _read_parens(src: str, open_paren: int) -> str:
-    """The text inside the parenthesis pair whose '(' is at [open_paren]."""
-    depth = 0
-    for i in range(open_paren, len(src)):
-        if src[i] == "(":
-            depth += 1
-        elif src[i] == ")":
-            depth -= 1
-            if depth == 0:
-                return src[open_paren + 1 : i]
-    raise ValueError(f"unbalanced '(' at offset {open_paren}")
+    """The text inside the parenthesis pair whose '(' is at [open_paren] (strings are skipped)."""
+    return src[open_paren + 1 : match_closer(src, open_paren)]
 
 
-def _split_top_level(params: str) -> list[str]:
-    """Split a Kotlin parameter list on top-level commas ('->' is not a closing angle bracket)."""
+def split_params(params: str) -> list[str]:
+    """Split a Kotlin parameter list on top-level commas.
+
+    THE parameter splitter of the ObjectCalls tooling (task 119 finding 9: the generator, the
+    parity gate and the deleted BuiltinCalls gate each had their own). Function-type parameters
+    (`wrapper: (MemorySegment) -> T?`) do not close a generic at their `>`, and a string literal
+    (a default value) is skipped whole.
+    """
     out: list[str] = []
     depth = 0
     current = ""
-    for i, ch in enumerate(params):
-        if ch in "(<[":
+    in_string = False
+    i = 0
+    while i < len(params):
+        ch = params[i]
+        if in_string:
+            current += ch
+            if ch == "\\" and i + 1 < len(params):
+                current += params[i + 1]
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch in "(<[":
             depth += 1
-        elif ch in ")]" or (ch == ">" and params[i - 1 : i] != "-"):
+        elif ch in ")]":
+            depth -= 1
+        elif ch == ">" and params[i - 1 : i] != "-":
             depth -= 1
         elif ch == "," and depth == 0:
             out.append(current.strip())
             current = ""
+            i += 1
             continue
         current += ch
+        i += 1
     out.append(current.strip())
-    return [param for param in out if param]
+    return [p for p in out if p]
+
+
+def parameter_names(src: str, open_paren: int) -> tuple[str, ...]:
+    """Parameter names, in order, of the parameter list whose '(' is at [open_paren]:
+    `vararg name: T`, `noinline name: T` and `name: T = default` all give `name`."""
+    names: list[str] = []
+    for param in split_params(_read_parens(src, open_paren)):
+        head = param.split(":", 1)[0].strip()
+        names.append(head.split()[-1] if head else "")
+    return tuple(names)
 
 
 def _to_extension(member: str, receiver: str) -> str:
