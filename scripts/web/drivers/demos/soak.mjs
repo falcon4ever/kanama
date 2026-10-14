@@ -27,6 +27,8 @@
 // Duration comes from KANAMA_WEB_SOAK_SECONDS (default 600). The smoke shell's
 // --timeout must exceed it; scripts/web/demos.sh derives that budget.
 
+import { callSmokeMethod } from "../envelope.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const START = Date.now();
@@ -56,7 +58,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? 0,
         mainHandle: bridge.dodgeMainHandle,
-        smokeQuitHandle: bridge.dodgeSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         readyCount: bridge.readyCount,
         mobInstantiations: bridge.match3PackedSceneInstantiations,
         liveHandles: bridge.liveBrowserHandleCount,
@@ -96,13 +98,11 @@ async function callMain(evaluate, method) {
   );
 }
 
-async function callTeardown(evaluate) {
-  return evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeSmokeQuitHandle, 1); true",
-  );
+async function callTeardown(evaluate, exportDir) {
+  return callSmokeMethod(evaluate, exportDir, "dodge.SmokeQuit", "smoke_teardown");
 }
 
-export async function runSoak({ url, evaluate, navigate, deadline }) {
+export async function runSoak({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
   trace(`navigate (soak ${SOAK_SECONDS}s)`);
   await navigate(`${url}?soak=${Date.now()}`);
@@ -170,7 +170,7 @@ export async function runSoak({ url, evaluate, navigate, deadline }) {
   trace(`high-water: first=${firstHigh} second=${secondHigh} (slack ${HIGH_WATER_SLACK})`);
 
   // Teardown after a long run must still drain everything.
-  await callTeardown(evaluate);
+  await callTeardown(evaluate, exportDir);
   const teardownUntil = Math.min(deadline, Date.now() + 15_000);
   let settled = last;
   while (Date.now() < teardownUntil) {

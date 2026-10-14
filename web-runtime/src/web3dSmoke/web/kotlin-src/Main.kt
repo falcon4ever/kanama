@@ -200,7 +200,7 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Task-64 API-parity probe (driver method #3).
+   * Task-64 API-parity probe.
    *
    * Exercises the parity pack end to end: `Resource.fromHandle` identity on an already-held
    * resource handle, `AudioStreamPlayer.setStream` assign + play + null-clear (the desktop
@@ -238,9 +238,9 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Task-64 API-parity probe (driver method #4): the same +X target with useModelFront = true
+   * Task-64 API-parity probe: the same +X target with useModelFront = true
    * flips the aim to +Z-forward (global yaw +PI/2) — the fps Enemy's 180-degree gap. The driver
-   * asserts the PI flip against method #3's read-back.
+   * asserts the PI flip against the first aim probe's read-back.
    */
   fun parityModelFrontLook() {
     self.lookAt(self.globalPosition + Vector3(1.0, 0.0, 0.0), useModelFront = true)
@@ -250,7 +250,7 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Harness probe (method#5): bit 1 = `@OnEnterTree` dispatched, bit 2 = the exported (non-default)
+   * Harness probe: bit 1 = `@OnEnterTree` dispatched, bit 2 = the exported (non-default)
    * `@Export` value was visible inside it, bit 4 = it ran before `@OnReady`. A healthy run
    * returns 7. The argument is unused (the Int->Int shape is what the callInt transport carries;
    * the proxy's ready-path immediate call passes 47 and records the same mask).
@@ -264,7 +264,7 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Task-76 generic-callv probe (driver method #6): exercises the generic fallback end to end.
+   * Task-76 generic-callv probe: exercises the generic fallback end to end.
    * The browser driver triggers this and reads the published JSON report.
    *
    * Probed methods with no typed opcode route through the generic tier and carry
@@ -400,7 +400,7 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Task-64 property-push probe (driver method #7): bit 1 = the scene-exported NodePath value
+   * Task-64 property-push probe: bit 1 = the scene-exported NodePath value
    * (`NodePath("Spinner")`, never the default) was pushed into Kotlin, bit 2 = the scene value
    * 47 of the RANGE-hinted one-line-annotated export arrived (proving the initializer parser
    * and the hint path end to end), bit 4 = the pushed NodePath resolves a live node through the
@@ -863,7 +863,7 @@ class Main(godotObject: GodotHandle) :
   fun dispatchProbeCount(): Long = PROBE_COUNT
 
   /**
-   * Task-80 dispatch probe (driver method #16). Bits, all of which a healthy run sets (mask 127):
+   * Task-80 dispatch probe. Bits, all of which a healthy run sets (mask 127):
    *
    * 1 = a single-FLOAT registered function received its argument (task 79's exact hole),
    * 2 = a `(BOOL)` registered function received its argument,
@@ -930,9 +930,9 @@ class Main(godotObject: GodotHandle) :
     return mask
   }
 
-  // A registered function's method id is its DECLARATION ORDER, and the browser drivers call
-  // several of these by id (dispatch_probe is method#16). Append new ones BELOW this line --
-  // inserting one above shifts every id after it and the driver silently calls the wrong method.
+  // A registered function's method id is its DECLARATION ORDER, but the browser driver resolves every
+  // one of these by NAME from the export manifest (resolveMethodId), so the order is free. Keep the
+  // names stable: a rename is a driver change.
 
   /**
    * The match3 `Tile.set_tile_type(String, Texture2D)` shape (task 80 slice 3): text and an object
@@ -955,7 +955,7 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Task-82 coroutine conformance probe (driver method #19), armed by the browser driver.
+   * Task-82 coroutine conformance probe, armed by the browser driver.
    *
    * The fifteen lines that would have caught task 82 on day one, in every demo: launch a coroutine
    * on this script's own scope, await the two delay shapes gameplay actually uses — the
@@ -1024,7 +1024,7 @@ class Main(godotObject: GodotHandle) :
   }
 
   /**
-   * Task-82 coroutine conformance readback (driver method #20): bit 1 = [coroutineProbe] ran,
+   * Task-82 coroutine conformance readback: bit 1 = [coroutineProbe] ran,
    * 2 = the coroutine body started, 4 = it resumed past `delaySeconds(0.0)`, 8 = it resumed past a
    * timed `delaySeconds`, 16 = a `MainThread.post` from inside the coroutine ran. A pumped
    * scheduler reaches 31. An unpumped one never gets past bit 1: `launch` dispatches even its

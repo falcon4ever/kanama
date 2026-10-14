@@ -1005,7 +1005,7 @@ tasks.register("stageWebMatch3Project") {
                 "res://kotlin-src/Audio.kt",
                 "res://kotlin-src/Main.kt",
                 "res://kotlin-src/Particles.kt",
-                "res://kotlin-src/SmokeQuit.kt",
+                "res://kotlin-src/Smoke.kt",
                 "res://kotlin-src/Tile.kt",
             )
         val mappings =
@@ -2477,6 +2477,7 @@ tasks.register("stageWebTpsdemoProject") {
                     "PlayerInputSynchronizer",
                     "RedRobot",
                     "Settings",
+                    "Smoke",
                 )
                 .map { "res://kotlin-src/$it.kt" }
                 .toSet()

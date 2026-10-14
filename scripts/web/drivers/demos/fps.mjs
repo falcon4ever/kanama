@@ -9,6 +9,8 @@
 // coverage the player->enemy damage path has ever had), then triggers Smoke.smoke_teardown —
 // which frees the Audio autoload and the scene root — and polls live handles to zero.
 
+import { callSmokeMethod } from "../envelope.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const START = Date.now();
@@ -32,7 +34,7 @@ async function snapshot(evaluate) {
       return {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
-        smokeHandle: bridge.fpsSmokeHandle,
+        smokeHandle: bridge.smokeHandle,
         playerHandle: bridge.fpsPlayerHandle,
         readyCount: bridge.readyCount,
         smokeReady: classCount(".Smoke"),
@@ -85,7 +87,7 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runFps({ url, evaluate, navigate, deadline }) {
+export async function runFps({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
   trace("navigate");
   await navigate(`${url}?fps=${Date.now()}`);
@@ -204,12 +206,10 @@ export async function runFps({ url, evaluate, navigate, deadline }) {
   peak.processCalls = Math.max(peak.processCalls, combatSnap.processCalls ?? 0);
   peak.appliedCommands = Math.max(peak.appliedCommands, combatSnap.appliedCommands ?? 0);
 
-  // Full teardown: Smoke.smoke_teardown (method#1 on the scene root's script) frees the
+  // Full teardown: Smoke.smoke_teardown (on the scene root's script) frees the
   // Audio autoload and the scene root, draining every live handle to zero.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.fpsSmokeHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "fps.Smoke", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);
