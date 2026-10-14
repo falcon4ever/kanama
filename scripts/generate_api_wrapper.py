@@ -5267,9 +5267,10 @@ GD_MEMBER_SECTIONS: dict[str, str] = {
     // string would compile and always return false; isInstanceIdValid takes a raw id. It never
     // dereferences the wrapper: it asks is_instance_id_valid about the id the wrapper captured at
     // construction, as GDScript does with the id its Variant cached, so it is safe on a wrapper
-    // whose object was freed (task 98).
+    // whose object was freed (task 98). Web answers from its handle tables (task 129 E), so the
+    // liveness test is the platform's GodotObject.isInstanceLive.
     fun isInstanceValid(instance: GodotObject?): Boolean =
-        instance != null && isInstanceIdValid(instance.instanceId)""",
+        instance != null && instance.isInstanceLive()""",
     "GD": """\
     // The text utilities' arguments: Godot formats null, String, Boolean and the numbers itself;
     // any other value is passed as its toString(), so a value with no Variant form still prints.

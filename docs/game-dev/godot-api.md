@@ -320,10 +320,24 @@ signal's handle) adds `isConnected(target, "method")`, `getConnections()`, `hasC
 
 On **Web** the String, NodePath and ByteArray functions compile from the same source: the byte
 codecs run in Kotlin/Wasm (checked against Godot's recorded results), the engine-run ones cross
-the Web bridge, which carries text, numbers, `NodePath`, `ByteArray` and the packed String/float
-returns but not a `List`/`Map` argument (`godotFormat`) or an `Array`/`Dictionary` result (`decodeVar`
-of a container): those fail with a clear error. Web has no `GodotCallable`, and its `GodotSignal`
-does not have the signal queries above yet.
+the Web bridge, which carries text, numbers, `NodePath`, `ByteArray`, the packed returns, objects,
+Callables, a `List`/`Map` argument (`godotFormat`) and an `Array`/`Dictionary` result (as a `List`
+/ `Map`). `GodotCallable` is the same class on Web, and `GodotSignal` has the same queries; each
+is a Godot call by name there. Two Web differences: `getObjectId()` (and `GodotObject.instanceId`)
+asks the engine, so it fails on a freed target instead of answering its old id, and in
+`getConnections()` a Kotlin lambda connection's `callable` is its own guard object's `fire`
+method (each lambda connection has its own callable, so two lambdas can connect one signal).
+
+Two **known limits on Web**, both being fixed (desktop has neither):
+
+- An object a signal handler (or `_input`, or another callback) receives as an argument is lent to
+  your handler for the length of that call. If you store it and use it after the handler returns, it
+  is not yet valid on Web unless something inside the handler resolved it through a result. The
+  workaround is to resolve it and keep the result: `kept = GD.instanceFromId(arg.instanceId)`, then
+  store `kept`.
+- `body == player` inside a handler can be `false` on Web even when both are the same node, because
+  the argument and your own reference can be two handles of one object. Compare the ids instead:
+  `body.instanceId == player.instanceId`.
 
 ## Collections
 
@@ -722,10 +736,22 @@ and returns the same double as GDScript, bit for bit; the transcendental functio
 `exp`, ...) and the float-to-int conversions (`roundToInt`, `floorToInt`) call `GD`. Each member
 also has a `Float` overload that computes in `Double`.
 
-On Web, `GD` and `Mathf` are still the Web runtime's own subset: `GD` has the random functions,
-`print`, `pushError`, `lerpf`, `clampf`, `remap`, `signf`, `lerpAngle`, `degToRad`, `radToDeg` and
-`isInstanceValid`; `Mathf` has `abs`, `min`, `max`, `clamp`, `lerp`, `inverseLerp`, `lerpAngle`,
-`wrap`, `sqrt`, `pow`, `log`, `sin`, `cos`, `atan2`, `isEqualApprox` and `roundToInt`.
+Web compiles the same `GD` and `Mathf`, and runs the math utilities in Kotlin, with no bridge
+call: everything `Mathf` has, and `GD`'s arithmetic, rounding, interpolation and transcendental
+functions (`sin`, `pow`, `exp`, `ease`, `dbToLinear`, ...). The arithmetic ones return GDScript's
+double bit for bit; the transcendental ones can differ from the engine's in the last bit or two
+(Kotlin/Wasm computes `kotlin.math` with its own fdlibm port, not the engine's libm; `ease` is
+within 2^-52 absolute, since some of its branches subtract from 1). The rest of `GD` runs in the
+engine: printing and
+`pushError`, `str` and the `varTo*` / `bytesTo*` conversions, `typeOf`, `hash`, `weakref`,
+`instanceFromId`, and the random functions (`randf`, `randi`, `randfRange`, `randiRange`, `randfn`,
+`seed`, `randomize`, `randFromSeed`); each of those is one engine call there.
+
+The `GD` random functions use Godot's one global generator on every platform, like GDScript and
+C#, so `seed()` from GDScript or from Kotlin gives the same sequence everywhere. On Web each call
+crosses the browser bridge (about 10-30 us), so draw thousands of numbers per frame with care. For
+strict determinism use a dedicated `RandomNumberGenerator` with its own seed: the global generator
+is shared with anything else that draws from it.
 
 ## Global Classes
 

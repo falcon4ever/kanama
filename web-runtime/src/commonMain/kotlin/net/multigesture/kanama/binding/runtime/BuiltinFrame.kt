@@ -1,5 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
+import net.multigesture.kanama.api.WebLocalUtilities
 import net.multigesture.kanama.types.GodotRealStorage
 
 /**
@@ -33,6 +34,23 @@ internal class BuiltinMethod(val variantType: Int, val name: String, val hash: L
   }
 }
 
+/**
+ * One of Godot's utility functions (task 129 E): the shared generated `GD` names each by its Godot
+ * name. Web runs the arithmetic ones in Kotlin ([WebLocalUtilities], by [localId]) and the rest by
+ * name in the engine (the builtin opcode's utility form, see [webRemoteUtilityCall]); the hash is
+ * the native backends' lookup key, unused here.
+ */
+internal class UtilityFunction(val name: String, @Suppress("unused") val hash: Long) {
+  /** [WebLocalUtilities]' id for this function, or -1 when only the engine runs it. */
+  internal val localId: Int = WebLocalUtilities.idOf(name)
+
+  /** The Variant type a frame-form call returns (0 for void; -1 for the Variant-form ones). */
+  internal val returnType: Int = WebLocalUtilities.frameReturnType(name)
+
+  /** A text utility's separator ([WebLocalUtilities.textSeparator]), null for the others. */
+  internal val textSeparator: String? = WebLocalUtilities.textSeparator(name)
+}
+
 private val frames = ArrayList<BuiltinFrame>()
 private var depth = 0
 
@@ -47,6 +65,12 @@ internal class BuiltinFrame {
   internal val slots = Array(MAX_SLOTS) { DoubleArray(MAX_COMPONENTS) }
   internal val longs = LongArray(MAX_SLOTS)
   internal val strings = arrayOfNulls<String>(MAX_SLOTS)
+
+  /**
+   * The Variant type each scalar slot was last written as (`putDouble` / `putLong` / `putBool` /
+   * `putString`): a utility call has no signature table, so its arguments cross as written.
+   */
+  internal val kinds = IntArray(MAX_SLOTS)
 
   /** The returned components; [retType] is its Godot `Variant.Type` (0 = NIL). */
   internal val ret = DoubleArray(MAX_COMPONENTS)
@@ -67,23 +91,42 @@ internal class BuiltinFrame {
 
   fun putDouble(slot: Int, value: Double) {
     slots[slot][0] = value
+    kinds[slot] = 3
   }
 
   fun putLong(slot: Int, value: Long) {
     longs[slot] = value
+    kinds[slot] = 2
   }
 
   fun putBool(slot: Int, value: Boolean) {
     slots[slot][0] = if (value) 1.0 else 0.0
+    kinds[slot] = 1
   }
 
   fun putString(slot: Int, value: String) {
     strings[slot] = value
+    kinds[slot] = 4
   }
 
   fun call(method: BuiltinMethod, argc: Int) = dispatch(method, argc, static = false)
 
   fun callStatic(method: BuiltinMethod, argc: Int) = dispatch(method, argc, static = true)
+
+  /** Calls the utility function [fn] with slots 1..[argc] (task 129 E). */
+  fun callUtility(fn: UtilityFunction, argc: Int) {
+    try {
+      // Task 129 E review B1: the arithmetic utilities never cross (10-30 us a crossing).
+      if (fn.localId >= 0 && WebLocalUtilities.call(this, fn.localId)) return
+      retType = 0
+      retLongValue = 0L
+      ret.fill(0.0)
+      webRemoteUtilityCall(this, fn, argc)
+    } finally {
+      for (i in 0..argc) strings[i] = null
+      depth--
+    }
+  }
 
   private fun dispatch(method: BuiltinMethod, argc: Int, static: Boolean) {
     try {

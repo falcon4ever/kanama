@@ -346,6 +346,9 @@ cannot throw at the call. On a freed object that one command is skipped and the 
 same `IllegalStateException` once as a script error (`SCRIPT ERROR: ... at: Script.<queued
 command>`), the other commands of the batch are applied, and the page keeps running, as on desktop
 where the setter throws and the script carries on; the exception is not catchable at the setter.
+A Kanama-scripted object freed while another script holds it behaves the same way (task 138 item
+22): a call on it throws the freed-instance `IllegalStateException`, and a command queued on it
+before it was freed is skipped and reported when the batch applies.
 A command that is malformed for a live object (a protocol fault) still ends the page. A position
 read of a `Node2D`/`Node3D` answers the last snapshot it had. Ask `GD.isInstanceValid(node)` first on Web too.
 

@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
+import net.multigesture.kanama.web.webScriptInstance
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class GodotObject(godotObject: GodotHandle) {
@@ -91,8 +92,8 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  /** Dynamic one-String-argument method call (e.g. a native GDScript autoload's play(path)). */
-  fun call(method: String, argument: String) {
+  /** Queued dynamic one-String-argument method call (the Variant return is discarded). */
+  internal fun callQueued(method: String, argument: String) {
     GodotBackendCalls.invokeStringNameStringNameArg(
       D.OBJECT_CALL,
       requireOpenHandle(),
@@ -104,8 +105,8 @@ open class GodotObject(godotObject: GodotHandle) {
   fun hasMethod(method: String): Boolean =
     GodotBackendCalls.invokeStringNameRetBool(D.OBJECT_HAS_METHOD, requireOpenHandle(), method)
 
-  /** Dynamic one-Double-argument method call (the FPS's damage(amount) on ray hits). */
-  fun call(method: String, value: Double) {
+  /** Queued dynamic one-Double-argument method call (the Variant return is discarded). */
+  internal fun callQueued(method: String, value: Double) {
     GodotBackendCalls.invokeStringNameDoubleArg(
       D.OBJECT_CALL_DOUBLE,
       requireOpenHandle(),
@@ -141,8 +142,8 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  /** Dynamic two-Vector3 dispatch (the corpus's damage(impact, force) convention). */
-  fun call(method: String, first: Vector3, second: Vector3) {
+  /** Queued dynamic two-Vector3 method call (the Variant return is discarded). */
+  internal fun callQueued(method: String, first: Vector3, second: Vector3) {
     GodotBackendCalls.invokeStringNameVector3Vector3Arg(
       D.OBJECT_CALL_VECTOR3_VECTOR3,
       requireOpenHandle(),
@@ -213,7 +214,7 @@ open class GodotObject(godotObject: GodotHandle) {
       property,
     ).toApi()
 
-  fun callDeferred(method: String) {
+  internal fun callDeferredQueued(method: String) {
     GodotBackendCalls.invokeStringNameArg(
       D.OBJECT_CALL_DEFERRED_NOARGS,
       requireOpenHandle(),
@@ -221,7 +222,7 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  fun callDeferred(method: String, argument: GodotObject) {
+  internal fun callDeferredQueued(method: String, argument: GodotObject) {
     GodotBackendCalls.invokeStringNameObjectArg(
       D.OBJECT_CALL_DEFERRED_OBJECT,
       requireOpenHandle(),
@@ -286,6 +287,43 @@ open class GodotObject(godotObject: GodotHandle) {
     set(propertyPath, value.value)
   }
 
+  /**
+   * The liveness test behind the shared [GD.isInstanceValid] (task 129 E): a live script or a live
+   * browser handle, answered without crossing to the engine.
+   */
+  internal fun isInstanceLive(): Boolean {
+    val token = handle.value
+    return webScriptInstance(token) != null || isWebBrowserHandleLive(token)
+  }
+
+  /**
+   * Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as
+   * a List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first.
+   */
+  fun call(method: String, vararg args: Any?): Any? = webGenericCall(this, method, args.toList())
+
+  /** Desktop's `callv`: [call] with the arguments as one list. */
+  fun callv(method: String, arguments: List<Any?>): Any? = webGenericCall(this, method, arguments)
+
+  /** Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch. */
+  fun callDeferred(method: String, vararg args: Any?): Any? {
+    webGenericQueue(this, "call_deferred", listOf<Any?>(method) + args)
+    return null
+  }
+
+  fun getMethodArgumentCount(method: String): Long =
+    webGenericCall(this, "get_method_argument_count", listOf(method)) as Long
+
+  /**
+   * The engine instance id, read once per handle and then kept (desktop captures it at
+   * construction): every wrapper of the handle answers without crossing again, also after the
+   * object is freed.
+   */
+  val instanceId: Long
+    get() = cachedInstanceId ?: (net.multigesture.kanama.web.WebHandleCache.read(handle.value, "get_instance_id") { webGenericCall(this, "get_instance_id", emptyList()) } as Long).also { cachedInstanceId = it }
+
+  private var cachedInstanceId: Long? = null
+
   /** Signal `script_changed`; see [TypedSignal]. */
   val scriptChanged: Signal0
     get() = Signal0(this, "script_changed")
@@ -336,13 +374,7 @@ fun GodotObject.emitSignal(signal: String) = emitSignal(signal)
 fun GodotObject.setDeferred(property: String, value: Boolean) = setDeferred(property, value)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.call(method: String, argument: String) = call(method, argument)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.hasMethod(method: String): Boolean = hasMethod(method)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.call(method: String, value: Double) = call(method, value)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.emitSignal(signal: String, value: GodotObject) = emitSignal(signal, value)
@@ -352,9 +384,6 @@ fun GodotObject.getObjectProperty(property: String): GodotObject? = getObjectPro
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.set(propertyPath: String, value: Double) = set(propertyPath, value)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.call(method: String, first: Vector3, second: Vector3) = call(method, first, second)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.emitSignal(signal: String, value: String) = emitSignal(signal, value)
@@ -370,12 +399,6 @@ fun GodotObject.set(propertyPath: String, value: Vector2) = set(propertyPath, va
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.getVector2(property: String): Vector2 = getVector2(property)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.callDeferred(method: String) = callDeferred(method)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun GodotObject.callDeferred(method: String, argument: GodotObject) = callDeferred(method, argument)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun GodotObject.hasSignal(signal: String): Boolean = hasSignal(signal)

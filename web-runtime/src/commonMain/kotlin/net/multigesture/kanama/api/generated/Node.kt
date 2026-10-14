@@ -187,13 +187,6 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   /**
-   * The window this node lives in. Web has exactly one: the handle-less browser-window mirror in
-   * `WebFacades.kt` (mode and 3D scaling are fixed by the canvas, so those writes stay Kotlin-side).
-   * Desktop's nullable return is kept so shared call sites read the same on both backends.
-   */
-  fun getWindow(): Window? = browserWindow
-
-  /**
    * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,
    * `propagate_call("set", [property, bool])` -- opcode 279 carries a typed (StringName, bool)
    * pair. Any other method, argument shape or `parentFirst` fails loud instead of silently
@@ -210,6 +203,9 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
       )
     }
   }
+
+  fun getWindow(): Window? =
+    (webGenericCall(this, "get_window", listOf()) as GodotObject?)?.let { Window(it.handle) }
 
   /** Signal `ready`; see [TypedSignal]. */
   val ready: Signal0

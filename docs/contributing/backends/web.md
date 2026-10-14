@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 34); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 35); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -291,6 +291,42 @@ memory layout and runs:
   parameter types, so the generated `WebBuiltinSignatures.kt` (`generate_builtin_ops.py`) supplies
   them.
 
+**Utility functions (the shared `GD`) run in Kotlin first.** `BuiltinFrame.callUtility` and
+`UtilityCalls.call` ask the generated `WebLocalUtilities` (rows in `scripts/web_local_utilities.py`,
+rendered by `generate_web_wrappers.py`, whose `--check` also requires every utility in
+`extension_api.json` to be in exactly one table) by an id each `UtilityFunction` gets at
+construction. The arithmetic, rounding and interpolation utilities are Godot's formulas, bit for
+bit; the transcendental ones (`sin` … `pow`, `db_to_linear`) carry a 1-ulp bound with the libm
+reason (Kotlin/Wasm's own fdlibm port of `kotlin.math` against the engine's emscripten libm), the
+composites a measured one: `linear_to_db` 2 ulps, `ease` 2^-52 absolute (its `1 - (...)` branches
+cancel, so ulps of a small result are not bounded; the web3d sweep's worst is 1.1e-16, 8 ulps); a
+float-to-int whose result is NaN or outside int64, or `posmod` by zero, still goes
+to the engine for its error and answer. The rest (printing, Variant text and serialization, object
+identity, RNG) ride the builtin opcode's utility form (static flag `2`, one cached `Expression` per
+name and arity). The web3d twin (`gd_twin.gd`, `BundleProbe.gdRows`) holds the local results to the
+engine's within each row's bound, and the budget gate counts every remaining synchronous builtin or
+utility crossing per tick (`maxBuiltinCallsPerTick`).
+
+RNG (decision 2026-10-14): the `GD` random functions (`randf`, `randi`, `randfRange`, `randiRange`,
+`randfn`, `seed`, `randomize`, `randFromSeed`) use Godot's global generator on every platform, like
+GDScript and C#, so `seed()` from GDScript or Kotlin gives the same sequence everywhere. On Web each
+call crosses the bridge (about 10-30 us): there is no Web-local generator (the old `WebRandom` is
+gone; the `UTILITY_RANDOMIZE` / `UTILITY_RANDI` / `UTILITY_RANDF` backend arms call `GD`, and the
+rows sit in `WEB_ENGINE_UTILITIES` with that reason). For strict determinism a script uses a
+dedicated `RandomNumberGenerator` with its own seed; the global generator is shared with anything
+else that draws from it. `bunnymark` draws about 5 numbers per tick, which is why its
+`maxBuiltinCallsPerTick` ceiling stays above the default.
+
+**Objects in results keep their handles** (review B2). An object inside a builtin, utility or
+generic-call result (`GD.instanceFromId`, an Array of nodes, a Callable's target) resolves like a
+generic call's object return: its script handle, else the handle already tracking it (retained for
+the calling script, `retainSharedHandle`), else a handle of its kind minted for the calling script
+and released with it. A repeated query reuses one handle and keeps identity
+(`call("get_children")[i] == getChild(i)`). A lambda connection's guard is held weakly, so a
+`getConnections()` answer does not keep it (or its Kotlin callback) alive. A fresh RefCounted
+result (`GD.weakref`) is a new object each call and keeps its handle until the calling script is
+freed.
+
 **One Variant text format.** `<Variant.Type>:<payload>` (`WebPackedValues.encodeVariant` /
 `decodeVariant`, the proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool
 `1`/`0`, an int as a decimal, a float (and every decimal value-type component) as its IEEE-754
@@ -384,7 +420,26 @@ proxies' shared `_kanama_object_handles` dictionary (through any installed proxy
 callback), so a later lookup of the same object mints a fresh handle instead of finding a dead one.
 A node freed from Kotlin (`queueFree`) stays a script error for every holder (`IllegalStateException:
 Stale Kanama Web browser handle=...`, catchable in the script). Signal arguments are not shared:
-each dispatch mints transient handles that the dispatching proxy owns and releases right after.
+each dispatch (a signal, `_input`, an object argument of a script method) lends Kotlin a transient
+handle that the dispatching proxy owns and releases right after (`_kanama_transient_handle` /
+`_kanama_release_transient`; the lent handles are `KanamaWebHandles.transient`). A call's result that
+names a lent object (`GD.instanceFromId(arg.instanceId)`, an element of `call("get_children")`, a
+`Callable`) promotes the handle instead: the dispatch no longer releases it, it stays with the
+dispatching script like a minted generic result, and a later dispatch of the same object lends the
+same handle (`KanamaWebHandles.promoted`), so the kept result stays valid and `== arg`. Typed lookups
+(`getNode`, `getChild`, colliders, group and child scans) skip lent and promoted handles and mint one
+of their own kind, since an Object handle carries no node snapshots. The web3d check
+`lentHandlesSurviveTheirDispatch` pins it.
+
+*Known limits, being fixed.* (1) A lent argument that is stored and used after its handler returns is
+not yet valid on Web unless something inside the handler resolved it through a result (the promotion
+above): the dispatching proxy releases the lent handle right after the call, so a stored argument
+reads as a stale handle later. `GD.instanceFromId(arg.instanceId)` inside the handler is the
+workaround. (2) Identity is by handle token, so `body == player` inside a handler can be false: the
+lent handle of the argument and the handle a script holds for the same node are two tokens of one
+object (`GodotObject.equals` compares tokens), and scripts compare `instanceId` instead. Both are the
+user-facing limits documented in `docs/game-dev/godot-api.md` (Web section); neither is to be
+relied on once the lending mechanism changes.
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 
 **A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,
@@ -444,7 +499,15 @@ command loop stops on a target the engine freed (a browser handle that still has
 staged arguments), applies the rest of the group and records the freed-instance message; the
 telemetry that follows tests each command as applied AND not skipped, since the applied ones are no
 longer a prefix;
-`WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A command that
+`WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A
+**script-backed** object (a script handle, bit 30 clear) is freed in Kotlin with its node
+(`kanamaWebFree`), so `requireLive` throws the same freed-instance message for a call on it
+(`WebInstanceRegistry.wasFreed`: a minted slot that is no longer live; not "Stale Kanama Web browser
+handle"), and `flushCommands` skips and reports a command queued on it before the free, both when
+its script was already gone at the scan (`kanamaWebIsFreedScriptHandle`) and when an earlier group
+of the same batch freed it (its owner's apply callback is gone; task 138 item 22; a command that
+group owned on another, live object is reported as dropped with its script, not as a freed
+instance). A command that
 stops the loop for any other reason is a protocol fault and ends the page through the
 applied/expected check.
 
@@ -455,9 +518,15 @@ applied/expected check.
 reads the debug engine's "GDScript backtrace" lines as part of the error above them. Run web3d
 in both.
 
-**Lambda connections never coalesce.** The unique callback id is bound into the connection's
-`Callable`, so two connects of the same lambda are two connections (`CONNECT_REFERENCE_COUNTED`
-included), each with its own guard and registry entry. A user `disconnectBound` keeps Godot's own
+**Lambda connections never coalesce.** Godot keys a signal's slots by the *base* callable and
+ignores binds, so binding the callback id alone did not separate two lambdas from one script on one
+signal (the second connect answered "already connected", task 138 item 20). Each lambda connection
+therefore targets its own `_KanamaSignalGuard` (`Callable(guard, "fire")`, the callback id and the
+guard bound), whose `fire` forwards to the receiving proxy's dispatch method: two connects of the
+same lambda, or two lambdas, are two connections (`CONNECT_REFERENCE_COUNTED` included), each with
+its own guard and registry entry. A receiver freed before its emitter ends its lambda connections
+with it, as Godot ends a connection whose target is freed: its proxy's teardown marks each of its
+guards done and disconnects it (`_kanama_drop_routed_guards`, next to the routed awaits). A user `disconnectBound` keeps Godot's own
 error for a connection that is not there; only `SignalConnection.close()` is quiet about one that
 is already gone.
 The handle namespaces are disjoint (bit 30): `WebInstanceRegistry` used to mask bit 30 away, so a

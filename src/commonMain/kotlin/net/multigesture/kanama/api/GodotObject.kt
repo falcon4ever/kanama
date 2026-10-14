@@ -89,6 +89,12 @@ open class GodotObject(val handle: GodotHandle) {
      */
     fun isSameInstance(other: GodotObject): Boolean = instanceId == other.instanceId
 
+    /**
+     * The liveness test behind `GD.isInstanceValid` (task 129 E: Web answers from its own handle
+     * tables): `is_instance_id_valid` on the id captured at construction, safe after a free.
+     */
+    internal fun isInstanceLive(): Boolean = GD.isInstanceIdValid(instanceId)
+
     init {
         require(handle.segment.address() != 0L) { "GodotObject handle must not be NULL" }
     }

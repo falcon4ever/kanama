@@ -255,9 +255,18 @@ fun kanamaWebAdoptResourceHandle(objectHandle: Int): Int {
   return 1
 }
 
+/**
+ * Task 138 item 22: 1 when [handle] is a script handle whose script was freed, so the bridge skips
+ * and reports a command queued on it (like one on an engine-freed browser handle) instead of
+ * failing the batch.
+ */
+@JsExport
+fun kanamaWebIsFreedScriptHandle(handle: Int): Int = if (instances.wasFreed(handle)) 1 else 0
+
 @JsExport
 fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
   clearWebPositionSnapshot(objectHandle)
+  WebHandleCache.forget(objectHandle)
   unregisterWebBrowserHandle(objectHandle, WebBrowserHandleKind.NODE)
   return 1
 }
