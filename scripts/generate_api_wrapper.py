@@ -5575,8 +5575,8 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             # (task 104 step 3 parcel C'): the iOS-only overloads in the same region stay plain,
             # which is why the marker keys on the parameter names and not just the helper name.
             expect_content, expect_members = render_objectcalls_expect()
-            # The `expect object ObjectCalls` file is generated, excluded from ktfmt and
-            # byte-compared by the drift gate like every other generated file (task 119 finding 25).
+            # The `expect object ObjectCalls` file is generated, then ktfmt-formatted; the drift gate
+            # and the skip below compare it by `formatted_code_key` (task 119 finding 25).
             files[_rel(OBJECTCALLS_EXPECT)] = expect_content
             region, marked = mark_actual_members(
                 render_ios_objectcalls(registry, unnamed), expect_member_keys(expect_members)
@@ -6498,6 +6498,14 @@ def tree_main(args: argparse.Namespace) -> int:
                 # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
                 # hand-written outside it), so leave the formatted copy alone when the region
                 # differs only in what ktfmt changes -- the drift gate compares the same key.
+                continue
+            if (
+                target == OBJECTCALLS_EXPECT
+                and target.exists()
+                and formatted_code_key(target.read_text(encoding="utf-8")) == formatted_code_key(content)
+            ):
+                # The expect file is ktfmt-formatted; keep the formatted copy when a regen differs
+                # only in what ktfmt changes (the drift gate compares the same key).
                 continue
             if (
                 target.parent == TYPES_DIR

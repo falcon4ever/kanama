@@ -118,8 +118,9 @@ container the shim cannot allocate is reported as out of memory rather than "not
 Gate and tooling fixes, no change to the API a script sees. The drift gate compares the iOS
 `ObjectCalls` GENERATED MEMBERS region by content (comments, spacing, `;` and trailing commas
 normalised) instead of by member names, so a body-only or `PT_*` tag change is drift, and
-`--write-tree` writes it. `ObjectCalls.expect.kt` is generated, excluded from ktfmt and byte-compared by
-the drift gate. A file in `src/jvmMain/.../api` or `src/iosMain/.../api` that is neither generated, nor a
+`--write-tree` writes it. `ObjectCalls.expect.kt` is generated and ktfmt-formatted like the iOS region,
+and the drift gate compares it the same way (comments, spacing, `;` and trailing commas normalised,
+string literals compared as written). A file in `src/jvmMain/.../api` or `src/iosMain/.../api` that is neither generated, nor a
 `PER_PLATFORM_WRAPPERS` class, nor a listed hand file (a retired wrapper restored by a merge) fails the
 drift gate. The generator, the parity gate and the expect writer share one parameter parser
 (`split_params`, `parameter_names`). The Android remap audit (`KanamaAndroidRemap.strippedSourceLines`

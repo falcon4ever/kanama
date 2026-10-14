@@ -22,10 +22,12 @@ from generate_api_wrapper import (
     IOS_OBJECTCALLS,
     IOS_ONLY_GENERATED,
     IOS_UNSUPPORTED_CLASSES,
+    OBJECTCALLS_EXPECT,
     PER_PLATFORM_WRAPPERS,
     SHARED_HAND_ROOT_FILES,
     TYPES_DIR,
     TreeResult,
+    formatted_code_key,
     generated_companion_paths,
     ios_generated_region_key,
     regenerate_tree,
@@ -524,6 +526,10 @@ def check_single_tree(tree: TreeResult) -> int:
             # drift, layout is not. The member names and their parameter names are also held to
             # desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
             same = ios_generated_region_key(committed) == ios_generated_region_key(content)
+        elif rel == _rel(OBJECTCALLS_EXPECT):
+            # Under ktfmt like any hand-formatted source (the generator emits it unwrapped), so
+            # compare with ktfmt's changes normalised away, as for the iOS region above.
+            same = formatted_code_key(committed) == formatted_code_key(content)
         elif rel.endswith(".md"):
             same = committed == content
         elif (ROOT / rel).parent == TYPES_DIR:

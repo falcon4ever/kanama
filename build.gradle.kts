@@ -50,9 +50,6 @@ allprojects {
   tasks.withType<com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask>().configureEach {
     // Exclude the drift-gated generated API wrappers (see note above).
     exclude("**/net/multigesture/kanama/api/**")
-    // The generated `expect object ObjectCalls` is written by the generator and byte-compared by
-    // the drift gate too (task 119 finding 25); a formatted copy would never equal a regen.
-    exclude("**/binding/runtime/ObjectCalls.expect.kt")
   }
   // Don't format *.gradle.kts build scripts: ktfmt 0.54 mis-parses the Gradle DSL (it did so in
   // the former ios-runtime/build.gradle.kts), and build scripts aren't the formatting target here.
