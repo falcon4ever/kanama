@@ -124,7 +124,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_gate_evidence.py:63` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_gate_evidence.py:76` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_ios_shim_faults.py:276` | `except Exception as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_ios_single_call_returns.py:349` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
+| `scripts/check_ios_single_call_returns.py:351` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:180` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:359` | `except (ParseError, OSError) as exc:` | justified: reported as a `parse-error` finding, which fails the gate (never silenced) |
 | `scripts/check_jdk_lookup_parity.sh:42` | `REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null \|\| true)"` | justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2. |
@@ -195,16 +195,16 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_device_gate.sh:593` | `"$OUTPUT_DIR/$app" \|\| true` | justified: run_step already recorded the FAIL row |
 | `scripts/ios_template_preflight.sh:92` | `if ! command -v unzip >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/ios_template_preflight.sh:107` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
-| `scripts/ios_visual_smoke.sh:107` | `rg 'SELFTEST( \([^)]*\))? FAIL:\|SELFTEST( MATRIX\| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$@" >&2 \|\| true` | justified: printing the evidence; the return 1 on the next line is the verdict. |
-| `scripts/ios_visual_smoke.sh:390` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl list devices >&2 \|\| true` | justified: diagnostics before the exit 2 on the next line. |
-| `scripts/ios_visual_smoke.sh:2647` | `if rg -q 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then` | justified: a poll loop; the logs may not exist yet. The loader/self-test assertions after the loop decide. |
-| `scripts/ios_visual_smoke.sh:2657` | `kill "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2659` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2707` | `kill "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2709` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2858` | `rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
-| `scripts/ios_visual_smoke.sh:2996` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2998` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/ios_visual_smoke.sh:108` | `grep -E 'SELFTEST( \([^)]*\))? FAIL:\|SELFTEST( MATRIX\| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$@" >&2 \|\| ` | justified: printing the evidence; the return 1 on the next line is the verdict. |
+| `scripts/ios_visual_smoke.sh:391` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl list devices >&2 \|\| true` | justified: diagnostics before the exit 2 on the next line. |
+| `scripts/ios_visual_smoke.sh:2648` | `if rg -q 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then` | justified: a poll loop; the logs may not exist yet. The loader/self-test assertions after the loop decide. |
+| `scripts/ios_visual_smoke.sh:2658` | `kill "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2660` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2708` | `kill "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2710` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2859` | `rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
+| `scripts/ios_visual_smoke.sh:2997` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2999` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:48` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:207` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/local_ci.sh:685` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
