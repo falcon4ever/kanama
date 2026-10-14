@@ -889,11 +889,21 @@ def main() -> int:
     parser.add_argument("--allow-skip", default="", help="comma-separated case-name substrings a --strict run may skip")
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
+    parser.add_argument("--shard", help="K/N: run every N-th selected case starting at the K-th (CI runs N shards in parallel)")
     args = parser.parse_args()
     strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
     allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
 
     cases = [c for c in CASES if (not args.only or args.only in c.gate) and (args.slow or not c.slow or args.only)]
+    if args.shard:
+        try:
+            k, n = (int(x) for x in args.shard.split("/"))
+        except ValueError:  # justified: a malformed --shard falls through to the range check below, which exits 2
+            k = n = 0
+        if not 1 <= k <= n:
+            print(f"gate_red_runs: --shard wants K/N with 1 <= K <= N, got {args.shard!r}", file=sys.stderr)
+            return 2
+        cases = cases[k - 1 :: n]
     if args.list:
         for c in cases:
             print(f"{c.gate}: {c.how}")
