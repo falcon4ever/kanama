@@ -265,6 +265,11 @@ stage "enum migration table docs check (task 128 A)"
 # through the generator's one naming function and the frozen prefix lock.
 python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" --table "$ROOT_DIR/docs/reference/generated/enum-migration.md" --check
 
+stage "iOS handwritten report docs check"
+# docs/reference/generated/ios-backend-handwritten.md is derived from the KANAMA-IOS-* markers (task 138 item 15);
+# regenerate with the same command minus --check.
+python3 "$ROOT_DIR/scripts/ios_handwritten_report.py" --check
+
 stage "gates index docs check"
 # docs/reference/generated/gates.md is derived from this file's stage lines, the workflows and the
 # gate ledger (task 99); regenerate with the same command minus --check.
