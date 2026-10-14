@@ -577,6 +577,13 @@ def check_single_tree(tree: TreeResult) -> int:
         for problem in unexplained:
             print(f"    {problem}", file=sys.stderr)
 
+    missing_hand = missing_platform_hand_files()
+    if missing_hand:
+        rc = 1
+        print(f"[wrapper_generator] FAIL {len(missing_hand)} listed platform hand file(s) no longer exist:", file=sys.stderr)
+        for problem in missing_hand:
+            print(f"    {problem}", file=sys.stderr)
+
     stale_roots = stale_hand_root_copies()
     if stale_roots:
         rc = 1
@@ -666,6 +673,22 @@ def unexplained_platform_files(tree: TreeResult) -> list[str]:
                 f"{label} hand file (PLATFORM_HAND_FILES in scripts/check_wrapper_generator.py) "
                 "-- a stale copy of a retired wrapper? delete it"
             )
+    return problems
+
+
+def missing_platform_hand_files() -> list[str]:
+    """The reverse of [unexplained_platform_files]: a PLATFORM_HAND_FILES entry whose file no longer
+    exists. A retired hand file stays listed, so the list would keep excusing a later file of that
+    name (a stale copy restored by a merge) that nothing generates."""
+    problems: list[str] = []
+    for label, directory in (("desktop", DESKTOP_API_DIR), ("iOS", IOS_API_DIR)):
+        for name in sorted(PLATFORM_HAND_FILES[label]):
+            if not (directory / f"{name}.kt").exists():
+                problems.append(
+                    f"{_rel(directory)}/{name}.kt: listed as a {label} hand file in "
+                    "PLATFORM_HAND_FILES (scripts/check_wrapper_generator.py) but the file does "
+                    "not exist -- remove the entry, or restore the file"
+                )
     return problems
 
 

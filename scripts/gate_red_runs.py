@@ -488,6 +488,9 @@ case("check_wrapper_generator.py", py("check_wrapper_generator.py"),
 case("check_wrapper_generator.py (stale platform file)", py("check_wrapper_generator.py"),
      [Create(f"{JVM}/net/multigesture/kanama/api/SceneTreeHandle.kt", "package net.multigesture.kanama.api\n\nclass SceneTreeHandle\n")],
      "unexplained file(s) in a platform api directory", "a retired per-platform wrapper is restored under src/jvmMain/.../api: it compiles, but nothing generates or lists it (task 119 finding 34)")
+case("check_wrapper_generator.py (missing hand file)", py("check_wrapper_generator.py"),
+     [Delete(f"{IOS}/api/ScriptAccessSelfTest.kt")],
+     "listed platform hand file(s) no longer exist", "a file listed in PLATFORM_HAND_FILES is deleted: the list would keep excusing a later file of that name")
 case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RID, ret.ptr)\n      RID(ret.value)",
            "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT, ret.ptr)\n      RID(ret.value)")],
