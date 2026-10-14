@@ -267,11 +267,19 @@ internal inline fun <T> webFreedAware(block: () -> T): T =
   } catch (error: JsException) {
     val message = error.message.orEmpty()
     val at = message.indexOf(FREED_INSTANCE_MESSAGE)
-    if (at < 0) throw error
-    throw IllegalStateException(message.substring(at), error)
+    if (at >= 0) throw IllegalStateException(message.substring(at), error)
+    throw error
   }
 
 private const val FREED_INSTANCE_MESSAGE = "Invalid access to previously freed instance"
+
+/**
+ * Task 138 item 32: the message for a call on a lent handle whose object the engine freed, the
+ * bridge's wording for an engine-freed browser handle.
+ */
+internal fun webFreedHandleMessage(handle: Int): String =
+  "$FREED_INSTANCE_MESSAGE (Kanama Web handle=$handle): the engine freed the object while a " +
+    "script still held it"
 
 /**
  * Task 138 item 22: the message for a call on a script-backed object that was freed, the same

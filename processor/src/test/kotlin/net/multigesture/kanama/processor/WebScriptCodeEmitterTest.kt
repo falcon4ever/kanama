@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 35"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 36"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -134,7 +134,7 @@ class WebScriptCodeEmitterTest {
       assertTrue(
         proxy.source.contains(
           "\tif _kanama_self_object is Node:\n" +
-            "\t\t_kanama_object_handles[_kanama_handle] = _kanama_self_object"
+            "\t\t_kanama_track(_kanama_handle, _kanama_self_object)"
         ),
         "attachTo=$attachTo must publish its handle for Nodes only:\n${proxy.source}",
       )
@@ -770,12 +770,10 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(mainProxy.contains("func _kanama_node_lookup(args: Array) -> int:"))
     assertTrue(mainProxy.contains("recordImmediateObjectHandle(script_handle)"))
-    // Task 129 E fix 2: a typed lookup skips a handle a dispatch lent (it mints its own kind).
-    assertTrue(
-      mainProxy.contains(
-        "if is_same(_kanama_object_handles[existing_handle], value) and not _kanama_loose_handle(existing_handle):"
-      )
-    )
+    // Task 138 item 32: a typed lookup finds the handle already tracking the node (a lookup's, a
+    // result's or a dispatch argument's) through the instance-id index, not a scan.
+    assertTrue(mainProxy.contains("\tvar existing_handle := _kanama_tracked_handle(value)"))
+    assertFalse(mainProxy.contains("for existing_handle in _kanama_object_handles:"))
     assertTrue(mainProxy.contains("refreshNode2DSnapshot(result_handle,"))
     assertTrue(mainProxy.contains("func _kanama_packed_scene_instantiate(args: Array) -> int:"))
     assertTrue(mainProxy.contains("func _kanama_input_cursor(args: Array) -> int:"))
@@ -790,7 +788,8 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(mainProxy.contains("dispatchSignal0(_kanama_handle, callback_id)"))
     assertTrue(mainProxy.contains("func _input(event: InputEvent) -> void:"))
-    assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, event_handle)"))
+    // Task 138 item 32: the event is lent for its lifetime (2 frames when only Kotlin keeps it).
+    assertTrue(mainProxy.contains("_kanama_bridge.input(_kanama_handle, _kanama_lend(event))"))
     assertTrue(
       mainProxy.contains("callVector2i(_kanama_handle, 1, gridPosition.x, gridPosition.y)")
     )
@@ -821,9 +820,7 @@ class WebScriptCodeEmitterTest {
       tileProxy,
     )
     assertTrue(
-      tileProxy.contains(
-        "_kanama_packed_args.append(str(_kanama_web_pack_object(texture, _kanama_packed_transient)))"
-      ),
+      tileProxy.contains("_kanama_packed_args.append(str(_kanama_web_pack_object(texture)))"),
       tileProxy,
     )
 
@@ -833,7 +830,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 35"))
+    assertTrue(protocol.contains("\"protocolVersion\": 36"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -844,7 +841,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=35\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=36\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1711,9 +1708,7 @@ class WebScriptCodeEmitterTest {
     // list rides the EXISTING string crossing -- no new bridge entry point, no protocol bump.
     assertTrue(proxy.contains("_kanama_packed_args.append(_kanama_web_pack_text(tag))"), proxy)
     assertTrue(
-      proxy.contains(
-        "_kanama_packed_args.append(str(_kanama_web_pack_object(node, _kanama_packed_transient)))"
-      ),
+      proxy.contains("_kanama_packed_args.append(str(_kanama_web_pack_object(node)))"),
       proxy,
     )
     assertTrue(
@@ -1726,14 +1721,62 @@ class WebScriptCodeEmitterTest {
     assertFalse(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 7,"), proxy)
     assertFalse(proxy.contains("unsupportedGameplayMethod(_KANAMA_SCRIPT_ID, 8,"), proxy)
 
-    // Every transient handle the call minted is erased and released after the crossing, unless a
-    // call's result promoted it (task 129 E fix 2).
-    assertTrue(proxy.contains("for _kanama_packed_handle in _kanama_packed_transient:"), proxy)
-    assertTrue(proxy.contains("\t\t_kanama_release_transient(_kanama_packed_handle)"), proxy)
-    assertTrue(proxy.contains("func _kanama_release_transient(handle: int) -> void:"), proxy)
-    assertTrue(proxy.contains("\tif KanamaWebHandles.transient.erase(handle):"), proxy)
-    assertTrue(proxy.contains("\t\t_kanama_bridge.releaseTransientObjectHandle(handle)"), proxy)
-    assertTrue(proxy.contains("func _kanama_promote_handle(handle: int, value: Object) -> void:"))
+    // Task 138 item 32: an object argument is lent for its object's lifetime, so nothing is
+    // released after the crossing (a stored argument stays valid); the sweep retires a handle once
+    // the engine freed its object.
+    assertFalse(proxy.contains("_kanama_packed_transient"), proxy)
+    assertFalse(proxy.contains("_kanama_release_transient"), proxy)
+    assertFalse(proxy.contains("releaseTransientObjectHandle"), proxy)
+    assertTrue(proxy.contains("func _kanama_lend(value: Variant) -> int:"), proxy)
+    assertTrue(proxy.contains("\tvar handle := _kanama_tracked_handle(object)"), proxy)
+    assertTrue(proxy.contains("func _kanama_sweep(budget: int, recent := false) -> void:"), proxy)
+    assertTrue(
+      proxy.contains(
+        "\t\t_kanama_bridge.releaseFreedHandles(\",\".join(PackedStringArray(freed)))"
+      ),
+      proxy,
+    )
+    // A lent RefCounted is held strongly for 2 frames after its dispatch, then weakly.
+    assertTrue(
+      proxy.contains("\t\tKanamaWebHandles.grace[handle] = Engine.get_process_frames() + 2"),
+      proxy,
+    )
+    assertTrue(proxy.contains("\t\t\t\t_kanama_object_handles[handle] = [weakref(held)]"), proxy)
+    // Every frame (once across the proxies) the sweep walks the lent handles: it rides
+    // SceneTree.process_frame, so it runs while the tree is paused or no script processes; a
+    // processing proxy only reconnects it, and costs one size check while nothing is lent.
+    assertTrue(proxy.contains("\ttree.process_frame.connect(KanamaWebHandles.sweep_hook)"), proxy)
+    assertTrue(
+      proxy.contains(
+        "\tif _kanama_handle != 0:\n" +
+          "\t\tif KanamaWebHandles.lent_ring.size() > 0 and not KanamaWebHandles.sweep_hook.is_valid():\n" +
+          "\t\t\t_kanama_hook_sweep()\n" +
+          "\t\t_kanama_refresh_self_snapshots()"
+      ),
+      proxy,
+    )
+    assertFalse(proxy.contains("\t\t_kanama_sweep_frame()"), proxy)
+    // A takeover (a handle a script created, lent from now on) joins the ring like a mint, so it
+    // connects the sweep too when nothing else does (a paused tree has no processing proxy).
+    assertTrue(
+      proxy.contains(
+        "\tif (flags & 2) != 0:\n" +
+          "\t\tKanamaWebHandles.lent[handle] = true\n" +
+          "\t\tKanamaWebHandles.lent_ring.append(object.get_instance_id())\n" +
+          "\t\tif not KanamaWebHandles.sweep_hook.is_valid():\n" +
+          "\t\t\t_kanama_hook_sweep()\n"
+      ),
+      proxy,
+    )
+    // A queued command on a freed LENT object leaves its handle to the sweep (released as freed),
+    // instead of erasing it from the index without a release.
+    assertTrue(
+      proxy.contains(
+        "\t\t\t\telif not KanamaWebHandles.lent.has(object_handle):\n" +
+          "\t\t\t\t\t_kanama_untrack(object_handle)"
+      ),
+      proxy,
+    )
 
     // The helpers: the escape must be the SAME spelling the generic-call transport uses, and a
     // Kanama-scripted argument must cross as its script handle so Kotlin can resolve it.
@@ -1742,12 +1785,7 @@ class WebScriptCodeEmitterTest {
       proxy.contains("\treturn value.replace(\"%\", \"%25\").replace(\"\\u001f\", \"%1F\")"),
       proxy,
     )
-    assertTrue(
-      proxy.contains(
-        "func _kanama_web_pack_object(value: Object, transient_handles: Array[int]) -> int:"
-      ),
-      proxy,
-    )
+    assertTrue(proxy.contains("func _kanama_web_pack_object(value: Object) -> int:"), proxy)
     assertTrue(proxy.contains("\tif value.has_method(\"_kanama_ensure_created\"):"), proxy)
 
     val registry =
@@ -1967,7 +2005,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 35"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 36"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

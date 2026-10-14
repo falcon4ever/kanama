@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=26 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -17,6 +17,9 @@
 [ext_resource type="Script" path="res://kotlin-src/BundleProbe.kt" id="15_bundle"]
 [ext_resource type="Script" path="res://gd_twin.gd" id="16_twin"]
 [ext_resource type="Script" path="res://kotlin-src/FreedScriptTarget.kt" id="17_fscript"]
+[ext_resource type="Script" path="res://lent_twin.gd" id="18_lenttwin"]
+[ext_resource type="Script" path="res://kotlin-src/LentProbe.kt" id="19_lentprobe"]
+[ext_resource type="Script" path="res://kotlin-src/LentKeeper.kt" id="20_lentkeeper"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -208,6 +211,15 @@ script = ExtResource("16_twin")
 
 [node name="GuardReceiver" type="Node" parent="."]
 script = ExtResource("17_fscript")
+
+[node name="LentTwin" type="Node" parent="."]
+script = ExtResource("18_lenttwin")
+
+[node name="LentProbe" type="Node" parent="."]
+script = ExtResource("19_lentprobe")
+
+[node name="LentEscapeA" type="Node" parent="."]
+script = ExtResource("20_lentkeeper")
 
 [node name="ThrowingConstructor" type="Node" parent="."]
 script = ExtResource("12_tctor")

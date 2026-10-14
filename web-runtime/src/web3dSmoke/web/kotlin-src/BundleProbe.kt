@@ -308,13 +308,13 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
   }
 
   /**
-   * Task 129 E fix 2: a call's result naming the object a signal dispatch lent Kotlin keeps that
-   * handle after the handler returns (the dispatch used to release it under the kept result). Both
-   * dispatch arms (`ping`: the one-object arm, `ping2`: packed arguments) receive a node no script
-   * tracks; each handler keeps `GD.instanceFromId(arg.instanceId)` and the matching element of
-   * `call("get_children")`. 1 = every kept result still answers after the dispatches; 2 = in every
-   * round both results `==` the argument; 4 = twenty more rounds leave the live browser handles
-   * where the first round left them.
+   * Task 129 E fix 2, task 138 item 32: the results naming the object a signal dispatch lent Kotlin
+   * are that object's one handle. Both dispatch arms (`ping`: the one-object arm, `ping2`: packed
+   * arguments) receive a node no script tracks; each handler keeps `GD.instanceFromId(arg.instanceId)`
+   * and the matching element of `call("get_children")`. 1 = every kept result still answers after
+   * the dispatches; 2 = in every round both results `==` the argument; 4 = twenty more rounds leave
+   * the live browser handles where the first round left them (one handle per object, however often
+   * it is dispatched and resolved). The lent-argument rows proper are LentProbe's.
    */
   fun lentRows(value: Long): Long {
     val twin = twin()

@@ -29,11 +29,11 @@ import net.multigesture.kanama.api.releaseWebTrackedObject
  * `v` (task 134 D1: a value type or NodePath as `<Variant.Type>:<payload>`, see `WebPackedValues`).
  *
  * Return encoding (immediate calls): `typeTag<US>payload...`. Object returns resolve to an
- * already-tracked handle first (`_kanama_ensure_created` for script-backed objects, `is_same` scan
- * otherwise); an untracked engine object is classified at runtime (Node / Resource / plain Object)
- * and a tracked handle of that kind is MINTED, owned by the receiver's proxy per the task-61 "close
- * what you create" contract — release it with [WebGenericCallResult.close] or let the owner
- * script's teardown drain it.
+ * already-tracked handle first (`_kanama_ensure_created` for script-backed objects, the instance-id
+ * index otherwise); an untracked engine object is classified at runtime (Node / Resource / plain
+ * Object) and a tracked handle of that kind is MINTED, owned by the receiver's proxy per the
+ * task-61 "close what you create" contract — release it with [WebGenericCallResult.close] or let
+ * the owner script's teardown drain it.
  */
 object WebExperimentalGenericCall {
   internal const val UNIT_SEPARATOR = '\u001f' // matches the packed-string transport
@@ -56,6 +56,10 @@ object WebExperimentalGenericCall {
     method: String,
     args: List<Any?> = emptyList(),
   ): WebGenericCallResult {
+    // The typed calls' liveness check (freed first, then stale), made in Kotlin before crossing:
+    // a handle the bridge no longer owns is a script error here, and one the two sides disagree
+    // about stays the bridge's fatal "No Kanama Web proxy owns handle".
+    requireLiveWebHandle(target.handle.value)
     commands.flush()
     val packed = buildString {
       append(method)
@@ -190,7 +194,7 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
 
   /**
    * How the object return resolved: `script` (a Kanama-scripted object's own handle), `tracked` (an
-   * existing handle found by the `is_same` scan), or the minted kinds `node` / `resource` /
+   * existing handle found through the instance-id index), or the minted kinds `node` / `resource` /
    * `object`. Null for non-object results.
    */
   val objectKind: String?
