@@ -18,6 +18,7 @@ Modes:
   mutate           write into --mutate-path (in the served tree) then succeed
   below-floor      a passing envelope from a browser below the declared floor
   over-budget      a passing envelope whose per-tick crossings blow the budget
+  over-builtin-budget  a passing envelope whose per-tick builtin calls blow the budget
 """
 
 from __future__ import annotations
@@ -43,6 +44,7 @@ def _envelope(
     passing: bool,
     user_agent: str = MODERN_USER_AGENT,
     crossings_per_tick: float = 2.0,
+    builtin_calls_per_tick: float = 0.0,
 ) -> dict:
     failed = 0 if passing else 1
     checks = {"fakeStartup": True, "fakeGameplay": passing, "fakeTeardown": True}
@@ -85,6 +87,8 @@ def _envelope(
             "kotlinToGodotCalls": 240,
             "appliedCommands": 240,
             "crossingsPerTick": crossings_per_tick,
+            "builtinCalls": int(builtin_calls_per_tick * 120),
+            "builtinCallsPerTick": builtin_calls_per_tick,
         },
         "teardown": {"outcome": "clean", "ownerRegistriesToBaseline": True},
     }
@@ -139,9 +143,11 @@ def main(argv: list[str]) -> int:
     # Far past any budget: a run can be schema-valid and fully passing and still
     # be doing far too much per-tick work at the module boundary.
     crossings_per_tick = 9999.0 if args.mode == "over-budget" else 2.0
+    # Task 129 E review B1: few batched crossings, but a synchronous builtin call every tick.
+    builtin_calls_per_tick = 50.0 if args.mode == "over-builtin-budget" else 0.0
     envelope = _envelope(
         args.demo, checksum, passing=passing, user_agent=user_agent,
-        crossings_per_tick=crossings_per_tick,
+        crossings_per_tick=crossings_per_tick, builtin_calls_per_tick=builtin_calls_per_tick,
     )
     with open(args.result, "w", encoding="utf-8") as handle:
         json.dump(envelope, handle, indent=2)

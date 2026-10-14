@@ -590,6 +590,12 @@ case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrappe
 case("generate_web_wrappers.py --check (inert facades)", py("generate_web_wrappers.py", "--check"),
      [Append("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt", "\nobject Marshalls\n")],
      "declares Godot class Marshalls", "a hand-written Web file declares a Godot class WEB_INERT_FACADES does not list (task 129 E)")
+case("generate_web_wrappers.py --check (Web-local utilities)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/web_local_utilities.py", '"sin": (1, "sin: " + LIBM,', '"sin": (0, "sin: " + LIBM + "",')],
+     "bound 0 on a body that calls a libm transcendental", "a Web-local transcendental utility claims bit equality (task 129 E review B1)")
+case("generate_web_wrappers.py --check (unclassified utility)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/web_local_utilities.py", '"step_decimals": "an editor helper', '"step_decimals_gone": "an editor helper')],
+     "utility step_decimals: in no table", "a Godot utility function is in none of the Web tables, so it would cross unreviewed (task 129 E review B1)")
 case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_shell_wrappers.py", "--from-skip-report", "build/wrapper-generator/skips.txt", "--dry-run", "--fail-if-candidates"),
      [Delete(f"{COMMON}/api/Curve2D.kt"),
       Append("build/wrapper-generator/skips.txt", "\nCurve2D.foo object return wrapper is missing for Curve2D\n")],
@@ -683,6 +689,9 @@ case("check_gradle_templates_configure.sh", ["bash", "scripts/check_gradle_templ
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
      "over-budget expected exit 1", "web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that)")
+case("check_budgets.py (builtin calls)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", "    violations += check_builtin_calls(demo, measured, budgets, limits)\n", "")],
+     "over-builtin-budget expected exit 1", "the budget gate stops counting synchronous builtin / utility calls per tick (task 129 E review B1)")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")

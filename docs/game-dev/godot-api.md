@@ -725,11 +725,14 @@ and returns the same double as GDScript, bit for bit; the transcendental functio
 `exp`, ...) and the float-to-int conversions (`roundToInt`, `floorToInt`) call `GD`. Each member
 also has a `Float` overload that computes in `Double`.
 
-Web compiles the same `GD` and `Mathf`. A `GD` call that needs the engine crosses the Web bridge
-(Godot runs the utility function by name), so it is a bridge call per use there: keep it out of
-tight per-object loops on Web, as you would any engine call. `Mathf`'s arithmetic members stay in
-Kotlin and never cross; its transcendental members call `GD`. The random functions use Godot's
-global generator on every platform, so `GD.seed(n)` reproduces GDScript's sequence on Web too.
+Web compiles the same `GD` and `Mathf`, and runs the math utilities in Kotlin, with no bridge
+call: everything `Mathf` has, and `GD`'s arithmetic, rounding, interpolation and transcendental
+functions (`sin`, `pow`, `exp`, `ease`, `dbToLinear`, ...). The arithmetic ones return GDScript's
+double bit for bit; the transcendental ones can differ from the engine's in the last bit (the
+browser's math library is not the engine's). The rest of `GD` runs in the engine: printing and
+`pushError`, `str` and the `varTo*` / `bytesTo*` conversions, `typeOf`, `hash`, `weakref`,
+`instanceFromId`, and the random functions, which use Godot's global generator on every platform,
+so `GD.seed(n)` reproduces GDScript's sequence on Web too; each of those is one engine call there.
 
 ## Global Classes
 

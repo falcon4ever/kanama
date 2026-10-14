@@ -1,5 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
+import net.multigesture.kanama.api.WebLocalUtilities
 import net.multigesture.kanama.web.WebPackedFloats
 import net.multigesture.kanama.web.WebPackedValues
 
@@ -146,6 +147,10 @@ internal object UtilityCalls {
    */
   @Suppress("UNUSED_PARAMETER")
   fun call(fn: UtilityFunction, argTypes: IntArray, args: Array<out Any?>, retType: Int): Any? {
+    if (fn.localId >= 0) {
+      val local = WebLocalUtilities.callBoxed(fn.localId, args)
+      if (local !== WebLocalUtilities.NOT_LOCAL) return local
+    }
     val packed = buildString {
       append("0").append(US).append(fn.name).append(US).append(UTILITY_FLAG).append(US)
       for (arg in args) append(US).append(WebPackedValues.encodeVariant(arg))

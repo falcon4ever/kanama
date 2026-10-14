@@ -681,8 +681,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 138 item 20 (bits 1-2) + item 2: signal queries (bits 4-256), GodotCallable (512-32768).
     bundleSignalsAndCallables: bundleProbe === 65535,
     // Task 138 item 2: Map/List arguments and Array/Dictionary results (bits 1-32); task 129 E: the
-    // shared GD bit for bit against its GDScript twin (bits 64 up).
-    bundleContainersAndGd: bundleValues === 4194303,
+    // shared GD (Web-local utilities) against its GDScript twin within each row's ulp bound, str,
+    // and isInstanceValid / instanceFromId (bits 64-256).
+    bundleContainersAndGd: bundleValues === 511,
     // callDeferred ran (1); task 138 item 22: a freed script-backed node throws desktop's
     // freed-instance error (2), and its late queued setter was skipped and reported (counted in
     // freedSetterReports); frames kept running (4).

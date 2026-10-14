@@ -1478,7 +1478,7 @@ class Main(godotObject: GodotHandle) :
     return mask
   }
 
-  /** Container rows (6 bits) | GD rows (16 bits) << 6 of [bundleProbe]: 4194303 when healthy. */
+  /** Container rows (6 bits) | GD rows (3 bits) << 6 of [bundleProbe]: 511 when healthy. */
   fun bundleValues(value: Long): Long = bundleValues
 
   /** 1 = callDeferred ran, 2 = the freed script node throws desktop's error, 4 = frames: 7. */

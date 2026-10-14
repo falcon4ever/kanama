@@ -50,6 +50,7 @@ from godot_enum_model import (  # noqa: E402  (task 128 C: the ONE enum model, s
     render_enum_class,
 )
 from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy  # noqa: E402
+from web_local_utilities import render_web_local_utilities  # noqa: E402  (task 129 E review B1)
 from generate_api_wrapper import (  # noqa: E402  (task 134 D1: desktop's typed-signal facts, one source)
     SIGNAL_ARG_TYPE_OVERRIDES,
     SIGNAL_NON_NULL_RESOURCE_ARGS,
@@ -2038,6 +2039,8 @@ def render_all(api: Api, api_dir: Path = API_DIR) -> dict[str, str]:
             continue
         by_class[call.class_name].append(call)
     files: dict[str, str] = {"WebWrapperSupport.kt": HEADER + SUPPORT_FILE, GLOBAL_ENUMS_FILE: render_global_enums(api)}
+    # Task 129 E review B1: the utility functions Web runs in Kotlin before crossing.
+    files["WebLocalUtilities.kt"] = render_web_local_utilities(API_PATH, HEADER)
     for godot_name, calls in by_class.items():
         # Task 129 E: Web compiles the shared generated GD (src/commonMain/.../api/GD.kt, every
         # utility function through the builtin opcode's utility form); the contract's three

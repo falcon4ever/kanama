@@ -71,7 +71,7 @@ def engine_limits(limits: dict, engine: str | None) -> dict:
     merged = dict(limits)
     per_engine = (limits.get("engines") or {}).get(engine or "")
     if per_engine:
-        for key in ("maxCrossingsPerTick", "minTicksForVerdict", "tickRatioNotApplicable"):
+        for key in ("maxCrossingsPerTick", "minTicksForVerdict", "tickRatioNotApplicable", "maxBuiltinCallsPerTick"):
             if key in per_engine:
                 merged[key] = per_engine[key]
     return merged
@@ -86,6 +86,7 @@ def measurements(envelope: dict) -> dict:
         "payloadBytes": artifact.get("totalBytes"),
         "startupMs": startup.get("durationMs"),
         "crossingsPerTick": performance.get("crossingsPerTick"),
+        "builtinCallsPerTick": performance.get("builtinCallsPerTick"),
         "ticksObserved": performance.get("ticksObserved"),
         "simSeconds": performance.get("simSeconds"),
     }
@@ -168,7 +169,39 @@ def check(demo: str, measured: dict, budgets: dict, engine: str | None = None) -
             f"path instead of being batched"
         )
 
+    violations += check_builtin_calls(demo, measured, budgets, limits)
     return violations
+
+
+def check_builtin_calls(demo: str, measured: dict, budgets: dict, limits: dict) -> list[str]:
+    """Task 129 E review B1: immediate builtin / utility crossings per tick.
+
+    A value-type method or GD utility the engine runs is one synchronous bridge round trip
+    (10-30 us), not a batched command, so `crossingsPerTick` never sees it. Every demo is gated:
+    its own `maxBuiltinCallsPerTick` (per engine like the crossings) or the corpus-wide
+    `defaultMaxBuiltinCallsPerTick`.
+    """
+    ceiling = limits.get("maxBuiltinCallsPerTick", budgets.get("defaultMaxBuiltinCallsPerTick"))
+    if ceiling is None:
+        raise BudgetError(
+            f"{demo}: no maxBuiltinCallsPerTick and no defaultMaxBuiltinCallsPerTick in budgets.json"
+        )
+    per_tick = measured.get("builtinCallsPerTick")
+    ticks = measured.get("ticksObserved")
+    if per_tick is None:
+        return [
+            "builtin calls per tick were NOT MEASURED (no builtinCallsPerTick in the performance "
+            "section) -- the driver could not read the bridge's builtinCalls counter"
+        ]
+    if ticks is not None and ticks < limits.get("minTicksForVerdict", 30):
+        return []  # the crossings check above already reports too few ticks
+    if per_tick > ceiling:
+        return [
+            f"builtin calls/tick {per_tick} exceeds budget {ceiling} (over {ticks} ticks) -- "
+            f"a per-tick value-type method or GD utility is crossing to the engine instead of "
+            f"running in Kotlin"
+        ]
+    return []
 
 
 def main(argv: list[str]) -> int:
@@ -219,6 +252,7 @@ def main(argv: list[str]) -> int:
             f"payload={payload_text} "
             f"startup={measured['startupMs']}ms "
             f"crossings/tick={measured['crossingsPerTick']} "
+            f"builtins/tick={measured['builtinCallsPerTick']} "
             f"(ticks={measured['ticksObserved']}, sim={measured['simSeconds']}s)"
         )
         return 0
@@ -243,7 +277,7 @@ def main(argv: list[str]) -> int:
         f"{measured['crossingsPerTick']} crossings/tick"
         if limits.get("maxCrossingsPerTick") is not None
         else "crossings/tick exempt"
-    )
+    ) + f", {measured['builtinCallsPerTick']} builtin calls/tick"
     print(
         f"web_export_smoke: {demo} within budget "
         f"(payload {measured['payloadBytes'] / 1e6:.1f}MB, "

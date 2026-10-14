@@ -1,5 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
+import net.multigesture.kanama.api.WebLocalUtilities
 import net.multigesture.kanama.types.GodotRealStorage
 
 /**
@@ -35,10 +36,14 @@ internal class BuiltinMethod(val variantType: Int, val name: String, val hash: L
 
 /**
  * One of Godot's utility functions (task 129 E): the shared generated `GD` names each by its Godot
- * name. Web runs it by name in the engine (the builtin opcode's utility form, see
- * [webRemoteUtilityCall]); the hash is the native backends' lookup key, unused here.
+ * name. Web runs the arithmetic ones in Kotlin ([WebLocalUtilities], by [localId]) and the rest by
+ * name in the engine (the builtin opcode's utility form, see [webRemoteUtilityCall]); the hash is
+ * the native backends' lookup key, unused here.
  */
-internal class UtilityFunction(val name: String, @Suppress("unused") val hash: Long)
+internal class UtilityFunction(val name: String, @Suppress("unused") val hash: Long) {
+  /** [WebLocalUtilities]' id for this function, or -1 when only the engine runs it. */
+  internal val localId: Int = WebLocalUtilities.idOf(name)
+}
 
 private val frames = ArrayList<BuiltinFrame>()
 private var depth = 0
@@ -105,6 +110,8 @@ internal class BuiltinFrame {
   /** Calls the utility function [fn] with slots 1..[argc] (task 129 E). */
   fun callUtility(fn: UtilityFunction, argc: Int) {
     try {
+      // Task 129 E review B1: the arithmetic utilities never cross (10-30 us a crossing).
+      if (fn.localId >= 0 && WebLocalUtilities.call(this, fn.localId)) return
       retType = 0
       retLongValue = 0L
       ret.fill(0.0)

@@ -127,41 +127,88 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
   }
 
   /**
-   * Task 129 E: the shared GD on Web against its GDScript twin, bit for bit. Bit i = case i of
-   * `gd_twin.gd`'s gd_value (0..13); bit 14 = str; bit 15 = isInstanceValid / instanceFromId.
+   * Task 129 E: the shared GD on Web against its GDScript twin. Web runs the arithmetic utilities
+   * in Kotlin (task 129 E review B1, scripts/web_local_utilities.py) and the twin asks the engine:
+   * each row is (ulp bound, Kotlin call), the bound the row's utility carries in that table (0:
+   * bit-exact; 1: a libm transcendental). Bit 0 = every row within its bound (a mismatch prints
+   * the row), bit 1 = str, bit 2 = isInstanceValid / instanceFromId.
    */
   fun gdRows(value: Long): Long {
-    val kotlin =
+    val rows: List<Pair<Int, () -> Double>> =
       listOf(
-        { GD.sin(0.7) },
-        { GD.pow(2.5, 1.3) },
-        { GD.atan2(0.3, -0.8) },
-        { GD.lerpf(1.0, 3.0, 0.25) },
-        { GD.snappedf(7.37, 0.25) },
-        { GD.wrapf(-0.5, 0.0, 2.0) },
-        { Mathf.sin(1.1) },
-        { Mathf.smoothStep(0.0, 2.0, 0.6) },
-        {
+        1 to { GD.sin(0.7) },
+        1 to { GD.pow(2.5, 1.3) },
+        1 to { GD.atan2(0.3, -0.8) },
+        0 to { GD.lerpf(1.0, 3.0, 0.25) },
+        0 to { GD.snappedf(7.37, 0.25) },
+        0 to { GD.wrapf(-0.5, 0.0, 2.0) },
+        1 to { Mathf.sin(1.1) },
+        0 to { Mathf.smoothStep(0.0, 2.0, 0.6) },
+        0 to {
           GD.seed(42L)
           GD.randf()
         },
-        { GD.fposmod(-5.5, 3.0) },
-        { Mathf.ease(0.4, 2.0) },
-        { Mathf.dbToLinear(-6.0) },
-        { Mathf.roundToInt(2.5).toDouble() },
-        { Mathf.exp(1.7) },
+        0 to { GD.fposmod(-5.5, 3.0) },
+        1 to { Mathf.ease(0.4, 2.0) },
+        1 to { Mathf.dbToLinear(-6.0) },
+        0 to { Mathf.roundToInt(2.5).toDouble() },
+        1 to { Mathf.exp(1.7) },
+        1 to { GD.cos(2.3) },
+        1 to { GD.tan(0.4) },
+        1 to { GD.asin(0.3) },
+        1 to { GD.acos(-0.6) },
+        1 to { GD.atan(1.7) },
+        1 to { GD.log(12.5) },
+        1 to { GD.sinh(0.9) },
+        1 to { GD.cosh(0.9) },
+        1 to { GD.tanh(0.9) },
+        1 to { GD.asinh(1.3) },
+        1 to { GD.acosh(2.4) },
+        1 to { GD.atanh(0.45) },
+        1 to { GD.linearToDb(0.3) },
+        1 to { GD.ease(0.7, -2.4) },
+        1 to { GD.ease(0.2, 0.4) },
+        0 to { GD.cubicInterpolate(1.0, 4.0, -2.0, 7.0, 0.3) },
+        0 to { GD.cubicInterpolateAngle(0.2, 6.0, -0.4, 6.4, 0.6) },
+        0 to { GD.cubicInterpolateInTime(1.0, 4.0, -2.0, 7.0, 0.3, 1.0, -0.5, 1.5) },
+        0 to { GD.cubicInterpolateAngleInTime(0.5, 5.9, -1.0, 2.0, 0.4, 1.0, -0.5, 1.5) },
+        0 to { GD.bezierInterpolate(0.0, 1.5, 2.5, 4.0, 0.35) },
+        0 to { GD.bezierDerivative(0.0, 1.5, 2.5, 4.0, 0.35) },
+        0 to { Mathf.lerpAngle(0.3, 5.9, 0.4) },
+        0 to { GD.angleDifference(0.3, 5.9) },
+        0 to { Mathf.rotateToward(0.2, -2.8, 0.5) },
+        0 to { Mathf.pingPong(7.3, 2.0) },
+        0 to { Mathf.inverseLerp(2.0, 7.0, 3.3) },
+        0 to { GD.remap(3.3, 2.0, 7.0, -1.0, 1.0) },
+        0 to { GD.moveToward(1.0, 4.0, 0.7) },
+        0 to { GD.fmod(-7.3, 2.1) },
+        0 to { GD.sqrt(2.0) },
+        0 to { GD.degToRad(33.0) },
+        0 to { Mathf.floorToInt(-3.5).toDouble() },
+        0 to { GD.snappedi(17.4, 5L).toDouble() },
+        0 to { Mathf.posmod(-7L, 3L).toDouble() },
+        0 to { GD.nearestPo2(37L).toDouble() },
+        0 to { GD.wrapi(-3L, 0L, 5L).toDouble() },
+        0 to { GD.max(1.5, 2.5, -1.0) as Double },
+        0 to { GD.clamp(0.0 as Any?, 3.0, 1.0) as Double },
+        0 to { (GD.min(4L, -2L, 9L) as Long).toDouble() },
       )
-    var mask = 0L
-    kotlin.forEachIndexed { index, case ->
+    var mask = 1L
+    rows.forEachIndexed { index, (bound, case) ->
       val twin = WebExperimentalGenericCall.callImmediate(twin(), "gd_value", listOf(index.toLong())).asDouble()
-      if (case().toRawBits() == twin.toRawBits()) mask = mask or (1L shl index)
+      val kotlin = case()
+      val ulps = kotlin.math.abs(kotlin.toRawBits() - twin.toRawBits())
+      if (ulps > bound) {
+        mask = mask and 1L.inv()
+        GD.print("gd twin row $index: Kotlin $kotlin vs engine $twin ($ulps ulps, bound $bound)")
+      }
     }
-    if (GD.str(1L, "a", 2.5) == twinText(1)) mask = mask or (1L shl 14)
+    if (GD.str(1L, "a", 2.5) == twinText(1)) mask = mask or 2L
     if (
       GD.isInstanceValid(self) &&
         GD.instanceFromId(self.instanceId)?.isSameInstance(self) == true
     ) {
-      mask = mask or (1L shl 15)
+      mask = mask or 4L
     }
     return mask
   }
