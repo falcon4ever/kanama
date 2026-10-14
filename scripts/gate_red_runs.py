@@ -474,6 +474,34 @@ case("check_public_signature_changes.py (Web GodotObject extension)", py("check_
            "fun GodotObject.asObject(): GodotObject = this\n\nfun GodotObject.get(property: String): Long = 0L")],
      "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun GodotObject.get(property: String): Long",
      "a Web-only top-level extension on GodotObject takes a call desktop sends to another member (fix round 2)")
+case("check_public_signature_changes.py (Web call on another class)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/Node.kt", "  fun queueFree() {", "  fun call(method: String) {}\n\n  fun queueFree() {")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only Node: fun call(method: String)",
+     "Web declares a `call` overload on Node (not GodotObject) that desktop does not: a call that compiles on both silently takes it (fix round 3)")
+case("check_public_signature_changes.py (Web callDeferred extension)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun Node.callDeferred(method: String) {}")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun Node.callDeferred(method: String)",
+     "a Web-only top-level `callDeferred` extension on a class other than GodotObject (fix round 3)")
+case("check_public_signature_changes.py (Web generic-receiver extension)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun <T : GodotObject> T.zzRedRun(): T = this")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun <T: GodotObject> T.zzRedRun(): T",
+     "a Web-only extension on a generic receiver `T : GodotObject` that desktop does not have (fix round 3)")
+case("check_public_signature_changes.py (Web generic Node receiver)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun <T : Node> T.zzRedRun(): T = this")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun <T: Node> T.zzRedRun(): T",
+     "a Web-only extension on a generic receiver `T : Node` that desktop does not have (fix round 3)")
+case("check_public_signature_changes.py (Web differing default)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/GodotObject.kt", "  fun signal(name: String): GodotSignal = GodotSignal(this, name)",
+           "  fun signal(name: String): GodotSignal = GodotSignal(this, name)\n\n"
+           "  fun getMeta(name: String, defaultValue: Any? = 1): Any? = null")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): differing default GodotObject: fun getMeta(name: String, defaultValue: Any? = ...): Any?",
+     "Web declares a desktop member with a different default value (`= 1` against desktop's `= null`); the snapshot shows both as `= ...` (fix round 3)")
 case("check_public_signature_changes.py (Web drift list stale)", py("check_public_signature_changes.py"),
      [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
            "fun GodotObject.asObject(): GodotObject = this", "")],
