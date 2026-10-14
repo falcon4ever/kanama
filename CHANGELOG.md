@@ -129,7 +129,7 @@ inside a string no longer blinds it for the rest of the file. `scripts/android_s
 desktop addon, build-template install) instead of two drifting copies. Each has a case in
 `scripts/gate_red_runs.py`.
 
-### Fixed — Desktop: a script property or argument of the wrong Variant type is an error, not a zero value (task 138 item 9)
+### Fixed — Desktop and Android: a script property or argument of the wrong Variant type is an error, not a zero value (task 138 item 9)
 
 A `@RegisterProperty`/`@RegisterFunction` value of type `Quaternion`, `Basis`, `Rect2`, `Rect2i`,
 `AABB`, `Plane`, `Transform2D`, `Transform3D`, `Projection`, `Vector4`, `Vector4i` or `RID` that
