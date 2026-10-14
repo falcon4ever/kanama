@@ -131,4 +131,38 @@ class WebInstanceRegistryTest {
     val second = registry.reserve(scriptId = 1)
     assertTrue((first and 0xffff) != (second and 0xffff))
   }
+
+  /** Task 129 E review N1: only a generation the slot has reached reads as freed. */
+  @Test
+  fun aFutureGenerationOfAnExistingSlotIsNotAFreedScript() {
+    val registry = registry()
+    val handle = registry.reserve(scriptId = 1)
+    registry.construct(handle, ::passThrough)
+    registry.free(handle)
+    assertTrue(registry.wasFreed(handle))
+    val future = handle + (1 shl 16)
+    assertFalse(registry.wasFreed(future))
+  }
+
+  /**
+   * Fix round 2: the 14-bit generation wraps (16383 -> 1). A handle from before the wrap has a
+   * generation above the slot's current one, yet it was minted: it reads as a freed script (the
+   * freed-instance error), not as a corrupt handle (fatal).
+   */
+  @Test
+  fun aStaleHandleFromBeforeTheGenerationWrapIsAFreedScript() {
+    val registry = registry()
+    var stale = 0
+    repeat(0x3fff + 2) {
+      val handle = registry.reserve(scriptId = 1)
+      registry.construct(handle, ::passThrough)
+      if ((handle ushr 16) == 0x3ff0) stale = handle
+      registry.free(handle)
+    }
+    val current = registry.reserve(scriptId = 1)
+    assertEquals(stale and 0xffff, current and 0xffff)
+    assertTrue((current ushr 16) < (stale ushr 16), "the generation wrapped")
+    assertTrue(registry.wasFreed(stale))
+    assertFalse(registry.wasFreed(current))
+  }
 }

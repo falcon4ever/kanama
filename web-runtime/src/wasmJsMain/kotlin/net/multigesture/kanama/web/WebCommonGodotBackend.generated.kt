@@ -4,6 +4,7 @@
 package net.multigesture.kanama.web
 
 import kotlin.js.ExperimentalWasmJsInterop
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotBasis
@@ -33,6 +34,8 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {
     val token = handle.webId()
     if (!instances.isLiveOrConstructing(token)) {
+      // Task 138 item 22: a freed script-backed object reads like desktop's freed instance.
+      check(!instances.wasFreed(token)) { webFreedScriptMessage(token) }
       check(containsWebBrowserHandle(token)) { "Stale Kanama Web browser handle=$token" }
     }
   }
@@ -342,7 +345,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-      WebRandom.randomize()
+      GD.randomize()
     }
   }
 
@@ -353,7 +356,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-      return WebRandom.randi()
+      return GD.randi()
     }
   }
 
@@ -364,7 +367,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-      return WebRandom.randf()
+      return GD.randf()
     }
   }
 

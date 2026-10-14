@@ -267,6 +267,12 @@ def _skip_char(src: str, i: int) -> int:
     return m.end()
 
 
+def _encode_string(body: str) -> str:
+    """A string literal's content as identifier-safe text (so brackets inside it never confuse the
+    parser): the default-value comparison (`WEB_GODOT_OBJECT_DRIFT`) tells `= "a"` from `= "b"`."""
+    return '"' + "".join(c if c.isalnum() else f"_{ord(c):x}_" for c in body) + '"'
+
+
 def compact(src: str) -> str:
     out: list[str] = []
     i = 0
@@ -285,11 +291,13 @@ def compact(src: str) -> str:
             out.append("\n" if "\n" in src[m.start() : end] else " ")
             i = end
         elif tok == '"""':
-            i = _skip_raw(src, m.end())
-            out.append('""')
+            end = _skip_raw(src, m.end())
+            out.append(_encode_string(src[m.end() : end - 3]))
+            i = end
         elif tok == '"':
-            i = _skip_string(src, m.end())
-            out.append('""')
+            end = _skip_string(src, m.end())
+            out.append(_encode_string(src[m.end() : end - 1]))
+            i = end
         else:
             i = _skip_char(src, m.start())
             out.append("' '")
@@ -415,12 +423,18 @@ def top_level_equals(param: str) -> int:
     return -1
 
 
-def render_param(param: str, strip_property: bool) -> str:
+class Rendered(str):
+    """A rendered parameter list; `.full` is the same list with every default value written out."""
+
+    full: str
+
+
+def render_param(param: str, strip_property: bool, full: bool = False) -> str:
     param = ANNOTATION_RE.sub("", param).strip()
     eq = top_level_equals(param)
     default = ""
     if eq >= 0:
-        param, default = param[:eq], " = ..."
+        param, default = param[:eq], (f" = {norm(param[eq + 1:])}" if full else " = ...")
     words = param.split()
     mods = []
     while words and words[0] in MODIFIERS | {"vararg", "val", "var"}:
@@ -431,8 +445,11 @@ def render_param(param: str, strip_property: bool) -> str:
     return " ".join([*mods, body]) + default
 
 
-def render_params(raw: str, strip_property: bool = False) -> str:
-    return "(" + ", ".join(render_param(p, strip_property) for p in split_top_level(raw)) + ")"
+def render_params(raw: str, strip_property: bool = False) -> Rendered:
+    params = split_top_level(raw)
+    out = Rendered("(" + ", ".join(render_param(p, strip_property) for p in params) + ")")
+    out.full = "(" + ", ".join(render_param(p, strip_property, full=True) for p in params) + ")"
+    return out
 
 
 def infer_literal(expr: str) -> str:
@@ -447,7 +464,7 @@ def infer_literal(expr: str) -> str:
         return "Double"
     if e in ("true", "false"):
         return "Boolean"
-    if e == '""':
+    if re.fullmatch(r'"\w*"', e):
         return "String"
     return INFERRED
 
@@ -461,6 +478,14 @@ class Decl:
     # For a `fun` whose return type is not written: the function its expression body calls, when the
     # WHOLE body is that one call (`= play(name, customSpeed)`); see resolve_forwarders.
     forward: str | None = None
+    # For a `fun`: its rendered parameter list and the same list with the default values written out.
+    params: Rendered | None = None
+
+    def full_text(self) -> str:
+        """The declaration with its default values written out (the text after resolve_forwarders)."""
+        if self.params is None or self.params.full == self.params:
+            return self.text
+        return self.text.replace(str(self.params), self.params.full, 1)
 
 
 WORD_CHARS = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.:")
@@ -687,9 +712,9 @@ class Parser:
     def kept(self, mods: list[str]) -> list[str]:
         return [m for m in KEPT_MODIFIERS if m in mods]
 
-    def emit(self, scope: str, text: str, pos: int, forward: str | None = None) -> None:
+    def emit(self, scope: str, text: str, pos: int, forward: str | None = None, params: Rendered | None = None) -> None:
         origin = self.src.where(pos) if INFERRED in text else ""
-        self.decls.append(Decl(scope, text, pos, origin, forward))
+        self.decls.append(Decl(scope, text, pos, origin, forward, params))
 
     def whole_body_call(self, k: int) -> str | None:
         """The function name if the expression body at [k] (`=`) is exactly one call `name(...)`."""
@@ -749,7 +774,7 @@ class Parser:
             rendered = " ".join([*self.kept(mods), f"fun {type_params}{name}{params}"])
             if ret and ret != "Unit":
                 rendered += f": {ret}"
-            self.emit(scope, rendered + where, pos, forward)
+            self.emit(scope, rendered + where, pos, forward, params)
         if text.startswith("{", k):
             return self.src.closers[k] + 1
         return k
@@ -993,6 +1018,8 @@ class SurfaceResult:
     lines: list[str]
     files: int
     inferred: list[str]  # "file:line: line" of every declaration whose type the gate cannot see
+    # Each line that has a default value, with the line written out in full (defaults as source).
+    full: dict[str, set[str]] = field(default_factory=dict)
 
 
 def surface_lines(root: Path, surface: Surface) -> SurfaceResult:
@@ -1019,7 +1046,11 @@ def surface_lines(root: Path, surface: Surface) -> SurfaceResult:
     resolve_forwarders(decls)
     lines = [f"{decl.scope or '<top-level>'}: {decl.text}" for decl in decls]
     inferred = [f"{decl.origin}: {line}" for decl, line in zip(decls, lines) if INFERRED in decl.text]
-    return SurfaceResult(sort_lines(lines), len(files), inferred)
+    full: dict[str, set[str]] = {}
+    for decl, line in zip(decls, lines):
+        if decl.params is not None and decl.params.full != decl.params:
+            full.setdefault(line, set()).add(f"{decl.scope or '<top-level>'}: {decl.full_text()}")
+    return SurfaceResult(sort_lines(lines), len(files), inferred, full)
 
 
 CLASSIFIER_LINE_RE = re.compile(r"^(?:\w+ )*(?:class|object|interface)\b")
@@ -1233,6 +1264,249 @@ def describe_changes(removed: Counter, added: Counter, compat: Counter, limit: i
     return out
 
 
+# Task 129 E fix round 2: Web's `GodotObject` against desktop's, member by member, and the top-level
+# extensions on `GodotObject` too. Every declaration one side has and the other lacks (or declares
+# differently) must be listed here with the reason it is accepted; anything else is NEW drift and
+# fails, and an entry whose drift is gone fails as stale, so the list only shrinks. Desktop is the
+# common tree plus its desktop/Android half (`jvm`). The dangerous kind is a Web-only overload of a
+# desktop name: a call that compiles on both silently takes it, with other semantics (task 129 E
+# review S3: Unit-returning queued `call` overloads hid the Variant `call`).
+_NOT_ON_WEB = (
+    "not on Web yet: Web's GodotObject is a hand-shaped facade that has not grown this member; a desktop "
+    "call fails to compile on Web (loud), it is never rerouted"
+)
+_WEB_SET = (
+    "Web's typed set(propertyPath, ...) runs Object.set_indexed and returns Unit; desktop's set(property, Any?) "
+    "runs Object.set and returns Unit, so set(\"position:x\", 5.0) writes the component on Web and "
+    "nothing on desktop"
+)
+_WEB_SET_DEFERRED = "Web's setDeferred takes only a Boolean (its one queued arm); desktop's takes any Variant"
+_WEB_EMIT = (
+    "Web's typed emit_signal arms (one crossing each, no Variant packing); desktop's vararg emitSignal takes "
+    "the same calls with the same effect"
+)
+_WEB_TYPED_READ = (
+    "a Web-only typed property read from the early Web ports; desktop reads through get(property): Any?"
+)
+WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
+    **{
+        f"desktop-only GodotObject: {decl}": _NOT_ON_WEB
+        for decl in (
+            "fun addUserSignal(signal: String, arguments: List<Map<String, Any>> = ...)",
+            "fun canTranslateMessages(): Boolean",
+            "fun cancelFree()",
+            "fun connect(signal: String, target: GodotObject, method: String, flags: GodotObject.ConnectFlags = ...): GodotError",
+            "fun disconnect(signal: String, target: GodotObject, method: String)",
+            "fun getClassName(): String",
+            "fun getIncomingConnections(): List<Map<String, Any?>>",
+            "fun getIndexed(propertyPath: NodePath): Any?",
+            "fun getIndexed(propertyPath: String): Any?",
+            "fun getInstanceId(): Long",
+            "fun getMeta(name: String, defaultValue: Any? = ...): Any?",
+            "fun getMetaList(): List<String>",
+            "fun getMethodList(): List<Map<String, Any?>>",
+            "fun getPropertyList(): List<Map<String, Any?>>",
+            "fun getScript(): Any?",
+            "fun getSignalConnectionList(signal: String): List<Map<String, Any?>>",
+            "fun getSignalList(): List<Map<String, Any?>>",
+            "fun getTranslationDomain(): String",
+            "fun hasConnections(signal: String): Boolean",
+            "fun hasMeta(name: String): Boolean",
+            "fun hasUserSignal(signal: String): Boolean",
+            "fun isBlockingSignals(): Boolean",
+            "fun isConnected(signal: String, target: GodotObject, method: String): Boolean",
+            "fun notification(what: Int, reversed: Boolean = ...)",
+            "fun notifyPropertyListChanged()",
+            "fun propertyCanRevert(property: String): Boolean",
+            "fun propertyGetRevert(property: String): Any?",
+            "fun removeMeta(name: String)",
+            "fun removeUserSignal(signal: String)",
+            "fun setBlockSignals(enable: Boolean)",
+            "fun setIndexed(propertyPath: NodePath, value: Any?)",
+            "fun setIndexed(propertyPath: String, value: Any?)",
+            "fun setMessageTranslation(enable: Boolean)",
+            "fun setMeta(name: String, value: Any?)",
+            "fun setScript(script: Resource?)",
+            "fun setTranslationDomain(domain: String)",
+            "fun tr(message: String, context: String = ...): String",
+            "fun trN(message: String, pluralMessage: String, n: Int, context: String = ...): String",
+        )
+    },
+    "desktop-only GodotObject: fun get(property: String): Any?":
+        "Web has no Variant get(property): only the typed reads (getVector2, getObjectProperty)",
+    "desktop-only GodotObject: fun set(property: String, value: Any?)": _WEB_SET,
+    **{f"web-only GodotObject: fun set(propertyPath: String, value: {t})": _WEB_SET
+       for t in ("Double", "GodotEnumValue", "Long", "String", "Vector2")},
+    "desktop-only GodotObject: fun setDeferred(property: String, value: Any?)": _WEB_SET_DEFERRED,
+    "web-only GodotObject: fun setDeferred(property: String, value: Boolean)": _WEB_SET_DEFERRED,
+    **{f"web-only GodotObject: fun emitSignal({params})": _WEB_EMIT
+       for params in ("signal: String", "signal: String, value: GodotObject", "signal: String, value: Int",
+                      "signal: String, value: String", "signal: String, value: Vector2i")},
+    "web-only GodotObject: fun getObjectProperty(property: String): GodotObject?": _WEB_TYPED_READ,
+    "web-only GodotObject: fun getVector2(property: String): Vector2": _WEB_TYPED_READ,
+    "desktop-only GodotObject: constructor(handle: GodotHandle)":
+        "the Web constructor's parameter is named godotObject: only a named-argument call differs",
+    "web-only GodotObject: constructor(godotObject: GodotHandle)":
+        "the Web constructor's parameter is named godotObject: only a named-argument call differs",
+    "desktop-only GodotObject: final override fun equals(other: Any?): Boolean":
+        "desktop compares the instance id (final); Web compares handle tokens, see GodotObject.equals on Web",
+    "desktop-only GodotObject: final override fun hashCode(): Int":
+        "desktop hashes the instance id (final); Web hashes the handle token",
+    "web-only GodotObject: override fun equals(other: Any?): Boolean":
+        "Web compares handle tokens: two tokens for one object are not equal (GodotObject.equals KDoc)",
+    "web-only GodotObject: override fun hashCode(): Int": "Web hashes the handle token",
+    "desktop-only GodotObject: override fun toString(): String":
+        "desktop names the class and instance id; Web keeps Any.toString",
+    "desktop-only <top-level>: inline fun <reified T: GodotObject> GodotObject.cast(): T":
+        "desktop's ClassDB-checked reified cast; Web re-types with a wrapper constructor",
+    "desktop-only <top-level>: inline fun <reified T: GodotObject> GodotObject.castOrNull(): T?":
+        "desktop's ClassDB-checked reified cast; Web re-types with a wrapper constructor",
+    "desktop-only <top-level>: inline fun <reified T> GodotObject.kotlinScriptInstance(): T?":
+        "Web bounds T: Any; only an explicit nullable type argument compiles on desktop alone",
+    "web-only <top-level>: inline fun <reified T: Any> GodotObject.kotlinScriptInstance(): T?":
+        "Web bounds T: Any; only an explicit nullable type argument compiles on desktop alone",
+    "web-only <top-level>: fun GodotObject.asObject(): GodotObject":
+        "a Web-only identity helper (WebFacades.kt) the early Web ports import; it answers the receiver",
+}
+
+
+# The Object-protocol names (task 138 fix round 3): a Web overload of one of these declared on ANY Web class
+# (`fun call(method: String) {}` on Web `Node`) is the same hazard as one on GodotObject itself.
+OBJECT_PROTOCOL_NAMES = frozenset(
+    {"call", "callv", "callDeferred", "set", "get", "setDeferred", "emitSignal"})
+MODIFIER_PREFIX_RE = re.compile(r"^(?:(?:" + "|".join(KEPT_MODIFIERS) + r") )+")
+
+
+def _split_fun(decl: str) -> tuple[str, str, str] | None:
+    """(type parameters, receiver, name) of a `fun` declaration line, or None for anything else."""
+    m = re.match(r"^(?:\w+ )*?fun ", decl)
+    if not m:
+        return None
+    i = m.end()
+    type_params = ""
+    if decl.startswith("<", i):
+        depth = 0
+        for j in range(i, len(decl)):
+            depth += decl[j] == "<"
+            depth -= decl[j] == ">" and decl[j - 1] != "-"
+            if depth == 0:
+                break
+        type_params, i = decl[i : j + 1], j + 2
+    head = decl[i : decl.find("(", i)]
+    depth = 0
+    cut = -1
+    for j, ch in enumerate(head):
+        depth += ch == "<"
+        depth -= ch == ">"
+        if ch == "." and depth == 0:
+            cut = j
+    receiver, name = (head[:cut], head[cut + 1 :]) if cut >= 0 else ("", head)
+    return type_params, receiver, name
+
+
+def _generic_receiver(decl: str) -> bool:
+    """True for `fun <T : GodotObject> T.x(...)`: the receiver is one of the function's own type parameters."""
+    parts = _split_fun(decl)
+    if not parts or not parts[0] or not parts[1]:
+        return False
+    names = re.findall(r"(?:^<|, )(?:reified )?(\w+)\b", parts[0])
+    return parts[1].rstrip("?") in names
+
+
+def _bare(decl: str) -> str:
+    """The declaration without its modifiers (`override fun call(...)` and `fun call(...)` are one)."""
+    return MODIFIER_PREFIX_RE.sub("", decl)
+
+
+def _web_parity_domain(scope: str, decl: str) -> bool:
+    """The declarations the Web/desktop parity check compares: everything that can silently take the
+    place of an Object-protocol call on a Web object (see WEB_GODOT_OBJECT_DRIFT)."""
+    if scope == "GodotObject":
+        return True
+    parts = _split_fun(decl)
+    if scope == "<top-level>":
+        return parts is not None and (
+            parts[1] == "GodotObject" or parts[2] in OBJECT_PROTOCOL_NAMES or _generic_receiver(decl))
+    return parts is not None and parts[2] in OBJECT_PROTOCOL_NAMES
+
+
+def web_parity_problems(current: dict[str, "SurfaceResult"]) -> list[str]:
+    desktop_lines = current["common"].lines + current["jvm"].lines
+    web_lines = current["web"].lines
+
+    def declarations(lines: list[str]) -> dict[str, set[str]]:
+        out: dict[str, set[str]] = {}
+        for line in lines:
+            scope, _, decl = line.partition(": ")
+            out.setdefault(scope, set()).add(decl)
+        return out
+
+    desktop, web = declarations(desktop_lines), declarations(web_lines)
+    desktop_bare = {scope: {_bare(d) for d in decls} for scope, decls in desktop.items()}
+    web_bare = {scope: {_bare(d) for d in decls} for scope, decls in web.items()}
+
+    def desktop_has(scope: str, decl: str) -> bool:
+        # A class inherits GodotObject's members, so a Web override of one desktop declares is no drift.
+        return _bare(decl) in desktop_bare.get(scope, set()) | (
+            desktop_bare.get("GodotObject", set()) if scope != "<top-level>" else set())
+
+    def shadowed(decl: str) -> bool:
+        """A Web extension a Web member of its receiver shadows with the same declaration is an
+        import-compat name: the member always wins, so it adds no behaviour."""
+        parts = _split_fun(decl)
+        if not parts or not parts[1] or _generic_receiver(decl):
+            return False
+        member = decl.replace(f"{parts[1]}.", "", 1)
+        return _bare(member) in web_bare.get(parts[1], set())
+
+    drift: dict[str, str] = {}
+    # GodotObject itself: member by member, both directions (the original check).
+    for decl in desktop.get("GodotObject", set()) - web.get("GodotObject", set()):
+        drift[f"desktop-only GodotObject: {decl}"] = ""
+    for decl in web.get("GodotObject", set()) - desktop.get("GodotObject", set()):
+        drift[f"web-only GodotObject: {decl}"] = ""
+    for decl in desktop.get("<top-level>", set()):
+        parts = _split_fun(decl)
+        if parts and parts[1] == "GodotObject" and decl not in web.get("<top-level>", set()):
+            drift[f"desktop-only <top-level>: {decl}"] = ""
+    # Web-only declarations that can take an Object-protocol call: an overload of call / callv / callDeferred /
+    # set / get / setDeferred / emitSignal on any Web class, a top-level extension of one, and a generic-receiver
+    # extension (`fun <T : GodotObject> T.x()`, `T : Node`, ...) desktop does not have.
+    for scope, decls in web.items():
+        for decl in decls:
+            if scope == "GodotObject" or not _web_parity_domain(scope, decl):
+                continue
+            if scope == "<top-level>":
+                if decl in desktop.get("<top-level>", set()) or shadowed(decl):
+                    continue
+            elif desktop_has(scope, decl):
+                continue
+            drift[f"web-only {scope}: {decl}"] = ""
+    # The same declaration on both sides with a different default value (the snapshot shows both as `= ...`).
+    desktop_full: dict[str, set[str]] = {}
+    for name in ("common", "jvm"):
+        for line, fulls in current[name].full.items():
+            desktop_full.setdefault(line, set()).update(fulls)
+    for line, fulls in current["web"].full.items():
+        scope, _, decl = line.partition(": ")
+        if not _web_parity_domain(scope, decl):
+            continue
+        for desktop_scope in {scope, "GodotObject"} if scope != "<top-level>" else {scope}:
+            there = desktop_full.get(f"{desktop_scope}: {decl}")
+            if there is None:
+                there = {f for k, v in desktop_full.items() if k.partition(": ")[0] == desktop_scope
+                         and _bare(k.partition(": ")[2]) == _bare(decl) for f in v}
+            if there and not (fulls & there) and {_bare(f.partition(": ")[2]) for f in fulls} != {
+                    _bare(f.partition(": ")[2]) for f in there}:
+                drift[f"differing default {line}"] = (
+                    f"desktop {sorted(there)} vs web {sorted(fulls)}")
+    problems = [f"new drift (not in WEB_GODOT_OBJECT_DRIFT): {line}" + (f"  [{drift[line]}]" if drift[line] else "")
+                for line in sorted(drift.keys() - WEB_GODOT_OBJECT_DRIFT.keys())]
+    problems += [f"stale WEB_GODOT_OBJECT_DRIFT entry (the drift is gone; delete it): {line}"
+                 for line in sorted(WEB_GODOT_OBJECT_DRIFT.keys() - drift.keys())]
+    return problems
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--root", type=Path, default=ROOT, help="repository root (a scratch copy for red runs)")
@@ -1247,6 +1521,13 @@ def main() -> int:
         current = {surface.name: surface_lines(root, surface) for surface in SURFACES}
     except ParseError as error:
         print(f"{TAG} FAIL cannot read the surface: {error}", file=sys.stderr)
+        return 1
+    parity = web_parity_problems(current)
+    if parity:
+        print(f"{TAG} FAIL Web's GodotObject differs from desktop's outside the known drift "
+              "(WEB_GODOT_OBJECT_DRIFT):", file=sys.stderr)
+        for line in parity:
+            print(f"    {line}", file=sys.stderr)
         return 1
     markers, has_unreleased = unreleased_markers(root / CHANGELOG)
     marker_text = "\n".join(text for _, text in markers)

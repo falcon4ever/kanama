@@ -308,7 +308,7 @@ case("check_android_remap_sources.py (address space, NULL_SEGMENT)", py("check_a
              "package net.multigesture.kanama\nval zz = NULL_SEGMENT.reinterpret(Long.MAX_VALUE)\n")],
      "ZzRedRun.kt:2: whole-address-space segment", "Kanama's `NULL_SEGMENT` reinterpreted as the whole address space")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 34)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 35)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -432,8 +432,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 34", "KANAMA_WEB_PROTOCOL_VERSION = 33")],
-     "protocol version disagrees", "the bridge pins protocol 33 while the emitter says 34")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 35", "KANAMA_WEB_PROTOCOL_VERSION = 34")],
+     "protocol version disagrees", "the bridge pins protocol 34 while the emitter says 35")
 case("check_protocol_pins.py (sentinel)", py("check_protocol_pins.py"),
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", 'scriptErrorResult: "\\u001fkanama-script-error\\u001f",', 'scriptErrorResult: "\\u001fkanama-script-errorX\\u001f",')],
      "script-error sentinel", "the bridge's script-error sentinel differs from the emitter's GDScript constant")
@@ -462,6 +462,51 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
 case("check_public_signature_changes.py (annotations)", py("check_public_signature_changes.py"),
      [Edit("annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt", "annotation class GodotName(val name: String)", "annotation class GodotName(val name: String, val extra: Int)")],
      "unannounced source break", "a parameter is added to a script annotation (annotations/ is a snapshotted surface, task 137 item 9)")
+
+case("check_public_signature_changes.py (Web parity)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/GodotObject.kt",
+           "  internal fun callQueued(method: String, value: Double) {", "  fun call(method: String, value: Double) {")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only GodotObject: fun call(method: String, value: Double)",
+     "Web declares a `call` overload desktop does not have (a Unit-returning queued call hides the Variant `call`, task 129 E review S3)")
+case("check_public_signature_changes.py (Web GodotObject extension)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun GodotObject.get(property: String): Long = 0L")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun GodotObject.get(property: String): Long",
+     "a Web-only top-level extension on GodotObject takes a call desktop sends to another member (fix round 2)")
+case("check_public_signature_changes.py (Web call on another class)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/Node.kt", "  fun queueFree() {", "  fun call(method: String) {}\n\n  fun queueFree() {")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only Node: fun call(method: String)",
+     "Web declares a `call` overload on Node (not GodotObject) that desktop does not: a call that compiles on both silently takes it (fix round 3)")
+case("check_public_signature_changes.py (Web callDeferred extension)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun Node.callDeferred(method: String) {}")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun Node.callDeferred(method: String)",
+     "a Web-only top-level `callDeferred` extension on a class other than GodotObject (fix round 3)")
+case("check_public_signature_changes.py (Web generic-receiver extension)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun <T : GodotObject> T.zzRedRun(): T = this")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun <T: GodotObject> T.zzRedRun(): T",
+     "a Web-only extension on a generic receiver `T : GodotObject` that desktop does not have (fix round 3)")
+case("check_public_signature_changes.py (Web generic Node receiver)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this",
+           "fun GodotObject.asObject(): GodotObject = this\n\nfun <T : Node> T.zzRedRun(): T = this")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): web-only <top-level>: fun <T: Node> T.zzRedRun(): T",
+     "a Web-only extension on a generic receiver `T : Node` that desktop does not have (fix round 3)")
+case("check_public_signature_changes.py (Web differing default)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/GodotObject.kt", "  fun signal(name: String): GodotSignal = GodotSignal(this, name)",
+           "  fun signal(name: String): GodotSignal = GodotSignal(this, name)\n\n"
+           "  fun getMeta(name: String, defaultValue: Any? = 1): Any? = null")],
+     "new drift (not in WEB_GODOT_OBJECT_DRIFT): differing default GodotObject: fun getMeta(name: String, defaultValue: Any? = ...): Any?",
+     "Web declares a desktop member with a different default value (`= 1` against desktop's `= null`); the snapshot shows both as `= ...` (fix round 3)")
+case("check_public_signature_changes.py (Web drift list stale)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt",
+           "fun GodotObject.asObject(): GodotObject = this", "")],
+     "stale WEB_GODOT_OBJECT_DRIFT entry (the drift is gone; delete it): web-only <top-level>: fun GodotObject.asObject(): GodotObject",
+     "a known Web drift is gone but its WEB_GODOT_OBJECT_DRIFT entry stays (the list must shrink)")
 case("check_typed_enums.py", py("check_typed_enums.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Long) {")],
      "typed_enums] FAIL", "an enum parameter goes back to a raw Long")
@@ -586,6 +631,16 @@ for name, args, target, expect, how in [
 case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
      [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
      "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")
+
+case("generate_web_wrappers.py --check (inert facades)", py("generate_web_wrappers.py", "--check"),
+     [Append("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt", "\nobject Marshalls\n")],
+     "declares Godot class Marshalls", "a hand-written Web file declares a Godot class WEB_INERT_FACADES does not list (task 129 E)")
+case("generate_web_wrappers.py --check (Web-local utilities)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/web_local_utilities.py", '"sin": (1, "sin: " + LIBM,', '"sin": (0, "sin: " + LIBM + "",')],
+     "bound 0 on a body that calls a libm transcendental", "a Web-local transcendental utility claims bit equality (task 129 E review B1)")
+case("generate_web_wrappers.py --check (unclassified utility)", py("generate_web_wrappers.py", "--check"),
+     [Edit("scripts/web_local_utilities.py", '"step_decimals": "an editor helper', '"step_decimals_gone": "an editor helper')],
+     "utility step_decimals: in no table", "a Godot utility function is in none of the Web tables, so it would cross unreviewed (task 129 E review B1)")
 case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_shell_wrappers.py", "--from-skip-report", "build/wrapper-generator/skips.txt", "--dry-run", "--fail-if-candidates"),
      [Delete(f"{COMMON}/api/Curve2D.kt"),
       Append("build/wrapper-generator/skips.txt", "\nCurve2D.foo object return wrapper is missing for Curve2D\n")],
@@ -679,6 +734,9 @@ case("check_gradle_templates_configure.sh", ["bash", "scripts/check_gradle_templ
 case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
      "over-budget expected exit 1", "web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that)")
+case("check_budgets.py (builtin calls)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", "    violations += check_builtin_calls(demo, measured, budgets, limits)\n", "")],
+     "over-builtin-budget expected exit 1", "the budget gate stops counting synchronous builtin / utility calls per tick (task 129 E review B1)")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")

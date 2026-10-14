@@ -671,14 +671,15 @@ object GD {
     // string would compile and always return false; isInstanceIdValid takes a raw id. It never
     // dereferences the wrapper: it asks is_instance_id_valid about the id the wrapper captured at
     // construction, as GDScript does with the id its Variant cached, so it is safe on a wrapper
-    // whose object was freed (task 98).
+    // whose object was freed (task 98). Web answers from its handle tables (task 129 E), so the
+    // liveness test is the platform's GodotObject.isInstanceLive.
     /**
      * Returns `true` if `instance` is a valid Object (e.g. has not been deleted from memory).
      *
      * Generated from Godot docs: @GlobalScope.is_instance_valid
      */
     fun isInstanceValid(instance: GodotObject?): Boolean =
-        instance != null && isInstanceIdValid(instance.instanceId)
+        instance != null && instance.isInstanceLive()
 
     /**
      * Returns `true` if `x` is a NaN ("Not a Number" or invalid) value. This method is needed as

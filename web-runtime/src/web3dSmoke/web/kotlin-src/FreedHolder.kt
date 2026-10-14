@@ -7,6 +7,7 @@ import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.web.WebExperimentalGenericCall
 
 /**
  * Harness-only (task 138 item 3): holds a node the ENGINE frees under it -- `FreedChild` goes when
@@ -98,6 +99,33 @@ class FreedHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
 
   /** 1 once the live node of [freedBatch] is gone from the engine. */
   fun freedBatchGone(value: Long): Long = if (GD.isInstanceValid(batchLive)) 0L else 1L
+
+  private var heldScript: Node? = null
+
+  /** Task 138 item 22: hold the script-backed FreedScriptTarget (its handle is its script's). */
+  fun freedScriptLookup(value: Long): Long {
+    heldScript = self.requireAs("../FreedScriptParent/FreedScriptTarget", ::Node)
+    return if (heldScript?.getName().toString() == "FreedScriptTarget") 1L else 0L
+  }
+
+  /**
+   * Task 138 item 22, the late case: ONE batch frees FreedScriptParent (a queued `free`, so the
+   * script-backed child goes while the batch applies) and then sets a property on the held script
+   * node. That setter is skipped and reported as the freed-instance error instead of failing the
+   * batch. 1 when the call came back and this script still answers (the read flushes the batch).
+   */
+  fun freedScriptLate(value: Long): Long {
+    val parent = self.requireAs("../FreedScriptParent", ::Node)
+    WebExperimentalGenericCall.queueVoidCall(parent, "free")
+    heldScript?.setProcessMode(Node.ProcessMode.DISABLED)
+    return if (self.getName().toString() == "FreedHolder") 1L else 0L
+  }
+
+  /**
+   * Task 138 item 22, the synchronous case: a call on the freed script-backed node throws desktop's
+   * freed-instance IllegalStateException (2), not "Stale Kanama Web browser handle" (3).
+   */
+  fun freedScriptCall(value: Long): Long = freedKind { heldScript?.getName() }
 
   /** 1 when this script's own node still answers after the held one was freed. */
   fun freedSelf(value: Long): Long = if (self.getName().toString() == "FreedHolder") 1L else 0L

@@ -168,6 +168,104 @@ Expressed" section with every case (294 parameters today), and the report check 
 changes without the page being regenerated, so a new required parameter, or a default that is
 gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
 
+### Known limits — Web signal and callback arguments
+
+Two things differ from desktop on Web and are being fixed. An object received as a signal or callback
+argument and stored for use after the handler returns is not yet valid unless something inside the
+handler resolved it through a result (`kept = GD.instanceFromId(arg.instanceId)` is the workaround).
+And `body == player` inside a handler can be `false` on Web even when both are the same node: compare
+`instanceId` instead. Documented in the Godot API guide (Web section) and the Web backend notes.
+
+### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable` (task 129 E, task 138 items 2 and 4)
+
+Web kept its own `GD` (16 members) and `Mathf` (18). It now compiles the same generated `GD` as
+desktop and iOS (every Godot utility function, with the typed overloads) and the same `Mathf`. The
+math utilities run in Kotlin, with no bridge crossing: every `Mathf` member and `GD`'s arithmetic,
+rounding, interpolation and transcendental functions (`GD.lerpf`, `GD.floori`, `GD.sin`, `GD.pow`,
+`GD.ease`, `GD.dbToLinear`, ...; the Variant forms `GD.abs`, `GD.max`, `GD.clamp`, ... on `Double`
+or `Long` arguments). The arithmetic ones return GDScript's double bit for bit; the transcendental
+ones are within one ulp of the engine's (Kotlin/Wasm computes `kotlin.math` with its own fdlibm port,
+the engine with emscripten's libm), except the composites: `linearToDb` (a logarithm times a constant)
+within two ulps, and `ease`, whose `1 - (1 - x)^(1/c)` branches cancel, within 2^-52 absolute.
+`scripts/web_local_utilities.py` lists which utility runs where. The rest crosses the bridge, one
+synchronous call each (10-30 us): printing, `pushError` / `pushWarning`, `str`, `varToStr` and the
+other conversions, `typeOf`, `hash`, `weakref`, `instanceFromId`, `isInstanceIdValid`, the RID
+helpers, and the random functions, which use Godot's global generator as on desktop, so `GD.seed`
+/ `GD.randf` reproduce GDScript's sequence. The Web budget gate now also counts these synchronous
+builtin and utility calls per engine tick (`maxBuiltinCallsPerTick`). The web3d smoke checks 55
+`GD` / `Mathf` results against a GDScript twin within each one's bound.
+`GodotCallable` is the shared class on Web too (`call`, `callv`, `callDeferred`, `isValid`,
+`getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,
+`hasConnections`, `getObject`, `getObjectId`, `disconnect` and `emit`, and `GodotObject` gains the
+Variant `call(method, vararg args)`, `callv`, `callDeferred(method, vararg args)`,
+`getMethodArgumentCount` and `instanceId` (read once per handle, then kept by every wrapper of
+it, so `getChild(0).instanceId` each frame does not cross and a read after the object is freed
+answers, as desktop keeps the id it captured). The Web bridge now carries a `List` / `Map`
+argument (`godotFormat`) and an `Array` / `Dictionary` / `Callable` / `Signal` result; an object in a result keeps the handle that already
+tracks it, so a repeated `GD.instanceFromId` or `call("get_children")` neither grows the handle
+table nor changes identity (`call("get_children")[0] == getChild(0)`). An object a signal handler
+(or `_input`) receives stays valid after the handler returns once a result named it
+(`kept = GD.instanceFromId(arg.instanceId)`, an element of `call("get_children")`), and that result
+`== arg`, as on desktop.
+
+Behaviour changes on Web, from the shared code:
+- `Mathf.inverseLerp(from, to, weight)` with `to == from` answers Godot's NaN / infinity (it
+  answered 0), and `Mathf.roundToInt` rounds halves away from zero like Godot's `roundi` (it
+  rounded them to even).
+- `GD.randiRange` / `GD.randfRange` no longer throw for `from > to`; Godot answers that case.
+- `GD.randf`, `randi`, `randiRange`, `randfRange`, `randfn`, `seed`, `randomize` and `randFromSeed`
+  use Godot's global generator on Web too, as on desktop, Android and iOS: the sequence after
+  `GD.seed(n)` is the one GDScript and C# draw, identical on every platform. Web's own generator
+  (the one behind `randomize` / `randi` / `randf`) is gone. Each draw is one bridge call (about
+  10-30 us).
+- `GodotObject.call(method, ...)` is desktop's: one immediate call that returns the method's
+  result. Web's queued `call(method, String)`, `call(method, Double)`,
+  `call(method, Vector3, Vector3)`, `callDeferred(method)` and `callDeferred(method, GodotObject)`
+  overloads, which returned `Unit` and hid the Variant ones, are gone.
+- **Source break:** `GD` and `Mathf` on Web take the shared signatures: `GD.print(message)` is
+  `GD.print(vararg values)`, `Mathf.isEqualApprox` uses Godot's tolerance instead of `1e-6`,
+  `Mathf.PI` / `Mathf.TAU` are `const`, and the parameters are named as on desktop
+  (`Mathf.pow(x, y)`, was `pow(value, exponent)`; `Mathf.inverseLerp(from, to, weight)`, was
+  `inverseLerp(from, to, value)`). The Web-only spellings sources import by name
+  (`net.multigesture.kanama.api.radToDeg`, `randf`, `randi`, `randomize`, `pushError`, `Basis`)
+  are kept. `Window` on Web is a generated `Viewport` subclass (its `handle` is the inherited
+  `GodotObject.handle`; see below).
+- **Source break:** `GodotObject` and `top-level` on Web: the typed `call` / `callDeferred`
+  overloads above are removed, and the Variant `call(method, vararg args): Any?` and
+  `callDeferred(method, vararg args): Any?` take those calls, as on desktop. The top-level
+  `GodotObject.call` / `GodotObject.callDeferred` extensions Web sources imported by name are
+  removed too: delete `import net.multigesture.kanama.api.call` (and `.callDeferred`); the member
+  takes the call.
+
+### Changed — Web `Window` is a generated `Viewport` subclass (task 129 E, inventory row 10)
+
+Web's `Window` was a hand facade with two shapes: a handle-backed root window and a handle-less
+mirror `Node.getWindow()` returned. It is now generated from the contract like every other Web
+class, extends `Viewport` as on desktop, and `Node.getWindow()` returns the root window (null for a
+node outside the tree, as on desktop), so `mode` is a real engine call there too. The 3D render
+settings the Compatibility renderer fixes on Web (`scaling3dScale`, `scaling3dMode`, `useTaa`,
+`msaa3d`, `screenSpaceAa`) stay Kotlin-side, one value per page. The remaining hand-written Web
+stand-ins for engine classes (`Time`, `DisplayServer`, `IP`, the single-player multiplayer
+classes, the ray-query helpers) are listed in the Web generator's `WEB_INERT_FACADES`, and its
+`--check` fails on any other hand-written Godot class.
+
+### Fixed — two Kotlin lambdas on one signal (task 138 item 20)
+
+Godot keys a signal's connections by the base callable and ignores bound arguments, so on Web a
+second lambda connected from the same script to the same signal failed with "already connected"
+(both used the proxy's dispatch method, the callback id only bound). Each Web lambda connection now
+targets its own guard object, so both connect and both fire. Desktop and iOS were not affected
+(each lambda's Callable carries its own callback id); the desktop/Android signal self-test now
+checks a second lambda on one signal.
+
+### Fixed — a freed Kanama-scripted object on Web (task 138 item 22)
+
+A call on a script-backed object freed while another script held it threw "Stale Kanama Web
+browser handle"; it now throws desktop's `IllegalStateException: Invalid access to previously freed
+instance`. A setter queued on such an object before it was freed (the free applied earlier in the
+same batch) failed the whole batch; it is now skipped and reported once as a script error, like a
+command on an engine-freed node.
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed

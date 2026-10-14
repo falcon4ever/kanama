@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 34;
+  const KANAMA_WEB_PROTOCOL_VERSION = 35;
   // Prefix of a contained script error's message (Main.kt WEB_SCRIPT_ERROR_MARKER).
   const SCRIPT_ERROR_MARKER = "Kanama Web script error (contained):";
   // Added after the marker when Godot's error log could not be reached (Main.kt
@@ -2269,7 +2269,9 @@
         owner = this.activeOwnerHandle;
       }
       if (!owner) owner = this.objectQueryCallbacks.keys().next().value ?? 0;
-      if (!owner) throw new Error("Kanama Web builtin call: no proxy is installed to run it");
+      // No proxy yet (a GD.print before any script is ready): Kotlin prints a text utility itself
+      // and fails loud for anything else (review N9).
+      if (!owner) return "E:no proxy is installed";
       this.builtinCalls += 1;
       return this.immediateStringQuery(KANAMA_WEB_OPCODE_BUILTIN_CALL, owner, String(packed));
     },
@@ -2825,6 +2827,25 @@
       const flushGroup = () => {
         if (groupCommands === 0) return;
         const callback = this.applyCallbacks.get(groupOwner);
+        if (!callback && this.isFreedScriptHandle(groupOwner)) {
+          // Task 138 item 22: an earlier group of this batch freed the owning script, so no proxy
+          // can apply its commands: each is skipped and reported, as skipFreedCommand does for an
+          // engine-freed browser handle. Only a command on the script's own node targets a freed
+          // instance; one on another (live) object is reported as dropped with its script.
+          let at = groupStart;
+          for (let index = 0; index < groupCommands; index += 1) {
+            const message =
+              words[at + 1] === groupOwner
+                ? FREED_INSTANCE_MESSAGE(words[at + 1])
+                : `Kanama Web command on handle=${words[at + 1]} skipped: the script that queued it ` +
+                  `(handle=${groupOwner}) was freed earlier in the same batch`;
+            this.recordFreedSkip(words[at], words[at + 1], words[at + 3], message);
+            skippedFreed += 1;
+            skippedIndices.add(groupFirstIndex + index);
+            at += commandWordCount(words[at]);
+          }
+          return;
+        }
         if (!callback) {
           throw new Error(`Godot command callback is not installed for owner=${groupOwner}`);
         }
@@ -2866,8 +2887,22 @@
       };
       for (let commandIndex = 0; commandIndex < commandCount; commandIndex += 1) {
         const opcode = words[scanOffset];
-        const owner = this.ownerForHandle(words[scanOffset + 1]);
         const size = commandWordCount(opcode);
+        const target = words[scanOffset + 1];
+        if (!this.handleOwners.has(target) && this.isFreedScriptHandle(target)) {
+          // Task 138 item 22: a command queued on a script-backed object freed before this batch
+          // applied is skipped and reported, like one on an engine-freed browser handle. The
+          // group so far is applied first: a group's commands are one contiguous run.
+          flushGroup();
+          groupCommands = 0;
+          groupWords = 0;
+          this.recordFreedSkip(opcode, target, words[scanOffset + 3]);
+          skippedFreed += 1;
+          skippedIndices.add(commandIndex);
+          scanOffset += size;
+          continue;
+        }
+        const owner = this.ownerForHandle(target);
         if (groupCommands > 0 && owner !== groupOwner) {
           flushGroup();
           groupStart = scanOffset;
@@ -3003,11 +3038,22 @@
       // corrupt, or already released) is a protocol fault and stays fatal.
       if (this.browserHandleSlot(handle) === null) return false;
       if (!this.isHandleFreed(handle, ownerHandle)) return false;
+      this.recordFreedSkip(opcode, handle, genericArgsId);
+      return true;
+    },
+    recordFreedSkip(opcode, handle, genericArgsId, message = FREED_INSTANCE_MESSAGE(handle)) {
       // The skipped command's staged generic-call arguments would never be consumed by its
       // applier arm; drop them or a per-frame call on a freed node fills the staging map.
       if (opcode === 1001) this.stagedGenericArgs.delete(genericArgsId);
-      this.freedCommandSkips.push(FREED_INSTANCE_MESSAGE(handle));
-      return true;
+      this.freedCommandSkips.push(message);
+    },
+    /** Task 138 item 22: a script handle (bit 30 clear) whose script Kotlin has freed. */
+    isFreedScriptHandle(handle) {
+      return (
+        handle > 0 &&
+        (handle & BROWSER_HANDLE_NAMESPACE) === 0 &&
+        this.api.kanamaWebIsFreedScriptHandle(handle) === 1
+      );
     },
     /**
      * The freed-instance messages of the commands [flushCommands] skipped since the last call, one
