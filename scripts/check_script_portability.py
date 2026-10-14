@@ -12,16 +12,22 @@ only ever exercises one. The rule instead:
   lives in ONE shared helper, `scripts/portable.sh` (`sed_inplace`), that scripts source;
 * device scripts may use macOS-only commands, but only the scripts listed in DEVICE_ONLY, with a
   reason, and only after the line that opens their device paths (a CI-invocable mode, such as
-  `--check-selftest-log`, comes before it and stays portable).
+  `--check-selftest-log`, comes before it and stays portable: the gate checks that the marker sits AFTER
+  that block, so moving the marker up cannot exempt it).
 
 What it scans: every tracked shell script (`*.sh`, plus extensionless files with a sh/bash shebang,
 except the generated `gradlew`), the `run:` blocks of `.github/workflows/*.yml` (the commands CI
 itself invokes), and the command names the tracked Python scripts hand to `subprocess`,
 `os.system` or `shutil.which`. Shell is tokenised, not grepped: comments, quoted text and
-here-document bodies are not commands. Failures (each has a red run in `scripts/gate_red_runs.py`):
+here-document bodies are not commands; the string a shell is handed (`bash -c '...'`, `sh -lc "..."`,
+`eval "..."`, Python `shell=True`, `["bash", "-c", "..."]`, `os.system`) is scanned as a script; a command
+wrapper (`timeout`, `stdbuf`, `nohup`, `nice`, `sudo`, `env`, `xargs`) is judged itself before the gate looks at
+the command it wraps. Failures (each has a red run in `scripts/gate_red_runs.py`):
 
-* a command that is not in ALLOWED_COMMANDS (`rg`, `fd`, `gsed`, `gawk`, `sha256sum`, `timeout`, ...),
-  also when it is only probed (`command -v rg`);
+* a command that is not in ALLOWED_COMMANDS (`rg`, `fd`, `gsed`, `gawk`, `sha256sum`, `timeout`, `stdbuf`, ...),
+  also when it is only probed (`command -v rg`) or only a wrapper (`timeout 5 cmd`);
+* a NOT_EVERYWHERE tool (`cygpath`, `cmake`, `shellcheck`, `mkdocs`, `ktfmt`) outside a guarded use listed in
+  PLATFORM_ONLY_USES with its reason;
 * `grep -P` / `--perl-regexp`;
 * `sed -i` (any form) outside `scripts/portable.sh`;
 * bash 4+: `declare -A`/`-n`/`-g`, `mapfile`/`readarray`, `coproc`, `${x,,}` / `${x^^}` / `${x@U}`,
@@ -58,13 +64,23 @@ HELPER = "scripts/portable.sh"
 # Present, with the options the scripts use, on both a stock macOS and a GitHub ubuntu runner.
 ALLOWED_COMMANDS = frozenset(
     """
-    awk basename bash cat chmod cmake cp curl cut date df diff dirname du env expr false file find git
-    grep egrep fgrep gzip head id java javac jq kill ln ls make mkdir mktemp mv node npm npx openssl patch
-    pgrep pkill printf ps python3 pwd readlink rm rmdir sed sh shellcheck sleep sort ssh tail tar tee
+    awk basename bash cat chmod cp curl cut date df diff dirname du env expr false file find git
+    grep egrep fgrep gzip head id java javac jq kill ln ls make mkdir mktemp mv node nohup nice npm npx
+    openssl patch pgrep pkill printf ps python3 pwd readlink rm rmdir sed sh sleep sort ssh tail tar tee
     touch tr true uname unzip wc which xargs xmllint zip cmp comm cpio lsof tput tty uniq stat
-    adb mkdocs gradle gradlew ktfmt sysctl jar keytool seq perl cygpath
+    adb gradle gradlew sysctl jar keytool seq perl
     """.split()
 )
+# Tools that are NOT on both a stock macOS and a stock GitHub ubuntu runner: each is judged where it is used
+# (PLATFORM_ONLY_USES below names the script, the command and the guard), so an unguarded use elsewhere
+# fails with the reason here. (task 138 item 34 review N3; cmake/shellcheck/mkdocs/ktfmt are toolchain installs.)
+NOT_EVERYWHERE = {
+    "cygpath": "exists only under Git-Bash/MSYS on Windows; use it behind a Windows (`uname -s` MINGW*/MSYS*/CYGWIN*) guard",
+    "cmake": "a toolchain install (not on a stock macOS; the ubuntu runner has it); use it only after a `command -v cmake` skip or in a script whose job is the native build",
+    "shellcheck": "a toolchain install (brew/apt), not part of either stock image; the lint gate probes for it and skips with a reason",
+    "mkdocs": "a pip install (docs extra); run it only behind the docs gate's own availability check",
+    "ktfmt": "fetched by Gradle (ktfmtCheck), not an installed command; call it through ./gradlew",
+}
 # Shell keywords and builtins (not external commands).
 SHELL_WORDS = frozenset(
     """
@@ -92,6 +108,7 @@ BANNED_TOOLS = {
     "gstat": "use python3 for file metadata",
     "gtimeout": "use a python3 timeout (see scripts/web_export_smoke.sh)",
     "timeout": "GNU coreutils; not on a stock macOS (use a python3 timeout, see scripts/web_export_smoke.sh)",
+    "stdbuf": "GNU coreutils; not on a stock macOS (use `python3 -u`, or let the program flush)",
     "bat": "use cat",
     "exa": "use ls",
     "eza": "use ls",
@@ -111,22 +128,27 @@ MACOS_ONLY_PATHS = ("/usr/libexec/", "/System/", "/Applications/", "/Library/", 
 WRAPPERS = frozenset("sudo env exec command nohup xargs timeout time nice stdbuf builtin".split())
 
 # ---- device scripts ----------------------------------------------------------------------------------------
-# path -> (reason, marker). A device script may use MACOS_ONLY_COMMANDS only AFTER the line carrying
+# path -> (reason, marker, ci_block). A device script may use MACOS_ONLY_COMMANDS only AFTER the line carrying
 # `marker`; everything above it (argument parsing, the CI-invocable modes) is held to the portable rule.
 # `marker` None means the whole file is device code (never invoked by CI in any mode).
+# `ci_block` is the opening line of the CI-invocable block (its closing `fi` is found at the same indent): the
+# marker must sit AFTER it, or moving the marker up would quietly exempt the very code CI runs on Linux.
 DEVICE_MARKER = "portability: device-only below"
-DEVICE_ONLY: dict[str, tuple[str, str | None]] = {
+DEVICE_ONLY: dict[str, tuple[str, str | None, str | None]] = {
     "scripts/ios_visual_smoke.sh": (
         "drives xcodebuild/simctl/devicectl on a Mac; only --check-selftest-log (and the CI red runs) run on Linux, "
         "and they are above the marker",
         DEVICE_MARKER,
+        'if [[ "${1:-}" == "--check-selftest-log" ]]; then',
     ),
     "scripts/ios_device_gate.sh": (
         "attaches to a physical iPhone through devicectl/xcrun; CI never runs it",
         None,
+        None,
     ),
     "scripts/ios_template_preflight.sh": (
         "checks an Xcode/iOS template on a Mac (plutil, xcodebuild); CI never runs it",
+        None,
         None,
     ),
 }
@@ -141,6 +163,18 @@ PLATFORM_ONLY_USES: dict[tuple[str, str], str] = {
     ("scripts/export_game_assemble.sh", "codesign"): "re-seals a macOS .app after the export; reached only for a macOS export target",
     ("scripts/check_bootstrap_jdk_resolution.sh", "/usr/libexec/java_home"): "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)",
     ("scripts/check_jdk_lookup_parity.sh", "/usr/libexec/java_home"): "behind `uname -s` = Darwin: finds a JDK 25 on a Mac (elsewhere JAVA_HOME / KANAMA_TEST_JDK)",
+    # NOT_EVERYWHERE tools (task 138 item 34 review N3): each use names the guard that makes it safe.
+    ("scripts/local_ci.sh", "cygpath"): "inside the `MINGW*|MSYS*|CYGWIN*)` arm of the host `case`, behind `command -v cygpath`: converts Windows paths for Git-Bash",
+    ("scripts/export_game_smoke.sh", "cygpath"): "only in the `Windows Desktop` preset branch, with a `|| printf` fallback to the native path",
+    ("scripts/hot_reload_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
+    ("scripts/hot_reload_in_process_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
+    ("scripts/package_install_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
+    ("scripts/runtime_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
+    ("scripts/tool_smoke.sh", "cygpath"): "behind `command -v cygpath` (present only under Git-Bash/MSYS): path conversion for the Windows Godot binary",
+    ("scripts/local_ci.sh", "cmake"): "behind `command -v cmake`; absent cmake is a named gate_skip (bootstrap-cmake), never a silent pass",
+    ("scripts/local_ci.sh", "mkdocs"): "behind `command -v mkdocs`; absent mkdocs is a named gate_skip (mkdocs), never a silent pass",
+    ("scripts/check_bootstrap_jdk_resolution.sh", "cmake"): "the gate's whole job is the cmake configure; it probes `command -v cmake` first and exits 2 with install instructions",
+    ("scripts/check_shell_lint.sh", "shellcheck"): "the lint gate probes `command -v shellcheck` first and fails with install instructions (the ubuntu runner ships it)",
 }
 
 # ---- bash 4+ -----------------------------------------------------------------------------------------------
@@ -553,6 +587,9 @@ class ShellScanner:
                 elif word.text == "in" and self.case_stack and self.case_stack[-1] == "header":
                     self.case_stack[-1] = "body"
                     self.expect_pattern = True
+                    # `case $x in a) cmd;; esac` on ONE line: the header ends at `in`, or the first clause
+                    # pattern is read as a command word and the rest of the line is mis-scanned (task 138 item 34 N1)
+                    self.flush()
                 elif word.text == "esac" and self.case_stack and self.case_stack[-1] == "body":
                     self.case_stack.pop()
         self.flush()
@@ -562,6 +599,31 @@ class ShellScanner:
 ASSIGNMENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\[[^\]]*\])?\+?=")
 FUNCTION_DEF_RE = re.compile(r"(?m)^\s*(?:function\s+)?([A-Za-z_][A-Za-z0-9_:.-]*)\s*\(\)\s*(?:\{|$)")
 KEYWORD_PREFIXES = frozenset("if then else elif while until do { } ! time".split())
+
+
+SHELL_INTERPRETERS = frozenset("bash sh dash zsh ksh".split())
+
+
+def inner_scripts(name_word: Word, args: list[Word]) -> list[tuple[str, int]]:
+    """(script text, line) the command hands to a shell to run: `bash -c '...'`, `sh -lc "..."`, `eval "..."`."""
+    if name_word.quoted and name_word.expands:
+        return []
+    base = name_word.text.rsplit("/", 1)[-1]
+    if base == "eval":
+        text = " ".join(w.text for w in args)
+        return [(text, name_word.line)] if text.strip() else []
+    if base not in SHELL_INTERPRETERS:
+        return []
+    for index, word in enumerate(args):
+        if word.text == "--" or not word.text.startswith("-"):
+            if not word.text.startswith("-"):
+                break  # the first non-option word is a script file: no -c script
+            continue
+        if not word.text.startswith("--") and "c" in word.text[1:] and not word.expands:
+            if index + 1 < len(args):
+                return [(args[index + 1].text, args[index + 1].line)]
+            break
+    return []
 
 
 def flag_chars(args: list[Word]) -> set[str]:
@@ -579,8 +641,10 @@ def long_flags(args: list[Word]) -> set[str]:
     return {w.text.split("=", 1)[0] for w in args if w.text.startswith("--") and len(w.text) > 2}
 
 
-def resolve_command(words: list[Word], functions: set[str]) -> tuple[Word, list[Word]] | None:
-    """The word that names the command and the words after it, skipping assignments, keywords and wrappers."""
+def resolve_command(words: list[Word], functions: set[str]) -> tuple[Word, list[Word], list[Word]] | None:
+    """The word that names the command, the words after it and the wrapper words skipped on the way
+    (`timeout`, `env`, `nohup`, ...: each is itself a command the gate must judge), skipping assignments and keywords."""
+    wrappers: list[Word] = []
     i = 0
     while i < len(words):
         text = words[i].text
@@ -595,6 +659,7 @@ def resolve_command(words: list[Word], functions: set[str]) -> tuple[Word, list[
         return None
     while words[i].text in WRAPPERS and not words[i].quoted:
         wrapper = words[i].text
+        wrappers.append(words[i])
         j = i + 1
         while j < len(words):
             nxt = words[j].text
@@ -616,11 +681,11 @@ def resolve_command(words: list[Word], functions: set[str]) -> tuple[Word, list[
         if wrapper == "command" and j > i + 1 and words[i + 1].text in ("-v", "-V", "-p"):
             # `command -v X` probes X: X must be a portable tool too
             if words[i + 1].text in ("-v", "-V") and j < len(words):
-                return words[j], words[j + 1 :]
+                return words[j], words[j + 1 :], wrappers[:-1]  # `command` is a shell word, not a wrapper to judge
         if j >= len(words):
-            return words[i], words[i + 1 :]
+            return words[i], words[i + 1 :], wrappers[:-1]
         i = j
-    return words[i], words[i + 1 :]
+    return words[i], words[i + 1 :], wrappers
 
 
 @dataclass
@@ -636,20 +701,43 @@ class ShellCheck:
         self.findings.append(Finding(self.path, line, rule, message))
 
     def run(self) -> None:
-        scanner = ShellScanner(self.text)
-        scanner.scan()
         functions = self.functions | set(FUNCTION_DEF_RE.findall(self.text))
+        self.scan_text(self.text, 1, functions, 0)
+
+    def scan_text(self, text: str, line0: int, functions: set[str], depth: int) -> None:
+        """Judge every command in [text]; the string a `bash -c` / `eval` hands to a shell is scanned the same way."""
+        scanner = ShellScanner(text, line0)
+        scanner.scan()
         is_helper = self.path == HELPER
         for command in scanner.commands:
             resolved = resolve_command(command.words, functions)
             if resolved is None:
                 continue
-            name_word, args = resolved
+            name_word, args, wrappers = resolved
             self.check_wrapper_options(command.words)
+            for wrapper in wrappers:
+                self.check_wrapper(wrapper)
             self.check_command(name_word, args, functions, is_helper)
+            if depth < 4:
+                for inner, inner_line in inner_scripts(name_word, args):
+                    self.scan_text(inner, inner_line, functions, depth + 1)
         for line, operator in scanner.operator_hits:
             self.add(line, "bash4", f"`{operator}` needs bash 4+ (macOS ships bash 3.2)")
         self.check_bash4_text(scanner)
+
+    def check_wrapper(self, word: Word) -> None:
+        """A wrapper (`timeout 5 cmd`, `stdbuf -oL cmd`, `nohup cmd`) is a command in its own right: the gate used to
+        skip straight to the wrapped command, so a GNU-only `timeout` or `stdbuf` was never judged."""
+        base = word.text.rsplit("/", 1)[-1]
+        line = word.line
+        if (self.path, base) in PLATFORM_ONLY_USES:
+            return
+        if base in BANNED_TOOLS:
+            self.add(line, "banned-tool", f"`{base}`: {BANNED_TOOLS[base]}")
+        elif base in SHELL_WORDS or base in ALLOWED_COMMANDS:
+            return
+        elif not self.runner_steps:  # a workflow step runs on one runner, whose own `sudo` is fine
+            self.add(line, "unlisted-command", f"`{base}` (a command wrapper) is not in the portable command list (ALLOWED_COMMANDS in {Path(__file__).name}); use a tool both macOS and the ubuntu runner have, or add it with a reason")
 
     def check_wrapper_options(self, words: list[Word]) -> None:
         """GNU-only options of `xargs` itself (-r, -d): the command it runs is checked separately."""
@@ -701,6 +789,11 @@ class ShellCheck:
             return
         if base in BASH4_COMMANDS:
             self.add(line, "bash4", f"`{base}` needs bash 4+ (macOS ships bash 3.2); loop over `read` instead")
+            return
+        if base in NOT_EVERYWHERE:
+            if self.runner_steps:
+                return  # a workflow step installs what it uses
+            self.add(line, "platform-only", f"`{base}` is not on every platform: {NOT_EVERYWHERE[base]}; list a guarded use in PLATFORM_ONLY_USES with its reason")
             return
         if base not in ALLOWED_COMMANDS:
             if self.runner_steps:
@@ -780,7 +873,7 @@ def device_from_line(path: str, text: str) -> int | None:
     entry = DEVICE_ONLY.get(path)
     if entry is None:
         return None
-    _, marker = entry
+    marker = entry[1]
     if marker is None:
         return 1
     for number, line in enumerate(text.splitlines(), 1):
@@ -796,7 +889,33 @@ def check_shell_file(path: str, text: str, functions: set[str]) -> list[Finding]
     entry = DEVICE_ONLY.get(path)
     if entry and entry[1] is not None and check.device_from_line is None:
         findings.append(Finding(path, 1, "device-marker", f"listed in DEVICE_ONLY with marker `{entry[1]}` but the script has no `# {entry[1]}` line"))
+    elif entry and entry[1] is not None and entry[2] is not None:
+        end = ci_block_end(text, entry[2])
+        if end is None:
+            findings.append(Finding(path, 1, "device-marker", f"the CI-invocable block `{entry[2]}` listed in DEVICE_ONLY is not in the script (or has no closing `fi` at its indent)"))
+        elif check.device_from_line is not None and check.device_from_line <= end:
+            findings.append(
+                Finding(
+                    path,
+                    check.device_from_line,
+                    "device-marker",
+                    f"the `# {entry[1]}` marker is above the end of the CI-invocable block (line {end}): code CI runs on Linux would be exempt from the portable rule; keep the marker after it",
+                )
+            )
     return findings
+
+
+def ci_block_end(text: str, opener: str) -> int | None:
+    """Line of the `fi` that closes the block opened by the line [opener] (matched at the same indent)."""
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() == opener:
+            indent = line[: len(line) - len(line.lstrip())]
+            for end in range(index + 1, len(lines)):
+                if lines[end].rstrip() == indent + "fi":
+                    return end + 1
+            return None
+    return None
 
 
 # ---- workflows ---------------------------------------------------------------------------------------------
@@ -837,12 +956,38 @@ def check_workflow(path: str, text: str, functions: set[str]) -> list[Finding]:
 
 
 # ---- python scripts ----------------------------------------------------------------------------------------
-SUBPROCESS_FUNCS = frozenset("run check_output check_call call Popen system which getoutput getstatusoutput".split())
+SUBPROCESS_FUNCS = frozenset("run check_output check_call call Popen system popen which getoutput getstatusoutput".split())
+SHELL_STRING_FUNCS = frozenset("system popen getoutput getstatusoutput".split())  # their string IS a shell command line
 
 
-def python_command_names(tree: ast.AST) -> list[tuple[int, str, list[str]]]:
-    """(line, command, argv strings) for each literal command a script hands to subprocess/os.system/which."""
-    found: list[tuple[int, str, list[str]]] = []
+def literal_text(node: ast.AST) -> str | None:
+    """The text of a string expression: a literal, an f-string (each `{...}` becomes `${PY}`), `a + b`, `"..." % x`."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.JoinedStr):
+        parts = []
+        for value in node.values:
+            parts.append(value.value if isinstance(value, ast.Constant) and isinstance(value.value, str) else "${PY}")
+        return "".join(parts)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        left, right = literal_text(node.left), literal_text(node.right)
+        if left is not None and right is not None:
+            return left + right
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mod):
+        return literal_text(node.left)
+    return None
+
+
+@dataclass
+class PyCommand:
+    line: int
+    argv: list[str] = field(default_factory=list)  # a literal argv: [0] is the command
+    shell: str | None = None  # a shell command line (os.system, shell=True, ["bash", "-c", "<this>"])
+
+
+def python_command_names(tree: ast.AST) -> list[PyCommand]:
+    """Each command a script hands to subprocess/os.system/which: its literal argv, and every shell command line."""
+    found: list[PyCommand] = []
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
@@ -851,30 +996,71 @@ def python_command_names(tree: ast.AST) -> list[tuple[int, str, list[str]]]:
         if name not in SUBPROCESS_FUNCS or not node.args:
             continue
         first = node.args[0]
-        argv: list[str] = []
+        shell_true = any(k.arg == "shell" and isinstance(k.value, ast.Constant) and k.value.value is True for k in node.keywords)
         if isinstance(first, (ast.List, ast.Tuple)):
-            argv = [e.value for e in first.elts if isinstance(e, ast.Constant) and isinstance(e.value, str)]
-            if not first.elts or not isinstance(first.elts[0], ast.Constant):
+            if not first.elts:
                 continue
-        elif isinstance(first, ast.Constant) and isinstance(first.value, str):
-            argv = first.value.split() if name in ("system", "getoutput", "getstatusoutput") else [first.value]
-        if argv:
-            found.append((node.lineno, argv[0], argv))
+            texts = [literal_text(e) for e in first.elts]
+            if shell_true and texts[0] is not None:
+                found.append(PyCommand(node.lineno, shell=texts[0]))  # with shell=True the first element is the command line
+                continue
+            if not isinstance(first.elts[0], ast.Constant):
+                continue
+            argv = [t for t in texts if t is not None]
+            found.append(PyCommand(node.lineno, argv=argv))
+            base = argv[0].rsplit("/", 1)[-1]
+            if base in SHELL_INTERPRETERS:
+                for index, arg in enumerate(argv[1:], 1):
+                    if arg.startswith("-") and not arg.startswith("--") and "c" in arg[1:] and index + 1 < len(texts):
+                        script = texts[index + 1]
+                        if script is not None:
+                            found.append(PyCommand(node.lineno, shell=script))
+                        break
+                    if not arg.startswith("-"):
+                        break
+            elif base in WRAPPERS:
+                for arg in argv[1:]:  # `["env", "FOO=1", "rg", ...]`: the wrapped command is judged too
+                    if arg.startswith("-") or ASSIGNMENT_RE.match(arg) or re.fullmatch(r"[0-9.]+[smhd]?", arg):
+                        continue
+                    found.append(PyCommand(node.lineno, argv=[arg]))
+                    break
+            continue
+        text = literal_text(first)
+        if text is None:
+            continue
+        if name in SHELL_STRING_FUNCS or shell_true:
+            found.append(PyCommand(node.lineno, shell=text))
+        else:
+            found.append(PyCommand(node.lineno, argv=[text]))
     return found
 
 
-def check_python_file(path: str, text: str) -> list[Finding]:
+def check_python_file(path: str, text: str, functions: set[str] | None = None) -> list[Finding]:
     try:
         tree = ast.parse(text)
     except SyntaxError as error:  # justified: reported as a `parse` finding (the return value), the gate stays red
         return [Finding(path, error.lineno or 1, "parse", f"not valid Python: {error.msg}")]
     findings: list[Finding] = []
-    for line, command, argv in python_command_names(tree):
-        base = command.rsplit("/", 1)[-1]
+    for command in python_command_names(tree):
+        line = command.line
+        if command.shell is not None:
+            # a shell command line (os.system, shell=True, ["bash", "-c", ...]): judged like a script's own text
+            check = ShellCheck(path, command.shell, 1 if path in DEVICE_ONLY_PY else None, functions or set())
+            check.run()
+            findings += [Finding(path, line + f.line - 1, f.rule, f.message) for f in check.findings]
+            continue
+        argv = command.argv
+        if not argv:
+            continue
+        base = argv[0].rsplit("/", 1)[-1]
+        if (path, base) in PLATFORM_ONLY_USES:
+            continue
         if base in BANNED_TOOLS:
             findings.append(Finding(path, line, "banned-tool", f"`{base}`: {BANNED_TOOLS[base]}"))
         elif base in MACOS_ONLY_COMMANDS and path not in DEVICE_ONLY_PY:
             findings.append(Finding(path, line, "macos-only", f"`{base}` exists on macOS only; allowed only in a DEVICE_ONLY_PY script"))
+        elif base in NOT_EVERYWHERE:
+            findings.append(Finding(path, line, "platform-only", f"`{base}` is not on every platform: {NOT_EVERYWHERE[base]}; list a guarded use in PLATFORM_ONLY_USES with its reason"))
         elif base == "sed" and any(a.startswith("-i") for a in argv[1:]):
             findings.append(Finding(path, line, "sed-i", f"`sed -i` differs between BSD and GNU sed; edit the file in python3"))
         elif base in ("grep", "egrep") and any(a.startswith("-") and not a.startswith("--") and "P" in a for a in argv[1:]):
@@ -889,6 +1075,7 @@ DEVICE_ONLY_PY: dict[str, str] = {}
 # ---- self-test ---------------------------------------------------------------------------------------------
 # (name, script path, text, rules the findings must be exactly). Proves the tokeniser sees each shape and
 # ignores the look-alikes (comments, quoted text, here-document bodies, case patterns, function names).
+SELFTEST_BLOCK = 'if [[ "${1:-}" == "--check-selftest-log" ]]; then\n  exit 0\nfi\n'  # the CI-invocable block of ios_visual_smoke.sh
 SELF_TESTS: list[tuple[str, str, str, list[str]]] = [
     ("rg", "scripts/x.sh", "rg -q foo file\n", ["banned-tool"]),
     ("rg after a pipe", "scripts/x.sh", "cat f | rg foo\n", ["banned-tool"]),
@@ -944,11 +1131,58 @@ SELF_TESTS: list[tuple[str, str, str, list[str]]] = [
     ("xargs -r", "scripts/x.sh", "ls | xargs -r rm\n", ["gnu-only"]),
     ("readlink -f", "scripts/x.sh", "readlink -f f\n", ["gnu-only"]),
     ("stat -c", "scripts/x.sh", "stat -c %s f\n", ["gnu-only"]),
-    ("xcrun in a device script, before its marker", "scripts/ios_visual_smoke.sh", "xcrun simctl list\n# portability: device-only below\n", ["macos-only"]),
-    ("xcrun in a device script, after its marker", "scripts/ios_visual_smoke.sh", "# portability: device-only below\nxcrun simctl list\n", []),
-    ("rg in a device script is still banned", "scripts/ios_visual_smoke.sh", "# portability: device-only below\nrg x f\n", ["banned-tool"]),
+    ("xcrun in a device script, before its marker", "scripts/ios_visual_smoke.sh", "xcrun simctl list\n" + SELFTEST_BLOCK + "# portability: device-only below\n", ["macos-only"]),
+    ("xcrun in a device script, after its marker", "scripts/ios_visual_smoke.sh", SELFTEST_BLOCK + "# portability: device-only below\nxcrun simctl list\n", []),
+    ("rg in a device script is still banned", "scripts/ios_visual_smoke.sh", SELFTEST_BLOCK + "# portability: device-only below\nrg x f\n", ["banned-tool"]),
     ("device script without its marker", "scripts/ios_visual_smoke.sh", "echo hi\n", ["device-marker"]),
+    # the marker must sit AFTER the CI-invocable block (review N2): moved above it, the block is silently exempt
+    ("device marker moved above the CI block", "scripts/ios_visual_smoke.sh", "# portability: device-only below\n" + SELFTEST_BLOCK, ["device-marker"]),
+    ("device marker inside the CI block", "scripts/ios_visual_smoke.sh", 'if [[ "${1:-}" == "--check-selftest-log" ]]; then\n  # portability: device-only below\n  exit 0\nfi\n', ["device-marker"]),
+    ("device script without its CI block", "scripts/ios_visual_smoke.sh", "# portability: device-only below\nxcrun x\n", ["device-marker"]),
     ("whole-file device script", "scripts/ios_device_gate.sh", "xcrun devicectl list\n", []),
+    # command wrappers are commands too (review S3): `timeout` / `stdbuf` are GNU-only
+    ("timeout wrapper", "scripts/x.sh", "timeout 5 sleep 1\n", ["banned-tool"]),
+    ("timeout with options", "scripts/x.sh", "timeout -k 2 --signal=INT 5 sleep 1\n", ["banned-tool"]),
+    ("timeout in a pipeline and $( )", "scripts/x.sh", 'cat f | timeout 3 grep x\nx="$(timeout 3 date)"\n', ["banned-tool", "banned-tool"]),
+    ("gtimeout wrapper", "scripts/x.sh", "gtimeout 5 sleep 1\n", ["banned-tool"]),
+    ("stdbuf wrapper", "scripts/x.sh", "stdbuf -oL cat f | cat\n", ["banned-tool"]),
+    ("env then timeout then a banned tool", "scripts/x.sh", "env A=1 timeout 3 rg x f\n", ["banned-tool", "banned-tool"]),
+    ("sudo wrapper outside a workflow", "scripts/x.sh", "sudo ls\n", ["unlisted-command"]),
+    ("sudo in a workflow step is the runner's", ".github/workflows/x.yml", "jobs:\n  a:\n    steps:\n      - run: sudo apt-get install -y x\n", []),
+    ("nohup, nice, env, xargs wrappers are fine", "scripts/x.sh", "nohup sleep 1 &\nnice -n 5 sleep 1\nenv A=1 ls\nls | xargs -n 1 echo\n", []),
+    ("command -v timeout", "scripts/x.sh", "if command -v timeout >/dev/null; then :; fi\n", ["banned-tool"]),
+    # the string a shell is handed is a script too (review N1)
+    ("bash -c", "scripts/x.sh", "bash -c 'rg x f'\n", ["banned-tool"]),
+    ("sh -c double-quoted", "scripts/x.sh", 'sh -c "cat f | rg x"\n', ["banned-tool"]),
+    ("bash -lc", "scripts/x.sh", "bash -lc 'gsed -n 1p f'\n", ["banned-tool"]),
+    ("env bash -c", "scripts/x.sh", "env A=1 bash -c 'rg x'\n", ["banned-tool"]),
+    ("xargs bash -c", "scripts/x.sh", "ls | xargs -I{} bash -c 'rg x {}'\n", ["banned-tool"]),
+    ("bash -c in $( )", "scripts/x.sh", "x=$(bash -c 'xcrun simctl list')\n", ["macos-only"]),
+    ("bash -c nested", "scripts/x.sh", "bash -c \"sh -c 'rg x'\"\n", ["banned-tool"]),
+    ("bash -c with a bash 4 construct", "scripts/x.sh", "bash -c 'declare -A m'\n", ["bash4"]),
+    ("bash -c multi-line", "scripts/x.sh", "bash -c '\n  echo ok\n  sed -i s/a/b/ f\n'\n", ["sed-i"]),
+    ("eval", "scripts/x.sh", 'eval "rg x f"\n', ["banned-tool"]),
+    ("eval with pieces", "scripts/x.sh", 'eval rg "$pattern" f\n', ["banned-tool"]),
+    ("bash script.sh -c is not a -c script", "scripts/x.sh", "bash script.sh -c rg\n", []),
+    ("bash -c from a variable", "scripts/x.sh", 'bash -c "$cmd"\neval "$cmd"\n', []),
+    ("bash -c with a portable script", "scripts/x.sh", "bash -c 'grep -E x f | sort'\n", []),
+    ("echo is not bash", "scripts/x.sh", "echo bash -c rg\n", []),
+    # the single-line case swallow (review N1)
+    ("one-line case body", "scripts/x.sh", "case $x in a) rg foo f;; esac\n", ["banned-tool"]),
+    ("one-line case, command after esac", "scripts/x.sh", "case $x in a) echo;; esac; rg y\n", ["banned-tool"]),
+    ("one-line case, patterns only", "scripts/x.sh", "case $x in rg) echo a;; fd|gsed) echo b;; *) echo c;; esac\n", []),
+    ("one-line case in a function", "scripts/x.sh", "f() { case $1 in a) fd x;; b) :;; esac; }\n", ["banned-tool"]),
+    # tools that are not on every platform (review N3)
+    ("cygpath unguarded", "scripts/x.sh", 'p="$(cygpath -u "$1")"\n', ["platform-only"]),
+    ("cygpath probe", "scripts/x.sh", "if command -v cygpath >/dev/null; then :; fi\n", ["platform-only"]),
+    ("cygpath in a listed guarded use", "scripts/tool_smoke.sh", 'p="$(cygpath -u "$1")"\n', []),
+    ("cmake unguarded", "scripts/x.sh", "cmake -S . -B build\n", ["platform-only"]),
+    ("cmake in a listed guarded use", "scripts/local_ci.sh", "cmake -S . -B build\n", []),
+    ("mkdocs unguarded", "scripts/x.sh", "mkdocs build --strict\n", ["platform-only"]),
+    ("shellcheck unguarded", "scripts/x.sh", "shellcheck a.sh\n", ["platform-only"]),
+    ("ktfmt unguarded", "scripts/x.sh", "ktfmt --version\n", ["platform-only"]),
+    ("cmake in a workflow step", ".github/workflows/x.yml", "jobs:\n  a:\n    steps:\n      - run: cmake --version\n", []),
+    ("python cygpath", "scripts/x.py", 'import subprocess\nsubprocess.run(["cygpath", "-u", "x"])\n', ["platform-only"]),
     # look-alikes that must NOT be findings
     ("comment", "scripts/x.sh", "# rg is not used; sed -i; declare -A; xcrun\necho ok # rg too\n", []),
     ("quoted text", "scripts/x.sh", 'echo "use rg, not grep -P; sed -i is BSD"\nprintf \'%s\' "xcrun"\n', []),
@@ -972,6 +1206,18 @@ SELF_TESTS: list[tuple[str, str, str, list[str]]] = [
     ("python sed -i", "scripts/x.py", 'import subprocess\nsubprocess.run(["sed", "-i", "s/a/b/", "f"])\n', ["sed-i"]),
     ("python xcrun", "scripts/x.py", 'import subprocess\nsubprocess.run(["xcrun", "simctl"])\n', ["macos-only"]),
     ("python git is fine", "scripts/x.py", 'import subprocess\nsubprocess.run(["git", "status"])\n', []),
+    ("python shell=True", "scripts/x.py", 'import subprocess\nsubprocess.run("cat f | rg x", shell=True)\n', ["banned-tool"]),
+    ("python shell=True f-string", "scripts/x.py", 'import subprocess\nsubprocess.check_output(f"rg {pat} f", shell=True)\n', ["banned-tool"]),
+    ("python shell=True portable", "scripts/x.py", 'import subprocess\nsubprocess.run("git status | grep -E x", shell=True)\n', []),
+    ("python os.system", "scripts/x.py", 'import os\nos.system("ls | rg x")\n', ["banned-tool"]),
+    ("python os.popen", "scripts/x.py", 'import os\nos.popen("sed -i s/a/b/ f")\n', ["sed-i"]),
+    ("python bash -c", "scripts/x.py", 'import subprocess\nsubprocess.run(["bash", "-c", "rg x f"])\n', ["banned-tool"]),
+    ("python sh -lc f-string", "scripts/x.py", 'import subprocess\nsubprocess.run(["sh", "-lc", f"timeout 5 {cmd}"])\n', ["banned-tool"]),
+    ("python bash script is fine", "scripts/x.py", 'import subprocess\nsubprocess.run(["bash", "scripts/x.sh", "-c"])\n', []),
+    ("python env wrapper", "scripts/x.py", 'import subprocess\nsubprocess.run(["env", "A=1", "rg", "x"])\n', ["banned-tool"]),
+    ("python timeout", "scripts/x.py", 'import subprocess\nsubprocess.run(["timeout", "5", "sleep", "1"])\n', ["banned-tool"]),
+    ("python stdbuf", "scripts/x.py", 'import subprocess\nsubprocess.run(["stdbuf", "-oL", "cat"])\n', ["banned-tool"]),
+    ("python shell string, multi-line line numbers", "scripts/x.py", 'import subprocess\nsubprocess.run("""\necho ok\nrg x\n""", shell=True)\n', ["banned-tool"]),
 ]
 
 
@@ -1073,7 +1319,7 @@ def check_files(files: list[str], functions: set[str]) -> tuple[list[Finding], d
                 if resolved and not resolved[0].expands and resolved[0].text not in SHELL_WORDS | known:
                     inventory[rel][resolved[0].text] += 1
         elif rel.endswith(".py") and rel != "scripts/check_script_portability.py":
-            findings += check_python_file(rel, text)
+            findings += check_python_file(rel, text, functions)
     return findings, inventory
 
 

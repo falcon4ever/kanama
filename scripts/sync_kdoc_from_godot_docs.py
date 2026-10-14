@@ -699,6 +699,26 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="Fail if generated KDoc is not up to date.")
     args = parser.parse_args()
 
+    # A Godot source checkout documents the classes a module defines (ZIPReader, WebSocket*, CSG*, ...) under
+    # modules/*/doc_classes. A doc/classes with no modules/ beside it (a copy of the directory alone, a partial
+    # checkout) would "pass" with those wrappers silently unchecked, so the count is printed and a source-layout
+    # docs directory with none fails (task 138 item 25 review N5).
+    module_dirs = module_doc_dirs(args.godot_docs)
+    resolved_docs = args.godot_docs.resolve()
+    source_layout = resolved_docs.name == "classes" and resolved_docs.parent.name == "doc"
+    print(
+        f"[sync_kdoc] godot docs {args.godot_docs}: {len(module_dirs)} module doc dir(s) "
+        f"({'modules/*/doc_classes' if source_layout else 'not a doc/classes source layout: module docs are not searched'})"
+    )
+    if args.scope in ("all", "api") and source_layout and not module_dirs:
+        print(
+            f"[sync_kdoc] FAIL: {args.godot_docs} looks like a Godot source checkout's doc/classes but 0 module doc dirs "
+            f"were found ({resolved_docs.parent.parent / 'modules'}/*/doc_classes): the KDoc of module-defined classes "
+            f"(ZIPReader, WebSocketPeer, ...) would go unchecked. Point --godot-docs / GODOT_DOCS at a full checkout.",
+            file=sys.stderr,
+        )
+        return 2
+
     class_filter = parse_class_filter(args.classes)
     targets: list[tuple[str, Path]] = []
     if args.scope in ("all", "api"):

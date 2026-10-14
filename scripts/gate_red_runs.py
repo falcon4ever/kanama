@@ -656,6 +656,14 @@ case("sync_kdoc_from_godot_docs.py --check", py("sync_kdoc_from_godot_docs.py", 
 case("sync_kdoc_from_godot_docs.py --check (module class)", py("sync_kdoc_from_godot_docs.py", "--godot-docs", os.environ.get("GODOT_DOCS", "/nonexistent"), "--check"),
      [Edit(f"{COMMON}/api/ZIPReader.kt", " * Opens the zip archive at the given `path` and reads its file index.", " * Opens the zip archive (red run: hand-edited KDoc).")],
      "changed_files=1", "a KDoc block of a module-defined class (ZIPReader, documented under modules/zip/doc_classes) is hand-edited (task 138 item 25)", requires_env="GODOT_DOCS")
+case("sync_kdoc_from_godot_docs.py --check (no module docs)",
+     py("sync_kdoc_from_godot_docs.py", "--godot-docs", "build/redrun-kdoc/doc/classes", "--scope", "api", "--classes", "Node,ZIPReader", "--check"),
+     [Rename("build/redrun-kdoc/modules", "build/redrun-kdoc/modules-off")],
+     "0 module doc dirs were found", "the docs directory is a source checkout's doc/classes but its modules/*/doc_classes are gone: module-defined wrappers would go unchecked (task 138 item 25 review N5)",
+     pre=[[PY, "-c", "import os, pathlib, shutil; docs = pathlib.Path(os.environ['GODOT_DOCS']); root = pathlib.Path('build/redrun-kdoc'); shutil.rmtree(root, ignore_errors=True); "
+           "(root / 'doc/classes').mkdir(parents=True); (root / 'modules/zip/doc_classes').mkdir(parents=True); "
+           "shutil.copy(docs / 'Node.xml', root / 'doc/classes'); shutil.copy(docs.parent.parent / 'modules/zip/doc_classes/ZIPReader.xml', root / 'modules/zip/doc_classes')"]],
+     requires_env="GODOT_DOCS")
 
 # ---- shell gates ---------------------------------------------------------------------------------------------
 case("audit_swallowed_failures.py", py("audit_swallowed_failures.py"),
@@ -691,6 +699,24 @@ portability_case("macOS-only command", "xcrun simctl list\n", "[macos-only] `xcr
 portability_case("stat -f", "stat -f %m file\n", "[macos-only]", "a script reads a modification time with BSD stat")
 portability_case("date -j", "date -j -f %s 0\n", "[macos-only]", "a script parses a date with BSD date")
 portability_case("GNU-only option", "date -d yesterday +%s\n", "[gnu-only]", "a script uses GNU date -d")
+portability_case("timeout wrapper", "timeout 5 sleep 1\n", "[banned-tool] `timeout`", "a script runs a command under GNU `timeout` (not on a stock macOS): the wrapper is judged, not skipped (review S3)")
+portability_case("stdbuf wrapper", "stdbuf -oL cat file | cat\n", "[banned-tool] `stdbuf`", "a script runs a command under GNU `stdbuf` (not on a stock macOS)")
+portability_case("wrapped banned tool", "env A=1 nice rg x file\n", "[banned-tool] `rg`", "the command behind a chain of wrappers is still judged")
+portability_case("bash -c", "bash -c 'rg x file'\n", "[banned-tool] `rg`", "ripgrep inside a `bash -c '...'` string (review N1)")
+portability_case("sh -c double-quoted", 'sh -c "cat file | rg x"\n', "[banned-tool] `rg`", "ripgrep inside a `sh -c \"...\"` string")
+portability_case("eval", 'eval "rg x file"\n', "[banned-tool] `rg`", "ripgrep inside an `eval \"...\"` string")
+portability_case("one-line case", "case $1 in a) rg x file;; esac\n", "[banned-tool] `rg`", "ripgrep in a single-line `case $x in a) cmd;; esac` clause (the scanner used to swallow it)")
+portability_case("cygpath unguarded", 'p="$(cygpath -u "$1")"\n', "[platform-only] `cygpath`", "a script calls the Windows-only cygpath outside a listed guarded use (review N3)")
+portability_case("cmake unguarded", "cmake -S . -B build\n", "[platform-only] `cmake`", "a script calls cmake (a toolchain install, not on every machine) outside a listed guarded use")
+case("check_script_portability.py (python shell=True)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run("ls | rg x", shell=True)\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep in a shell=True command line (review N1)")
+case("check_script_portability.py (python bash -c)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["bash", "-c", "rg x"])\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep in a [\"bash\", \"-c\", ...] command line")
+case("check_script_portability.py (python timeout)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["timeout", "5", "sleep", "1"])\n')],
+     "[banned-tool] `timeout`", "a Python gate shells out through GNU timeout")
 case("check_script_portability.py (python subprocess)", py("check_script_portability.py"),
      [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["rg", "x"])\n')],
      "[banned-tool] `rg`", "a Python gate shells out to ripgrep")
@@ -706,6 +732,10 @@ case("check_script_portability.py (device path)", py("check_script_portability.p
 case("check_script_portability.py (stale device marker)", py("check_script_portability.py"),
      [Edit("scripts/ios_visual_smoke.sh", "# portability: device-only below", "# portability: device-only marker removed")],
      "[device-marker]", "a DEVICE_ONLY script loses its marker line (every macOS-only command in it would be unexplained)")
+case("check_script_portability.py (marker above the CI block)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", 'if [[ "${1:-}" == "--check-selftest-log" ]]; then\n', '# portability: device-only below (moved up)\nif [[ "${1:-}" == "--check-selftest-log" ]]; then\n')],
+     "[device-marker] the `# portability: device-only below` marker is above the end of the CI-invocable block",
+     "the device-only marker moves above the --check-selftest-log block: the code CI runs on Linux would be exempt from the portable rule (review N2)")
 case("check_script_portability.py --self-test", py("check_script_portability.py", "--self-test"),
      [Edit("scripts/portable.sh", '  rm -f "${file}.portable-bak"\n', "  :\n")],
      "sed_inplace:", "sed_inplace leaves its backup file behind")

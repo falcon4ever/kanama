@@ -43,11 +43,14 @@ only `--write`.
 
 Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now
 also covers the classes a Godot module defines (`ZIPReader`/`ZIPPacker`, `WebSocket*`, `WebRTC*`, `CSG*`,
-`GLTF*`, `OpenXR*`, `ENet*`, ...): the sync reads `modules/*/doc_classes` beside `doc/classes`. A new
+`GLTF*`, `OpenXR*`, `ENet*`, ...): the sync reads `modules/*/doc_classes` beside `doc/classes`, prints how
+many module doc directories it found and fails when a `doc/classes` source layout has none. A new
 gate, `scripts/check_script_portability.py` (in `local_ci.sh`), holds every script CI can invoke to the
 tools a Mac and the ubuntu runner both have: no `rg`/`fd`/`gsed`, no `grep -P`, no bash 4+, `sed -i` only
 through `sed_inplace` in `scripts/portable.sh`, macOS-only commands only in the listed device scripts
-(the 87 `rg` calls became `grep -E`; CI no longer installs ripgrep). `scripts/ios_handwritten_report.py`
+(the 87 `rg` calls became `grep -E`; CI no longer installs ripgrep). The gate also judges command wrappers
+(`timeout`, `stdbuf` are GNU-only), scans the string a `bash -c` / `sh -c` / `eval` / Python `shell=True` is
+handed, and lists the tools only one platform has (`cygpath`, `cmake`, `shellcheck`, `mkdocs`) as guarded uses. `scripts/ios_handwritten_report.py`
 has a `--check` mode in `local_ci.sh` (the generated page was already stale on main), and the Android remap
 audit tracks `${...}` template nesting, so `"${"/*"}"` no longer hides the lines after it.
 

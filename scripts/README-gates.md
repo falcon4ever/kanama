@@ -33,8 +33,12 @@ Contents: [rules](#rules) · [skips](#skips-print-skip-and-fail-in-ci) · [audit
    and each machine only exercises one), no `grep -P`, no bash 4+ (`declare -A`, `mapfile`, `${x,,}`, `|&`), and no `sed -i`
    outside `scripts/portable.sh` (`sed_inplace`). macOS-only commands (`xcrun`, `devicectl`, `plutil`, `stat -f`, ...) live
    only in the device scripts listed in `scripts/check_script_portability.py` (`DEVICE_ONLY`, each with its reason, and
-   only after the script's `# portability: device-only below` line); a platform-guarded use in a CI script is listed
-   there too (`PLATFORM_ONLY_USES`). `scripts/check_script_portability.py` enforces it in `local_ci.sh`.
+   only after the script's `# portability: device-only below` line, which must itself sit after the CI-invocable block);
+   a platform-guarded use in a CI script is listed there too (`PLATFORM_ONLY_USES`), and so is every use of a tool that
+   is not on both machines (`cygpath`, `cmake`, `shellcheck`, `mkdocs`, `ktfmt`). Command wrappers (`timeout`, `stdbuf`,
+   `nohup`, `nice`, `sudo`, `env`, `xargs`) are judged like any command, and the string a shell is handed (`bash -c '...'`,
+   `eval "..."`, Python `shell=True` or `["bash", "-c", ...]`) is scanned as a script.
+   `scripts/check_script_portability.py` enforces it in `local_ci.sh`.
 
 
 ## Skips print `SKIP:` and fail in CI
@@ -150,8 +154,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_public_signature_changes.py:1032` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_public_signature_changes.py:1041` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_public_signature_changes.py:1522` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_script_portability.py:869` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
-| `scripts/check_script_portability.py:1041` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
+| `scripts/check_script_portability.py:1041` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
+| `scripts/check_script_portability.py:1287` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_smoke.sh:133` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
@@ -252,8 +256,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/validate_godot_api.py:280` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_browser_floor.py:110` | `except FloorError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_browser_floor.py:113` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/check_budgets.py:241` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/check_budgets.py:267` | `except BudgetError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/web/check_budgets.py:265` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/web/check_budgets.py:292` | `except BudgetError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/coverage_report.py:48` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/demos.sh:142` | `[[ "$1" == "spike" ]] \|\| kanama_web_demo_project_dir "$1" >/dev/null 2>&1` | justified: a probe; the registry lookup's exit status is the answer (unknown demo), its stdout/stderr are noise. |
 | `scripts/web/result_schema.py:235` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -263,8 +267,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web/scaffold_selftest.sh:64` | `note "stderr: $(tail -n3 "$case_dir/stderr.log" 2>/dev/null \|\| true)"` | justified: diagnostics for a case already counted as failed by bad() above. |
 | `scripts/web/scaffold_selftest.sh:69` | `if pgrep -f "serve_export.py $export_dir" >/dev/null 2>&1; then` | justified: output dropped, the command's exit status is the condition of the `if` |
 | `scripts/web/scaffold_selftest.sh:72` | `if pgrep -f "fake_driver.py.*$result" >/dev/null 2>&1; then` | justified: output dropped, the command's exit status is the condition of the `if` |
-| `scripts/web/scaffold_selftest.sh:106` | `&& python3 "$ROOT_DIR/scripts/web/result_schema.py" "$WORK/success/result.json" >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
-| `scripts/web/scaffold_selftest.sh:115` | `>/dev/null 2>&1 \|\| usage_status=$?` | justified: the status is captured and asserted on the next lines |
+| `scripts/web/scaffold_selftest.sh:109` | `&& python3 "$ROOT_DIR/scripts/web/result_schema.py" "$WORK/success/result.json" >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
+| `scripts/web/scaffold_selftest.sh:118` | `>/dev/null 2>&1 \|\| usage_status=$?` | justified: the status is captured and asserted on the next lines |
 | `scripts/web/serve_export.py:83` | `except OSError:` | justified: no route means no LAN address to print; the server itself still binds and serves |
 | `scripts/web/serve_export.py:113` | `except FileNotFoundError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/serve_export.py:120` | `except subprocess.CalledProcessError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
