@@ -8,7 +8,7 @@ import net.multigesture.kanama.api.Node
 /**
  * Harness-only teardown for the web3d render smoke (never gameplay).
  *
- * The browser driver calls [smokeTeardown] (its only registered function, method#1) to free the
+ * The browser driver calls [smokeTeardown] (its only registered function) to free the
  * scene root; every node then exits the tree and releases its Godot handles, so the live-handle
  * count drains to zero — the smoke wrapper's `handles.liveAfterTeardown === 0` assertion.
  */
