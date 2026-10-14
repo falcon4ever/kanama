@@ -38,6 +38,16 @@ private val targetPosition3Snapshots = mutableMapOf<Int, GodotVector3>()
 private val renderingMethodSnapshots = mutableMapOf<Int, String>()
 private val browserHandles = mutableMapOf<Int, WebBrowserHandleKind>()
 
+/**
+ * Task 138 item 32: the handles whose object the engine freed (lent handles the proxy's sweep
+ * released), most recent last. A later use of one reads like desktop's freed instance instead of a
+ * stale handle. A handle carries its slot's generation, so a reused slot's new handle never
+ * matches. Capped like the bridge's copy (FREED_HANDLES_REMEMBERED): the oldest goes first.
+ */
+private val freedBrowserHandles = LinkedHashSet<Int>()
+
+private const val FREED_HANDLES_REMEMBERED = 4096
+
 internal enum class WebBrowserHandleKind {
   RESOURCE,
   NODE,
@@ -219,6 +229,7 @@ internal fun registerConstructedNode(token: Int, className: String): GodotHandle
 
 internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
   check(handle > 0) { "Kanama Web browser handle must be positive" }
+  freedBrowserHandles.remove(handle)
   val previous = browserHandles[handle]
   if (previous == null) browserHandles[handle] = kind
   check(previous == null || previous == kind) {
@@ -265,11 +276,23 @@ internal fun onWebQueueFree(objectId: Int) {
   }
 }
 
-internal fun discardWebBrowserHandle(handle: Int): Boolean {
+/**
+ * Drops a released browser handle. [freed]: the engine freed its object (task 138 item 32), so a
+ * later use is the freed-instance error ([wasFreedWebBrowserHandle]).
+ */
+internal fun discardWebBrowserHandle(handle: Int, freed: Boolean = false): Boolean {
   clearWebPositionSnapshot(handle)
   WebHandleCache.forget(handle)
+  if (
+    freed && freedBrowserHandles.add(handle) && freedBrowserHandles.size > FREED_HANDLES_REMEMBERED
+  ) {
+    freedBrowserHandles.remove(freedBrowserHandles.first())
+  }
   return browserHandles.remove(handle) != null
 }
+
+/** True for a browser handle released because the engine freed its object (see above). */
+internal fun wasFreedWebBrowserHandle(handle: Int): Boolean = handle in freedBrowserHandles
 
 // ---------------------------------------------------------------------------
 // Snapshot loaders invoked from the JS bridge (frame snapshots).

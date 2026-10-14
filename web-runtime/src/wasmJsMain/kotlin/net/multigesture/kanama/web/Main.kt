@@ -275,6 +275,14 @@ fun kanamaWebDiscardNodeHandle(objectHandle: Int): Int {
 fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
   if (discardWebBrowserHandle(objectHandle)) 1 else 0
 
+/**
+ * Task 138 item 32: a lent handle the proxy's sweep released because the engine freed its object; a
+ * later use throws desktop's freed-instance error.
+ */
+@JsExport
+fun kanamaWebDiscardFreedHandle(objectHandle: Int): Int =
+  if (discardWebBrowserHandle(objectHandle, freed = true)) 1 else 0
+
 @JsExport
 fun kanamaWebEnterTree(objectId: Int): Int {
   return webCallbackBoundary(objectId, "_enter_tree") { record ->

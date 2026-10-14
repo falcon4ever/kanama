@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 35); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 36); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -422,27 +422,55 @@ to a remaining holder, so the others keep calling it. Retiring a handle also era
 proxies' shared `_kanama_object_handles` dictionary (through any installed proxy's release
 callback), so a later lookup of the same object mints a fresh handle instead of finding a dead one.
 A node freed from Kotlin (`queueFree`) stays a script error for every holder (`IllegalStateException:
-Stale Kanama Web browser handle=...`, catchable in the script). Signal arguments are not shared:
-each dispatch (a signal, `_input`, an object argument of a script method) lends Kotlin a transient
-handle that the dispatching proxy owns and releases right after (`_kanama_transient_handle` /
-`_kanama_release_transient`; the lent handles are `KanamaWebHandles.transient`). A call's result that
-names a lent object (`GD.instanceFromId(arg.instanceId)`, an element of `call("get_children")`, a
-`Callable`) promotes the handle instead: the dispatch no longer releases it, it stays with the
-dispatching script like a minted generic result, and a later dispatch of the same object lends the
-same handle (`KanamaWebHandles.promoted`), so the kept result stays valid and `== arg`. Typed lookups
-(`getNode`, `getChild`, colliders, group and child scans) skip lent and promoted handles and mint one
-of their own kind, since an Object handle carries no node snapshots. The web3d check
-`lentHandlesSurviveTheirDispatch` pins it.
+Stale Kanama Web browser handle=...`, catchable in the script).
 
-*Known limits, being fixed.* (1) A lent argument that is stored and used after its handler returns is
-not yet valid on Web unless something inside the handler resolved it through a result (the promotion
-above): the dispatching proxy releases the lent handle right after the call, so a stored argument
-reads as a stale handle later. `GD.instanceFromId(arg.instanceId)` inside the handler is the
-workaround. (2) Identity is by handle token, so `body == player` inside a handler can be false: the
-lent handle of the argument and the handle a script holds for the same node are two tokens of one
-object (`GodotObject.equals` compares tokens), and scripts compare `instanceId` instead. Both are the
-user-facing limits documented in `docs/game-dev/godot-api.md` (Web section); neither is to be
-relied on once the lending mechanism changes.
+**One handle per object: the instance-id index.** Every browser handle the proxies enter into the
+shared `_kanama_object_handles` for an object goes through `_kanama_track` (and leaves through
+`_kanama_untrack`), which indexes it by the object's instance id (`KanamaWebHandles.by_id` /
+`id_of`; the first handle tracked wins; script handles are never indexed, a script-backed object
+always crosses as its script handle). A lookup, a call's object result, a collider and a dispatch
+argument find the handle already tracking their object with one dictionary lookup
+(`_kanama_tracked_handle`), so within Web a token IS the object's identity: `body == player` and
+`typed == arg` hold as on desktop, and a lookup costs O(1) instead of a scan of every handle.
+
+**Dispatch arguments are lent for the object's lifetime.** A signal argument (one-object and packed
+arms), `_input` / `_unhandled_input`'s event and a registered method's object arguments cross as
+`_kanama_lend(value)`: the handle already tracking the object, else one `bridge.lendHandle` mints
+(NODE kind for a Node, so its snapshot and `queueFree` work; OBJECT otherwise). The handle is not
+released when the handler returns, and lending adds no holder: it lives until the engine frees the
+object, or the last Kanama script goes away. A lookup's handle a dispatch lends is taken over the
+same way (`flags 2`: its holders no longer matter). Its owner is only the proxy its calls route
+through: `releaseBrowserHandlesOwnedBy` re-routes a lent handle to another installed proxy, so a
+copy another script stored outlives the script that received it; the last proxy releases it. A
+Node2D, Node3D or Control argument carries its transform snapshot, refreshed on every dispatch in the
+same call, so `body.position` reads the current value inside the handler (a stored one read later
+reads its last refresh, the rule for every non-self node).
+
+*Engine frees: the sweep.* The engine frees objects without telling Kotlin, so every proxy's
+`_process` / `_physics_process` runs `_kanama_sweep_frame`: once per process frame across the proxies
+(one static size check while nothing is lent), it checks up to 32 lent handles from a ring cursor
+(`KanamaWebHandles.lent_ring`); a handle whose object is gone (`is_instance_id_valid`, or a dead weak
+entry) is untracked and released in one `bridge.releaseFreedHandles` call. Each new lend also checks
+the lend before it and one ring entry, which keeps create / hand over / free churn bounded (the
+web3d row `lentHandlesBounded`: 500 rounds stay within 34 handles of the baseline). A released
+handle is remembered as freed (the bridge's `freedHandles`, Kotlin's `freedBrowserHandles`, 4096
+each), so its later use throws "Invalid access to previously freed instance", desktop's error, not a
+stale-handle one.
+
+*RefCounted arguments: 2 frames, then weak.* A lent `RefCounted` (an `InputEvent`, a `Resource`) is
+held strongly for its dispatch and the next 2 process frames (`KanamaWebHandles.grace`; a new
+dispatch of it renews them), then the sweep demotes its entry to a `[WeakRef]`: it lives while Godot
+holds it anywhere, and a use after it was freed is the freed-instance error. Holding it strongly for
+good would pin one `InputEvent` per input event; desktop instead keeps it until the Kotlin wrapper is
+closed or collected, which Web cannot observe yet (releasing through the browser's garbage collector
+is tracked in [#332](https://github.com/falcon4ever/kanama/issues/332)). A call's result naming a lent `RefCounted`
+(`GD.instanceFromId(event.instanceId)`) makes it owned by the calling script (`ownLentHandle`), like
+any object result. A `RefCounted` a script already owns keeps its owner when it is lent. The web3d
+`LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
+`lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,
+`lentHandlesBounded`, `lentRefCountedGracePeriod`, `lentRefCountedExpiry`, `lentNodeSnapshotReads`,
+`lentKotlinQueueFree`, `lentDispatchCost`) pin all of it; `lentDispatchCost` holds a seen plain Node
+argument at 0 lending JS calls per dispatch and a Node3D at 1 (the old per-dispatch lend cost 2).
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 
 **A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,

@@ -69,10 +69,14 @@ export async function collectPerformance(evaluate) {
         builtinCalls: bridge.builtinCalls ?? 0,
         builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
         // The handles lent to Kotlin for dispatch arguments (signal / input / method object
-        // arguments): how many were minted and released, the most alive at once, and the
-        // GDScript->JS calls the lending cost. Reported, not budgeted.
+        // arguments): how many were minted, taken over from a lookup, released (swept: the engine
+        // freed the object; owned: a call's result made a script own it), the most alive at once,
+        // and the GDScript->JS calls the lending cost. Reported, not budgeted.
         lentMints: bridge.lentMints ?? 0,
+        lentAdopts: bridge.lentAdopts ?? 0,
         lentReleases: bridge.lentReleases ?? 0,
+        lentSwept: bridge.lentSwept ?? 0,
+        lentOwned: bridge.lentOwned ?? 0,
         maxLiveLent: bridge.maxLiveLent ?? 0,
         maxLiveBrowserHandles: bridge.maxLiveBrowserHandles ?? 0,
         lendBridgeCalls: bridge.lendBridgeCalls ?? 0,

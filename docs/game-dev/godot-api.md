@@ -328,17 +328,6 @@ asks the engine, so it fails on a freed target instead of answering its old id, 
 `getConnections()` a Kotlin lambda connection's `callable` is its own guard object's `fire`
 method (each lambda connection has its own callable, so two lambdas can connect one signal).
 
-Two **known limits on Web**, both being fixed (desktop has neither):
-
-- An object a signal handler (or `_input`, or another callback) receives as an argument is lent to
-  your handler for the length of that call. If you store it and use it after the handler returns, it
-  is not yet valid on Web unless something inside the handler resolved it through a result. The
-  workaround is to resolve it and keep the result: `kept = GD.instanceFromId(arg.instanceId)`, then
-  store `kept`.
-- `body == player` inside a handler can be `false` on Web even when both are the same node, because
-  the argument and your own reference can be two handles of one object. Compare the ids instead:
-  `body.instanceId == player.instanceId`.
-
 ## Collections
 
 Godot collections only matter when data crosses the engine boundary. For pure
@@ -438,6 +427,28 @@ Godot's own `close()` method is `closeFile()` in Kotlin: it closes the file and
 keeps your reference (the object stays usable for `isOpen()`, `getError()`).
 `DirAccess` has no file to close (`listDirEnd()` ends a listing), so its
 `close()` only releases your reference.
+
+### Objects you receive
+
+**On every platform, a Godot object you receive (a signal or callback argument, a lookup, a call's
+result) is one value per object, valid for as long as the object lives: a `Node` or plain `Object`
+until it is freed, a `RefCounted` while Godot or one of your owned references still holds it.** So
+a handler can keep its argument (`lastHit = body`) and use it frames later, and `body == player` is
+`true` when both are the same node, on Web as on desktop. Using it after the engine freed the
+object throws the `IllegalStateException` "Invalid access to previously freed instance", which a
+script can catch.
+
+**One Web limit: a `RefCounted` that only your Kotlin code keeps.** On Web, a `RefCounted` argument
+(an `InputEvent`, a `Resource`) that nothing but your Kotlin code holds stays valid for the call and
+the next 2 frames, which covers an `await()` that resumes a frame later and keeping "the last event"
+for the next frame. After that it lives only while Godot holds it (a node, a resource, a GDScript
+variable, one of your owned references), and a use after it was freed throws "Invalid access to
+previously freed instance". Desktop, Android and iOS keep it alive until you `close()` it or the
+garbage collector releases it. To keep one longer on Web, keep a Godot reference to it, or resolve an
+owned reference inside the handler: `kept = GD.instanceFromId(event.instanceId)` is a call's result,
+so it is owned by your script and lives until the script is freed. This limit will be lifted when
+Web can release objects through the browser's garbage collector (tracked in
+[#332](https://github.com/falcon4ever/kanama/issues/332)).
 
 ### Which category is it?
 

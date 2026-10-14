@@ -822,9 +822,9 @@ CLASS_POLICY: dict[str, dict] = {
 
   /**
    * Token identity (task 131 item 6), the same test as [isSameInstance]: wrappers that carry the
-   * same Web handle token are equal, whatever their class. The Web bridge mints a token per
-   * crossing site, not per Godot object, and does not expose the engine instance id cheaply, so two
-   * tokens for one object are NOT equal here (desktop/Android/iOS compare the instance id).
+   * same Web handle token are equal, whatever their class. A Godot object has one token on Web
+   * (a lookup, a result and an argument find it by instance id), so this is object identity, as
+   * desktop's instance-id test is; two Kotlin-owned loads of one resource are still two tokens.
    */
   override fun equals(other: Any?): Boolean =
     this === other || (other is GodotObject && isSameInstance(other))
