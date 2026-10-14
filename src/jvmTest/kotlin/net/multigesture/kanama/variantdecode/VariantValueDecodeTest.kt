@@ -135,4 +135,35 @@ class VariantValueDecodeTest {
       )
     }
   }
+
+  /**
+   * Task 138 item 27: the iOS runtime builds its refusal of a wrong-typed value-type property from
+   * the registered and the offered `Variant::Type` ids, with this one function (the C shim passes
+   * the ids; there is no device here), so the message is pinned on the host.
+   */
+  @Test
+  fun iosRefusalMessageFromVariantTypeIds() {
+    assertEquals(
+      "Expected Quaternion for property 'rot' but the Variant holds Vector2",
+      VariantTypeNames.assignmentError(
+        VariantType.QUATERNION.id,
+        VariantType.VECTOR2.id,
+        "property 'rot'",
+      ),
+    )
+    // A Nil is the same refusal, spelled as the desktop one is.
+    assertEquals(
+      "Expected Rect2 for property 'area' but the Variant holds null (Nil)",
+      VariantTypeNames.assignmentError(VariantType.RECT2.id, VariantType.NIL.id, "property 'area'"),
+    )
+    assertEquals(
+      "Expected Basis for property 'b' but the Variant holds int",
+      VariantTypeNames.assignmentError(VariantType.BASIS.id, VariantType.INT.id, "property 'b'"),
+    )
+    // The desktop message for the same mistake is the same text.
+    assertEquals(
+      VariantTypeNames.assignmentError(VariantType.QUATERNION.id, VariantType.VECTOR2.id, "p"),
+      BuiltinTypes.variantAssignmentError(VariantType.QUATERNION, VariantType.VECTOR2.id, "p"),
+    )
+  }
 }

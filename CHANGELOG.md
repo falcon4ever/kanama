@@ -39,6 +39,21 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — iOS: a value-type script property set to a value of another type follows GDScript
+
+A `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`,
+`Quaternion`, `AABB`, `Basis`, `Transform2D`, `Transform3D`, `Projection`, `Color` or `NodePath`
+property that received a Variant of another type failed with a bare `ClassCastException` that did not
+name the property (a `Vector2` for a `Vector3`, and also a `Vector2i` for a `Vector2`, which GDScript
+converts), or, for a `null`, was dropped without a message. The runtime now applies GDScript's rule
+before it decodes, as desktop and Android do: a value Godot converts is converted (a `Vector2i` for a
+`Vector2`, a `Basis` for a `Quaternion`, a `String` for a `NodePath`, ...), anything else is refused
+with `Expected Quaternion for property 'rot' but the Variant holds Vector2` (`null (Nil)` for a nil)
+and the property keeps its value. The on-device probe sets wrong-typed and convertible values on a
+`Quaternion`, a `Vector2` and a `Vector3` property and requires the messages, the unchanged values
+and the converted ones. The `Boolean`, `Long`, `Double`, `String`, `List` and `Map` properties are
+unchanged on iOS.
+
 ### Fixed — Desktop and Android: a script property set to a value of the wrong type is an error, not a zero value
 
 A `@Export` property of type `Boolean`, `Long`, `Double`, `String`, `NodePath`, `Vector2`,
