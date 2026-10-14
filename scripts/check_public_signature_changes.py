@@ -153,6 +153,14 @@ SURFACES = (
         "net.multigesture.kanama.builtins",
     ),
     Surface(
+        "annotations",
+        # Task 137 item 9: the annotations a script author writes (`@ScriptClass`, `@RegisterProperty`,
+        # `@Rpc`, ...) and their parameters are public API too; task 133 B changed them unseen.
+        ("annotations/src/main/kotlin/net/multigesture/kanama/annotations",),
+        "the annotations a script is written with (and the helper objects they name) and their parameters",
+        "net.multigesture.kanama.annotations",
+    ),
+    Surface(
         "web-types",
         # Task 134 D1: the Web build compiles the shared value types, plus its own `real_t` storage
         # half (`WebReal.kt`, internal) in place of the generated Real.kt.

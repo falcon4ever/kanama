@@ -456,6 +456,9 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
      "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
+case("check_public_signature_changes.py (annotations)", py("check_public_signature_changes.py"),
+     [Edit("annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt", "annotation class GodotName(val name: String)", "annotation class GodotName(val name: String, val extra: Int)")],
+     "unannounced source break", "a parameter is added to a script annotation (annotations/ is a snapshotted surface, task 137 item 9)")
 case("check_typed_enums.py", py("check_typed_enums.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Long) {")],
      "typed_enums] FAIL", "an enum parameter goes back to a raw Long")
@@ -563,6 +566,9 @@ for name, args, target, expect, how in [
     ("generate_web_wrappers.py --check", ("generate_web_wrappers.py", "--check"), f"{WEBGEN}/Node.kt", "FAIL", "a generated Web wrapper is hand-edited"),
 ]:
     case(name, py(*args), [Append(target, "\nval redRunHandEdit = 1\n" if target.endswith(".kt") else "\nred run: hand edit\n")], expect, how)
+case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
+     [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
+     "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")
 case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_shell_wrappers.py", "--from-skip-report", "build/wrapper-generator/skips.txt", "--dry-run", "--fail-if-candidates"),
      [Delete(f"{COMMON}/api/Curve2D.kt"),
       Append("build/wrapper-generator/skips.txt", "\nCurve2D.foo object return wrapper is missing for Curve2D\n")],

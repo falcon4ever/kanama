@@ -1914,6 +1914,33 @@ def kotlin_enum_default_expression(default_value: str | None, logical_kind: str,
     return enum_constant_expression(type_name, number)
 
 
+# Godot defaults the generator cannot express as a Kotlin default (task 137 item 5, Rule 9): the
+# parameter is REQUIRED instead. Filled while the wrappers render, keyed by (class, Godot method,
+# Godot parameter) -> (logical kind, Godot default text), and listed in the generator report
+# (`docs/reference/generated/wrapper-generator-report.md`, drift-gated), so a new case, or a case
+# that gets a default, shows up in a pull request instead of silently changing a signature.
+DROPPED_DEFAULTS: dict[tuple[str, str, str], tuple[str, str]] = {}
+
+
+def parameter_default_expression(
+    class_name: str,
+    method_name: str,
+    raw_name: str,
+    kind: str,
+    type_name: str,
+    default_value: str | None,
+) -> str | None:
+    """The Kotlin default for one Godot parameter, or None (and the case recorded in
+    [DROPPED_DEFAULTS]) when Godot has a default this generator cannot express."""
+    default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method_name, raw_name), default_value)
+    expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
+        (class_name, method_name, raw_name),
+    ) or kotlin_enum_default_expression(default_value, kind, type_name)
+    if expression is None and default_value is not None:
+        DROPPED_DEFAULTS[(class_name, method_name, raw_name)] = (kind, default_value)
+    return expression
+
+
 def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape | None:
     logical_args = method.logical_arg_kinds(object_types)
     logical_return = method.logical_return_kind(object_types)
@@ -2767,10 +2794,9 @@ def render_method(
         method.argument_defaults,
         strict=True,
     ):
-        default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
-        default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
-            (class_name, method.name, raw_name),
-        ) or kotlin_enum_default_expression(default_value, kind, type_name)
+        default_expression = parameter_default_expression(
+            class_name, method.name, raw_name, kind, type_name, default_value
+        )
         type_text = kotlin_parameter_type(
             class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
         )
@@ -2868,10 +2894,9 @@ def render_vararg_method(
         method.argument_defaults,
         strict=True,
     ):
-        default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
-        default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
-            (class_name, method.name, raw_name),
-        ) or kotlin_enum_default_expression(default_value, kind, type_name)
+        default_expression = parameter_default_expression(
+            class_name, method.name, raw_name, kind, type_name, default_value
+        )
         type_text = kotlin_parameter_type(
             class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
         )

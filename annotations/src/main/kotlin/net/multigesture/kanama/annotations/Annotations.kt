@@ -212,7 +212,7 @@ object PropertyUsage {
   const val NONE = 0
   const val STORAGE = 2
   const val EDITOR = 4
-  const val DEFAULT = STORAGE or EDITOR
+  const val DEFAULT: Int = STORAGE or EDITOR
   const val GROUP = 64
   const val CATEGORY = 128
   const val SUBGROUP = 256
@@ -222,7 +222,7 @@ object PropertyUsage {
   const val SCRIPT_DEFAULT_VALUE = 32768
   const val READ_ONLY = 268435456
   const val SECRET = 536870912
-  const val NO_EDITOR = STORAGE
+  const val NO_EDITOR: Int = STORAGE
 }
 
 /**

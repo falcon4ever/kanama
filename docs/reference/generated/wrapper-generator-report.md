@@ -167,3 +167,345 @@ These classes have every method covered by the conservative generator. Promotion
 | ParticleProcessMaterial | 116/116 | 124/124 | 1/1 | 0 |
 | CodeEdit | 114/117 | 22/22 | 5/5 | 3 |
 | FontFile | 106/106 | 17/22 | 0/0 | 0 |
+
+## Godot Defaults Not Expressed
+
+Godot gives these parameters a default value that the generator cannot write as a Kotlin default argument, so the generated parameter is **required** (Rule 9 of the [Generated API Conventions](../wrapper-conventions.md#9-defaults-and-overloads)). Giving one a default later is not a source break. A new row here is a new required parameter in a signature, and a row that disappears gained its default.
+
+294 parameters, by Godot default:
+
+| Godot default | Parameters |
+| --- | ---: |
+| Object: `null` | 62 |
+| Color: `Color(1, 1, 1, 1)` | 52 |
+| Callable: `Callable()` | 50 |
+| RID: `RID()` | 15 |
+| Vector3: `Vector3(0, 0, 0)` | 15 |
+| Rect2: `Rect2(0, 0, 0, 0)` | 10 |
+| Vector2i: `Vector2i(-1, -1)` | 8 |
+| PackedByteArray: `PackedByteArray()` | 7 |
+| PackedStringArray: `PackedStringArray()` | 6 |
+| PackedVector2Array: `PackedVector2Array()` | 6 |
+| Vector2i: `Vector2i(0, 0)` | 6 |
+| Transform2D: `Transform2D(1, 0, 0, 1, 0, 0)` | 5 |
+| PackedColorArray: `PackedColorArray()` | 4 |
+| TypedStringNameArray: `[]` | 4 |
+| Color: `Color(0, 0, 0, 0)` | 3 |
+| NodePath: `NodePath("")` | 3 |
+| PackedFloat32Array: `PackedFloat32Array()` | 3 |
+| PackedInt32Array: `PackedInt32Array()` | 3 |
+| Rect2i: `Rect2i(0, 0, 0, 0)` | 3 |
+| Transform3D: `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)` | 3 |
+| TypedStringNameArray: `Array[StringName]([])` | 3 |
+| Variant: `0` | 3 |
+| Color: `Color(0, 0, 0, 1)` | 2 |
+| PackedInt64Array: `PackedInt64Array()` | 2 |
+| TypedObjectArray::RDPipelineSpecializationConstant: `Array[RDPipelineSpecializationConstant]([])` | 2 |
+| TypedRIDArray: `Array[RID]([])` | 2 |
+| Vector2: `Vector2(0, -1)` | 2 |
+| Vector3: `Vector3(0, 1, 0)` | 2 |
+| PackedVector3Array: `PackedVector3Array()` | 1 |
+| TypedArrayArray: `Array[Array]([])` | 1 |
+| TypedArrayArray: `[]` | 1 |
+| TypedPackedByteArray: `[]` | 1 |
+| TypedPlaneArray: `Array[Plane]([])` | 1 |
+| Vector2: `Vector2(0, 1)` | 1 |
+| Vector2: `Vector2(1, 1)` | 1 |
+| Vector2i: `Vector2i(1, 1)` | 1 |
+
+| Class | Method | Parameter | Godot default |
+| --- | --- | --- | --- |
+| AESContext | `start` | `iv` | `PackedByteArray()` |
+| AccessibilityServer | `update_set_text_decorations` | `color` | `Color(0, 0, 0, 1)` |
+| ArrayMesh | `add_surface_from_arrays` | `blend_shapes` | `[]` |
+| CanvasItem | `draw_char` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_char_outline` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_colored_polygon` | `texture` | `null` |
+| CanvasItem | `draw_colored_polygon` | `uvs` | `PackedVector2Array()` |
+| CanvasItem | `draw_lcd_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_mesh` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_mesh` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
+| CanvasItem | `draw_msdf_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_multiline_string` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_multiline_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_polygon` | `texture` | `null` |
+| CanvasItem | `draw_polygon` | `uvs` | `PackedVector2Array()` |
+| CanvasItem | `draw_primitive` | `texture` | `null` |
+| CanvasItem | `draw_set_transform` | `scale` | `Vector2(1, 1)` |
+| CanvasItem | `draw_string` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_texture` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_texture_rect` | `modulate` | `Color(1, 1, 1, 1)` |
+| CanvasItem | `draw_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
+| CharacterBody2D | `get_floor_angle` | `up_direction` | `Vector2(0, -1)` |
+| CharacterBody3D | `get_floor_angle` | `up_direction` | `Vector3(0, 1, 0)` |
+| CodeEdit | `add_code_completion_option` | `icon` | `null` |
+| CodeEdit | `add_code_completion_option` | `text_color` | `Color(1, 1, 1, 1)` |
+| Curve3D | `add_point` | `in` | `Vector3(0, 0, 0)` |
+| Curve3D | `add_point` | `out` | `Vector3(0, 0, 0)` |
+| DisplayServer | `global_menu_add_check_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_check_item` | `key_callback` | `Callable()` |
+| DisplayServer | `global_menu_add_icon_check_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_icon_check_item` | `key_callback` | `Callable()` |
+| DisplayServer | `global_menu_add_icon_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_icon_item` | `key_callback` | `Callable()` |
+| DisplayServer | `global_menu_add_icon_radio_check_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_icon_radio_check_item` | `key_callback` | `Callable()` |
+| DisplayServer | `global_menu_add_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_item` | `key_callback` | `Callable()` |
+| DisplayServer | `global_menu_add_multistate_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_multistate_item` | `key_callback` | `Callable()` |
+| DisplayServer | `global_menu_add_radio_check_item` | `callback` | `Callable()` |
+| DisplayServer | `global_menu_add_radio_check_item` | `key_callback` | `Callable()` |
+| DisplayServer | `virtual_keyboard_show` | `position` | `Rect2(0, 0, 0, 0)` |
+| DrawableTexture2D | `blit_rect` | `material` | `null` |
+| DrawableTexture2D | `blit_rect` | `modulate` | `Color(1, 1, 1, 1)` |
+| DrawableTexture2D | `blit_rect_multi` | `material` | `null` |
+| DrawableTexture2D | `blit_rect_multi` | `modulate` | `Color(1, 1, 1, 1)` |
+| DrawableTexture2D | `setup` | `color` | `Color(1, 1, 1, 1)` |
+| ENetConnection | `dtls_client_setup` | `client_options` | `null` |
+| EditorContextMenuPlugin | `add_context_menu_item` | `icon` | `null` |
+| EditorContextMenuPlugin | `add_context_menu_item_from_shortcut` | `icon` | `null` |
+| EditorContextMenuPlugin | `add_context_submenu_item` | `icon` | `null` |
+| EditorExportPlatform | `export_pack_patch` | `patches` | `PackedStringArray()` |
+| EditorExportPlatform | `export_project_files` | `shared_cb` | `Callable()` |
+| EditorExportPlatform | `export_zip_patch` | `patches` | `PackedStringArray()` |
+| EditorExportPlatform | `get_forced_export_files` | `preset` | `null` |
+| EditorInspector | `create_default_inspector` | `filter_line_edit` | `null` |
+| EditorInterface | `popup_create_dialog` | `type_blocklist` | `Array[StringName]([])` |
+| EditorInterface | `popup_dialog` | `rect` | `Rect2i(0, 0, 0, 0)` |
+| EditorInterface | `popup_dialog_centered` | `minsize` | `Vector2i(0, 0)` |
+| EditorInterface | `popup_dialog_centered_clamped` | `minsize` | `Vector2i(0, 0)` |
+| EditorInterface | `popup_node_selector` | `current_value` | `null` |
+| EditorInterface | `popup_node_selector` | `valid_types` | `Array[StringName]([])` |
+| EditorInterface | `popup_property_selector` | `type_filter` | `PackedInt32Array()` |
+| EditorInterface | `popup_quick_open` | `base_types` | `Array[StringName]([])` |
+| EditorNode3DGizmo | `add_lines` | `modulate` | `Color(1, 1, 1, 1)` |
+| EditorNode3DGizmo | `add_mesh` | `material` | `null` |
+| EditorNode3DGizmo | `add_mesh` | `skeleton` | `null` |
+| EditorNode3DGizmo | `add_mesh` | `transform` | `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)` |
+| EditorNode3DGizmo | `add_unscaled_billboard` | `modulate` | `Color(1, 1, 1, 1)` |
+| EditorNode3DGizmoPlugin | `create_handle_material` | `texture` | `null` |
+| EditorNode3DGizmoPlugin | `create_icon_material` | `color` | `Color(1, 1, 1, 1)` |
+| EditorNode3DGizmoPlugin | `get_material` | `gizmo` | `null` |
+| EditorPlugin | `add_control_to_bottom_panel` | `shortcut` | `null` |
+| EditorPlugin | `add_control_to_dock` | `shortcut` | `null` |
+| EditorUndoRedoManager | `create_action` | `custom_context` | `null` |
+| Expression | `execute` | `base_instance` | `null` |
+| Expression | `parse` | `input_names` | `PackedStringArray()` |
+| Font | `draw_char` | `modulate` | `Color(1, 1, 1, 1)` |
+| Font | `draw_char_outline` | `modulate` | `Color(1, 1, 1, 1)` |
+| Font | `draw_multiline_string` | `modulate` | `Color(1, 1, 1, 1)` |
+| Font | `draw_multiline_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
+| Font | `draw_string` | `modulate` | `Color(1, 1, 1, 1)` |
+| Font | `draw_string_outline` | `modulate` | `Color(1, 1, 1, 1)` |
+| Font | `find_variation` | `custom_colors` | `PackedColorArray()` |
+| Font | `find_variation` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
+| GraphNode | `set_slot` | `custom_icon_left` | `null` |
+| GraphNode | `set_slot` | `custom_icon_right` | `null` |
+| HTTPClient | `connect_to_host` | `tls_options` | `null` |
+| HTTPRequest | `request` | `custom_headers` | `PackedStringArray()` |
+| HTTPRequest | `request_raw` | `custom_headers` | `PackedStringArray()` |
+| HTTPRequest | `request_raw` | `request_data_raw` | `PackedByteArray()` |
+| ImmediateMesh | `surface_begin` | `material` | `null` |
+| ImporterMesh | `add_surface` | `blend_shapes` | `Array[Array]([])` |
+| ImporterMesh | `add_surface` | `material` | `null` |
+| ImporterMesh | `get_mesh` | `base_mesh` | `null` |
+| InstancePlaceholder | `create_instance` | `custom_scene` | `null` |
+| ItemList | `add_item` | `icon` | `null` |
+| KinematicCollision2D | `get_angle` | `up_direction` | `Vector2(0, -1)` |
+| KinematicCollision3D | `get_angle` | `up_direction` | `Vector3(0, 1, 0)` |
+| MeshInstance3D | `bake_mesh_from_current_blend_shape_mix` | `existing` | `null` |
+| MeshInstance3D | `bake_mesh_from_current_skeleton_pose` | `existing` | `null` |
+| MeshInstance3D | `create_multiple_convex_collisions` | `settings` | `null` |
+| NativeMenu | `add_check_item` | `callback` | `Callable()` |
+| NativeMenu | `add_check_item` | `key_callback` | `Callable()` |
+| NativeMenu | `add_icon_check_item` | `callback` | `Callable()` |
+| NativeMenu | `add_icon_check_item` | `key_callback` | `Callable()` |
+| NativeMenu | `add_icon_item` | `callback` | `Callable()` |
+| NativeMenu | `add_icon_item` | `key_callback` | `Callable()` |
+| NativeMenu | `add_icon_radio_check_item` | `callback` | `Callable()` |
+| NativeMenu | `add_icon_radio_check_item` | `key_callback` | `Callable()` |
+| NativeMenu | `add_item` | `callback` | `Callable()` |
+| NativeMenu | `add_item` | `key_callback` | `Callable()` |
+| NativeMenu | `add_multistate_item` | `callback` | `Callable()` |
+| NativeMenu | `add_multistate_item` | `key_callback` | `Callable()` |
+| NativeMenu | `add_radio_check_item` | `callback` | `Callable()` |
+| NativeMenu | `add_radio_check_item` | `key_callback` | `Callable()` |
+| NavigationMeshGenerator | `bake_from_source_geometry_data` | `callback` | `Callable()` |
+| NavigationMeshGenerator | `parse_source_geometry_data` | `callback` | `Callable()` |
+| NavigationServer2D | `bake_from_source_geometry_data` | `callback` | `Callable()` |
+| NavigationServer2D | `bake_from_source_geometry_data_async` | `callback` | `Callable()` |
+| NavigationServer2D | `parse_source_geometry_data` | `callback` | `Callable()` |
+| NavigationServer2D | `query_path` | `callback` | `Callable()` |
+| NavigationServer3D | `bake_from_source_geometry_data` | `callback` | `Callable()` |
+| NavigationServer3D | `bake_from_source_geometry_data_async` | `callback` | `Callable()` |
+| NavigationServer3D | `parse_source_geometry_data` | `callback` | `Callable()` |
+| NavigationServer3D | `query_path` | `callback` | `Callable()` |
+| OS | `set_restart_on_exit` | `arguments` | `PackedStringArray()` |
+| OpenXRFutureExtension | `register_future` | `on_success` | `Callable()` |
+| OpenXRPlaneTracker | `set_mesh_data` | `indices` | `PackedInt32Array()` |
+| OpenXRSpatialAnchorCapability | `create_default_persistence_context` | `user_callback` | `Callable()` |
+| OpenXRSpatialAnchorCapability | `create_new_anchor` | `next` | `null` |
+| OpenXRSpatialAnchorCapability | `create_new_anchor` | `spatial_context` | `RID()` |
+| OpenXRSpatialAnchorCapability | `create_persistence_context` | `user_callback` | `Callable()` |
+| OpenXRSpatialAnchorCapability | `do_entity_update` | `next_snapshot_create` | `null` |
+| OpenXRSpatialAnchorCapability | `do_entity_update` | `next_snapshot_query` | `null` |
+| OpenXRSpatialAnchorCapability | `persist_anchor` | `persistence_context` | `RID()` |
+| OpenXRSpatialAnchorCapability | `persist_anchor` | `user_callback` | `Callable()` |
+| OpenXRSpatialAnchorCapability | `start_entity_discovery` | `next_snapshot_create` | `null` |
+| OpenXRSpatialAnchorCapability | `start_entity_discovery` | `next_snapshot_query` | `null` |
+| OpenXRSpatialAnchorCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
+| OpenXRSpatialAnchorCapability | `unpersist_anchor` | `persistence_context` | `RID()` |
+| OpenXRSpatialAnchorCapability | `unpersist_anchor` | `user_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `create_spatial_context` | `next` | `null` |
+| OpenXRSpatialEntityExtension | `create_spatial_context` | `user_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `discover_spatial_entities` | `next` | `null` |
+| OpenXRSpatialEntityExtension | `discover_spatial_entities` | `user_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `discover_spatial_entities_with_component_data` | `next` | `null` |
+| OpenXRSpatialEntityExtension | `discover_spatial_entities_with_component_data` | `user_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `query_snapshot` | `next` | `null` |
+| OpenXRSpatialEntityExtension | `update_spatial_entities` | `next` | `null` |
+| OpenXRSpatialMarkerTrackingCapability | `do_entity_update` | `next_snapshot_create` | `null` |
+| OpenXRSpatialMarkerTrackingCapability | `do_entity_update` | `next_snapshot_query` | `null` |
+| OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `next_snapshot_create` | `null` |
+| OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `next_snapshot_query` | `null` |
+| OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
+| OpenXRSpatialPlaneTrackingCapability | `start_entity_discovery` | `next_snapshot_create` | `null` |
+| OpenXRSpatialPlaneTrackingCapability | `start_entity_discovery` | `next_snapshot_query` | `null` |
+| OpenXRSpatialPlaneTrackingCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
+| PacketPeerDTLS | `connect_to_peer` | `client_options` | `null` |
+| PhysicalBone3D | `apply_impulse` | `position` | `Vector3(0, 0, 0)` |
+| PhysicalBoneSimulator3D | `physical_bones_start_simulation` | `bones` | `[]` |
+| PhysicsBody2D | `test_move` | `collision` | `null` |
+| PhysicsBody3D | `test_move` | `collision` | `null` |
+| PhysicsDirectBodyState3D | `add_constant_central_force` | `force` | `Vector3(0, 0, 0)` |
+| PhysicsDirectBodyState3D | `add_constant_force` | `position` | `Vector3(0, 0, 0)` |
+| PhysicsDirectBodyState3D | `apply_central_force` | `force` | `Vector3(0, 0, 0)` |
+| PhysicsDirectBodyState3D | `apply_central_impulse` | `impulse` | `Vector3(0, 0, 0)` |
+| PhysicsDirectBodyState3D | `apply_force` | `position` | `Vector3(0, 0, 0)` |
+| PhysicsDirectBodyState3D | `apply_impulse` | `position` | `Vector3(0, 0, 0)` |
+| PhysicsRayQueryParameters2D | `create` | `exclude` | `Array[RID]([])` |
+| PhysicsServer2D | `area_add_shape` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
+| PhysicsServer2D | `body_add_shape` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
+| PhysicsServer2D | `body_set_shape_as_one_way_collision` | `direction` | `Vector2(0, 1)` |
+| PhysicsServer2D | `body_test_motion` | `result` | `null` |
+| PhysicsServer2D | `joint_make_damped_spring` | `body_b` | `RID()` |
+| PhysicsServer2D | `joint_make_groove` | `body_a` | `RID()` |
+| PhysicsServer2D | `joint_make_groove` | `body_b` | `RID()` |
+| PhysicsServer2D | `joint_make_pin` | `body_b` | `RID()` |
+| PhysicsServer3D | `area_add_shape` | `transform` | `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)` |
+| PhysicsServer3D | `body_add_constant_force` | `position` | `Vector3(0, 0, 0)` |
+| PhysicsServer3D | `body_add_shape` | `transform` | `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)` |
+| PhysicsServer3D | `body_apply_force` | `position` | `Vector3(0, 0, 0)` |
+| PhysicsServer3D | `body_apply_impulse` | `position` | `Vector3(0, 0, 0)` |
+| PhysicsServer3D | `body_test_motion` | `result` | `null` |
+| RegExMatch | `get_end` | `name` | `0` |
+| RegExMatch | `get_start` | `name` | `0` |
+| RegExMatch | `get_string` | `name` | `0` |
+| RenderingDevice | `compute_pipeline_create` | `specialization_constants` | `Array[RDPipelineSpecializationConstant]([])` |
+| RenderingDevice | `draw_list_begin` | `clear_color_values` | `PackedColorArray()` |
+| RenderingDevice | `draw_list_begin` | `region` | `Rect2(0, 0, 0, 0)` |
+| RenderingDevice | `draw_list_begin_for_screen` | `clear_color` | `Color(0, 0, 0, 1)` |
+| RenderingDevice | `draw_list_begin_split` | `clear_color_values` | `PackedColorArray()` |
+| RenderingDevice | `draw_list_begin_split` | `region` | `Rect2(0, 0, 0, 0)` |
+| RenderingDevice | `draw_list_begin_split` | `storage_textures` | `Array[RID]([])` |
+| RenderingDevice | `draw_list_bind_vertex_buffers_format` | `offsets` | `PackedInt64Array()` |
+| RenderingDevice | `draw_list_enable_scissor` | `rect` | `Rect2(0, 0, 0, 0)` |
+| RenderingDevice | `index_buffer_create` | `data` | `PackedByteArray()` |
+| RenderingDevice | `render_pipeline_create` | `specialization_constants` | `Array[RDPipelineSpecializationConstant]([])` |
+| RenderingDevice | `shader_create_from_bytecode` | `placeholder_rid` | `RID()` |
+| RenderingDevice | `storage_buffer_create` | `data` | `PackedByteArray()` |
+| RenderingDevice | `texture_buffer_create` | `data` | `PackedByteArray()` |
+| RenderingDevice | `texture_create` | `data` | `[]` |
+| RenderingDevice | `uniform_buffer_create` | `data` | `PackedByteArray()` |
+| RenderingDevice | `vertex_array_create` | `offsets` | `PackedInt64Array()` |
+| RenderingDevice | `vertex_buffer_create` | `data` | `PackedByteArray()` |
+| RenderingServer | `canvas_item_add_mesh` | `modulate` | `Color(1, 1, 1, 1)` |
+| RenderingServer | `canvas_item_add_mesh` | `texture` | `RID()` |
+| RenderingServer | `canvas_item_add_mesh` | `transform` | `Transform2D(1, 0, 0, 1, 0, 0)` |
+| RenderingServer | `canvas_item_add_msdf_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
+| RenderingServer | `canvas_item_add_multimesh` | `texture` | `RID()` |
+| RenderingServer | `canvas_item_add_nine_patch` | `modulate` | `Color(1, 1, 1, 1)` |
+| RenderingServer | `canvas_item_add_polygon` | `texture` | `RID()` |
+| RenderingServer | `canvas_item_add_polygon` | `uvs` | `PackedVector2Array()` |
+| RenderingServer | `canvas_item_add_texture_rect` | `modulate` | `Color(1, 1, 1, 1)` |
+| RenderingServer | `canvas_item_add_texture_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
+| RenderingServer | `canvas_item_add_triangle_array` | `bones` | `PackedInt32Array()` |
+| RenderingServer | `canvas_item_add_triangle_array` | `texture` | `RID()` |
+| RenderingServer | `canvas_item_add_triangle_array` | `uvs` | `PackedVector2Array()` |
+| RenderingServer | `canvas_item_add_triangle_array` | `weights` | `PackedFloat32Array()` |
+| RenderingServer | `canvas_item_set_custom_rect` | `rect` | `Rect2(0, 0, 0, 0)` |
+| RenderingServer | `instances_cull_aabb` | `scenario` | `RID()` |
+| RenderingServer | `instances_cull_convex` | `scenario` | `RID()` |
+| RenderingServer | `instances_cull_ray` | `scenario` | `RID()` |
+| RenderingServer | `texture_drawable_create` | `color` | `Color(1, 1, 1, 1)` |
+| RenderingServer | `viewport_attach_to_screen` | `rect` | `Rect2(0, 0, 0, 0)` |
+| RichTextLabel | `add_hr` | `color` | `Color(1, 1, 1, 1)` |
+| RichTextLabel | `add_image` | `color` | `Color(1, 1, 1, 1)` |
+| RichTextLabel | `add_image` | `region` | `Rect2(0, 0, 0, 0)` |
+| RichTextLabel | `push_dropcap` | `color` | `Color(1, 1, 1, 1)` |
+| RichTextLabel | `push_dropcap` | `dropcap_margins` | `Rect2(0, 0, 0, 0)` |
+| RichTextLabel | `push_dropcap` | `outline_color` | `Color(0, 0, 0, 0)` |
+| RichTextLabel | `push_paragraph` | `tab_stops` | `PackedFloat32Array()` |
+| RichTextLabel | `push_strikethrough` | `color` | `Color(0, 0, 0, 0)` |
+| RichTextLabel | `push_underline` | `color` | `Color(0, 0, 0, 0)` |
+| RichTextLabel | `update_image` | `color` | `Color(1, 1, 1, 1)` |
+| RichTextLabel | `update_image` | `region` | `Rect2(0, 0, 0, 0)` |
+| RigidBody3D | `add_constant_force` | `position` | `Vector3(0, 0, 0)` |
+| RigidBody3D | `apply_force` | `position` | `Vector3(0, 0, 0)` |
+| RigidBody3D | `apply_impulse` | `position` | `Vector3(0, 0, 0)` |
+| SceneTree | `get_multiplayer` | `for_path` | `NodePath("")` |
+| SceneTree | `set_multiplayer` | `root_path` | `NodePath("")` |
+| Skeleton3D | `physical_bones_start_simulation` | `bones` | `[]` |
+| SkeletonModification2DPhysicalBones | `start_simulation` | `bones` | `[]` |
+| SkeletonModification2DPhysicalBones | `stop_simulation` | `bones` | `[]` |
+| SoftBody3D | `set_point_pinned` | `attachment_path` | `NodePath("")` |
+| StreamPeerTLS | `connect_to_stream` | `client_options` | `null` |
+| SurfaceTool | `add_triangle_fan` | `colors` | `PackedColorArray()` |
+| SurfaceTool | `add_triangle_fan` | `normals` | `PackedVector3Array()` |
+| SurfaceTool | `add_triangle_fan` | `tangents` | `Array[Plane]([])` |
+| SurfaceTool | `add_triangle_fan` | `uv2s` | `PackedVector2Array()` |
+| SurfaceTool | `add_triangle_fan` | `uvs` | `PackedVector2Array()` |
+| TLSOptions | `client` | `trusted_chain` | `null` |
+| TLSOptions | `client_unsafe` | `trusted_chain` | `null` |
+| TabBar | `add_tab` | `icon` | `null` |
+| TextLine | `draw` | `color` | `Color(1, 1, 1, 1)` |
+| TextLine | `draw_outline` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw` | `dc_color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw_dropcap` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw_dropcap_outline` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw_line` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw_line_outline` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw_outline` | `color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `draw_outline` | `dc_color` | `Color(1, 1, 1, 1)` |
+| TextParagraph | `set_dropcap` | `dropcap_margins` | `Rect2(0, 0, 0, 0)` |
+| TextServer | `font_draw_glyph` | `color` | `Color(1, 1, 1, 1)` |
+| TextServer | `font_draw_glyph_outline` | `color` | `Color(1, 1, 1, 1)` |
+| TextServer | `shaped_text_draw` | `color` | `Color(1, 1, 1, 1)` |
+| TextServer | `shaped_text_draw_outline` | `color` | `Color(1, 1, 1, 1)` |
+| Texture2D | `draw` | `modulate` | `Color(1, 1, 1, 1)` |
+| Texture2D | `draw_rect` | `modulate` | `Color(1, 1, 1, 1)` |
+| Texture2D | `draw_rect_region` | `modulate` | `Color(1, 1, 1, 1)` |
+| TileMap | `get_used_cells_by_id` | `atlas_coords` | `Vector2i(-1, -1)` |
+| TileMap | `set_cell` | `atlas_coords` | `Vector2i(-1, -1)` |
+| TileMapLayer | `get_used_cells_by_id` | `atlas_coords` | `Vector2i(-1, -1)` |
+| TileMapLayer | `set_cell` | `atlas_coords` | `Vector2i(-1, -1)` |
+| TileMapPattern | `set_cell` | `atlas_coords` | `Vector2i(-1, -1)` |
+| TileSetAtlasSource | `create_tile` | `size` | `Vector2i(1, 1)` |
+| TileSetAtlasSource | `has_room_for_tile` | `ignored_tile` | `Vector2i(-1, -1)` |
+| TileSetAtlasSource | `move_tile_in_atlas` | `new_atlas_coords` | `Vector2i(-1, -1)` |
+| TileSetAtlasSource | `move_tile_in_atlas` | `new_size` | `Vector2i(-1, -1)` |
+| Tree | `create_item` | `parent` | `null` |
+| VideoStreamPlayback | `mix_audio` | `buffer` | `PackedFloat32Array()` |
+| VoxelGI | `bake` | `from_node` | `null` |
+| WebSocketMultiplayerPeer | `create_client` | `tls_client_options` | `null` |
+| WebSocketMultiplayerPeer | `create_server` | `tls_server_options` | `null` |
+| WebSocketPeer | `connect_to_url` | `tls_client_options` | `null` |
+| Window | `popup` | `rect` | `Rect2i(0, 0, 0, 0)` |
+| Window | `popup_centered` | `minsize` | `Vector2i(0, 0)` |
+| Window | `popup_centered_clamped` | `minsize` | `Vector2i(0, 0)` |
+| Window | `popup_exclusive` | `rect` | `Rect2i(0, 0, 0, 0)` |
+| Window | `popup_exclusive_centered` | `minsize` | `Vector2i(0, 0)` |
+| Window | `popup_exclusive_centered_clamped` | `minsize` | `Vector2i(0, 0)` |

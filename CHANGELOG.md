@@ -124,6 +124,27 @@ argument, the expected and the actual type, like the "Expected X argument" error
 arguments. iOS and Web decode these types through tagged or packed components, not a Variant cast, and
 have no such fallback.
 
+### Changed — `GodotObject.set` returns `Unit`; the signature gate also holds the annotations (task 137 items 7, 9)
+
+Desktop, Android and iOS. `GodotObject.set(property, value)` returned a `Long` that was always `0`;
+Godot's `Object.set` returns nothing, and the Web wrapper already returned `Unit`. It returns `Unit`
+now. Nothing in Kanama read the value; a script that did (`val r = node.set("x", 1)`) must drop it.
+
+- **Source break:** `GodotObject.set` returns `Unit` instead of `Long`.
+
+The signature gate (`scripts/check_public_signature_changes.py`) gains an `annotations` surface
+(`api-snapshots/annotations.txt`): the annotations a script is written with and their parameters are
+public API, and task 133 B had changed them without the gate seeing it.
+
+### Changed — the generator report lists every Godot default the wrappers cannot express (task 137 item 5)
+
+A Godot default the generator cannot write as a Kotlin default argument (`CanvasItem.drawTexture`'s
+`modulate = Color(1, 1, 1, 1)`, a `Callable()`, an Object `null`, ...) makes the parameter required.
+That was silent. `docs/reference/generated/wrapper-generator-report.md` now has a "Godot Defaults Not
+Expressed" section with every case (294 parameters today), and the report check fails when the list
+changes without the page being regenerated, so a new required parameter, or a default that is
+gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed
