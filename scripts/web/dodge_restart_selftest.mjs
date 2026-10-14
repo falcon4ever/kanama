@@ -2,9 +2,10 @@
 // Self-test of the dodge driver's round-restart budget (task 138 tooling bundle, fix round 2).
 //
 // Dodge restarts a round (new_game) when the player is hit before enough mobs have spawned, and the
-// mob counter is cumulative across rounds. Without a budget, a build where the player dies on the FIRST
-// mob of every round passes: four rounds x one mob = the four mobs the gate asks for. The driver now puts
-// `roundRestarts` in the envelope and fails `restartBudgetNotExhausted` when all three restarts were used.
+// bridge's mob counter is cumulative across rounds. Judged cumulatively, a build where the player dies on
+// the 1st (or 2nd, or 3rd) mob of every round passes: 1+1+1+1, or 2+2 = 4 mobs. The driver therefore
+// judges mobs PER ROUND (`mobsInstantiated` = the best round reached 4) and also fails
+// `restartBudgetNotExhausted` when all three restarts were used. The scenarios below pin both.
 //
 // This drives the real runDodge() against a fake bridge (no browser): `evaluate` runs the driver's own
 // snapshot/call source inside a vm context whose KanamaWebBridge is a small game simulation. Time is
@@ -139,36 +140,49 @@ const failures = [];
 const expect = (condition, message) => {
   if (!condition) failures.push(message);
 };
+const redChecks = (result) => Object.entries(result.checks).filter(([, ok]) => ok !== true).map(([name]) => name);
 
-// Healthy: the player survives (never hit) -> no restarts, every check green.
-{
-  const result = await runScenario(() => Infinity);
-  expect(result.crossings.roundRestarts === 0, `healthy: roundRestarts is ${result.crossings.roundRestarts}, expected 0`);
-  expect(result.checks.restartBudgetNotExhausted === true, "healthy: restartBudgetNotExhausted must be true");
-  const red = Object.entries(result.checks).filter(([, ok]) => ok !== true).map(([n]) => n);
-  expect(red.length === 0, `healthy: checks red: ${red.join(", ")}`);
-  expect(result.boundaryErrors.length === 0, `healthy: boundaryErrors ${JSON.stringify(result.boundaryErrors)}`);
-}
+// [label, deathAfterMobs(round), expected restarts, expected best-round mobs (min), red?]
+// A round ends when the player is hit; "healthy" never is.
+const scenarios = [
+  ["healthy", () => Infinity, 0, 4, false],
+  ["one early death then healthy", (round) => (round === 1 ? 1 : Infinity), 1, 4, false],
+  ["2 mobs per round", () => 2, 3, 2, true],
+  ["3 mobs per round", () => 3, 3, 3, true],
+  ["1 mob per round", () => 1, 3, 1, true],
+  ["1,1,1 then healthy", (round) => (round <= 3 ? 1 : Infinity), 3, 4, true],
+];
 
-// One unlucky round (hit on the first mob of round 1 only) -> one restart is within budget.
-{
-  const result = await runScenario((round) => (round === 1 ? 1 : Infinity));
-  expect(result.crossings.roundRestarts === 1, `one early death: roundRestarts is ${result.crossings.roundRestarts}, expected 1`);
-  expect(result.checks.restartBudgetNotExhausted === true, "one early death: restartBudgetNotExhausted must be true");
-  const red = Object.entries(result.checks).filter(([, ok]) => ok !== true).map(([n]) => n);
-  expect(red.length === 0, `one early death: checks red: ${red.join(", ")}`);
-}
-
-// Instant kill: every round ends after one mob. The cumulative mob counter still reaches the four mobs the
-// other checks ask for, so only the restart budget can catch it.
-{
-  const result = await runScenario(() => 1);
-  expect(result.crossings.roundRestarts === 3, `instant kill: roundRestarts is ${result.crossings.roundRestarts}, expected 3`);
-  expect(result.checks.mobsInstantiated === true, "instant kill: the scenario no longer hides behind the cumulative counter (mobsInstantiated is false); the self-test proves nothing");
-  expect(result.checks.restartBudgetNotExhausted === false, "instant kill: restartBudgetNotExhausted must be false");
+for (const [label, deathAfterMobs, restarts, bestRound, expectRed] of scenarios) {
+  const result = await runScenario(deathAfterMobs);
+  const red = redChecks(result);
+  expect(result.crossings.roundRestarts === restarts, `${label}: roundRestarts is ${result.crossings.roundRestarts}, expected ${restarts}`);
   expect(
-    result.boundaryErrors.some((message) => message.includes("restart budget exhausted") && message.includes("1, 2, 3 mob(s)")),
-    `instant kill: boundaryErrors must name the early game overs: ${JSON.stringify(result.boundaryErrors)}`,
+    result.crossings.bestRoundMobInstantiations >= bestRound && (bestRound >= 4 || result.crossings.bestRoundMobInstantiations === bestRound),
+    `${label}: bestRoundMobInstantiations is ${result.crossings.bestRoundMobInstantiations}, expected ${bestRound}${bestRound >= 4 ? "+" : ""}`,
+  );
+  if (expectRed) {
+    expect(red.length > 0, `${label}: expected a red check, but every check is green (the run would pass)`);
+    expect(result.boundaryErrors.length > 0 || result.checks.mobsInstantiated === false, `${label}: red without a boundary error or a failed mobsInstantiated`);
+  } else {
+    expect(red.length === 0, `${label}: checks red: ${red.join(", ")}`);
+    expect(result.boundaryErrors.length === 0, `${label}: boundaryErrors ${JSON.stringify(result.boundaryErrors)}`);
+  }
+  console.log(`  ${label}: restarts=${result.crossings.roundRestarts} bestRound=${result.crossings.bestRoundMobInstantiations} cumulative=${result.crossings.mobInstantiations} red=[${red.join(",")}]`);
+}
+
+// The two ways to go red are separate checks: a run that never has a 4-mob round fails mobsInstantiated; a run
+// that needed every restart fails restartBudgetNotExhausted even though its last round was long enough.
+{
+  const twoMobs = await runScenario(() => 2);
+  expect(twoMobs.checks.mobsInstantiated === false, "2 mobs per round: mobsInstantiated must be false (no round reached 4 mobs)");
+  expect(twoMobs.checks.restartBudgetNotExhausted === false, "2 mobs per round: restartBudgetNotExhausted must be false");
+  const lateRecovery = await runScenario((round) => (round <= 3 ? 1 : Infinity));
+  expect(lateRecovery.checks.mobsInstantiated === true, "1,1,1 then healthy: the fourth round reached 4 mobs, mobsInstantiated must be true");
+  expect(lateRecovery.checks.restartBudgetNotExhausted === false, "1,1,1 then healthy: restartBudgetNotExhausted must be false");
+  expect(
+    lateRecovery.boundaryErrors.some((message) => message.includes("restart budget exhausted") && message.includes("1, 1, 1 mob(s)")),
+    `1,1,1 then healthy: boundaryErrors must name the per-round counts: ${JSON.stringify(lateRecovery.boundaryErrors)}`,
   );
 }
 
@@ -177,4 +191,4 @@ if (failures.length > 0) {
   for (const failure of failures) console.error(`  FAIL ${failure}`);
   process.exit(1);
 }
-console.log("dodge_restart_selftest: OK (healthy 0 restarts, one early death 1 restart, instant kill red)");
+console.log("dodge_restart_selftest: OK (healthy and one early death green; 1, 2, 3 mobs per round and 1,1,1-then-healthy red)");

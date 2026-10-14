@@ -1384,6 +1384,12 @@ def run_self_test() -> int:
         rules = sorted(f.rule for f in found)
         if rules != sorted(expected):
             failures.append(f"{name}: expected {sorted(expected)}, got {rules}" + "".join(f"\n      {f}" for f in found))
+        # an over-count finding lists every use of the command, so the reader can see the extra one
+        for finding in found:
+            if finding.rule == "platform-use-count" and " times here" in finding.message:
+                listed = f"(lines {', '.join(str(n) for n in range(1, count + 1))})"
+                if listed not in finding.message:
+                    failures.append(f"{name}: the finding must list all {count} lines {listed}: {finding}")
     for name, path, text, expected in SELF_TESTS:
         if path.endswith(".py"):
             found = check_python_file(path, text)
@@ -1500,10 +1506,10 @@ def pin_findings(uses: dict, scanned: set[str], pins: dict | None = None) -> lis
             findings.append(
                 Finding(
                     path,
-                    sorted(lines)[expected],
+                    min(lines),
                     "platform-use-count",
-                    f"`{command}` is used {len(lines)} times here but PLATFORM_ONLY_USES pins {expected} guarded use(s): "
-                    f"the extra use is not covered by the listed guard; guard it and raise the pin with the reason, or remove it",
+                    f"`{command}` is used {len(lines)} times here (lines {', '.join(str(n) for n in sorted(lines))}) but PLATFORM_ONLY_USES pins {expected} guarded use(s): "
+                    f"one of them is not covered by the listed guard; guard it and raise the pin with the reason, or remove it",
                 )
             )
         elif len(lines) < expected:

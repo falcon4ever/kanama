@@ -214,7 +214,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   // three HUD handles over seven mobs reads as 0.43 retention and the threshold is
   // measuring the mob count.
   await delay(1_200);
-  const roundBaselineByKind = (await snapshot(evaluate))?.liveByKind ?? baselineByKind;
+  const roundBaselineSnap = await snapshot(evaluate);
+  const roundBaselineByKind = roundBaselineSnap?.liveByKind ?? baselineByKind;
   trace(`round baseline: ${JSON.stringify(roundBaselineByKind)}`);
   // Play long enough for several mobs to spawn AND for the earliest ones to fly across
   // and leave the screen (each mob queue_frees itself on VisibleOnScreenNotifier2D
@@ -227,25 +228,36 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   // it within a second of the first spawn (Main.game_over stops MobTimer). How many mobs
   // spawn before that is decided by the engine RNG, which Godot seeds randomly at startup.
   // A hit is gameplay, not a bridge fault, so when the round ends before enough mobs have
-  // spawned, start another round (new_game) and keep counting -- the instantiation counter
-  // is cumulative across rounds.
+  // spawned, start another round (new_game). The bridge's instantiation counter is cumulative
+  // across rounds, so the driver keeps a round baseline (the counter at the last new_game) and
+  // judges mobs PER ROUND: `mobsInstantiated` needs at least one round to reach 4 mobs, and the
+  // window ends on that round's count, not the cumulative one.
   //
   // The restarts are a budget, not a free pass. A healthy run ends a round early about 10-15% of
-  // the time, so it needs 0-1 restarts and three in a row happen about 0.2% of the time. A run that
-  // uses all MAX_ROUND_RESTARTS is more likely a build where the player dies on the first mob
-  // (an instant-kill bug): the cumulative mob counter would still reach 4 across the restarts and
-  // every other check would pass. `restartBudgetNotExhausted` below fails that run.
+  // the time, so it needs 0-1 restarts and three in a row happen about 0.2% of the time. What the
+  // two checks deliver together: a build that kills the player on the 1st, 2nd or 3rd mob of every
+  // round never gets a 4-mob round, so `mobsInstantiated` fails; one that kills it on the 1st mob
+  // of the first three rounds and then recovers uses every restart, so `restartBudgetNotExhausted`
+  // fails. What they do not catch: a player that dies at exactly the 4th mob of every round (that
+  // round counts as long enough), or a regression that only shows up after the 4th mob.
   let gameOversSeen = 0;
   let roundRestarts = 0;
-  const earlyGameOvers = []; // mobs spawned so far (cumulative) at each early game over that was restarted
+  let roundBaseline = roundBaselineSnap?.mobInstantiations ?? 0; // cumulative counter at the last new_game
+  const earlyGameOvers = []; // mobs spawned in the round at each early game over that was restarted
+  const trackRound = (snap, p) => {
+    p.roundMobs = snap.mobInstantiations - roundBaseline;
+    p.bestRoundMobs = Math.max(p.bestRoundMobs ?? 0, p.roundMobs);
+  };
   const restartAfterEarlyGameOver = async (snap, p) => {
+    trackRound(snap, p);
     if (snap.gameOvers <= gameOversSeen) return false;
     gameOversSeen = snap.gameOvers;
-    if (p.mobInstantiations >= 4 || roundRestarts >= MAX_ROUND_RESTARTS) return false;
+    if (p.roundMobs >= 4 || roundRestarts >= MAX_ROUND_RESTARTS) return false;
     roundRestarts += 1;
-    earlyGameOvers.push(p.mobInstantiations);
-    trace(`game over after ${p.mobInstantiations} mob(s): new round ${roundRestarts}`);
+    earlyGameOvers.push(p.roundMobs);
+    trace(`game over after ${p.roundMobs} mob(s) this round: new round ${roundRestarts}`);
     await callMain(evaluate, "new_game");
+    roundBaseline = snap.mobInstantiations;
     return true;
   };
   const gameplay = await observe(
@@ -253,12 +265,12 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     seedPeak,
     45_000,
     deadline,
-    (snap, p) => p.mobFrees >= 2 && p.mobInstantiations >= 4,
+    (snap, p) => p.mobFrees >= 2 && p.bestRoundMobs >= 4,
     restartAfterEarlyGameOver,
   );
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
-  trace(`gameplay: mobs=${peak.mobInstantiations} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);
+  trace(`gameplay: mobs=${peak.mobInstantiations} bestRound=${peak.bestRoundMobs} addChild=${peak.mobAddChildCommands} maxLive=${peak.maxLiveHandles} frees=${peak.mobFrees} finalLive=${atPeak.liveHandles} crossings=${peak.crossings}`);
 
   // Full teardown: SmokeQuit.smoke_teardown quits the SceneTree, exiting every node so it
   // releases its handles. Poll until the live-handle count drains to zero (the smoke
@@ -314,7 +326,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const checks = {
     modeDodge: ready.mode === "dodge",
     sceneScriptsReady: ready.mainReady >= 1 && ready.playerReady >= 1 && ready.hudReady >= 1,
-    mobsInstantiated: peak.mobInstantiations >= 4,
+    mobsInstantiated: (peak.bestRoundMobs ?? 0) >= 4,
     mobsAddedToTree: peak.mobAddChildCommands >= peak.mobInstantiations,
     handleGrowthDuringGameplay: peak.maxLiveHandles > ready.liveHandles,
     crossingsAdvanced: peak.crossings > ready.crossings,
@@ -334,8 +346,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     // at 1.0 (task 72 measured exactly that); a healthy run sits near 0. This is
     // the SHORT-run form of what the soak gate needs ten minutes to see.
     noPerMobHandleRetention: worstRetention <= 0.5,
-    // Fewer than MAX_ROUND_RESTARTS early game overs: a build where every round ends on the first
-    // mob uses them all, and must not pass on the mobs spawned across those rounds.
+    // Fewer than MAX_ROUND_RESTARTS early game overs: a build that ends the first rounds on the first
+    // mob uses them all, even if a later round runs long enough for mobsInstantiated.
     restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
@@ -350,7 +362,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
   if (roundRestarts >= MAX_ROUND_RESTARTS) {
     boundaryErrors.push(
-      `dodge restart budget exhausted: ${roundRestarts} early game overs, after ${earlyGameOvers.join(", ")} mob(s) spawned so far ` +
+      `dodge restart budget exhausted: ${roundRestarts} early game overs, after ${earlyGameOvers.join(", ")} mob(s) in each round ` +
         `(a healthy run needs 0-1 restarts); the player may be dying on the first mob (instant-kill bug)`,
     );
   }
@@ -371,6 +383,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     crossings: {
       kotlinToGodotCalls: peak.crossings,
       mobInstantiations: peak.mobInstantiations,
+      // Mobs spawned in the best single round (the count mobsInstantiated judges; mobInstantiations is cumulative).
+      bestRoundMobInstantiations: peak.bestRoundMobs ?? 0,
       mobAddChildCommands: peak.mobAddChildCommands,
       // New rounds started after an early game over (0-1 when healthy; the check fails at 3).
       roundRestarts,

@@ -717,7 +717,7 @@ portability_case("env -C wrapped tool", "env -C /tmp rg x\n", "[banned-tool] `rg
 portability_case("sudo -u wrapped tool", "sudo -u root rg x\n", "[banned-tool] `rg`", "the command behind `sudo -u USER` is judged, not the user name")
 case("check_script_portability.py (extra guarded-tool use)", py("check_script_portability.py"),
      [Append("scripts/check_shell_lint.sh", "\nshellcheck --version >/dev/null\n")],
-     "[platform-use-count] `shellcheck`", "one more `shellcheck` in a script whose listed use is guarded: the entry pins its use count, so the extra, unguarded use fails (review round 2)")
+     "[platform-use-count] `shellcheck` is used 4 times here (lines ", "one more `shellcheck` in a script whose listed use is guarded: the entry pins its use count, so the extra, unguarded use fails, and the finding lists every use so the reader can see the extra one (review rounds 2 and 3)")
 case("check_script_portability.py (python bash -o pipefail -c)", py("check_script_portability.py"),
      [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["bash", "-o", "pipefail", "-c", "rg x"])\n')],
      "[banned-tool] `rg`", "a Python gate hides ripgrep in a [\"bash\", \"-o\", \"pipefail\", \"-c\", ...] command line")
@@ -871,6 +871,9 @@ case("web/bridge_simtime_selftest.mjs (physics)", ["node", "scripts/web/bridge_s
 case("web/dodge_restart_selftest.mjs", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,", "restartBudgetNotExhausted: true,")],
      "restartBudgetNotExhausted must be false", "dodge stops failing a run that used every round restart (a build that kills the player on the first mob passes on the cumulative mob counter)")
+case("web/dodge_restart_selftest.mjs (per-round mob count)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsInstantiated: (peak.bestRoundMobs ?? 0) >= 4,", "mobsInstantiated: peak.mobInstantiations >= 4,")],
+     "2 mobs per round: mobsInstantiated must be false", "dodge counts mobs across rounds again: a build that kills the player on the 2nd mob of every round reaches 2 + 2 = 4 and passes with one restart")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
