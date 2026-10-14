@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * SDF raymarching algorithm to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeSDFRaymarch
  */
 class VisualShaderNodeSDFRaymarch(handle: GodotHandle) : VisualShaderNode(handle) {

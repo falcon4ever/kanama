@@ -7,16 +7,30 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Imports an Ogg Vorbis audio file for playback.
+ *
  * Generated from Godot docs: ResourceImporterOggVorbis
  */
 class ResourceImporterOggVorbis(handle: GodotHandle) : ResourceImporter(handle) {
     // No conservative instance methods emitted yet.
 
     companion object {
+        /**
+         * Creates a new `AudioStreamOggVorbis` instance from the given buffer. The buffer must contain Ogg
+         * Vorbis data.
+         *
+         * Generated from Godot docs: ResourceImporterOggVorbis.load_from_buffer
+         */
         fun loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
             return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithByteArrayArgRetObject(Binds.loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
+        /**
+         * Creates a new `AudioStreamOggVorbis` instance from the given file path. The file must be in Ogg
+         * Vorbis format.
+         *
+         * Generated from Godot docs: ResourceImporterOggVorbis.load_from_file
+         */
         fun loadFromFile(path: String): AudioStreamOggVorbis? {
             return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadFromFileBind, NULL_SEGMENT, path))
         }

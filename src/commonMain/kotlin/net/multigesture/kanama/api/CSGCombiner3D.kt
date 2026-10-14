@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A CSG node that allows you to combine other CSG modifiers.
+ *
  * Generated from Godot docs: CSGCombiner3D
  */
 class CSGCombiner3D(handle: GodotHandle) : CSGShape3D(handle) {

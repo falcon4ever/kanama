@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Multiplies a `Transform3D` and a `Vector3` within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTransformVecMult
  */
 class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,16 +19,33 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
         @JvmName("setOperatorProperty")
         set(value) = setOperator(value)
 
+    /**
+     * The multiplication type to be performed.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformVecMult.set_operator
+     */
     fun setOperator(op: VisualShaderNodeTransformVecMult.Operator) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOperatorBind, segment, op.value)
     }
 
+    /**
+     * The multiplication type to be performed.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformVecMult.get_operator
+     */
     fun getOperator(): VisualShaderNodeTransformVecMult.Operator {
         checkOpen()
         return VisualShaderNodeTransformVecMult.Operator(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOperatorBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeTransformVecMult.Operator` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeTransformVecMult.Operator.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformVecMult.Operator
+     */
     @JvmInline
     value class Operator(override val value: Long) : GodotEnumValue {
         companion object {
@@ -34,6 +53,11 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
             val BxA: Operator get() = Operator(1L)
             val OP_3x3_AxB: Operator get() = Operator(2L)
             val OP_3x3_BxA: Operator get() = Operator(3L)
+            /**
+             * Represents the size of the `Operator` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeTransformVecMult.OP_MAX
+             */
             val MAX: Operator get() = Operator(4L)
         }
     }

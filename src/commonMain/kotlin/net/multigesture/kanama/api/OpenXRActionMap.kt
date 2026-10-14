@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Collection of `OpenXRActionSet` and `OpenXRInteractionProfile` resources for the OpenXR module.
+ *
  * Generated from Godot docs: OpenXRActionMap
  */
 class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
@@ -23,76 +25,151 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
         @JvmName("setInteractionProfilesProperty")
         set(value) = setInteractionProfiles(value)
 
+    /**
+     * Collection of `OpenXRActionSet`s that are part of this action map.
+     *
+     * Generated from Godot docs: OpenXRActionMap.set_action_sets
+     */
     fun setActionSets(actionSets: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setActionSetsBind, segment, actionSets)
     }
 
+    /**
+     * Collection of `OpenXRActionSet`s that are part of this action map.
+     *
+     * Generated from Godot docs: OpenXRActionMap.get_action_sets
+     */
     fun getActionSets(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionSetsBind, segment)
     }
 
+    /**
+     * Retrieve the number of actions sets in our action map.
+     *
+     * Generated from Godot docs: OpenXRActionMap.get_action_set_count
+     */
     fun getActionSetCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getActionSetCountBind, segment)
     }
 
+    /**
+     * Retrieve an action set by name.
+     *
+     * Generated from Godot docs: OpenXRActionMap.find_action_set
+     */
     fun findActionSet(name: String): OpenXRActionSet? {
         checkOpen()
         return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findActionSetBind, segment, name))
     }
 
+    /**
+     * Retrieve the action set at this index.
+     *
+     * Generated from Godot docs: OpenXRActionMap.get_action_set
+     */
     fun getActionSet(idx: Int): OpenXRActionSet? {
         checkOpen()
         return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getActionSetBind, segment, idx))
     }
 
+    /**
+     * Add an action set.
+     *
+     * Generated from Godot docs: OpenXRActionMap.add_action_set
+     */
     fun addActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Remove an action set.
+     *
+     * Generated from Godot docs: OpenXRActionMap.remove_action_set
+     */
     fun removeActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Collection of `OpenXRInteractionProfile`s that are part of this action map.
+     *
+     * Generated from Godot docs: OpenXRActionMap.set_interaction_profiles
+     */
     fun setInteractionProfiles(interactionProfiles: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setInteractionProfilesBind, segment, interactionProfiles)
     }
 
+    /**
+     * Collection of `OpenXRInteractionProfile`s that are part of this action map.
+     *
+     * Generated from Godot docs: OpenXRActionMap.get_interaction_profiles
+     */
     fun getInteractionProfiles(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getInteractionProfilesBind, segment)
     }
 
+    /**
+     * Retrieve the number of interaction profiles in our action map.
+     *
+     * Generated from Godot docs: OpenXRActionMap.get_interaction_profile_count
+     */
     fun getInteractionProfileCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInteractionProfileCountBind, segment)
     }
 
+    /**
+     * Find an interaction profile by its name (path).
+     *
+     * Generated from Godot docs: OpenXRActionMap.find_interaction_profile
+     */
     fun findInteractionProfile(name: String): OpenXRInteractionProfile? {
         checkOpen()
         return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findInteractionProfileBind, segment, name))
     }
 
+    /**
+     * Get the interaction profile at this index.
+     *
+     * Generated from Godot docs: OpenXRActionMap.get_interaction_profile
+     */
     fun getInteractionProfile(idx: Int): OpenXRInteractionProfile? {
         checkOpen()
         return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInteractionProfileBind, segment, idx))
     }
 
+    /**
+     * Add an interaction profile.
+     *
+     * Generated from Godot docs: OpenXRActionMap.add_interaction_profile
+     */
     fun addInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Remove an interaction profile.
+     *
+     * Generated from Godot docs: OpenXRActionMap.remove_interaction_profile
+     */
     fun removeInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Setup this action set with our default actions.
+     *
+     * Generated from Godot docs: OpenXRActionMap.create_default_action_sets
+     */
     fun createDefaultActionSets() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.createDefaultActionSetsBind, segment)

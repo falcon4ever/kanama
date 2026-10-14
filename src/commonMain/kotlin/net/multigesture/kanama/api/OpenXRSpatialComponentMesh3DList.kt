@@ -7,14 +7,26 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * Object for storing the queries mesh3d result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentMesh3DList
  */
 class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the transform for positioning our mesh for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentMesh3DList.get_transform
+     */
     fun getTransform(index: Long): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getTransformBind, segment, index)
     }
 
+    /**
+     * Returns the mesh for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentMesh3DList.get_mesh
+     */
     fun getMesh(index: Long): Mesh? {
         checkOpen()
         return Mesh.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getMeshBind, segment, index))

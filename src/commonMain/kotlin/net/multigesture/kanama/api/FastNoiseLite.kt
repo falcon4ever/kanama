@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * Generates noise using the FastNoiseLite library.
+ *
  * Generated from Godot docs: FastNoiseLite
  */
 class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
@@ -138,275 +140,692 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setDomainWarpFractalGainProperty")
         set(value) = setDomainWarpFractalGain(value)
 
+    /**
+     * The noise algorithm used.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_noise_type
+     */
     fun setNoiseType(type: FastNoiseLite.NoiseType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setNoiseTypeBind, segment, type.value)
     }
 
+    /**
+     * The noise algorithm used.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_noise_type
+     */
     fun getNoiseType(): FastNoiseLite.NoiseType {
         checkOpen()
         return FastNoiseLite.NoiseType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNoiseTypeBind, segment))
     }
 
+    /**
+     * The random number seed for all noise types.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_seed
+     */
     fun setSeed(seed: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSeedBind, segment, seed)
     }
 
+    /**
+     * The random number seed for all noise types.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_seed
+     */
     fun getSeed(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSeedBind, segment)
     }
 
+    /**
+     * The frequency for all noise types. Low frequency results in smooth noise while high frequency
+     * results in rougher, more granular noise.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_frequency
+     */
     fun setFrequency(freq: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFrequencyBind, segment, freq)
     }
 
+    /**
+     * The frequency for all noise types. Low frequency results in smooth noise while high frequency
+     * results in rougher, more granular noise.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_frequency
+     */
     fun getFrequency(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
     }
 
+    /**
+     * Translate the noise input coordinates by the given `Vector3`.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_offset
+     */
     fun setOffset(offset: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setOffsetBind, segment, offset)
     }
 
+    /**
+     * Translate the noise input coordinates by the given `Vector3`.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_offset
+     */
     fun getOffset(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOffsetBind, segment)
     }
 
+    /**
+     * The method for combining octaves into a fractal.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_fractal_type
+     */
     fun setFractalType(type: FastNoiseLite.FractalType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFractalTypeBind, segment, type.value)
     }
 
+    /**
+     * The method for combining octaves into a fractal.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_fractal_type
+     */
     fun getFractalType(): FastNoiseLite.FractalType {
         checkOpen()
         return FastNoiseLite.FractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFractalTypeBind, segment))
     }
 
+    /**
+     * The number of noise layers that are sampled to get the final value for fractal noise types.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_fractal_octaves
+     */
     fun setFractalOctaves(octaveCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setFractalOctavesBind, segment, octaveCount)
     }
 
+    /**
+     * The number of noise layers that are sampled to get the final value for fractal noise types.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_fractal_octaves
+     */
     fun getFractalOctaves(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFractalOctavesBind, segment)
     }
 
+    /**
+     * Frequency multiplier between subsequent octaves. Increasing this value results in higher octaves
+     * producing noise with finer details and a rougher appearance.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_fractal_lacunarity
+     */
     fun setFractalLacunarity(lacunarity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalLacunarityBind, segment, lacunarity)
     }
 
+    /**
+     * Frequency multiplier between subsequent octaves. Increasing this value results in higher octaves
+     * producing noise with finer details and a rougher appearance.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_fractal_lacunarity
+     */
     fun getFractalLacunarity(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalLacunarityBind, segment)
     }
 
+    /**
+     * Determines the strength of each subsequent layer of noise in fractal noise. A low value places
+     * more emphasis on the lower frequency base layers, while a high value puts more emphasis on the
+     * higher frequency layers.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_fractal_gain
+     */
     fun setFractalGain(gain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalGainBind, segment, gain)
     }
 
+    /**
+     * Determines the strength of each subsequent layer of noise in fractal noise. A low value places
+     * more emphasis on the lower frequency base layers, while a high value puts more emphasis on the
+     * higher frequency layers.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_fractal_gain
+     */
     fun getFractalGain(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalGainBind, segment)
     }
 
+    /**
+     * Higher weighting means higher octaves have less impact if lower octaves have a large impact.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_fractal_weighted_strength
+     */
     fun setFractalWeightedStrength(weightedStrength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalWeightedStrengthBind, segment, weightedStrength)
     }
 
+    /**
+     * Higher weighting means higher octaves have less impact if lower octaves have a large impact.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_fractal_weighted_strength
+     */
     fun getFractalWeightedStrength(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalWeightedStrengthBind, segment)
     }
 
+    /**
+     * Sets the strength of the fractal ping pong type.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_fractal_ping_pong_strength
+     */
     fun setFractalPingPongStrength(pingPongStrength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalPingPongStrengthBind, segment, pingPongStrength)
     }
 
+    /**
+     * Sets the strength of the fractal ping pong type.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_fractal_ping_pong_strength
+     */
     fun getFractalPingPongStrength(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalPingPongStrengthBind, segment)
     }
 
+    /**
+     * Determines how the distance to the nearest/second-nearest point is computed.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_cellular_distance_function
+     */
     fun setCellularDistanceFunction(func: FastNoiseLite.CellularDistanceFunction) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCellularDistanceFunctionBind, segment, func.value)
     }
 
+    /**
+     * Determines how the distance to the nearest/second-nearest point is computed.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_cellular_distance_function
+     */
     fun getCellularDistanceFunction(): FastNoiseLite.CellularDistanceFunction {
         checkOpen()
         return FastNoiseLite.CellularDistanceFunction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularDistanceFunctionBind, segment))
     }
 
+    /**
+     * Maximum distance a point can move off of its grid position. Set to `0` for an even grid.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_cellular_jitter
+     */
     fun setCellularJitter(jitter: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCellularJitterBind, segment, jitter)
     }
 
+    /**
+     * Maximum distance a point can move off of its grid position. Set to `0` for an even grid.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_cellular_jitter
+     */
     fun getCellularJitter(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellularJitterBind, segment)
     }
 
+    /**
+     * Return type from cellular noise calculations.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_cellular_return_type
+     */
     fun setCellularReturnType(ret: FastNoiseLite.CellularReturnType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setCellularReturnTypeBind, segment, ret.value)
     }
 
+    /**
+     * Return type from cellular noise calculations.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_cellular_return_type
+     */
     fun getCellularReturnType(): FastNoiseLite.CellularReturnType {
         checkOpen()
         return FastNoiseLite.CellularReturnType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularReturnTypeBind, segment))
     }
 
+    /**
+     * If enabled, another FastNoiseLite instance is used to warp the space, resulting in a distortion
+     * of the noise.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_enabled
+     */
     fun setDomainWarpEnabled(domainWarpEnabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDomainWarpEnabledBind, segment, domainWarpEnabled)
     }
 
+    /**
+     * If enabled, another FastNoiseLite instance is used to warp the space, resulting in a distortion
+     * of the noise.
+     *
+     * Generated from Godot docs: FastNoiseLite.is_domain_warp_enabled
+     */
     fun isDomainWarpEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDomainWarpEnabledBind, segment)
     }
 
+    /**
+     * The warp algorithm.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_type
+     */
     fun setDomainWarpType(domainWarpType: FastNoiseLite.DomainWarpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDomainWarpTypeBind, segment, domainWarpType.value)
     }
 
+    /**
+     * The warp algorithm.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_type
+     */
     fun getDomainWarpType(): FastNoiseLite.DomainWarpType {
         checkOpen()
         return FastNoiseLite.DomainWarpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpTypeBind, segment))
     }
 
+    /**
+     * Sets the maximum warp distance from the origin.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_amplitude
+     */
     fun setDomainWarpAmplitude(domainWarpAmplitude: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpAmplitudeBind, segment, domainWarpAmplitude)
     }
 
+    /**
+     * Sets the maximum warp distance from the origin.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_amplitude
+     */
     fun getDomainWarpAmplitude(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpAmplitudeBind, segment)
     }
 
+    /**
+     * Frequency of the noise which warps the space. Low frequency results in smooth noise while high
+     * frequency results in rougher, more granular noise.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_frequency
+     */
     fun setDomainWarpFrequency(domainWarpFrequency: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFrequencyBind, segment, domainWarpFrequency)
     }
 
+    /**
+     * Frequency of the noise which warps the space. Low frequency results in smooth noise while high
+     * frequency results in rougher, more granular noise.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_frequency
+     */
     fun getDomainWarpFrequency(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFrequencyBind, segment)
     }
 
+    /**
+     * The method for combining octaves into a fractal which is used to warp the space.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_fractal_type
+     */
     fun setDomainWarpFractalType(domainWarpFractalType: FastNoiseLite.DomainWarpFractalType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDomainWarpFractalTypeBind, segment, domainWarpFractalType.value)
     }
 
+    /**
+     * The method for combining octaves into a fractal which is used to warp the space.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_fractal_type
+     */
     fun getDomainWarpFractalType(): FastNoiseLite.DomainWarpFractalType {
         checkOpen()
         return FastNoiseLite.DomainWarpFractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpFractalTypeBind, segment))
     }
 
+    /**
+     * The number of noise layers that are sampled to get the final value for the fractal noise which
+     * warps the space.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_fractal_octaves
+     */
     fun setDomainWarpFractalOctaves(domainWarpOctaveCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDomainWarpFractalOctavesBind, segment, domainWarpOctaveCount)
     }
 
+    /**
+     * The number of noise layers that are sampled to get the final value for the fractal noise which
+     * warps the space.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_fractal_octaves
+     */
     fun getDomainWarpFractalOctaves(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDomainWarpFractalOctavesBind, segment)
     }
 
+    /**
+     * The change in frequency between octaves, also known as "lacunarity", of the fractal noise which
+     * warps the space. Increasing this value results in higher octaves, producing noise with finer
+     * details and a rougher appearance.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_fractal_lacunarity
+     */
     fun setDomainWarpFractalLacunarity(domainWarpLacunarity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFractalLacunarityBind, segment, domainWarpLacunarity)
     }
 
+    /**
+     * The change in frequency between octaves, also known as "lacunarity", of the fractal noise which
+     * warps the space. Increasing this value results in higher octaves, producing noise with finer
+     * details and a rougher appearance.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_fractal_lacunarity
+     */
     fun getDomainWarpFractalLacunarity(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalLacunarityBind, segment)
     }
 
+    /**
+     * Determines the strength of each subsequent layer of the noise which is used to warp the space. A
+     * low value places more emphasis on the lower frequency base layers, while a high value puts more
+     * emphasis on the higher frequency layers.
+     *
+     * Generated from Godot docs: FastNoiseLite.set_domain_warp_fractal_gain
+     */
     fun setDomainWarpFractalGain(domainWarpGain: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFractalGainBind, segment, domainWarpGain)
     }
 
+    /**
+     * Determines the strength of each subsequent layer of the noise which is used to warp the space. A
+     * low value places more emphasis on the lower frequency base layers, while a high value puts more
+     * emphasis on the higher frequency layers.
+     *
+     * Generated from Godot docs: FastNoiseLite.get_domain_warp_fractal_gain
+     */
     fun getDomainWarpFractalGain(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalGainBind, segment)
     }
 
+    /**
+     * Godot's `FastNoiseLite.NoiseType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`FastNoiseLite.NoiseType.<NAME>`).
+     *
+     * Generated from Godot docs: FastNoiseLite.NoiseType
+     */
     @JvmInline
     value class NoiseType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * A lattice of points are assigned random values then interpolated based on neighboring values.
+             *
+             * Generated from Godot docs: FastNoiseLite.TYPE_VALUE
+             */
             val VALUE: NoiseType get() = NoiseType(5L)
+            /**
+             * Similar to value noise (`NoiseType.VALUE`), but slower. Has more variance in peaks and valleys.
+             * Cubic noise can be used to avoid certain artifacts when using value noise to create a bumpmap.
+             * In general, you should always use this mode if the value noise is being used for a heightmap or
+             * bumpmap.
+             *
+             * Generated from Godot docs: FastNoiseLite.TYPE_VALUE_CUBIC
+             */
             val VALUE_CUBIC: NoiseType get() = NoiseType(4L)
+            /**
+             * A lattice of random gradients. Their dot products are interpolated to obtain values in between
+             * the lattices.
+             *
+             * Generated from Godot docs: FastNoiseLite.TYPE_PERLIN
+             */
             val PERLIN: NoiseType get() = NoiseType(3L)
+            /**
+             * Cellular includes both Worley noise and Voronoi diagrams which creates various regions of the
+             * same value.
+             *
+             * Generated from Godot docs: FastNoiseLite.TYPE_CELLULAR
+             */
             val CELLULAR: NoiseType get() = NoiseType(2L)
+            /**
+             * As opposed to `NoiseType.PERLIN`, gradients exist in a simplex lattice rather than a grid
+             * lattice, avoiding directional artifacts. Internally uses FastNoiseLite's OpenSimplex2 noise
+             * type.
+             *
+             * Generated from Godot docs: FastNoiseLite.TYPE_SIMPLEX
+             */
             val SIMPLEX: NoiseType get() = NoiseType(0L)
+            /**
+             * Modified, higher quality version of `NoiseType.SIMPLEX`, but slower. Internally uses
+             * FastNoiseLite's OpenSimplex2S noise type.
+             *
+             * Generated from Godot docs: FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+             */
             val SIMPLEX_SMOOTH: NoiseType get() = NoiseType(1L)
         }
     }
 
+    /**
+     * Godot's `FastNoiseLite.FractalType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`FastNoiseLite.FractalType.<NAME>`).
+     *
+     * Generated from Godot docs: FastNoiseLite.FractalType
+     */
     @JvmInline
     value class FractalType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * No fractal noise.
+             *
+             * Generated from Godot docs: FastNoiseLite.FRACTAL_NONE
+             */
             val NONE: FractalType get() = FractalType(0L)
+            /**
+             * Method using Fractional Brownian Motion to combine octaves into a fractal.
+             *
+             * Generated from Godot docs: FastNoiseLite.FRACTAL_FBM
+             */
             val FBM: FractalType get() = FractalType(1L)
+            /**
+             * Method of combining octaves into a fractal resulting in a "ridged" look.
+             *
+             * Generated from Godot docs: FastNoiseLite.FRACTAL_RIDGED
+             */
             val RIDGED: FractalType get() = FractalType(2L)
+            /**
+             * Method of combining octaves into a fractal with a ping pong effect.
+             *
+             * Generated from Godot docs: FastNoiseLite.FRACTAL_PING_PONG
+             */
             val PING_PONG: FractalType get() = FractalType(3L)
         }
     }
 
+    /**
+     * Godot's `FastNoiseLite.CellularDistanceFunction` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`FastNoiseLite.CellularDistanceFunction.<NAME>`).
+     *
+     * Generated from Godot docs: FastNoiseLite.CellularDistanceFunction
+     */
     @JvmInline
     value class CellularDistanceFunction(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Euclidean distance to the nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.DISTANCE_EUCLIDEAN
+             */
             val EUCLIDEAN: CellularDistanceFunction get() = CellularDistanceFunction(0L)
+            /**
+             * Squared Euclidean distance to the nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.DISTANCE_EUCLIDEAN_SQUARED
+             */
             val EUCLIDEAN_SQUARED: CellularDistanceFunction get() = CellularDistanceFunction(1L)
+            /**
+             * Manhattan distance (taxicab metric) to the nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.DISTANCE_MANHATTAN
+             */
             val MANHATTAN: CellularDistanceFunction get() = CellularDistanceFunction(2L)
+            /**
+             * Blend of `CellularDistanceFunction.EUCLIDEAN` and `CellularDistanceFunction.MANHATTAN` to give
+             * curved cell boundaries.
+             *
+             * Generated from Godot docs: FastNoiseLite.DISTANCE_HYBRID
+             */
             val HYBRID: CellularDistanceFunction get() = CellularDistanceFunction(3L)
         }
     }
 
+    /**
+     * Godot's `FastNoiseLite.CellularReturnType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`FastNoiseLite.CellularReturnType.<NAME>`).
+     *
+     * Generated from Godot docs: FastNoiseLite.CellularReturnType
+     */
     @JvmInline
     value class CellularReturnType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * The cellular distance function will return the same value for all points within a cell.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_CELL_VALUE
+             */
             val CELL_VALUE: CellularReturnType get() = CellularReturnType(0L)
+            /**
+             * The cellular distance function will return a value determined by the distance to the nearest
+             * point.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_DISTANCE
+             */
             val DISTANCE: CellularReturnType get() = CellularReturnType(1L)
+            /**
+             * The cellular distance function returns the distance to the second-nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_DISTANCE2
+             */
             val DISTANCE2: CellularReturnType get() = CellularReturnType(2L)
+            /**
+             * The distance to the nearest point is added to the distance to the second-nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_DISTANCE2_ADD
+             */
             val DISTANCE2_ADD: CellularReturnType get() = CellularReturnType(3L)
+            /**
+             * The distance to the nearest point is subtracted from the distance to the second-nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_DISTANCE2_SUB
+             */
             val DISTANCE2_SUB: CellularReturnType get() = CellularReturnType(4L)
+            /**
+             * The distance to the nearest point is multiplied with the distance to the second-nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_DISTANCE2_MUL
+             */
             val DISTANCE2_MUL: CellularReturnType get() = CellularReturnType(5L)
+            /**
+             * The distance to the nearest point is divided by the distance to the second-nearest point.
+             *
+             * Generated from Godot docs: FastNoiseLite.RETURN_DISTANCE2_DIV
+             */
             val DISTANCE2_DIV: CellularReturnType get() = CellularReturnType(6L)
         }
     }
 
+    /**
+     * Godot's `FastNoiseLite.DomainWarpType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`FastNoiseLite.DomainWarpType.<NAME>`).
+     *
+     * Generated from Godot docs: FastNoiseLite.DomainWarpType
+     */
     @JvmInline
     value class DomainWarpType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * The domain is warped using the simplex noise algorithm.
+             *
+             * Generated from Godot docs: FastNoiseLite.DOMAIN_WARP_SIMPLEX
+             */
             val SIMPLEX: DomainWarpType get() = DomainWarpType(0L)
+            /**
+             * The domain is warped using a simplified version of the simplex noise algorithm.
+             *
+             * Generated from Godot docs: FastNoiseLite.DOMAIN_WARP_SIMPLEX_REDUCED
+             */
             val SIMPLEX_REDUCED: DomainWarpType get() = DomainWarpType(1L)
+            /**
+             * The domain is warped using a simple noise grid (not as smooth as the other methods, but more
+             * performant).
+             *
+             * Generated from Godot docs: FastNoiseLite.DOMAIN_WARP_BASIC_GRID
+             */
             val BASIC_GRID: DomainWarpType get() = DomainWarpType(2L)
         }
     }
 
+    /**
+     * Godot's `FastNoiseLite.DomainWarpFractalType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`FastNoiseLite.DomainWarpFractalType.<NAME>`).
+     *
+     * Generated from Godot docs: FastNoiseLite.DomainWarpFractalType
+     */
     @JvmInline
     value class DomainWarpFractalType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * No fractal noise for warping the space.
+             *
+             * Generated from Godot docs: FastNoiseLite.DOMAIN_WARP_FRACTAL_NONE
+             */
             val NONE: DomainWarpFractalType get() = DomainWarpFractalType(0L)
+            /**
+             * Warping the space progressively, octave for octave, resulting in a more "liquified" distortion.
+             *
+             * Generated from Godot docs: FastNoiseLite.DOMAIN_WARP_FRACTAL_PROGRESSIVE
+             */
             val PROGRESSIVE: DomainWarpFractalType get() = DomainWarpFractalType(1L)
+            /**
+             * Warping the space independently for each octave, resulting in a more chaotic distortion.
+             *
+             * Generated from Godot docs: FastNoiseLite.DOMAIN_WARP_FRACTAL_INDEPENDENT
+             */
             val INDEPENDENT: DomainWarpFractalType get() = DomainWarpFractalType(2L)
         }
     }

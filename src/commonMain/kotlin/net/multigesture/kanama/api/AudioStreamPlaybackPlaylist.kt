@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Playback class used for `AudioStreamPlaylist`.
+ *
  * Generated from Godot docs: AudioStreamPlaybackPlaylist
  */
 class AudioStreamPlaybackPlaylist(handle: GodotHandle) : AudioStreamPlayback(handle) {

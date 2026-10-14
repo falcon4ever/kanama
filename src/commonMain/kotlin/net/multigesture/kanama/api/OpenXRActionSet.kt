@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Collection of `OpenXRAction` resources that make up an action set.
+ *
  * Generated from Godot docs: OpenXRActionSet
  */
 class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
@@ -29,46 +31,91 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
         @JvmName("setActionsProperty")
         set(value) = setActions(value)
 
+    /**
+     * The localized name of this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.set_localized_name
+     */
     fun setLocalizedName(localizedName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLocalizedNameBind, segment, localizedName)
     }
 
+    /**
+     * The localized name of this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.get_localized_name
+     */
     fun getLocalizedName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocalizedNameBind, segment)
     }
 
+    /**
+     * The priority for this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.set_priority
+     */
     fun setPriority(priority: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setPriorityBind, segment, priority)
     }
 
+    /**
+     * The priority for this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.get_priority
+     */
     fun getPriority(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPriorityBind, segment)
     }
 
+    /**
+     * Retrieve the number of actions in our action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.get_action_count
+     */
     fun getActionCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getActionCountBind, segment)
     }
 
+    /**
+     * Collection of actions for this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.set_actions
+     */
     fun setActions(actions: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setActionsBind, segment, actions)
     }
 
+    /**
+     * Collection of actions for this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.get_actions
+     */
     fun getActions(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getActionsBind, segment)
     }
 
+    /**
+     * Add an action to this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.add_action
+     */
     fun addAction(action: OpenXRAction?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Remove an action from this action set.
+     *
+     * Generated from Godot docs: OpenXRActionSet.remove_action
+     */
     fun removeAction(action: OpenXRAction?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))

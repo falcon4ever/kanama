@@ -9,57 +9,134 @@ import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * This class implements the OpenXR Render Model Extension.
+ *
  * Generated from Godot docs: OpenXRRenderModelExtension
  */
 class OpenXRRenderModelExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
+    /**
+     * Returns `true` if OpenXR's render model extension is supported and enabled. Note: This only
+     * returns a valid value after OpenXR has been initialized.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.is_active
+     */
     fun isActive(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
+    /**
+     * Creates a render model object within OpenXR using a render model id. Note: This function is
+     * exposed for dependent OpenXR extensions that provide render model ids to be used with the render
+     * model extension.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_create
+     */
     fun renderModelCreate(renderModelId: Long): RID {
         return ObjectCalls.ptrcallWithLongArgRetRID(Binds.renderModelCreateBind, segment, renderModelId)
     }
 
+    /**
+     * Destroys a render model object within OpenXR that was previously created with
+     * `render_model_create`. Note: This function is exposed for dependent OpenXR extensions that
+     * provide render model ids to be used with the render model extension.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_destroy
+     */
     fun renderModelDestroy(renderModel: RID) {
         ObjectCalls.ptrcallWithRIDArg(Binds.renderModelDestroyBind, segment, renderModel)
     }
 
+    /**
+     * Returns an array of all currently active render models registered with this extension.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_all
+     */
     fun renderModelGetAll(): List<RID> {
         return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.renderModelGetAllBind, segment)
     }
 
+    /**
+     * Returns an instance of a subscene that contains all `MeshInstance3D` nodes that allow you to
+     * visualize the render model.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_new_scene_instance
+     */
     fun renderModelNewSceneInstance(renderModel: RID): Node3D? {
         return Node3D.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(Binds.renderModelNewSceneInstanceBind, segment, renderModel))
     }
 
+    /**
+     * Returns a list of active subaction paths for this `render_model`. Note: If different devices are
+     * bound to your actions than available in suggested interaction bindings, this information shows
+     * paths related to the interaction bindings being mimicked by that device.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_subaction_paths
+     */
     fun renderModelGetSubactionPaths(renderModel: RID): List<String> {
         return ObjectCalls.ptrcallWithRIDArgRetPackedStringList(Binds.renderModelGetSubactionPathsBind, segment, renderModel)
     }
 
+    /**
+     * Returns the top level path associated with this `render_model`. If provided this identifies
+     * whether the render model is associated with the player's hands or other body part.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_top_level_path
+     */
     fun renderModelGetTopLevelPath(renderModel: RID): String {
         return ObjectCalls.ptrcallWithRIDArgRetString(Binds.renderModelGetTopLevelPathBind, segment, renderModel)
     }
 
+    /**
+     * Returns the tracking confidence of the tracking data for the render model.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_confidence
+     */
     fun renderModelGetConfidence(renderModel: RID): XRPose.TrackingConfidence {
         return XRPose.TrackingConfidence(ObjectCalls.ptrcallWithRIDArgRetLong(Binds.renderModelGetConfidenceBind, segment, renderModel))
     }
 
+    /**
+     * Returns the root transform of a render model. This is the tracked position relative to our
+     * `XROrigin3D` node.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_root_transform
+     */
     fun renderModelGetRootTransform(renderModel: RID): Transform3D {
         return ObjectCalls.ptrcallWithRIDArgRetTransform3D(Binds.renderModelGetRootTransformBind, segment, renderModel)
     }
 
+    /**
+     * Returns the number of animatable nodes this render model has.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_animatable_node_count
+     */
     fun renderModelGetAnimatableNodeCount(renderModel: RID): Long {
         return ObjectCalls.ptrcallWithRIDArgRetUInt32(Binds.renderModelGetAnimatableNodeCountBind, segment, renderModel)
     }
 
+    /**
+     * Returns the name of the given animatable node.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_animatable_node_name
+     */
     fun renderModelGetAnimatableNodeName(renderModel: RID, index: Long): String {
         return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetString(Binds.renderModelGetAnimatableNodeNameBind, segment, renderModel, index)
     }
 
+    /**
+     * Returns `true` if this animatable node should be visible.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_is_animatable_node_visible
+     */
     fun renderModelIsAnimatableNodeVisible(renderModel: RID, index: Long): Boolean {
         return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetBool(Binds.renderModelIsAnimatableNodeVisibleBind, segment, renderModel, index)
     }
 
+    /**
+     * Returns the current local transform for an animatable node. This is updated every frame.
+     *
+     * Generated from Godot docs: OpenXRRenderModelExtension.render_model_get_animatable_node_transform
+     */
     fun renderModelGetAnimatableNodeTransform(renderModel: RID, index: Long): Transform3D {
         return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetTransform3D(Binds.renderModelGetAnimatableNodeTransformBind, segment, renderModel, index)
     }

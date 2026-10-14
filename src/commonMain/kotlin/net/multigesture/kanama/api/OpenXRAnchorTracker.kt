@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Positional tracker for our spatial entity anchor extension.
+ *
  * Generated from Godot docs: OpenXRAnchorTracker
  */
 class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handle) {
@@ -16,16 +18,31 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         @JvmName("setUuidProperty")
         set(value) = setUuid(value)
 
+    /**
+     * Returns `true` if a non-zero UUID is set.
+     *
+     * Generated from Godot docs: OpenXRAnchorTracker.has_uuid
+     */
     fun hasUuid(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasUuidBind, segment)
     }
 
+    /**
+     * The UUID provided for persistent anchors.
+     *
+     * Generated from Godot docs: OpenXRAnchorTracker.set_uuid
+     */
     fun setUuid(uuid: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setUuidBind, segment, uuid)
     }
 
+    /**
+     * The UUID provided for persistent anchors.
+     *
+     * Generated from Godot docs: OpenXRAnchorTracker.get_uuid
+     */
     fun getUuid(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getUuidBind, segment)

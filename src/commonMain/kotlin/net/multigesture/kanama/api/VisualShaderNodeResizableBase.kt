@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * Base class for resizable nodes in a visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeResizableBase
  */
 open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,11 +19,21 @@ open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
+    /**
+     * The size of the node in the visual shader graph.
+     *
+     * Generated from Godot docs: VisualShaderNodeResizableBase.set_size
+     */
     fun setSize(size: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
     }
 
+    /**
+     * The size of the node in the visual shader graph.
+     *
+     * Generated from Godot docs: VisualShaderNodeResizableBase.get_size
+     */
     fun getSize(): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)

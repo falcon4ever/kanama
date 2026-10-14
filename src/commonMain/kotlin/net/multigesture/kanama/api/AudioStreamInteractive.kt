@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Audio stream that can playback music interactively, combining clips and a transition table.
+ *
  * Generated from Godot docs: AudioStreamInteractive
  */
 class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
@@ -24,41 +26,81 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
         @JvmName("setInitialClipProperty")
         set(value) = setInitialClip(value)
 
+    /**
+     * Amount of clips contained in this interactive player.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.set_clip_count
+     */
     fun setClipCount(clipCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setClipCountBind, segment, clipCount)
     }
 
+    /**
+     * Amount of clips contained in this interactive player.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_clip_count
+     */
     fun getClipCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getClipCountBind, segment)
     }
 
+    /**
+     * Index of the initial clip, which will be played first when this stream is played.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.set_initial_clip
+     */
     fun setInitialClip(clipIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInitialClipBind, segment, clipIndex)
     }
 
+    /**
+     * Index of the initial clip, which will be played first when this stream is played.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_initial_clip
+     */
     fun getInitialClip(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInitialClipBind, segment)
     }
 
+    /**
+     * Set the name of the current clip (for easier identification).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.set_clip_name
+     */
     fun setClipName(clipIndex: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setClipNameBind, segment, clipIndex, name)
     }
 
+    /**
+     * Return the name of a clip.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_clip_name
+     */
     fun getClipName(clipIndex: Int): String {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getClipNameBind, segment, clipIndex)
     }
 
+    /**
+     * Set the `AudioStream` associated with the current clip.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.set_clip_stream
+     */
     fun setClipStream(clipIndex: Int, stream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setClipStreamBind, segment, clipIndex, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Return the `AudioStream` associated with a clip.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_clip_stream
+     */
     fun getClipStream(clipIndex: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getClipStreamBind, segment, clipIndex)
@@ -69,116 +111,310 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
         return AudioStream.wrapOwned(ret)
     }
 
+    /**
+     * Set whether a clip will auto-advance by changing the auto-advance mode.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.set_clip_auto_advance
+     */
     fun setClipAutoAdvance(clipIndex: Int, mode: AudioStreamInteractive.AutoAdvanceMode) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setClipAutoAdvanceBind, segment, clipIndex, mode.value)
     }
 
+    /**
+     * Return whether a clip has auto-advance enabled. See `set_clip_auto_advance`.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_clip_auto_advance
+     */
     fun getClipAutoAdvance(clipIndex: Int): AudioStreamInteractive.AutoAdvanceMode {
         checkOpen()
         return AudioStreamInteractive.AutoAdvanceMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getClipAutoAdvanceBind, segment, clipIndex))
     }
 
+    /**
+     * Set the index of the next clip towards which this clip will auto advance to when finished. If
+     * the clip being played loops, then auto-advance will be ignored.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.set_clip_auto_advance_next_clip
+     */
     fun setClipAutoAdvanceNextClip(clipIndex: Int, autoAdvanceNextClip: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setClipAutoAdvanceNextClipBind, segment, clipIndex, autoAdvanceNextClip)
     }
 
+    /**
+     * Return the clip towards which the clip referenced by `clip_index` will auto-advance to.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_clip_auto_advance_next_clip
+     */
     fun getClipAutoAdvanceNextClip(clipIndex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getClipAutoAdvanceNextClipBind, segment, clipIndex)
     }
 
+    /**
+     * Add a transition between two clips. Provide the indices of the source and destination clips, or
+     * use the `CLIP_ANY` constant to indicate that transition happens to/from any clip to this one. *
+     * `from_time` indicates the moment in the current clip the transition will begin after triggered.
+     * * `to_time` indicates the time in the next clip that the playback will start from. * `fade_mode`
+     * indicates how the fade will happen between clips. If unsure, just use `FadeMode.AUTOMATIC` which
+     * uses the most common type of fade for each situation. * `fade_beats` indicates how many beats
+     * the fade will take. Using decimals is allowed. * `use_filler_clip` indicates that there will be
+     * a filler clip used between the source and destination clips. * `filler_clip` the index of the
+     * filler clip. * If `hold_previous` is used, then this clip will be remembered. This can be used
+     * together with `AutoAdvanceMode.RETURN_TO_HOLD` to return to this clip after another is done
+     * playing.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.add_transition
+     */
     fun addTransition(fromClip: Int, toClip: Int, fromTime: AudioStreamInteractive.TransitionFromTime, toTime: AudioStreamInteractive.TransitionToTime, fadeMode: AudioStreamInteractive.FadeMode, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(Binds.addTransitionBind, segment, fromClip, toClip, fromTime.value, toTime.value, fadeMode.value, fadeBeats, useFillerClip, fillerClip, holdPrevious)
     }
 
+    /**
+     * Returns `true` if a given transition exists (was added via `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.has_transition
+     */
     fun hasTransition(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.hasTransitionBind, segment, fromClip, toClip)
     }
 
+    /**
+     * Erase a transition by providing `from_clip` and `to_clip` clip indices. `CLIP_ANY` can be used
+     * for either argument or both.
+     *
+     * Generated from Godot docs: AudioStreamInteractive.erase_transition
+     */
     fun eraseTransition(fromClip: Int, toClip: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.eraseTransitionBind, segment, fromClip, toClip)
     }
 
+    /**
+     * Return the list of transitions (from, to interleaved).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_transition_list
+     */
     fun getTransitionList(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getTransitionListBind, segment)
     }
 
+    /**
+     * Return the source time position for a transition (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_transition_from_time
+     */
     fun getTransitionFromTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionFromTime {
         checkOpen()
         return AudioStreamInteractive.TransitionFromTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFromTimeBind, segment, fromClip, toClip))
     }
 
+    /**
+     * Return the destination time position for a transition (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_transition_to_time
+     */
     fun getTransitionToTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionToTime {
         checkOpen()
         return AudioStreamInteractive.TransitionToTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionToTimeBind, segment, fromClip, toClip))
     }
 
+    /**
+     * Return the mode for a transition (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_transition_fade_mode
+     */
     fun getTransitionFadeMode(fromClip: Int, toClip: Int): AudioStreamInteractive.FadeMode {
         checkOpen()
         return AudioStreamInteractive.FadeMode(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getTransitionFadeModeBind, segment, fromClip, toClip))
     }
 
+    /**
+     * Return the time (in beats) for a transition (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_transition_fade_beats
+     */
     fun getTransitionFadeBeats(fromClip: Int, toClip: Int): Double {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getTransitionFadeBeatsBind, segment, fromClip, toClip)
     }
 
+    /**
+     * Return whether a transition uses the filler clip functionality (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.is_transition_using_filler_clip
+     */
     fun isTransitionUsingFillerClip(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionUsingFillerClipBind, segment, fromClip, toClip)
     }
 
+    /**
+     * Return the filler clip for a transition (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.get_transition_filler_clip
+     */
     fun getTransitionFillerClip(fromClip: Int, toClip: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getTransitionFillerClipBind, segment, fromClip, toClip)
     }
 
+    /**
+     * Return whether a transition uses the hold previous functionality (see `add_transition`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.is_transition_holding_previous
+     */
     fun isTransitionHoldingPrevious(fromClip: Int, toClip: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isTransitionHoldingPreviousBind, segment, fromClip, toClip)
     }
 
+    /**
+     * Godot's `AudioStreamInteractive.TransitionFromTime` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AudioStreamInteractive.TransitionFromTime.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.TransitionFromTime
+     */
     @JvmInline
     value class TransitionFromTime(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Start transition as soon as possible, don't wait for any specific time position.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_FROM_TIME_IMMEDIATE
+             */
             val IMMEDIATE: TransitionFromTime get() = TransitionFromTime(0L)
+            /**
+             * Transition when the clip playback position reaches the next beat.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_FROM_TIME_NEXT_BEAT
+             */
             val NEXT_BEAT: TransitionFromTime get() = TransitionFromTime(1L)
+            /**
+             * Transition when the clip playback position reaches the next bar.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_FROM_TIME_NEXT_BAR
+             */
             val NEXT_BAR: TransitionFromTime get() = TransitionFromTime(2L)
+            /**
+             * Transition when the current clip finished playing.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_FROM_TIME_END
+             */
             val END: TransitionFromTime get() = TransitionFromTime(3L)
         }
     }
 
+    /**
+     * Godot's `AudioStreamInteractive.TransitionToTime` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AudioStreamInteractive.TransitionToTime.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.TransitionToTime
+     */
     @JvmInline
     value class TransitionToTime(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Transition to the same position in the destination clip. This is useful when both clips have
+             * exactly the same length and the music should fade between them.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_TO_TIME_SAME_POSITION
+             */
             val SAME_POSITION: TransitionToTime get() = TransitionToTime(0L)
+            /**
+             * Transition to the start of the destination clip.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_TO_TIME_START
+             */
             val START: TransitionToTime get() = TransitionToTime(1L)
+            /**
+             * Transition to the last played position in the destination clip, if there was a previous
+             * transition from that clip. Otherwise, plays from the start of the destination clip.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.TRANSITION_TO_TIME_PREVIOUS_POSITION
+             */
             val PREVIOUS_POSITION: TransitionToTime get() = TransitionToTime(2L)
         }
     }
 
+    /**
+     * Godot's `AudioStreamInteractive.FadeMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`AudioStreamInteractive.FadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.FadeMode
+     */
     @JvmInline
     value class FadeMode(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Do not use fade for the transition. This is useful when transitioning from a clip-end to
+             * clip-beginning, and each clip has their begin/end.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.FADE_DISABLED
+             */
             val DISABLED: FadeMode get() = FadeMode(0L)
+            /**
+             * Use a fade-in in the next clip, let the current clip finish.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.FADE_IN
+             */
             val IN: FadeMode get() = FadeMode(1L)
+            /**
+             * Use a fade-out in the current clip, the next clip will start by itself.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.FADE_OUT
+             */
             val OUT: FadeMode get() = FadeMode(2L)
+            /**
+             * Use a cross-fade between clips.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.FADE_CROSS
+             */
             val CROSS: FadeMode get() = FadeMode(3L)
+            /**
+             * Use automatic fade logic depending on the transition from/to. It is recommended to use this by
+             * default.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.FADE_AUTOMATIC
+             */
             val AUTOMATIC: FadeMode get() = FadeMode(4L)
         }
     }
 
+    /**
+     * Godot's `AudioStreamInteractive.AutoAdvanceMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AudioStreamInteractive.AutoAdvanceMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamInteractive.AutoAdvanceMode
+     */
     @JvmInline
     value class AutoAdvanceMode(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Disable auto-advance (default).
+             *
+             * Generated from Godot docs: AudioStreamInteractive.AUTO_ADVANCE_DISABLED
+             */
             val DISABLED: AutoAdvanceMode get() = AutoAdvanceMode(0L)
+            /**
+             * Enable auto-advance, a clip must be specified.
+             *
+             * Generated from Godot docs: AudioStreamInteractive.AUTO_ADVANCE_ENABLED
+             */
             val ENABLED: AutoAdvanceMode get() = AutoAdvanceMode(1L)
+            /**
+             * Enable auto-advance, but instead of specifying a clip, the playback will return to hold (see
+             * `add_transition`).
+             *
+             * Generated from Godot docs: AudioStreamInteractive.AUTO_ADVANCE_RETURN_TO_HOLD
+             */
             val RETURN_TO_HOLD: AutoAdvanceMode get() = AutoAdvanceMode(2L)
         }
     }

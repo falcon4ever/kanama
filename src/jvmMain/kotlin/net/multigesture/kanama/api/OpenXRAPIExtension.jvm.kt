@@ -13,11 +13,23 @@ import net.multigesture.kanama.types.Transform3D
 //   ptrcallWithConstVoidPtrArgRetTransform3D
 // Index: docs/reference/generated/ios-shape-gap.md
 
+/**
+ * Creates a `Transform3D` from an XrPosef
+ * (https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrPosef.html).
+ *
+ * Generated from Godot docs: OpenXRAPIExtension.transform_from_pose
+ */
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
     checkOpen()
     return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(OpenXRAPIExtensionJvmBinds.transformFromPoseBind, segment, pose)
 }
 
+/**
+ * Sets the reference space used by OpenXR to the given XrSpace
+ * (https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrSpace.html) (cast to a `void *`).
+ *
+ * Generated from Godot docs: OpenXRAPIExtension.set_custom_play_space
+ */
 fun OpenXRAPIExtension.setCustomPlaySpace(space: MemorySegment) {
     checkOpen()
     ObjectCalls.ptrcallWithConstVoidPtrArg(OpenXRAPIExtensionJvmBinds.setCustomPlaySpaceBind, segment, space)

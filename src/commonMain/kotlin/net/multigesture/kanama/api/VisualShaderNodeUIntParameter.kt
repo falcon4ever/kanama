@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node for shader parameter (uniform) of type unsigned `int`.
+ *
  * Generated from Godot docs: VisualShaderNodeUIntParameter
  */
 class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
@@ -22,21 +24,43 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
+    /**
+     * If `true`, the node will have a custom default value.
+     *
+     * Generated from Godot docs: VisualShaderNodeUIntParameter.set_default_value_enabled
+     */
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the node will have a custom default value.
+     *
+     * Generated from Godot docs: VisualShaderNodeUIntParameter.is_default_value_enabled
+     */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
+    /**
+     * Default value of this parameter, which will be used if not set externally.
+     * `default_value_enabled` must be enabled; defaults to `0` otherwise.
+     *
+     * Generated from Godot docs: VisualShaderNodeUIntParameter.set_default_value
+     */
     fun setDefaultValue(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDefaultValueBind, segment, value)
     }
 
+    /**
+     * Default value of this parameter, which will be used if not set externally.
+     * `default_value_enabled` must be enabled; defaults to `0` otherwise.
+     *
+     * Generated from Godot docs: VisualShaderNodeUIntParameter.get_default_value
+     */
     fun getDefaultValue(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)

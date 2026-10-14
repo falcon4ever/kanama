@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Quaternion
 
 /**
+ * A 4D vector constant to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeVec4Constant
  */
 class VisualShaderNodeVec4Constant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
@@ -17,11 +19,21 @@ class VisualShaderNodeVec4Constant(handle: GodotHandle) : VisualShaderNodeConsta
         @JvmName("setConstantProperty")
         set(value) = setConstant(value)
 
+    /**
+     * A 4D vector (represented as a `Quaternion`) constant which represents the state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec4Constant.set_constant
+     */
     fun setConstant(constant: Quaternion) {
         checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(Binds.setConstantBind, segment, constant)
     }
 
+    /**
+     * A 4D vector (represented as a `Quaternion`) constant which represents the state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec4Constant.get_constant
+     */
     fun getConstant(): Quaternion {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getConstantBind, segment)

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents a glTF buffer view.
+ *
  * Generated from Godot docs: GLTFBufferView
  */
 class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
@@ -47,77 +49,172 @@ class GLTFBufferView(handle: GodotHandle) : Resource(handle) {
         @JvmName("setVertexAttributesProperty")
         set(value) = setVertexAttributes(value)
 
+    /**
+     * Loads the buffer view data from the buffer referenced by this buffer view in the given
+     * `GLTFState`. Interleaved data with a byte stride is not yet supported by this method. The data
+     * is returned as a `PackedByteArray`.
+     *
+     * Generated from Godot docs: GLTFBufferView.load_buffer_view_data
+     */
     fun loadBufferViewData(state: GLTFState?): ByteArray {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetByteArray(Binds.loadBufferViewDataBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Serializes this GLTFBufferView instance into a `Dictionary`.
+     *
+     * Generated from Godot docs: GLTFBufferView.to_dictionary
+     */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
+    /**
+     * The index of the buffer this buffer view is referencing. If `-1`, this buffer view is not
+     * referencing any buffer.
+     *
+     * Generated from Godot docs: GLTFBufferView.get_buffer
+     */
     fun getBuffer(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferBind, segment)
     }
 
+    /**
+     * The index of the buffer this buffer view is referencing. If `-1`, this buffer view is not
+     * referencing any buffer.
+     *
+     * Generated from Godot docs: GLTFBufferView.set_buffer
+     */
     fun setBuffer(buffer: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBufferBind, segment, buffer)
     }
 
+    /**
+     * The offset, in bytes, from the start of the buffer to the start of this buffer view.
+     *
+     * Generated from Godot docs: GLTFBufferView.get_byte_offset
+     */
     fun getByteOffset(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteOffsetBind, segment)
     }
 
+    /**
+     * The offset, in bytes, from the start of the buffer to the start of this buffer view.
+     *
+     * Generated from Godot docs: GLTFBufferView.set_byte_offset
+     */
     fun setByteOffset(byteOffset: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteOffsetBind, segment, byteOffset)
     }
 
+    /**
+     * The length, in bytes, of this buffer view. If `0`, this buffer view is empty.
+     *
+     * Generated from Godot docs: GLTFBufferView.get_byte_length
+     */
     fun getByteLength(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteLengthBind, segment)
     }
 
+    /**
+     * The length, in bytes, of this buffer view. If `0`, this buffer view is empty.
+     *
+     * Generated from Godot docs: GLTFBufferView.set_byte_length
+     */
     fun setByteLength(byteLength: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteLengthBind, segment, byteLength)
     }
 
+    /**
+     * The stride, in bytes, between interleaved data. If `-1`, this buffer view is not interleaved.
+     *
+     * Generated from Godot docs: GLTFBufferView.get_byte_stride
+     */
     fun getByteStride(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getByteStrideBind, segment)
     }
 
+    /**
+     * The stride, in bytes, between interleaved data. If `-1`, this buffer view is not interleaved.
+     *
+     * Generated from Godot docs: GLTFBufferView.set_byte_stride
+     */
     fun setByteStride(byteStride: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setByteStrideBind, segment, byteStride)
     }
 
+    /**
+     * `true` if the GLTFBufferView's OpenGL GPU buffer type is an `ELEMENT_ARRAY_BUFFER` used for
+     * vertex indices (integer constant `34963`). `false` if the buffer type is any other value. See
+     * Buffers, BufferViews, and Accessors
+     * (https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_005_BuffersBufferViewsAccessors.md)
+     * for possible values. This property is set on import and used on export.
+     *
+     * Generated from Godot docs: GLTFBufferView.get_indices
+     */
     fun getIndices(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIndicesBind, segment)
     }
 
+    /**
+     * `true` if the GLTFBufferView's OpenGL GPU buffer type is an `ELEMENT_ARRAY_BUFFER` used for
+     * vertex indices (integer constant `34963`). `false` if the buffer type is any other value. See
+     * Buffers, BufferViews, and Accessors
+     * (https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_005_BuffersBufferViewsAccessors.md)
+     * for possible values. This property is set on import and used on export.
+     *
+     * Generated from Godot docs: GLTFBufferView.set_indices
+     */
     fun setIndices(indices: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIndicesBind, segment, indices)
     }
 
+    /**
+     * `true` if the GLTFBufferView's OpenGL GPU buffer type is an `ARRAY_BUFFER` used for vertex
+     * attributes (integer constant `34962`). `false` if the buffer type is any other value. See
+     * Buffers, BufferViews, and Accessors
+     * (https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_005_BuffersBufferViewsAccessors.md)
+     * for possible values. This property is set on import and used on export.
+     *
+     * Generated from Godot docs: GLTFBufferView.get_vertex_attributes
+     */
     fun getVertexAttributes(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getVertexAttributesBind, segment)
     }
 
+    /**
+     * `true` if the GLTFBufferView's OpenGL GPU buffer type is an `ARRAY_BUFFER` used for vertex
+     * attributes (integer constant `34962`). `false` if the buffer type is any other value. See
+     * Buffers, BufferViews, and Accessors
+     * (https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_005_BuffersBufferViewsAccessors.md)
+     * for possible values. This property is set on import and used on export.
+     *
+     * Generated from Godot docs: GLTFBufferView.set_vertex_attributes
+     */
     fun setVertexAttributes(isAttributes: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setVertexAttributesBind, segment, isAttributes)
     }
 
     companion object {
+        /**
+         * Creates a new GLTFBufferView instance by parsing the given `Dictionary`.
+         *
+         * Generated from Godot docs: GLTFBufferView.from_dictionary
+         */
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFBufferView? {
             return GLTFBufferView.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A boolean comparison operator to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeIs
  */
 class VisualShaderNodeIs(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,21 +19,53 @@ class VisualShaderNodeIs(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
+    /**
+     * The comparison function.
+     *
+     * Generated from Godot docs: VisualShaderNodeIs.set_function
+     */
     fun setFunction(func: VisualShaderNodeIs.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
+    /**
+     * The comparison function.
+     *
+     * Generated from Godot docs: VisualShaderNodeIs.get_function
+     */
     fun getFunction(): VisualShaderNodeIs.Function {
         checkOpen()
         return VisualShaderNodeIs.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeIs.Function` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VisualShaderNodeIs.Function.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeIs.Function
+     */
     @JvmInline
     value class Function(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Comparison with `INF` (Infinity).
+             *
+             * Generated from Godot docs: VisualShaderNodeIs.FUNC_IS_INF
+             */
             val IS_INF: Function get() = Function(0L)
+            /**
+             * Comparison with `NaN` (Not a Number; indicates invalid numeric results, such as division by
+             * zero).
+             *
+             * Generated from Godot docs: VisualShaderNodeIs.FUNC_IS_NAN
+             */
             val IS_NAN: Function get() = Function(1L)
+            /**
+             * Represents the size of the `Function` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeIs.FUNC_MAX
+             */
             val MAX: Function get() = Function(2L)
         }
     }

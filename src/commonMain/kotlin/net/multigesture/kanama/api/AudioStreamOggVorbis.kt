@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A class representing an Ogg Vorbis audio stream.
+ *
  * Generated from Godot docs: AudioStreamOggVorbis
  */
 class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
@@ -53,81 +55,177 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
         @JvmName("setLoopOffsetProperty")
         set(value) = setLoopOffset(value)
 
+    /**
+     * Contains the raw Ogg data for this stream.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_packet_sequence
+     */
     fun setPacketSequence(packetSequence: OggPacketSequence?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setPacketSequenceBind, segment, listOf(packetSequence?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Contains the raw Ogg data for this stream.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.get_packet_sequence
+     */
     fun getPacketSequence(): OggPacketSequence? {
         checkOpen()
         return OggPacketSequence.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPacketSequenceBind, segment))
     }
 
+    /**
+     * If `true`, the stream will play again from the specified `loop_offset` once it reaches the end
+     * of the audio track, or once it reaches the end of the last beat according to the amount
+     * specified in `beat_count`. Useful for ambient sounds and background music.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_loop
+     */
     fun setLoop(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, enable)
     }
 
+    /**
+     * If `true`, the stream will play again from the specified `loop_offset` once it reaches the end
+     * of the audio track, or once it reaches the end of the last beat according to the amount
+     * specified in `beat_count`. Useful for ambient sounds and background music.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.has_loop
+     */
     fun hasLoop(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
     }
 
+    /**
+     * Time in seconds at which the stream starts after being looped.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_loop_offset
+     */
     fun setLoopOffset(seconds: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLoopOffsetBind, segment, seconds)
     }
 
+    /**
+     * Time in seconds at which the stream starts after being looped.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.get_loop_offset
+     */
     fun getLoopOffset(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLoopOffsetBind, segment)
     }
 
+    /**
+     * The tempo of the audio track, measured in beats per minute.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_bpm
+     */
     fun setBpm(bpm: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBpmBind, segment, bpm)
     }
 
+    /**
+     * The tempo of the audio track, measured in beats per minute.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.get_bpm
+     */
     fun getBpm(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
     }
 
+    /**
+     * The length of the audio track, in beats. The actual duration of the audio file might be longer
+     * than what is indicated by this property. It defines the end of the audio for looping,
+     * `AudioStreamPlaylist`, and `AudioStreamInteractive`.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_beat_count
+     */
     fun setBeatCount(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBeatCountBind, segment, count)
     }
 
+    /**
+     * The length of the audio track, in beats. The actual duration of the audio file might be longer
+     * than what is indicated by this property. It defines the end of the audio for looping,
+     * `AudioStreamPlaylist`, and `AudioStreamInteractive`.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.get_beat_count
+     */
     fun getBeatCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBeatCountBind, segment)
     }
 
+    /**
+     * The number of beats within a single bar in the audio track.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_bar_beats
+     */
     fun setBarBeats(count: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBarBeatsBind, segment, count)
     }
 
+    /**
+     * The number of beats within a single bar in the audio track.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.get_bar_beats
+     */
     fun getBarBeats(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBarBeatsBind, segment)
     }
 
+    /**
+     * Contains user-defined tags if found in the Ogg Vorbis data. Commonly used tags include `title`,
+     * `artist`, `album`, `tracknumber`, and `date` (`date` does not have a standard date format).
+     * Note: No tag is guaranteed to be present in every file, so make sure to account for the keys not
+     * always existing.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.set_tags
+     */
     fun setTags(tags: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setTagsBind, segment, tags)
     }
 
+    /**
+     * Contains user-defined tags if found in the Ogg Vorbis data. Commonly used tags include `title`,
+     * `artist`, `album`, `tracknumber`, and `date` (`date` does not have a standard date format).
+     * Note: No tag is guaranteed to be present in every file, so make sure to account for the keys not
+     * always existing.
+     *
+     * Generated from Godot docs: AudioStreamOggVorbis.get_tags
+     */
     fun getTags(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getTagsBind, segment)
     }
 
     companion object {
+        /**
+         * Creates a new `AudioStreamOggVorbis` instance from the given buffer. The buffer must contain Ogg
+         * Vorbis data.
+         *
+         * Generated from Godot docs: AudioStreamOggVorbis.load_from_buffer
+         */
         fun loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
             return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithByteArrayArgRetObject(Binds.loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
+        /**
+         * Creates a new `AudioStreamOggVorbis` instance from the given file path. The file must be in Ogg
+         * Vorbis format.
+         *
+         * Generated from Godot docs: AudioStreamOggVorbis.load_from_file
+         */
         fun loadFromFile(path: String): AudioStreamOggVorbis? {
             return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadFromFileBind, NULL_SEGMENT, path))
         }

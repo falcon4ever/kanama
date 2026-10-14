@@ -6,14 +6,26 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Object for storing the query persistence result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentPersistenceList
  */
 class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the persistent uuid for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentPersistenceList.get_persistent_uuid
+     */
     fun getPersistentUuid(index: Long): String {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetString(Binds.getPersistentUuidBind, segment, index)
     }
 
+    /**
+     * Returns the persistent state (`XrSpatialPersistenceStateEXT`) for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentPersistenceList.get_persistent_state
+     */
     fun getPersistentState(index: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPersistentStateBind, segment, index)

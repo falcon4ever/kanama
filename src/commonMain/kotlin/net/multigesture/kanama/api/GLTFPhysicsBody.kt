@@ -11,6 +11,8 @@ import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * Represents a glTF physics body.
+ *
  * Generated from Godot docs: GLTFPhysicsBody
  */
 class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
@@ -62,101 +64,231 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
         @JvmName("setInertiaTensorProperty")
         set(value) = setInertiaTensor(value)
 
+    /**
+     * Converts this GLTFPhysicsBody instance into a Godot `CollisionObject3D` node.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.to_node
+     */
     fun toNode(): CollisionObject3D? {
         checkOpen()
         return CollisionObject3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
     }
 
+    /**
+     * Serializes this GLTFPhysicsBody instance into a `Dictionary`. It will be in the format expected
+     * by the `OMI_physics_body` glTF extension.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.to_dictionary
+     */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
+    /**
+     * The type of the body. When importing, this controls what type of `CollisionObject3D` node Godot
+     * should generate. Valid values are `"static"`, `"animatable"`, `"character"`, `"rigid"`,
+     * `"vehicle"`, and `"trigger"`. When exporting, this will be squashed down to one of `"static"`,
+     * `"kinematic"`, or `"dynamic"` motion types, or the `"trigger"` property.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_body_type
+     */
     fun getBodyType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getBodyTypeBind, segment)
     }
 
+    /**
+     * The type of the body. When importing, this controls what type of `CollisionObject3D` node Godot
+     * should generate. Valid values are `"static"`, `"animatable"`, `"character"`, `"rigid"`,
+     * `"vehicle"`, and `"trigger"`. When exporting, this will be squashed down to one of `"static"`,
+     * `"kinematic"`, or `"dynamic"` motion types, or the `"trigger"` property.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_body_type
+     */
     fun setBodyType(bodyType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBodyTypeBind, segment, bodyType)
     }
 
+    /**
+     * The mass of the physics body, in kilograms. This is only used when the body type is "rigid" or
+     * "vehicle".
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_mass
+     */
     fun getMass(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMassBind, segment)
     }
 
+    /**
+     * The mass of the physics body, in kilograms. This is only used when the body type is "rigid" or
+     * "vehicle".
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_mass
+     */
     fun setMass(mass: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMassBind, segment, mass)
     }
 
+    /**
+     * The linear velocity of the physics body, in meters per second. This is only used when the body
+     * type is "rigid" or "vehicle".
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_linear_velocity
+     */
     fun getLinearVelocity(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
     }
 
+    /**
+     * The linear velocity of the physics body, in meters per second. This is only used when the body
+     * type is "rigid" or "vehicle".
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_linear_velocity
+     */
     fun setLinearVelocity(linearVelocity: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, linearVelocity)
     }
 
+    /**
+     * The angular velocity of the physics body, in radians per second. This is only used when the body
+     * type is "rigid" or "vehicle".
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_angular_velocity
+     */
     fun getAngularVelocity(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
     }
 
+    /**
+     * The angular velocity of the physics body, in radians per second. This is only used when the body
+     * type is "rigid" or "vehicle".
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_angular_velocity
+     */
     fun setAngularVelocity(angularVelocity: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, angularVelocity)
     }
 
+    /**
+     * The center of mass of the body, in meters. This is in local space relative to the body. By
+     * default, the center of the mass is the body's origin.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_center_of_mass
+     */
     fun getCenterOfMass(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassBind, segment)
     }
 
+    /**
+     * The center of mass of the body, in meters. This is in local space relative to the body. By
+     * default, the center of the mass is the body's origin.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_center_of_mass
+     */
     fun setCenterOfMass(centerOfMass: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setCenterOfMassBind, segment, centerOfMass)
     }
 
+    /**
+     * The inertia strength of the physics body, in kilogram meter squared (kg⋅m²). This represents the
+     * inertia around the principle axes, the diagonal of the inertia tensor matrix. This is only used
+     * when the body type is "rigid" or "vehicle". When converted to a Godot `RigidBody3D` node, if
+     * this value is zero, then the inertia will be calculated automatically.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_inertia_diagonal
+     */
     fun getInertiaDiagonal(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getInertiaDiagonalBind, segment)
     }
 
+    /**
+     * The inertia strength of the physics body, in kilogram meter squared (kg⋅m²). This represents the
+     * inertia around the principle axes, the diagonal of the inertia tensor matrix. This is only used
+     * when the body type is "rigid" or "vehicle". When converted to a Godot `RigidBody3D` node, if
+     * this value is zero, then the inertia will be calculated automatically.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_inertia_diagonal
+     */
     fun setInertiaDiagonal(inertiaDiagonal: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setInertiaDiagonalBind, segment, inertiaDiagonal)
     }
 
+    /**
+     * The inertia orientation of the physics body. This defines the rotation of the inertia's
+     * principle axes relative to the object's local axes. This is only used when the body type is
+     * "rigid" or "vehicle" and `inertia_diagonal` is set to a non-zero value.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_inertia_orientation
+     */
     fun getInertiaOrientation(): Quaternion {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getInertiaOrientationBind, segment)
     }
 
+    /**
+     * The inertia orientation of the physics body. This defines the rotation of the inertia's
+     * principle axes relative to the object's local axes. This is only used when the body type is
+     * "rigid" or "vehicle" and `inertia_diagonal` is set to a non-zero value.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_inertia_orientation
+     */
     fun setInertiaOrientation(inertiaOrientation: Quaternion) {
         checkOpen()
         ObjectCalls.ptrcallWithQuaternionArg(Binds.setInertiaOrientationBind, segment, inertiaOrientation)
     }
 
+    /**
+     * The inertia tensor of the physics body, in kilogram meter squared (kg⋅m²). This is only used
+     * when the body type is "rigid" or "vehicle". When converted to a Godot `RigidBody3D` node, if
+     * this value is zero, then the inertia will be calculated automatically.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.get_inertia_tensor
+     */
     fun getInertiaTensor(): Basis {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getInertiaTensorBind, segment)
     }
 
+    /**
+     * The inertia tensor of the physics body, in kilogram meter squared (kg⋅m²). This is only used
+     * when the body type is "rigid" or "vehicle". When converted to a Godot `RigidBody3D` node, if
+     * this value is zero, then the inertia will be calculated automatically.
+     *
+     * Generated from Godot docs: GLTFPhysicsBody.set_inertia_tensor
+     */
     fun setInertiaTensor(inertiaTensor: Basis) {
         checkOpen()
         ObjectCalls.ptrcallWithBasisArg(Binds.setInertiaTensorBind, segment, inertiaTensor)
     }
 
     companion object {
+        /**
+         * Creates a new GLTFPhysicsBody instance from the given Godot `CollisionObject3D` node.
+         *
+         * Generated from Godot docs: GLTFPhysicsBody.from_node
+         */
         fun fromNode(bodyNode: CollisionObject3D): GLTFPhysicsBody? {
             return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, bodyNode.segment))
         }
 
+        /**
+         * Creates a new GLTFPhysicsBody instance by parsing the given `Dictionary` in the
+         * `OMI_physics_body` glTF extension format.
+         *
+         * Generated from Godot docs: GLTFPhysicsBody.from_dictionary
+         */
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsBody? {
             return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }

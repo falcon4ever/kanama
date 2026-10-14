@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A scalar integer function to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeIntFunc
  */
 class VisualShaderNodeIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,23 +19,67 @@ class VisualShaderNodeIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
+    /**
+     * A function to be applied to the scalar.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntFunc.set_function
+     */
     fun setFunction(func: VisualShaderNodeIntFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
+    /**
+     * A function to be applied to the scalar.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntFunc.get_function
+     */
     fun getFunction(): VisualShaderNodeIntFunc.Function {
         checkOpen()
         return VisualShaderNodeIntFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeIntFunc.Function` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeIntFunc.Function.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeIntFunc.Function
+     */
     @JvmInline
     value class Function(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Returns the absolute value of the parameter. Translates to `abs(x)` in the Godot Shader
+             * Language.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntFunc.FUNC_ABS
+             */
             val ABS: Function get() = Function(0L)
+            /**
+             * Negates the `x` using `-(x)`.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntFunc.FUNC_NEGATE
+             */
             val NEGATE: Function get() = Function(1L)
+            /**
+             * Extracts the sign of the parameter. Translates to `sign(x)` in the Godot Shader Language.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntFunc.FUNC_SIGN
+             */
             val SIGN: Function get() = Function(2L)
+            /**
+             * Returns the result of bitwise `NOT` operation on the integer. Translates to `~a` in the Godot
+             * Shader Language.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntFunc.FUNC_BITWISE_NOT
+             */
             val BITWISE_NOT: Function get() = Function(3L)
+            /**
+             * Represents the size of the `Function` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntFunc.FUNC_MAX
+             */
             val MAX: Function get() = Function(4L)
         }
     }

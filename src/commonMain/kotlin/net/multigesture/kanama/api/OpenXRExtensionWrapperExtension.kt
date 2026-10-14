@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Allows implementing OpenXR extensions with GDExtension.
+ *
  * Generated from Godot docs: OpenXRExtensionWrapperExtension
  */
 class OpenXRExtensionWrapperExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Base class for WebSocket server and client.
+ *
  * Generated from Godot docs: WebSocketMultiplayerPeer
  */
 class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
@@ -47,86 +49,185 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         @JvmName("setMaxQueuedPacketsProperty")
         set(value) = setMaxQueuedPackets(value)
 
+    /**
+     * Starts a new multiplayer client connecting to the given `url`. TLS certificates will be verified
+     * against the hostname when connecting using the `wss://` protocol. You can pass the optional
+     * `tls_client_options` parameter to customize the trusted certification authorities, or disable
+     * the common name verification. See `TLSOptions.client` and `TLSOptions.client_unsafe`. Note: It
+     * is recommended to specify the scheme part of the URL, i.e. the `url` should start with either
+     * `ws://` or `wss://`.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.create_client
+     */
     fun createClient(url: String, tlsClientOptions: TLSOptions?): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Starts a new multiplayer server listening on the given `port`. You can optionally specify a
+     * `bind_address`, and provide valid `tls_server_options` to use TLS. See `TLSOptions.server`.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.create_server
+     */
     fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(Binds.createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Returns the `WebSocketPeer` associated to the given `peer_id`.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_peer
+     */
     fun getPeer(peerId: Int): WebSocketPeer? {
         checkOpen()
         return WebSocketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPeerBind, segment, peerId))
     }
 
+    /**
+     * Returns the IP address of the given peer.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_peer_address
+     */
     fun getPeerAddress(id: Int): String {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(Binds.getPeerAddressBind, segment, id)
     }
 
+    /**
+     * Returns the remote port of the given peer.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_peer_port
+     */
     fun getPeerPort(id: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getPeerPortBind, segment, id)
     }
 
+    /**
+     * The supported WebSocket sub-protocols. See `WebSocketPeer.supported_protocols` for more details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_supported_protocols
+     */
     fun getSupportedProtocols(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedProtocolsBind, segment)
     }
 
+    /**
+     * The supported WebSocket sub-protocols. See `WebSocketPeer.supported_protocols` for more details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.set_supported_protocols
+     */
     fun setSupportedProtocols(protocols: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setSupportedProtocolsBind, segment, protocols)
     }
 
+    /**
+     * The extra headers to use during handshake. See `WebSocketPeer.handshake_headers` for more
+     * details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_handshake_headers
+     */
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getHandshakeHeadersBind, segment)
     }
 
+    /**
+     * The extra headers to use during handshake. See `WebSocketPeer.handshake_headers` for more
+     * details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.set_handshake_headers
+     */
     fun setHandshakeHeaders(protocols: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setHandshakeHeadersBind, segment, protocols)
     }
 
+    /**
+     * The inbound buffer size for connected peers. See `WebSocketPeer.inbound_buffer_size` for more
+     * details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_inbound_buffer_size
+     */
     fun getInboundBufferSize(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInboundBufferSizeBind, segment)
     }
 
+    /**
+     * The inbound buffer size for connected peers. See `WebSocketPeer.inbound_buffer_size` for more
+     * details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.set_inbound_buffer_size
+     */
     fun setInboundBufferSize(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setInboundBufferSizeBind, segment, bufferSize)
     }
 
+    /**
+     * The outbound buffer size for connected peers. See `WebSocketPeer.outbound_buffer_size` for more
+     * details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_outbound_buffer_size
+     */
     fun getOutboundBufferSize(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutboundBufferSizeBind, segment)
     }
 
+    /**
+     * The outbound buffer size for connected peers. See `WebSocketPeer.outbound_buffer_size` for more
+     * details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.set_outbound_buffer_size
+     */
     fun setOutboundBufferSize(bufferSize: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setOutboundBufferSizeBind, segment, bufferSize)
     }
 
+    /**
+     * The maximum time each peer can stay in a connecting state before being dropped.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_handshake_timeout
+     */
     fun getHandshakeTimeout(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHandshakeTimeoutBind, segment)
     }
 
+    /**
+     * The maximum time each peer can stay in a connecting state before being dropped.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.set_handshake_timeout
+     */
     fun setHandshakeTimeout(timeout: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHandshakeTimeoutBind, segment, timeout)
     }
 
+    /**
+     * The maximum number of queued packets for connected peers. See `WebSocketPeer.max_queued_packets`
+     * for more details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.set_max_queued_packets
+     */
     fun setMaxQueuedPackets(maxQueuedPackets: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxQueuedPacketsBind, segment, maxQueuedPackets)
     }
 
+    /**
+     * The maximum number of queued packets for connected peers. See `WebSocketPeer.max_queued_packets`
+     * for more details.
+     *
+     * Generated from Godot docs: WebSocketMultiplayerPeer.get_max_queued_packets
+     */
     fun getMaxQueuedPackets(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxQueuedPacketsBind, segment)

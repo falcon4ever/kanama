@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * OpenXR Haptic feedback base class.
+ *
  * Generated from Godot docs: OpenXRHapticBase
  */
 open class OpenXRHapticBase(handle: GodotHandle) : Resource(handle) {

@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A base type for the constants within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeConstant
  */
 open class VisualShaderNodeConstant(handle: GodotHandle) : VisualShaderNode(handle) {

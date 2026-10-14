@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Handles FBX documents.
+ *
  * Generated from Godot docs: FBXDocument
  */
 class FBXDocument(handle: GodotHandle) : GLTFDocument(handle) {

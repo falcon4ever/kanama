@@ -7,9 +7,16 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Base class for editing interaction profiles.
+ *
  * Generated from Godot docs: OpenXRInteractionProfileEditorBase
  */
 open class OpenXRInteractionProfileEditorBase(handle: GodotHandle) : HBoxContainer(handle) {
+    /**
+     * Setup this editor for the provided `action_map` and `interaction_profile`.
+     *
+     * Generated from Godot docs: OpenXRInteractionProfileEditorBase.setup
+     */
     fun setup(actionMap: OpenXRActionMap?, interactionProfile: OpenXRInteractionProfile?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT)
     }

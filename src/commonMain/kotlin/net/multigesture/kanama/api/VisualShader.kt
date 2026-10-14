@@ -10,6 +10,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * A custom shader program with a visual editor.
+ *
  * Generated from Godot docs: VisualShader
  */
 class VisualShader(handle: GodotHandle) : Shader(handle) {
@@ -19,154 +21,404 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
         @JvmName("setGraphOffsetProperty")
         set(value) = setGraphOffset(value)
 
+    /**
+     * Sets the mode of this shader.
+     *
+     * Generated from Godot docs: VisualShader.set_mode
+     */
     fun setMode(mode: Shader.Mode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
     }
 
+    /**
+     * Adds the specified `node` to the shader.
+     *
+     * Generated from Godot docs: VisualShader.add_node
+     */
     fun addNode(type: VisualShader.Type, node: VisualShaderNode?, position: Vector2, id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongObjectVector2IntArgs(Binds.addNodeBind, segment, type.value, node?.requireOpenHandle() ?: NULL_SEGMENT, position, id)
     }
 
+    /**
+     * Returns the shader node instance with specified `type` and `id`.
+     *
+     * Generated from Godot docs: VisualShader.get_node
+     */
     fun getNode(type: VisualShader.Type, id: Int): VisualShaderNode? {
         checkOpen()
         return VisualShaderNode.wrapOwned(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(Binds.getNodeBind, segment, type.value, id))
     }
 
+    /**
+     * Sets the position of the specified node.
+     *
+     * Generated from Godot docs: VisualShader.set_node_position
+     */
     fun setNodePosition(type: VisualShader.Type, id: Int, position: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithLongIntVector2Args(Binds.setNodePositionBind, segment, type.value, id, position)
     }
 
+    /**
+     * Returns the position of the specified node within the shader graph.
+     *
+     * Generated from Godot docs: VisualShader.get_node_position
+     */
     fun getNodePosition(type: VisualShader.Type, id: Int): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(Binds.getNodePositionBind, segment, type.value, id)
     }
 
+    /**
+     * Returns the list of all nodes in the shader with the specified type.
+     *
+     * Generated from Godot docs: VisualShader.get_node_list
+     */
     fun getNodeList(type: VisualShader.Type): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(Binds.getNodeListBind, segment, type.value)
     }
 
+    /**
+     * Returns next valid node ID that can be added to the shader graph.
+     *
+     * Generated from Godot docs: VisualShader.get_valid_node_id
+     */
     fun getValidNodeId(type: VisualShader.Type): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getValidNodeIdBind, segment, type.value)
     }
 
+    /**
+     * Removes the specified node from the shader.
+     *
+     * Generated from Godot docs: VisualShader.remove_node
+     */
     fun removeNode(type: VisualShader.Type, id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.removeNodeBind, segment, type.value, id)
     }
 
+    /**
+     * Replaces the specified node with a node of new class type.
+     *
+     * Generated from Godot docs: VisualShader.replace_node
+     */
     fun replaceNode(type: VisualShader.Type, id: Int, newClass: String) {
         checkOpen()
         ObjectCalls.ptrcallWithLongIntStringNameArgs(Binds.replaceNodeBind, segment, type.value, id, newClass)
     }
 
+    /**
+     * Returns `true` if the specified node and port connection exist.
+     *
+     * Generated from Godot docs: VisualShader.is_node_connection
+     */
     fun isNodeConnection(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(Binds.isNodeConnectionBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
+    /**
+     * Returns `true` if the specified nodes and ports can be connected together.
+     *
+     * Generated from Godot docs: VisualShader.can_connect_nodes
+     */
     fun canConnectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(Binds.canConnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
+    /**
+     * Connects the specified nodes and ports.
+     *
+     * Generated from Godot docs: VisualShader.connect_nodes
+     */
     fun connectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(Binds.connectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort))
     }
 
+    /**
+     * Connects the specified nodes and ports.
+     *
+     * Generated from Godot docs: VisualShader.disconnect_nodes
+     */
     fun disconnectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndFourIntArgs(Binds.disconnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
+    /**
+     * Connects the specified nodes and ports, even if they can't be connected. Such connection is
+     * invalid and will not function properly.
+     *
+     * Generated from Godot docs: VisualShader.connect_nodes_forced
+     */
     fun connectNodesForced(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndFourIntArgs(Binds.connectNodesForcedBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
+    /**
+     * Returns the list of connected nodes with the specified type.
+     *
+     * Generated from Godot docs: VisualShader.get_node_connections
+     */
     fun getNodeConnections(type: VisualShader.Type): List<Map<String, Any?>> {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetDictionaryList(Binds.getNodeConnectionsBind, segment, type.value)
     }
 
+    /**
+     * Attaches the given node to the given frame.
+     *
+     * Generated from Godot docs: VisualShader.attach_node_to_frame
+     */
     fun attachNodeToFrame(type: VisualShader.Type, id: Int, frame: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndTwoIntArgs(Binds.attachNodeToFrameBind, segment, type.value, id, frame)
     }
 
+    /**
+     * Detaches the given node from the frame it is attached to.
+     *
+     * Generated from Godot docs: VisualShader.detach_node_from_frame
+     */
     fun detachNodeFromFrame(type: VisualShader.Type, id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithLongAndIntArgs(Binds.detachNodeFromFrameBind, segment, type.value, id)
     }
 
+    /**
+     * Adds a new varying value node to the shader.
+     *
+     * Generated from Godot docs: VisualShader.add_varying
+     */
     fun addVarying(name: String, mode: VisualShader.VaryingMode, type: VisualShader.VaryingType) {
         checkOpen()
         ObjectCalls.ptrcallWithStringTwoLongArgs(Binds.addVaryingBind, segment, name, mode.value, type.value)
     }
 
+    /**
+     * Removes a varying value node with the given `name`. Prints an error if a node with this name is
+     * not found.
+     *
+     * Generated from Godot docs: VisualShader.remove_varying
+     */
     fun removeVarying(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removeVaryingBind, segment, name)
     }
 
+    /**
+     * Returns `true` if the shader has a varying with the given `name`.
+     *
+     * Generated from Godot docs: VisualShader.has_varying
+     */
     fun hasVarying(name: String): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasVaryingBind, segment, name)
     }
 
+    /**
+     * Deprecated.
+     *
+     * Generated from Godot docs: VisualShader.set_graph_offset
+     */
     fun setGraphOffset(offset: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setGraphOffsetBind, segment, offset)
     }
 
+    /**
+     * Deprecated.
+     *
+     * Generated from Godot docs: VisualShader.get_graph_offset
+     */
     fun getGraphOffset(): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGraphOffsetBind, segment)
     }
 
+    /**
+     * Godot's `VisualShader.Type` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`VisualShader.Type.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShader.Type
+     */
     @JvmInline
     value class Type(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * A vertex shader, operating on vertices.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_VERTEX
+             */
             val VERTEX: Type get() = Type(0L)
+            /**
+             * A fragment shader, operating on fragments (pixels).
+             *
+             * Generated from Godot docs: VisualShader.TYPE_FRAGMENT
+             */
             val FRAGMENT: Type get() = Type(1L)
+            /**
+             * A shader for light calculations.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_LIGHT
+             */
             val LIGHT: Type get() = Type(2L)
+            /**
+             * A function for the "start" stage of particle shader.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_START
+             */
             val START: Type get() = Type(3L)
+            /**
+             * A function for the "process" stage of particle shader.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_PROCESS
+             */
             val PROCESS: Type get() = Type(4L)
+            /**
+             * A function for the "collide" stage (particle collision handler) of particle shader.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_COLLIDE
+             */
             val COLLIDE: Type get() = Type(5L)
+            /**
+             * A function for the "start" stage of particle shader, with customized output.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_START_CUSTOM
+             */
             val START_CUSTOM: Type get() = Type(6L)
+            /**
+             * A function for the "process" stage of particle shader, with customized output.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_PROCESS_CUSTOM
+             */
             val PROCESS_CUSTOM: Type get() = Type(7L)
+            /**
+             * A shader for 3D environment's sky.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_SKY
+             */
             val SKY: Type get() = Type(8L)
+            /**
+             * A compute shader that runs for each froxel of the volumetric fog map.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_FOG
+             */
             val FOG: Type get() = Type(9L)
+            /**
+             * A shader used to process blit calls to a DrawableTexture.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_TEXTURE_BLIT
+             */
             val TEXTURE_BLIT: Type get() = Type(10L)
+            /**
+             * Represents the size of the `Type` enum.
+             *
+             * Generated from Godot docs: VisualShader.TYPE_MAX
+             */
             val MAX: Type get() = Type(11L)
         }
     }
 
+    /**
+     * Godot's `VisualShader.VaryingMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`VisualShader.VaryingMode.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShader.VaryingMode
+     */
     @JvmInline
     value class VaryingMode(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Varying is passed from `Vertex` function to `Fragment` and `Light` functions.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_MODE_VERTEX_TO_FRAG_LIGHT
+             */
             val VERTEX_TO_FRAG_LIGHT: VaryingMode get() = VaryingMode(0L)
+            /**
+             * Varying is passed from `Fragment` function to `Light` function.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_MODE_FRAG_TO_LIGHT
+             */
             val FRAG_TO_LIGHT: VaryingMode get() = VaryingMode(1L)
+            /**
+             * Represents the size of the `VaryingMode` enum.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_MODE_MAX
+             */
             val MAX: VaryingMode get() = VaryingMode(2L)
         }
     }
 
+    /**
+     * Godot's `VisualShader.VaryingType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`VisualShader.VaryingType.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShader.VaryingType
+     */
     @JvmInline
     value class VaryingType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Varying is of type `float`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_FLOAT
+             */
             val FLOAT: VaryingType get() = VaryingType(0L)
+            /**
+             * Varying is of type `int`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_INT
+             */
             val INT: VaryingType get() = VaryingType(1L)
+            /**
+             * Varying is of type unsigned `int`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_UINT
+             */
             val UINT: VaryingType get() = VaryingType(2L)
+            /**
+             * Varying is of type `Vector2`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_VECTOR_2D
+             */
             val VECTOR_2D: VaryingType get() = VaryingType(3L)
+            /**
+             * Varying is of type `Vector3`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_VECTOR_3D
+             */
             val VECTOR_3D: VaryingType get() = VaryingType(4L)
+            /**
+             * Varying is of type `Vector4`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_VECTOR_4D
+             */
             val VECTOR_4D: VaryingType get() = VaryingType(5L)
+            /**
+             * Varying is of type `bool`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_BOOLEAN
+             */
             val BOOLEAN: VaryingType get() = VaryingType(6L)
+            /**
+             * Varying is of type `Transform3D`.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_TRANSFORM
+             */
             val TRANSFORM: VaryingType get() = VaryingType(7L)
+            /**
+             * Represents the size of the `VaryingType` enum.
+             *
+             * Generated from Godot docs: VisualShader.VARYING_TYPE_MAX
+             */
             val MAX: VaryingType get() = VaryingType(8L)
         }
     }

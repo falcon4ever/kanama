@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A `Cubemap` parameter node to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeCubemapParameter
  */
 class VisualShaderNodeCubemapParameter(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {

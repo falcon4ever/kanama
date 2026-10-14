@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Draws a stereo correct visibility mask.
+ *
  * Generated from Godot docs: OpenXRVisibilityMask
  */
 class OpenXRVisibilityMask(handle: GodotHandle) : VisualInstance3D(handle) {

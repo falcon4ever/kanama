@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Importer for Blender's `.blend` scene file format.
+ *
  * Generated from Godot docs: EditorSceneFormatImporterBlend
  */
 class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImporter(handle) {

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Visual shader node for randomizing particle values.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleRandomness
  */
 class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,23 +19,65 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
         @JvmName("setOpTypeProperty")
         set(value) = setOpType(value)
 
+    /**
+     * A type of operands and returned value.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleRandomness.set_op_type
+     */
     fun setOpType(type: VisualShaderNodeParticleRandomness.OpType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setOpTypeBind, segment, type.value)
     }
 
+    /**
+     * A type of operands and returned value.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleRandomness.get_op_type
+     */
     fun getOpType(): VisualShaderNodeParticleRandomness.OpType {
         checkOpen()
         return VisualShaderNodeParticleRandomness.OpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOpTypeBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeParticleRandomness.OpType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeParticleRandomness.OpType.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleRandomness.OpType
+     */
     @JvmInline
     value class OpType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * A floating-point scalar.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleRandomness.OP_TYPE_SCALAR
+             */
             val SCALAR: OpType get() = OpType(0L)
+            /**
+             * A 2D vector type.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleRandomness.OP_TYPE_VECTOR_2D
+             */
             val VECTOR_2D: OpType get() = OpType(1L)
+            /**
+             * A 3D vector type.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleRandomness.OP_TYPE_VECTOR_3D
+             */
             val VECTOR_3D: OpType get() = OpType(2L)
+            /**
+             * A 4D vector type.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleRandomness.OP_TYPE_VECTOR_4D
+             */
             val VECTOR_4D: OpType get() = OpType(3L)
+            /**
+             * Represents the size of the `OpType` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleRandomness.OP_TYPE_MAX
+             */
             val MAX: OpType get() = OpType(4L)
         }
     }

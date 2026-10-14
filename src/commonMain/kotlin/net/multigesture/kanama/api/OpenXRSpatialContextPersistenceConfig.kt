@@ -7,19 +7,38 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 
 /**
+ * Configuration header for spatial persistence.
+ *
  * Generated from Godot docs: OpenXRSpatialContextPersistenceConfig
  */
 class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructureBase(handle) {
+    /**
+     * Adds a persistence context to this configuration. You must add at least one persistence context
+     * to create a valid configuration. You can create a persistence context by calling
+     * `OpenXRSpatialAnchorCapability.create_persistence_context`.
+     *
+     * Generated from Godot docs: OpenXRSpatialContextPersistenceConfig.add_persistence_context
+     */
     fun addPersistenceContext(persistenceContext: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.addPersistenceContextBind, segment, persistenceContext)
     }
 
+    /**
+     * Removes a persistence context.
+     *
+     * Generated from Godot docs: OpenXRSpatialContextPersistenceConfig.remove_persistence_context
+     */
     fun removePersistenceContext(persistenceContext: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.removePersistenceContextBind, segment, persistenceContext)
     }
 
+    /**
+     * Gets the persistence context(s) (as `RID`s) received by `add_persistence_context`.
+     *
+     * Generated from Godot docs: OpenXRSpatialContextPersistenceConfig.get_persistence_contexts
+     */
     fun getPersistenceContexts(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getPersistenceContextsBind, segment)

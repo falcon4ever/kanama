@@ -6,6 +6,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Workspace related language server functionality.
+ *
  * Generated from Godot docs: GDScriptWorkspace
  */
 class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
@@ -14,16 +16,31 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithObjectStringAndPackedStringListArgs(Binds.applyNewSignalBind, segment, obj.segment, function, args)
     }
 
+    /**
+     * Converts a URI to a file path.
+     *
+     * Generated from Godot docs: GDScriptWorkspace.get_file_path
+     */
     fun getFilePath(uri: String): String {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(Binds.getFilePathBind, segment, uri)
     }
 
+    /**
+     * Converts a file path to a URI.
+     *
+     * Generated from Godot docs: GDScriptWorkspace.get_file_uri
+     */
     fun getFileUri(path: String): String {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetString(Binds.getFileUriBind, segment, path)
     }
 
+    /**
+     * Returns the interface of the script in a machine-readable format.
+     *
+     * Generated from Godot docs: GDScriptWorkspace.generate_script_api
+     */
     fun generateScriptApi(path: String): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetDictionary(Binds.generateScriptApiBind, segment, path)

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 
 /**
+ * A `Color` constant to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeColorConstant
  */
 class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
@@ -17,11 +19,21 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
         @JvmName("setConstantProperty")
         set(value) = setConstant(value)
 
+    /**
+     * A `Color` constant which represents a state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorConstant.set_constant
+     */
     fun setConstant(constant: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setConstantBind, segment, constant)
     }
 
+    /**
+     * A `Color` constant which represents a state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorConstant.get_constant
+     */
     fun getConstant(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(Binds.getConstantBind, segment)

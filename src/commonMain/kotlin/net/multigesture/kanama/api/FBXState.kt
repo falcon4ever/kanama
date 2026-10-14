@@ -16,11 +16,23 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
         @JvmName("setAllowGeometryHelperNodesProperty")
         set(value) = setAllowGeometryHelperNodes(value)
 
+    /**
+     * If `true`, the import process used auxiliary nodes called geometry helper nodes. These nodes
+     * help preserve the pivots and transformations of the original 3D model during import.
+     *
+     * Generated from Godot docs: FBXState.get_allow_geometry_helper_nodes
+     */
     fun getAllowGeometryHelperNodes(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowGeometryHelperNodesBind, segment)
     }
 
+    /**
+     * If `true`, the import process used auxiliary nodes called geometry helper nodes. These nodes
+     * help preserve the pivots and transformations of the original 3D model during import.
+     *
+     * Generated from Godot docs: FBXState.set_allow_geometry_helper_nodes
+     */
     fun setAllowGeometryHelperNodes(allow: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowGeometryHelperNodesBind, segment, allow)

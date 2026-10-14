@@ -22,11 +22,21 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
         @JvmName("setLoopProperty")
         set(value) = setLoop(value)
 
+    /**
+     * The original name of the animation.
+     *
+     * Generated from Godot docs: GLTFAnimation.get_original_name
+     */
     fun getOriginalName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
     }
 
+    /**
+     * The original name of the animation.
+     *
+     * Generated from Godot docs: GLTFAnimation.set_original_name
+     */
     fun setOriginalName(originalName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setOriginalNameBind, segment, originalName)
@@ -42,11 +52,28 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
     }
 
+    /**
+     * Gets additional arbitrary data in this `GLTFAnimation` instance. This can be used to keep
+     * per-node state data in `GLTFDocumentExtension` classes, which is important because they are
+     * stateless. The argument should be the `GLTFDocumentExtension` name (does not have to match the
+     * extension name in the glTF file), and the return value can be anything you set. If nothing was
+     * set, the return value is `null`.
+     *
+     * Generated from Godot docs: GLTFAnimation.get_additional_data
+     */
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
     }
 
+    /**
+     * Sets additional arbitrary data in this `GLTFAnimation` instance. This can be used to keep
+     * per-node state data in `GLTFDocumentExtension` classes, which is important because they are
+     * stateless. The first argument should be the `GLTFDocumentExtension` name (does not have to match
+     * the extension name in the glTF file), and the second argument can be anything you want.
+     *
+     * Generated from Godot docs: GLTFAnimation.set_additional_data
+     */
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)

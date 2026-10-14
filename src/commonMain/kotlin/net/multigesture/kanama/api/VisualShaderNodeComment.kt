@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Only exists for compatibility. Use `VisualShaderNodeFrame` as a replacement.
+ *
  * Generated from Godot docs: VisualShaderNodeComment
  */
 class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handle) {
@@ -16,11 +18,23 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
         @JvmName("setDescriptionProperty")
         set(value) = setDescription(value)
 
+    /**
+     * This property only exists to preserve data authored in earlier versions of Godot. It has
+     * currently no function.
+     *
+     * Generated from Godot docs: VisualShaderNodeComment.set_description
+     */
     fun setDescription(description: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setDescriptionBind, segment, description)
     }
 
+    /**
+     * This property only exists to preserve data authored in earlier versions of Godot. It has
+     * currently no function.
+     *
+     * Generated from Godot docs: VisualShaderNodeComment.get_description
+     */
     fun getDescription(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionBind, segment)

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Performs a `CurveTexture` lookup within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeCurveTexture
  */
 class VisualShaderNodeCurveTexture(handle: GodotHandle) : VisualShaderNodeResizableBase(handle) {
@@ -17,11 +19,21 @@ class VisualShaderNodeCurveTexture(handle: GodotHandle) : VisualShaderNodeResiza
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    /**
+     * The source texture.
+     *
+     * Generated from Godot docs: VisualShaderNodeCurveTexture.set_texture
+     */
     fun setTexture(texture: CurveTexture?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The source texture.
+     *
+     * Generated from Godot docs: VisualShaderNodeCurveTexture.get_texture
+     */
     fun getTexture(): CurveTexture? {
         checkOpen()
         return CurveTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))

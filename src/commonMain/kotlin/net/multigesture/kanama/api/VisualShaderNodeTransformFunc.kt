@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Computes a `Transform3D` function within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTransformFunc
  */
 class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,21 +19,53 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
+    /**
+     * The function to be computed.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformFunc.set_function
+     */
     fun setFunction(func: VisualShaderNodeTransformFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
+    /**
+     * The function to be computed.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformFunc.get_function
+     */
     fun getFunction(): VisualShaderNodeTransformFunc.Function {
         checkOpen()
         return VisualShaderNodeTransformFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeTransformFunc.Function` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeTransformFunc.Function.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformFunc.Function
+     */
     @JvmInline
     value class Function(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Perform the inverse operation on the `Transform3D` matrix.
+             *
+             * Generated from Godot docs: VisualShaderNodeTransformFunc.FUNC_INVERSE
+             */
             val INVERSE: Function get() = Function(0L)
+            /**
+             * Perform the transpose operation on the `Transform3D` matrix.
+             *
+             * Generated from Godot docs: VisualShaderNodeTransformFunc.FUNC_TRANSPOSE
+             */
             val TRANSPOSE: Function get() = Function(1L)
+            /**
+             * Represents the size of the `Function` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeTransformFunc.FUNC_MAX
+             */
             val MAX: Function get() = Function(2L)
         }
     }

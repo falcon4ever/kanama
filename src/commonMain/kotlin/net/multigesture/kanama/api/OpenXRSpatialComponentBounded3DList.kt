@@ -8,14 +8,26 @@ import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * Object for storing the queries bounded3d result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentBounded3DList
  */
 class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the center of our bounding box for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentBounded3DList.get_center_pose
+     */
     fun getCenterPose(index: Long): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getCenterPoseBind, segment, index)
     }
 
+    /**
+     * Returns the size of our bounding box for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentBounded3DList.get_size
+     */
     fun getSize(index: Long): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetVector3(Binds.getSizeBind, segment, index)

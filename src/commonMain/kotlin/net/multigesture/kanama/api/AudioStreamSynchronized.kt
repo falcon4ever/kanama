@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Stream that can be fitted with sub-streams, which will be played in-sync.
+ *
  * Generated from Godot docs: AudioStreamSynchronized
  */
 class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
@@ -17,21 +19,41 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
         @JvmName("setStreamCountProperty")
         set(value) = setStreamCount(value)
 
+    /**
+     * Set the total amount of streams that will be played back synchronized.
+     *
+     * Generated from Godot docs: AudioStreamSynchronized.set_stream_count
+     */
     fun setStreamCount(streamCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStreamCountBind, segment, streamCount)
     }
 
+    /**
+     * Set the total amount of streams that will be played back synchronized.
+     *
+     * Generated from Godot docs: AudioStreamSynchronized.get_stream_count
+     */
     fun getStreamCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
     }
 
+    /**
+     * Set one of the synchronized streams, by index.
+     *
+     * Generated from Godot docs: AudioStreamSynchronized.set_sync_stream
+     */
     fun setSyncStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Get one of the synchronized streams, by index.
+     *
+     * Generated from Godot docs: AudioStreamSynchronized.get_sync_stream
+     */
     fun getSyncStream(streamIndex: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSyncStreamBind, segment, streamIndex)
@@ -42,11 +64,21 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
         return AudioStream.wrapOwned(ret)
     }
 
+    /**
+     * Set the volume of one of the synchronized streams, by index.
+     *
+     * Generated from Godot docs: AudioStreamSynchronized.set_sync_stream_volume
+     */
     fun setSyncStreamVolume(streamIndex: Int, volumeDb: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setSyncStreamVolumeBind, segment, streamIndex, volumeDb)
     }
 
+    /**
+     * Get the volume of one of the synchronized streams, by index.
+     *
+     * Generated from Godot docs: AudioStreamSynchronized.get_sync_stream_volume
+     */
     fun getSyncStreamVolume(streamIndex: Int): Double {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getSyncStreamVolumeBind, segment, streamIndex)

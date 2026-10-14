@@ -39,14 +39,6 @@ jobs:
           java-version: "25"
           cache: gradle
 
-      - name: Install CLI dependencies
-        shell: bash
-        run: |
-          # local_ci.sh and the smoke scripts shell out to ripgrep (`rg`), which
-          # is not preinstalled on ubuntu-24.04 runners.
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ripgrep
-
       - name: Cache Godot binary
         id: godot-cache
         uses: actions/cache@v4
@@ -153,20 +145,25 @@ jobs:
   # Every gate shown red on a known-bad input and green again (task 118): the fast set of
   # scripts/gate_red_runs.py in a throwaway worktree. --strict makes a skipped case a failure; the one case
   # that needs a Godot docs checkout (sync_kdoc) is skipped on purpose here, by name. The Godot/Gradle smokes
-  # run nightly (gate-red-runs-nightly.yml). Not part of local_ci.sh: it takes several minutes.
+  # run nightly (gate-red-runs-nightly.yml). Not part of local_ci.sh: it takes several minutes, so CI splits the
+  # cases over three parallel shards (--shard K/3, every third case).
   gate-red-runs:
     name: gate red runs (fast set)
     needs: changes
     if: needs.changes.outputs.gates == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
       - name: Run the fast gate red runs
         shell: bash
-        run: python3 scripts/gate_red_runs.py --strict --allow-skip sync_kdoc
+        run: python3 scripts/gate_red_runs.py --strict --allow-skip sync_kdoc --shard ${{ matrix.shard }}/3
 
   # The GDExtension header is platform-independent; dump it once here and share
   # it (matches package.yml). The iOS C shim needs it to compile; the Android

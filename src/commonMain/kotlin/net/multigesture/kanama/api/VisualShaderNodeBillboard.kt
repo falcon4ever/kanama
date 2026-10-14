@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A node that controls how the object faces the camera to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeBillboard
  */
 class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -23,33 +25,87 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
         @JvmName("setKeepScaleProperty")
         set(value) = setKeepScaleEnabled(value)
 
+    /**
+     * Controls how the object faces the camera.
+     *
+     * Generated from Godot docs: VisualShaderNodeBillboard.set_billboard_type
+     */
     fun setBillboardType(billboardType: VisualShaderNodeBillboard.BillboardType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setBillboardTypeBind, segment, billboardType.value)
     }
 
+    /**
+     * Controls how the object faces the camera.
+     *
+     * Generated from Godot docs: VisualShaderNodeBillboard.get_billboard_type
+     */
     fun getBillboardType(): VisualShaderNodeBillboard.BillboardType {
         checkOpen()
         return VisualShaderNodeBillboard.BillboardType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardTypeBind, segment))
     }
 
+    /**
+     * If `true`, the shader will keep the scale set for the mesh. Otherwise, the scale is lost when
+     * billboarding.
+     *
+     * Generated from Godot docs: VisualShaderNodeBillboard.set_keep_scale_enabled
+     */
     fun setKeepScaleEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setKeepScaleEnabledBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the shader will keep the scale set for the mesh. Otherwise, the scale is lost when
+     * billboarding.
+     *
+     * Generated from Godot docs: VisualShaderNodeBillboard.is_keep_scale_enabled
+     */
     fun isKeepScaleEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepScaleEnabledBind, segment)
     }
 
+    /**
+     * Godot's `VisualShaderNodeBillboard.BillboardType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeBillboard.BillboardType.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeBillboard.BillboardType
+     */
     @JvmInline
     value class BillboardType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Billboarding is disabled and the node does nothing.
+             *
+             * Generated from Godot docs: VisualShaderNodeBillboard.BILLBOARD_TYPE_DISABLED
+             */
             val DISABLED: BillboardType get() = BillboardType(0L)
+            /**
+             * A standard billboarding algorithm is enabled.
+             *
+             * Generated from Godot docs: VisualShaderNodeBillboard.BILLBOARD_TYPE_ENABLED
+             */
             val ENABLED: BillboardType get() = BillboardType(1L)
+            /**
+             * A billboarding algorithm to rotate around Y-axis is enabled.
+             *
+             * Generated from Godot docs: VisualShaderNodeBillboard.BILLBOARD_TYPE_FIXED_Y
+             */
             val FIXED_Y: BillboardType get() = BillboardType(2L)
+            /**
+             * A billboarding algorithm designed to use on particles is enabled.
+             *
+             * Generated from Godot docs: VisualShaderNodeBillboard.BILLBOARD_TYPE_PARTICLES
+             */
             val PARTICLES: BillboardType get() = BillboardType(3L)
+            /**
+             * Represents the size of the `BillboardType` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeBillboard.BILLBOARD_TYPE_MAX
+             */
             val MAX: BillboardType get() = BillboardType(4L)
         }
     }

@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Vibration haptic feedback.
+ *
  * Generated from Godot docs: OpenXRHapticVibration
  */
 class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
@@ -28,31 +30,65 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
         @JvmName("setAmplitudeProperty")
         set(value) = setAmplitude(value)
 
+    /**
+     * The duration of the pulse in nanoseconds. Use `-1` for a minimum duration pulse for the current
+     * XR runtime.
+     *
+     * Generated from Godot docs: OpenXRHapticVibration.set_duration
+     */
     fun setDuration(duration: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setDurationBind, segment, duration)
     }
 
+    /**
+     * The duration of the pulse in nanoseconds. Use `-1` for a minimum duration pulse for the current
+     * XR runtime.
+     *
+     * Generated from Godot docs: OpenXRHapticVibration.get_duration
+     */
     fun getDuration(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getDurationBind, segment)
     }
 
+    /**
+     * The frequency of the pulse in Hz. `0.0` will let the XR runtime chose an optimal frequency for
+     * the device used.
+     *
+     * Generated from Godot docs: OpenXRHapticVibration.set_frequency
+     */
     fun setFrequency(frequency: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFrequencyBind, segment, frequency)
     }
 
+    /**
+     * The frequency of the pulse in Hz. `0.0` will let the XR runtime chose an optimal frequency for
+     * the device used.
+     *
+     * Generated from Godot docs: OpenXRHapticVibration.get_frequency
+     */
     fun getFrequency(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
     }
 
+    /**
+     * The amplitude of the pulse between `0.0` and `1.0`.
+     *
+     * Generated from Godot docs: OpenXRHapticVibration.set_amplitude
+     */
     fun setAmplitude(amplitude: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAmplitudeBind, segment, amplitude)
     }
 
+    /**
+     * The amplitude of the pulse between `0.0` and `1.0`.
+     *
+     * Generated from Godot docs: OpenXRHapticVibration.get_amplitude
+     */
     fun getAmplitude(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAmplitudeBind, segment)

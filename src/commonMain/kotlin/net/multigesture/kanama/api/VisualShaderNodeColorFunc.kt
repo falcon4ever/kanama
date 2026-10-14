@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A `Color` function to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeColorFunc
  */
 class VisualShaderNodeColorFunc(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,25 +19,77 @@ class VisualShaderNodeColorFunc(handle: GodotHandle) : VisualShaderNode(handle) 
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
+    /**
+     * A function to be applied to the input color.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorFunc.set_function
+     */
     fun setFunction(func: VisualShaderNodeColorFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
+    /**
+     * A function to be applied to the input color.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorFunc.get_function
+     */
     fun getFunction(): VisualShaderNodeColorFunc.Function {
         checkOpen()
         return VisualShaderNodeColorFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeColorFunc.Function` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeColorFunc.Function.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeColorFunc.Function
+     */
     @JvmInline
     value class Function(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Converts the color to grayscale using the following formula.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_GRAYSCALE
+             */
             val GRAYSCALE: Function get() = Function(0L)
+            /**
+             * Converts HSV vector to RGB equivalent.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_HSV2RGB
+             */
             val HSV2RGB: Function get() = Function(1L)
+            /**
+             * Converts RGB vector to HSV equivalent.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_RGB2HSV
+             */
             val RGB2HSV: Function get() = Function(2L)
+            /**
+             * Applies sepia tone effect using the following formula.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_SEPIA
+             */
             val SEPIA: Function get() = Function(3L)
+            /**
+             * Converts color from linear encoding to nonlinear sRGB encoding using the following formula.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_LINEAR_TO_SRGB
+             */
             val LINEAR_TO_SRGB: Function get() = Function(4L)
+            /**
+             * Converts color from nonlinear sRGB encoding to linear encoding using the following formula.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_SRGB_TO_LINEAR
+             */
             val SRGB_TO_LINEAR: Function get() = Function(5L)
+            /**
+             * Represents the size of the `Function` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeColorFunc.FUNC_MAX
+             */
             val MAX: Function get() = Function(6L)
         }
     }

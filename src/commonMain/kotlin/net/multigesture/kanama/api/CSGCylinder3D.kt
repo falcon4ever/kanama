@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A CSG Cylinder shape.
+ *
  * Generated from Godot docs: CSGCylinder3D
  */
 class CSGCylinder3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
@@ -47,50 +49,114 @@ class CSGCylinder3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
 
+    /**
+     * The radius of the cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
+    /**
+     * The radius of the cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
+    /**
+     * The height of the cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.set_height
+     */
     fun setHeight(height: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
+    /**
+     * The height of the cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.get_height
+     */
     fun getHeight(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
+    /**
+     * The number of sides of the cylinder, the higher this number the more detail there will be in the
+     * cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.set_sides
+     */
     fun setSides(sides: Int) {
         ObjectCalls.ptrcallWithIntArg(Binds.setSidesBind, segment, sides)
     }
 
+    /**
+     * The number of sides of the cylinder, the higher this number the more detail there will be in the
+     * cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.get_sides
+     */
     fun getSides(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSidesBind, segment)
     }
 
+    /**
+     * If `true` a cone is created, the `radius` will only apply to one side.
+     *
+     * Generated from Godot docs: CSGCylinder3D.set_cone
+     */
     fun setCone(cone: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setConeBind, segment, cone)
     }
 
+    /**
+     * If `true` a cone is created, the `radius` will only apply to one side.
+     *
+     * Generated from Godot docs: CSGCylinder3D.is_cone
+     */
     fun isCone(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isConeBind, segment)
     }
 
+    /**
+     * The material used to render the cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The material used to render the cylinder.
+     *
+     * Generated from Godot docs: CSGCylinder3D.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
+    /**
+     * If `true` the normals of the cylinder are set to give a smooth effect making the cylinder seem
+     * rounded. If `false` the cylinder will have a flat shaded look.
+     *
+     * Generated from Godot docs: CSGCylinder3D.set_smooth_faces
+     */
     fun setSmoothFaces(smoothFaces: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothFacesBind, segment, smoothFaces)
     }
 
+    /**
+     * If `true` the normals of the cylinder are set to give a smooth effect making the cylinder seem
+     * rounded. If `false` the cylinder will have a flat shaded look.
+     *
+     * Generated from Godot docs: CSGCylinder3D.get_smooth_faces
+     */
     fun getSmoothFaces(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSmoothFacesBind, segment)
     }

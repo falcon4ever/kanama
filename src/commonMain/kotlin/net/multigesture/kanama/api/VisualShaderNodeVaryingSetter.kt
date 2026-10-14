@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that sets a value of a varying.
+ *
  * Generated from Godot docs: VisualShaderNodeVaryingSetter
  */
 class VisualShaderNodeVaryingSetter(handle: GodotHandle) : VisualShaderNodeVarying(handle) {

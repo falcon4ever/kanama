@@ -610,7 +610,7 @@ if [[ "$RUN_DEMOS" -eq 1 ]]; then
     exit 2
   fi
 fi
-if rg -q $'\tFAIL\t' "$RESULTS_TSV"; then
+if grep -Eq $'\tFAIL\t' "$RESULTS_TSV"; then
   echo "[ios_device_gate] one or more gate steps failed; summary: $SUMMARY" >&2
   exit 1
 fi

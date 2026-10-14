@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A reference to an existing `VisualShaderNodeParameter`.
+ *
  * Generated from Godot docs: VisualShaderNodeParameterRef
  */
 class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -16,11 +18,21 @@ class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handl
         @JvmName("setParameterNameProperty")
         set(value) = setParameterName(value)
 
+    /**
+     * The name of the parameter which this reference points to.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameterRef.set_parameter_name
+     */
     fun setParameterName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setParameterNameBind, segment, name)
     }
 
+    /**
+     * The name of the parameter which this reference points to.
+     *
+     * Generated from Godot docs: VisualShaderNodeParameterRef.get_parameter_name
+     */
     fun getParameterName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getParameterNameBind, segment)

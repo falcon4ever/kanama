@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that makes particles emitted in a ring shape.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleRingEmitter
  */
 class VisualShaderNodeParticleRingEmitter(handle: GodotHandle) : VisualShaderNodeParticleEmitter(handle) {

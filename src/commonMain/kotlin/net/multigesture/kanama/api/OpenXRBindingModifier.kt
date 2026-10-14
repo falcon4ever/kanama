@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Binding modifier base class.
+ *
  * Generated from Godot docs: OpenXRBindingModifier
  */
 open class OpenXRBindingModifier(handle: GodotHandle) : Resource(handle) {

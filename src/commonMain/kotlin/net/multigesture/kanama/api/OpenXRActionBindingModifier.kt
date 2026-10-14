@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Binding modifier that applies on individual actions related to an interaction profile.
+ *
  * Generated from Godot docs: OpenXRActionBindingModifier
  */
 open class OpenXRActionBindingModifier(handle: GodotHandle) : OpenXRBindingModifier(handle) {

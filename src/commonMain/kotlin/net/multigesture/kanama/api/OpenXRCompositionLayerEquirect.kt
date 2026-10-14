@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * An OpenXR composition layer that is rendered as an internal slice of a sphere.
+ *
  * Generated from Godot docs: OpenXRCompositionLayerEquirect
  */
 class OpenXRCompositionLayerEquirect(handle: GodotHandle) : OpenXRCompositionLayer(handle) {
@@ -40,42 +42,96 @@ class OpenXRCompositionLayerEquirect(handle: GodotHandle) : OpenXRCompositionLay
         @JvmName("setFallbackSegmentsProperty")
         set(value) = setFallbackSegments(value)
 
+    /**
+     * The radius of the sphere.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.set_radius
+     */
     fun setRadius(radius: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
+    /**
+     * The radius of the sphere.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.get_radius
+     */
     fun getRadius(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
+    /**
+     * The central horizontal angle of the sphere. Used to set the width.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.set_central_horizontal_angle
+     */
     fun setCentralHorizontalAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCentralHorizontalAngleBind, segment, angle)
     }
 
+    /**
+     * The central horizontal angle of the sphere. Used to set the width.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.get_central_horizontal_angle
+     */
     fun getCentralHorizontalAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCentralHorizontalAngleBind, segment)
     }
 
+    /**
+     * The upper vertical angle of the sphere. Used (together with `lower_vertical_angle`) to set the
+     * height.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.set_upper_vertical_angle
+     */
     fun setUpperVerticalAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setUpperVerticalAngleBind, segment, angle)
     }
 
+    /**
+     * The upper vertical angle of the sphere. Used (together with `lower_vertical_angle`) to set the
+     * height.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.get_upper_vertical_angle
+     */
     fun getUpperVerticalAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUpperVerticalAngleBind, segment)
     }
 
+    /**
+     * The lower vertical angle of the sphere. Used (together with `upper_vertical_angle`) to set the
+     * height.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.set_lower_vertical_angle
+     */
     fun setLowerVerticalAngle(angle: Double) {
         ObjectCalls.ptrcallWithDoubleArg(Binds.setLowerVerticalAngleBind, segment, angle)
     }
 
+    /**
+     * The lower vertical angle of the sphere. Used (together with `upper_vertical_angle`) to set the
+     * height.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.get_lower_vertical_angle
+     */
     fun getLowerVerticalAngle(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLowerVerticalAngleBind, segment)
     }
 
+    /**
+     * The number of segments to use in the fallback mesh.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.set_fallback_segments
+     */
     fun setFallbackSegments(segments: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setFallbackSegmentsBind, segment, segments)
     }
 
+    /**
+     * The number of segments to use in the fallback mesh.
+     *
+     * Generated from Godot docs: OpenXRCompositionLayerEquirect.get_fallback_segments
+     */
     fun getFallbackSegments(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getFallbackSegmentsBind, segment)
     }

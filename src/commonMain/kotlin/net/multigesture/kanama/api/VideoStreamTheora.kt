@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * `VideoStream` resource for Ogg Theora videos.
+ *
  * Generated from Godot docs: VideoStreamTheora
  */
 class VideoStreamTheora(handle: GodotHandle) : VideoStream(handle) {

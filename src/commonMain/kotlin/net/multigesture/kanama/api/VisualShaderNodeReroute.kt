@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A node that allows rerouting a connection within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeReroute
  */
 class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -14,6 +16,11 @@ class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("portTypeProperty")
         get() = getPortType()
 
+    /**
+     * Returns the port type of the reroute node.
+     *
+     * Generated from Godot docs: VisualShaderNodeReroute.get_port_type
+     */
     fun getPortType(): VisualShaderNode.PortType {
         checkOpen()
         return VisualShaderNode.PortType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPortTypeBind, segment))

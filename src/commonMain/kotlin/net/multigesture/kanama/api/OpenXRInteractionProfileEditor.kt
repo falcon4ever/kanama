@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Default OpenXR interaction profile editor.
+ *
  * Generated from Godot docs: OpenXRInteractionProfileEditor
  */
 class OpenXRInteractionProfileEditor(handle: GodotHandle) : OpenXRInteractionProfileEditorBase(handle) {

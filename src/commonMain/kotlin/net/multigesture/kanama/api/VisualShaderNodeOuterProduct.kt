@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Calculates an outer product of two vectors within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeOuterProduct
  */
 class VisualShaderNodeOuterProduct(handle: GodotHandle) : VisualShaderNode(handle) {

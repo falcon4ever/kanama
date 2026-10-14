@@ -8,6 +8,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * The analog threshold binding modifier can modify a float input to a boolean input with specified
+ * thresholds.
+ *
  * Generated from Godot docs: OpenXRAnalogThresholdModifier
  */
 class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingModifier(handle) {
@@ -35,41 +38,83 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
         @JvmName("setOffHapticProperty")
         set(value) = setOffHaptic(value)
 
+    /**
+     * When our input value is equal or larger than this value, our output becomes `true`. It stays
+     * `true` until it falls under the `off_threshold` value.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.set_on_threshold
+     */
     fun setOnThreshold(onThreshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOnThresholdBind, segment, onThreshold)
     }
 
+    /**
+     * When our input value is equal or larger than this value, our output becomes `true`. It stays
+     * `true` until it falls under the `off_threshold` value.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.get_on_threshold
+     */
     fun getOnThreshold(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOnThresholdBind, segment)
     }
 
+    /**
+     * When our input value falls below this, our output becomes `false`.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.set_off_threshold
+     */
     fun setOffThreshold(offThreshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOffThresholdBind, segment, offThreshold)
     }
 
+    /**
+     * When our input value falls below this, our output becomes `false`.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.get_off_threshold
+     */
     fun getOffThreshold(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOffThresholdBind, segment)
     }
 
+    /**
+     * Haptic pulse to emit when the user presses the input.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.set_on_haptic
+     */
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Haptic pulse to emit when the user presses the input.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.get_on_haptic
+     */
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
         return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
     }
 
+    /**
+     * Haptic pulse to emit when the user releases the input.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.set_off_haptic
+     */
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Haptic pulse to emit when the user releases the input.
+     *
+     * Generated from Godot docs: OpenXRAnalogThresholdModifier.get_off_haptic
+     */
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
         return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))

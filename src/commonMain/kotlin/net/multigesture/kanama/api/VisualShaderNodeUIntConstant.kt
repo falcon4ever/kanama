@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * An unsigned scalar integer constant to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeUIntConstant
  */
 class VisualShaderNodeUIntConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
@@ -16,11 +18,21 @@ class VisualShaderNodeUIntConstant(handle: GodotHandle) : VisualShaderNodeConsta
         @JvmName("setConstantProperty")
         set(value) = setConstant(value)
 
+    /**
+     * An unsigned integer constant which represents a state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeUIntConstant.set_constant
+     */
     fun setConstant(constant: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setConstantBind, segment, constant)
     }
 
+    /**
+     * An unsigned integer constant which represents a state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeUIntConstant.get_constant
+     */
     fun getConstant(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConstantBind, segment)

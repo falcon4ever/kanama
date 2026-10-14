@@ -947,7 +947,13 @@ python3 scripts/sync_kdoc_from_godot_docs.py \
 The script uses `$GODOT_DOCS` when set, otherwise it defaults to
 `godot/doc/classes` relative to the current working directory. Use
 `--godot-docs /path/to/godot/doc/classes` when syncing against a different
-Godot checkout. Use `--classes Node,Node3D,Tween` for a focused refresh while
+Godot checkout. The classes a module defines (`ZIPReader`/`ZIPPacker`, `WebSocket*`,
+`WebRTC*`, `CSG*`, `GLTF*`, `OpenXR*`, `ENet*`, ...) are documented in the engine
+source under `modules/<module>/doc_classes`, not in `doc/classes`: the script finds
+that directory from the `--godot-docs` path (a source checkout's
+`<root>/doc/classes` has `<root>/modules/*/doc_classes` beside it), and the drift
+gate covers those wrappers too. A docs directory outside that layout syncs the core
+classes only. Use `--classes Node,Node3D,Tween` for a focused refresh while
 working on one wrapper slice, or `--scope types --classes Vector3` when
 working on builtin values. By default the api scope covers the shared tree, the
 desktop per-platform files and their `<Class>.jvm.kt` companions; `--api-dir`

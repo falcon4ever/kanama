@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A CSG Mesh shape that uses a mesh resource.
+ *
  * Generated from Godot docs: CSGMesh3D
  */
 class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
@@ -23,18 +25,56 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
 
+    /**
+     * The `Mesh` resource to use as a CSG shape. Note: Some `Mesh` types such as `PlaneMesh`,
+     * `PointMesh`, `QuadMesh`, and `RibbonTrailMesh` are excluded from the type hint for this
+     * property, as these primitives are non-manifold and thus not compatible with the CSG algorithm.
+     * Note: When using an `ArrayMesh`, all vertex attributes except `Mesh.ArrayType.VERTEX`,
+     * `Mesh.ArrayType.NORMAL` and `Mesh.ArrayType.TEX_UV` are left unused. Only
+     * `Mesh.ArrayType.VERTEX` and `Mesh.ArrayType.TEX_UV` will be passed to the GPU.
+     * `Mesh.ArrayType.NORMAL` is only used to determine which faces require the use of flat shading.
+     * By default, CSGMesh will ignore the mesh's vertex normals, recalculate them for each vertex and
+     * use a smooth shader. If a flat shader is required for a face, ensure that all vertex normals of
+     * the face are approximately equal.
+     *
+     * Generated from Godot docs: CSGMesh3D.set_mesh
+     */
     fun setMesh(mesh: Mesh?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The `Mesh` resource to use as a CSG shape. Note: Some `Mesh` types such as `PlaneMesh`,
+     * `PointMesh`, `QuadMesh`, and `RibbonTrailMesh` are excluded from the type hint for this
+     * property, as these primitives are non-manifold and thus not compatible with the CSG algorithm.
+     * Note: When using an `ArrayMesh`, all vertex attributes except `Mesh.ArrayType.VERTEX`,
+     * `Mesh.ArrayType.NORMAL` and `Mesh.ArrayType.TEX_UV` are left unused. Only
+     * `Mesh.ArrayType.VERTEX` and `Mesh.ArrayType.TEX_UV` will be passed to the GPU.
+     * `Mesh.ArrayType.NORMAL` is only used to determine which faces require the use of flat shading.
+     * By default, CSGMesh will ignore the mesh's vertex normals, recalculate them for each vertex and
+     * use a smooth shader. If a flat shader is required for a face, ensure that all vertex normals of
+     * the face are approximately equal.
+     *
+     * Generated from Godot docs: CSGMesh3D.get_mesh
+     */
     fun getMesh(): Mesh? {
         return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
+    /**
+     * The `Material` used in drawing the CSG shape.
+     *
+     * Generated from Godot docs: CSGMesh3D.set_material
+     */
     fun setMaterial(material: Material?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The `Material` used in drawing the CSG shape.
+     *
+     * Generated from Godot docs: CSGMesh3D.get_material
+     */
     fun getMaterial(): Material? {
         return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }

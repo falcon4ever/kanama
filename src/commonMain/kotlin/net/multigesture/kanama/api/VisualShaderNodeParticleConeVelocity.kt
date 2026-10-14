@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that makes particles move in a cone shape.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleConeVelocity
  */
 class VisualShaderNodeParticleConeVelocity(handle: GodotHandle) : VisualShaderNode(handle) {

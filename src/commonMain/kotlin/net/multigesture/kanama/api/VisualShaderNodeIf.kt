@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Outputs a 3D vector based on the result of a floating-point comparison within the visual shader
+ * graph.
+ *
  * Generated from Godot docs: VisualShaderNodeIf
  */
 class VisualShaderNodeIf(handle: GodotHandle) : VisualShaderNode(handle) {

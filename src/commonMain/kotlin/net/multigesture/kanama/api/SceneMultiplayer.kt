@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.NodePath
 
 /**
+ * High-level multiplayer API implementation.
+ *
  * Generated from Godot docs: SceneMultiplayer
  */
 class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
@@ -57,111 +59,269 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         @JvmName("setMaxDeltaPacketSizeProperty")
         set(value) = setMaxDeltaPacketSize(value)
 
+    /**
+     * The root path to use for RPCs and replication. Instead of an absolute path, a relative path will
+     * be used to find the node upon which the RPC should be executed. This effectively allows to have
+     * different branches of the scene tree to be managed by different MultiplayerAPI, allowing for
+     * example to run both client and server in the same scene.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_root_path
+     */
     fun setRootPath(path: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.setRootPathBind, segment, path)
     }
 
+    /**
+     * The root path to use for RPCs and replication. Instead of an absolute path, a relative path will
+     * be used to find the node upon which the RPC should be executed. This effectively allows to have
+     * different branches of the scene tree to be managed by different MultiplayerAPI, allowing for
+     * example to run both client and server in the same scene.
+     *
+     * Generated from Godot docs: SceneMultiplayer.get_root_path
+     */
     fun getRootPath(): NodePath {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootPathBind, segment)
     }
 
+    /**
+     * Clears the current SceneMultiplayer network state (you shouldn't call this unless you know what
+     * you are doing).
+     *
+     * Generated from Godot docs: SceneMultiplayer.clear
+     */
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
+    /**
+     * Disconnects the peer identified by `id`, removing it from the list of connected peers, and
+     * closing the underlying connection with it.
+     *
+     * Generated from Godot docs: SceneMultiplayer.disconnect_peer
+     */
     fun disconnectPeer(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.disconnectPeerBind, segment, id)
     }
 
+    /**
+     * Returns the IDs of the peers currently trying to authenticate with this `MultiplayerAPI`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.get_authenticating_peers
+     */
     fun getAuthenticatingPeers(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getAuthenticatingPeersBind, segment)
     }
 
+    /**
+     * Sends the specified `data` to the remote peer identified by `id` as part of an authentication
+     * message. This can be used to authenticate peers, and control when
+     * `MultiplayerAPI.peer_connected` is emitted (and the remote peer accepted as one of the connected
+     * peers).
+     *
+     * Generated from Godot docs: SceneMultiplayer.send_auth
+     */
     fun sendAuth(id: Int, data: ByteArray): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(Binds.sendAuthBind, segment, id, data))
     }
 
+    /**
+     * Mark the authentication step as completed for the remote peer identified by `id`. The
+     * `MultiplayerAPI.peer_connected` signal will be emitted for this peer once the remote side also
+     * completes the authentication. No further authentication messages are expected to be received
+     * from this peer. If a peer disconnects before completing authentication, either due to a network
+     * issue, the `auth_timeout` expiring, or manually calling `disconnect_peer`, the
+     * `peer_authentication_failed` signal will be emitted instead of
+     * `MultiplayerAPI.peer_disconnected`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.complete_auth
+     */
     fun completeAuth(id: Int): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.completeAuthBind, segment, id))
     }
 
+    /**
+     * The callback to execute when receiving authentication data sent via `send_auth`. If the
+     * `Callable` is empty (default), peers will be automatically accepted as soon as they connect.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_auth_callback
+     */
     fun setAuthCallback(callback: GodotCallable) {
         checkOpen()
         ObjectCalls.ptrcallWithCallableArg(Binds.setAuthCallbackBind, segment, callback.target.segment, callback.method)
     }
 
+    /**
+     * The callback to execute when receiving authentication data sent via `send_auth`. If the
+     * `Callable` is empty (default), peers will be automatically accepted as soon as they connect.
+     *
+     * Generated from Godot docs: SceneMultiplayer.get_auth_callback
+     */
     fun getAuthCallback(): GodotCallable? {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetCallable(Binds.getAuthCallbackBind, segment)
     }
 
+    /**
+     * If set to a value greater than `0.0`, the maximum duration in seconds peers can stay in the
+     * authenticating state, after which the authentication will automatically fail. See the
+     * `peer_authenticating` and `peer_authentication_failed` signals.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_auth_timeout
+     */
     fun setAuthTimeout(timeout: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setAuthTimeoutBind, segment, timeout)
     }
 
+    /**
+     * If set to a value greater than `0.0`, the maximum duration in seconds peers can stay in the
+     * authenticating state, after which the authentication will automatically fail. See the
+     * `peer_authenticating` and `peer_authentication_failed` signals.
+     *
+     * Generated from Godot docs: SceneMultiplayer.get_auth_timeout
+     */
     fun getAuthTimeout(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAuthTimeoutBind, segment)
     }
 
+    /**
+     * If `true`, the MultiplayerAPI's `MultiplayerAPI.multiplayer_peer` refuses new incoming
+     * connections.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_refuse_new_connections
+     */
     fun setRefuseNewConnections(refuse: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setRefuseNewConnectionsBind, segment, refuse)
     }
 
+    /**
+     * If `true`, the MultiplayerAPI's `MultiplayerAPI.multiplayer_peer` refuses new incoming
+     * connections.
+     *
+     * Generated from Godot docs: SceneMultiplayer.is_refusing_new_connections
+     */
     fun isRefusingNewConnections(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRefusingNewConnectionsBind, segment)
     }
 
+    /**
+     * If `true`, the MultiplayerAPI will allow encoding and decoding of object during RPCs. Warning:
+     * Deserialized objects can contain code which gets executed. Do not use this option if the
+     * serialized object comes from untrusted sources to avoid potential security threat such as remote
+     * code execution.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_allow_object_decoding
+     */
     fun setAllowObjectDecoding(enable: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setAllowObjectDecodingBind, segment, enable)
     }
 
+    /**
+     * If `true`, the MultiplayerAPI will allow encoding and decoding of object during RPCs. Warning:
+     * Deserialized objects can contain code which gets executed. Do not use this option if the
+     * serialized object comes from untrusted sources to avoid potential security threat such as remote
+     * code execution.
+     *
+     * Generated from Godot docs: SceneMultiplayer.is_object_decoding_allowed
+     */
     fun isObjectDecodingAllowed(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isObjectDecodingAllowedBind, segment)
     }
 
+    /**
+     * Enable or disable the server feature that notifies clients of other peers'
+     * connection/disconnection, and relays messages between them. When this option is `false`, clients
+     * won't be automatically notified of other peers and won't be able to send them packets through
+     * the server. Note: Changing this option while other peers are connected may lead to unexpected
+     * behaviors. Note: Support for this feature may depend on the current `MultiplayerPeer`
+     * configuration. See `MultiplayerPeer.is_server_relay_supported`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_server_relay_enabled
+     */
     fun setServerRelayEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setServerRelayEnabledBind, segment, enabled)
     }
 
+    /**
+     * Enable or disable the server feature that notifies clients of other peers'
+     * connection/disconnection, and relays messages between them. When this option is `false`, clients
+     * won't be automatically notified of other peers and won't be able to send them packets through
+     * the server. Note: Changing this option while other peers are connected may lead to unexpected
+     * behaviors. Note: Support for this feature may depend on the current `MultiplayerPeer`
+     * configuration. See `MultiplayerPeer.is_server_relay_supported`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.is_server_relay_enabled
+     */
     fun isServerRelayEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isServerRelayEnabledBind, segment)
     }
 
+    /**
+     * Sends the given raw `bytes` to a specific peer identified by `id` (see
+     * `MultiplayerPeer.set_target_peer`). Default ID is `0`, i.e. broadcast to all peers.
+     *
+     * Generated from Godot docs: SceneMultiplayer.send_bytes
+     */
     fun sendBytes(bytes: ByteArray, id: Int = 0, mode: MultiplayerPeer.TransferMode = MultiplayerPeer.TransferMode.RELIABLE, channel: Int = 0): GodotError {
         checkOpen()
         return GodotError(ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(Binds.sendBytesBind, segment, bytes, id, mode.value, channel))
     }
 
+    /**
+     * Maximum size of each synchronization packet. Higher values increase the chance of receiving full
+     * updates in a single frame, but also the chance of packet loss. See `MultiplayerSynchronizer`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.get_max_sync_packet_size
+     */
     fun getMaxSyncPacketSize(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxSyncPacketSizeBind, segment)
     }
 
+    /**
+     * Maximum size of each synchronization packet. Higher values increase the chance of receiving full
+     * updates in a single frame, but also the chance of packet loss. See `MultiplayerSynchronizer`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_max_sync_packet_size
+     */
     fun setMaxSyncPacketSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxSyncPacketSizeBind, segment, size)
     }
 
+    /**
+     * Maximum size of each delta packet. Higher values increase the chance of receiving full updates
+     * in a single frame, but also the chance of causing networking congestion (higher latency,
+     * disconnections). See `MultiplayerSynchronizer`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.get_max_delta_packet_size
+     */
     fun getMaxDeltaPacketSize(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxDeltaPacketSizeBind, segment)
     }
 
+    /**
+     * Maximum size of each delta packet. Higher values increase the chance of receiving full updates
+     * in a single frame, but also the chance of causing networking congestion (higher latency,
+     * disconnections). See `MultiplayerSynchronizer`.
+     *
+     * Generated from Godot docs: SceneMultiplayer.set_max_delta_packet_size
+     */
     fun setMaxDeltaPacketSize(size: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxDeltaPacketSizeBind, segment, size)

@@ -69,11 +69,25 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueNamesBind, segment, uniqueNames)
     }
 
+    /**
+     * Returns a `Dictionary` that maps skeleton bone indices to the indices of glTF nodes. This
+     * property is unused during import, and only set during export. In a glTF file, a bone is a node,
+     * so Godot converts skeleton bones to glTF nodes.
+     *
+     * Generated from Godot docs: GLTFSkeleton.get_godot_bone_node
+     */
     fun getGodotBoneNode(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getGodotBoneNodeBind, segment)
     }
 
+    /**
+     * Sets a `Dictionary` that maps skeleton bone indices to the indices of glTF nodes. This property
+     * is unused during import, and only set during export. In a glTF file, a bone is a node, so Godot
+     * converts skeleton bones to glTF nodes.
+     *
+     * Generated from Godot docs: GLTFSkeleton.set_godot_bone_node
+     */
     fun setGodotBoneNode(godotBoneNode: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setGodotBoneNodeBind, segment, godotBoneNode)

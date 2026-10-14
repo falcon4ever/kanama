@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Configuration header for April tag markers.
+ *
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag
  */
 class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
@@ -17,27 +19,72 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
         @JvmName("setAprilDictProperty")
         set(value) = setAprilDict(value)
 
+    /**
+     * Returns the components enabled by this configuration. Note: Only valid after this configuration
+     * was used to create a spatial context.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.get_enabled_components
+     */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
     }
 
+    /**
+     * Dictionary to use to decode April tags. Note: Must be set before using this configuration to
+     * create a spatial context.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.set_april_dict
+     */
     fun setAprilDict(aprilDict: OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setAprilDictBind, segment, aprilDict.value)
     }
 
+    /**
+     * Dictionary to use to decode April tags. Note: Must be set before using this configuration to
+     * create a spatial context.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.get_april_dict
+     */
     fun getAprilDict(): OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict {
         checkOpen()
         return OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAprilDictBind, segment))
     }
 
+    /**
+     * Godot's `OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict` enum as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict
+     */
     @JvmInline
     value class AprilTagDict(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * 4 by 4 bits, minimum Hamming distance between any two codes = 5, 30 codes.
+             *
+             * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.APRIL_TAG_DICT_16H5
+             */
             val DICT_16H5: AprilTagDict get() = AprilTagDict(1L)
+            /**
+             * 5 by 5 bits, minimum Hamming distance between any two codes = 9, 35 codes.
+             *
+             * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.APRIL_TAG_DICT_25H9
+             */
             val DICT_25H9: AprilTagDict get() = AprilTagDict(2L)
+            /**
+             * 6 by 6 bits, minimum Hamming distance between any two codes = 10, 2320 codes.
+             *
+             * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.APRIL_TAG_DICT_36H10
+             */
             val DICT_36H10: AprilTagDict get() = AprilTagDict(3L)
+            /**
+             * 6 by 6 bits, minimum Hamming distance between any two codes = 11, 587 codes.
+             *
+             * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag.APRIL_TAG_DICT_36H11
+             */
             val DICT_36H11: AprilTagDict get() = AprilTagDict(4L)
         }
     }
