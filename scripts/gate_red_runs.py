@@ -377,10 +377,10 @@ case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
-     [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
+     [Edit(f"{COMMON}/api/Label.kt", "    fun setText(text: String) {", "    fun setText(text: String, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
-     [Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "inline fun <reified T : Any> newScriptInstance(): OwnedScriptResource<T> {", "inline fun <reified T : Any> newScriptInstanceRedRun(): OwnedScriptResource<T> {")],
+     [Edit(f"{JVM}/net/multigesture/kanama/api/ScriptResources.kt", "    val resource: Resource,", "    val resourceRedRun: Resource,")],
      "unannounced source break", "a desktop-only declaration disappears and is not in the common tree (not a move to common, task 129 C)")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
