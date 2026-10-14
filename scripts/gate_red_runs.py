@@ -482,6 +482,14 @@ case("check_wrapper_generator.py", py("check_wrapper_generator.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode ) {")],
      "single-tree drift-gate", "a generated wrapper is hand-edited (one stray space)")
 
+case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator.py"),
+     [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RID, ret.ptr)\n      RID(ret.value)",
+           "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT, ret.ptr)\n      RID(ret.value)")],
+     "single-tree drift-gate", "a generated iOS ObjectCalls helper keeps its name and parameters but its body (here a PT_* tag) changes: the region is compared by content, not by member names (task 119 finding 4)")
+case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
+     [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
+     "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")
+
 # ---- audit_* -----------------------------------------------------------------------------------------------
 case("audit_api_wrapper_inheritance.py", py("audit_api_wrapper_inheritance.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "open class CanvasItem(handle: GodotHandle) : Node(handle)", "open class CanvasItem(handle: GodotHandle) : RefCounted(handle)")],

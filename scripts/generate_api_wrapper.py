@@ -4363,14 +4363,6 @@ def _inject_ios_helper_import(content: str) -> str:
     return "".join(lines)
 
 
-# A member function declaration: the `actual` modifier (if any) and the name. Whitespace-tolerant on
-# purpose: ktfmt may break a long generic parameter list, and the previous, stricter spelling of this
-# regex silently missed three wrapped helpers, which made every regen rewrite the generated file raw
-# (task 104 parcel A). The modifier is part of the compared unit since parcel C' -- a member that
-# loses its `actual` no longer actualizes the `expect object` member, which is drift.
-IOS_MEMBER_NAME_RE = re.compile(r"\b(actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(")
-
-
 def expect_member_keys(members: list[str]) -> set[tuple[str, tuple[str, ...]]]:
     """(name, parameter names) for each rendered `expect` member -- the key an `actual` must match."""
     keys: set[tuple[str, tuple[str, ...]]] = set()
@@ -4439,18 +4431,23 @@ def ios_generated_region(source: str) -> str:
     return source[start:end]
 
 
-def ios_generated_member_names(source: str) -> set[str]:
-    """Helper names (with their `actual` modifier) inside the GENERATED MEMBERS region of an iOS
-    `ObjectCalls.kt`.
+def formatted_code_key(source: str) -> str:
+    """The comparison key of generated code that ktfmt re-formats: comments dropped, every space and
+    newline dropped, the `;` and trailing commas ktfmt adds or removes dropped. Two sources with the
+    same key differ only in what ktfmt changes, so a statement, an argument, a name or a constant
+    that differs shows up (task 119 findings 1/4/24: the iOS region was compared by member NAMES)."""
+    code = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", source, flags=re.DOTALL))
+    return re.sub(r",(?=[)\]}])", "", re.sub(r"\s+", "", code).replace(";", ""))
 
-    The drift gate and `--write-tree`'s skip both compare THIS set rather than the region's bytes:
-    the file is ktfmt-formatted (it is hand-written outside the region), so layout is not drift but
-    a helper appearing or disappearing is.
+
+def ios_generated_region_key(source: str) -> str:
+    """[formatted_code_key] of the GENERATED MEMBERS region of an iOS `ObjectCalls.kt`.
+
+    The file is hand-written outside the region and ktfmt formats it, region included, so the drift
+    gate and `--write-tree`'s skip compare THIS key rather than the region's bytes: layout is not
+    drift, but a helper, a body or a `PT_*` tag value that changed is.
     """
-    return {
-        ("actual " if match.group(1) else "") + match.group(2)
-        for match in IOS_MEMBER_NAME_RE.finditer(ios_generated_region(source))
-    }
+    return formatted_code_key(ios_generated_region(source))
 
 
 def splice_ios_generated_members(source: str, region: str) -> str:
@@ -5535,7 +5532,10 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             # `actual` on the region members that actualize an `expect object ObjectCalls` member
             # (task 104 step 3 parcel C'): the iOS-only overloads in the same region stay plain,
             # which is why the marker keys on the parameter names and not just the helper name.
-            _, expect_members = render_objectcalls_expect()
+            expect_content, expect_members = render_objectcalls_expect()
+            # The `expect object ObjectCalls` file is generated, excluded from ktfmt and
+            # byte-compared by the drift gate like every other generated file (task 119 finding 25).
+            files[_rel(OBJECTCALLS_EXPECT)] = expect_content
             region, marked = mark_actual_members(
                 render_ios_objectcalls(registry, unnamed), expect_member_keys(expect_members)
             )
@@ -6443,13 +6443,6 @@ def tree_main(args: argparse.Namespace) -> int:
             target.write_text(content, encoding="utf-8")
         print(f"{summary} -> {args.regen_tree}")
     if args.write_tree:
-        expect_content, expect_members = render_objectcalls_expect()
-        OBJECTCALLS_EXPECT.parent.mkdir(parents=True, exist_ok=True)
-        OBJECTCALLS_EXPECT.write_text(expect_content, encoding="utf-8")
-        print(
-            f"[generate_api_wrapper] expect ObjectCalls: {len(expect_members)} member(s) -> "
-            f"{_rel(OBJECTCALLS_EXPECT)}"
-        )
         written = 0
         for rel_path, content in tree.files.items():
             target = ROOT / rel_path
@@ -6457,12 +6450,12 @@ def tree_main(args: argparse.Namespace) -> int:
             if (
                 target == IOS_OBJECTCALLS
                 and target.exists()
-                and ios_generated_member_names(target.read_text(encoding="utf-8"))
-                == ios_generated_member_names(content)
+                and ios_generated_region_key(target.read_text(encoding="utf-8"))
+                == ios_generated_region_key(content)
             ):
                 # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
-                # hand-written outside it), so leave the formatted copy alone when the member set is
-                # unchanged -- the drift gate compares the same set for the same reason.
+                # hand-written outside it), so leave the formatted copy alone when the region
+                # differs only in what ktfmt changes -- the drift gate compares the same key.
                 continue
             if (
                 target.parent == TYPES_DIR

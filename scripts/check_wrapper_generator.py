@@ -27,7 +27,7 @@ from generate_api_wrapper import (
     TYPES_DIR,
     TreeResult,
     generated_companion_paths,
-    ios_generated_member_names,
+    ios_generated_region_key,
     regenerate_tree,
     strip_comments,
     whitespace_insensitive,
@@ -519,10 +519,11 @@ def check_single_tree(tree: TreeResult) -> int:
         committed = path.read_text(encoding="utf-8")
         if rel == _rel(IOS_OBJECTCALLS):
             # This file is HAND-WRITTEN outside its GENERATED MEMBERS region and ktfmt reformats the
-            # region after every regen, so compare the region's member set, not the bytes: a helper
-            # added or dropped is drift, layout is not. The member names and their parameter names
-            # are held to desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
-            same = ios_generated_member_names(committed) == ios_generated_member_names(content)
+            # region after every regen, so compare the region with ktfmt's changes normalised away
+            # (`ios_generated_region_key`): a helper, a body or a PT_* tag value that differs is
+            # drift, layout is not. The member names and their parameter names are also held to
+            # desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
+            same = ios_generated_region_key(committed) == ios_generated_region_key(content)
         elif rel.endswith(".md"):
             same = committed == content
         elif (ROOT / rel).parent == TYPES_DIR:
