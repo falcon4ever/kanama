@@ -15,9 +15,9 @@ import net.multigesture.kanama.types.Vector2i
  * session (peer 1, no remote peers) and the lobby's connect paths fail the way the demo already
  * handles. The display/renderer settings that the compatibility renderer ignores are no-ops.
  *
- * `Window` and the ray query (`WebPhysicsQuery.kt`) are the two hand-shaped classes that dispatch
- * opcodes directly; `WEB_HANDSHAPED` in `scripts/generate_web_wrappers.py` names them and the
- * generator's `--check` fails on any other hand-written dispatch.
+ * The ray query (`WebPhysicsQuery.kt`) is the one hand-shaped class that dispatches opcodes
+ * directly (`WEB_HANDSHAPED`); every inert facade here is listed in `WEB_INERT_FACADES`, and the
+ * generator's `--check` fails on any other hand-written dispatch or Godot class.
  */
 
 // Liveness: `Node.isInsideTree()` and `GodotObject.isQueuedForDeletion()` are generated members
@@ -275,143 +275,6 @@ object IP {
 // Display / renderer settings. The compatibility renderer ignores most of the
 // tps graphics menu, so those writes are no-ops rather than fake successes.
 // ---------------------------------------------------------------------------
-
-/**
- * Window. Two shapes share the class:
- * - **Handle-backed** (task 64 tier 3): `getTree().getRoot()` returns the tracked root window
- *   wrapped in this class (desktop/iOS shape since task 128 C), and [setMode] / [getMode] (and
- *   the [mode] property) are real engine calls -- FullScreenHandler's F11 toggle reads the mode
- *   the engine reports.
- * - **Handle-less facade** ([Node.getWindow]): the tps settings menu's target. Mode and 3D
- *   scaling are fixed by the browser canvas there, so those writes are mirrored Kotlin-side and
- *   never reach the engine (the pre-existing facade contract, documented here and unchanged).
- */
-class Window internal constructor() {
-  private var windowHandle: GodotHandle? = null
-
-  /** Desktop's handle-taking constructor: wrap a tracked Window handle (the tree root). */
-  constructor(godotObject: GodotHandle) : this() {
-    windowHandle = godotObject
-  }
-
-  /**
-   * The engine handle of a handle-backed window (desktop's `GodotObject.handle`); the handle-less
-   * browser-window facade has none and fails loud.
-   */
-  val handle: GodotHandle
-    get() = checkNotNull(windowHandle) { "the handle-less browser-window facade has no engine handle" }
-
-  /** Facade mirror for the handle-less window; unused when a handle is present. */
-  private var facadeMode: Window.Mode = Window.Mode.WINDOWED
-
-  var mode: Window.Mode
-    get() = getMode()
-    set(value) = setMode(value)
-
-  fun setMode(mode: Window.Mode) {
-    val handle = windowHandle
-    if (handle == null) facadeMode = mode
-    else GodotBackendCalls.invokeLongArg(D.WINDOW_SET_MODE, handle.toBackendHandle(), mode.value)
-  }
-
-  fun getMode(): Window.Mode {
-    val handle = windowHandle ?: return facadeMode
-    return Window.Mode(
-      GodotBackendCalls.invokeNoArgsRetLong(D.WINDOW_GET_MODE, handle.toBackendHandle())
-    )
-  }
-
-  var scaling3dScale: Double = 1.0
-  var scaling3dMode: Viewport.Scaling3DMode = Viewport.Scaling3DMode.BILINEAR
-  var useTaa: Boolean = false
-  var msaa3d: Viewport.MSAA = Viewport.MSAA.DISABLED
-  var screenSpaceAa: Viewport.ScreenSpaceAA = Viewport.ScreenSpaceAA.DISABLED
-
-  // ===== BEGIN GENERATED ENUMS: Window (scripts/generate_web_wrappers.py — do not edit) =====
-  value class Mode(override val value: Long) : GodotEnumValue {
-    companion object {
-      val WINDOWED: Mode get() = Mode(0L)
-      val MINIMIZED: Mode get() = Mode(1L)
-      val MAXIMIZED: Mode get() = Mode(2L)
-      val FULLSCREEN: Mode get() = Mode(3L)
-      val EXCLUSIVE_FULLSCREEN: Mode get() = Mode(4L)
-    }
-  }
-
-  value class Flags(override val value: Long) : GodotEnumValue {
-    companion object {
-      val RESIZE_DISABLED: Flags get() = Flags(0L)
-      val BORDERLESS: Flags get() = Flags(1L)
-      val ALWAYS_ON_TOP: Flags get() = Flags(2L)
-      val TRANSPARENT: Flags get() = Flags(3L)
-      val NO_FOCUS: Flags get() = Flags(4L)
-      val POPUP: Flags get() = Flags(5L)
-      val EXTEND_TO_TITLE: Flags get() = Flags(6L)
-      val MOUSE_PASSTHROUGH: Flags get() = Flags(7L)
-      val SHARP_CORNERS: Flags get() = Flags(8L)
-      val EXCLUDE_FROM_CAPTURE: Flags get() = Flags(9L)
-      val POPUP_WM_HINT: Flags get() = Flags(10L)
-      val MINIMIZE_DISABLED: Flags get() = Flags(11L)
-      val MAXIMIZE_DISABLED: Flags get() = Flags(12L)
-      val MAX: Flags get() = Flags(13L)
-    }
-  }
-
-  value class ContentScaleMode(override val value: Long) : GodotEnumValue {
-    companion object {
-      val DISABLED: ContentScaleMode get() = ContentScaleMode(0L)
-      val CANVAS_ITEMS: ContentScaleMode get() = ContentScaleMode(1L)
-      val VIEWPORT: ContentScaleMode get() = ContentScaleMode(2L)
-    }
-  }
-
-  value class ContentScaleAspect(override val value: Long) : GodotEnumValue {
-    companion object {
-      val IGNORE: ContentScaleAspect get() = ContentScaleAspect(0L)
-      val KEEP: ContentScaleAspect get() = ContentScaleAspect(1L)
-      val KEEP_WIDTH: ContentScaleAspect get() = ContentScaleAspect(2L)
-      val KEEP_HEIGHT: ContentScaleAspect get() = ContentScaleAspect(3L)
-      val EXPAND: ContentScaleAspect get() = ContentScaleAspect(4L)
-    }
-  }
-
-  value class ContentScaleStretch(override val value: Long) : GodotEnumValue {
-    companion object {
-      val FRACTIONAL: ContentScaleStretch get() = ContentScaleStretch(0L)
-      val INTEGER: ContentScaleStretch get() = ContentScaleStretch(1L)
-    }
-  }
-
-  value class LayoutDirection(override val value: Long) : GodotEnumValue {
-    companion object {
-      val INHERITED: LayoutDirection get() = LayoutDirection(0L)
-      val APPLICATION_LOCALE: LayoutDirection get() = LayoutDirection(1L)
-      val LTR: LayoutDirection get() = LayoutDirection(2L)
-      val RTL: LayoutDirection get() = LayoutDirection(3L)
-      val SYSTEM_LOCALE: LayoutDirection get() = LayoutDirection(4L)
-      val MAX: LayoutDirection get() = LayoutDirection(5L)
-      val LOCALE: LayoutDirection get() = LayoutDirection(1L)
-    }
-  }
-
-  value class WindowInitialPosition(override val value: Long) : GodotEnumValue {
-    companion object {
-      val ABSOLUTE: WindowInitialPosition get() = WindowInitialPosition(0L)
-      val CENTER_PRIMARY_SCREEN: WindowInitialPosition get() = WindowInitialPosition(1L)
-      val CENTER_MAIN_WINDOW_SCREEN: WindowInitialPosition get() = WindowInitialPosition(2L)
-      val CENTER_OTHER_SCREEN: WindowInitialPosition get() = WindowInitialPosition(3L)
-      val CENTER_SCREEN_WITH_MOUSE_FOCUS: WindowInitialPosition get() = WindowInitialPosition(4L)
-      val CENTER_SCREEN_WITH_KEYBOARD_FOCUS: WindowInitialPosition get() = WindowInitialPosition(5L)
-    }
-  }
-  // ===== END GENERATED ENUMS: Window =====
-}
-
-/**
- * The single browser window. `Node.getWindow()` is a generated member since task 64 parcel 8, and
- * hands this mirror back, so the shared demo sources call it exactly the way desktop does.
- */
-internal val browserWindow = Window()
 
 object DisplayServer {
   /** Web adaptation: the demo branches on "headless"; the browser is a real display. */

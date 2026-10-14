@@ -159,9 +159,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * types) adds `kanamaWebSetPackedValueProperty`: the push arm of a Vector3i, Rect2, Rect2i,
      * Plane, Quaternion, Basis or Transform3D export, carried as its packed components. 33 splits
      * `create` into `reserve` + `construct`: the proxy installs its callbacks between them, so a
-     * script's property initializers can call the engine.
+     * script's property initializers can call the engine. 34 adds the freed checks and
+     * `skipFreedCommand`. 35 (task 129 E, task 138 items 2, 20, 22): the builtin opcode's utility
+     * form (static flag 2, the shared GD), Array / Dictionary / Callable / Signal Variants, lambda
+     * connections targeting their guard, and the freed-script-handle skip
+     * (`kanamaWebIsFreedScriptHandle`).
      */
-    const val PROTOCOL_VERSION = 34
+    const val PROTOCOL_VERSION = 35
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -222,6 +226,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /** Bit 30, the browser-handle namespace: `BROWSER_HANDLE_NAMESPACE` in the bridge. */
     internal const val BROWSER_HANDLE_NAMESPACE = 0x40000000
     internal const val BUILTIN_CALL = "_kanama_web_builtin_call"
+    /** Task 129 E: the utility-function arm of [BUILTIN_CALL] (the shared generated `GD`). */
+    internal const val UTILITY_CALL = "_kanama_web_utility_call"
     /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
     internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
     /** Task 133 C3: the proxy's parser of one text-channel decimal (`nan`/`inf`/`-inf` too). */
@@ -880,6 +886,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             )
             appendLine("# the emitter's connection owns each one).")
             appendLine("static var signal_guards: Dictionary = {}")
+            appendLine()
+            appendLine("# Task 129 E: one parsed Expression per utility function and arity (see")
+            appendLine("# _kanama_web_utility_call), shared by every proxy.")
+            appendLine("static var utility_expressions: Dictionary = {}")
             appendLine()
             appendLine("# Proxy script path per Kanama script class (simple name), so a proxy can")
             appendLine("# instantiate a scripted resource for the runtime factory crossing.")
@@ -4089,10 +4099,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t\t\tguard.bridge = _kanama_bridge")
     appendLine("\t\t\t\t\tguard.router_handle = target_handle")
     appendLine("\t\t\t\t\tguard.callback_id = callback_id")
-    // The unique callback id is bound into the Callable, so two connects of one lambda never equal
-    // each other: Godot never coalesces them (CONNECT_REFERENCE_COUNTED included), and every
-    // connection has its own guard and its own registry entry.
-    appendLine("\t\t\t\tcallable = callable.bind(callback_id, guard)")
+    appendLine("\t\t\t\t\tguard.router_id = target.get_instance_id()")
+    appendLine("\t\t\t\t\tguard.method = StringName(String(args[3]))")
+    appendLine("\t\t\t\t\tguard.source_id = source.get_instance_id()")
+    appendLine("\t\t\t\t\tguard.signal_name = StringName(String(args[1]))")
+    // Task 138 item 20: Godot keys a signal's slots by the BASE callable and ignores binds, so two
+    // lambdas bound to the same proxy method collide ("already connected", or one reference-counted
+    // slot). Each lambda connection therefore targets its OWN guard (`fire` forwards to the proxy
+    // method): two connects of one lambda, or two lambdas from one script, never equal each other,
+    // and every connection has its own guard and its own registry entry.
+    appendLine("\t\t\t\tcallable = Callable(guard, \"fire\").bind(callback_id, guard)")
     appendLine("\t\t\telse:")
     appendLine("\t\t\t\tcallable = callable.bind(callback_id)")
     appendLine("\t\tif int(args[4]) == -1:")
@@ -4187,12 +4203,39 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t$DROP_AWAIT(callback_id)")
     appendLine()
     appendLine("class $SIGNAL_GUARD extends RefCounted:")
-    appendLine("\t# Held only by its connection: dies with the emitter (or the receiver, or a")
-    appendLine("\t# disconnect) and then tells Kotlin to drop the callback entry.")
+    appendLine("\t# Held only by its connection: dies with the emitter (or a disconnect) and then")
+    appendLine("\t# tells Kotlin to drop the callback entry. It is also the connection's callable")
+    appendLine(
+      "\t# target (task 138 item 20), so each lambda connection has its own base callable;"
+    )
+    appendLine("\t# `fire` forwards to the receiving proxy's dispatch method.")
     appendLine("\tvar bridge: Variant")
     appendLine("\tvar router_handle := 0")
     appendLine("\tvar callback_id := 0")
     appendLine("\tvar done := false")
+    appendLine("\tvar router_id := 0")
+    appendLine("\tvar method := &\"\"")
+    appendLine("\tvar source_id := 0")
+    appendLine("\tvar signal_name := &\"\"")
+    appendLine()
+    appendLine("\tfunc fire(...args: Array) -> void:")
+    appendLine("\t\t# args: the emitted arguments, then the bound callback id and this guard.")
+    appendLine("\t\tif done:")
+    appendLine("\t\t\treturn")
+    appendLine("\t\tvar router := instance_from_id(router_id)")
+    appendLine("\t\tif router == null:")
+    appendLine(
+      "\t\t\t# The receiving script is gone (Kotlin released its entries with it): drop the"
+    )
+    appendLine("\t\t\t# connection, as Godot did when the receiver itself was the callable target.")
+    appendLine("\t\t\tdone = true")
+    appendLine("\t\t\tKanamaWebHandles.signal_guards.erase(callback_id)")
+    appendLine("\t\t\tvar source := instance_from_id(source_id)")
+    appendLine("\t\t\tvar own := Callable(self, \"fire\").bind(callback_id, self)")
+    appendLine("\t\t\tif source != null and source.is_connected(signal_name, own):")
+    appendLine("\t\t\t\tsource.disconnect(signal_name, own)")
+    appendLine("\t\t\treturn")
+    appendLine("\t\trouter.callv(method, args)")
     appendLine()
     appendLine("\tfunc _notification(what: int) -> void:")
     appendLine("\t\tif what == NOTIFICATION_PREDELETE and not done:")
@@ -5121,6 +5164,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t# each value `<Variant.Type>:<payload>`; the result is one such Variant, or")
     appendLine("\t# `E:<reason>` so Kotlin fails loud instead of reading zeros.")
     appendLine("\tvar parts := packed.split(\"\\u001f\")")
+    appendLine("\tif parts[2] == \"2\":")
+    appendLine("\t\treturn $UTILITY_CALL(parts)")
     appendLine("\tvar base: Variant")
     appendLine("\tif parts[2] == \"1\":")
     appendLine(
@@ -5141,6 +5186,35 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\tvar no_handles: Array[int] = []")
     appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(method.callv(call_args), no_handles)")
+    appendLine()
+    appendLine("func $UTILITY_CALL(parts: PackedStringArray) -> String:")
+    appendLine(
+      "\t# Task 129 E: one utility function (the shared GD), `0<US><name><US>2<US><US><args...>`. GDScript"
+    )
+    appendLine(
+      "\t# cannot call a utility by name, but an Expression can: one is parsed per name and arity and"
+    )
+    appendLine("\t# cached, then run with the decoded arguments as its inputs.")
+    appendLine("\tvar call_args: Array = []")
+    appendLine("\tfor index in range(4, parts.size()):")
+    appendLine("\t\tcall_args.append(${WebValueTypes.UNPACK_VARIANT}(parts[index]))")
+    appendLine("\tvar key := \"%s/%d\" % [parts[1], call_args.size()]")
+    appendLine("\tvar expression: Expression = KanamaWebHandles.utility_expressions.get(key)")
+    appendLine("\tif expression == null:")
+    appendLine("\t\tvar names := PackedStringArray()")
+    appendLine("\t\tfor index in range(call_args.size()):")
+    appendLine("\t\t\tnames.append(\"a%d\" % index)")
+    appendLine("\t\texpression = Expression.new()")
+    appendLine("\t\tif expression.parse(\"%s(%s)\" % [parts[1], \", \".join(names)], names) != OK:")
+    appendLine(
+      "\t\t\treturn \"E:no utility function %s taking %d argument(s): %s\" % [parts[1], call_args.size(), expression.get_error_text()]"
+    )
+    appendLine("\t\tKanamaWebHandles.utility_expressions[key] = expression")
+    appendLine("\tvar result: Variant = expression.execute(call_args, null, false)")
+    appendLine("\tif expression.has_execute_failed():")
+    appendLine("\t\treturn \"E:%s: %s\" % [parts[1], expression.get_error_text()]")
+    appendLine("\tvar no_handles: Array[int] = []")
+    appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(result, no_handles)")
     appendLine()
     appendLine("func _kanama_generic_decode_arg(generic_packed_arg: String) -> Variant:")
     appendLine("\t# EXPERIMENTAL (task 76 spike): one `typeTag:value` generic-call argument.")
@@ -5209,6 +5283,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvar generic_no_handles: Array[int] = []")
     appendLine(
       "\t\treturn \"v\\u001f%s\" % ${WebValueTypes.PACK_VARIANT}(generic_value, generic_no_handles)"
+    )
+    appendLine(
+      "\tif typeof(generic_value) in [TYPE_ARRAY, TYPE_DICTIONARY, TYPE_CALLABLE, TYPE_SIGNAL, TYPE_PACKED_INT64_ARRAY, TYPE_PACKED_STRING_ARRAY, TYPE_PACKED_BYTE_ARRAY, TYPE_PACKED_FLOAT64_ARRAY, TYPE_RID, TYPE_NODE_PATH]:"
+    )
+    appendLine(
+      "\t\t# Task 138 item 2: containers (getConnections' Array of Dictionaries, a Callable) as one"
+    )
+    appendLine("\t\t# `<Variant.Type>:<payload>` Variant; an object inside reuses a held handle.")
+    appendLine("\t\tvar generic_container_handles: Array[int] = []")
+    appendLine(
+      "\t\treturn \"v\\u001f%s\" % ${WebValueTypes.PACK_VARIANT}(generic_value, generic_container_handles)"
     )
     appendLine("\tif generic_value is Object:")
     appendLine("\t\tvar generic_object := generic_value as Object")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -14,6 +14,9 @@
 [ext_resource type="Script" path="res://kotlin-src/ThrowingConstructor.kt" id="12_tctor"]
 [ext_resource type="Script" path="res://kotlin-src/ThrowingProperty.kt" id="13_tprop"]
 [ext_resource type="Script" path="res://kotlin-src/ThrowingReady.kt" id="14_tready"]
+[ext_resource type="Script" path="res://kotlin-src/BundleProbe.kt" id="15_bundle"]
+[ext_resource type="Script" path="res://gd_twin.gd" id="16_twin"]
+[ext_resource type="Script" path="res://kotlin-src/FreedScriptTarget.kt" id="17_fscript"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -191,6 +194,17 @@ script = ExtResource("10_error")
 
 [node name="FreedHolder" type="Node" parent="."]
 script = ExtResource("11_freed")
+
+[node name="FreedScriptParent" type="Node" parent="."]
+
+[node name="FreedScriptTarget" type="Node" parent="FreedScriptParent"]
+script = ExtResource("17_fscript")
+
+[node name="BundleProbe" type="Node" parent="."]
+script = ExtResource("15_bundle")
+
+[node name="GdTwin" type="Node" parent="."]
+script = ExtResource("16_twin")
 
 [node name="ThrowingConstructor" type="Node" parent="."]
 script = ExtResource("12_tctor")

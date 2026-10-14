@@ -272,3 +272,11 @@ internal inline fun <T> webFreedAware(block: () -> T): T =
   }
 
 private const val FREED_INSTANCE_MESSAGE = "Invalid access to previously freed instance"
+
+/**
+ * Task 138 item 22: the message for a call on a script-backed object that was freed, the same
+ * wording as desktop's freed instance and as the bridge's for an engine-freed browser handle.
+ */
+internal fun webFreedScriptMessage(handle: Int): String =
+  "$FREED_INSTANCE_MESSAGE (Kanama Web handle=$handle): the script's object was freed while a " +
+    "script still held it"

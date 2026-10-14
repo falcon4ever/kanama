@@ -176,6 +176,42 @@ internal object WebSignalCallbackRegistry {
 }
 
 class GodotSignal internal constructor(private val owner: GodotObject, internal val name: String) {
+  // Desktop's Signal members (task 138 item 2): each one Godot call by name on the emitter, its
+  // Callable / Array / Dictionary crossing as a Variant (WebPackedValues).
+
+  /** Emits this signal with [args] (desktop's `emit`). */
+  fun emit(vararg args: Any?) {
+    owner.emitSignal(name, *args)
+  }
+
+  /** Disconnects [target]'s [method] (a `connect(target, method)` connection). */
+  fun disconnect(target: GodotObject, method: String) {
+    webGenericCall(owner, "disconnect", listOf(name, GodotCallable(target, method)))
+  }
+
+  /** Whether [target]'s [method] is connected to this signal. */
+  fun isConnected(target: GodotObject, method: String): Boolean =
+    webGenericCall(owner, "is_connected", listOf(name, GodotCallable(target, method))) as Boolean
+
+  /**
+   * Each connection as Godot's Dictionary: `signal` (a [GodotSignal]), `callable` (a
+   * [GodotCallable]) and `flags`. A Kotlin lambda connection's callable targets its guard object.
+   */
+  @Suppress("UNCHECKED_CAST")
+  fun getConnections(): List<Map<String, Any?>> =
+    (webGenericCall(owner, "get_signal_connection_list", listOf(name)) as List<*>).map {
+      it as Map<String, Any?>
+    }
+
+  /** Whether anything is connected to this signal. */
+  fun hasConnections(): Boolean = webGenericCall(owner, "has_connections", listOf(name)) as Boolean
+
+  /** The emitter, or null once it was freed. */
+  fun getObject(): GodotObject? = if (GD.isInstanceValid(owner)) owner else null
+
+  /** The emitter's instance id. */
+  fun getObjectId(): Long = owner.instanceId
+
   fun connect(
     target: GodotObject,
     method: String,
@@ -474,6 +510,17 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
  * The wasmJs actual routes through `WebExperimentalGenericCall.callImmediate`.
  */
 internal expect fun webEmitSignalGeneric(target: GodotObject, signal: String, args: Array<out Any?>)
+
+/**
+ * Task 138 item 2: an immediate generic call of [method] with any arguments (scalars, Strings,
+ * value types, objects, Callables, Lists and Maps), its result decoded as desktop's Variant-returning
+ * `call` (Arrays and Dictionaries included). Desktop parity for `GodotObject.call` / `callv` and the
+ * signal queries.
+ */
+internal expect fun webGenericCall(target: GodotObject, method: String, args: List<Any?>): Any?
+
+/** Task 138 item 2: a queued (void) generic call of [method], applied with the command batch. */
+internal expect fun webGenericQueue(target: GodotObject, method: String, args: List<Any?>)
 
 /** A live bound connection; [close] disconnects and releases the Kotlin callback. */
 class SignalConnection

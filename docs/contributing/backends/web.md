@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 34); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 35); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -444,7 +444,13 @@ command loop stops on a target the engine freed (a browser handle that still has
 staged arguments), applies the rest of the group and records the freed-instance message; the
 telemetry that follows tests each command as applied AND not skipped, since the applied ones are no
 longer a prefix;
-`WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A command that
+`WebCommandBuffer.flush` reports each as a script error (`takeFreedCommandSkips`). A
+**script-backed** object (a script handle, bit 30 clear) is freed in Kotlin with its node
+(`kanamaWebFree`), so `requireLive` throws the same freed-instance message for a call on it
+(`WebInstanceRegistry.wasFreed`: a minted slot that is no longer live; not "Stale Kanama Web browser
+handle"), and `flushCommands` skips and reports a command queued on it before the free, both when
+its script was already gone at the scan (`kanamaWebIsFreedScriptHandle`) and when an earlier group
+of the same batch freed it (its owner's apply callback is gone; task 138 item 22). A command that
 stops the loop for any other reason is a protocol fault and ends the page through the
 applied/expected check.
 
@@ -455,9 +461,14 @@ applied/expected check.
 reads the debug engine's "GDScript backtrace" lines as part of the error above them. Run web3d
 in both.
 
-**Lambda connections never coalesce.** The unique callback id is bound into the connection's
-`Callable`, so two connects of the same lambda are two connections (`CONNECT_REFERENCE_COUNTED`
-included), each with its own guard and registry entry. A user `disconnectBound` keeps Godot's own
+**Lambda connections never coalesce.** Godot keys a signal's slots by the *base* callable and
+ignores binds, so binding the callback id alone did not separate two lambdas from one script on one
+signal (the second connect answered "already connected", task 138 item 20). Each lambda connection
+therefore targets its own `_KanamaSignalGuard` (`Callable(guard, "fire")`, the callback id and the
+guard bound), whose `fire` forwards to the receiving proxy's dispatch method: two connects of the
+same lambda, or two lambdas, are two connections (`CONNECT_REFERENCE_COUNTED` included), each with
+its own guard and registry entry. A receiver freed before its emitter no longer takes the connection
+with it; the guard's next `fire` finds the receiver gone and disconnects itself. A user `disconnectBound` keeps Godot's own
 error for a connection that is not there; only `SignalConnection.close()` is quiet about one that
 is already gone.
 The handle namespaces are disjoint (bit 30): `WebInstanceRegistry` used to mask bit 30 away, so a

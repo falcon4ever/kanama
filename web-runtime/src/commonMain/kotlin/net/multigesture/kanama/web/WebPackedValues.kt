@@ -1,6 +1,9 @@
 package net.multigesture.kanama.web
 
 import kotlin.reflect.KClass
+import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.GodotSignal
 import net.multigesture.kanama.binding.runtime.BuiltinFrame
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -69,7 +72,12 @@ internal object WebPackedValues {
   const val TYPE_NODE_PATH = 22
   const val TYPE_RID = 23
   const val TYPE_OBJECT = 24
+  const val TYPE_CALLABLE = 25
+  const val TYPE_SIGNAL = 26
+  const val TYPE_DICTIONARY = 27
+  const val TYPE_ARRAY = 28
   const val TYPE_PACKED_BYTE_ARRAY = 29
+  const val TYPE_PACKED_INT64_ARRAY = 31
   const val TYPE_PACKED_FLOAT64_ARRAY = 33
   const val TYPE_PACKED_STRING_ARRAY = 34
 
@@ -218,11 +226,24 @@ internal object WebPackedValues {
    * `%`-escapes text so it cannot split a unit-separated list (the proxy's
    * `_kanama_web_pack_text`).
    */
+  /** One encoded element of a comma-separated container payload (task 138 item 2). */
+  fun nest(encoded: String): String =
+    encoded.replace("%", "%25").replace(",", "%2C").replace("\u001F", "%1F")
+
+  /** The reverse of [nest]. */
+  fun unnest(text: String): String =
+    text.replace("%1F", "\u001F").replace("%2C", ",").replace("%25", "%")
+
   fun escapeText(value: String): String = value.replace("%", "%25").replace("\u001F", "%1F")
 
   fun unescapeText(value: String): String = value.replace("%1F", "\u001F").replace("%25", "%")
 
-  /** One `<Variant.Type>:<payload>` Variant (see the class doc); objects are not encoded here. */
+  /**
+   * One `<Variant.Type>:<payload>` Variant (see the class doc). An object is its bridge handle; a
+   * Callable `<object handle>,<method>`; a List (Array) or Map (Dictionary) is its count then each
+   * element (each key, then its value), comma-separated, each one an encoded Variant [nest]ed so
+   * its own separators survive (task 138 item 2).
+   */
   fun encodeVariant(value: Any?): String =
     when (value) {
       null -> "0:"
@@ -237,6 +258,21 @@ internal object WebPackedValues {
       is net.multigesture.kanama.api.GodotEnumValue -> "2:${value.value}"
       // Task 134 D2: a PackedByteArray as lowercase hex (the proxy's `hex_decode`).
       is ByteArray -> "29:${hexEncode(value)}"
+      is GodotObject -> "24:${value.handle.value}"
+      is GodotCallable -> "25:${value.target.handle.value},${nest(value.method)}"
+      is List<*> ->
+        buildString {
+          append("28:").append(value.size)
+          for (item in value) append(',').append(nest(encodeVariant(item)))
+        }
+      is Map<*, *> ->
+        buildString {
+          append("27:").append(value.size)
+          for ((key, item) in value) {
+            append(',').append(nest(encodeVariant(key)))
+            append(',').append(nest(encodeVariant(item)))
+          }
+        }
       else -> {
         val type = variantTypeOf(value::class)
         require(type != 0) { "Kanama Web cannot encode a ${value::class.simpleName} Variant" }
@@ -252,8 +288,8 @@ internal object WebPackedValues {
 
   /**
    * An encoded Variant as Kotlin: null, Boolean, Long, Double, String (String/StringName),
-   * NodePath, RID or a value type. An object (type 24) is the caller's to resolve (its payload is a
-   * handle id).
+   * NodePath, RID, a value type, a ByteArray, a `GodotObject` (a wrapper of its bridge handle), a
+   * [GodotCallable], a [GodotSignal], a List (Array) or a Map (Dictionary).
    */
   fun decodeVariant(encoded: String): Any? {
     val type = variantType(encoded)
@@ -270,6 +306,38 @@ internal object WebPackedValues {
       in 5..20 -> fromComponents(type, decodeComponents(type, payload))
       // Task 134 D2: the packed returns of the String / PackedByteArray methods.
       TYPE_PACKED_BYTE_ARRAY -> hexDecode(payload)
+      // Task 138 item 2: objects, Callables, Signals, Arrays and Dictionaries (in a builtin or
+      // utility result, a generic call's result, or nested in one of those).
+      TYPE_OBJECT -> payload.toInt().takeIf { it != 0 }?.let { GodotObject(WebObjectId(it)) }
+      TYPE_CALLABLE -> {
+        val parts = payload.split(',')
+        parts[0]
+          .toInt()
+          .takeIf { it != 0 }
+          ?.let { GodotCallable(GodotObject(WebObjectId(it)), unnest(parts[1])) }
+      }
+      TYPE_SIGNAL -> {
+        val parts = payload.split(',')
+        parts[0]
+          .toInt()
+          .takeIf { it != 0 }
+          ?.let { GodotSignal(GodotObject(WebObjectId(it)), unnest(parts[1])) }
+      }
+      TYPE_ARRAY -> {
+        val parts = payload.split(',')
+        List(parts[0].toInt()) { decodeVariant(unnest(parts[it + 1])) }
+      }
+      TYPE_DICTIONARY -> {
+        val parts = payload.split(',')
+        val result = LinkedHashMap<Any?, Any?>()
+        for (index in 0 until parts[0].toInt()) {
+          result[decodeVariant(unnest(parts[2 * index + 1]))] =
+            decodeVariant(unnest(parts[2 * index + 2]))
+        }
+        result
+      }
+      TYPE_PACKED_INT64_ARRAY ->
+        if (payload.isEmpty()) emptyList() else payload.split(',').map(String::toLong)
       TYPE_PACKED_FLOAT64_ARRAY ->
         if (payload.isEmpty()) emptyList() else payload.split(',').map(WebPackedFloats::decode)
       TYPE_PACKED_STRING_ARRAY -> {

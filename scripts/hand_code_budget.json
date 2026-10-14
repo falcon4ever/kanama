@@ -22,9 +22,10 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
       "category": "runtime-core",
-      "lines": 513,
+      "lines": 519,
       "raises": [
-        "508 -> 513: task 122 item 3 (call() owns RefCounted container elements, documented on GodotObject.call) and task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)"
+        "508 -> 513: task 122 item 3 (call() owns RefCounted container elements, documented on GodotObject.call) and task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)",
+        "513 -> 519: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
       ],
       "reason": "lifetime root GodotObject (Object); its enum region is generated"
     },
@@ -188,7 +189,7 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt": {
       "category": "transitional",
-      "lines": 302,
+      "lines": 243,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
     },
@@ -203,11 +204,10 @@
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
     },
-    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebMath.kt": {
-      "category": "transitional",
-      "lines": 59,
-      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
-      "reason": "per-platform hand file the generator should emit"
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebImportCompat.kt": {
+      "category": "sugar",
+      "lines": 20,
+      "reason": "Web-only import-compat names the replaced Web GD/Mathf copies had (task 129 E): Basis alias, five GD extensions"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
       "category": "transitional",
@@ -228,11 +228,12 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebSignals.kt": {
       "category": "runtime-core",
-      "lines": 509,
+      "lines": 556,
       "raises": [
         "456 -> 505: task 134 D1: callback registry for any-arity delivery (dispatchArgs), await watcher release reasons (router vs emitter freed), connectAwait, and the webEmitSignalGeneric expect moved here from the transitional WebGodotApi.kt",
         "505 -> 508: task 131 item 12: the registry exposes a per-owner entry count for the leak probe",
-        "508 -> 509: task 131 review fixes: the registry runs the user's lambda through userScript so only user failures are contained"
+        "508 -> 509: task 131 review fixes: the registry runs the user's lambda through userScript so only user failures are contained",
+        "509 -> 556: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
       ],
       "reason": "Web signal plumbing"
     },
@@ -247,9 +248,10 @@
     },
     "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/api/WebGodotApi.wasmJs.kt": {
       "category": "seam",
-      "lines": 70,
+      "lines": 77,
       "raises": [
-        "62 -> 70: task 134 D1: the webEmitSignalGeneric actual (emit_signal with any arguments as one immediate generic call)"
+        "62 -> 70: task 134 D1: the webEmitSignalGeneric actual (emit_signal with any arguments as one immediate generic call)",
+        "70 -> 77: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
       ],
       "reason": "Wasm JS bridge entry points"
     }
@@ -259,7 +261,10 @@
       "lines": 9
     },
     "generate_api_wrapper.GD_MEMBER_SECTIONS[is_instance_valid]": {
-      "lines": 7
+      "lines": 8,
+      "raises": [
+        "7 -> 8: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+      ]
     },
     "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": {
       "lines": 16
@@ -303,12 +308,6 @@
     "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Viewport]": {
       "lines": 7
     },
-    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].custom": {
-      "lines": 55
-    },
-    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].top_level": {
-      "lines": 3
-    },
     "generate_web_wrappers.CLASS_POLICY[AnimationMixer].custom": {
       "lines": 14
     },
@@ -343,7 +342,7 @@
       "lines": 50
     },
     "generate_web_wrappers.CLASS_POLICY[Node].custom": {
-      "lines": 54
+      "lines": 53
     },
     "generate_web_wrappers.CLASS_POLICY[Node].top_level": {
       "lines": 17
@@ -352,7 +351,10 @@
       "lines": 2
     },
     "generate_web_wrappers.CLASS_POLICY[Object].custom": {
-      "lines": 49
+      "lines": 84,
+      "raises": [
+        "49 -> 84: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+      ]
     },
     "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": {
       "lines": 10
@@ -371,6 +373,12 @@
     },
     "generate_web_wrappers.CLASS_POLICY[Tween].custom": {
       "lines": 25
+    },
+    "generate_web_wrappers.CLASS_POLICY[Window].custom": {
+      "lines": 32
+    },
+    "generate_web_wrappers.CLASS_POLICY[Window].top_level": {
+      "lines": 8
     },
     "generate_web_wrappers.SUPPORT_FILE": {
       "lines": 70

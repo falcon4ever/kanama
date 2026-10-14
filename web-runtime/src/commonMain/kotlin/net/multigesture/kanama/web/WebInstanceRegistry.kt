@@ -100,6 +100,18 @@ internal class WebInstanceRegistry(
   fun isLiveOrConstructing(handle: Int): Boolean =
     liveSlot(handle)?.let { it.record != null || it.pendingScriptId != null } == true
 
+  /**
+   * True for a script handle whose script was freed (task 138 item 22): a script-namespace handle
+   * of a slot this registry minted that is no longer live or constructing. A browser handle, 0, or
+   * a slot this registry never had is not one.
+   */
+  fun wasFreed(handle: Int): Boolean {
+    if (handle <= 0 || handle and BROWSER_NAMESPACE != 0) return false
+    val slotIndex = slotIndex(handle)
+    if (slotIndex == 0 || slotIndex >= slots.size || generation(handle) == 0) return false
+    return !isLiveOrConstructing(handle)
+  }
+
   /** Releases a constructed or reserved slot; false when it was already free (no double-push). */
   fun free(handle: Int): Boolean {
     val slotIndex = slotIndex(handle)

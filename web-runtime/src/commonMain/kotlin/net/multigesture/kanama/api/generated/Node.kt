@@ -187,11 +187,10 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   /**
-   * The window this node lives in. Web has exactly one: the handle-less browser-window mirror in
-   * `WebFacades.kt` (mode and 3D scaling are fixed by the canvas, so those writes stay Kotlin-side).
-   * Desktop's nullable return is kept so shared call sites read the same on both backends.
+   * The window this node lives in: Web has exactly one, the root window (a generated `Window`, a
+   * `Viewport` as on desktop, task 129 E), or null for a node outside the tree as on desktop.
    */
-  fun getWindow(): Window? = browserWindow
+  fun getWindow(): Window? = if (isInsideTree()) getTree().getRoot() else null
 
   /**
    * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,

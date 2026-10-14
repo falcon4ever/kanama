@@ -168,6 +168,57 @@ Expressed" section with every case (294 parameters today), and the report check 
 changes without the page being regenerated, so a new required parameter, or a default that is
 gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
 
+### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable` (task 129 E, task 138 items 2 and 4)
+
+Web kept its own `GD` (16 members) and `Mathf` (18). It now compiles the same generated `GD` as
+desktop and iOS (every Godot utility function, with the typed overloads) and the same `Mathf`. A
+`GD` call that needs the engine crosses the Web bridge: Godot runs the utility function by name (the
+builtin opcode's utility form, one cached `Expression` per function and arity), so `GD.sin`,
+`GD.str`, `GD.varToStr` and `GD.seed` / `GD.randf` answer exactly what GDScript answers (the
+random functions now use Godot's global generator, as on desktop). `Mathf`'s arithmetic stays in
+Kotlin. The web3d smoke checks fourteen `GD` / `Mathf` results bit for bit against a GDScript twin.
+`GodotCallable` is the shared class on Web too (`call`, `callv`, `callDeferred`, `isValid`,
+`getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,
+`hasConnections`, `getObject`, `getObjectId`, `disconnect` and `emit`, and `GodotObject` gains the
+Variant `call(method, vararg args)`, `callv`, `callDeferred(method, vararg args)`,
+`getMethodArgumentCount` and `instanceId`. The Web bridge now carries a `List` / `Map` argument
+(`godotFormat`) and an `Array` / `Dictionary` / `Callable` / `Signal` result.
+- **Source break:** `GD` and `Mathf` on Web take the shared signatures: `GD.print(message)` is
+  `GD.print(vararg values)`, `Mathf.isEqualApprox` uses Godot's tolerance instead of `1e-6`, and
+  `Mathf.PI` / `Mathf.TAU` are `const`. The Web-only spellings sources import by name
+  (`net.multigesture.kanama.api.radToDeg`, `randf`, `randi`, `randomize`, `pushError`, `Basis`)
+  are kept. `Window` on Web is a generated `Viewport` subclass (its `handle` is the inherited
+  `GodotObject.handle`; see below).
+
+### Changed — Web `Window` is a generated `Viewport` subclass (task 129 E, inventory row 10)
+
+Web's `Window` was a hand facade with two shapes: a handle-backed root window and a handle-less
+mirror `Node.getWindow()` returned. It is now generated from the contract like every other Web
+class, extends `Viewport` as on desktop, and `Node.getWindow()` returns the root window (null for a
+node outside the tree, as on desktop), so `mode` is a real engine call there too. The 3D render
+settings the Compatibility renderer fixes on Web (`scaling3dScale`, `scaling3dMode`, `useTaa`,
+`msaa3d`, `screenSpaceAa`) stay Kotlin-side, one value per page. The remaining hand-written Web
+stand-ins for engine classes (`Time`, `DisplayServer`, `IP`, the single-player multiplayer
+classes, the ray-query helpers) are listed in the Web generator's `WEB_INERT_FACADES`, and its
+`--check` fails on any other hand-written Godot class.
+
+### Fixed — two Kotlin lambdas on one signal (task 138 item 20)
+
+Godot keys a signal's connections by the base callable and ignores bound arguments, so on Web a
+second lambda connected from the same script to the same signal failed with "already connected"
+(both used the proxy's dispatch method, the callback id only bound). Each Web lambda connection now
+targets its own guard object, so both connect and both fire. Desktop and iOS were not affected
+(each lambda's Callable carries its own callback id); the desktop/Android signal self-test now
+checks a second lambda on one signal.
+
+### Fixed — a freed Kanama-scripted object on Web (task 138 item 22)
+
+A call on a script-backed object freed while another script held it threw "Stale Kanama Web
+browser handle"; it now throws desktop's `IllegalStateException: Invalid access to previously freed
+instance`. A setter queued on such an object before it was freed (the free applied earlier in the
+same batch) failed the whole batch; it is now skipped and reported once as a script error, like a
+command on an engine-freed node.
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed

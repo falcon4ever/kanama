@@ -320,10 +320,13 @@ signal's handle) adds `isConnected(target, "method")`, `getConnections()`, `hasC
 
 On **Web** the String, NodePath and ByteArray functions compile from the same source: the byte
 codecs run in Kotlin/Wasm (checked against Godot's recorded results), the engine-run ones cross
-the Web bridge, which carries text, numbers, `NodePath`, `ByteArray` and the packed String/float
-returns but not a `List`/`Map` argument (`godotFormat`) or an `Array`/`Dictionary` result (`decodeVar`
-of a container): those fail with a clear error. Web has no `GodotCallable`, and its `GodotSignal`
-does not have the signal queries above yet.
+the Web bridge, which carries text, numbers, `NodePath`, `ByteArray`, the packed returns, objects,
+Callables, a `List`/`Map` argument (`godotFormat`) and an `Array`/`Dictionary` result (as a `List`
+/ `Map`). `GodotCallable` is the same class on Web, and `GodotSignal` has the same queries; each
+is a Godot call by name there. Two Web differences: `getObjectId()` (and `GodotObject.instanceId`)
+asks the engine, so it fails on a freed target instead of answering its old id, and in
+`getConnections()` a Kotlin lambda connection's `callable` is its own guard object's `fire`
+method (each lambda connection has its own callable, so two lambdas can connect one signal).
 
 ## Collections
 
@@ -722,10 +725,11 @@ and returns the same double as GDScript, bit for bit; the transcendental functio
 `exp`, ...) and the float-to-int conversions (`roundToInt`, `floorToInt`) call `GD`. Each member
 also has a `Float` overload that computes in `Double`.
 
-On Web, `GD` and `Mathf` are still the Web runtime's own subset: `GD` has the random functions,
-`print`, `pushError`, `lerpf`, `clampf`, `remap`, `signf`, `lerpAngle`, `degToRad`, `radToDeg` and
-`isInstanceValid`; `Mathf` has `abs`, `min`, `max`, `clamp`, `lerp`, `inverseLerp`, `lerpAngle`,
-`wrap`, `sqrt`, `pow`, `log`, `sin`, `cos`, `atan2`, `isEqualApprox` and `roundToInt`.
+Web compiles the same `GD` and `Mathf`. A `GD` call that needs the engine crosses the Web bridge
+(Godot runs the utility function by name), so it is a bridge call per use there: keep it out of
+tight per-object loops on Web, as you would any engine call. `Mathf`'s arithmetic members stay in
+Kotlin and never cross; its transcendental members call `GD`. The random functions use Godot's
+global generator on every platform, so `GD.seed(n)` reproduces GDScript's sequence on Web too.
 
 ## Global Classes
 

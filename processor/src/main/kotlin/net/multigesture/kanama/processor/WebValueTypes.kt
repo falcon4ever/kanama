@@ -160,6 +160,33 @@ internal object WebValueTypes {
     appendLine("\t\t\tfor text in value:")
     appendLine("\t\t\t\ttexts += \"\\u001f\" + _kanama_web_pack_text(text)")
     appendLine("\t\t\treturn texts")
+    // Task 138 item 2: Arrays, Dictionaries, Callables and Signals (a builtin, utility or generic
+    // call's result, a signal argument): each element an encoded Variant, nested (`%`, `,` and the
+    // unit separator escaped) so a container rides one comma-separated payload.
+    appendLine("\t\tTYPE_ARRAY:")
+    appendLine("\t\t\tvar items := PackedStringArray([str(value.size())])")
+    appendLine("\t\t\tfor item in value:")
+    appendLine("\t\t\t\titems.append($NEST($PACK_VARIANT(item, transient)))")
+    appendLine("\t\t\treturn \"28:\" + \",\".join(items)")
+    appendLine("\t\tTYPE_DICTIONARY:")
+    appendLine("\t\t\tvar entries := PackedStringArray([str(value.size())])")
+    appendLine("\t\t\tfor key in value:")
+    appendLine("\t\t\t\tentries.append($NEST($PACK_VARIANT(key, transient)))")
+    appendLine("\t\t\t\tentries.append($NEST($PACK_VARIANT(value[key], transient)))")
+    appendLine("\t\t\treturn \"27:\" + \",\".join(entries)")
+    appendLine("\t\tTYPE_CALLABLE:")
+    appendLine(
+      "\t\t\treturn \"25:%d,%s\" % [$PACK_HELD_OBJECT(value.get_object(), transient), $NEST(String(value.get_method()))]"
+    )
+    appendLine("\t\tTYPE_SIGNAL:")
+    appendLine(
+      "\t\t\treturn \"26:%d,%s\" % [$PACK_HELD_OBJECT(value.get_object(), transient), $NEST(String(value.get_name()))]"
+    )
+    appendLine("\t\tTYPE_PACKED_INT64_ARRAY:")
+    appendLine("\t\t\tvar ints := PackedStringArray()")
+    appendLine("\t\t\tfor i in value:")
+    appendLine("\t\t\t\tints.append(str(i))")
+    appendLine("\t\t\treturn \"31:\" + \",\".join(ints)")
     appendLine("\tif type >= TYPE_VECTOR2 and type <= TYPE_COLOR:")
     appendLine("\t\treturn \"%d:%s\" % [type, $PACK(value)]")
     appendLine("\t# A type Web does not carry: the type alone, so Kotlin reports it by name.")
@@ -193,7 +220,51 @@ internal object WebValueTypes {
     appendLine(
       "\t\t\treturn null if handle == 0 else (self if handle == _kanama_handle else _kanama_object_handles.get(handle))"
     )
+    appendLine("\t\tTYPE_ARRAY:")
+    appendLine("\t\t\tvar items := payload.split(\",\")")
+    appendLine("\t\t\tvar array := []")
+    appendLine("\t\t\tfor index in range(1, int(items[0]) + 1):")
+    appendLine("\t\t\t\tarray.append($UNPACK_VARIANT($UNNEST(items[index])))")
+    appendLine("\t\t\treturn array")
+    appendLine("\t\tTYPE_DICTIONARY:")
+    appendLine("\t\t\tvar entries := payload.split(\",\")")
+    appendLine("\t\t\tvar dictionary := {}")
+    appendLine("\t\t\tfor index in range(int(entries[0])):")
+    appendLine(
+      "\t\t\t\tdictionary[$UNPACK_VARIANT($UNNEST(entries[2 * index + 1]))] = $UNPACK_VARIANT($UNNEST(entries[2 * index + 2]))"
+    )
+    appendLine("\t\t\treturn dictionary")
+    appendLine("\t\tTYPE_CALLABLE:")
+    appendLine("\t\t\tvar callable_parts := payload.split(\",\")")
+    appendLine("\t\t\tvar callable_target: Object = _kanama_live_object(int(callable_parts[0]))")
+    appendLine("\t\t\treturn Callable(callable_target, StringName($UNNEST(callable_parts[1])))")
     appendLine("\treturn $UNPACK(type, payload)")
+    appendLine()
+    appendLine("func $NEST(text: String) -> String:")
+    appendLine(
+      "\treturn text.replace(\"%\", \"%25\").replace(\",\", \"%2C\").replace(\"\\u001f\", \"%1F\")"
+    )
+    appendLine()
+    appendLine("func $UNNEST(text: String) -> String:")
+    appendLine(
+      "\treturn text.replace(\"%1F\", \"\\u001f\").replace(\"%2C\", \",\").replace(\"%25\", \"%\")"
+    )
+    appendLine()
+    appendLine("func $PACK_HELD_OBJECT(value: Object, transient: Array[int]) -> int:")
+    appendLine(
+      "\t# An object inside a container, Callable or Signal: its script handle, else the handle"
+    )
+    appendLine(
+      "\t# already tracking it, else a fresh one (_kanama_web_pack_object), so a repeated query"
+    )
+    appendLine("\t# does not mint a handle per call for an object Kotlin already holds.")
+    appendLine("\tif value == null:")
+    appendLine("\t\treturn 0")
+    appendLine("\tif not value.has_method(\"_kanama_ensure_created\"):")
+    appendLine("\t\tfor existing in _kanama_object_handles:")
+    appendLine("\t\t\tif is_same(_kanama_object_handles[existing], value):")
+    appendLine("\t\t\t\treturn int(existing)")
+    appendLine("\treturn _kanama_web_pack_object(value, transient)")
     appendLine()
     appendLine("func _kanama_web_unpack_text(value: String) -> String:")
     appendLine("\treturn value.replace(\"%1F\", \"\\u001f\").replace(\"%25\", \"%\")")
@@ -222,5 +293,8 @@ internal object WebValueTypes {
   const val UNPACK = "_kanama_web_unpack_value"
   const val PACK_VARIANT = "_kanama_web_pack_variant"
   const val UNPACK_VARIANT = "_kanama_web_unpack_variant"
+  const val NEST = "_kanama_web_nest"
+  const val UNNEST = "_kanama_web_unnest"
+  const val PACK_HELD_OBJECT = "_kanama_web_pack_held_object"
   private const val RUNTIME = "net.multigesture.kanama.web.WebPackedValues"
 }

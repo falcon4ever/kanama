@@ -1448,6 +1448,42 @@ class Main(godotObject: GodotHandle) :
     return 0L
   }
 
+  private var bundleValues = 0L
+  private var bundleAfterMask = 0L
+
+  /**
+   * The web bundle's rows (task 129 E, task 138 items 2, 20, 22; see BundleProbe and FreedHolder).
+   * Returns BundleProbe's lambda pair (2 bits) | signal queries (7 bits) << 2 | GodotCallable rows
+   * (7 bits) << 9: 65535 when healthy. [bundleValues] reads the container and GD rows;
+   * [bundleProbeAfter] the rows that need a frame.
+   */
+  fun bundleProbe(value: Long): Long {
+    val probe = self.requireAs("BundleProbe", ::Node)
+    val holder = self.requireAs("FreedHolder", ::Node)
+    val says = { target: Node, method: String ->
+      WebExperimentalGenericCall.callImmediate(target, method, listOf(0L)).asLong()
+    }
+    val mask =
+      says(probe, "lambda_pair") or
+        (says(probe, "signal_queries") shl 2) or
+        (says(probe, "callable_rows") shl 9)
+    bundleValues = says(probe, "container_rows") or (says(probe, "gd_rows") shl 6)
+    bundleAfterMask = 0L
+    val freedLate = says(holder, "freed_script_lookup") == 1L && says(holder, "freed_script_late") == 1L
+    MainThread.postAfterFrames(3) {
+      if (says(probe, "deferred_ran") == 1L) bundleAfterMask = bundleAfterMask or 1L
+      if (freedLate && says(holder, "freed_script_call") == 2L) bundleAfterMask = bundleAfterMask or 2L
+      MainThread.postAfterFrames(3) { bundleAfterMask = bundleAfterMask or 4L }
+    }
+    return mask
+  }
+
+  /** Container rows (6 bits) | GD rows (16 bits) << 6 of [bundleProbe]: 4194303 when healthy. */
+  fun bundleValues(value: Long): Long = bundleValues
+
+  /** 1 = callDeferred ran, 2 = the freed script node throws desktop's error, 4 = frames: 7. */
+  fun bundleProbeAfter(value: Long): Long = bundleAfterMask
+
   /** Readback of [freedBatchProbe]: 7 once its frames have passed. */
   fun freedBatchProbeAfter(value: Long): Long = freedBatchMask
 

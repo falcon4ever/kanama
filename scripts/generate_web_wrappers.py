@@ -736,7 +736,7 @@ WRAPPER_POLICY: dict[int, dict] = {
     # SceneTree: the exit code must fit Godot's int32 ABI before any command is emitted; the root
     # window stays a raw handle because Window is a hand-shaped facade (see WEB_HANDSHAPED).
     52: {"param_types": {"exitCode": "Long"}, "guards": ['require(exitCode in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) { "SceneTree.quit exit code must fit Godot\'s int32 ABI" }']},
-    250: {"wrap_facade": "Window", "no_property": True, "doc": "The root window (desktop/iOS shape: `Window`, non-null); [root] is its Viewport view."},
+    250: {"no_property": True, "doc": "The root window (desktop/iOS shape: `Window`, non-null); [root] is its Viewport view."},
     168: {"extra_names": ["setPaused"]},
     # AnimationMixer root-motion rotation crosses as euler angles (the applier converts).
     235: {
@@ -857,6 +857,88 @@ CLASS_POLICY: dict[str, dict] = {
   fun set(propertyPath: String, value: GodotEnumValue) {
     set(propertyPath, value.value)
   }
+
+  /**
+   * Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as a
+   * List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first.
+   * A call whose arguments match a typed overload above takes that overload instead.
+   */
+  fun call(method: String, vararg args: Any?): Any? = webGenericCall(this, method, args.toList())
+
+  /** Desktop's `callv`: [call] with the arguments as one list. */
+  fun callv(method: String, arguments: List<Any?>): Any? = webGenericCall(this, method, arguments)
+
+  /** Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch. */
+  fun callDeferred(method: String, vararg args: Any?) {
+    webGenericQueue(this, "call_deferred", listOf<Any?>(method) + args)
+  }
+
+  fun getMethodArgumentCount(method: String): Long =
+    webGenericCall(this, "get_method_argument_count", listOf(method)) as Long
+
+  /**
+   * The engine instance id. Web reads it from the engine on each access (desktop captures it at
+   * construction), so it fails like any other call on a freed object; [GD.isInstanceValid] does not
+   * go through it.
+   */
+  val instanceId: Long
+    get() = webGenericCall(this, "get_instance_id", emptyList()) as Long
+
+  /**
+   * The liveness test behind the shared [GD.isInstanceValid] (task 129 E): a live script or a live
+   * browser handle, answered without crossing to the engine.
+   */
+  internal fun isInstanceLive(): Boolean {
+    val token = handle.value
+    return webScriptInstance(token) != null || isWebBrowserHandleLive(token)
+  }
+""",
+        "imports": ["net.multigesture.kanama.web.webScriptInstance"],
+    },
+    "Window": {
+        "custom": """
+  // The 3D render settings the tps-demo settings menu writes. Web renders with the Compatibility
+  // renderer at the canvas size, so these stay Kotlin-side (one value per page, whichever wrapper
+  // of the root window wrote it); the window mode above is a real engine call.
+  var scaling3dScale: Double
+    get() = WebWindowSettings.scaling3dScale
+    set(value) {
+      WebWindowSettings.scaling3dScale = value
+    }
+
+  var scaling3dMode: Viewport.Scaling3DMode
+    get() = WebWindowSettings.scaling3dMode
+    set(value) {
+      WebWindowSettings.scaling3dMode = value
+    }
+
+  var useTaa: Boolean
+    get() = WebWindowSettings.useTaa
+    set(value) {
+      WebWindowSettings.useTaa = value
+    }
+
+  var msaa3d: Viewport.MSAA
+    get() = WebWindowSettings.msaa3d
+    set(value) {
+      WebWindowSettings.msaa3d = value
+    }
+
+  var screenSpaceAa: Viewport.ScreenSpaceAA
+    get() = WebWindowSettings.screenSpaceAa
+    set(value) {
+      WebWindowSettings.screenSpaceAa = value
+    }
+""",
+        "top_level": """
+/** The page's one set of Kotlin-side 3D render settings (see [Window.scaling3dScale]). */
+internal object WebWindowSettings {
+  var scaling3dScale: Double = 1.0
+  var scaling3dMode: Viewport.Scaling3DMode = Viewport.Scaling3DMode.BILINEAR
+  var useTaa: Boolean = false
+  var msaa3d: Viewport.MSAA = Viewport.MSAA.DISABLED
+  var screenSpaceAa: Viewport.ScreenSpaceAA = Viewport.ScreenSpaceAA.DISABLED
+}
 """,
     },
     "Node": {
@@ -892,11 +974,10 @@ CLASS_POLICY: dict[str, dict] = {
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   /**
-   * The window this node lives in. Web has exactly one: the handle-less browser-window mirror in
-   * `WebFacades.kt` (mode and 3D scaling are fixed by the canvas, so those writes stay Kotlin-side).
-   * Desktop's nullable return is kept so shared call sites read the same on both backends.
+   * The window this node lives in: Web has exactly one, the root window (a generated `Window`, a
+   * `Viewport` as on desktop, task 129 E), or null for a node outside the tree as on desktop.
    */
-  fun getWindow(): Window? = browserWindow
+  fun getWindow(): Window? = if (isInsideTree()) getTree().getRoot() else null
 
   /**
    * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,
@@ -1218,71 +1299,6 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
   }
 """,
     },
-    "@GlobalScope": {
-        "custom": """
-  fun randiRange(from: Long, to: Long): Long {
-    require(from <= to)
-    val range = to - from + 1
-    return from + (randi().toULong() % range.toULong()).toLong()
-  }
-
-  /** Normally-distributed random (Box-Muller over the engine-seeded randf). */
-  fun randfn(mean: Double, deviation: Double): Double {
-    val u1 = randf().coerceAtLeast(1e-12)
-    val u2 = randf()
-    val gaussian =
-      kotlin.math.sqrt(-2.0 * kotlin.math.ln(u1)) * kotlin.math.cos(2.0 * kotlin.math.PI * u2)
-    return mean + deviation * gaussian
-  }
-
-  /** Web adaptation: liveness of the tracked script/browser handle. */
-  fun isInstanceValid(instance: GodotObject?): Boolean {
-    if (instance == null) return false
-    val handle = instance.handle.value
-    return webScriptInstance(handle) != null || isWebBrowserHandleLive(handle)
-  }
-
-  fun randfRange(from: Double, to: Double): Double {
-    require(from <= to)
-    return from + (to - from) * randf()
-  }
-
-  fun lerpf(from: Double, to: Double, weight: Double): Double = Mathf.lerp(from, to, weight)
-
-  fun signf(value: Double): Double = if (value > 0.0) 1.0 else if (value < 0.0) -1.0 else 0.0
-
-  /** Godot's remap: linear map of [value] from [istart, istop] onto [ostart, ostop]. */
-  fun remap(value: Double, istart: Double, istop: Double, ostart: Double, ostop: Double): Double =
-    ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
-
-  fun clampf(value: Double, min: Double, max: Double): Double = Mathf.clamp(value, min, max)
-
-  fun lerpAngle(from: Double, to: Double, weight: Double): Double =
-    Mathf.lerpAngle(from, to, weight)
-
-  fun degToRad(degrees: Double): Double = degrees * kotlin.math.PI / 180.0
-
-  fun radToDeg(radians: Double): Double = radians * 180.0 / kotlin.math.PI
-
-  /** Web adaptation: Godot's print lands on the browser console via Wasm stdout. */
-  fun print(message: Any?) {
-    println(printable(message))
-  }
-
-  fun pushError(message: Any?) {
-    println("ERROR: ${printable(message)}")
-  }
-
-  /** Desktop parity (task 128 C): Godot prints a typed enum as its number, not `ProcessMode(value=2)`. */
-  private fun printable(message: Any?): Any? = if (message is GodotEnumValue) message.value else message
-""",
-        "imports": ["net.multigesture.kanama.web.webScriptInstance"],
-        "top_level": """
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun GD.radToDeg(radians: Double): Double = radToDeg(radians)
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER") fun GD.pushError(message: Any?) = pushError(message)
-""",
-    },
     "Input": {
         "custom": """
   /**
@@ -1479,12 +1495,28 @@ EXTRA_CLASSES: tuple[str, ...] = (
 )
 # Bespoke facades that stay hand-written under api/ (name -> why the generator cannot emit it).
 WEB_HANDSHAPED: dict[str, str] = {
-    "Window": "handle-less browser-window mirror shared with the handle-backed root window (tps settings menu)",
     "PhysicsDirectSpaceState3D": "owner-bound facade; the ray query packs a Dictionary result into one string",
+}
+# Inert Web stand-ins for engine classes the browser build does not host (task 129 E, inventory row
+# 10): name -> what it answers instead. They dispatch no opcode and hold no engine object. A
+# hand-written file under api/ may declare a Godot class only when it is listed here or in
+# WEB_HANDSHAPED (--check), so a new hand facade is a reviewed table entry, not a silent file.
+WEB_INERT_FACADES: dict[str, str] = {
+    "Time": "a Kotlin clock: no engine crossing for the time queries the corpus makes",
+    "DisplayServer": "the browser is the display: a name, vsync and window answers, structural limits fail loud",
+    "IP": "no sockets on Web: no local addresses",
+    "MultiplayerAPI": "single-player session behind Node.getMultiplayer: the local peer is the server",
+    "MultiplayerPeer": "AutoCloseable base of the single-player peers",
+    "OfflineMultiplayerPeer": "the single-player peer",
+    "ENetMultiplayerPeer": "ENet needs UDP sockets: create_server / create_client answer ERR_UNAVAILABLE",
+    "SceneMultiplayer": "server-relay switch of the single-player session",
+    "MultiplayerSynchronizer": "nothing to replicate with one local peer",
+    "World3D": "owner-bound accessor of the hand-shaped PhysicsDirectSpaceState3D",
+    "PhysicsRayQueryParameters3D": "inputs of the hand-shaped ray query, built engine-side by the applier",
 }
 # Opcodes a hand-written facade in WEB_HANDSHAPED may dispatch directly.
 HANDSHAPED_OPCODES: frozenset[str] = frozenset(
-    {"WINDOW_SET_MODE", "WINDOW_GET_MODE", "PHYSICSDIRECTSPACESTATE3D_INTERSECT_RAY"}
+    {"PHYSICSDIRECTSPACESTATE3D_INTERSECT_RAY"}
 )
 
 PACKAGE_IMPORTS = {
@@ -2007,7 +2039,12 @@ def render_all(api: Api, api_dir: Path = API_DIR) -> dict[str, str]:
         by_class[call.class_name].append(call)
     files: dict[str, str] = {"WebWrapperSupport.kt": HEADER + SUPPORT_FILE, GLOBAL_ENUMS_FILE: render_global_enums(api)}
     for godot_name, calls in by_class.items():
-        file_name = ("GD" if godot_name == "@GlobalScope" else kotlin_class_name(godot_name)) + ".kt"
+        # Task 129 E: Web compiles the shared generated GD (src/commonMain/.../api/GD.kt, every
+        # utility function through the builtin opcode's utility form); the contract's three
+        # utility opcodes stay for the backend SPI but get no Web wrapper.
+        if godot_name == "@GlobalScope":
+            continue
+        file_name = kotlin_class_name(godot_name) + ".kt"
         files[file_name] = render_class(tree, godot_name, sorted(calls, key=lambda c: c.opcode))
     return files
 
@@ -2048,6 +2085,16 @@ def check_hand_written(api_dir: Path, rendered: dict[str, str]) -> list[str]:
     for name in sorted(WEB_HANDSHAPED):
         if name not in declared:
             failures.append(f"WEB_HANDSHAPED names {name} but no hand-written file under api/ declares it")
+    godot_classes = {c["name"] for c in json.loads(API_PATH.read_text())["classes"]}
+    for name in sorted(declared & godot_classes):
+        if name not in WEB_HANDSHAPED and name not in WEB_INERT_FACADES:
+            failures.append(
+                f"a hand-written file under api/ declares Godot class {name}; generate it, or list it in "
+                "WEB_INERT_FACADES / WEB_HANDSHAPED with what it answers instead"
+            )
+    for name in sorted(WEB_INERT_FACADES):
+        if name not in declared:
+            failures.append(f"WEB_INERT_FACADES names {name} but no hand-written file under api/ declares it")
     return failures
 
 

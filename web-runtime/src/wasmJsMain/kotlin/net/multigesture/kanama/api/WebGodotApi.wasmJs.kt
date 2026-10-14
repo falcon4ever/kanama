@@ -61,6 +61,13 @@ internal actual fun releaseWebTrackedObject(handle: Int) {
 internal actual fun webGenericImmediateStringCall(target: GodotObject, method: String): String =
   net.multigesture.kanama.web.WebExperimentalGenericCall.callImmediate(target, method).asString()
 
+internal actual fun webGenericCall(target: GodotObject, method: String, args: List<Any?>): Any? =
+  net.multigesture.kanama.web.WebExperimentalGenericCall.callImmediate(target, method, args).asAny()
+
+internal actual fun webGenericQueue(target: GodotObject, method: String, args: List<Any?>) {
+  net.multigesture.kanama.web.WebExperimentalGenericCall.queueVoidCall(target, method, args)
+}
+
 internal actual fun webEmitSignalGeneric(target: GodotObject, signal: String, args: Array<out Any?>) {
   net.multigesture.kanama.web.WebExperimentalGenericCall.callImmediate(
     target,

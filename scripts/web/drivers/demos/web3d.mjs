@@ -486,6 +486,30 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
   const liveAfterBatch = (await snapshot(evaluate))?.liveHandles;
   trace(`freedBatchAfter: ${freedBatchAfter} liveHandles ${liveBeforeBatch} -> ${liveAfterBatch}`);
+  // The web bundle (task 129 E, task 138 items 2, 20, 22; see Main.bundle_probe): two lambdas on
+  // one signal, the signal queries, GodotCallable, Map/List/Array/Dictionary on the builtin and
+  // utility crossing, the shared GD against its GDScript twin, and a freed script-backed node.
+  const bundleProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("bundle_probe")}, 0)`,
+    ),
+  );
+  const bundleValues = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("bundle_values")}, 0)`,
+    ),
+  );
+  const readBundleAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("bundle_probe_after")}, 0)`,
+    ).then(Number);
+  let bundleAfter = await readBundleAfter();
+  const bundleDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (bundleAfter !== 7 && Date.now() < bundleDeadline) {
+    await delay(150);
+    bundleAfter = await readBundleAfter();
+  }
+  trace(`bundle: probe=${bundleProbe} values=${bundleValues} after=${bundleAfter}`);
   const readLeakAfter = () =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
@@ -512,10 +536,11 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ready: "ThrowingReady._ready",
   };
   const expectedScriptErrors = Object.keys(expectedSites);
-  // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one) and the
-  // two batches of FreedHolder.freed_batch (one each). Each is reported once as a script error
+  // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one), the
+  // two batches of FreedHolder.freed_batch (one each) and FreedHolder.freed_script_late's setter on
+  // a script-backed node freed in the same batch (one). Each is reported once as a script error
   // naming the freed instance, and none is counted among the deliberate throws.
-  const freedSetterReports = 3;
+  const freedSetterReports = 4;
   const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
@@ -653,6 +678,15 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 131 item 12: a lambda connection's Kotlin callback is dropped with its one-shot firing,
     // its emitter's free and its receiver's free (desktop's SignalCallbackRegistry rules).
     lambdaConnectionsReleaseTheirCallbacks: leakProbeAfter === 31,
+    // Task 138 item 20 (bits 1-2) + item 2: signal queries (bits 4-256), GodotCallable (512-32768).
+    bundleSignalsAndCallables: bundleProbe === 65535,
+    // Task 138 item 2: Map/List arguments and Array/Dictionary results (bits 1-32); task 129 E: the
+    // shared GD bit for bit against its GDScript twin (bits 64 up).
+    bundleContainersAndGd: bundleValues === 4194303,
+    // callDeferred ran (1); task 138 item 22: a freed script-backed node throws desktop's
+    // freed-instance error (2), and its late queued setter was skipped and reported (counted in
+    // freedSetterReports); frames kept running (4).
+    bundleAfterFrames: bundleAfter === 7,
     // Task 131 item 14: every deliberate throw (function, signal handler, _process, coroutine) was
     // contained -- the call came back, the script still answers, the frame loop kept running and no
     // other bridge fault appeared.

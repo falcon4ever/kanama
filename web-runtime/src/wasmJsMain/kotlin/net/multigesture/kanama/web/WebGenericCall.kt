@@ -161,6 +161,28 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
     }
 
   /** The tracked handle an object return resolved (or minted) to. */
+  /**
+   * Task 138 item 2: the result as desktop's Variant-returning `call` gives it: null, Boolean,
+   * Long, Double, String, a value type, a `GodotObject`, a Callable, a List (Array) or a Map
+   * (Dictionary).
+   */
+  fun asAny(): Any? =
+    when (tag) {
+      "n" -> null
+      "b" -> asBoolean()
+      "i" -> asLong()
+      "f" -> asDouble()
+      "s" -> asString()
+      "v2",
+      "v3" -> asValue()
+      "v" -> WebPackedValues.decodeVariant(payload[0])
+      "o" -> GodotObject(WebObjectId(asObjectHandle()))
+      else ->
+        error(
+          "Generic call returned a ${payload.firstOrNull() ?: tag}, which Kanama Web does not carry"
+        )
+    }
+
   fun asObjectHandle(): Int {
     check(tag == "o") { "Generic call returned tag '$tag', not an object" }
     return payload[0].toInt()

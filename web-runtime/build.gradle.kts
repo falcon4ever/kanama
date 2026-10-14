@@ -9,6 +9,16 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+// Task 129 E: the shared api sources Web compiles (see the commonMain source set below). The
+// directory is the native wrapper tree's; everything else in it is excluded from the Web build and
+// from ktfmt (the wrapper tree is drift-gated, not formatted: see the root build's ktfmt note).
+val sharedApiDir: File = rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/api")
+val sharedApiFiles = setOf("GD.kt", "Mathf.kt", "GodotCallable.kt")
+
+tasks.withType<com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask>().configureEach {
+    exclude { element -> element.file.parentFile == sharedApiDir }
+}
+
 val webScriptSourceRoot =
     layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/web")
 
@@ -153,6 +163,16 @@ kotlin {
             // Task 131 item 14: the script-error report (its fields and the game-frame rule) is ONE
             // source with desktop, Android and iOS; Web supplies only its frames and its way out.
             kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/scripterrors"))
+            // Task 129 E: GD (generated from extension_api.json's utility functions), Mathf and
+            // GodotCallable are ONE source with desktop and iOS. The shared api directory is added
+            // and every other file in it excluded; GD's engine calls cross through
+            // WebBuiltinRemote (the builtin opcode's utility form).
+            kotlin.srcDir(sharedApiDir)
+            kotlin.exclude { element ->
+                !element.isDirectory &&
+                    element.file.parentFile == sharedApiDir &&
+                    element.name !in sharedApiFiles
+            }
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(project(":kanama-common-api"))
@@ -1341,6 +1361,8 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/ThrowingConstructor.kt",
                 "res://kotlin-src/ThrowingProperty.kt",
                 "res://kotlin-src/ThrowingReady.kt",
+                "res://kotlin-src/BundleProbe.kt",
+                "res://kotlin-src/FreedScriptTarget.kt",
             )
         val mappings =
             manifest

@@ -10,6 +10,7 @@ import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
+import net.multigesture.kanama.web.webScriptInstance
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class GodotObject(godotObject: GodotHandle) {
@@ -284,6 +285,41 @@ open class GodotObject(godotObject: GodotHandle) {
    */
   fun set(propertyPath: String, value: GodotEnumValue) {
     set(propertyPath, value.value)
+  }
+
+  /**
+   * Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as a
+   * List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first.
+   * A call whose arguments match a typed overload above takes that overload instead.
+   */
+  fun call(method: String, vararg args: Any?): Any? = webGenericCall(this, method, args.toList())
+
+  /** Desktop's `callv`: [call] with the arguments as one list. */
+  fun callv(method: String, arguments: List<Any?>): Any? = webGenericCall(this, method, arguments)
+
+  /** Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch. */
+  fun callDeferred(method: String, vararg args: Any?) {
+    webGenericQueue(this, "call_deferred", listOf<Any?>(method) + args)
+  }
+
+  fun getMethodArgumentCount(method: String): Long =
+    webGenericCall(this, "get_method_argument_count", listOf(method)) as Long
+
+  /**
+   * The engine instance id. Web reads it from the engine on each access (desktop captures it at
+   * construction), so it fails like any other call on a freed object; [GD.isInstanceValid] does not
+   * go through it.
+   */
+  val instanceId: Long
+    get() = webGenericCall(this, "get_instance_id", emptyList()) as Long
+
+  /**
+   * The liveness test behind the shared [GD.isInstanceValid] (task 129 E): a live script or a live
+   * browser handle, answered without crossing to the engine.
+   */
+  internal fun isInstanceLive(): Boolean {
+    val token = handle.value
+    return webScriptInstance(token) != null || isWebBrowserHandleLive(token)
   }
 
   /** Signal `script_changed`; see [TypedSignal]. */

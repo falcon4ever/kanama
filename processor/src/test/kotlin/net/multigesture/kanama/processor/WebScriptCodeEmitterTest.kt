@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 34"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 35"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -178,7 +178,28 @@ class WebScriptCodeEmitterTest {
     assertTrue(
       proxy.source.contains("installReportCallback(_kanama_handle, _kanama_report_callback)")
     )
-    assertTrue(proxy.source.contains("callable = callable.bind(callback_id, guard)"))
+    // Task 138 item 20: each lambda connection targets its own guard, so two lambdas from one
+    // script on one signal are two base callables (Godot ignores binds when keying slots).
+    assertTrue(
+      proxy.source.contains("callable = Callable(guard, \"fire\").bind(callback_id, guard)")
+    )
+    assertTrue(proxy.source.contains("\tfunc fire(...args: Array) -> void:"))
+    assertTrue(proxy.source.contains("\t\trouter.callv(method, args)"))
+    // Task 129 E: the shared GD's utility calls ride the builtin opcode (static flag 2) and run
+    // through one cached Expression per name and arity.
+    assertTrue(
+      proxy.source.contains("\tif parts[2] == \"2\":\n\t\treturn _kanama_web_utility_call(parts)")
+    )
+    assertTrue(
+      proxy.source.contains("func _kanama_web_utility_call(parts: PackedStringArray) -> String:")
+    )
+    // Task 138 item 2: Arrays, Dictionaries and Callables cross as nested Variants.
+    assertTrue(
+      proxy.source.contains(
+        "\t\tTYPE_DICTIONARY:\n\t\t\tvar entries := PackedStringArray([str(value.size())])"
+      )
+    )
+    assertTrue(proxy.source.contains("func _kanama_web_unnest(text: String) -> String:"))
     assertTrue(
       proxy.source.contains(
         "func _kanama_web_signal_dispatch1(arg: Variant, callback_id: int, _guard: Variant = null)"
@@ -807,7 +828,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 34"))
+    assertTrue(protocol.contains("\"protocolVersion\": 35"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -818,7 +839,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=34\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=35\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1939,7 +1960,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 34"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 35"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
