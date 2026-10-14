@@ -328,6 +328,17 @@ asks the engine, so it fails on a freed target instead of answering its old id, 
 `getConnections()` a Kotlin lambda connection's `callable` is its own guard object's `fire`
 method (each lambda connection has its own callable, so two lambdas can connect one signal).
 
+Two **known limits on Web**, both being fixed (desktop has neither):
+
+- An object a signal handler (or `_input`, or another callback) receives as an argument is lent to
+  your handler for the length of that call. If you store it and use it after the handler returns, it
+  is not yet valid on Web unless something inside the handler resolved it through a result. The
+  workaround is to resolve it and keep the result: `kept = GD.instanceFromId(arg.instanceId)`, then
+  store `kept`.
+- `body == player` inside a handler can be `false` on Web even when both are the same node, because
+  the argument and your own reference can be two handles of one object. Compare the ids instead:
+  `body.instanceId == player.instanceId`.
+
 ## Collections
 
 Godot collections only matter when data crosses the engine boundary. For pure

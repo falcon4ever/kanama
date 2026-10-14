@@ -420,6 +420,16 @@ same handle (`KanamaWebHandles.promoted`), so the kept result stays valid and `=
 (`getNode`, `getChild`, colliders, group and child scans) skip lent and promoted handles and mint one
 of their own kind, since an Object handle carries no node snapshots. The web3d check
 `lentHandlesSurviveTheirDispatch` pins it.
+
+*Known limits, being fixed.* (1) A lent argument that is stored and used after its handler returns is
+not yet valid on Web unless something inside the handler resolved it through a result (the promotion
+above): the dispatching proxy releases the lent handle right after the call, so a stored argument
+reads as a stale handle later. `GD.instanceFromId(arg.instanceId)` inside the handler is the
+workaround. (2) Identity is by handle token, so `body == player` inside a handler can be false: the
+lent handle of the argument and the handle a script holds for the same node are two tokens of one
+object (`GodotObject.equals` compares tokens), and scripts compare `instanceId` instead. Both are the
+user-facing limits documented in `docs/game-dev/godot-api.md` (Web section); neither is to be
+relied on once the lending mechanism changes.
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 
 **A lambda connection's Kotlin callback goes with whatever held it.** `connect { }`, `connectLong`,

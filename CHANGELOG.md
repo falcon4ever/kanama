@@ -168,6 +168,14 @@ Expressed" section with every case (294 parameters today), and the report check 
 changes without the page being regenerated, so a new required parameter, or a default that is
 gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
 
+### Known limits — Web signal and callback arguments
+
+Two things differ from desktop on Web and are being fixed. An object received as a signal or callback
+argument and stored for use after the handler returns is not yet valid unless something inside the
+handler resolved it through a result (`kept = GD.instanceFromId(arg.instanceId)` is the workaround).
+And `body == player` inside a handler can be `false` on Web even when both are the same node: compare
+`instanceId` instead. Documented in the Godot API guide (Web section) and the Web backend notes.
+
 ### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable` (task 129 E, task 138 items 2 and 4)
 
 Web kept its own `GD` (16 members) and `Mathf` (18). It now compiles the same generated `GD` as
