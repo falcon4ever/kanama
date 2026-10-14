@@ -37,7 +37,7 @@ Optional environment:
   KANAMA_GODOT_BIN=/Applications/Godot.app/Contents/MacOS/Godot
   KANAMA_IOS_DEVICE_LABEL="iPhone 15 Pro, iOS 26.5"
   KANAMA_IOS_GATE_BUNDLE_ID=net.multigesture.kanama.devicegate
-  KANAMA_IOS_SMOKE_QUIT=1|0   Launch each demo with KANAMA_DEMO_SMOKE_QUIT=1 so its SmokeQuit script
+  KANAMA_IOS_SMOKE_QUIT=1|0   Launch each demo with KANAMA_DEMO_SMOKE_QUIT=1 so its smoke script (the kotlin-src/Smoke*.kt that reads it)
                               (spawn / damage / free / quit) runs on the phone inside the console window;
                               the step then also requires the smoke's completion line (task 111).
                               Default 1; set 0 for a launch-only matrix.

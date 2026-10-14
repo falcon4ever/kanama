@@ -1,4 +1,4 @@
-import { resolveMethodId } from "../envelope.mjs";
+import { callScriptMethod, callSmokeMethod, resolveMethodId } from "../envelope.mjs";
 // demos/web3d.mjs -- 3D render-foundation smoke: observe + teardown assertions.
 //
 // The web3d scene auto-runs: Main._ready applies the platformer's Compatibility-renderer
@@ -27,7 +27,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         mainHandle: bridge.web3dMainHandle,
-        smokeQuitHandle: bridge.web3dSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         readyCount: bridge.readyCount,
         enterTreeCalls: bridge.enterTreeCalls,
         mainReady: classCount(".Main"),
@@ -242,14 +242,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       return bridge.immediateNoArgsVector3Y();
     })()`);
   trace("parity_probe");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 3); true",
-  );
+  await callScriptMethod(evaluate, exportDir, "web3d.Main", "web3dMainHandle", "parity_probe");
   const defaultYaw = await readGlobalYaw();
   trace(`parity default yaw=${defaultYaw}`);
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 4); true",
-  );
+  await callScriptMethod(evaluate, exportDir, "web3d.Main", "web3dMainHandle", "parity_model_front_look");
   const modelFrontYaw = await readGlobalYaw();
   trace(`parity model-front yaw=${modelFrontYaw}`);
   // Task 118: both aims turn the whole level (the probes aim the ROOT). Turn it back before anything else
@@ -262,14 +258,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   const HALF_PI = Math.PI / 2;
   const angleNear = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 1e-3;
 
-  // Task 76: generic callv fallback. Main.generic_probe (method#6) runs queued generic
+  // Task 76: generic callv fallback. Main.generic_probe runs queued generic
   // mutations, immediate generic read-backs, the object-return shapes under the minting
   // policy, and the generic-vs-typed crossing-cost timing, then publishes a JSON report
   // for these assertions.
   trace("generic_probe");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 6); true",
-  );
+  await callScriptMethod(evaluate, exportDir, "web3d.Main", "web3dMainHandle", "generic_probe");
   const generic = JSON.parse(
     await evaluate("globalThis.KanamaWebBridge.api.kanamaWebGenericCallProbeReport()"),
   );
@@ -432,7 +426,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     `coroutine: mask=${coroutineMask} (was ${maskBeforeArm}) pumps=${afterCoroutine.pumps} continuations=${afterCoroutine.continuations}`,
   );
 
-  // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the scene root, draining handles.
+  // Full teardown: SmokeQuit.smoke_teardown frees the scene root, draining handles.
   const demoPageProbeAfter = Number(
     await evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("demo_page_probe_after")}, 0)`,
@@ -581,9 +575,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
 
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dSmokeQuitHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "web3d.SmokeQuit", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} errs=${settled.callbackErrors}`);

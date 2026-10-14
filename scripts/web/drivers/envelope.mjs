@@ -162,6 +162,30 @@ export function resolveMethodId(exportDir, className, methodName) {
 }
 
 /**
+ * Task 131 item 17: calls a registered no-argument method on a script whose handle the bridge keeps
+ * in `handleProperty`, resolving the method id from the export manifest by NAME -- never a
+ * hard-coded position, which a new registered function silently renumbers (the call would then run
+ * a different method and still look like a pass). A missing method throws.
+ */
+export async function callScriptMethod(evaluate, exportDir, className, handleProperty, methodName) {
+  const id = resolveMethodId(exportDir, className, methodName);
+  if (id === null) {
+    throw new Error(`${className}.${methodName} is not in the export manifest (KanamaWebProtocol.generated.json)`);
+  }
+  await evaluate(
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.${handleProperty}, ${id}); true`,
+  );
+}
+
+/**
+ * Calls a registered no-argument method on the demo's smoke script (`Smoke`, or `SmokeQuit` in the
+ * demos that keep it as a scene child). The bridge captures its handle generically as `smokeHandle`.
+ */
+export function callSmokeMethod(evaluate, exportDir, className, methodName) {
+  return callScriptMethod(evaluate, exportDir, className, "smokeHandle", methodName);
+}
+
+/**
  * Merges two exercised-member censuses, summing dispatch counts (task 81).
  *
  * A navigation resets the page's bridge, so a driver that navigates more than

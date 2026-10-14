@@ -24,6 +24,8 @@
 //   wrong-audio-path  -> op 287 queries a nonexistent child: footstepsPipelineLive false
 //   no-coin           -> coin pin skipped: coinCollectedOnHud false
 
+import { callSmokeMethod } from "../envelope.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
@@ -67,7 +69,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         mainHandle: bridge.platformerMainHandle,
-        smokeQuitHandle: bridge.platformerSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         playerHandle: bridge.platformerPlayerHandle,
         hudHandle: bridge.platformerHudHandle,
         readyCount: bridge.readyCount,
@@ -232,7 +234,7 @@ function mergeSnap(peak, snap) {
   peak.callbackErrors = Math.max(peak.callbackErrors, snap.callbackErrors);
 }
 
-export async function runPlatformer({ url, evaluate, navigate, deadline }) {
+export async function runPlatformer({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
   trace("navigate");
   await navigate(`${url}?platformer=${Date.now()}`);
@@ -375,12 +377,10 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   mergeSnap(peak, await snapshot(evaluate));
   atPeak = (await snapshot(evaluate)) ?? atPeak;
 
-  // Full teardown: SmokeQuit.smoke_teardown (its only registered function, method#1) frees
+  // Full teardown: SmokeQuit.smoke_teardown frees
   // the scene root; every node exits the tree and releases its handles.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.platformerSmokeQuitHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "platformer.SmokeQuit", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);

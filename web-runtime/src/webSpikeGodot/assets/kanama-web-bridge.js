@@ -413,12 +413,15 @@
     match3TileTypeByHandle: new Map(),
     match3NodePositions: new Map(),
     match3MainHandle: 0,
+    // Task 131 item 17: every demo keeps its smoke and probe hooks (probes, harness entry points,
+    // teardown) in a script named `Smoke` (`SmokeQuit` in the older scene-child demos) that is no
+    // gameplay class. The bridge captures its handle
+    // by that name alone, in every mode; a driver resolves the method ids it calls from the export
+    // manifest (resolveMethodId), never by position.
+    smokeHandle: 0,
     dodgeMainHandle: 0,
-    dodgeSmokeQuitHandle: 0,
     web3dMainHandle: 0,
-    web3dSmokeQuitHandle: 0,
     platformerMainHandle: 0,
-    platformerSmokeQuitHandle: 0,
     // Task 81: the platformer driver drives gameplay -- the Player handle carries the
     // action press/release (ops 86/87), stance pins (142), position reads (138) and the
     // SoundFootsteps is_playing query (287); the Hud handle carries the "Coins" Label
@@ -426,7 +429,6 @@
     platformerPlayerHandle: 0,
     platformerHudHandle: 0,
     squashMainHandle: 0,
-    squashSmokeQuitHandle: 0,
     // Task 81: the squash driver drives gameplay -- the Player handle carries movement
     // injection and stance pins; the ScoreLabel handle carries the score text read (288);
     // the Mob handle is the LATEST ready mob, the driver's squash target. Mobs free
@@ -435,21 +437,16 @@
     squashPlayerHandle: 0,
     squashScoreLabelHandle: 0,
     squashMobHandle: 0,
-    fpsSmokeHandle: 0,
     fpsPlayerHandle: 0,
-    charSmokeQuitHandle: 0,
     charPlayerHandle: 0,
-    tpSmokeQuitHandle: 0,
     tpPlayerHandle: 0,
     tpDemoPageHandle: 0,
     tpsMainHandle: 0,
     tpsMenuHandle: 0,
     tpsLevelHandle: 0,
     tpsPlayerHandle: 0,
-    racingSmokeHandle: 0,
     racingVehicleHandle: 0,
     racingViewHandle: 0,
-    cbSmokeHandle: 0,
     cbBuilderHandle: 0,
     // _physics_process/_process ordering evidence (Task 60d): Godot's iteration runs all
     // physics ticks BEFORE the idle/_process pass inside one requestAnimationFrame callback,
@@ -1249,6 +1246,7 @@
         0,
       );
       if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
+      if (result === 1 && handle === this.smokeHandle) this.smokeHandle = 0;
       if (result === 1 && handle === this.match3AudioHandle) this.match3AudioHandle = 0;
       if (result === 1) this.teardownScriptHandles(handle, scriptName);
       return result;
@@ -3037,28 +3035,16 @@
           bucket[memberKey] = (bucket[memberKey] ?? 0) + count;
         }
       }
+      if (scriptName.endsWith(".Smoke") || scriptName.endsWith(".SmokeQuit")) this.smokeHandle = handle;
       if (this.mode === "dodge" && scriptName.endsWith(".Main")) {
         // The Web smoke drives gameplay from the browser driver (dodge's SmokeQuit
         // gate reads an env var, which Kotlin/Wasm cannot; the driver calls new_game
         // through this handle instead, mirroring bunnymark's method-call driving).
         this.dodgeMainHandle = handle;
       }
-      if (this.mode === "dodge" && scriptName.endsWith(".SmokeQuit")) {
-        // The driver calls SmokeQuit.smoke_teardown (method#1) through this handle to
-        // quit the SceneTree and drain live handles to zero for the teardown assertion.
-        this.dodgeSmokeQuitHandle = handle;
-      }
       if (this.mode === "web3d" && scriptName.endsWith(".Main")) this.web3dMainHandle = handle;
-      if (this.mode === "web3d" && scriptName.endsWith(".SmokeQuit")) {
-        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
-        // drain live handles to zero for the render smoke's teardown assertion.
-        this.web3dSmokeQuitHandle = handle;
-      }
       if (this.mode === "platformer" && scriptName.endsWith(".Main")) {
         this.platformerMainHandle = handle;
-      }
-      if (this.mode === "platformer" && scriptName.endsWith(".SmokeQuit")) {
-        this.platformerSmokeQuitHandle = handle;
       }
       if (this.mode === "platformer" && scriptName.endsWith(".Player")) {
         // Task 81: the driver injects movement (ops 86/87), pins the stance (142), reads
@@ -3072,11 +3058,6 @@
       }
       if (this.mode === "squash" && scriptName.endsWith(".Main")) {
         this.squashMainHandle = handle;
-      }
-      if (this.mode === "squash" && scriptName.endsWith(".SmokeQuit")) {
-        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the scene root and
-        // drain live handles to zero for the teardown assertion.
-        this.squashSmokeQuitHandle = handle;
       }
       if (this.mode === "squash" && scriptName.endsWith(".Player")) {
         // Task 81: movement injection, stance pins, and position reads ride this handle.
@@ -3093,36 +3074,17 @@
         // tolerates a stale-handle throw rather than the bridge tracking frees here.
         this.squashMobHandle = handle;
       }
-      if (this.mode === "fps" && scriptName.endsWith(".Smoke")) {
-        // The scene-root Smoke script's smoke_teardown (method#1) frees the Audio autoload
-        // and the scene root, draining live handles to zero.
-        this.fpsSmokeHandle = handle;
-      }
       if (this.mode === "fps" && scriptName.endsWith(".Player")) {
         this.fpsPlayerHandle = handle;
       }
-      if (this.mode === "charactercontroller" && scriptName.endsWith(".SmokeQuit")) {
-        // The driver calls SmokeQuit.smoke_teardown (method#1) to free the Events autoload
-        // and the scene root, draining live handles to zero.
-        this.charSmokeQuitHandle = handle;
-      }
       if (this.mode === "charactercontroller" && scriptName.endsWith(".Player3DTemplate")) {
         this.charPlayerHandle = handle;
-      }
-      if (this.mode === "thirdperson" && scriptName.endsWith(".SmokeQuit")) {
-        // smoke_resume (method#1) presses through the boot pause; smoke_teardown (method#2)
-        // frees the scene root and drains live handles to zero.
-        this.tpSmokeQuitHandle = handle;
       }
       if (this.mode === "thirdperson" && scriptName.endsWith(".Player")) {
         this.tpPlayerHandle = handle;
       }
       if (this.mode === "thirdperson" && scriptName.endsWith(".DemoPage")) {
         this.tpDemoPageHandle = handle;
-      }
-      if (this.mode === "racing" && scriptName.endsWith(".Smoke")) {
-        // smoke_teardown (method#1) frees the scene root for the teardown assertion.
-        this.racingSmokeHandle = handle;
       }
       if (this.mode === "racing" && scriptName.endsWith(".Vehicle")) {
         // The player vehicle uses the base class (trucks/motorcycle variants subclass it).
@@ -3134,9 +3096,7 @@
         this.racingViewHandle = handle;
       }
       if (this.mode === "tpsdemo" && scriptName.endsWith(".Main")) {
-        // The scene root pumps the frame scheduler and hosts the harness entry points:
-        // smoke_start_game (method#1) presses Play, smoke_teardown (method#2) releases the
-        // cached scenes plus the settings ConfigFile and frees the root.
+        // The scene root pumps the frame scheduler.
         this.tpsMainHandle = handle;
       }
       if (this.mode === "tpsdemo" && scriptName.endsWith(".Menu")) {
@@ -3148,11 +3108,6 @@
       if (this.mode === "tpsdemo" && scriptName.endsWith(".Player")) {
         // The player body is the driver's movement evidence (opcode 138 on this handle).
         this.tpsPlayerHandle = handle;
-      }
-      if (this.mode === "citybuilder" && scriptName.endsWith(".Smoke")) {
-        // smoke_teardown (method#1) frees the Audio autoload, releases hydrated structure
-        // assets, and frees the scene root for the teardown assertion.
-        this.cbSmokeHandle = handle;
       }
       if (this.mode === "citybuilder" && scriptName.endsWith(".Builder")) {
         // The driver reads the gridmap/selector property handles off the Builder to
