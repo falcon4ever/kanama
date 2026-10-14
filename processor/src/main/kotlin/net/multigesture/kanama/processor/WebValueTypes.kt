@@ -128,7 +128,9 @@ internal object WebValueTypes {
     }
     appendLine("\treturn null")
     appendLine()
-    appendLine("func $PACK_VARIANT(value: Variant, transient: Array[int], result := false) -> String:")
+    appendLine(
+      "func $PACK_VARIANT(value: Variant, transient: Array[int], result := false) -> String:"
+    )
     appendLine("\t# Task 134 D1: one Variant as `<Variant.Type>:<payload>` (a signal argument, a")
     appendLine("\t# builtin call's result); an object crosses as its bridge handle id. A call's")
     appendLine("\t# [result] keeps the handles of the objects in it (see $PACK_HELD_OBJECT).")
@@ -250,11 +252,19 @@ internal object WebValueTypes {
       "\treturn text.replace(\"%1F\", \"\\u001f\").replace(\"%2C\", \",\").replace(\"%25\", \"%\")"
     )
     appendLine()
-    appendLine("func $PACK_HELD_OBJECT(value: Object, transient: Array[int], result := false) -> int:")
-    appendLine("\t# Any object in a Variant: its script handle, else the handle already tracking it")
+    appendLine(
+      "func $PACK_HELD_OBJECT(value: Object, transient: Array[int], result := false) -> int:"
+    )
+    appendLine(
+      "\t# Any object in a Variant: its script handle, else the handle already tracking it"
+    )
     appendLine("\t# (which this script now holds too), so a repeated query reuses one handle and")
-    appendLine("\t# keeps the object's identity. An untracked one: a signal argument rides a transient")
-    appendLine("\t# handle the dispatch releases; a call's result (task 129 E review B2) gets a handle")
+    appendLine(
+      "\t# keeps the object's identity. An untracked one: a signal argument rides a transient"
+    )
+    appendLine(
+      "\t# handle the dispatch releases; a call's result (task 129 E review B2) gets a handle"
+    )
     appendLine("\t# of its kind owned by this script, as a generic call's object return does.")
     appendLine("\tif value == null:")
     appendLine("\t\treturn 0")
@@ -277,8 +287,12 @@ internal object WebValueTypes {
     appendLine("\telif value is Resource:")
     appendLine("\t\tkind = \"resource\"")
     appendLine("\tvar minted := int(_kanama_bridge.mintGenericHandle(_kanama_handle, kind))")
-    appendLine("\t# A lambda connection's guard (getConnections) is held by its connection alone: a weak")
-    appendLine("\t# entry ([WeakRef], unwrapped by _kanama_live_object), so the answer does not keep it,")
+    appendLine(
+      "\t# A lambda connection's guard (getConnections) is held by its connection alone: a weak"
+    )
+    appendLine(
+      "\t# entry ([WeakRef], unwrapped by _kanama_live_object), so the answer does not keep it,"
+    )
     appendLine("\t# and its Kotlin callback, alive.")
     appendLine("\tvar guard := \"router_handle\" in value and \"callback_id\" in value")
     appendLine("\t_kanama_object_handles[minted] = [weakref(value)] if guard else value")

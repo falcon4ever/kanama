@@ -4456,7 +4456,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar object_handle := int(args[1])")
     // Review N8: the builtin / utility call is the hottest arm and needs no receiver: first.
     appendLine("\tif opcode == $BUILTIN_CALL_OPCODE:")
-    appendLine("\t\t# Task 134 D1: one value-type (builtin) method or utility function run by the engine.")
+    appendLine(
+      "\t\t# Task 134 D1: one value-type (builtin) method or utility function run by the engine."
+    )
     appendLine("\t\t_kanama_bridge.recordImmediateStringResult($BUILTIN_CALL(String(args[2])))")
     appendLine("\t\t_kanama_bridge.recordImmediateLongResult(1)")
     appendLine("\t\treturn 1")
