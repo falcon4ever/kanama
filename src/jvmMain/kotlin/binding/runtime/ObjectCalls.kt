@@ -2358,7 +2358,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVariantAndBoolArgRetBool(
+  actual fun ptrcallWithVariantAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -8354,7 +8354,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (String, int64) args and Object return value. */
-  fun ptrcallWithStringAndLongArgsRetObject(
+  actual fun ptrcallWithStringAndLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -8378,7 +8378,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringLongStringArgsRetObject(
+  actual fun ptrcallWithStringLongStringArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -8407,7 +8407,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringTwoLongArgsRetObject(
+  actual fun ptrcallWithStringTwoLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -8435,7 +8435,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringLongByteArrayByteArrayArgsRetObject(
+  actual fun ptrcallWithStringLongByteArrayByteArrayArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -8469,7 +8469,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithLongTwoStringBoolArgsRetObject(
+  actual fun ptrcallWithLongTwoStringBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -9784,7 +9784,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with two String args and decodes PackedByteArray return. */
-  fun ptrcallWithTwoStringArgsRetByteArray(
+  actual fun ptrcallWithTwoStringArgsRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -9971,7 +9971,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with two String args, one int32 arg, and int64 return value. */
-  fun ptrcallWithTwoStringAndIntArgsRetLong(
+  actual fun ptrcallWithTwoStringAndIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -10398,7 +10398,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with one PackedByteArray arg and bool return value. */
-  fun ptrcallWithByteArrayArgRetBool(
+  actual fun ptrcallWithByteArrayArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -10760,7 +10760,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (PackedStringArray, String) args and bool return value. */
-  fun ptrcallWithPackedStringListAndStringArgsRetBool(
+  actual fun ptrcallWithPackedStringListAndStringArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<String>,
@@ -12620,7 +12620,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (String, String, String) args and int64 return value. */
-  fun ptrcallWithThreeStringArgsRetLong(
+  actual fun ptrcallWithThreeStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -13764,7 +13764,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (String, String, PackedByteArray) args and int64 return value. */
-  fun ptrcallWithTwoStringAndByteArrayArgsRetLong(
+  actual fun ptrcallWithTwoStringAndByteArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,

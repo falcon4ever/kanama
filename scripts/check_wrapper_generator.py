@@ -465,20 +465,8 @@ def check_ios_policies(output_dir: Path) -> int:
               "(receiver-side use-after-close guard regressed)", file=sys.stderr)
         return 1
 
-    # The collision probe: a class PER_PLATFORM_WRAPPERS marks `collision` on iOS (hand-written
-    # inside IosGodotApi.kt or a bespoke file) must NOT be emitted by the iOS renderer, and the
-    # refusal must be reported. FileAccess (the iOS hand facade + FileAccessHandle glue) is the last
-    # collision class: it replaced ResourceLoader here when task 129 C generated ResourceLoader once,
-    # as ResourceLoader had replaced SceneTree (task 117 P1'(b1)).
-    collision = _gen_ios(policy_dir, "FileAccess")
-    if (policy_dir / "FileAccess.kt").exists():
-        print("[wrapper_generator] FAIL FileAccess.kt emitted despite being hand-written "
-              "(collision policy regressed)", file=sys.stderr)
-        return 1
-    if "collision: FileAccess is hand-written" not in collision.stderr:
-        print("[wrapper_generator] FAIL FileAccess collision not reported "
-              "(collision policy regressed)", file=sys.stderr)
-        return 1
+    # No collision probe since task 129 D: FileAccess, the last class PER_PLATFORM_WRAPPERS marked
+    # `collision` on iOS, is generated once, and the table is empty.
     return 0
 
 

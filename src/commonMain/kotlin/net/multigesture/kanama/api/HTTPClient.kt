@@ -96,6 +96,11 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
         return GodotError(ObjectCalls.ptrcallWithLongStringPackedStringListStringArgsRetLong(Binds.requestBind, segment, method.value, url, headers, body))
     }
 
+    /**
+     * Closes the current connection, allowing reuse of this `HTTPClient`.
+     *
+     * Generated from Godot docs: HTTPClient.close
+     */
     fun closeConnection() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)

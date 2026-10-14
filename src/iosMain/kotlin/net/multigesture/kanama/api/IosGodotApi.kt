@@ -17,10 +17,6 @@ import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.get
 import kotlinx.cinterop.value
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect_callable
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect_callable
@@ -28,45 +24,9 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_is_instance_id_valid
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_get_instance_id
-import kotlin.coroutines.CoroutineContext
 
-/**
- * Deprecated, no longer applied to any Kanama API (task 97; the generated iOS `RefCounted.close()`
- * dropped it in task 103). Kept so an existing `@OptIn(ManualGodotLifetimeApi::class)` still
- * compiles; delete the opt-in, nothing replaces it.
- */
-@Deprecated("No longer required; close() is the documented contract (docs/game-dev/godot-api.md#resource-ownership)")
-@Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
-annotation class ManualGodotLifetimeApi
-
-// KanamaScript is common code since task 133 (src/commonMain/.../api/KanamaScript.kt).
-
-// KANAMA-IOS-HANDWRITTEN: [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json.
-// An exception escaping a coroutine is reported as a Godot script error with the game's file:line
-// (task 131 item 10), like desktop; before, the default handler terminated the app.
-// Internal since task 133: it backs KanamaScript.scriptScope (ScriptRuntime.newScriptScope).
-internal class KanamaScope : CoroutineScope {
-    private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext =
-        Dispatchers.Main + job + kotlinx.coroutines.CoroutineExceptionHandler { context, throwable ->
-            val name = context[kotlinx.coroutines.CoroutineName]?.name
-            IosScriptErrors.report(
-                throwable,
-                if (name.isNullOrEmpty()) "KanamaScope coroutine" else "KanamaScope coroutine $name",
-            )
-        }
-
-    fun cancel() {
-        job.cancel()
-    }
-}
-
-inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =
-    net.multigesture.kanama.ios.iosScriptInstanceForOwner(handle.segment.address()) as? T
-
-inline fun <reified T> Node.kotlinScriptInstance(): T? =
-    GodotObject(handle).kotlinScriptInstance<T>()
+// KanamaScript (task 133), and KanamaScope, kotlinScriptInstance and ManualGodotLifetimeApi
+// (task 129 D) are common code in src/commonMain/.../api.
 
 @OptIn(ExperimentalForeignApi::class)
 // KANAMA-IOS-HANDWRITTEN: [seam] thin cinterop facade over the C shim entry points the runtime and

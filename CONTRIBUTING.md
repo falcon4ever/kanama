@@ -244,7 +244,7 @@ When the limitation is machine-checkable, do not rely on the grep habit — writ
 the claim so `scripts/audit_stale_blockers.py` can re-check it every run:
 
 ```
-KANAMA-BLOCKED(since:2026-07-13, symbol:DirAccessHandle@ios): iOS carries no DirAccessHandle
+KANAMA-BLOCKED(since:2026-07-13, symbol:OpenXRInterface@web): the Web backend carries no OpenXRInterface
 ```
 
 The audit is inverted on purpose: it **fails when the blocker no longer holds**,

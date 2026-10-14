@@ -246,7 +246,7 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
          *
          * Generated from Godot docs: PhysicsRayQueryParameters3D.create
          */
-        fun create(from: Vector3, to: Vector3, collisionMask: Long = 4294967295L, exclude: List<RID>): PhysicsRayQueryParameters3D? {
+        fun create(from: Vector3, to: Vector3, collisionMask: Long = 4294967295L, exclude: List<RID> = emptyList()): PhysicsRayQueryParameters3D? {
             return PhysicsRayQueryParameters3D.wrapOwned(ObjectCalls.ptrcallWithTwoVector3UInt32RIDListArgsRetObject(Binds.createBind, NULL_SEGMENT, from, to, collisionMask, exclude))
         }
 

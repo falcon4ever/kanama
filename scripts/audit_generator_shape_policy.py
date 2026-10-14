@@ -692,12 +692,7 @@ def refcounted_classes() -> set[str]:
             name = parents.get(name)
         return False
 
-    # The hand-shaped FileAccess/DirAccess handle classes stand for Godot's FileAccess/DirAccess.
-    return {name for name in parents if is_refcounted(name)} | {"RefCounted", *REFCOUNTED_ALIASES}
-
-
-# Hand-written RefCounted wrapper classes with no Godot class of their own name.
-REFCOUNTED_ALIASES = {"FileAccessHandle": "FileAccess", "DirAccessHandle": "DirAccess"}
+    return {name for name in parents if is_refcounted(name)} | {"RefCounted"}
 
 
 WRAP_CALL = re.compile(r"(?<![\w])(?:(\w+)\.)?(wrap|wrapOwned|wrapBorrowed)\(\s*")
@@ -899,9 +894,6 @@ def _positive_return_problems(roots: tuple[Path, ...], refcounted: set[str]) -> 
         if not paths:
             continue
         texts = [(p, p.read_text(encoding="utf-8")) for p in paths]
-        for alias, godot_name in REFCOUNTED_ALIASES.items():
-            if godot_name == cls["name"]:
-                texts += [(p, p.read_text(encoding="utf-8")) for p in files.get(alias, [])]
         for method in cls.get("methods", []):
             ret = (method.get("return_value") or {}).get("type", "")
             if ret not in refcounted:

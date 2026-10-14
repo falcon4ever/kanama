@@ -4,7 +4,9 @@ import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.AudioStreamWAV
 import net.multigesture.kanama.api.BoxMesh
 import net.multigesture.kanama.api.BoxShape3D
+import net.multigesture.kanama.api.DirAccess
 import net.multigesture.kanama.api.Engine
+import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -23,6 +25,8 @@ import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.ResourceSaver
 import net.multigesture.kanama.api.ShaderMaterial
 import net.multigesture.kanama.api.SurfaceTool
+import net.multigesture.kanama.api.castOrNull
+import net.multigesture.kanama.builtins.md5Text
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import platform.posix.usleep
@@ -318,7 +322,282 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
   )
   mismatch?.close()
 
+  fileAccessRows(check)
+
   check("wrappers-once(no kanama_ios_fault raised)", ObjectCalls.faultCount() == faultsBefore)
+}
+
+/**
+ * Task 129 D: FileAccess and DirAccess are generated RefCounted classes with companion statics on
+ * every platform. iOS had 11 FileAccess members and no DirAccess before; these rows go through the
+ * generated instance methods, the statics and the owned `open()` result (closed by `use { }`).
+ */
+private fun fileAccessRows(check: (String, Boolean) -> Unit) {
+  val dir = "user://kanama_selftest_files"
+  val path = "$dir/notes.txt"
+  val made = DirAccess.makeDirRecursiveAbsolute(dir)
+  val wrote =
+    FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use { file ->
+      file.storeString("alpha") && file.storeLine("beta")
+    } ?: false
+  val read =
+    FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { file ->
+      Triple(file.getLength(), file.getLine(), file.getAsText())
+    }
+  checkParts(
+    check,
+    "file-access(open user:// WRITE storeString+storeLine, use{} closes; READ getLength 10, getLine alphabeta, getAsText)",
+    "makeDir" to ((made == GodotError.OK) to "$made"),
+    "write" to (wrote to "$wrote"),
+    "length" to ((read?.first == 10L) to "${read?.first}"),
+    "line" to ((read?.second == "alphabeta") to "${read?.second}"),
+    "text" to ((read?.third == "alphabeta\n") to "${read?.third}"),
+  )
+
+  val missing = FileAccess.open("$dir/missing.txt", FileAccess.ModeFlags.READ)
+  val openError = FileAccess.getOpenError()
+  checkParts(
+    check,
+    "file-access(open of a missing file -> null, getOpenError ERR_FILE_NOT_FOUND)",
+    "null" to ((missing == null) to "$missing"),
+    "error" to ((openError == GodotError.ERR_FILE_NOT_FOUND) to "$openError"),
+  )
+  missing?.close()
+
+  val md5 = FileAccess.getMd5(path)
+  checkParts(
+    check,
+    "file-access(statics fileExists, getFileAsString, getFileAsBytes 10, getSize 10, getMd5 == md5Text)",
+    "exists" to (FileAccess.fileExists(path) to "${FileAccess.fileExists(path)}"),
+    "string" to
+      ((FileAccess.getFileAsString(path) == "alphabeta\n") to FileAccess.getFileAsString(path)),
+    "bytes" to
+      ((FileAccess.getFileAsBytes(path).size == 10) to "${FileAccess.getFileAsBytes(path).size}"),
+    "size" to ((FileAccess.getSize(path) == 10L) to "${FileAccess.getSize(path)}"),
+    "md5" to ((md5 == "alphabeta\n".md5Text()) to md5),
+  )
+
+  val walked = mutableListOf<String>()
+  val listed =
+    DirAccess.open(dir)?.use { d ->
+      if (d.listDirBegin() == GodotError.OK) {
+        while (true) {
+          val name = d.getNext()
+          if (name.isEmpty()) break
+          walked += name
+        }
+        d.listDirEnd()
+      }
+      d.getFiles() to d.fileExists("notes.txt")
+    }
+  checkParts(
+    check,
+    "dir-access(open -> getFiles, listDirBegin/getNext walk and DirAccess.getFilesAt all list notes.txt)",
+    "getFiles" to ((listed?.first == listOf("notes.txt")) to "${listed?.first}"),
+    "fileExists" to ((listed?.second == true) to "${listed?.second}"),
+    "walk" to (("notes.txt" in walked) to "$walked"),
+    "getFilesAt" to
+      ((DirAccess.getFilesAt(dir) == listOf("notes.txt")) to "${DirAccess.getFilesAt(dir)}"),
+  )
+
+  fileAccessCloseRows(check, path)
+  fileAccessIoRows(check, dir)
+  cursorReadRows(check, dir)
+
+  val removedFile = DirAccess.removeAbsolute(path)
+  val removedDir = DirAccess.removeAbsolute(dir)
+  checkParts(
+    check,
+    "dir-access(removeAbsolute file and dir -> OK, dirExistsAbsolute false after)",
+    "file" to ((removedFile == GodotError.OK) to "$removedFile"),
+    "dir" to ((removedDir == GodotError.OK) to "$removedDir"),
+    "gone" to
+      DirAccess.dirExistsAbsolute(dir).let { exists -> !exists to "dirExistsAbsolute=$exists" },
+  )
+}
+
+/**
+ * Task 129 D: `FileAccess.close()` closes the file as GDScript's `file.close()` does, also through
+ * a borrowed `fromHandle` view and while a second reference (`castOrNull`) keeps the object alive.
+ */
+private fun fileAccessCloseRows(check: (String, Boolean) -> Unit, path: String) {
+  val owner = FileAccess.open(path, FileAccess.ModeFlags.WRITE)
+  owner?.storeString("gamma")
+  owner?.let { FileAccess.fromHandle(it.handle) }?.close()
+  val viewClosed = owner?.isOpen()
+  val viewText = FileAccess.getFileAsString(path)
+  owner?.close()
+  checkParts(
+    check,
+    "file-access(close() on a borrowed fromHandle view closes the file: owner isOpen false, write flushed)",
+    "opened" to ((owner != null) to "$owner"),
+    "isOpen" to ((viewClosed == false) to "$viewClosed"),
+    "text" to ((viewText == "gamma") to viewText),
+  )
+
+  val first = FileAccess.open(path, FileAccess.ModeFlags.WRITE)
+  first?.storeString("delta")
+  val second = first?.castOrNull<FileAccess>()
+  val refs = first?.getReferenceCount()
+  second?.close()
+  val secondClosed = first?.isOpen()
+  val secondText = FileAccess.getFileAsString(path)
+  first?.close()
+  checkParts(
+    check,
+    "file-access(close() while a second reference holds the object closes the file: refs 2, isOpen false, write flushed)",
+    "refs" to ((refs == 2) to "$refs"),
+    "isOpen" to ((secondClosed == false) to "$secondClosed"),
+    "text" to ((secondText == "delta") to secondText),
+  )
+}
+
+/** Task 129 D: FileAccess members iOS gained (it had 11 of Godot's 68), write then read back. */
+private fun fileAccessIoRows(check: (String, Boolean) -> Unit, dir: String) {
+  val path = "$dir/io.bin"
+  val bytes = byteArrayOf(1, 2, 3, 4)
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use { it.storeBuffer(bytes) }
+  val readBytes = FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.getBuffer(4L) }
+  checkParts(
+    check,
+    "file-access(storeBuffer/getBuffer round trip of 4 bytes)",
+    "bytes" to ((readBytes?.contentEquals(bytes) == true) to "${readBytes?.toList()}"),
+  )
+
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use {
+    it.storeVar("variant-smoke")
+    it.storeVar(42L)
+  }
+  val vars = FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.getVar() to it.getVar() }
+  checkParts(
+    check,
+    "file-access(storeVar/getVar round trip of a String and an int)",
+    "string" to ((vars?.first == "variant-smoke") to "${vars?.first}"),
+    "int" to ((vars?.second == 42L) to "${vars?.second}"),
+  )
+
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use {
+    it.storeCsvLine(listOf("alpha", "beta"))
+  }
+  val csv = FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { it.getCsvLine() }
+  checkParts(
+    check,
+    "file-access(storeCsvLine/getCsvLine round trip alpha,beta)",
+    "csv" to ((csv == listOf("alpha", "beta")) to "$csv"),
+  )
+
+  val temp = FileAccess.createTemp(FileAccess.ModeFlags.WRITE_READ, "kanama", "txt")
+  val tempPath = temp?.getPathAbsolute().orEmpty()
+  val tempStored = temp?.storeString("temp") ?: false
+  temp?.seek(0L)
+  val tempText = temp?.getAsText().orEmpty()
+  temp?.close()
+  checkParts(
+    check,
+    "file-access(createTemp WRITE_READ: open, path set, storeString then getAsText reads it back)",
+    "opened" to ((temp != null) to "$temp"),
+    "path" to (tempPath.isNotEmpty() to tempPath),
+    "store" to (tempStored to "$tempStored"),
+    "text" to ((tempText == "temp") to tempText),
+  )
+
+  val compressed = "$dir/compressed.bin"
+  val compressedWrote =
+    FileAccess.openCompressed(compressed, FileAccess.ModeFlags.WRITE)?.use {
+      it.storeString("packed")
+    }
+  val compressedText =
+    FileAccess.openCompressed(compressed, FileAccess.ModeFlags.READ)?.use { it.getAsText() }
+  val compressedCleanup = DirAccess.removeAbsolute(compressed)
+  checkParts(
+    check,
+    "file-access(openCompressed WRITE then READ round trip, FASTLZ)",
+    "write" to ((compressedWrote == true) to "$compressedWrote"),
+    "text" to ((compressedText == "packed") to "$compressedText"),
+    "cleanup" to ((compressedCleanup == GodotError.OK) to "$compressedCleanup"),
+  )
+
+  val encrypted = "$dir/encrypted.bin"
+  val encryptedWrote =
+    FileAccess.openEncryptedWithPass(encrypted, FileAccess.ModeFlags.WRITE, "kanama-pass")?.use {
+      it.storeString("secret")
+    }
+  val encryptedText =
+    FileAccess.openEncryptedWithPass(encrypted, FileAccess.ModeFlags.READ, "kanama-pass")?.use {
+      it.getAsText()
+    }
+  val encryptedCleanup = DirAccess.removeAbsolute(encrypted)
+  checkParts(
+    check,
+    "file-access(openEncryptedWithPass WRITE then READ round trip)",
+    "write" to ((encryptedWrote == true) to "$encryptedWrote"),
+    "text" to ((encryptedText == "secret") to "$encryptedText"),
+    "cleanup" to ((encryptedCleanup == GodotError.OK) to "$encryptedCleanup"),
+  )
+  DirAccess.removeAbsolute(path)
+}
+
+/**
+ * Task 129 D: getters that advance a cursor (`FileAccess.getLine`, `DirAccess.getNext`) run the
+ * Godot method once per Kotlin call. The no-arg String read-back used to call it twice (measure,
+ * then fill), so each call skipped one line / entry and returned "". Two reads in sequence must
+ * return the first and the second value.
+ */
+private fun cursorReadRows(check: (String, Boolean) -> Unit, dir: String) {
+  val path = "$dir/lines.txt"
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use {
+    it.storeLine("one")
+    it.storeLine("two")
+  }
+  // The cursor is read after EACH getLine: "one\n" is 4 bytes, so a getLine that ran the engine
+  // method twice would leave it at 8 after the first call, not 4: the cursor proves the count of
+  // engine calls independently of the values read.
+  val lines =
+    FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { file ->
+      val first = file.getLine()
+      val afterFirst = file.getPosition().toString()
+      val second = file.getLine()
+      listOf(first, second, afterFirst, file.getPosition().toString())
+    }
+  val linesCleanup = DirAccess.removeAbsolute(path)
+  checkParts(
+    check,
+    "file-access(getLine twice reads one then two: one engine call per getLine)",
+    "first" to ((lines?.get(0) == "one") to "${lines?.get(0)}"),
+    "second" to ((lines?.get(1) == "two") to "${lines?.get(1)}"),
+    "position after one getLine" to ((lines?.get(2) == "4") to "${lines?.get(2)}"),
+    "position after two getLine" to ((lines?.get(3) == "8") to "${lines?.get(3)}"),
+    "cleanup" to ((linesCleanup == GodotError.OK) to "$linesCleanup"),
+  )
+
+  val walkDir = "$dir/walk"
+  val made = DirAccess.makeDirRecursiveAbsolute(walkDir)
+  FileAccess.open("$walkDir/a.txt", FileAccess.ModeFlags.WRITE)?.use { it.storeString("a") }
+  FileAccess.open("$walkDir/b.txt", FileAccess.ModeFlags.WRITE)?.use { it.storeString("b") }
+  val walked = mutableListOf<String>()
+  DirAccess.open(walkDir)?.use { d ->
+    if (d.listDirBegin() == GodotError.OK) {
+      while (walked.size < 8) {
+        val name = d.getNext()
+        if (name.isEmpty()) break
+        walked += name
+      }
+      d.listDirEnd()
+    }
+  }
+  val walkCleanup =
+    listOf(
+      DirAccess.removeAbsolute("$walkDir/a.txt"),
+      DirAccess.removeAbsolute("$walkDir/b.txt"),
+      DirAccess.removeAbsolute(walkDir),
+    )
+  checkParts(
+    check,
+    "dir-access(getNext walk of two files returns both: one engine call per getNext)",
+    "makeDir" to ((made == GodotError.OK) to "$made"),
+    "walk" to ((walked.sorted() == listOf("a.txt", "b.txt")) to "$walked"),
+    "cleanup" to (walkCleanup.all { it == GodotError.OK } to "$walkCleanup"),
+  )
 }
 
 private fun <T : RefCounted> newRef(className: String, wrap: (GodotHandle) -> T): T =

@@ -429,6 +429,11 @@ stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, t
 # *Dispatch function, which also calls the entry point's _static sibling.
 python3 "$ROOT_DIR/scripts/check_ios_static_dispatch.py"
 
+stage "iOS read-backs run the Godot method once (no measure-then-fill double call, task 129 D)"
+# The old no-arg String / Packed*Array read-backs called the method twice (a NULL-buffer measure,
+# then a fill), so FileAccess.get_line / DirAccess.get_next lost a line or an entry on the phone.
+python3 "$ROOT_DIR/scripts/check_ios_single_call_returns.py"
+
 stage "iOS shim fault coverage (no guarded early return is silent, task 124)"
 # The bridge's default failure mode was silence: 131 exported entry points open with guards that
 # returned 0 / -1 / nothing when the API had not resolved, the bind was zero, the instance was
