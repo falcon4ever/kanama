@@ -306,7 +306,25 @@
     // slow motion while frames keep ticking. A gate that waits a fixed number of
     // wall seconds is really waiting for an unknown amount of gameplay, and this
     // is the number that says which.
-    simSeconds: 0,
+    //
+    // It is the GAME's time, once per engine frame, NOT once per scripted handle: `process` and
+    // `physicsFrame` run for every scripted node, so adding `delta` in each of them made the sum scale
+    // with the number of scripted nodes (dodge's mobs: 4-7x game time; task 138 item 33 review). One clock
+    // is kept: the _process (render frame) clock when any script ran `process()`, else the fixed-step
+    // _physics_process clock. They are never added together, which would count the same game time twice.
+    // WebScriptCodeEmitter emits `_process` for EVERY proxy (whatever the script declares), and `frame()` hands
+    // it to `process()`, so every demo that dispatches at all, the physics-driven controllers included, runs
+    // the _process clock. The physics clock is only the fallback for a run where no `process()` happened:
+    // the spike benchmark (`spikeBenchmarkFrame` bypasses `process()`) and a scene whose only proxies are
+    // match3 board Tiles (their `frame()` returns before `process()`).
+    simProcessSeconds: 0,
+    simPhysicsSeconds: 0,
+    simProcessRafTick: -1, // the engine frame whose _process delta is already in simProcessSeconds
+    simPhysicsRafTick: -1, // the engine frame whose first physics step's handle is the physics clock's
+    simPhysicsClockHandle: 0, // the handle whose physicsFrame calls advance the physics clock this frame
+    get simSeconds() {
+      return this.processCalls > 0 ? this.simProcessSeconds : this.simPhysicsSeconds;
+    },
     noArgCalls: 0,
     // Task 80 slice 2: how often the two new registered-method crossings actually ran. A
     // driver can otherwise only see the SIDE EFFECT of a dispatched method, never the dispatch.
@@ -845,7 +863,11 @@
     process(handle, delta) {
       this.lastProcessRafTick = this.rafTick;
       this.processCalls += 1;
-        this.simSeconds += delta;
+      if (this.simProcessRafTick !== this.rafTick) {
+        // the first _process of this engine frame carries the frame's delta; the other scripted nodes' do not add
+        this.simProcessRafTick = this.rafTick;
+        this.simProcessSeconds += delta;
+      }
       const started = performance.now();
       const result = this.invoke(
         handle,
@@ -862,10 +884,17 @@
       // Godot's fixed physics tick: run the script's _physics_process (character controllers
       // set velocity + move_and_slide here). Applies to every mode with a physics-body script.
       this.physicsProcessCalls = (this.physicsProcessCalls ?? 0) + 1;
-      // Physics-driven demos (character controllers, racing, third-person) run their
-      // script work here and never touch _process, so simulated time must accumulate
-      // on this path too or those demos report zero.
-      this.simSeconds += delta;
+      // The physics clock is the fallback for a run with no `process()` calls (the spike benchmark, a
+      // match3 scene of Tiles only): every other proxy also emits `_process` (WebScriptCodeEmitter), so the
+      // physics-driven demos (character controllers, racing, third-person) are timed by the _process clock
+      // and this one is not read for them. One step is one delta however many scripted
+      // nodes run it: the first handle to run in an engine frame is the clock, and its later calls in
+      // the same frame (a catch-up step) are the further steps.
+      if (this.simPhysicsRafTick !== this.rafTick) {
+        this.simPhysicsRafTick = this.rafTick;
+        this.simPhysicsClockHandle = handle;
+      }
+      if (handle === this.simPhysicsClockHandle) this.simPhysicsSeconds += delta;
       return this.invoke(
         handle,
         "_physics_process",

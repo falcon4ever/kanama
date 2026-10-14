@@ -7,9 +7,16 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 
 /**
+ * Object for storing the queries parent result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentParentList
  */
 class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the RID for the parent entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentParentList.get_parent
+     */
     fun getParent(index: Long): RID {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetRID(Binds.getParentBind, segment, index)

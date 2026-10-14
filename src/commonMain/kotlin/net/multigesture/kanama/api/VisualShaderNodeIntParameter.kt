@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node for shader parameter (uniform) of type `int`.
+ *
  * Generated from Godot docs: VisualShaderNodeIntParameter
  */
 class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
@@ -53,83 +55,195 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
+    /**
+     * Range hint of this node. Use it to customize valid parameter range.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_hint
+     */
     fun setHint(hint: VisualShaderNodeIntParameter.Hint) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHintBind, segment, hint.value)
     }
 
+    /**
+     * Range hint of this node. Use it to customize valid parameter range.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.get_hint
+     */
     fun getHint(): VisualShaderNodeIntParameter.Hint {
         checkOpen()
         return VisualShaderNodeIntParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
     }
 
+    /**
+     * The minimum value this parameter can take. `hint` must be either `Hint.RANGE` or
+     * `Hint.RANGE_STEP` for this to take effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_min
+     */
     fun setMin(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMinBind, segment, value)
     }
 
+    /**
+     * The minimum value this parameter can take. `hint` must be either `Hint.RANGE` or
+     * `Hint.RANGE_STEP` for this to take effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.get_min
+     */
     fun getMin(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinBind, segment)
     }
 
+    /**
+     * The maximum value this parameter can take. `hint` must be either `Hint.RANGE` or
+     * `Hint.RANGE_STEP` for this to take effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_max
+     */
     fun setMax(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMaxBind, segment, value)
     }
 
+    /**
+     * The maximum value this parameter can take. `hint` must be either `Hint.RANGE` or
+     * `Hint.RANGE_STEP` for this to take effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.get_max
+     */
     fun getMax(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxBind, segment)
     }
 
+    /**
+     * The step between parameter's values. Forces the parameter to be a multiple of the given value.
+     * `hint` must be `Hint.RANGE_STEP` for this to take effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_step
+     */
     fun setStep(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStepBind, segment, value)
     }
 
+    /**
+     * The step between parameter's values. Forces the parameter to be a multiple of the given value.
+     * `hint` must be `Hint.RANGE_STEP` for this to take effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.get_step
+     */
     fun getStep(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStepBind, segment)
     }
 
+    /**
+     * The names used for the enum select in the editor. `hint` must be `Hint.ENUM` for this to take
+     * effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_enum_names
+     */
     fun setEnumNames(names: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setEnumNamesBind, segment, names)
     }
 
+    /**
+     * The names used for the enum select in the editor. `hint` must be `Hint.ENUM` for this to take
+     * effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.get_enum_names
+     */
     fun getEnumNames(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getEnumNamesBind, segment)
     }
 
+    /**
+     * If `true`, the node will have a custom default value.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_default_value_enabled
+     */
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the node will have a custom default value.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.is_default_value_enabled
+     */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
+    /**
+     * Default value of this parameter, which will be used if not set externally.
+     * `default_value_enabled` must be enabled; defaults to `0` otherwise.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.set_default_value
+     */
     fun setDefaultValue(value: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setDefaultValueBind, segment, value)
     }
 
+    /**
+     * Default value of this parameter, which will be used if not set externally.
+     * `default_value_enabled` must be enabled; defaults to `0` otherwise.
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.get_default_value
+     */
     fun getDefaultValue(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDefaultValueBind, segment)
     }
 
+    /**
+     * Godot's `VisualShaderNodeIntParameter.Hint` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeIntParameter.Hint.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeIntParameter.Hint
+     */
     @JvmInline
     value class Hint(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * The parameter will not constrain its value.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntParameter.HINT_NONE
+             */
             val NONE: Hint get() = Hint(0L)
+            /**
+             * The parameter's value must be within the specified `min`/`max` range.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntParameter.HINT_RANGE
+             */
             val RANGE: Hint get() = Hint(1L)
+            /**
+             * The parameter's value must be within the specified range, with the given `step` between values.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntParameter.HINT_RANGE_STEP
+             */
             val RANGE_STEP: Hint get() = Hint(2L)
+            /**
+             * The parameter uses an enum to associate preset values to names in the editor.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntParameter.HINT_ENUM
+             */
             val ENUM: Hint get() = Hint(3L)
+            /**
+             * Represents the size of the `Hint` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeIntParameter.HINT_MAX
+             */
             val MAX: Hint get() = Hint(4L)
         }
     }

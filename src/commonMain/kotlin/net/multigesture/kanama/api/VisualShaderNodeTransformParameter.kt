@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * A `Transform3D` parameter for use within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTransformParameter
  */
 class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
@@ -23,21 +25,41 @@ class VisualShaderNodeTransformParameter(handle: GodotHandle) : VisualShaderNode
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformParameter.set_default_value_enabled
+     */
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformParameter.is_default_value_enabled
+     */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformParameter.set_default_value
+     */
     fun setDefaultValue(value: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DArg(Binds.setDefaultValueBind, segment, value)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeTransformParameter.get_default_value
+     */
     fun getDefaultValue(): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getDefaultValueBind, segment)

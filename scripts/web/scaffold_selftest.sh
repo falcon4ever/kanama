@@ -28,7 +28,7 @@ bad() { FAILURES=$((FAILURES + 1)); echo "FAIL: $1" >&2; }
 # Run one scenario: fresh fixture copy, run the shell with a fake-driver mode,
 # assert the exit code, then assert no owned process leaked.
 run_case() {
-  local name="$1" expected_status="$2" mode="$3"; shift 3
+  local name="$1" expected_status="$2" mode="$3" demo="${4:-fake}"
   local case_dir="$WORK/$name"
   local export_dir="$case_dir/export"
   local result="$case_dir/result.json"
@@ -49,7 +49,7 @@ run_case() {
   local status=0
   "$SMOKE" \
     --export-dir "$export_dir" \
-    --demo "fake" \
+    --demo "$demo" \
     --result "$result" \
     --timeout 2 \
     --log-dir "$case_dir/logs" \
@@ -100,6 +100,23 @@ run_case over-budget       1 over-budget
 # Few batched crossings but a synchronous builtin / utility call every tick: the
 # builtin-calls budget must reject it (task 129 E review B1).
 run_case over-builtin-budget 1 over-builtin-budget
+# The per-tick cap stays the gate for a demo with no per-simulated-second ceiling: a slow host's envelope
+# (3.0 calls per tick, 9.0 per simulated second) is over the 1.0 per-tick cap of `fake` (task 138 item 33 review).
+run_case slow-host-per-tick 1 slow-host fake
+# A demo whose calls follow simulated time declares a per-simulated-second ceiling, which REPLACES its per-tick
+# cap: the same slow-host envelope (ceiling 25 per simulated second) is green, and load must not turn it red.
+run_case slow-host-simtime 0 slow-host fake-simtime
+# ... and the same demo is red when its calls per simulated second blow the ceiling (50 per tick = 3000 per second).
+run_case over-builtin-simtime 1 over-builtin-budget fake-simtime
+# A demo exempt from the tick ratio is exempt from the builtin cap too, and the verdict line SAYS exempt.
+run_case exempt-demo       0 success fake-exempt
+if grep -q "builtin calls EXEMPT" "$WORK/exempt-demo/stdout.log" && grep -q "EXEMPT, not graded: crossings/tick, builtin calls" "$WORK/exempt-demo/stdout.log"; then
+  ok "an exempt demo's verdict line says exempt"
+else
+  bad "an exempt demo's verdict line does not say exempt"
+  # justified: diagnostics for a case already counted as failed by bad() above.
+  note "stdout: $(tail -n3 "$WORK/exempt-demo/stdout.log" 2>/dev/null || true)"
+fi
 
 # Success case must yield a schema-valid result on disk.
 if [[ -f "$WORK/success/result.json" ]] \

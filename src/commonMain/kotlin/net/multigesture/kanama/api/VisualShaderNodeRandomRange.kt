@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that generates a pseudo-random scalar.
+ *
  * Generated from Godot docs: VisualShaderNodeRandomRange
  */
 class VisualShaderNodeRandomRange(handle: GodotHandle) : VisualShaderNode(handle) {

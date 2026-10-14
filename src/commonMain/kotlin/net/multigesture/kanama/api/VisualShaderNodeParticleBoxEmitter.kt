@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that makes particles emitted in a box shape.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleBoxEmitter
  */
 class VisualShaderNodeParticleBoxEmitter(handle: GodotHandle) : VisualShaderNodeParticleEmitter(handle) {

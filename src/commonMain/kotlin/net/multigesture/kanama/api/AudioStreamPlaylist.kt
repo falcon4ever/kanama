@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * `AudioStream` that includes sub-streams and plays them back like a playlist.
+ *
  * Generated from Godot docs: AudioStreamPlaylist
  */
 class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
@@ -419,26 +421,51 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
         @JvmName("setStream63Property")
         set(value) = setListStream(63, value)
 
+    /**
+     * Amount of streams in the playlist.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.set_stream_count
+     */
     fun setStreamCount(streamCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setStreamCountBind, segment, streamCount)
     }
 
+    /**
+     * Amount of streams in the playlist.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.get_stream_count
+     */
     fun getStreamCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
     }
 
+    /**
+     * Returns the BPM of the playlist, which can vary depending on the clip being played.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.get_bpm
+     */
     fun getBpm(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBpmBind, segment)
     }
 
+    /**
+     * Sets the stream at playback position index.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.set_list_stream
+     */
     fun setListStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setListStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Returns the stream at playback position index.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.get_list_stream
+     */
     fun getListStream(streamIndex: Int): AudioStream? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getListStreamBind, segment, streamIndex)
@@ -449,31 +476,65 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
         return AudioStream.wrapOwned(ret)
     }
 
+    /**
+     * If `true`, the playlist will shuffle each time playback starts and each time it loops.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.set_shuffle
+     */
     fun setShuffle(shuffle: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setShuffleBind, segment, shuffle)
     }
 
+    /**
+     * If `true`, the playlist will shuffle each time playback starts and each time it loops.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.get_shuffle
+     */
     fun getShuffle(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShuffleBind, segment)
     }
 
+    /**
+     * Fade time used when a stream ends, when going to the next one. Streams are expected to have an
+     * extra bit of audio after the end to help with fading.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.set_fade_time
+     */
     fun setFadeTime(dec: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFadeTimeBind, segment, dec)
     }
 
+    /**
+     * Fade time used when a stream ends, when going to the next one. Streams are expected to have an
+     * extra bit of audio after the end to help with fading.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.get_fade_time
+     */
     fun getFadeTime(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFadeTimeBind, segment)
     }
 
+    /**
+     * If `true`, the playlist will loop, otherwise the playlist will end when the last stream is
+     * finished.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.set_loop
+     */
     fun setLoop(loop: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
     }
 
+    /**
+     * If `true`, the playlist will loop, otherwise the playlist will end when the last stream is
+     * finished.
+     *
+     * Generated from Godot docs: AudioStreamPlaylist.has_loop
+     */
     fun hasLoop(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)

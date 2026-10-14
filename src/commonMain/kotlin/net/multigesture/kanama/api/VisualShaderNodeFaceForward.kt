@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Returns the vector that points in the same direction as a reference vector within the visual
+ * shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeFaceForward
  */
 class VisualShaderNodeFaceForward(handle: GodotHandle) : VisualShaderNodeVectorBase(handle) {

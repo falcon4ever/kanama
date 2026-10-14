@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents a glTF camera.
+ *
  * Generated from Godot docs: GLTFCamera
  */
 class GLTFCamera(handle: GodotHandle) : Resource(handle) {
@@ -41,71 +43,157 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
         @JvmName("setDepthNearProperty")
         set(value) = setDepthNear(value)
 
+    /**
+     * Converts this GLTFCamera instance into a Godot `Camera3D` node.
+     *
+     * Generated from Godot docs: GLTFCamera.to_node
+     */
     fun toNode(): Camera3D? {
         checkOpen()
         return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
     }
 
+    /**
+     * Serializes this GLTFCamera instance into a `Dictionary`.
+     *
+     * Generated from Godot docs: GLTFCamera.to_dictionary
+     */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
+    /**
+     * If `true`, the camera is in perspective mode. Otherwise, the camera is in
+     * orthographic/orthogonal mode. This maps to glTF's camera `type` property. See
+     * `Camera3D.projection` and the glTF spec for more information.
+     *
+     * Generated from Godot docs: GLTFCamera.get_perspective
+     */
     fun getPerspective(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPerspectiveBind, segment)
     }
 
+    /**
+     * If `true`, the camera is in perspective mode. Otherwise, the camera is in
+     * orthographic/orthogonal mode. This maps to glTF's camera `type` property. See
+     * `Camera3D.projection` and the glTF spec for more information.
+     *
+     * Generated from Godot docs: GLTFCamera.set_perspective
+     */
     fun setPerspective(perspective: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setPerspectiveBind, segment, perspective)
     }
 
+    /**
+     * The FOV of the camera. This class and glTF define the camera FOV in radians, while Godot uses
+     * degrees. This maps to glTF's `yfov` property. This value is only used for perspective cameras,
+     * when `perspective` is `true`.
+     *
+     * Generated from Godot docs: GLTFCamera.get_fov
+     */
     fun getFov(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
     }
 
+    /**
+     * The FOV of the camera. This class and glTF define the camera FOV in radians, while Godot uses
+     * degrees. This maps to glTF's `yfov` property. This value is only used for perspective cameras,
+     * when `perspective` is `true`.
+     *
+     * Generated from Godot docs: GLTFCamera.set_fov
+     */
     fun setFov(fov: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setFovBind, segment, fov)
     }
 
+    /**
+     * The size of the camera. This class and glTF define the camera size magnitude as a radius in
+     * meters, while Godot defines it as a diameter in meters. This maps to glTF's `ymag` property.
+     * This value is only used for orthographic/orthogonal cameras, when `perspective` is `false`.
+     *
+     * Generated from Godot docs: GLTFCamera.get_size_mag
+     */
     fun getSizeMag(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeMagBind, segment)
     }
 
+    /**
+     * The size of the camera. This class and glTF define the camera size magnitude as a radius in
+     * meters, while Godot defines it as a diameter in meters. This maps to glTF's `ymag` property.
+     * This value is only used for orthographic/orthogonal cameras, when `perspective` is `false`.
+     *
+     * Generated from Godot docs: GLTFCamera.set_size_mag
+     */
     fun setSizeMag(sizeMag: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSizeMagBind, segment, sizeMag)
     }
 
+    /**
+     * The distance to the far culling boundary for this camera relative to its local Z axis, in
+     * meters. This maps to glTF's `zfar` property.
+     *
+     * Generated from Godot docs: GLTFCamera.get_depth_far
+     */
     fun getDepthFar(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthFarBind, segment)
     }
 
+    /**
+     * The distance to the far culling boundary for this camera relative to its local Z axis, in
+     * meters. This maps to glTF's `zfar` property.
+     *
+     * Generated from Godot docs: GLTFCamera.set_depth_far
+     */
     fun setDepthFar(zdepthFar: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthFarBind, segment, zdepthFar)
     }
 
+    /**
+     * The distance to the near culling boundary for this camera relative to its local Z axis, in
+     * meters. This maps to glTF's `znear` property.
+     *
+     * Generated from Godot docs: GLTFCamera.get_depth_near
+     */
     fun getDepthNear(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthNearBind, segment)
     }
 
+    /**
+     * The distance to the near culling boundary for this camera relative to its local Z axis, in
+     * meters. This maps to glTF's `znear` property.
+     *
+     * Generated from Godot docs: GLTFCamera.set_depth_near
+     */
     fun setDepthNear(zdepthNear: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthNearBind, segment, zdepthNear)
     }
 
     companion object {
+        /**
+         * Create a new GLTFCamera instance from the given Godot `Camera3D` node.
+         *
+         * Generated from Godot docs: GLTFCamera.from_node
+         */
         fun fromNode(cameraNode: Camera3D): GLTFCamera? {
             return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, cameraNode.segment))
         }
 
+        /**
+         * Creates a new GLTFCamera instance by parsing the given `Dictionary`.
+         *
+         * Generated from Godot docs: GLTFCamera.from_dictionary
+         */
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFCamera? {
             return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }

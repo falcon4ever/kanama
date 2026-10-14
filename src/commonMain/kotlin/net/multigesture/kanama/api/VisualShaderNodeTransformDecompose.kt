@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Decomposes a `Transform3D` into four `Vector3`s within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTransformDecompose
  */
 class VisualShaderNodeTransformDecompose(handle: GodotHandle) : VisualShaderNode(handle) {

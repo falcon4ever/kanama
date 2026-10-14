@@ -181,11 +181,14 @@ echo "web_export_smoke: serving $EXPORT_DIR at $URL (server pid $SERVER_PID)"
 rm -f "$RESULT"
 
 # The driver receives everything explicitly: no workstation-absolute assumptions.
-# `setsid` puts it in its own process group so a timeout kill reaps the browser.
+# One path on every platform (task 138 item 34): python3 makes the process a session leader (os.setsid(),
+# what setsid(1) does; macOS has no setsid(1)) and execs the driver in the same pid, so the group is
+# `-$DRIVER_PID` and a timeout kill reaps the browser the driver started.
 run_driver() {
-  exec setsid bash -c '
-    exec "$@"
-  ' _ $DRIVER_CMD \
+  # shellcheck disable=SC2086
+  exec python3 -c 'import os, sys
+os.setsid()
+os.execvp(sys.argv[1], sys.argv[1:])' $DRIVER_CMD \
     --url "$URL" \
     --result "$RESULT" \
     --demo "$DEMO" \
@@ -194,21 +197,6 @@ run_driver() {
     --export-dir "$EXPORT_DIR" \
     ${BROWSER_BINARY:+--browser-binary "$BROWSER_BINARY"}
 }
-
-# Fallback when setsid is unavailable (macOS lacks it by default): run directly.
-if ! command -v setsid >/dev/null 2>&1; then
-  run_driver() {
-    # shellcheck disable=SC2086
-    exec $DRIVER_CMD \
-      --url "$URL" \
-      --result "$RESULT" \
-      --demo "$DEMO" \
-      --timeout "$TIMEOUT" \
-      --source-checksum "$CHECKSUM_BEFORE" \
-      --export-dir "$EXPORT_DIR" \
-      ${BROWSER_BINARY:+--browser-binary "$BROWSER_BINARY"}
-  }
-fi
 
 ( run_driver ) >"$DRIVER_LOG" 2>&1 &
 DRIVER_PID=$!

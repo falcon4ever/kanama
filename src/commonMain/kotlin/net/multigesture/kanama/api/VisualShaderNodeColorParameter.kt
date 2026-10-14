@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 
 /**
+ * A `Color` parameter to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeColorParameter
  */
 class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
@@ -23,21 +25,41 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorParameter.set_default_value_enabled
+     */
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorParameter.is_default_value_enabled
+     */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorParameter.set_default_value
+     */
     fun setDefaultValue(value: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setDefaultValueBind, segment, value)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeColorParameter.get_default_value
+     */
     fun getDefaultValue(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDefaultValueBind, segment)

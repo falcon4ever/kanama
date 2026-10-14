@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 
 /**
+ * This node will display an OpenXR render model.
+ *
  * Generated from Godot docs: OpenXRRenderModel
  */
 class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
@@ -17,14 +19,33 @@ class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setRenderModelProperty")
         set(value) = setRenderModel(value)
 
+    /**
+     * Returns the top level path related to this render model.
+     *
+     * Generated from Godot docs: OpenXRRenderModel.get_top_level_path
+     */
     fun getTopLevelPath(): String {
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getTopLevelPathBind, segment)
     }
 
+    /**
+     * The render model RID for the render model to load, as returned by
+     * `OpenXRRenderModelExtension.render_model_create` or
+     * `OpenXRRenderModelExtension.render_model_get_all`.
+     *
+     * Generated from Godot docs: OpenXRRenderModel.get_render_model
+     */
     fun getRenderModel(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRenderModelBind, segment)
     }
 
+    /**
+     * The render model RID for the render model to load, as returned by
+     * `OpenXRRenderModelExtension.render_model_create` or
+     * `OpenXRRenderModelExtension.render_model_get_all`.
+     *
+     * Generated from Godot docs: OpenXRRenderModel.set_render_model
+     */
     fun setRenderModel(renderModel: RID) {
         ObjectCalls.ptrcallWithRIDArg(Binds.setRenderModelBind, segment, renderModel)
     }

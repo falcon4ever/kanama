@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that modifies the texture UV using polar coordinates.
+ *
  * Generated from Godot docs: VisualShaderNodeUVPolarCoord
  */
 class VisualShaderNodeUVPolarCoord(handle: GodotHandle) : VisualShaderNode(handle) {

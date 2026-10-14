@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Provides a 2D texture parameter within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTexture2DParameter
  */
 class VisualShaderNodeTexture2DParameter(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {

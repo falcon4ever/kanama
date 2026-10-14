@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that forces to emit a particle from a sub-emitter.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleEmit
  */
 class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,23 +19,65 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
         @JvmName("setFlagsProperty")
         set(value) = setFlags(value)
 
+    /**
+     * Flags used to override the properties defined in the sub-emitter's process material.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleEmit.set_flags
+     */
     fun setFlags(flags: VisualShaderNodeParticleEmit.EmitFlags) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, flags.value)
     }
 
+    /**
+     * Flags used to override the properties defined in the sub-emitter's process material.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleEmit.get_flags
+     */
     fun getFlags(): VisualShaderNodeParticleEmit.EmitFlags {
         checkOpen()
         return VisualShaderNodeParticleEmit.EmitFlags(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeParticleEmit.EmitFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeParticleEmit.EmitFlags.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleEmit.EmitFlags
+     */
     @JvmInline
     value class EmitFlags(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * If enabled, the particle starts with the position defined by this node.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleEmit.EMIT_FLAG_POSITION
+             */
             val POSITION: EmitFlags get() = EmitFlags(1L)
+            /**
+             * If enabled, the particle starts with the rotation and scale defined by this node.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleEmit.EMIT_FLAG_ROT_SCALE
+             */
             val ROT_SCALE: EmitFlags get() = EmitFlags(2L)
+            /**
+             * If enabled,the particle starts with the velocity defined by this node.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleEmit.EMIT_FLAG_VELOCITY
+             */
             val VELOCITY: EmitFlags get() = EmitFlags(4L)
+            /**
+             * If enabled, the particle starts with the color defined by this node.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleEmit.EMIT_FLAG_COLOR
+             */
             val COLOR: EmitFlags get() = EmitFlags(8L)
+            /**
+             * If enabled, the particle starts with the `CUSTOM` data defined by this node.
+             *
+             * Generated from Godot docs: VisualShaderNodeParticleEmit.EMIT_FLAG_CUSTOM
+             */
             val CUSTOM: EmitFlags get() = EmitFlags(16L)
         }
     }

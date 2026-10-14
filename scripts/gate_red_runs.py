@@ -291,6 +291,9 @@ case("check_android_remap_sources.py", py("check_android_remap_sources.py"),
 case("check_android_remap_sources.py (string literal)", py("check_android_remap_sources.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", 'package net.multigesture.kanama\nval zzText: String = "a block-comment opener inside a string: /*"\nfun zz() = Files.readString(x)\n')],
      "forbidden after the Android remap", "a string literal holding a block-comment opener no longer blinds the audit to the rest of the file (task 119 finding 13)")
+case("check_android_remap_sources.py (nested template)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", 'package net.multigesture.kanama\nval zzText: String = "${"/*"}"\nfun zz() = Files.readString(x)\n')],
+     "ZzRedRun.kt:3: forbidden after the Android remap", "a template whose inner literal holds a block-comment opener no longer hides the following lines (task 138 item 28)")
 case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sources.py"),
      [Edit("android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap.kt",
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
@@ -621,6 +624,7 @@ for name, args, target, expect, how in [
     ("api_wrapper_coverage.py --check", ("api_wrapper_coverage.py", "--markdown", f"{GEN}/api-coverage.md", "--check"), f"{GEN}/api-coverage.md", "FAIL stale markdown", "the committed coverage page is hand-edited"),
     ("api_wrapper_generator_report.py --check", ("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"), f"{GEN}/wrapper-generator-report.md", "FAIL", "the committed generator report is hand-edited"),
     ("migrate_enum_constants.py --check", ("migrate_enum_constants.py", "--table", f"{GEN}/enum-migration.md", "--check"), f"{GEN}/enum-migration.md", "is stale", "the committed enum migration table is hand-edited"),
+    ("ios_handwritten_report.py --check", ("ios_handwritten_report.py", "--check"), f"{GEN}/ios-backend-handwritten.md", "FAIL stale", "the committed iOS handwritten report is hand-edited"),
     ("generate_gates_index.py --check", ("generate_gates_index.py", "--markdown", f"{GEN}/gates.md", "--check"), f"{GEN}/gates.md", "FAIL stale gates index", "the committed gates index is hand-edited"),
     ("generate_virtual_signature_table.py --check", ("generate_virtual_signature_table.py", "--check"), VIRTUAL_TABLE, "STALE", "the committed virtual-signature table is hand-edited"),
     ("generate_engine_method_table.py --check", ("generate_engine_method_table.py", "--check"), "processor/src/main/resources/net/multigesture/kanama/processor/engine-methods.tsv", "STALE", "the committed engine-method table is hand-edited"),
@@ -649,6 +653,17 @@ case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_she
 case("sync_kdoc_from_godot_docs.py --check", py("sync_kdoc_from_godot_docs.py", "--godot-docs", os.environ.get("GODOT_DOCS", "/nonexistent"), "--check"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun getParent(): Node? {", "    /** red run: a KDoc block the Godot class docs do not contain */\n    fun getParent(): Node? {")],
      "changed_files=1", "a wrapper KDoc block differs from the Godot class docs", requires_env="GODOT_DOCS")
+case("sync_kdoc_from_godot_docs.py --check (module class)", py("sync_kdoc_from_godot_docs.py", "--godot-docs", os.environ.get("GODOT_DOCS", "/nonexistent"), "--check"),
+     [Edit(f"{COMMON}/api/ZIPReader.kt", " * Opens the zip archive at the given `path` and reads its file index.", " * Opens the zip archive (red run: hand-edited KDoc).")],
+     "changed_files=1", "a KDoc block of a module-defined class (ZIPReader, documented under modules/zip/doc_classes) is hand-edited (task 138 item 25)", requires_env="GODOT_DOCS")
+case("sync_kdoc_from_godot_docs.py --check (no module docs)",
+     py("sync_kdoc_from_godot_docs.py", "--godot-docs", "build/redrun-kdoc/doc/classes", "--scope", "api", "--classes", "Node,ZIPReader", "--check"),
+     [Rename("build/redrun-kdoc/modules", "build/redrun-kdoc/modules-off")],
+     "0 module doc dirs were found", "the docs directory is a source checkout's doc/classes but its modules/*/doc_classes are gone: module-defined wrappers would go unchecked (task 138 item 25 review N5)",
+     pre=[[PY, "-c", "import os, pathlib, shutil; docs = pathlib.Path(os.environ['GODOT_DOCS']); root = pathlib.Path('build/redrun-kdoc'); shutil.rmtree(root, ignore_errors=True); "
+           "(root / 'doc/classes').mkdir(parents=True); (root / 'modules/zip/doc_classes').mkdir(parents=True); "
+           "shutil.copy(docs / 'Node.xml', root / 'doc/classes'); shutil.copy(docs.parent.parent / 'modules/zip/doc_classes/ZIPReader.xml', root / 'modules/zip/doc_classes')"]],
+     requires_env="GODOT_DOCS")
 
 # ---- shell gates ---------------------------------------------------------------------------------------------
 case("audit_swallowed_failures.py", py("audit_swallowed_failures.py"),
@@ -660,6 +675,89 @@ case("audit_swallowed_failures.py (stale table)", py("audit_swallowed_failures.p
 case("check_shell_lint.sh", ["bash", "scripts/check_shell_lint.sh"],
      [Create("scripts/zz_redrun.sh", '#!/usr/bin/env bash\ncd /tmp\nrm -rf $UNSET_VAR/\n')],
      "zz_redrun.sh", "a new gate script carries a shellcheck warning (unquoted variable, unchecked cd)")
+
+
+# ---- script portability (task 138 item 34): one case per shape ---------------------------------------------------
+def portability_case(name, body, expect, how, path="scripts/zz_redrun_portability.sh"):
+    case(f"check_script_portability.py ({name})", py("check_script_portability.py"),
+         [Create(path, "#!/usr/bin/env bash\n" + body)], expect, how)
+
+
+portability_case("rg", "rg -q foo file\n", "[banned-tool] `rg`", "a script calls ripgrep, which the CI runner does not have (kanama#328)")
+portability_case("rg probe", "if command -v rg >/dev/null; then :; fi\n", "[banned-tool] `rg`", "a script probes for ripgrep: a conditional convenience tool is two paths, each machine exercises one")
+portability_case("gsed", "gsed -n 1p file\n", "[banned-tool] `gsed`", "a script calls the Homebrew GNU tool name")
+portability_case("unlisted command", "sha256sum file\n", "[unlisted-command] `sha256sum`", "a script calls a command outside the portable list (not on a stock macOS)")
+portability_case("grep -P", "grep -oP 'a\\K.*' file\n", "[grep-P]", "a script uses PCRE grep, which BSD grep lacks")
+portability_case("sed -i", "sed -i 's/a/b/' file\n", "[sed-i] `sed -i` differs", "a script edits in place with GNU-only sed -i (outside scripts/portable.sh)")
+portability_case("sed -i ''", "sed -i '' 's/a/b/' file\n", "[sed-i] `sed -i ''` is the BSD spelling", "a script edits in place with the BSD-only spelling")
+portability_case("declare -A", "declare -A map\n", "[bash4] `declare -A`", "a script uses an associative array (bash 4; macOS ships 3.2)")
+portability_case("mapfile", "mapfile -t lines < file\n", "[bash4] `mapfile`", "a script uses mapfile (bash 4)")
+portability_case("case modification", 'name="${1,,}"\n', "[bash4] case-modifying", "a script lower-cases with ${x,,} (bash 4)")
+portability_case("pipe-ampersand", "cat file |& grep x\n", "[bash4] `|&`", "a script pipes stderr with |& (bash 4)")
+portability_case("coproc", "coproc cat\n", "[bash4] `coproc`", "a script uses coproc (bash 4)")
+portability_case("macOS-only command", "xcrun simctl list\n", "[macos-only] `xcrun`", "a CI-invocable script calls a macOS-only command outside a DEVICE_ONLY script")
+portability_case("stat -f", "stat -f %m file\n", "[macos-only]", "a script reads a modification time with BSD stat")
+portability_case("date -j", "date -j -f %s 0\n", "[macos-only]", "a script parses a date with BSD date")
+portability_case("GNU-only option", "date -d yesterday +%s\n", "[gnu-only]", "a script uses GNU date -d")
+portability_case("timeout wrapper", "timeout 5 sleep 1\n", "[banned-tool] `timeout`", "a script runs a command under GNU `timeout` (not on a stock macOS): the wrapper is judged, not skipped (review S3)")
+portability_case("stdbuf wrapper", "stdbuf -oL cat file | cat\n", "[banned-tool] `stdbuf`", "a script runs a command under GNU `stdbuf` (not on a stock macOS)")
+portability_case("wrapped banned tool", "env A=1 nice rg x file\n", "[banned-tool] `rg`", "the command behind a chain of wrappers is still judged")
+portability_case("bash -c", "bash -c 'rg x file'\n", "[banned-tool] `rg`", "ripgrep inside a `bash -c '...'` string (review N1)")
+portability_case("sh -c double-quoted", 'sh -c "cat file | rg x"\n', "[banned-tool] `rg`", "ripgrep inside a `sh -c \"...\"` string")
+portability_case("eval", 'eval "rg x file"\n', "[banned-tool] `rg`", "ripgrep inside an `eval \"...\"` string")
+portability_case("one-line case", "case $1 in a) rg x file;; esac\n", "[banned-tool] `rg`", "ripgrep in a single-line `case $x in a) cmd;; esac` clause (the scanner used to swallow it)")
+portability_case("cygpath unguarded", 'p="$(cygpath -u "$1")"\n', "[platform-only] `cygpath`", "a script calls the Windows-only cygpath outside a listed guarded use (review N3)")
+portability_case("cmake unguarded", "cmake -S . -B build\n", "[platform-only] `cmake`", "a script calls cmake (a toolchain install, not on every machine) outside a listed guarded use")
+portability_case("bash -o pipefail -c", "bash -o pipefail -c 'rg x file'\n", "[banned-tool] `rg`", "ripgrep inside a `bash -o pipefail -c '...'` string: options before -c no longer hide the script (review round 2)")
+portability_case("bash -O extglob -c", 'bash -O extglob -c "cat file | rg x"\n', "[banned-tool] `rg`", "ripgrep inside a `bash -O extglob -c \"...\"` string")
+portability_case("find -exec", "find . -name '*.kt' -exec rg x {} \\;\n", "[banned-tool] `rg`", "ripgrep run by `find -exec ... \\;` (review round 2)")
+portability_case("find -exec +", "find . -type f -exec rg x {} +\n", "[banned-tool] `rg`", "ripgrep run by `find -exec ... +`")
+portability_case("env -C", "env -C /tmp ls\n", "[gnu-only] `env -C DIR`", "a script changes directory with GNU-only `env -C` (BSD env has no -C)")
+portability_case("env -C wrapped tool", "env -C /tmp rg x\n", "[banned-tool] `rg`", "the command behind `env -C DIR` is judged, not the directory")
+portability_case("sudo -u wrapped tool", "sudo -u root rg x\n", "[banned-tool] `rg`", "the command behind `sudo -u USER` is judged, not the user name")
+case("check_script_portability.py (extra guarded-tool use)", py("check_script_portability.py"),
+     [Append("scripts/check_shell_lint.sh", "\nshellcheck --version >/dev/null\n")],
+     "[platform-use-count] `shellcheck` is used 4 times here (lines ", "one more `shellcheck` in a script whose listed use is guarded: the entry pins its use count, so the extra, unguarded use fails, and the finding lists every use so the reader can see the extra one (review rounds 2 and 3)")
+case("check_script_portability.py (python bash -o pipefail -c)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["bash", "-o", "pipefail", "-c", "rg x"])\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep in a [\"bash\", \"-o\", \"pipefail\", \"-c\", ...] command line")
+case("check_script_portability.py (python find -exec)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["find", ".", "-exec", "rg", "x", "{}", ";"])\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep behind `find -exec`")
+case("check_script_portability.py (python shell=True)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run("ls | rg x", shell=True)\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep in a shell=True command line (review N1)")
+case("check_script_portability.py (python bash -c)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["bash", "-c", "rg x"])\n')],
+     "[banned-tool] `rg`", "a Python gate hides ripgrep in a [\"bash\", \"-c\", ...] command line")
+case("check_script_portability.py (python timeout)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["timeout", "5", "sleep", "1"])\n')],
+     "[banned-tool] `timeout`", "a Python gate shells out through GNU timeout")
+case("check_script_portability.py (python subprocess)", py("check_script_portability.py"),
+     [Create("scripts/zz_redrun_portability.py", 'import subprocess\nsubprocess.run(["rg", "x"])\n')],
+     "[banned-tool] `rg`", "a Python gate shells out to ripgrep")
+case("check_script_portability.py (workflow step)", py("check_script_portability.py"),
+     [Edit(".github/workflows/ci.yml", "          scripts/local_ci.sh --skip-docs", "          rg --version\n          scripts/local_ci.sh --skip-docs")],
+     ".github/workflows/ci.yml", "a CI workflow step calls ripgrep")
+case("check_script_portability.py (selftest mode)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", "selftest_verdict() {\n", "selftest_verdict() {\n  rg -q x /dev/null\n")],
+     "scripts/ios_visual_smoke.sh", "ripgrep returns to the CI-invocable --check-selftest-log path of the macOS smoke (the kanama#328 failure)")
+case("check_script_portability.py (device path)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", "selftest_verdict() {\n", "selftest_verdict() {\n  xcrun simctl list >/dev/null\n")],
+     "[macos-only] `xcrun`", "a macOS-only command moves above the device-only marker into the CI-invocable --check-selftest-log path")
+case("check_script_portability.py (stale device marker)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", "# portability: device-only below", "# portability: device-only marker removed")],
+     "[device-marker]", "a DEVICE_ONLY script loses its marker line (every macOS-only command in it would be unexplained)")
+case("check_script_portability.py (marker above the CI block)", py("check_script_portability.py"),
+     [Edit("scripts/ios_visual_smoke.sh", 'if [[ "${1:-}" == "--check-selftest-log" ]]; then\n', '# portability: device-only below (moved up)\nif [[ "${1:-}" == "--check-selftest-log" ]]; then\n')],
+     "[device-marker] the `# portability: device-only below` marker is above the end of the CI-invocable block",
+     "the device-only marker moves above the --check-selftest-log block: the code CI runs on Linux would be exempt from the portable rule (review N2)")
+case("check_script_portability.py --self-test", py("check_script_portability.py", "--self-test"),
+     [Edit("scripts/portable.sh", '  rm -f "${file}.portable-bak"\n', "  :\n")],
+     "sed_inplace:", "sed_inplace leaves its backup file behind")
+case("check_script_portability.py --self-test (tokeniser)", py("check_script_portability.py", "--self-test"),
+     [Edit("scripts/check_script_portability.py", 'self.add(line, "banned-tool", f"', 'self.add(line, "banned-tool-off", f"')],
+     "--self-test FAIL", "the gate stops classifying a banned tool (its own shape table must say so)")
 
 
 # ---- web gate self-test: break the gate, its own --self-test must go red ------------------------------------
@@ -735,8 +833,47 @@ case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
      "over-budget expected exit 1", "web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that)")
 case("check_budgets.py (builtin calls)", ["bash", "scripts/web/scaffold_selftest.sh"],
-     [Edit("scripts/web/check_budgets.py", "    violations += check_builtin_calls(demo, measured, budgets, limits)\n", "")],
-     "over-builtin-budget expected exit 1", "the budget gate stops counting synchronous builtin / utility calls per tick (task 129 E review B1)")
+     [Edit("scripts/web/check_budgets.py", "\n    violations += check_builtin_calls(demo, measured, budgets, limits)\n    return violations", "\n    return violations")],
+     "over-builtin-budget expected exit 1", "the budget gate stops counting synchronous builtin / utility calls, per tick or per simulated second (task 129 E review B1)")
+case("check_budgets.py (builtin calls per simulated second)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", "    rate = calls / sim\n", "    rate = 1000.0 * calls / ticks\n")],
+     "slow-host-simtime expected exit 0, got 1", "a per-simulated-second ceiling is taken per engine tick again (load-sensitive): a slow host's envelope (3.0 calls per tick, 9.0 per simulated second) goes red (task 138 item 33)")
+case("check_budgets.py (builtin calls per tick cap)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", "        if per_tick > ceiling:\n", "        if False:\n")],
+     "slow-host-per-tick expected exit 1, got 0", "the per-tick builtin-call cap stops gating a demo with no per-simulated-second ceiling (it caught the fps regression at 2.1x; review of task 138 item 33)")
+case("check_budgets.py (exempt verdict)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", '    if builtin_gate(demo, limits, budgets)[0] == "exempt":\n        exempt.append("builtin calls")\n    else:', '    if False:\n        exempt.append("builtin calls")\n    else:')],
+     "an exempt demo's verdict line does not say exempt", "an exempt demo's final line reads \"within budget\" for a metric it was never graded on (review N6)")
+case("check_budgets.py --self-test (per-tick cap)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/budgets.json", '"defaultMaxBuiltinCallsPerTick": 0.5,', '"defaultMaxBuiltinCallsPerTick": 0.9,')],
+     "must exceed the per-tick cap 0.9 by 2x or more", "the per-tick cap is loosened until the pre-fix fps envelope (1.06 per tick) is no longer red by 2x")
+case("check_budgets.py --self-test (record-only engine)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", "        violations += check_builtin_calls(demo, measured, budgets, limits)\n        return violations\n", "        return violations\n")],
+     "fps pre-fix builtin calls on record-only safari: expected red", "a record-only engine (Safari) stops grading builtin calls (review N6)")
+case("check_budgets.py --self-test (too few ticks, per tick)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", '            return [too_few_ticks_message("builtin calls per tick", ticks, limits)]', "            return []")],
+     "on record-only safari: expected red", "the per-tick builtin-call gate passes a run with too few ticks ungraded again (Safari skips the crossings check that used to report it)")
+case("check_budgets.py --self-test (too few ticks, per simulated second)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", '        return [too_few_ticks_message("builtin calls per simulated second", ticks, limits)]', "        return []")],
+     "bunnymark, 10 ticks (graded per simulated second) on record-only safari: expected red", "the per-simulated-second builtin-call gate passes a run with too few ticks ungraded again")
+case("check_budgets.py --self-test (both ceilings at demo level)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", "    if all(key in limits for key in BUILTIN_KEYS):\n", "    if False:\n")],
+     "must be a budget error for engine", "an engine naming one builtin-call ceiling silently drops the other of a demo that declared both")
+case("check_budgets.py --self-test (default cap margin)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/budgets.json", '"defaultMaxBuiltinCallsPerTick": 0.5,', '"defaultMaxBuiltinCallsPerTick": 0.45,')],
+     "under 1.9x the highest measured run", "the per-tick default sinks below 1.9x the CI runner's fps measurement (0.26 per tick)")
+case("web/bridge_simtime_selftest.mjs", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (this.simProcessRafTick !== this.rafTick) {\n", "      if (true) {\n")],
+     "scripted node(s): simSeconds", "the bridge adds the _process delta once per scripted handle again: simSeconds scales with the number of scripted nodes (dodge's mobs made it 4-7x game time)")
+case("web/bridge_simtime_selftest.mjs (physics)", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (handle === this.simPhysicsClockHandle) this.simPhysicsSeconds += delta;\n", "      this.simPhysicsSeconds += delta;\n")],
+     "_physics_process", "the bridge adds the physics delta once per scripted handle again")
+case("web/dodge_restart_selftest.mjs", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,", "restartBudgetNotExhausted: true,")],
+     "restartBudgetNotExhausted must be false", "dodge stops failing a run that used every round restart (a build that kills the player on the first mob passes on the cumulative mob counter)")
+case("web/dodge_restart_selftest.mjs (per-round mob count)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "mobsInstantiated: (peak.bestRoundMobs ?? 0) >= 4,", "mobsInstantiated: peak.mobInstantiations >= 4,")],
+     "2 mobs per round: mobsInstantiated must be false", "dodge counts mobs across rounds again: a build that kills the player on the 2nd mob of every round reaches 2 + 2 = 4 and passes with one restart")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
@@ -752,11 +889,21 @@ def main() -> int:
     parser.add_argument("--allow-skip", default="", help="comma-separated case-name substrings a --strict run may skip")
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
+    parser.add_argument("--shard", help="K/N: run every N-th selected case starting at the K-th (CI runs N shards in parallel)")
     args = parser.parse_args()
     strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
     allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
 
     cases = [c for c in CASES if (not args.only or args.only in c.gate) and (args.slow or not c.slow or args.only)]
+    if args.shard:
+        try:
+            k, n = (int(x) for x in args.shard.split("/"))
+        except ValueError:  # justified: a malformed --shard falls through to the range check below, which exits 2
+            k = n = 0
+        if not 1 <= k <= n:
+            print(f"gate_red_runs: --shard wants K/N with 1 <= K <= N, got {args.shard!r}", file=sys.stderr)
+            return 2
+        cases = cases[k - 1 :: n]
     if args.list:
         for c in cases:
             print(f"{c.gate}: {c.how}")

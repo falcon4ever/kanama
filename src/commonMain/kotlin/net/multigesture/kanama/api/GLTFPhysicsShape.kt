@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * Represents a glTF physics shape.
+ *
  * Generated from Godot docs: GLTFPhysicsShape
  */
 class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
@@ -54,100 +56,219 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
         @JvmName("setImporterMeshProperty")
         set(value) = setImporterMesh(value)
 
+    /**
+     * Converts this GLTFPhysicsShape instance into a Godot `CollisionShape3D` node.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.to_node
+     */
     fun toNode(cacheShapes: Boolean = false): CollisionShape3D? {
         checkOpen()
         return CollisionShape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toNodeBind, segment, cacheShapes))
     }
 
+    /**
+     * Converts this GLTFPhysicsShape instance into a Godot `Shape3D` resource.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.to_resource
+     */
     fun toResource(cacheShapes: Boolean = false): Shape3D? {
         checkOpen()
         return Shape3D.wrapOwned(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.toResourceBind, segment, cacheShapes))
     }
 
+    /**
+     * Serializes this GLTFPhysicsShape instance into a `Dictionary` in the format defined by
+     * `OMI_physics_shape`.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.to_dictionary
+     */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
+    /**
+     * The type of shape this shape represents. Valid values are `"box"`, `"capsule"`, `"cylinder"`,
+     * `"sphere"`, `"hull"`, and `"trimesh"`.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_shape_type
+     */
     fun getShapeType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getShapeTypeBind, segment)
     }
 
+    /**
+     * The type of shape this shape represents. Valid values are `"box"`, `"capsule"`, `"cylinder"`,
+     * `"sphere"`, `"hull"`, and `"trimesh"`.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_shape_type
+     */
     fun setShapeType(shapeType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setShapeTypeBind, segment, shapeType)
     }
 
+    /**
+     * The size of the shape, in meters. This is only used when the shape type is `"box"`, and it
+     * represents the `"diameter"` of the box. This value should not be negative.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_size
+     */
     fun getSize(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
+    /**
+     * The size of the shape, in meters. This is only used when the shape type is `"box"`, and it
+     * represents the `"diameter"` of the box. This value should not be negative.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_size
+     */
     fun setSize(size: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
+    /**
+     * The radius of the shape, in meters. This is only used when the shape type is `"capsule"`,
+     * `"cylinder"`, or `"sphere"`. This value should not be negative.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_radius
+     */
     fun getRadius(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
+    /**
+     * The radius of the shape, in meters. This is only used when the shape type is `"capsule"`,
+     * `"cylinder"`, or `"sphere"`. This value should not be negative.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_radius
+     */
     fun setRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
+    /**
+     * The height of the shape, in meters. This is only used when the shape type is `"capsule"` or
+     * `"cylinder"`. This value should not be negative, and for `"capsule"` it should be at least twice
+     * the radius.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_height
+     */
     fun getHeight(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
+    /**
+     * The height of the shape, in meters. This is only used when the shape type is `"capsule"` or
+     * `"cylinder"`. This value should not be negative, and for `"capsule"` it should be at least twice
+     * the radius.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_height
+     */
     fun setHeight(height: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
+    /**
+     * If `true`, indicates that this shape is a trigger. For Godot, this means that the shape should
+     * be a child of an `Area3D` node. This is the only variable not used in the `to_node` method, it's
+     * intended to be used alongside when deciding where to add the generated node as a child.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_is_trigger
+     */
     fun getIsTrigger(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsTriggerBind, segment)
     }
 
+    /**
+     * If `true`, indicates that this shape is a trigger. For Godot, this means that the shape should
+     * be a child of an `Area3D` node. This is the only variable not used in the `to_node` method, it's
+     * intended to be used alongside when deciding where to add the generated node as a child.
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_is_trigger
+     */
     fun setIsTrigger(isTrigger: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsTriggerBind, segment, isTrigger)
     }
 
+    /**
+     * The index of the shape's mesh in the glTF file. This is only used when the shape type is
+     * `"hull"` (convex hull) or `"trimesh"` (concave trimesh).
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_mesh_index
+     */
     fun getMeshIndex(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMeshIndexBind, segment)
     }
 
+    /**
+     * The index of the shape's mesh in the glTF file. This is only used when the shape type is
+     * `"hull"` (convex hull) or `"trimesh"` (concave trimesh).
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_mesh_index
+     */
     fun setMeshIndex(meshIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setMeshIndexBind, segment, meshIndex)
     }
 
+    /**
+     * The `ImporterMesh` resource of the shape. This is only used when the shape type is `"hull"`
+     * (convex hull) or `"trimesh"` (concave trimesh).
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.get_importer_mesh
+     */
     fun getImporterMesh(): ImporterMesh? {
         checkOpen()
         return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImporterMeshBind, segment))
     }
 
+    /**
+     * The `ImporterMesh` resource of the shape. This is only used when the shape type is `"hull"`
+     * (convex hull) or `"trimesh"` (concave trimesh).
+     *
+     * Generated from Godot docs: GLTFPhysicsShape.set_importer_mesh
+     */
     fun setImporterMesh(importerMesh: ImporterMesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setImporterMeshBind, segment, listOf(importerMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
+        /**
+         * Creates a new GLTFPhysicsShape instance from the given Godot `CollisionShape3D` node.
+         *
+         * Generated from Godot docs: GLTFPhysicsShape.from_node
+         */
         fun fromNode(shapeNode: CollisionShape3D): GLTFPhysicsShape? {
             return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, shapeNode.segment))
         }
 
+        /**
+         * Creates a new GLTFPhysicsShape instance from the given Godot `Shape3D` resource.
+         *
+         * Generated from Godot docs: GLTFPhysicsShape.from_resource
+         */
         fun fromResource(shapeResource: Shape3D?): GLTFPhysicsShape? {
             return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
+        /**
+         * Creates a new GLTFPhysicsShape instance by parsing the given `Dictionary`.
+         *
+         * Generated from Godot docs: GLTFPhysicsShape.from_dictionary
+         */
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsShape? {
             return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }

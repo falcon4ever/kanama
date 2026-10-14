@@ -39,6 +39,21 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — tooling: script portability gate, module-class KDoc, three gate fixes (task 138 items 15, 25, 28, 34)
+
+Tooling and documentation only; no change to the API a script sees beyond IDE docs. The wrapper KDoc now
+also covers the classes a Godot module defines (`ZIPReader`/`ZIPPacker`, `WebSocket*`, `WebRTC*`, `CSG*`,
+`GLTF*`, `OpenXR*`, `ENet*`, ...): the sync reads `modules/*/doc_classes` beside `doc/classes`, prints how
+many module doc directories it found and fails when a `doc/classes` source layout has none. A new
+gate, `scripts/check_script_portability.py` (in `local_ci.sh`), holds every script CI can invoke to the
+tools a Mac and the ubuntu runner both have: no `rg`/`fd`/`gsed`, no `grep -P`, no bash 4+, `sed -i` only
+through `sed_inplace` in `scripts/portable.sh`, macOS-only commands only in the listed device scripts
+(the 87 `rg` calls became `grep -E`; CI no longer installs ripgrep). The gate also judges command wrappers
+(`timeout`, `stdbuf` are GNU-only), scans the string a `bash -c` / `sh -c` / `eval` / Python `shell=True` is
+handed, and lists the tools only one platform has (`cygpath`, `cmake`, `shellcheck`, `mkdocs`) as guarded uses. `scripts/ios_handwritten_report.py`
+has a `--check` mode in `local_ci.sh` (the generated page was already stale on main), and the Android remap
+audit tracks `${...}` template nesting, so `"${"/*"}"` no longer hides the lines after it.
+
 ### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
 
 The iOS self-tests (the C `PTRCALL SELFTEST MATRIX` and the Kotlin `OBJECTCALLS SELFTEST` rows at
@@ -192,7 +207,10 @@ synchronous call each (10-30 us): printing, `pushError` / `pushWarning`, `str`, 
 other conversions, `typeOf`, `hash`, `weakref`, `instanceFromId`, `isInstanceIdValid`, the RID
 helpers, and the random functions, which use Godot's global generator as on desktop, so `GD.seed`
 / `GD.randf` reproduce GDScript's sequence. The Web budget gate now also counts these synchronous
-builtin and utility calls per engine tick (`maxBuiltinCallsPerTick`). The web3d smoke checks 55
+builtin and utility calls per engine tick (0.5 by default, `maxBuiltinCallsPerTick`), or per simulated
+second (`maxBuiltinCallsPerSimSecond`) for a demo whose calls follow simulated time, which is bunnymark's
+random draws. The envelope's `simSeconds` is now the game's time, one delta per engine frame (the bridge
+added it once per scripted node, so dodge read 4-7x game time). The web3d smoke checks 55
 `GD` / `Mathf` results against a GDScript twin within each one's bound.
 `GodotCallable` is the shared class on Web too (`call`, `callv`, `callDeferred`, `isValid`,
 `getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,

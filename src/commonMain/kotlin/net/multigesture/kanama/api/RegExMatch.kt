@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Contains the results of a `RegEx` search.
+ *
  * Generated from Godot docs: RegExMatch
  */
 class RegExMatch(handle: GodotHandle) : RefCounted(handle) {
@@ -22,36 +24,82 @@ class RegExMatch(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("stringsProperty")
         get() = getStrings()
 
+    /**
+     * The source string used with the search pattern to find this matching result.
+     *
+     * Generated from Godot docs: RegExMatch.get_subject
+     */
     fun getSubject(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getSubjectBind, segment)
     }
 
+    /**
+     * Returns the number of capturing groups.
+     *
+     * Generated from Godot docs: RegExMatch.get_group_count
+     */
     fun getGroupCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGroupCountBind, segment)
     }
 
+    /**
+     * A dictionary of named groups and its corresponding group number. Only groups that were matched
+     * are included. If multiple groups have the same name, that name would refer to the first matching
+     * one.
+     *
+     * Generated from Godot docs: RegExMatch.get_names
+     */
     fun getNames(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getNamesBind, segment)
     }
 
+    /**
+     * An `Array` of the match and its capturing groups.
+     *
+     * Generated from Godot docs: RegExMatch.get_strings
+     */
     fun getStrings(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getStringsBind, segment)
     }
 
+    /**
+     * Returns the substring of the match from the source string. Capturing groups can be retrieved by
+     * providing its group number as an integer or its string name (if it's a named group). The default
+     * value of 0 refers to the whole pattern. Returns an empty string if the group did not match or
+     * doesn't exist.
+     *
+     * Generated from Godot docs: RegExMatch.get_string
+     */
     fun getString(name: Any?): String {
         checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetString(Binds.getStringBind, segment, name)
     }
 
+    /**
+     * Returns the starting position of the match within the source string. The starting position of
+     * capturing groups can be retrieved by providing its group number as an integer or its string name
+     * (if it's a named group). The default value of 0 refers to the whole pattern. Returns -1 if the
+     * group did not match or doesn't exist.
+     *
+     * Generated from Godot docs: RegExMatch.get_start
+     */
     fun getStart(name: Any?): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetInt(Binds.getStartBind, segment, name)
     }
 
+    /**
+     * Returns the end position of the match within the source string. The end position of capturing
+     * groups can be retrieved by providing its group number as an integer or its string name (if it's
+     * a named group). The default value of 0 refers to the whole pattern. Returns -1 if the group did
+     * not match or doesn't exist.
+     *
+     * Generated from Godot docs: RegExMatch.get_end
+     */
     fun getEnd(name: Any?): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithVariantArgRetInt(Binds.getEndBind, segment, name)

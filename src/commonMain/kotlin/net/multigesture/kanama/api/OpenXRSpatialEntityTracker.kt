@@ -10,6 +10,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 
 /**
+ * Base class for Positional trackers managed by OpenXR's spatial entity extensions.
+ *
  * Generated from Godot docs: OpenXRSpatialEntityTracker
  */
 open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
@@ -25,46 +27,92 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         @JvmName("setSpatialTrackingStateProperty")
         set(value) = setSpatialTrackingState(value)
 
+    /**
+     * Sets the spatial context used to create this tracker.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.set_spatial_context
+     */
     fun setSpatialContext(spatialContext: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setSpatialContextBind, segment, spatialContext)
     }
 
+    /**
+     * Gets the spatial context used to create this `OpenXRSpatialEntityTracker`.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.get_spatial_context
+     */
     fun getSpatialContext(): RID {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(Binds.getSpatialContextBind, segment)
     }
 
+    /**
+     * The spatial entity associated with this tracker.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.set_entity
+     */
     fun setEntity(entity: RID) {
         checkOpen()
         ObjectCalls.ptrcallWithRIDArg(Binds.setEntityBind, segment, entity)
     }
 
+    /**
+     * The spatial entity associated with this tracker.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.get_entity
+     */
     fun getEntity(): RID {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRID(Binds.getEntityBind, segment)
     }
 
+    /**
+     * The spatial tracking state for this tracker.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.set_spatial_tracking_state
+     */
     fun setSpatialTrackingState(spatialTrackingState: OpenXRSpatialEntityTracker.EntityTrackingState) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setSpatialTrackingStateBind, segment, spatialTrackingState.value)
     }
 
+    /**
+     * The spatial tracking state for this tracker.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.get_spatial_tracking_state
+     */
     fun getSpatialTrackingState(): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
         return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSpatialTrackingStateBind, segment))
     }
 
+    /**
+     * Gets the head `OpenXRStructureBase` in the next-chain. See also `add_next` and `remove_next`.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.get_next
+     */
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
         return OpenXRStructureBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getNextBind, segment))
     }
 
+    /**
+     * Adds a new `OpenXRStructureBase` to the next-chain. `get_next` will return this `next` until
+     * either `add_next` is called again or it's removed in `remove_next`.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.add_next
+     */
     fun addNext(next: OpenXRStructureBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.addNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Removes a `next` object previously added in `add_next` from the next-chain.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.remove_next
+     */
     fun removeNext(next: OpenXRStructureBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
@@ -85,11 +133,33 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         const val spatialTrackingStateChanged: String = "spatial_tracking_state_changed"
     }
 
+    /**
+     * Godot's `OpenXRSpatialEntityTracker.EntityTrackingState` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`OpenXRSpatialEntityTracker.EntityTrackingState.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityTracker.EntityTrackingState
+     */
     @JvmInline
     value class EntityTrackingState(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * This anchor has stopped tracking.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityTracker.ENTITY_TRACKING_STATE_STOPPED
+             */
             val STOPPED: EntityTrackingState get() = EntityTrackingState(1L)
+            /**
+             * Tracking is currently paused.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityTracker.ENTITY_TRACKING_STATE_PAUSED
+             */
             val PAUSED: EntityTrackingState get() = EntityTrackingState(2L)
+            /**
+             * This anchor is currently being tracked.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityTracker.ENTITY_TRACKING_STATE_TRACKING
+             */
             val TRACKING: EntityTrackingState get() = EntityTrackingState(3L)
         }
     }

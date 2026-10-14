@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Composes a `Transform3D` from four `Vector3`s within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTransformCompose
  */
 class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(handle) {

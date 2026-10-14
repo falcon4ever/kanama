@@ -6,24 +6,51 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Configuration header for plane tracking.
+ *
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking
  */
 class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
+    /**
+     * Returns `true` if we support the mesh 2D component (only valid after the OpenXR session has
+     * started). You can query these using the `OpenXRSpatialComponentMesh2DList` data object.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking.supports_mesh_2d
+     */
     fun supportsMesh2d(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsMesh2dBind, segment)
     }
 
+    /**
+     * Returns `true` if we support the polygon 2D component (only valid after the OpenXR session has
+     * started). You can query these using the `OpenXRSpatialComponentPolygon2DList` data object.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking.supports_polygons
+     */
     fun supportsPolygons(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsPolygonsBind, segment)
     }
 
+    /**
+     * Returns `true` if we support the plane semantic label component (only valid after the OpenXR
+     * session has started). You can query these using the
+     * `OpenXRSpatialComponentPlaneSemanticLabelList` data object.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking.supports_labels
+     */
     fun supportsLabels(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.supportsLabelsBind, segment)
     }
 
+    /**
+     * Returns the components enabled by this configuration. Note: Only valid after this configuration
+     * was used to create a spatial context.
+     *
+     * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationPlaneTracking.get_enabled_components
+     */
     fun getEnabledComponents(): List<Long> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)

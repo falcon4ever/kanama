@@ -8,6 +8,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Contains functions to modify texture coordinates (`uv`) to be used within the visual shader
+ * graph.
+ *
  * Generated from Godot docs: VisualShaderNodeUVFunc
  */
 class VisualShaderNodeUVFunc(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -17,21 +20,54 @@ class VisualShaderNodeUVFunc(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
+    /**
+     * A function to be applied to the texture coordinates.
+     *
+     * Generated from Godot docs: VisualShaderNodeUVFunc.set_function
+     */
     fun setFunction(func: VisualShaderNodeUVFunc.Function) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setFunctionBind, segment, func.value)
     }
 
+    /**
+     * A function to be applied to the texture coordinates.
+     *
+     * Generated from Godot docs: VisualShaderNodeUVFunc.get_function
+     */
     fun getFunction(): VisualShaderNodeUVFunc.Function {
         checkOpen()
         return VisualShaderNodeUVFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFunctionBind, segment))
     }
 
+    /**
+     * Godot's `VisualShaderNodeUVFunc.Function` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`VisualShaderNodeUVFunc.Function.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeUVFunc.Function
+     */
     @JvmInline
     value class Function(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Translates `uv` by using `scale` and `offset` values using the following formula: `uv = uv +
+             * offset * scale`. `uv` port is connected to `UV` built-in by default.
+             *
+             * Generated from Godot docs: VisualShaderNodeUVFunc.FUNC_PANNING
+             */
             val PANNING: Function get() = Function(0L)
+            /**
+             * Scales `uv` by using `scale` and `pivot` values using the following formula: `uv = (uv - pivot)
+             * * scale + pivot`. `uv` port is connected to `UV` built-in by default.
+             *
+             * Generated from Godot docs: VisualShaderNodeUVFunc.FUNC_SCALING
+             */
             val SCALING: Function get() = Function(1L)
+            /**
+             * Represents the size of the `Function` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeUVFunc.FUNC_MAX
+             */
             val MAX: Function get() = Function(2L)
         }
     }

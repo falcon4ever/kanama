@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * A `Vector3` constant to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeVec3Constant
  */
 class VisualShaderNodeVec3Constant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
@@ -17,11 +19,21 @@ class VisualShaderNodeVec3Constant(handle: GodotHandle) : VisualShaderNodeConsta
         @JvmName("setConstantProperty")
         set(value) = setConstant(value)
 
+    /**
+     * A `Vector3` constant which represents the state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec3Constant.set_constant
+     */
     fun setConstant(constant: Vector3) {
         checkOpen()
         ObjectCalls.ptrcallWithVector3Arg(Binds.setConstantBind, segment, constant)
     }
 
+    /**
+     * A `Vector3` constant which represents the state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec3Constant.get_constant
+     */
     fun getConstant(): Vector3 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getConstantBind, segment)

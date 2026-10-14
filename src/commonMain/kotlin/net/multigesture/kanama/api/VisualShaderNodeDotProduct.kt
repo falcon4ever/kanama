@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Calculates a dot product of two vectors within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeDotProduct
  */
 class VisualShaderNodeDotProduct(handle: GodotHandle) : VisualShaderNode(handle) {

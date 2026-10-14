@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents the input shader parameter within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeInput
  */
 class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
@@ -16,16 +18,34 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setInputNameProperty")
         set(value) = setInputName(value)
 
+    /**
+     * One of the several input constants in lower-case style like: "vertex" (`VERTEX`) or "point_size"
+     * (`POINT_SIZE`).
+     *
+     * Generated from Godot docs: VisualShaderNodeInput.set_input_name
+     */
     fun setInputName(name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInputNameBind, segment, name)
     }
 
+    /**
+     * One of the several input constants in lower-case style like: "vertex" (`VERTEX`) or "point_size"
+     * (`POINT_SIZE`).
+     *
+     * Generated from Godot docs: VisualShaderNodeInput.get_input_name
+     */
     fun getInputName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputNameBind, segment)
     }
 
+    /**
+     * Returns a translated name of the current constant in the Godot Shader Language. E.g. `"ALBEDO"`
+     * if the `input_name` equal to `"albedo"`.
+     *
+     * Generated from Godot docs: VisualShaderNodeInput.get_input_real_name
+     */
     fun getInputRealName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputRealNameBind, segment)

@@ -6,19 +6,36 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Object for storing the main query result data.
+ *
  * Generated from Godot docs: OpenXRSpatialQueryResultData
  */
 class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the number of entities that were retrieved.
+     *
+     * Generated from Godot docs: OpenXRSpatialQueryResultData.get_capacity
+     */
     fun getCapacity(): Long {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCapacityBind, segment)
     }
 
+    /**
+     * Returns the entity id (`XrSpatialEntityIdEXT`) for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialQueryResultData.get_entity_id
+     */
     fun getEntityId(index: Long): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityIdBind, segment, index)
     }
 
+    /**
+     * Returns the entity state for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialQueryResultData.get_entity_state
+     */
     fun getEntityState(index: Long): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
         return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getEntityStateBind, segment, index))

@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Rect2
 
 /**
+ * Generic mobile VR implementation.
+ *
  * Generated from Godot docs: MobileVRInterface
  */
 class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
@@ -71,101 +73,219 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
         @JvmName("setVrsStrengthProperty")
         set(value) = setVrsStrength(value)
 
+    /**
+     * The height at which the camera is placed in relation to the ground (i.e. `XROrigin3D` node).
+     *
+     * Generated from Godot docs: MobileVRInterface.set_eye_height
+     */
     fun setEyeHeight(eyeHeight: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setEyeHeightBind, segment, eyeHeight)
     }
 
+    /**
+     * The height at which the camera is placed in relation to the ground (i.e. `XROrigin3D` node).
+     *
+     * Generated from Godot docs: MobileVRInterface.get_eye_height
+     */
     fun getEyeHeight(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEyeHeightBind, segment)
     }
 
+    /**
+     * The interocular distance, also known as the interpupillary distance. The distance between the
+     * pupils of the left and right eye.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_iod
+     */
     fun setIod(iod: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setIodBind, segment, iod)
     }
 
+    /**
+     * The interocular distance, also known as the interpupillary distance. The distance between the
+     * pupils of the left and right eye.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_iod
+     */
     fun getIod(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIodBind, segment)
     }
 
+    /**
+     * The width of the display in centimeters.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_display_width
+     */
     fun setDisplayWidth(displayWidth: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayWidthBind, segment, displayWidth)
     }
 
+    /**
+     * The width of the display in centimeters.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_display_width
+     */
     fun getDisplayWidth(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayWidthBind, segment)
     }
 
+    /**
+     * The distance between the display and the lenses inside of the device in centimeters.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_display_to_lens
+     */
     fun setDisplayToLens(displayToLens: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayToLensBind, segment, displayToLens)
     }
 
+    /**
+     * The distance between the display and the lenses inside of the device in centimeters.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_display_to_lens
+     */
     fun getDisplayToLens(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDisplayToLensBind, segment)
     }
 
+    /**
+     * Set the offset rect relative to the area being rendered. A length of 1 represents the whole
+     * rendering area on that axis.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_offset_rect
+     */
     fun setOffsetRect(offsetRect: Rect2) {
         checkOpen()
         ObjectCalls.ptrcallWithRect2Arg(Binds.setOffsetRectBind, segment, offsetRect)
     }
 
+    /**
+     * Set the offset rect relative to the area being rendered. A length of 1 represents the whole
+     * rendering area on that axis.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_offset_rect
+     */
     fun getOffsetRect(): Rect2 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getOffsetRectBind, segment)
     }
 
+    /**
+     * The oversample setting. Because of the lens distortion we have to render our buffers at a higher
+     * resolution then the screen can natively handle. A value between 1.5 and 2.0 often provides good
+     * results but at the cost of performance.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_oversample
+     */
     fun setOversample(oversample: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOversampleBind, segment, oversample)
     }
 
+    /**
+     * The oversample setting. Because of the lens distortion we have to render our buffers at a higher
+     * resolution then the screen can natively handle. A value between 1.5 and 2.0 often provides good
+     * results but at the cost of performance.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_oversample
+     */
     fun getOversample(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversampleBind, segment)
     }
 
+    /**
+     * The k1 lens factor is one of the two constants that define the strength of the lens used and
+     * directly influences the lens distortion effect.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_k1
+     */
     fun setK1(k: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setK1Bind, segment, k)
     }
 
+    /**
+     * The k1 lens factor is one of the two constants that define the strength of the lens used and
+     * directly influences the lens distortion effect.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_k1
+     */
     fun getK1(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getK1Bind, segment)
     }
 
+    /**
+     * The k2 lens factor, see k1.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_k2
+     */
     fun setK2(k: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setK2Bind, segment, k)
     }
 
+    /**
+     * The k2 lens factor, see k1.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_k2
+     */
     fun getK2(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getK2Bind, segment)
     }
 
+    /**
+     * The minimum radius around the focal point where full quality is guaranteed if VRS is used as a
+     * percentage of screen size. Note: Mobile and Forward+ renderers only. Requires
+     * `Viewport.vrs_mode` to be set to `Viewport.VRSMode.XR`.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_vrs_min_radius
+     */
     fun getVrsMinRadius(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsMinRadiusBind, segment)
     }
 
+    /**
+     * The minimum radius around the focal point where full quality is guaranteed if VRS is used as a
+     * percentage of screen size. Note: Mobile and Forward+ renderers only. Requires
+     * `Viewport.vrs_mode` to be set to `Viewport.VRSMode.XR`.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_vrs_min_radius
+     */
     fun setVrsMinRadius(radius: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsMinRadiusBind, segment, radius)
     }
 
+    /**
+     * The strength used to calculate the VRS density map. The greater this value, the more noticeable
+     * VRS is. This improves performance at the cost of quality. Note: Mobile and Forward+ renderers
+     * only. Requires `Viewport.vrs_mode` to be set to `Viewport.VRSMode.XR`.
+     *
+     * Generated from Godot docs: MobileVRInterface.get_vrs_strength
+     */
     fun getVrsStrength(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVrsStrengthBind, segment)
     }
 
+    /**
+     * The strength used to calculate the VRS density map. The greater this value, the more noticeable
+     * VRS is. This improves performance at the cost of quality. Note: Mobile and Forward+ renderers
+     * only. Requires `Viewport.vrs_mode` to be set to `Viewport.VRSMode.XR`.
+     *
+     * Generated from Godot docs: MobileVRInterface.set_vrs_strength
+     */
     fun setVrsStrength(strength: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setVrsStrengthBind, segment, strength)

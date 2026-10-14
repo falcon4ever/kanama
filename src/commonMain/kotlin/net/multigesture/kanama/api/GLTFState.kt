@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents all data of a glTF file.
+ *
  * Generated from Godot docs: GLTFState
  */
 open class GLTFState(handle: GodotHandle) : Resource(handle) {
@@ -198,26 +200,66 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         @JvmName("setHandleBinaryImageProperty")
         set(value) = setHandleBinaryImage(value)
 
+    /**
+     * Appends an extension to the list of extensions used by this glTF file during serialization. If
+     * `required` is `true`, the extension will also be added to the list of required extensions. Do
+     * not run this in `GLTFDocumentExtension._export_post`, as that stage is too late to add
+     * extensions. The final list is sorted alphabetically.
+     *
+     * Generated from Godot docs: GLTFState.add_used_extension
+     */
     fun addUsedExtension(extensionName: String, required: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndBoolArg(Binds.addUsedExtensionBind, segment, extensionName, required)
     }
 
+    /**
+     * Appends the given byte array `data` to the buffers and creates a `GLTFBufferView` for it. The
+     * index of the destination `GLTFBufferView` is returned. If `deduplication` is `true`, the buffers
+     * are first searched for duplicate data, otherwise new bytes are always appended.
+     *
+     * Generated from Godot docs: GLTFState.append_data_to_buffers
+     */
     fun appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(Binds.appendDataToBuffersBind, segment, data, deduplication)
     }
 
+    /**
+     * Appends the given `GLTFNode` to the state, and returns its new index. This can be used to export
+     * one Godot node as multiple glTF nodes, or inject new glTF nodes at import time. On import, this
+     * must be called before `GLTFDocumentExtension._generate_scene_node` finishes for the parent node.
+     * On export, this must be called before `GLTFDocumentExtension._export_node` runs for the parent
+     * node. The `godot_scene_node` parameter is the Godot scene node that corresponds to this glTF
+     * node. This is highly recommended to be set to a valid node, but may be `null` if there is no
+     * corresponding Godot scene node. One Godot scene node may be used for multiple glTF nodes, so if
+     * exporting multiple glTF nodes for one Godot scene node, use the same Godot scene node for each.
+     * The `parent_node_index` parameter is the index of the parent `GLTFNode` in the state. If `-1`,
+     * the node will be a root node, otherwise the new node will be added to the parent's list of
+     * children. The index will also be written to the `GLTFNode.parent` property of the new node.
+     *
+     * Generated from Godot docs: GLTFState.append_gltf_node
+     */
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(Binds.appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: NULL_SEGMENT, godotSceneNode.segment, parentNodeIndex)
     }
 
+    /**
+     * The original raw JSON document corresponding to this GLTFState.
+     *
+     * Generated from Godot docs: GLTFState.get_json
+     */
     fun getJson(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJsonBind, segment)
     }
 
+    /**
+     * The original raw JSON document corresponding to this GLTFState.
+     *
+     * Generated from Godot docs: GLTFState.set_json
+     */
     fun setJson(json: Map<String, Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithDictionaryArg(Binds.setJsonBind, segment, json)
@@ -243,21 +285,43 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithIntArg(Binds.setMinorVersionBind, segment, minorVersion)
     }
 
+    /**
+     * The copyright string in the asset header of the glTF file. This is set during import if present
+     * and export if non-empty. See the glTF asset header documentation for more information.
+     *
+     * Generated from Godot docs: GLTFState.get_copyright
+     */
     fun getCopyright(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getCopyrightBind, segment)
     }
 
+    /**
+     * The copyright string in the asset header of the glTF file. This is set during import if present
+     * and export if non-empty. See the glTF asset header documentation for more information.
+     *
+     * Generated from Godot docs: GLTFState.set_copyright
+     */
     fun setCopyright(copyright: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setCopyrightBind, segment, copyright)
     }
 
+    /**
+     * The binary buffer attached to a .glb file.
+     *
+     * Generated from Godot docs: GLTFState.get_glb_data
+     */
     fun getGlbData(): ByteArray {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getGlbDataBind, segment)
     }
 
+    /**
+     * The binary buffer attached to a .glb file.
+     *
+     * Generated from Godot docs: GLTFState.set_glb_data
+     */
     fun setGlbData(glbData: ByteArray) {
         checkOpen()
         ObjectCalls.ptrcallWithByteArrayArg(Binds.setGlbDataBind, segment, glbData)
@@ -273,11 +337,25 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseNamedSkinBindsBind, segment, useNamedSkinBinds)
     }
 
+    /**
+     * Returns an array of all `GLTFNode`s in the glTF file. These are the nodes that
+     * `GLTFNode.children` and `root_nodes` refer to. This includes nodes that may not be generated in
+     * the Godot scene, or nodes that may generate multiple Godot scene nodes.
+     *
+     * Generated from Godot docs: GLTFState.get_nodes
+     */
     fun getNodes(): List<GLTFNode> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getNodesBind, segment, GLTFNode::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFNode`s in the state. These are the nodes that `GLTFNode.children` and `root_nodes`
+     * refer to. Some of the nodes set here may not be generated in the Godot scene, or may generate
+     * multiple Godot scene nodes.
+     *
+     * Generated from Godot docs: GLTFState.set_nodes
+     */
     fun setNodes(nodes: List<GLTFNode>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setNodesBind, segment, nodes)
@@ -313,21 +391,45 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithObjectListArg(Binds.setAccessorsBind, segment, accessors)
     }
 
+    /**
+     * Returns an array of all `GLTFMesh`es in the glTF file. These are the meshes that the
+     * `GLTFNode.mesh` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.get_meshes
+     */
     fun getMeshes(): List<GLTFMesh> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMeshesBind, segment, GLTFMesh::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFMesh`es in the state. These are the meshes that the `GLTFNode.mesh` index refers
+     * to.
+     *
+     * Generated from Godot docs: GLTFState.set_meshes
+     */
     fun setMeshes(meshes: List<GLTFMesh>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setMeshesBind, segment, meshes)
     }
 
+    /**
+     * Returns the number of `AnimationPlayer` nodes in this `GLTFState`. These nodes are only used
+     * during the export process when converting Godot `AnimationPlayer` nodes to glTF animations.
+     *
+     * Generated from Godot docs: GLTFState.get_animation_players_count
+     */
     fun getAnimationPlayersCount(animPlayerIndex: Int): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getAnimationPlayersCountBind, segment, animPlayerIndex)
     }
 
+    /**
+     * Returns the `AnimationPlayer` node with the given index. These nodes are only used during the
+     * export process when converting Godot `AnimationPlayer` nodes to glTF animations.
+     *
+     * Generated from Godot docs: GLTFState.get_animation_player
+     */
     fun getAnimationPlayer(animPlayerIndex: Int): AnimationPlayer? {
         checkOpen()
         return AnimationPlayer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getAnimationPlayerBind, segment, animPlayerIndex))
@@ -343,41 +445,99 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithTypedMaterialListArg(Binds.setMaterialsBind, segment, materials)
     }
 
+    /**
+     * The name of the scene. When importing, if not specified, this will be the file name. When
+     * exporting, if specified, the scene name will be saved to the glTF file.
+     *
+     * Generated from Godot docs: GLTFState.get_scene_name
+     */
     fun getSceneName(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneNameBind, segment)
     }
 
+    /**
+     * The name of the scene. When importing, if not specified, this will be the file name. When
+     * exporting, if specified, the scene name will be saved to the glTF file.
+     *
+     * Generated from Godot docs: GLTFState.set_scene_name
+     */
     fun setSceneName(sceneName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setSceneNameBind, segment, sceneName)
     }
 
+    /**
+     * The folder path associated with this glTF data. This is used to find other files the glTF file
+     * references, like images or binary buffers. This will be set during import when appending from a
+     * file, and will be set during export when writing to a file.
+     *
+     * Generated from Godot docs: GLTFState.get_base_path
+     */
     fun getBasePath(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getBasePathBind, segment)
     }
 
+    /**
+     * The folder path associated with this glTF data. This is used to find other files the glTF file
+     * references, like images or binary buffers. This will be set during import when appending from a
+     * file, and will be set during export when writing to a file.
+     *
+     * Generated from Godot docs: GLTFState.set_base_path
+     */
     fun setBasePath(basePath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBasePathBind, segment, basePath)
     }
 
+    /**
+     * The file name associated with this glTF data. If it ends with `.gltf`, this is text-based glTF,
+     * otherwise this is binary GLB. This will be set during import when appending from a file, and
+     * will be set during export when writing to a file. If writing to a buffer, this will be an empty
+     * string.
+     *
+     * Generated from Godot docs: GLTFState.get_filename
+     */
     fun getFilename(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getFilenameBind, segment)
     }
 
+    /**
+     * The file name associated with this glTF data. If it ends with `.gltf`, this is text-based glTF,
+     * otherwise this is binary GLB. This will be set during import when appending from a file, and
+     * will be set during export when writing to a file. If writing to a buffer, this will be an empty
+     * string.
+     *
+     * Generated from Godot docs: GLTFState.set_filename
+     */
     fun setFilename(filename: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setFilenameBind, segment, filename)
     }
 
+    /**
+     * The root nodes of the glTF file. Typically, a glTF file will only have one scene, and therefore
+     * one root node. However, a glTF file may have multiple scenes and therefore multiple root nodes,
+     * which will be generated as siblings of each other and as children of the root node of the
+     * generated Godot scene.
+     *
+     * Generated from Godot docs: GLTFState.get_root_nodes
+     */
     fun getRootNodes(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootNodesBind, segment)
     }
 
+    /**
+     * The root nodes of the glTF file. Typically, a glTF file will only have one scene, and therefore
+     * one root node. However, a glTF file may have multiple scenes and therefore multiple root nodes,
+     * which will be generated as siblings of each other and as children of the root node of the
+     * generated Godot scene.
+     *
+     * Generated from Godot docs: GLTFState.set_root_nodes
+     */
     fun setRootNodes(rootNodes: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setRootNodesBind, segment, rootNodes)
@@ -393,81 +553,172 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithObjectListArg(Binds.setTexturesBind, segment, textures)
     }
 
+    /**
+     * Retrieves the array of texture samplers that are used by the textures contained in the glTF.
+     *
+     * Generated from Godot docs: GLTFState.get_texture_samplers
+     */
     fun getTextureSamplers(): List<GLTFTextureSampler> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTextureSamplersBind, segment, GLTFTextureSampler::wrapBorrowed)
     }
 
+    /**
+     * Sets the array of texture samplers that are used by the textures contained in the glTF.
+     *
+     * Generated from Godot docs: GLTFState.set_texture_samplers
+     */
     fun setTextureSamplers(textureSamplers: List<GLTFTextureSampler>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setTextureSamplersBind, segment, textureSamplers)
     }
 
+    /**
+     * Gets the images of the glTF file as an array of `Texture2D`s. These are the images that the
+     * `GLTFTexture.src_image` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.get_images
+     */
     fun getImages(): List<Texture2D> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getImagesBind, segment, Texture2D::wrapBorrowed)
     }
 
+    /**
+     * Sets the images in the state stored as an array of `Texture2D`s. This can be used during export.
+     * These are the images that the `GLTFTexture.src_image` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.set_images
+     */
     fun setImages(images: List<Texture2D>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setImagesBind, segment, images)
     }
 
+    /**
+     * Returns an array of all `GLTFSkin`s in the glTF file. These are the skins that the
+     * `GLTFNode.skin` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.get_skins
+     */
     fun getSkins(): List<GLTFSkin> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkinsBind, segment, GLTFSkin::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFSkin`s in the state. These are the skins that the `GLTFNode.skin` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.set_skins
+     */
     fun setSkins(skins: List<GLTFSkin>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setSkinsBind, segment, skins)
     }
 
+    /**
+     * Returns an array of all `GLTFCamera`s in the glTF file. These are the cameras that the
+     * `GLTFNode.camera` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.get_cameras
+     */
     fun getCameras(): List<GLTFCamera> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCamerasBind, segment, GLTFCamera::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFCamera`s in the state. These are the cameras that the `GLTFNode.camera` index
+     * refers to.
+     *
+     * Generated from Godot docs: GLTFState.set_cameras
+     */
     fun setCameras(cameras: List<GLTFCamera>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setCamerasBind, segment, cameras)
     }
 
+    /**
+     * Returns an array of all `GLTFLight`s in the glTF file. These are the lights that the
+     * `GLTFNode.light` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.get_lights
+     */
     fun getLights(): List<GLTFLight> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightsBind, segment, GLTFLight::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFLight`s in the state. These are the lights that the `GLTFNode.light` index refers
+     * to.
+     *
+     * Generated from Godot docs: GLTFState.set_lights
+     */
     fun setLights(lights: List<GLTFLight>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setLightsBind, segment, lights)
     }
 
+    /**
+     * Returns an array of unique node names. This is used in both the import process and export
+     * process.
+     *
+     * Generated from Godot docs: GLTFState.get_unique_names
+     */
     fun getUniqueNames(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueNamesBind, segment)
     }
 
+    /**
+     * Sets the unique node names in the state. This is used in both the import process and export
+     * process.
+     *
+     * Generated from Godot docs: GLTFState.set_unique_names
+     */
     fun setUniqueNames(uniqueNames: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueNamesBind, segment, uniqueNames)
     }
 
+    /**
+     * Returns an array of unique animation names. This is only used during the import process.
+     *
+     * Generated from Godot docs: GLTFState.get_unique_animation_names
+     */
     fun getUniqueAnimationNames(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueAnimationNamesBind, segment)
     }
 
+    /**
+     * Sets the unique animation names in the state. This is only used during the import process.
+     *
+     * Generated from Godot docs: GLTFState.set_unique_animation_names
+     */
     fun setUniqueAnimationNames(uniqueAnimationNames: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueAnimationNamesBind, segment, uniqueAnimationNames)
     }
 
+    /**
+     * Returns an array of all `GLTFSkeleton`s in the glTF file. These are the skeletons that the
+     * `GLTFNode.skeleton` index refers to.
+     *
+     * Generated from Godot docs: GLTFState.get_skeletons
+     */
     fun getSkeletons(): List<GLTFSkeleton> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkeletonsBind, segment, GLTFSkeleton::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFSkeleton`s in the state. These are the skeletons that the `GLTFNode.skeleton`
+     * index refers to.
+     *
+     * Generated from Godot docs: GLTFState.set_skeletons
+     */
     fun setSkeletons(skeletons: List<GLTFSkeleton>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setSkeletonsBind, segment, skeletons)
@@ -483,82 +734,225 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setCreateAnimationsBind, segment, createAnimations)
     }
 
+    /**
+     * If `true`, forces all GLTFNodes in the document to be bones of a single `Skeleton3D` Godot node.
+     *
+     * Generated from Godot docs: GLTFState.get_import_as_skeleton_bones
+     */
     fun getImportAsSkeletonBones(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getImportAsSkeletonBonesBind, segment)
     }
 
+    /**
+     * If `true`, forces all GLTFNodes in the document to be bones of a single `Skeleton3D` Godot node.
+     *
+     * Generated from Godot docs: GLTFState.set_import_as_skeleton_bones
+     */
     fun setImportAsSkeletonBones(importAsSkeletonBones: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setImportAsSkeletonBonesBind, segment, importAsSkeletonBones)
     }
 
+    /**
+     * Returns an array of all `GLTFAnimation`s in the glTF file. When importing, these will be
+     * generated as animations in an `AnimationPlayer` node. When exporting, these will be generated
+     * from Godot `AnimationPlayer` nodes.
+     *
+     * Generated from Godot docs: GLTFState.get_animations
+     */
     fun getAnimations(): List<GLTFAnimation> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAnimationsBind, segment, GLTFAnimation::wrapBorrowed)
     }
 
+    /**
+     * Sets the `GLTFAnimation`s in the state. When importing, these will be generated as animations in
+     * an `AnimationPlayer` node. When exporting, these will be generated from Godot `AnimationPlayer`
+     * nodes.
+     *
+     * Generated from Godot docs: GLTFState.set_animations
+     */
     fun setAnimations(animations: List<GLTFAnimation>) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectListArg(Binds.setAnimationsBind, segment, animations)
     }
 
+    /**
+     * Returns the Godot scene node that corresponds to the same index as the `GLTFNode` it was
+     * generated from. This is the inverse of `get_node_index`. Useful during the import process. Note:
+     * Not every `GLTFNode` will have a scene node generated, and not every generated scene node will
+     * have a corresponding `GLTFNode`. If there is no scene node for this `GLTFNode` index, `null` is
+     * returned.
+     *
+     * Generated from Godot docs: GLTFState.get_scene_node
+     */
     fun getSceneNode(gltfNodeIndex: Int): Node? {
         checkOpen()
         return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneNodeBind, segment, gltfNodeIndex))
     }
 
+    /**
+     * Returns the index of the `GLTFNode` corresponding to this Godot scene node. This is the inverse
+     * of `get_scene_node`. Useful during the export process. Note: Not every Godot scene node will
+     * have a corresponding `GLTFNode`, and not every `GLTFNode` will have a scene node generated. If
+     * there is no `GLTFNode` index for this scene node, `-1` is returned.
+     *
+     * Generated from Godot docs: GLTFState.get_node_index
+     */
     fun getNodeIndex(sceneNode: Node): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getNodeIndexBind, segment, sceneNode.segment)
     }
 
+    /**
+     * Gets additional arbitrary data in this `GLTFState` instance. This can be used to keep per-file
+     * state data in `GLTFDocumentExtension` classes, which is important because they are stateless.
+     * The argument should be the `GLTFDocumentExtension` name (does not have to match the extension
+     * name in the glTF file), and the return value can be anything you set. If nothing was set, the
+     * return value is `null`.
+     *
+     * Generated from Godot docs: GLTFState.get_additional_data
+     */
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
     }
 
+    /**
+     * Sets additional arbitrary data in this `GLTFState` instance. This can be used to keep per-file
+     * state data in `GLTFDocumentExtension` classes, which is important because they are stateless.
+     * The first argument should be the `GLTFDocumentExtension` name (does not have to match the
+     * extension name in the glTF file), and the second argument can be anything you want.
+     *
+     * Generated from Godot docs: GLTFState.set_additional_data
+     */
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
+    /**
+     * When importing a glTF file with unimported raw binary images embedded inside of binary blob
+     * buffers, in data URIs, or separate files not imported by Godot, this controls how the images are
+     * handled. Images can be discarded, saved as separate files, or embedded in the scene lossily or
+     * losslessly. See `HandleBinaryImageMode` for options. This property does nothing for image files
+     * in the `res://` folder imported by Godot, as those are handled by Godot's image importer
+     * directly, and then the Godot scene generated from the glTF file will use the images as Godot
+     * imported them.
+     *
+     * Generated from Godot docs: GLTFState.get_handle_binary_image_mode
+     */
     fun getHandleBinaryImageMode(): GLTFState.HandleBinaryImageMode {
         checkOpen()
         return GLTFState.HandleBinaryImageMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHandleBinaryImageModeBind, segment))
     }
 
+    /**
+     * When importing a glTF file with unimported raw binary images embedded inside of binary blob
+     * buffers, in data URIs, or separate files not imported by Godot, this controls how the images are
+     * handled. Images can be discarded, saved as separate files, or embedded in the scene lossily or
+     * losslessly. See `HandleBinaryImageMode` for options. This property does nothing for image files
+     * in the `res://` folder imported by Godot, as those are handled by Godot's image importer
+     * directly, and then the Godot scene generated from the glTF file will use the images as Godot
+     * imported them.
+     *
+     * Generated from Godot docs: GLTFState.set_handle_binary_image_mode
+     */
     fun setHandleBinaryImageMode(method: GLTFState.HandleBinaryImageMode) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHandleBinaryImageModeBind, segment, method.value)
     }
 
+    /**
+     * The baking fps of the animation for either import or export.
+     *
+     * Generated from Godot docs: GLTFState.set_bake_fps
+     */
     fun setBakeFps(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeFpsBind, segment, value)
     }
 
+    /**
+     * The baking fps of the animation for either import or export.
+     *
+     * Generated from Godot docs: GLTFState.get_bake_fps
+     */
     fun getBakeFps(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeFpsBind, segment)
     }
 
+    /**
+     * Deprecated untyped alias for `handle_binary_image_mode`. When importing a glTF file with
+     * unimported raw binary images embedded inside of binary blob buffers, in data URIs, or separate
+     * files not imported by Godot, this controls how the images are handled.
+     *
+     * Generated from Godot docs: GLTFState.get_handle_binary_image
+     */
     fun getHandleBinaryImage(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHandleBinaryImageBind, segment)
     }
 
+    /**
+     * Deprecated untyped alias for `handle_binary_image_mode`. When importing a glTF file with
+     * unimported raw binary images embedded inside of binary blob buffers, in data URIs, or separate
+     * files not imported by Godot, this controls how the images are handled.
+     *
+     * Generated from Godot docs: GLTFState.set_handle_binary_image
+     */
     fun setHandleBinaryImage(method: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setHandleBinaryImageBind, segment, method)
     }
 
+    /**
+     * Godot's `GLTFState.HandleBinaryImageMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`GLTFState.HandleBinaryImageMode.<NAME>`).
+     *
+     * Generated from Godot docs: GLTFState.HandleBinaryImageMode
+     */
     @JvmInline
     value class HandleBinaryImageMode(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * When importing a glTF file with embedded binary images, discards all images and uses untextured
+             * materials in their place. Images stored as separate files in the `res://` folder are not
+             * affected by this; those will be used as Godot imported them.
+             *
+             * Generated from Godot docs: GLTFState.HANDLE_BINARY_IMAGE_MODE_DISCARD_TEXTURES
+             */
             val DISCARD_TEXTURES: HandleBinaryImageMode get() = HandleBinaryImageMode(0L)
+            /**
+             * When importing a glTF file with embedded binary images, extracts them and saves them to their
+             * own files. This allows the image to be imported by Godot's image importer, which can then have
+             * their import options customized by the user, including optionally compressing the image to VRAM
+             * texture formats. This will save the images's bytes exactly as-is, without recompression. For
+             * image formats supplied by glTF extensions, the file will have a filename ending with the file
+             * extension supplied by `GLTFDocumentExtension._get_image_file_extension` of the extension class.
+             * Note: This option is editor-only. At runtime, this acts the same as
+             * `HandleBinaryImageMode.EMBED_AS_UNCOMPRESSED`.
+             *
+             * Generated from Godot docs: GLTFState.HANDLE_BINARY_IMAGE_MODE_EXTRACT_TEXTURES
+             */
             val EXTRACT_TEXTURES: HandleBinaryImageMode get() = HandleBinaryImageMode(1L)
+            /**
+             * When importing a glTF file with embedded binary images, embeds textures VRAM compressed with
+             * Basis Universal into the generated scene. Images stored as separate files in the `res://` folder
+             * are not affected by this; those will be used as Godot imported them.
+             *
+             * Generated from Godot docs: GLTFState.HANDLE_BINARY_IMAGE_MODE_EMBED_AS_BASISU
+             */
             val EMBED_AS_BASISU: HandleBinaryImageMode get() = HandleBinaryImageMode(2L)
+            /**
+             * When importing a glTF file with embedded binary images, embeds textures compressed losslessly
+             * into the generated scene. Images stored as separate files in the `res://` folder are not
+             * affected by this; those will be used as Godot imported them.
+             *
+             * Generated from Godot docs: GLTFState.HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED
+             */
             val EMBED_AS_UNCOMPRESSED: HandleBinaryImageMode get() = HandleBinaryImageMode(3L)
         }
     }

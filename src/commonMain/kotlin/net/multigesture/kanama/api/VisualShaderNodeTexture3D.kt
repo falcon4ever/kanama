@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Performs a 3D texture lookup within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTexture3D
  */
 class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(handle) {
@@ -17,11 +19,23 @@ class VisualShaderNodeTexture3D(handle: GodotHandle) : VisualShaderNodeSample3D(
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
+    /**
+     * A source texture. Used if `VisualShaderNodeSample3D.source` is set to
+     * `VisualShaderNodeSample3D.Source.TEXTURE`.
+     *
+     * Generated from Godot docs: VisualShaderNodeTexture3D.set_texture
+     */
     fun setTexture(value: Texture3D?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * A source texture. Used if `VisualShaderNodeSample3D.source` is set to
+     * `VisualShaderNodeSample3D.Source.TEXTURE`.
+     *
+     * Generated from Godot docs: VisualShaderNodeTexture3D.get_texture
+     */
     fun getTexture(): Texture3D? {
         checkOpen()
         return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))

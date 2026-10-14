@@ -10,12 +10,15 @@ Markers (one per line, in a comment above the code):
 - KANAMA-IOS-HANDWRITTEN: intentionally bespoke (not generatable), correct as-is.
 - KANAMA-IOS-SUGAR: hand-added inside a generated wrapper file; regeneration clobbers it.
 
-Run: python3 scripts/ios_handwritten_report.py
+Run: python3 scripts/ios_handwritten_report.py          # rewrite the page
+     python3 scripts/ios_handwritten_report.py --check   # fail (exit 1) when the committed page is stale
 """
 
 from __future__ import annotations
 
+import argparse
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -86,13 +89,31 @@ def found_count(found: dict[str, list[tuple[str, int, str]]], kind: str) -> int:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="do not write; exit 1 when the committed page differs from what the markers produce",
+    )
+    args = parser.parse_args()
     found = collect()
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(render(found), encoding="utf-8")
+    rendered = render(found)
     total = sum(len(v) for v in found.values())
-    print(f"[ios_handwritten_report] wrote {OUTPUT.relative_to(ROOT)} — {total} marked sites "
-          f"(STUB={found_count(found,'STUB')} HANDWRITTEN={found_count(found,'HANDWRITTEN')} "
-          f"SUGAR={found_count(found,'SUGAR')})")
+    counts = (f"STUB={found_count(found,'STUB')} HANDWRITTEN={found_count(found,'HANDWRITTEN')} "
+              f"SUGAR={found_count(found,'SUGAR')}")
+    rel = OUTPUT.relative_to(ROOT)
+    if args.check:
+        current = OUTPUT.read_text(encoding="utf-8") if OUTPUT.is_file() else None
+        if current != rendered:
+            print(f"[ios_handwritten_report] FAIL stale {rel}: it no longer matches the KANAMA-IOS-* markers "
+                  f"({total} marked sites, {counts}). Regenerate with: python3 scripts/ios_handwritten_report.py",
+                  file=sys.stderr)
+            return 1
+        print(f"[ios_handwritten_report] OK {rel} is current — {total} marked sites ({counts})")
+        return 0
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text(rendered, encoding="utf-8")
+    print(f"[ios_handwritten_report] wrote {rel} — {total} marked sites ({counts})")
     return 0
 
 

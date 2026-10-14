@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Represents the output shader parameters within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeOutput
  */
 open class VisualShaderNodeOutput(handle: GodotHandle) : VisualShaderNode(handle) {

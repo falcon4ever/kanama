@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A 2D texture uniform array to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeTexture2DArray
  */
 class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSample3D(handle) {
@@ -17,11 +19,23 @@ class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSamp
         @JvmName("setTextureArrayProperty")
         set(value) = setTextureArray(value)
 
+    /**
+     * A source texture array. Used if `VisualShaderNodeSample3D.source` is set to
+     * `VisualShaderNodeSample3D.Source.TEXTURE`.
+     *
+     * Generated from Godot docs: VisualShaderNodeTexture2DArray.set_texture_array
+     */
     fun setTextureArray(value: TextureLayered?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureArrayBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * A source texture array. Used if `VisualShaderNodeSample3D.source` is set to
+     * `VisualShaderNodeSample3D.Source.TEXTURE`.
+     *
+     * Generated from Godot docs: VisualShaderNodeTexture2DArray.get_texture_array
+     */
     fun getTextureArray(): TextureLayered? {
         checkOpen()
         return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureArrayBind, segment))

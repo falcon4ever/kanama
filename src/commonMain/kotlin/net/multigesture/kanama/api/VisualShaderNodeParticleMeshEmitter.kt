@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that makes particles emitted in a shape defined by a `Mesh`.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter
  */
 class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNodeParticleEmitter(handle) {
@@ -29,31 +31,63 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
         @JvmName("setSurfaceIndexProperty")
         set(value) = setSurfaceIndex(value)
 
+    /**
+     * The `Mesh` that defines emission shape.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter.set_mesh
+     */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The `Mesh` that defines emission shape.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter.get_mesh
+     */
     fun getMesh(): Mesh? {
         checkOpen()
         return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
+    /**
+     * If `true`, the particles will emit from all surfaces of the mesh.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter.set_use_all_surfaces
+     */
     fun setUseAllSurfaces(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setUseAllSurfacesBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the particles will emit from all surfaces of the mesh.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter.is_use_all_surfaces
+     */
     fun isUseAllSurfaces(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUseAllSurfacesBind, segment)
     }
 
+    /**
+     * Index of the surface that emits particles. `use_all_surfaces` must be `false` for this to take
+     * effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter.set_surface_index
+     */
     fun setSurfaceIndex(surfaceIndex: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSurfaceIndexBind, segment, surfaceIndex)
     }
 
+    /**
+     * Index of the surface that emits particles. `use_all_surfaces` must be `false` for this to take
+     * effect.
+     *
+     * Generated from Godot docs: VisualShaderNodeParticleMeshEmitter.get_surface_index
+     */
     fun getSurfaceIndex(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceIndexBind, segment)

@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A GDScript syntax highlighter that can be used with `TextEdit` and `CodeEdit` nodes.
+ *
  * Generated from Godot docs: GDScriptSyntaxHighlighter
  */
 class GDScriptSyntaxHighlighter(handle: GodotHandle) : EditorSyntaxHighlighter(handle) {

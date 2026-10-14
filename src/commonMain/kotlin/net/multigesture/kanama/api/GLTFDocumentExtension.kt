@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * `GLTFDocument` extension class.
+ *
  * Generated from Godot docs: GLTFDocumentExtension
  */
 open class GLTFDocumentExtension(handle: GodotHandle) : Resource(handle) {

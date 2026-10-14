@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node for shader parameter (uniform) of type `Texture2DArray`.
+ *
  * Generated from Godot docs: VisualShaderNodeTexture2DArrayParameter
  */
 class VisualShaderNodeTexture2DArrayParameter(handle: GodotHandle) : VisualShaderNodeTextureParameter(handle) {

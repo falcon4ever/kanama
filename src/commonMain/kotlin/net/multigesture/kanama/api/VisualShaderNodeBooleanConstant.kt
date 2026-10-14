@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A boolean constant to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeBooleanConstant
  */
 class VisualShaderNodeBooleanConstant(handle: GodotHandle) : VisualShaderNodeConstant(handle) {
@@ -16,11 +18,21 @@ class VisualShaderNodeBooleanConstant(handle: GodotHandle) : VisualShaderNodeCon
         @JvmName("setConstantProperty")
         set(value) = setConstant(value)
 
+    /**
+     * A boolean constant which represents a state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeBooleanConstant.set_constant
+     */
     fun setConstant(constant: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setConstantBind, segment, constant)
     }
 
+    /**
+     * A boolean constant which represents a state of this node.
+     *
+     * Generated from Godot docs: VisualShaderNodeBooleanConstant.get_constant
+     */
     fun getConstant(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConstantBind, segment)

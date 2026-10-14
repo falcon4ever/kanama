@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Visual shader node that defines output values for particle emitting.
+ *
  * Generated from Godot docs: VisualShaderNodeParticleOutput
  */
 class VisualShaderNodeParticleOutput(handle: GodotHandle) : VisualShaderNodeOutput(handle) {

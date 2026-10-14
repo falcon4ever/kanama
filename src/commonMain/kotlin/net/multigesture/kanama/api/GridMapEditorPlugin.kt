@@ -8,37 +8,85 @@ import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3i
 
 /**
+ * Editor for `GridMap` nodes.
+ *
  * Generated from Godot docs: GridMapEditorPlugin
  */
 class GridMapEditorPlugin(handle: GodotHandle) : EditorPlugin(handle) {
+    /**
+     * Returns the `GridMap` node currently edited by the grid map editor.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.get_current_grid_map
+     */
     fun getCurrentGridMap(): GridMap? {
         return GridMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurrentGridMapBind, segment))
     }
 
+    /**
+     * Selects the cells inside the given bounds from `begin` to `end`.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.set_selection
+     */
     fun setSelection(begin: Vector3i, end: Vector3i) {
         ObjectCalls.ptrcallWithTwoVector3iArgs(Binds.setSelectionBind, segment, begin, end)
     }
 
+    /**
+     * Deselects any currently selected cells.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.clear_selection
+     */
     fun clearSelection() {
         ObjectCalls.ptrcallNoArgs(Binds.clearSelectionBind, segment)
     }
 
+    /**
+     * Returns the cell coordinate bounds of the current selection. Use `has_selection` to check if
+     * there is an active selection.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.get_selection
+     */
     fun getSelection(): AABB {
         return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getSelectionBind, segment)
     }
 
+    /**
+     * Returns `true` if there are selected cells.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.has_selection
+     */
     fun hasSelection(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasSelectionBind, segment)
     }
 
+    /**
+     * Returns an array of `Vector3i`s with the selected cells' coordinates.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.get_selected_cells
+     */
     fun getSelectedCells(): List<Any?> {
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getSelectedCellsBind, segment)
     }
 
+    /**
+     * Selects the `MeshLibrary` item with the given index in the grid map editor's palette. If a
+     * negative index is given, no item will be selected. If a value greater than the last index is
+     * given, the last item will be selected. Note: The indices might not be in the same order as they
+     * appear in the editor's interface.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.set_selected_palette_item
+     */
     fun setSelectedPaletteItem(item: Int) {
         ObjectCalls.ptrcallWithIntArg(Binds.setSelectedPaletteItemBind, segment, item)
     }
 
+    /**
+     * Returns the index of the selected `MeshLibrary` item in the grid map editor's palette or `-1` if
+     * no item is selected. Note: The indices might not be in the same order as they appear in the
+     * editor's interface.
+     *
+     * Generated from Godot docs: GridMapEditorPlugin.get_selected_palette_item
+     */
     fun getSelectedPaletteItem(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSelectedPaletteItemBind, segment)
     }

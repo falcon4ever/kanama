@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A sequence of Ogg packets.
+ *
  * Generated from Godot docs: OggPacketSequence
  */
 class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
@@ -28,36 +30,73 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSamplingRateProperty")
         set(value) = setSamplingRate(value)
 
+    /**
+     * Contains the raw packets that make up this OggPacketSequence.
+     *
+     * Generated from Godot docs: OggPacketSequence.set_packet_data
+     */
     fun setPacketData(packetData: List<List<Any?>>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayListArg(Binds.setPacketDataBind, segment, packetData)
     }
 
+    /**
+     * Contains the raw packets that make up this OggPacketSequence.
+     *
+     * Generated from Godot docs: OggPacketSequence.get_packet_data
+     */
     fun getPacketData(): List<List<Any?>> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArrayList(Binds.getPacketDataBind, segment)
     }
 
+    /**
+     * Contains the granule positions for each page in this packet sequence.
+     *
+     * Generated from Godot docs: OggPacketSequence.set_packet_granule_positions
+     */
     fun setPacketGranulePositions(granulePositions: List<Long>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedInt64ListArg(Binds.setPacketGranulePositionsBind, segment, granulePositions)
     }
 
+    /**
+     * Contains the granule positions for each page in this packet sequence.
+     *
+     * Generated from Godot docs: OggPacketSequence.get_packet_granule_positions
+     */
     fun getPacketGranulePositions(): List<Long> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPacketGranulePositionsBind, segment)
     }
 
+    /**
+     * Holds sample rate information about this sequence. Must be set by another class that actually
+     * understands the codec.
+     *
+     * Generated from Godot docs: OggPacketSequence.set_sampling_rate
+     */
     fun setSamplingRate(samplingRate: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setSamplingRateBind, segment, samplingRate)
     }
 
+    /**
+     * Holds sample rate information about this sequence. Must be set by another class that actually
+     * understands the codec.
+     *
+     * Generated from Godot docs: OggPacketSequence.get_sampling_rate
+     */
     fun getSamplingRate(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSamplingRateBind, segment)
     }
 
+    /**
+     * The length of this stream, in seconds.
+     *
+     * Generated from Godot docs: OggPacketSequence.get_length
+     */
     fun getLength(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)

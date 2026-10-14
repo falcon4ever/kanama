@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Calculates the determinant of a `Transform3D` within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeDeterminant
  */
 class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle) {

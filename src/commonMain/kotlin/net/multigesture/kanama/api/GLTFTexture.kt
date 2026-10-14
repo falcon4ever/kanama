@@ -7,6 +7,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * GLTFTexture represents a texture in a glTF file.
+ *
  * Generated from Godot docs: GLTFTexture
  */
 class GLTFTexture(handle: GodotHandle) : Resource(handle) {
@@ -22,21 +24,45 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSamplerProperty")
         set(value) = setSampler(value)
 
+    /**
+     * The index of the image associated with this texture, see `GLTFState.get_images`. If -1, then
+     * this texture does not have an image assigned.
+     *
+     * Generated from Godot docs: GLTFTexture.get_src_image
+     */
     fun getSrcImage(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSrcImageBind, segment)
     }
 
+    /**
+     * The index of the image associated with this texture, see `GLTFState.get_images`. If -1, then
+     * this texture does not have an image assigned.
+     *
+     * Generated from Godot docs: GLTFTexture.set_src_image
+     */
     fun setSrcImage(srcImage: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSrcImageBind, segment, srcImage)
     }
 
+    /**
+     * ID of the texture sampler to use when sampling the image. If -1, then the default texture
+     * sampler is used (linear filtering, and repeat wrapping in both axes).
+     *
+     * Generated from Godot docs: GLTFTexture.get_sampler
+     */
     fun getSampler(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSamplerBind, segment)
     }
 
+    /**
+     * ID of the texture sampler to use when sampling the image. If -1, then the default texture
+     * sampler is used (linear filtering, and repeat wrapping in both axes).
+     *
+     * Generated from Godot docs: GLTFTexture.set_sampler
+     */
     fun setSampler(sampler: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setSamplerBind, segment, sampler)

@@ -6,9 +6,16 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A script implemented in the GDScript programming language.
+ *
  * Generated from Godot docs: GDScript
  */
 class GDScript(handle: GodotHandle) : Script(handle) {
+    /**
+     * Returns a new instance of the script.
+     *
+     * Generated from Godot docs: GDScript.new
+     */
     fun new(vararg extraArgs: Any?): Any? {
         checkOpen()
         return ObjectCalls.callWithVariantArgs(Binds.newBind, segment, listOf(*extraArgs))

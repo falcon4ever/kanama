@@ -25,7 +25,7 @@ _Intentionally bespoke — not generatable from extension_api.json; correct as-i
 | `src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt:5` | [runtime] signal/connect/emitSignal/await use the custom GDExtension |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:32` | [seam] thin cinterop facade over the C shim entry points the runtime and |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt:9` | [platform] MainThread.post/runOnMainThread run inline (Kotlin/Native scripts already run on the engine main thread); the frame queues are pumped by KanamaIosRuntime.frame(), not a JVM executor. |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt:6` | [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt:7` | [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt:7` | [platform] iOS actual of the script-authoring seam (ScriptRuntime.expect.kt, task 133): the runtime's script-instance table, the main dispatcher and the script-error report. |
 
 ## SUGAR

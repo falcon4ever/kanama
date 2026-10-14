@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * An advanced text server with support for BiDi, complex text layout, and contextual OpenType
+ * features. Used in Godot by default.
+ *
  * Generated from Godot docs: TextServerAdvanced
  */
 class TextServerAdvanced(handle: GodotHandle) : TextServerExtension(handle) {

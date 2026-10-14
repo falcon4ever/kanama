@@ -7,9 +7,16 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * Object for storing the queries anchor result data.
+ *
  * Generated from Godot docs: OpenXRSpatialComponentAnchorList
  */
 class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
+    /**
+     * Returns the transform for the entity at this `index`.
+     *
+     * Generated from Godot docs: OpenXRSpatialComponentAnchorList.get_entity_pose
+     */
     fun getEntityPose(index: Long): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(Binds.getEntityPoseBind, segment, index)

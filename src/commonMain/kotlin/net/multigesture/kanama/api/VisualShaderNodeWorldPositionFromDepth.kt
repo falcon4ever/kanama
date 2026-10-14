@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that calculates the position of the pixel in world space using the depth
+ * texture.
+ *
  * Generated from Godot docs: VisualShaderNodeWorldPositionFromDepth
  */
 class VisualShaderNodeWorldPositionFromDepth(handle: GodotHandle) : VisualShaderNode(handle) {

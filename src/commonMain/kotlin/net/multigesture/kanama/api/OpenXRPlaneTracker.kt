@@ -9,6 +9,8 @@ import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * Spatial entity tracker for our spatial entity plane tracking extension.
+ *
  * Generated from Godot docs: OpenXRPlaneTracker
  */
 class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handle) {
@@ -30,56 +32,114 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
         @JvmName("setPlaneLabelProperty")
         set(value) = setPlaneLabel(value)
 
+    /**
+     * The bounding size of the plane. This is a 2D size.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.set_bounds_size
+     */
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2Arg(Binds.setBoundsSizeBind, segment, boundsSize)
     }
 
+    /**
+     * The bounding size of the plane. This is a 2D size.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_bounds_size
+     */
     fun getBoundsSize(): Vector2 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
     }
 
+    /**
+     * The main alignment in space of this plane.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.set_plane_alignment
+     */
     fun setPlaneAlignment(planeAlignment: OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setPlaneAlignmentBind, segment, planeAlignment.value)
     }
 
+    /**
+     * The main alignment in space of this plane.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_plane_alignment
+     */
     fun getPlaneAlignment(): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
         return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPlaneAlignmentBind, segment))
     }
 
+    /**
+     * The semantic label for this plane.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.set_plane_label
+     */
     fun setPlaneLabel(planeLabel: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setPlaneLabelBind, segment, planeLabel)
     }
 
+    /**
+     * The semantic label for this plane.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_plane_label
+     */
     fun getPlaneLabel(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getPlaneLabelBind, segment)
     }
 
+    /**
+     * Sets the mesh data for this plane. You should only call this if you are handling your own
+     * discovery logic.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.set_mesh_data
+     */
     fun setMeshData(origin: Transform3D, vertices: List<Vector2>, indices: List<Int>) {
         checkOpen()
         ObjectCalls.ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(Binds.setMeshDataBind, segment, origin, vertices, indices)
     }
 
+    /**
+     * Clears the mesh data for this tracker. You should only call this if you are handling your own
+     * discovery logic.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.clear_mesh_data
+     */
     fun clearMeshData() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearMeshDataBind, segment)
     }
 
+    /**
+     * Gets the transform by which to offset the mesh and collision shape from our pose to display
+     * these correctly.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_mesh_offset
+     */
     fun getMeshOffset(): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getMeshOffsetBind, segment)
     }
 
+    /**
+     * Gets a mesh created from either the mesh data or from our bounding size for this plane.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_mesh
+     */
     fun getMesh(): Mesh? {
         checkOpen()
         return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
+    /**
+     * Gets a collision shape built either from the mesh data or from our bounding size for this plane.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_shape
+     */
     fun getShape(thickness: Double = 0.01): Shape3D? {
         checkOpen()
         return Shape3D.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(Binds.getShapeBind, segment, thickness))

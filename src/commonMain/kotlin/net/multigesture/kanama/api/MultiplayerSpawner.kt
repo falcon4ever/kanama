@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.NodePath
 
 /**
+ * Automatically replicates spawnable nodes from the authority to other multiplayer peers.
+ *
  * Generated from Godot docs: MultiplayerSpawner
  */
 class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
@@ -27,46 +29,113 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
         @JvmName("spawnFunctionProperty")
         get() = getSpawnFunction()
 
+    /**
+     * Adds a scene path to spawnable scenes, making it automatically replicated from the multiplayer
+     * authority to other peers when added as children of the node pointed by `spawn_path`.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.add_spawnable_scene
+     */
     fun addSpawnableScene(path: String) {
         ObjectCalls.ptrcallWithStringArg(Binds.addSpawnableSceneBind, segment, path)
     }
 
+    /**
+     * Returns the count of spawnable scene paths.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.get_spawnable_scene_count
+     */
     fun getSpawnableSceneCount(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSpawnableSceneCountBind, segment)
     }
 
+    /**
+     * Returns the spawnable scene path by index.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.get_spawnable_scene
+     */
     fun getSpawnableScene(index: Int): String {
         return ObjectCalls.ptrcallWithIntArgRetString(Binds.getSpawnableSceneBind, segment, index)
     }
 
+    /**
+     * Clears all spawnable scenes. Does not despawn existing instances on remote peers.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.clear_spawnable_scenes
+     */
     fun clearSpawnableScenes() {
         ObjectCalls.ptrcallNoArgs(Binds.clearSpawnableScenesBind, segment)
     }
 
+    /**
+     * Requests a custom spawn, with `data` passed to `spawn_function` on all peers. Returns the
+     * locally spawned node instance already inside the scene tree, and added as a child of the node
+     * pointed by `spawn_path`. Note: Spawnable scenes are spawned automatically. `spawn` is only
+     * needed for custom spawns.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.spawn
+     */
     fun spawn(data: Any? = null): Node? {
         return Node.wrap(ObjectCalls.ptrcallWithVariantArgRetObject(Binds.spawnBind, segment, data))
     }
 
+    /**
+     * Path to the spawn root. Spawnable scenes that are added as direct children are replicated to
+     * other peers.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.get_spawn_path
+     */
     fun getSpawnPath(): NodePath {
         return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getSpawnPathBind, segment)
     }
 
+    /**
+     * Path to the spawn root. Spawnable scenes that are added as direct children are replicated to
+     * other peers.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.set_spawn_path
+     */
     fun setSpawnPath(path: NodePath) {
         ObjectCalls.ptrcallWithNodePathArg(Binds.setSpawnPathBind, segment, path)
     }
 
+    /**
+     * Maximum number of nodes allowed to be spawned by this spawner. Includes both spawnable scenes
+     * and custom spawns. When set to `0` (the default), there is no limit.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.get_spawn_limit
+     */
     fun getSpawnLimit(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getSpawnLimitBind, segment)
     }
 
+    /**
+     * Maximum number of nodes allowed to be spawned by this spawner. Includes both spawnable scenes
+     * and custom spawns. When set to `0` (the default), there is no limit.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.set_spawn_limit
+     */
     fun setSpawnLimit(limit: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(Binds.setSpawnLimitBind, segment, limit)
     }
 
+    /**
+     * Method called on all peers when a custom `spawn` is requested by the authority. Will receive the
+     * `data` parameter, and should return a `Node` that is not in the scene tree. Note: The returned
+     * node should not be added to the scene with `Node.add_child`. This is done automatically.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.get_spawn_function
+     */
     fun getSpawnFunction(): GodotCallable? {
         return ObjectCalls.ptrcallNoArgsRetCallable(Binds.getSpawnFunctionBind, segment)
     }
 
+    /**
+     * Method called on all peers when a custom `spawn` is requested by the authority. Will receive the
+     * `data` parameter, and should return a `Node` that is not in the scene tree. Note: The returned
+     * node should not be added to the scene with `Node.add_child`. This is done automatically.
+     *
+     * Generated from Godot docs: MultiplayerSpawner.set_spawn_function
+     */
     fun setSpawnFunction(spawnFunction: GodotCallable) {
         ObjectCalls.ptrcallWithCallableArg(Binds.setSpawnFunctionBind, segment, spawnFunction.target.segment, spawnFunction.method)
     }

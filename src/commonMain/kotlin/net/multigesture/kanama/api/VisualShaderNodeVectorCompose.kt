@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Composes a `Vector2`, `Vector3` or 4D vector (represented as a `Quaternion`) from scalars within
+ * the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeVectorCompose
  */
 class VisualShaderNodeVectorCompose(handle: GodotHandle) : VisualShaderNodeVectorBase(handle) {

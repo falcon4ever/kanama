@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that returns the depth value of the DEPTH_TEXTURE node in a linear space.
+ *
  * Generated from Godot docs: VisualShaderNodeLinearSceneDepth
  */
 class VisualShaderNodeLinearSceneDepth(handle: GodotHandle) : VisualShaderNode(handle) {

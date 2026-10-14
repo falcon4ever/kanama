@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Universal Plug and Play (UPnP) device.
+ *
  * Generated from Godot docs: UPNPDevice
  */
 class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
@@ -47,98 +49,237 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setIgdStatusProperty")
         set(value) = setIgdStatus(value)
 
+    /**
+     * Returns `true` if this is a valid IGD (InternetGatewayDevice) which potentially supports port
+     * forwarding.
+     *
+     * Generated from Godot docs: UPNPDevice.is_valid_gateway
+     */
     fun isValidGateway(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isValidGatewayBind, segment)
     }
 
+    /**
+     * Returns the external IP address of this `UPNPDevice` or an empty string.
+     *
+     * Generated from Godot docs: UPNPDevice.query_external_address
+     */
     fun queryExternalAddress(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.queryExternalAddressBind, segment)
     }
 
+    /**
+     * Adds a port mapping to forward the given external port on this `UPNPDevice` for the given
+     * protocol to the local machine. See `UPNP.add_port_mapping`.
+     *
+     * Generated from Godot docs: UPNPDevice.add_port_mapping
+     */
     fun addPortMapping(port: Int, portInternal: Int = 0, desc: String = "", proto: String = "UDP", duration: Int = 0): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithTwoIntTwoStringAndIntArgsRetInt(Binds.addPortMappingBind, segment, port, portInternal, desc, proto, duration)
     }
 
+    /**
+     * Deletes the port mapping identified by the given port and protocol combination on this device.
+     * See `UPNP.delete_port_mapping`.
+     *
+     * Generated from Godot docs: UPNPDevice.delete_port_mapping
+     */
     fun deletePortMapping(port: Int, proto: String = "UDP"): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntAndStringArgRetInt(Binds.deletePortMappingBind, segment, port, proto)
     }
 
+    /**
+     * URL to the device description.
+     *
+     * Generated from Godot docs: UPNPDevice.set_description_url
+     */
     fun setDescriptionUrl(url: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setDescriptionUrlBind, segment, url)
     }
 
+    /**
+     * URL to the device description.
+     *
+     * Generated from Godot docs: UPNPDevice.get_description_url
+     */
     fun getDescriptionUrl(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getDescriptionUrlBind, segment)
     }
 
+    /**
+     * Service type.
+     *
+     * Generated from Godot docs: UPNPDevice.set_service_type
+     */
     fun setServiceType(type: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setServiceTypeBind, segment, type)
     }
 
+    /**
+     * Service type.
+     *
+     * Generated from Godot docs: UPNPDevice.get_service_type
+     */
     fun getServiceType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getServiceTypeBind, segment)
     }
 
+    /**
+     * IDG control URL.
+     *
+     * Generated from Godot docs: UPNPDevice.set_igd_control_url
+     */
     fun setIgdControlUrl(url: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setIgdControlUrlBind, segment, url)
     }
 
+    /**
+     * IDG control URL.
+     *
+     * Generated from Godot docs: UPNPDevice.get_igd_control_url
+     */
     fun getIgdControlUrl(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdControlUrlBind, segment)
     }
 
+    /**
+     * IGD service type.
+     *
+     * Generated from Godot docs: UPNPDevice.set_igd_service_type
+     */
     fun setIgdServiceType(type: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setIgdServiceTypeBind, segment, type)
     }
 
+    /**
+     * IGD service type.
+     *
+     * Generated from Godot docs: UPNPDevice.get_igd_service_type
+     */
     fun getIgdServiceType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdServiceTypeBind, segment)
     }
 
+    /**
+     * Address of the local machine in the network connecting it to this `UPNPDevice`.
+     *
+     * Generated from Godot docs: UPNPDevice.set_igd_our_addr
+     */
     fun setIgdOurAddr(addr: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setIgdOurAddrBind, segment, addr)
     }
 
+    /**
+     * Address of the local machine in the network connecting it to this `UPNPDevice`.
+     *
+     * Generated from Godot docs: UPNPDevice.get_igd_our_addr
+     */
     fun getIgdOurAddr(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getIgdOurAddrBind, segment)
     }
 
+    /**
+     * IGD status.
+     *
+     * Generated from Godot docs: UPNPDevice.set_igd_status
+     */
     fun setIgdStatus(status: UPNPDevice.IGDStatus) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setIgdStatusBind, segment, status.value)
     }
 
+    /**
+     * IGD status.
+     *
+     * Generated from Godot docs: UPNPDevice.get_igd_status
+     */
     fun getIgdStatus(): UPNPDevice.IGDStatus {
         checkOpen()
         return UPNPDevice.IGDStatus(ObjectCalls.ptrcallNoArgsRetLong(Binds.getIgdStatusBind, segment))
     }
 
+    /**
+     * Godot's `UPNPDevice.IGDStatus` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`UPNPDevice.IGDStatus.<NAME>`).
+     *
+     * Generated from Godot docs: UPNPDevice.IGDStatus
+     */
     @JvmInline
     value class IGDStatus(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * OK.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_OK
+             */
             val OK: IGDStatus get() = IGDStatus(0L)
+            /**
+             * HTTP error.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_HTTP_ERROR
+             */
             val HTTP_ERROR: IGDStatus get() = IGDStatus(1L)
+            /**
+             * Empty HTTP response.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_HTTP_EMPTY
+             */
             val HTTP_EMPTY: IGDStatus get() = IGDStatus(2L)
+            /**
+             * Returned response contained no URLs.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_NO_URLS
+             */
             val NO_URLS: IGDStatus get() = IGDStatus(3L)
+            /**
+             * Not a valid IGD.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_NO_IGD
+             */
             val NO_IGD: IGDStatus get() = IGDStatus(4L)
+            /**
+             * Disconnected.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_DISCONNECTED
+             */
             val DISCONNECTED: IGDStatus get() = IGDStatus(5L)
+            /**
+             * Unknown device.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_UNKNOWN_DEVICE
+             */
             val UNKNOWN_DEVICE: IGDStatus get() = IGDStatus(6L)
+            /**
+             * Invalid control.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_INVALID_CONTROL
+             */
             val INVALID_CONTROL: IGDStatus get() = IGDStatus(7L)
+            /**
+             * Memory allocation error.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_MALLOC_ERROR
+             */
             val MALLOC_ERROR: IGDStatus get() = IGDStatus(8L)
+            /**
+             * Unknown error.
+             *
+             * Generated from Godot docs: UPNPDevice.IGD_STATUS_UNKNOWN_ERROR
+             */
             val UNKNOWN_ERROR: IGDStatus get() = IGDStatus(9L)
         }
     }

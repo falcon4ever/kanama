@@ -9,6 +9,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 
 /**
+ * Represents a glTF light.
+ *
  * Generated from Godot docs: GLTFLight
  */
 class GLTFLight(handle: GodotHandle) : Resource(handle) {
@@ -48,71 +50,173 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
         @JvmName("setOuterConeAngleProperty")
         set(value) = setOuterConeAngle(value)
 
+    /**
+     * Converts this GLTFLight instance into a Godot `Light3D` node.
+     *
+     * Generated from Godot docs: GLTFLight.to_node
+     */
     fun toNode(): Light3D? {
         checkOpen()
         return Light3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
     }
 
+    /**
+     * Serializes this GLTFLight instance into a `Dictionary`.
+     *
+     * Generated from Godot docs: GLTFLight.to_dictionary
+     */
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
+    /**
+     * The `Color` of the light in linear space. Defaults to white. A black color causes the light to
+     * have no effect. This value is linear to match glTF, but will be converted to nonlinear sRGB when
+     * creating a Godot `Light3D` node upon import, or converted to linear when exporting a Godot
+     * `Light3D` to glTF.
+     *
+     * Generated from Godot docs: GLTFLight.get_color
+     */
     fun getColor(): Color {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
+    /**
+     * The `Color` of the light in linear space. Defaults to white. A black color causes the light to
+     * have no effect. This value is linear to match glTF, but will be converted to nonlinear sRGB when
+     * creating a Godot `Light3D` node upon import, or converted to linear when exporting a Godot
+     * `Light3D` to glTF.
+     *
+     * Generated from Godot docs: GLTFLight.set_color
+     */
     fun setColor(color: Color) {
         checkOpen()
         ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
+    /**
+     * The intensity of the light. This is expressed in candelas (lumens per steradian) for point and
+     * spot lights, and lux (lumens per m²) for directional lights. When creating a Godot light, this
+     * value is converted to a unitless multiplier.
+     *
+     * Generated from Godot docs: GLTFLight.get_intensity
+     */
     fun getIntensity(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getIntensityBind, segment)
     }
 
+    /**
+     * The intensity of the light. This is expressed in candelas (lumens per steradian) for point and
+     * spot lights, and lux (lumens per m²) for directional lights. When creating a Godot light, this
+     * value is converted to a unitless multiplier.
+     *
+     * Generated from Godot docs: GLTFLight.set_intensity
+     */
     fun setIntensity(intensity: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setIntensityBind, segment, intensity)
     }
 
+    /**
+     * The type of the light. The values accepted by Godot are "point", "spot", and "directional",
+     * which correspond to Godot's `OmniLight3D`, `SpotLight3D`, and `DirectionalLight3D` respectively.
+     *
+     * Generated from Godot docs: GLTFLight.get_light_type
+     */
     fun getLightType(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getLightTypeBind, segment)
     }
 
+    /**
+     * The type of the light. The values accepted by Godot are "point", "spot", and "directional",
+     * which correspond to Godot's `OmniLight3D`, `SpotLight3D`, and `DirectionalLight3D` respectively.
+     *
+     * Generated from Godot docs: GLTFLight.set_light_type
+     */
     fun setLightType(lightType: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setLightTypeBind, segment, lightType)
     }
 
+    /**
+     * The range of the light, beyond which the light has no effect. glTF lights with no range defined
+     * behave like physical lights (which have infinite range). When creating a Godot light, the range
+     * is clamped to `4096.0`.
+     *
+     * Generated from Godot docs: GLTFLight.get_range
+     */
     fun getRange(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRangeBind, segment)
     }
 
+    /**
+     * The range of the light, beyond which the light has no effect. glTF lights with no range defined
+     * behave like physical lights (which have infinite range). When creating a Godot light, the range
+     * is clamped to `4096.0`.
+     *
+     * Generated from Godot docs: GLTFLight.set_range
+     */
     fun setRange(range: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setRangeBind, segment, range)
     }
 
+    /**
+     * The inner angle of the cone in a spotlight. Must be less than or equal to the outer cone angle.
+     * Within this angle, the light is at full brightness. Between the inner and outer cone angles,
+     * there is a transition from full brightness to zero brightness. When creating a Godot
+     * `SpotLight3D`, the ratio between the inner and outer cone angles is used to calculate the
+     * attenuation of the light.
+     *
+     * Generated from Godot docs: GLTFLight.get_inner_cone_angle
+     */
     fun getInnerConeAngle(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerConeAngleBind, segment)
     }
 
+    /**
+     * The inner angle of the cone in a spotlight. Must be less than or equal to the outer cone angle.
+     * Within this angle, the light is at full brightness. Between the inner and outer cone angles,
+     * there is a transition from full brightness to zero brightness. When creating a Godot
+     * `SpotLight3D`, the ratio between the inner and outer cone angles is used to calculate the
+     * attenuation of the light.
+     *
+     * Generated from Godot docs: GLTFLight.set_inner_cone_angle
+     */
     fun setInnerConeAngle(innerConeAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerConeAngleBind, segment, innerConeAngle)
     }
 
+    /**
+     * The outer angle of the cone in a spotlight. Must be greater than or equal to the inner angle. At
+     * this angle, the light drops off to zero brightness. Between the inner and outer cone angles,
+     * there is a transition from full brightness to zero brightness. If this angle is a half turn,
+     * then the spotlight emits in all directions. When creating a Godot `SpotLight3D`, the outer cone
+     * angle is used as the angle of the spotlight.
+     *
+     * Generated from Godot docs: GLTFLight.get_outer_cone_angle
+     */
     fun getOuterConeAngle(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterConeAngleBind, segment)
     }
 
+    /**
+     * The outer angle of the cone in a spotlight. Must be greater than or equal to the inner angle. At
+     * this angle, the light drops off to zero brightness. Between the inner and outer cone angles,
+     * there is a transition from full brightness to zero brightness. If this angle is a half turn,
+     * then the spotlight emits in all directions. When creating a Godot `SpotLight3D`, the outer cone
+     * angle is used as the angle of the spotlight.
+     *
+     * Generated from Godot docs: GLTFLight.set_outer_cone_angle
+     */
     fun setOuterConeAngle(outerConeAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterConeAngleBind, segment, outerConeAngle)
@@ -129,10 +233,20 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
     }
 
     companion object {
+        /**
+         * Create a new GLTFLight instance from the given Godot `Light3D` node.
+         *
+         * Generated from Godot docs: GLTFLight.from_node
+         */
         fun fromNode(lightNode: Light3D): GLTFLight? {
             return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, lightNode.segment))
         }
 
+        /**
+         * Creates a new GLTFLight instance by parsing the given `Dictionary`.
+         *
+         * Generated from Godot docs: GLTFLight.from_dictionary
+         */
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFLight? {
             return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }

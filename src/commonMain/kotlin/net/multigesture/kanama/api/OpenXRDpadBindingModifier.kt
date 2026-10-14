@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * The DPad binding modifier converts an axis input to a dpad output.
+ *
  * Generated from Godot docs: OpenXRDpadBindingModifier
  */
 class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(handle) {
@@ -65,91 +67,185 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
         @JvmName("setOffHapticProperty")
         set(value) = setOffHaptic(value)
 
+    /**
+     * Action set for which this dpad binding modifier is active.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_action_set
+     */
     fun setActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Action set for which this dpad binding modifier is active.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_action_set
+     */
     fun getActionSet(): OpenXRActionSet? {
         checkOpen()
         return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getActionSetBind, segment))
     }
 
+    /**
+     * Input path for this dpad binding modifier.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_input_path
+     */
     fun setInputPath(inputPath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setInputPathBind, segment, inputPath)
     }
 
+    /**
+     * Input path for this dpad binding modifier.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_input_path
+     */
     fun getInputPath(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getInputPathBind, segment)
     }
 
+    /**
+     * When our input value is equal or larger than this value, our dpad in that direction becomes
+     * `true`. It stays `true` until it falls under the `threshold_released` value.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_threshold
+     */
     fun setThreshold(threshold: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdBind, segment, threshold)
     }
 
+    /**
+     * When our input value is equal or larger than this value, our dpad in that direction becomes
+     * `true`. It stays `true` until it falls under the `threshold_released` value.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_threshold
+     */
     fun getThreshold(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdBind, segment)
     }
 
+    /**
+     * When our input value falls below this, our output becomes `false`.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_threshold_released
+     */
     fun setThresholdReleased(thresholdReleased: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setThresholdReleasedBind, segment, thresholdReleased)
     }
 
+    /**
+     * When our input value falls below this, our output becomes `false`.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_threshold_released
+     */
     fun getThresholdReleased(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThresholdReleasedBind, segment)
     }
 
+    /**
+     * Center region in which our center position of our dpad return `true`.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_center_region
+     */
     fun setCenterRegion(centerRegion: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setCenterRegionBind, segment, centerRegion)
     }
 
+    /**
+     * Center region in which our center position of our dpad return `true`.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_center_region
+     */
     fun getCenterRegion(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCenterRegionBind, segment)
     }
 
+    /**
+     * The angle of each wedge that identifies the 4 directions of the emulated dpad.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_wedge_angle
+     */
     fun setWedgeAngle(wedgeAngle: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setWedgeAngleBind, segment, wedgeAngle)
     }
 
+    /**
+     * The angle of each wedge that identifies the 4 directions of the emulated dpad.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_wedge_angle
+     */
     fun getWedgeAngle(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWedgeAngleBind, segment)
     }
 
+    /**
+     * If `false`, when the joystick enters a new dpad zone this becomes `true`. If `true`, when the
+     * joystick remains in active dpad zone, this remains `true` even if we overlap with another zone.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_is_sticky
+     */
     fun setIsSticky(isSticky: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setIsStickyBind, segment, isSticky)
     }
 
+    /**
+     * If `false`, when the joystick enters a new dpad zone this becomes `true`. If `true`, when the
+     * joystick remains in active dpad zone, this remains `true` even if we overlap with another zone.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_is_sticky
+     */
     fun getIsSticky(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsStickyBind, segment)
     }
 
+    /**
+     * Haptic pulse to emit when the user presses the input.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_on_haptic
+     */
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Haptic pulse to emit when the user presses the input.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_on_haptic
+     */
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
         return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOnHapticBind, segment))
     }
 
+    /**
+     * Haptic pulse to emit when the user releases the input.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.set_off_haptic
+     */
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Haptic pulse to emit when the user releases the input.
+     *
+     * Generated from Godot docs: OpenXRDpadBindingModifier.get_off_haptic
+     */
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
         return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOffHapticBind, segment))

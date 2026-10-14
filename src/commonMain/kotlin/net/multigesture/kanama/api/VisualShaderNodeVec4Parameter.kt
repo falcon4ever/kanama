@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Vector4
 
 /**
+ * A 4D vector parameter to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeVec4Parameter
  */
 class VisualShaderNodeVec4Parameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
@@ -23,21 +25,41 @@ class VisualShaderNodeVec4Parameter(handle: GodotHandle) : VisualShaderNodeParam
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec4Parameter.set_default_value_enabled
+     */
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec4Parameter.is_default_value_enabled
+     */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec4Parameter.set_default_value
+     */
     fun setDefaultValue(value: Vector4) {
         checkOpen()
         ObjectCalls.ptrcallWithVector4Arg(Binds.setDefaultValueBind, segment, value)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeVec4Parameter.get_default_value
+     */
     fun getDefaultValue(): Vector4 {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector4(Binds.getDefaultValueBind, segment)

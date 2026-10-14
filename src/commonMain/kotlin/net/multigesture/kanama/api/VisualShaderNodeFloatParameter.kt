@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A scalar float parameter to be used within the visual shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeFloatParameter
  */
 class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
@@ -47,72 +49,164 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
+    /**
+     * A hint applied to the uniform, which controls the values it can take when set through the
+     * Inspector.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.set_hint
+     */
     fun setHint(hint: VisualShaderNodeFloatParameter.Hint) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setHintBind, segment, hint.value)
     }
 
+    /**
+     * A hint applied to the uniform, which controls the values it can take when set through the
+     * Inspector.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.get_hint
+     */
     fun getHint(): VisualShaderNodeFloatParameter.Hint {
         checkOpen()
         return VisualShaderNodeFloatParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintBind, segment))
     }
 
+    /**
+     * Maximum value for range hints. Used if `hint` is set to `Hint.RANGE` or `Hint.RANGE_STEP`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.set_min
+     */
     fun setMin(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMinBind, segment, value)
     }
 
+    /**
+     * Maximum value for range hints. Used if `hint` is set to `Hint.RANGE` or `Hint.RANGE_STEP`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.get_min
+     */
     fun getMin(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinBind, segment)
     }
 
+    /**
+     * Minimum value for range hints. Used if `hint` is set to `Hint.RANGE` or `Hint.RANGE_STEP`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.set_max
+     */
     fun setMax(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxBind, segment, value)
     }
 
+    /**
+     * Minimum value for range hints. Used if `hint` is set to `Hint.RANGE` or `Hint.RANGE_STEP`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.get_max
+     */
     fun getMax(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxBind, segment)
     }
 
+    /**
+     * Step (increment) value for the range hint with step. Used if `hint` is set to `Hint.RANGE_STEP`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.set_step
+     */
     fun setStep(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setStepBind, segment, value)
     }
 
+    /**
+     * Step (increment) value for the range hint with step. Used if `hint` is set to `Hint.RANGE_STEP`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.get_step
+     */
     fun getStep(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
     }
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.set_default_value_enabled
+     */
     fun setDefaultValueEnabled(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(Binds.setDefaultValueEnabledBind, segment, enabled)
     }
 
+    /**
+     * Enables usage of the `default_value`.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.is_default_value_enabled
+     */
     fun isDefaultValueEnabled(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultValueEnabledBind, segment)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.set_default_value
+     */
     fun setDefaultValue(value: Double) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDefaultValueBind, segment, value)
     }
 
+    /**
+     * A default value to be assigned within the shader.
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.get_default_value
+     */
     fun getDefaultValue(): Double {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDefaultValueBind, segment)
     }
 
+    /**
+     * Godot's `VisualShaderNodeFloatParameter.Hint` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisualShaderNodeFloatParameter.Hint.<NAME>`).
+     *
+     * Generated from Godot docs: VisualShaderNodeFloatParameter.Hint
+     */
     @JvmInline
     value class Hint(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * No hint used.
+             *
+             * Generated from Godot docs: VisualShaderNodeFloatParameter.HINT_NONE
+             */
             val NONE: Hint get() = Hint(0L)
+            /**
+             * A range hint for scalar value, which limits possible input values between `min` and `max`.
+             * Translated to `hint_range(min, max)` in shader code.
+             *
+             * Generated from Godot docs: VisualShaderNodeFloatParameter.HINT_RANGE
+             */
             val RANGE: Hint get() = Hint(1L)
+            /**
+             * A range hint for scalar value with step, which limits possible input values between `min` and
+             * `max`, with a step (increment) of `step`). Translated to `hint_range(min, max, step)` in shader
+             * code.
+             *
+             * Generated from Godot docs: VisualShaderNodeFloatParameter.HINT_RANGE_STEP
+             */
             val RANGE_STEP: Hint get() = Hint(2L)
+            /**
+             * Represents the size of the `Hint` enum.
+             *
+             * Generated from Godot docs: VisualShaderNodeFloatParameter.HINT_MAX
+             */
             val MAX: Hint get() = Hint(3L)
         }
     }

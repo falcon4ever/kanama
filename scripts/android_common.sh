@@ -5,14 +5,14 @@
 # messages) first, and DEMO_DIR, ROOT_DIR, GODOT_BIN, APK_PATH, LOG_FILE where a function needs them.
 #
 #   check_log <pattern> / check_log_absent <pattern>   the logcat verdicts (LOG_FILE)
-#   set_gradle_property <file> <key> <value>
+#   set_gradle_property <file> <key> <value>   (uses sed_inplace from scripts/portable.sh: source that first)
 #   build_demo_scripts                                 the demo's scripts, against THIS checkout
 #   install_desktop_addon                              the export-time editor's addon (task 116)
 #   ensure_android_build_template                      sets BUILD_GRADLE (and installs the template)
 
 check_log() {
   local pattern="$1"
-  if ! rg -q "$pattern" "$LOG_FILE"; then
+  if ! grep -Eq "$pattern" "$LOG_FILE"; then
     echo "$ANDROID_TAG missing log pattern: $pattern" >&2
     echo "$ANDROID_TAG log tail:" >&2
     tail -n 200 "$LOG_FILE" >&2
@@ -22,7 +22,7 @@ check_log() {
 
 check_log_absent() {
   local pattern="$1"
-  if rg -q "$pattern" "$LOG_FILE"; then
+  if grep -Eq "$pattern" "$LOG_FILE"; then
     echo "$ANDROID_TAG unexpected log pattern: $pattern" >&2
     echo "$ANDROID_TAG log tail:" >&2
     tail -n 200 "$LOG_FILE" >&2
@@ -35,7 +35,7 @@ set_gradle_property() {
   local key="$2"
   local value="$3"
   if [[ -f "$file" ]] && grep -q "^$key=" "$file"; then
-    /usr/bin/sed -i '' "s|^$key=.*|$key=$value|" "$file"
+    sed_inplace "$file" "s|^$key=.*|$key=$value|"
   else
     printf '\n%s=%s\n' "$key" "$value" >>"$file"
   fi

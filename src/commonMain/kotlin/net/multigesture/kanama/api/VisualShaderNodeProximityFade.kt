@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node representing proximity fade effect.
+ *
  * Generated from Godot docs: VisualShaderNodeProximityFade
  */
 class VisualShaderNodeProximityFade(handle: GodotHandle) : VisualShaderNode(handle) {

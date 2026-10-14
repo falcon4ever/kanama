@@ -10,6 +10,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.NodePath
 
 /**
+ * Describes how to access a property as defined in the glTF object model.
+ *
  * Generated from Godot docs: GLTFObjectModelProperty
  */
 class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
@@ -49,109 +51,319 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setVariantTypeProperty")
         set(value) = setVariantType(value)
 
+    /**
+     * Appends a `NodePath` to `node_paths`. This can be used by `GLTFDocumentExtension` classes to
+     * define how a glTF object model property maps to a Godot property, or multiple Godot properties.
+     * Prefer using `append_path_to_property` for simple cases. Be sure to also call `set_types` once
+     * (the order does not matter).
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.append_node_path
+     */
     fun appendNodePath(nodePath: NodePath) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathArg(Binds.appendNodePathBind, segment, nodePath)
     }
 
+    /**
+     * High-level wrapper over `append_node_path` that handles the most common cases. It constructs a
+     * new `NodePath` using `node_path` as a base and appends `prop_name` to the subpath. Be sure to
+     * also call `set_types` once (the order does not matter).
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.append_path_to_property
+     */
     fun appendPathToProperty(nodePath: NodePath, propName: String) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathStringNameArgs(Binds.appendPathToPropertyBind, segment, nodePath, propName)
     }
 
+    /**
+     * The GLTF accessor type associated with this property's `object_model_type`. See
+     * `GLTFAccessor.accessor_type` for possible values, and see `GLTFObjectModelType` for how the
+     * object model type maps to accessor types.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_accessor_type
+     */
     fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
         return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
     }
 
+    /**
+     * If set, this `Expression` will be used to convert the property value from the glTF object model
+     * to the value expected by the Godot property. This is useful when the glTF object model uses a
+     * different unit system, or when the data needs to be transformed in some way. If `null`, the
+     * value will be copied as-is.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_gltf_to_godot_expression
+     */
     fun getGltfToGodotExpression(): Expression? {
         checkOpen()
         return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGltfToGodotExpressionBind, segment))
     }
 
+    /**
+     * If set, this `Expression` will be used to convert the property value from the glTF object model
+     * to the value expected by the Godot property. This is useful when the glTF object model uses a
+     * different unit system, or when the data needs to be transformed in some way. If `null`, the
+     * value will be copied as-is.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_gltf_to_godot_expression
+     */
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * If set, this `Expression` will be used to convert the property value from the Godot property to
+     * the value expected by the glTF object model. This is useful when the glTF object model uses a
+     * different unit system, or when the data needs to be transformed in some way. If `null`, the
+     * value will be copied as-is.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_godot_to_gltf_expression
+     */
     fun getGodotToGltfExpression(): Expression? {
         checkOpen()
         return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotToGltfExpressionBind, segment))
     }
 
+    /**
+     * If set, this `Expression` will be used to convert the property value from the Godot property to
+     * the value expected by the glTF object model. This is useful when the glTF object model uses a
+     * different unit system, or when the data needs to be transformed in some way. If `null`, the
+     * value will be copied as-is.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_godot_to_gltf_expression
+     */
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * An array of `NodePath`s that point to a property, or multiple properties, in the Godot scene
+     * tree. On import, this will either be set by `GLTFDocument`, or by a `GLTFDocumentExtension`
+     * class. For simple cases, use `append_path_to_property` to add properties to this array. In most
+     * cases `node_paths` will only have one item, but in some cases a single glTF JSON pointer will
+     * map to multiple Godot properties. For example, a `GLTFCamera` or `GLTFLight` used on multiple
+     * glTF nodes will be represented by multiple Godot nodes.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_node_paths
+     */
     fun getNodePaths(): List<NodePath> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getNodePathsBind, segment)
     }
 
+    /**
+     * Returns `true` if `node_paths` is not empty. This is used during import to determine if a
+     * `GLTFObjectModelProperty` can handle converting a glTF object model property to a Godot
+     * property.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.has_node_paths
+     */
     fun hasNodePaths(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasNodePathsBind, segment)
     }
 
+    /**
+     * An array of `NodePath`s that point to a property, or multiple properties, in the Godot scene
+     * tree. On import, this will either be set by `GLTFDocument`, or by a `GLTFDocumentExtension`
+     * class. For simple cases, use `append_path_to_property` to add properties to this array. In most
+     * cases `node_paths` will only have one item, but in some cases a single glTF JSON pointer will
+     * map to multiple Godot properties. For example, a `GLTFCamera` or `GLTFLight` used on multiple
+     * glTF nodes will be represented by multiple Godot nodes.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_node_paths
+     */
     fun setNodePaths(nodePaths: List<NodePath>) {
         checkOpen()
         ObjectCalls.ptrcallWithNodePathListArg(Binds.setNodePathsBind, segment, nodePaths)
     }
 
+    /**
+     * The type of data stored in the glTF file as defined by the object model. This is a superset of
+     * the available accessor types, and determines the accessor type.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_object_model_type
+     */
     fun getObjectModelType(): GLTFObjectModelProperty.GLTFObjectModelType {
         checkOpen()
         return GLTFObjectModelProperty.GLTFObjectModelType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectModelTypeBind, segment))
     }
 
+    /**
+     * The type of data stored in the glTF file as defined by the object model. This is a superset of
+     * the available accessor types, and determines the accessor type.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_object_model_type
+     */
     fun setObjectModelType(type: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setObjectModelTypeBind, segment, type.value)
     }
 
+    /**
+     * The glTF object model JSON pointers used to identify the property in the glTF object model. In
+     * most cases, there will be only one item in this array, but specific cases may require multiple
+     * pointers. The items are themselves arrays which represent the JSON pointer split into its
+     * components.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_json_pointers
+     */
     fun getJsonPointers(): List<List<String>> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringListList(Binds.getJsonPointersBind, segment)
     }
 
+    /**
+     * Returns `true` if `json_pointers` is not empty. This is used during export to determine if a
+     * `GLTFObjectModelProperty` can handle converting a Godot property to a glTF object model
+     * property.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.has_json_pointers
+     */
     fun hasJsonPointers(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasJsonPointersBind, segment)
     }
 
+    /**
+     * The glTF object model JSON pointers used to identify the property in the glTF object model. In
+     * most cases, there will be only one item in this array, but specific cases may require multiple
+     * pointers. The items are themselves arrays which represent the JSON pointer split into its
+     * components.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_json_pointers
+     */
     fun setJsonPointers(jsonPointers: List<List<String>>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListListArg(Binds.setJsonPointersBind, segment, jsonPointers)
     }
 
+    /**
+     * The type of data stored in the Godot property. This is the type of the property that the
+     * `node_paths` point to.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.get_variant_type
+     */
     fun getVariantType(): VariantType {
         checkOpen()
         return VariantType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVariantTypeBind, segment))
     }
 
+    /**
+     * The type of data stored in the Godot property. This is the type of the property that the
+     * `node_paths` point to.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_variant_type
+     */
     fun setVariantType(variantType: VariantType) {
         checkOpen()
         ObjectCalls.ptrcallWithLongArg(Binds.setVariantTypeBind, segment, variantType.value)
     }
 
+    /**
+     * Sets the `variant_type` and `object_model_type` properties. This is a convenience method to set
+     * both properties at once, since they are almost always known at the same time. This method should
+     * be called once. Calling it again with the same values will have no effect.
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.set_types
+     */
     fun setTypes(variantType: VariantType, objModelType: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoLongArgs(Binds.setTypesBind, segment, variantType.value, objModelType.value)
     }
 
+    /**
+     * Godot's `GLTFObjectModelProperty.GLTFObjectModelType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`GLTFObjectModelProperty.GLTFObjectModelType.<NAME>`).
+     *
+     * Generated from Godot docs: GLTFObjectModelProperty.GLTFObjectModelType
+     */
     @JvmInline
     value class GLTFObjectModelType(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Unknown or not set object model type. If the object model type is set to this value, the real
+             * type still needs to be determined.
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_UNKNOWN
+             */
             val UNKNOWN: GLTFObjectModelType get() = GLTFObjectModelType(0L)
+            /**
+             * Object model type "bool". Represented in the glTF JSON as a boolean, and encoded in a
+             * `GLTFAccessor` as "SCALAR". When encoded in an accessor, a value of `0` is `false`, and any
+             * other value is `true`.
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_BOOL
+             */
             val BOOL: GLTFObjectModelType get() = GLTFObjectModelType(1L)
+            /**
+             * Object model type "float". Represented in the glTF JSON as a number, and encoded in a
+             * `GLTFAccessor` as "SCALAR".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT
+             */
             val FLOAT: GLTFObjectModelType get() = GLTFObjectModelType(2L)
+            /**
+             * Object model type "float`lb``rb`". Represented in the glTF JSON as an array of numbers, and
+             * encoded in a `GLTFAccessor` as "SCALAR".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT_ARRAY
+             */
             val FLOAT_ARRAY: GLTFObjectModelType get() = GLTFObjectModelType(3L)
+            /**
+             * Object model type "float2". Represented in the glTF JSON as an array of two numbers, and encoded
+             * in a `GLTFAccessor` as "VEC2".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT2
+             */
             val FLOAT2: GLTFObjectModelType get() = GLTFObjectModelType(4L)
+            /**
+             * Object model type "float3". Represented in the glTF JSON as an array of three numbers, and
+             * encoded in a `GLTFAccessor` as "VEC3".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT3
+             */
             val FLOAT3: GLTFObjectModelType get() = GLTFObjectModelType(5L)
+            /**
+             * Object model type "float4". Represented in the glTF JSON as an array of four numbers, and
+             * encoded in a `GLTFAccessor` as "VEC4".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT4
+             */
             val FLOAT4: GLTFObjectModelType get() = GLTFObjectModelType(6L)
+            /**
+             * Object model type "float2x2". Represented in the glTF JSON as an array of four numbers, and
+             * encoded in a `GLTFAccessor` as "MAT2".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT2X2
+             */
             val FLOAT2X2: GLTFObjectModelType get() = GLTFObjectModelType(7L)
+            /**
+             * Object model type "float3x3". Represented in the glTF JSON as an array of nine numbers, and
+             * encoded in a `GLTFAccessor` as "MAT3".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT3X3
+             */
             val FLOAT3X3: GLTFObjectModelType get() = GLTFObjectModelType(8L)
+            /**
+             * Object model type "float4x4". Represented in the glTF JSON as an array of sixteen numbers, and
+             * encoded in a `GLTFAccessor` as "MAT4".
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_FLOAT4X4
+             */
             val FLOAT4X4: GLTFObjectModelType get() = GLTFObjectModelType(9L)
+            /**
+             * Object model type "int". Represented in the glTF JSON as a number, and encoded in a
+             * `GLTFAccessor` as "SCALAR". The range of values is limited to signed integers. For
+             * `KHR_interactivity`, only 32-bit integers are supported.
+             *
+             * Generated from Godot docs: GLTFObjectModelProperty.GLTF_OBJECT_MODEL_TYPE_INT
+             */
             val INT: GLTFObjectModelType get() = GLTFObjectModelType(10L)
         }
     }

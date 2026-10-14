@@ -5,6 +5,9 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A function to convert an SDF (signed-distance field) to screen UV, to be used within the visual
+ * shader graph.
+ *
  * Generated from Godot docs: VisualShaderNodeSDFToScreenUV
  */
 class VisualShaderNodeSDFToScreenUV(handle: GodotHandle) : VisualShaderNode(handle) {

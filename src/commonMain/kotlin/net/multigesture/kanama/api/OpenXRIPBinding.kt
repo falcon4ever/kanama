@@ -8,6 +8,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Defines a binding between an `OpenXRAction` and an XR input or output.
+ *
  * Generated from Godot docs: OpenXRIPBinding
  */
 class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
@@ -35,71 +37,145 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
         @JvmName("setPathsProperty")
         set(value) = setPaths(value)
 
+    /**
+     * `OpenXRAction` that is bound to `binding_path`.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.set_action
+     */
     fun setAction(action: OpenXRAction?) {
         checkOpen()
         ObjectCalls.ptrcallWithObjectArgs(Binds.setActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * `OpenXRAction` that is bound to `binding_path`.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_action
+     */
     fun getAction(): OpenXRAction? {
         checkOpen()
         return OpenXRAction.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getActionBind, segment))
     }
 
+    /**
+     * Binding path that defines the input or output bound to `action`. Note: Binding paths are
+     * suggestions, an XR runtime may choose to bind the action to a different input or output
+     * emulating this input or output.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.set_binding_path
+     */
     fun setBindingPath(bindingPath: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.setBindingPathBind, segment, bindingPath)
     }
 
+    /**
+     * Binding path that defines the input or output bound to `action`. Note: Binding paths are
+     * suggestions, an XR runtime may choose to bind the action to a different input or output
+     * emulating this input or output.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_binding_path
+     */
     fun getBindingPath(): String {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getBindingPathBind, segment)
     }
 
+    /**
+     * Get the number of binding modifiers for this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_binding_modifier_count
+     */
     fun getBindingModifierCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindingModifierCountBind, segment)
     }
 
+    /**
+     * Get the `OpenXRBindingModifier` at this index.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_binding_modifier
+     */
     fun getBindingModifier(index: Int): OpenXRActionBindingModifier? {
         checkOpen()
         return OpenXRActionBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getBindingModifierBind, segment, index))
     }
 
+    /**
+     * Binding modifiers for this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.set_binding_modifiers
+     */
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithArrayArg(Binds.setBindingModifiersBind, segment, bindingModifiers)
     }
 
+    /**
+     * Binding modifiers for this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_binding_modifiers
+     */
     fun getBindingModifiers(): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetArray(Binds.getBindingModifiersBind, segment)
     }
 
+    /**
+     * Paths that define the inputs or outputs bound on the device.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.set_paths
+     */
     fun setPaths(paths: List<String>) {
         checkOpen()
         ObjectCalls.ptrcallWithPackedStringListArg(Binds.setPathsBind, segment, paths)
     }
 
+    /**
+     * Paths that define the inputs or outputs bound on the device.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_paths
+     */
     fun getPaths(): List<String> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPathsBind, segment)
     }
 
+    /**
+     * Get the number of input/output paths in this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.get_path_count
+     */
     fun getPathCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPathCountBind, segment)
     }
 
+    /**
+     * Returns `true` if this input/output path is part of this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.has_path
+     */
     fun hasPath(path: String): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasPathBind, segment, path)
     }
 
+    /**
+     * Add an input/output path to this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.add_path
+     */
     fun addPath(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.addPathBind, segment, path)
     }
 
+    /**
+     * Removes this input/output path from this binding.
+     *
+     * Generated from Godot docs: OpenXRIPBinding.remove_path
+     */
     fun removePath(path: String) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(Binds.removePathBind, segment, path)

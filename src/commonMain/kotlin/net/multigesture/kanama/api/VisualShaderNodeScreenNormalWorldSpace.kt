@@ -5,6 +5,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A visual shader node that unpacks the screen normal texture in World Space.
+ *
  * Generated from Godot docs: VisualShaderNodeScreenNormalWorldSpace
  */
 class VisualShaderNodeScreenNormalWorldSpace(handle: GodotHandle) : VisualShaderNode(handle) {
