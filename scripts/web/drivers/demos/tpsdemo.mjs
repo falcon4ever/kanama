@@ -1,13 +1,15 @@
 // demos/tpsdemo.mjs -- tps-demo-kanama play + teardown assertions for the Web smoke.
 //
-// The demo boots into its menu; the driver presses Play through Main.smoke_start_game
-// (method#1) and waits for the level to finish streaming in (four red robots, the player,
-// its input synchronizer and camera-shake camera). It then holds move_forward at ENGINE
+// The demo boots into its menu; the driver presses Play through Smoke.smoke_start_game and
+// waits for the level to finish streaming in (four red robots, the player, its input
+// synchronizer and camera-shake camera). It then holds move_forward at ENGINE
 // level (ops 86/87 — browser key synthesis stalls headless Firefox) and PROVES movement by
 // reading the player's global position through the immediate Vector3 channel (opcode 138).
 // The robots' AI, the AnimationTree-driven locomotion, and the level's coroutine timers all
-// run under that window. Main.smoke_teardown (method#2) releases the cached scenes and the
-// settings ConfigFile, then frees the scene root, draining every live handle to zero.
+// run under that window. Smoke.smoke_teardown releases the cached scenes and the
+// settings ConfigFile, then frees the scene root and the Smoke autoload, draining every live handle to zero.
+
+import { callSmokeMethod } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -126,7 +128,7 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
+export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir }) {
   // Engine-level action injection (ops 86/87) on the player's own handle: browser key
   // synthesis stalls the headless-Firefox main thread for the whole hold.
   const action = (opcode, name) =>
@@ -169,12 +171,10 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
   const startupDurationMs = Date.now() - startupStart;
   trace(`menu ready: readyCount=${menu.readyCount} mainHandle=${menu.mainHandle}`);
 
-  // Press Play: Main.smoke_start_game (method#1) drives the menu's own play path, which
+  // Press Play: Smoke.smoke_start_game drives the menu's own play path, which
   // loads the level and hands it to Main through the demo's replace_main_scene signal.
   trace("smoke_start_game");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpsMainHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "tps.Smoke", "smoke_start_game");
 
   const levelDeadline = Math.min(deadline, Date.now() + 180_000);
   let level = null;
@@ -232,12 +232,10 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
     : 0;
   trace(`ran: displacement=${displacement.toFixed(2)} physics=${peak.physicsCalls}`);
 
-  // Full teardown: smoke_teardown (method#2) releases the cached scenes and the settings
+  // Full teardown: smoke_teardown releases the cached scenes and the settings
   // ConfigFile, then frees the scene root; every node exits the tree and drops its handles.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpsMainHandle, 2); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "tps.Smoke", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 20_000, deadline, (snap) => snap.liveHandles === 0);
   const torndown = teardown.last ?? atPeak;
   trace(`teardown: live=${torndown.liveHandles} callbacks=${torndown.callbacks} errs=${torndown.callbackErrors}`);

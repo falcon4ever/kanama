@@ -8,6 +8,8 @@
 // crossings advancing) and the post-teardown trough, and asserts a clean run with no
 // callback faults.
 
+import { callSmokeMethod } from "../envelope.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 // Task 88: prove the post-teardown invariant can FAIL. Set
@@ -37,7 +39,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? 0,
         mainHandle: bridge.dodgeMainHandle,
-        smokeQuitHandle: bridge.dodgeSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         readyCount: bridge.readyCount,
         mainReady: classCount(".Main"),
         playerReady: classCount(".Player"),
@@ -118,12 +120,10 @@ async function callMain(evaluate, method) {
   );
 }
 
-// SmokeQuit.smoke_teardown is its only registered function (method#1); it quits the
+// SmokeQuit.smoke_teardown (resolved by name from the export manifest) quits the
 // SceneTree so every node exits the tree and releases its handles.
-async function callTeardown(evaluate) {
-  return evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.dodgeSmokeQuitHandle, 1); true",
-  );
+async function callTeardown(evaluate, exportDir) {
+  return callSmokeMethod(evaluate, exportDir, "dodge.SmokeQuit", "smoke_teardown");
 }
 
 // Polls the snapshot until `predicate` holds or the window elapses, tracking the
@@ -157,7 +157,7 @@ async function observe(evaluate, seedPeak, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runDodge({ url, evaluate, navigate, deadline }) {
+export async function runDodge({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
   trace("navigate");
   await navigate(`${url}?dodge=${Date.now()}`);
@@ -260,7 +260,7 @@ export async function runDodge({ url, evaluate, navigate, deadline }) {
   trace(`retention per mob after restart (${mobsBeforeRestart} mobs): ${JSON.stringify(retention)} worst=${worstRetentionKind}:${worstRetention}`);
 
   trace("smoke_teardown");
-  await callTeardown(evaluate);
+  await callTeardown(evaluate, exportDir);
   const teardown = await observe(evaluate, { ...peak, maxLiveHandles: peak.maxLiveHandles }, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} (peak=${peak.maxLiveHandles}) callbacks=${settled.callbacks} pending=${settled.pending} jobs=${settled.jobs} errs=${settled.callbackErrors}`);

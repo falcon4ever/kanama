@@ -53,7 +53,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         playerHandle: bridge.tpPlayerHandle,
-        smokeQuitHandle: bridge.tpSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         demoPageHandle: bridge.tpDemoPageHandle,
         readyCount: bridge.readyCount,
         playerReady: classCount(".Player"),
@@ -239,7 +239,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline, export
   // Press through the page (SmokeQuit.smoke_resume) and wait for physics.
   trace("smoke_resume");
   await evaluate(
-    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, ${smokeResumeId}); true`,
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.smokeHandle, ${smokeResumeId}); true`,
   );
   const resumed = await observe(
     evaluate,
@@ -282,7 +282,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline, export
   if (FALSIFY !== "no-combat") {
     trace(`smoke_combat: bees=${beesBefore} beetles=${beetlesBefore}`);
     await evaluate(
-      `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, ${smokeCombatId}); true`,
+      `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.smokeHandle, ${smokeCombatId}); true`,
     );
     // Window MEASURED both ways (2026-08-12): healthy hosts break out in 1-3s, but the
     // first gated runner outing (main 31623511177) showed damage DISPATCHED (census
@@ -412,7 +412,7 @@ export async function runThirdperson({ url, evaluate, navigate, deadline, export
   // node exits the tree and releases its handles.
   trace("smoke_teardown");
   await evaluate(
-    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.tpSmokeQuitHandle, ${smokeTeardownId}); true`,
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.smokeHandle, ${smokeTeardownId}); true`,
   );
   const teardown = await observe(evaluate, runPeak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;

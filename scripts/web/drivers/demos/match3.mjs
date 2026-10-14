@@ -11,7 +11,7 @@
 // crossings, then tears the scene down twice to baseline and proves stale
 // handles are rejected.
 
-import { resolveMethodId } from "../envelope.mjs";
+import { callSmokeMethod, resolveMethodId } from "../envelope.mjs";
 
 const OFFSET = 68;
 const BOARD = 8;
@@ -227,7 +227,7 @@ async function navigateAndSettle(navigate, evaluate, url, label) {
   return { board, settled };
 }
 
-async function teardownCurrentRun(evaluate) {
+async function teardownCurrentRun(evaluate, exportDir) {
   const beforeMain = await snapshot(evaluate);
   const sceneTreeProbe = await evaluate(`globalThis.KanamaWebBridge.invoke(${beforeMain.mainHandle}, "g8_scene_tree", "g8_scene_tree", () => globalThis.KanamaWebBridge.api.kanamaWebMatch3Group8SceneTreeProbe(${beforeMain.mainHandle}), 0)`);
   const sceneTreeHandle = await evaluate("globalThis.KanamaWebBridge.api.kanamaWebMatch3Group8SceneTreeHandle()");
@@ -241,6 +241,9 @@ async function teardownCurrentRun(evaluate) {
   );
   const sceneTreeStaleProbe = await evaluate(`globalThis.KanamaWebBridge.api.kanamaWebMatch3Group8SceneTreeStaleProbe(${sceneTreeHandle})`);
   const audioTeardownResult = await evaluate(`globalThis.KanamaWebBridge.invoke(${afterMain.audioHandle}, "g7_audio_teardown", "g7_audio_teardown", () => globalThis.KanamaWebBridge.api.kanamaWebMatch3Group7AudioOwnerTeardownProbe(${afterMain.audioHandle}), 0)`);
+  // The Smoke autoload outlives Main like Audio does, and the node handles its probe looked up are
+  // released with the script, so the live-handle baseline is only reached once it is freed too.
+  await callSmokeMethod(evaluate, exportDir, "match3.Smoke", "smoke_teardown");
   const afterAudio = await waitUntil(
     evaluate,
     (v) => v.audioHandle === 0 && v.liveHandles === 0 && v.callbacks === 0 && v.pending === 0 && v.jobs === 0,
@@ -267,19 +270,19 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
   const startupDurationMs = Date.now() - startupStart;
 
   // Task 80 slice 6: read the demo's hydrated-state dump WHILE THE BOARD IS ALIVE. Run
-  // after teardown it returns null -- the bridge zeroes match3MainHandle when Main frees,
+  // after teardown it returns null -- the bridge zeroes smokeHandle when the Smoke autoload frees,
   // and a null payload would look like "the probe is broken" rather than "asked too late".
   // Ids are resolved from the export manifest, never hardcoded: adding a
   // registered function renumbers the rest (this probe took id 1 and pushed the existing
   // two down), so a hardcoded call would dispatch a different method and still "work".
-  const probeId = resolveMethodId(exportDir, "match3.Main", "differential_probe");
+  const probeId = resolveMethodId(exportDir, "match3.Smoke", "differential_probe");
   const differentialPayload =
     probeId === null
       ? null
       : await evaluate(
           `(() => { const b = globalThis.KanamaWebBridge;` +
-            ` if (!b || !b.match3MainHandle) return null;` +
-            ` return String(b.callPacked(b.match3MainHandle, ${probeId})); })()`,
+            ` if (!b || !b.smokeHandle) return null;` +
+            ` return String(b.callPacked(b.smokeHandle, ${probeId})); })()`,
         );
 
   const legalSwap = findLegalSwap(firstRun.settled.tileGrid);
@@ -298,9 +301,9 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
   );
   matrixFrom(afterSwap.tileGrid);
 
-  const firstTeardown = await teardownCurrentRun(evaluate);
+  const firstTeardown = await teardownCurrentRun(evaluate, exportDir);
   const secondRun = await navigateAndSettle(navigate, evaluate, url, "restart");
-  const secondTeardown = await teardownCurrentRun(evaluate);
+  const secondTeardown = await teardownCurrentRun(evaluate, exportDir);
 
   const tileFreeDelta = afterSwap.tileFrees - beforeSwap.tileFrees;
   const tileReadyDelta = afterSwap.tileReady - beforeSwap.tileReady;
@@ -360,7 +363,7 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
     differential:
       probeId === null
         ? { available: false, reason: "differential_probe not found in the export manifest" }
-        : { available: true, script: "match3.Main", payload: differentialPayload },
+        : { available: true, script: "match3.Smoke", payload: differentialPayload },
     protocolVersion: firstRun.settled.protocol,
     startup: {
       loaded: firstRun.board.pass === true,

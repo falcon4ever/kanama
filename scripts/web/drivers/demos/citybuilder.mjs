@@ -7,8 +7,10 @@
 // observes the grid through the GridMap query family on the Builder's gridmap property
 // handle, and proves the full save round-trip: build -> save (user://map.res, scripted
 // DataMap/DataStructure resources) -> demolish -> load -> the placed cell comes back.
-// smoke_teardown (method#1) releases hydrated structure assets, frees the Audio autoload
+// smoke_teardown releases hydrated structure assets, frees the Audio autoload
 // and the scene root, draining every live handle to zero.
+
+import { callSmokeMethod } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Cells the authored sample city occupies -- 122 structures in `sample map/map.tres`,
@@ -34,7 +36,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         builderHandle: bridge.cbBuilderHandle,
-        smokeHandle: bridge.cbSmokeHandle,
+        smokeHandle: bridge.smokeHandle,
         builderReady: classCount(".Builder"),
         viewReady: classCount(".View"),
         audioReady: classCount(".Audio"),
@@ -127,17 +129,17 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runCitybuilder({ url, evaluate, navigate, deadline }) {
+export async function runCitybuilder({ url, evaluate, navigate, deadline, exportDir }) {
   // Engine-level action injection (ops 86/87) instead of browser key events: the first
   // browser input gesture stalls the headless-Firefox main thread for the whole hold
   // (audio-context resume), freezing gameplay under it.
   const press = (action) =>
     evaluate(
-      `globalThis.KanamaWebBridge.immediateObjectQuery(86, globalThis.KanamaWebBridge.cbSmokeHandle, "${action}"); true`,
+      `globalThis.KanamaWebBridge.immediateObjectQuery(86, globalThis.KanamaWebBridge.smokeHandle, "${action}"); true`,
     );
   const release = (action) =>
     evaluate(
-      `globalThis.KanamaWebBridge.immediateObjectQuery(87, globalThis.KanamaWebBridge.cbSmokeHandle, "${action}"); true`,
+      `globalThis.KanamaWebBridge.immediateObjectQuery(87, globalThis.KanamaWebBridge.smokeHandle, "${action}"); true`,
     );
   const tap = async (action) => {
     await press(action);
@@ -256,12 +258,10 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline }) {
   const sampleCells = await usedCellsRetry(evaluate);
   trace(`sample map: cells=${sampleCells?.count} (expected ${SAMPLE_MAP_CELLS})`);
 
-  // Full teardown: smoke_teardown (method#1) releases hydrated structure assets, frees
+  // Full teardown: smoke_teardown releases hydrated structure assets, frees
   // the Audio autoload and the scene root; every node exits and releases its handles.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.cbSmokeHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "citybuilder.Smoke", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);

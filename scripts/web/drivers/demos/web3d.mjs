@@ -1,4 +1,4 @@
-import { resolveMethodId } from "../envelope.mjs";
+import { callScriptMethod, callSmokeMethod, resolveMethodId } from "../envelope.mjs";
 // demos/web3d.mjs -- 3D render-foundation smoke: observe + teardown assertions.
 //
 // The web3d scene auto-runs: Main._ready applies the platformer's Compatibility-renderer
@@ -27,7 +27,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         mainHandle: bridge.web3dMainHandle,
-        smokeQuitHandle: bridge.web3dSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         readyCount: bridge.readyCount,
         enterTreeCalls: bridge.enterTreeCalls,
         mainReady: classCount(".Main"),
@@ -113,7 +113,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   const startupDurationMs = Date.now() - startupStart;
   trace(`ready: readyCount=${ready.readyCount} mainHandle=${ready.mainHandle} protocol=${ready.protocol}`);
 
-  // Task 66b enter-tree proof: Main.enter_tree_probe (method#5, Int->Int) returns a mask —
+  // Task 66b enter-tree proof: Main.enter_tree_probe (Int->Int) returns a mask —
   // bit 1 = @OnEnterTree dispatched, bit 2 = the scene-exported @Export value
   // ("web3d-enter-tree", never the default) was visible inside it, bit 4 = it ran before
   // @OnReady. A healthy protocol-16 run returns exactly 7.
@@ -124,7 +124,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`enterTreeProbe: mask=${enterTreeProbe} enterTreeCalls=${ready.enterTreeCalls}`);
 
-  // Task 64 property-push proof: Main.property_probe (method#7, Int->Int) returns a mask —
+  // Task 64 property-push proof: Main.property_probe (Int->Int) returns a mask —
   // bit 1 = the scene-exported NodePath (NodePath("Spinner"), never the default) was pushed
   // into Kotlin, bit 2 = the scene value 47 of the RANGE-hinted one-line-annotated export
   // arrived, bit 4 = the pushed NodePath resolves a live node. Task 80 slice 4 added one bit
@@ -190,7 +190,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`tweenerFromProbe: ${tweenerFrom}`);
 
-  // Task 80 dispatch-shape conformance: Main.dispatch_probe (method#16, Int->Int)
+  // Task 80 dispatch-shape conformance: Main.dispatch_probe (Int->Int)
   // returns a mask. Every bit is a shape task 80 admitted, exercised through the REAL crossing
   // (Kotlin asks Godot to call the method by name, Godot dispatches to the generated GDScript
   // proxy, the proxy takes the new arm) rather than through the emitter tests alone:
@@ -230,7 +230,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
 
   // Task-64 API-parity probes (Main methods #3 and #4). Method #3 exercises
   // Resource.fromHandle identity and AudioStreamPlayer.setStream (assign + play + null-clear),
-  // then aims the root at +X with the default -Z-forward convention; method #4 repeats the aim
+  // then aims the root at +X with the default -Z-forward convention; the second aim probe repeats the aim
   // with useModelFront=true. Orientation is read back over the immediate global-rotation
   // channel (opcode 141): the default aim must read yaw -PI/2, the model-front aim +PI/2 — a
   // PI flip (the fps Enemy's 180-degree gap). A Kotlin-side check failure throws before the
@@ -242,14 +242,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       return bridge.immediateNoArgsVector3Y();
     })()`);
   trace("parity_probe");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 3); true",
-  );
+  await callScriptMethod(evaluate, exportDir, "web3d.Main", "web3dMainHandle", "parity_probe");
   const defaultYaw = await readGlobalYaw();
   trace(`parity default yaw=${defaultYaw}`);
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 4); true",
-  );
+  await callScriptMethod(evaluate, exportDir, "web3d.Main", "web3dMainHandle", "parity_model_front_look");
   const modelFrontYaw = await readGlobalYaw();
   trace(`parity model-front yaw=${modelFrontYaw}`);
   // Task 118: both aims turn the whole level (the probes aim the ROOT). Turn it back before anything else
@@ -262,14 +258,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   const HALF_PI = Math.PI / 2;
   const angleNear = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 1e-3;
 
-  // Task 76: generic callv fallback. Main.generic_probe (method#6) runs queued generic
+  // Task 76: generic callv fallback. Main.generic_probe runs queued generic
   // mutations, immediate generic read-backs, the object-return shapes under the minting
   // policy, and the generic-vs-typed crossing-cost timing, then publishes a JSON report
   // for these assertions.
   trace("generic_probe");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, 6); true",
-  );
+  await callScriptMethod(evaluate, exportDir, "web3d.Main", "web3dMainHandle", "generic_probe");
   const generic = JSON.parse(
     await evaluate("globalThis.KanamaWebBridge.api.kanamaWebGenericCallProbeReport()"),
   );
@@ -376,10 +370,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("freed_probe")}, 0)`,
   );
 
-  // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
+  // Task 82 coroutine conformance probe. Main.coroutine_probe launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
-  // Main.coroutine_probe_mask (method#20, Int->Int) reports how far it got.
+  // Main.coroutine_probe_mask (Int->Int) reports how far it got.
   //
   // This is the generic version of the bug task 82 fixed: before the fix the frame scheduler was
   // pumped only for four hardcoded "Main" handles, so in eight of twelve demos a launched
@@ -432,7 +426,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     `coroutine: mask=${coroutineMask} (was ${maskBeforeArm}) pumps=${afterCoroutine.pumps} continuations=${afterCoroutine.continuations}`,
   );
 
-  // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the scene root, draining handles.
+  // Full teardown: SmokeQuit.smoke_teardown frees the scene root, draining handles.
   const demoPageProbeAfter = Number(
     await evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("demo_page_probe_after")}, 0)`,
@@ -581,9 +575,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
 
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dSmokeQuitHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "web3d.SmokeQuit", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 6_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} errs=${settled.callbackErrors}`);

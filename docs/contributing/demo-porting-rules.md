@@ -373,7 +373,12 @@ Kanama script instance from that node.
 
 Do not embed environment-gated smoke-test branches in normal gameplay scripts.
 Put smoke behavior in dedicated `Smoke.kt` or `SmokeQuit.kt` scripts/nodes so
-the gameplay port stays close to the source demo.
+the gameplay port stays close to the source demo. Where a smoke has to reach
+several gameplay classes, register one `Smoke` autoload that finds them from
+outside, and keep every hook, probe and environment read in it: the demos'
+`demoParityAudit` fails on a smoke/probe member, `@GodotName`, or environment or
+command-line read in a gameplay class. The Web harness calls the autoload's
+methods by name through the export manifest.
 
 When the original GDScript calls Godot math, random, or value-type helpers,
 prefer the Kanama/Godot wrapper (`GD`, `Mathf`, `Vector3.moveToward`,

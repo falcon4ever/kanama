@@ -34,6 +34,8 @@
 //   no-chase  -> mob-drop choreography skipped: mobSquashScoredOnHud false
 //   no-death  -> death steer skipped (player stays pinned aloft): playerFreedOnMobContact false
 
+import { callSmokeMethod } from "../envelope.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
@@ -103,7 +105,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         mainHandle: bridge.squashMainHandle,
-        smokeQuitHandle: bridge.squashSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         playerHandle: bridge.squashPlayerHandle,
         scoreLabelHandle: bridge.squashScoreLabelHandle,
         mobHandle: bridge.squashMobHandle,
@@ -248,7 +250,7 @@ function mergeSnap(state, snap) {
   state.last = snap;
 }
 
-export async function runSquash({ url, evaluate, navigate, deadline }) {
+export async function runSquash({ url, evaluate, navigate, deadline, exportDir }) {
   const startupStart = Date.now();
   trace("navigate");
   await navigate(`${url}?squash=${Date.now()}`);
@@ -414,13 +416,11 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   const atPeak = state.last ?? ready;
   trace(`gameplay: mobs=${peak.mobInstantiations} physics=${peak.physicsCalls} frees=${state.mobFrees} live=${atPeak.liveHandles}`);
 
-  // Full teardown: SmokeQuit.smoke_teardown (its only registered function, method#1) frees
+  // Full teardown: SmokeQuit.smoke_teardown frees
   // the scene root; every node exits the tree and releases its handles. SmokeQuit
   // survives the player's death-path free, so this works in every phase outcome.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.squashSmokeQuitHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "squash.SmokeQuit", "smoke_teardown");
   let settled = atPeak;
   const teardownDeadline = Math.min(deadline, Date.now() + 8_000);
   while (Date.now() < teardownDeadline) {

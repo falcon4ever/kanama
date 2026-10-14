@@ -10,6 +10,8 @@
 // SmokeQuit.smoke_teardown frees the Events autoload + scene root, draining every live
 // handle to zero.
 
+import { callSmokeMethod } from "../envelope.mjs";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // How far below the start height counts as "off the platform and falling". The level's
 // KillPlane sits ~17 units down, so anything past this is unambiguously a fall, not a step.
@@ -36,7 +38,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         playerHandle: bridge.charPlayerHandle,
-        smokeQuitHandle: bridge.charSmokeQuitHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         readyCount: bridge.readyCount,
         playerReady: classCount(".Player3DTemplate"),
         skinReady: classCount(".SophiaSkin"),
@@ -131,7 +133,7 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runCharactercontroller({ url, evaluate, navigate, keys, deadline }) {
+export async function runCharactercontroller({ url, evaluate, navigate, keys, deadline, exportDir }) {
   // Trusted per-engine key synthesis when the transport provides it; DOM-event
   // fallback otherwise (works headless-Chrome, stalls headless-Firefox rAF).
   const keyDown = keys ? () => keys("down", "w") : () => evaluate(keyExpression("keydown", "KeyW", "w", 87));
@@ -296,12 +298,10 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   peak.callbackErrors = Math.max(peak.callbackErrors, afterGameplay.callbackErrors);
   trace(`scheduler: pumps=${afterGameplay.pumps} continuations=${afterGameplay.continuations}`);
 
-  // Full teardown: SmokeQuit.smoke_teardown (method#1) frees the Events autoload and
+  // Full teardown: SmokeQuit.smoke_teardown frees the Events autoload and
   // the scene root; every node exits the tree and releases its handles.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.charSmokeQuitHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "charactercontroller.SmokeQuit", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 8_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);

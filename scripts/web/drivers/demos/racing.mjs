@@ -1,12 +1,13 @@
-// demos/racing.mjs -- third-person controller play + teardown assertions for the
-// Web smoke.
+// demos/racing.mjs -- Starter-Kit-Racing play + teardown assertions for the Web smoke.
 //
-// The demo boots PAUSED behind its instructions page: the driver first dispatches
-// SmokeQuit.smoke_resume (method#1) to press through, then holds move_up via the trusted
-// per-engine key transport and PROVES movement by reading the player's global position
-// through the bridge's immediate Vector3 channel (opcode 138). Enemy AI is self-evidencing
-// while the world runs (beetle-bot navigation, bee-bot bobbing). smoke_teardown (method#2)
-// releases the scene caches and frees the root, draining every live handle to zero.
+// The demo starts playing straight away. The driver holds `forward` at ENGINE level (ops 86/87
+// on the Smoke handle; browser key synthesis stalls the headless-Firefox main thread) and PROVES
+// movement by reading the camera rig's global position through the bridge's immediate Vector3
+// channel (opcode 138): the rig lerps toward the sphere racer, whose root node never moves.
+// Smoke.smoke_teardown frees the scene root and the Smoke autoload, draining every live handle
+// to zero.
+
+import { callSmokeMethod } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -28,7 +29,7 @@ async function snapshot(evaluate) {
         mode: bridge.mode,
         protocol: bridge.results?.protocolVersion ?? bridge.protocolVersion ?? 0,
         playerHandle: bridge.racingViewHandle,
-        smokeQuitHandle: bridge.racingSmokeHandle,
+        smokeQuitHandle: bridge.smokeHandle,
         vehicleHandle: bridge.racingVehicleHandle,
         readyCount: bridge.readyCount,
         vehicleReady: classCount(".Vehicle"),
@@ -107,17 +108,17 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
   return { last, peak };
 }
 
-export async function runRacing({ url, evaluate, navigate, deadline }) {
+export async function runRacing({ url, evaluate, navigate, deadline, exportDir }) {
   // Engine-level action injection (ops 86/87) instead of browser key events: the first
   // browser input gesture stalls the headless-Firefox main thread for the whole hold
   // (audio-context resume), freezing physics under it.
   const keyDown = () =>
     evaluate(
-      'globalThis.KanamaWebBridge.immediateObjectQuery(86, globalThis.KanamaWebBridge.racingSmokeHandle, "forward"); true',
+      'globalThis.KanamaWebBridge.immediateObjectQuery(86, globalThis.KanamaWebBridge.smokeHandle, "forward"); true',
     );
   const keyUp = () =>
     evaluate(
-      'globalThis.KanamaWebBridge.immediateObjectQuery(87, globalThis.KanamaWebBridge.racingSmokeHandle, "forward"); true',
+      'globalThis.KanamaWebBridge.immediateObjectQuery(87, globalThis.KanamaWebBridge.smokeHandle, "forward"); true',
     );
 
   const startupStart = Date.now();
@@ -198,12 +199,10 @@ export async function runRacing({ url, evaluate, navigate, deadline }) {
     : 0;
   trace(`ran: displacement=${displacement.toFixed(2)} physics=${peak.physicsCalls} live=${atPeak.liveHandles}`);
 
-  // Full teardown: smoke_teardown (method#1) frees the root; every node exits the tree
+  // Full teardown: smoke_teardown frees the root; every node exits the tree
   // and releases its handles.
   trace("smoke_teardown");
-  await evaluate(
-    "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.racingSmokeHandle, 1); true",
-  );
+  await callSmokeMethod(evaluate, exportDir, "racing.Smoke", "smoke_teardown");
   const teardown = await observe(evaluate, peak, 12_000, deadline, (snap) => snap.liveHandles === 0);
   const settled = teardown.last ?? atPeak;
   trace(`teardown: live=${settled.liveHandles} callbacks=${settled.callbacks} errs=${settled.callbackErrors}`);

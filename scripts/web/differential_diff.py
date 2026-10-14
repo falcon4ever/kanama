@@ -2,7 +2,7 @@
 """Diff a demo's hydrated state between desktop and Web (task 80 slice 6).
 
 Task 64 made one Kotlin source compile for both platforms, which makes this possible:
-the same `differential_probe()` runs on desktop and on Web, so its output must be
+the same `differential_probe()` (match3's `Smoke` autoload) runs on desktop and on Web, so its output must be
 byte-identical. A difference is by definition a bug — one of the two hydration paths
 delivered a different value for the same declaration.
 
