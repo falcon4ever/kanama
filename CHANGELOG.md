@@ -207,7 +207,9 @@ synchronous call each (10-30 us): printing, `pushError` / `pushWarning`, `str`, 
 other conversions, `typeOf`, `hash`, `weakref`, `instanceFromId`, `isInstanceIdValid`, the RID
 helpers, and the random functions, which use Godot's global generator as on desktop, so `GD.seed`
 / `GD.randf` reproduce GDScript's sequence. The Web budget gate now also counts these synchronous
-builtin and utility calls per simulated second (`maxBuiltinCallsPerSimSecond`). The web3d smoke checks 55
+builtin and utility calls per engine tick (0.5 by default, `maxBuiltinCallsPerTick`), or per simulated
+second (`maxBuiltinCallsPerSimSecond`) for a demo whose calls follow simulated time, which is bunnymark's
+random draws. The web3d smoke checks 55
 `GD` / `Mathf` results against a GDScript twin within each one's bound.
 `GodotCallable` is the shared class on Web too (`call`, `callv`, `callDeferred`, `isValid`,
 `getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,

@@ -817,11 +817,23 @@ case("web/scaffold_selftest.sh", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_budgets.py" "$RESULT"; then', 'if false; then')],
      "over-budget expected exit 1", "web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that)")
 case("check_budgets.py (builtin calls)", ["bash", "scripts/web/scaffold_selftest.sh"],
-     [Edit("scripts/web/check_budgets.py", "    violations += check_builtin_calls(demo, measured, budgets, limits)\n", "")],
-     "over-builtin-budget expected exit 1", "the budget gate stops counting synchronous builtin / utility calls per simulated second (task 129 E review B1)")
-case("check_budgets.py (builtin calls per tick)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", "\n    violations += check_builtin_calls(demo, measured, budgets, limits)\n    return violations", "\n    return violations")],
+     "over-builtin-budget expected exit 1", "the budget gate stops counting synchronous builtin / utility calls, per tick or per simulated second (task 129 E review B1)")
+case("check_budgets.py (builtin calls per simulated second)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web/check_budgets.py", "    rate = calls / sim\n", "    rate = 1000.0 * calls / ticks\n")],
-     "slow-host expected exit 0, got 1", "the builtin-call rate is taken per engine tick again (load-sensitive): a slow host's envelope (3.0 calls per tick, 9.0 per simulated second) goes red (task 138 item 33)")
+     "slow-host-simtime expected exit 0, got 1", "a per-simulated-second ceiling is taken per engine tick again (load-sensitive): a slow host's envelope (3.0 calls per tick, 9.0 per simulated second) goes red (task 138 item 33)")
+case("check_budgets.py (builtin calls per tick cap)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", "        if per_tick > ceiling:\n", "        if False:\n")],
+     "slow-host-per-tick expected exit 1, got 0", "the per-tick builtin-call cap stops gating a demo with no per-simulated-second ceiling (it caught the fps regression at 2.1x; review of task 138 item 33)")
+case("check_budgets.py (exempt verdict)", ["bash", "scripts/web/scaffold_selftest.sh"],
+     [Edit("scripts/web/check_budgets.py", '    if builtin_gate(demo, limits, budgets)[0] == "exempt":\n        exempt.append("builtin calls")\n    else:', '    if False:\n        exempt.append("builtin calls")\n    else:')],
+     "an exempt demo's verdict line does not say exempt", "an exempt demo's final line reads \"within budget\" for a metric it was never graded on (review N6)")
+case("check_budgets.py --self-test (per-tick cap)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/budgets.json", '"defaultMaxBuiltinCallsPerTick": 0.5,', '"defaultMaxBuiltinCallsPerTick": 0.9,')],
+     "must exceed the per-tick cap 0.9 by 2x or more", "the per-tick cap is loosened until the pre-fix fps envelope (1.06 per tick) is no longer red by 2x")
+case("check_budgets.py --self-test (record-only engine)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", "        violations += check_builtin_calls(demo, measured, budgets, limits)\n        return violations\n", "        return violations\n")],
+     "fps pre-fix builtin calls on record-only safari: expected red", "a record-only engine (Safari) stops grading builtin calls (review N6)")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")

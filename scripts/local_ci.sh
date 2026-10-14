@@ -804,6 +804,10 @@ if [[ $skip_web -eq 0 ]]; then
   stage "web export-smoke scaffold self-test"
   "$ROOT_DIR/scripts/web/scaffold_selftest.sh"
 
+  # The builtin-call ceilings against the recorded pre-fix and measured Chrome/Firefox envelopes (task 138 item 33).
+  stage "web budget builtin-call self-test"
+  python3 "$ROOT_DIR/scripts/web/check_budgets.py" --self-test
+
   # Generated Web backend dispatch drift gate (Task 60a): the shared backend
   # contract + Web policy must still render the committed dispatch file.
   stage "web backend dispatch drift gate"

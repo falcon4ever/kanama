@@ -18,9 +18,10 @@ Modes:
   mutate           write into --mutate-path (in the served tree) then succeed
   below-floor      a passing envelope from a browser below the declared floor
   over-budget      a passing envelope whose per-tick crossings blow the budget
-  over-builtin-budget  a passing envelope whose per-tick builtin calls blow the budget
+  over-builtin-budget  a passing envelope whose per-tick builtin calls blow the budget (3000 per simulated second too)
   slow-host        a passing envelope from a slow host: many builtin calls per TICK (3.0) but few per
-                   simulated second (9.0), because each tick advanced more simulated time (task 138 item 33)
+                   simulated second (9.0), because each tick advanced more simulated time (task 138 item 33):
+                   over the per-tick cap of `fake`, within the per-simulated-second ceiling of `fake-simtime`
 """
 
 from __future__ import annotations

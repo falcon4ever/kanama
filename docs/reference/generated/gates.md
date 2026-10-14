@@ -10,7 +10,7 @@ Every check that decides whether Kanama is green, in one place: what each one pr
 
 A green PR means the first two tiers passed. It does not mean the third tier was run — that is what the ledger is for.
 
-## Local CI stages (82)
+## Local CI stages (83)
 
 In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the script's docstring or header where a script exists, otherwise the stage's own comment.
 
@@ -89,15 +89,16 @@ In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the sc
 | 71 | `web bridge + driver syntax` | `node --check` parses the JS bridge and every Web driver. | PR + push to main; local when node is installed (`--skip-web` skips) | `node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.…` | — |
 | 72 | `web driver lint (eslint)` | Correctness lint over the same drivers (task 86: an unused variable held the Safari envelope's performance section back for two weeks). | PR + push to main; local when node is installed (`--skip-web` skips) | `(` | — |
 | 73 | `web export-smoke scaffold self-test` | exercises web_export_smoke.sh against a static fake fixture (Task 57f1 scaffold validation). | PR + push to main (ci.yml `local-ci`); local | `scripts/web/scaffold_selftest.sh` | 2026-07-23 |
-| 74 | `web backend dispatch drift gate` | Generate the Kotlin/Wasm Web backend dispatch from the Web backend call contract. | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_backend.py` | 2026-07-23 |
-| 75 | `web wrapper tree drift gate` | Generate the Kotlin/Wasm Web wrapper tree from the Web call contract (task 96). | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_wrappers.py` | 2026-09-09 |
-| 76 | `web typed Godot enums and required returns (task 128 C)` | Gate: the Web wrappers surface Godot enums as their value classes and keep Godot's `required` returns non-null (task 128 C) -- the Kotlin/Wasm twin of `scripts/check_typed_enums.py`. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_web_typed_enums.py` | 2026-10-02 |
-| 77 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -Pkotlin.compiler.execution.stra…` | — |
-| 78 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
-| 79 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
-| 80 | `JDK lookup parity, bootstrap.c vs plugin: <godot>` | The runtime (bootstrap.c) and the editor plugin pick the same JDK from the same layout (kanama#277). | PR + push to main (ci.yml `local-ci`); local | `scripts/check_jdk_lookup_parity.sh` | 2026-10-02 |
-| 81 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound, autoloads)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
-| 82 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
+| 74 | `web budget builtin-call self-test` | Enforce the Web performance budgets (Task 60f, promotion criterion W4). | PR + push to main (ci.yml `local-ci`); local | `scripts/web/check_budgets.py` | 2026-07-30 |
+| 75 | `web backend dispatch drift gate` | Generate the Kotlin/Wasm Web backend dispatch from the Web backend call contract. | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_backend.py` | 2026-07-23 |
+| 76 | `web wrapper tree drift gate` | Generate the Kotlin/Wasm Web wrapper tree from the Web call contract (task 96). | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_wrappers.py` | 2026-09-09 |
+| 77 | `web typed Godot enums and required returns (task 128 C)` | Gate: the Web wrappers surface Godot enums as their value classes and keep Godot's `required` returns non-null (task 128 C) -- the Kotlin/Wasm twin of `scripts/check_typed_enums.py`. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_web_typed_enums.py` | 2026-10-02 |
+| 78 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -Pkotlin.compiler.execution.stra…` | — |
+| 79 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
+| 80 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
+| 81 | `JDK lookup parity, bootstrap.c vs plugin: <godot>` | The runtime (bootstrap.c) and the editor plugin pick the same JDK from the same layout (kanama#277). | PR + push to main (ci.yml `local-ci`); local | `scripts/check_jdk_lookup_parity.sh` | 2026-10-02 |
+| 82 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound, autoloads)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
+| 83 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
 
 ## CI workflow jobs
 
