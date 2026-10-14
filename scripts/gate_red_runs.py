@@ -834,6 +834,12 @@ case("check_budgets.py --self-test (per-tick cap)", py("web/check_budgets.py", "
 case("check_budgets.py --self-test (record-only engine)", py("web/check_budgets.py", "--self-test"),
      [Edit("scripts/web/check_budgets.py", "        violations += check_builtin_calls(demo, measured, budgets, limits)\n        return violations\n", "        return violations\n")],
      "fps pre-fix builtin calls on record-only safari: expected red", "a record-only engine (Safari) stops grading builtin calls (review N6)")
+case("web/bridge_simtime_selftest.mjs", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (this.simProcessRafTick !== this.rafTick) {\n", "      if (true) {\n")],
+     "scripted node(s): simSeconds", "the bridge adds the _process delta once per scripted handle again: simSeconds scales with the number of scripted nodes (dodge's mobs made it 4-7x game time)")
+case("web/bridge_simtime_selftest.mjs (physics)", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (handle === this.simPhysicsClockHandle) this.simPhysicsSeconds += delta;\n", "      this.simPhysicsSeconds += delta;\n")],
+     "_physics_process", "the bridge adds the physics delta once per scripted handle again")
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")

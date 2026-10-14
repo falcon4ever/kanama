@@ -787,6 +787,10 @@ if [[ $skip_web -eq 0 ]]; then
     done
     echo "[local_ci] node --check: $checked_drivers driver(s)"
 
+    # The bridge's simulated clock is game time, not game time x scripted nodes (task 138 item 33 review).
+    stage "web bridge simulated-clock self-test"
+    node "$ROOT_DIR/scripts/web/bridge_simtime_selftest.mjs"
+
     # Correctness lint over the same drivers (task 86: an unused variable held
     # the Safari envelope's performance section back for two weeks). Pinned
     # install: npm ci against the committed scripts/web lockfile.
