@@ -4425,9 +4425,35 @@ def formatted_code_key(source: str) -> str:
     """The comparison key of generated code that ktfmt re-formats: comments dropped, every space and
     newline dropped, the `;` and trailing commas ktfmt adds or removes dropped. Two sources with the
     same key differ only in what ktfmt changes, so a statement, an argument, a name or a constant
-    that differs shows up (task 119 findings 1/4/24: the iOS region was compared by member NAMES)."""
-    code = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", source, flags=re.DOTALL))
-    return re.sub(r",(?=[)\]}])", "", re.sub(r"\s+", "", code).replace(";", ""))
+    that differs shows up (task 119 findings 1/4/24: the iOS region was compared by member NAMES).
+
+    String-aware: comments are stripped by [strip_comments] and the whitespace / `;` / trailing-comma
+    normalisation applies to the code between string literals only, so a literal's contents (a `//`
+    in a URL, a `;` or a space in a message) are compared as written."""
+    pieces: list[str] = []
+    code: list[str] = []
+
+    def flush_code() -> None:
+        text = re.sub(r"\s+", "", "".join(code)).replace(";", "")
+        pieces.append(re.sub(r",(?=[)\]}])", "", text))
+        code.clear()
+
+    src = strip_comments(source)
+    i, n = 0, len(src)
+    while i < n:
+        ch = src[i]
+        if ch != '"':
+            code.append(ch)
+            i += 1
+            continue
+        flush_code()
+        j = i + 1
+        while j < n and src[j] != '"':
+            j += 2 if src[j] == "\\" else 1
+        pieces.append(src[i : j + 1])
+        i = j + 1
+    flush_code()
+    return "".join(pieces)
 
 
 def ios_generated_region_key(source: str) -> str:
