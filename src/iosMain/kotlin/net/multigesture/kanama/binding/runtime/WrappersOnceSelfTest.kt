@@ -402,6 +402,7 @@ private fun fileAccessRows(check: (String, Boolean) -> Unit) {
 
   fileAccessCloseRows(check, path)
   fileAccessIoRows(check, dir)
+  cursorReadRows(check, dir)
 
   val removedFile = DirAccess.removeAbsolute(path)
   val removedDir = DirAccess.removeAbsolute(dir)
@@ -534,6 +535,62 @@ private fun fileAccessIoRows(check: (String, Boolean) -> Unit, dir: String) {
     "cleanup" to ((encryptedCleanup == GodotError.OK) to "$encryptedCleanup"),
   )
   DirAccess.removeAbsolute(path)
+}
+
+/**
+ * Task 129 D: getters that advance a cursor (`FileAccess.getLine`, `DirAccess.getNext`) run the
+ * Godot method once per Kotlin call. The no-arg String read-back used to call it twice (measure,
+ * then fill), so each call skipped one line / entry and returned "". Two reads in sequence must
+ * return the first and the second value.
+ */
+private fun cursorReadRows(check: (String, Boolean) -> Unit, dir: String) {
+  val path = "$dir/lines.txt"
+  FileAccess.open(path, FileAccess.ModeFlags.WRITE)?.use {
+    it.storeLine("one")
+    it.storeLine("two")
+  }
+  val lines =
+    FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { file ->
+      listOf(file.getLine(), file.getLine(), file.getPosition().toString())
+    }
+  val linesCleanup = DirAccess.removeAbsolute(path)
+  checkParts(
+    check,
+    "file-access(getLine twice reads one then two: one engine call per getLine)",
+    "first" to ((lines?.get(0) == "one") to "${lines?.get(0)}"),
+    "second" to ((lines?.get(1) == "two") to "${lines?.get(1)}"),
+    "position" to ((lines?.get(2) == "8") to "${lines?.get(2)}"),
+    "cleanup" to ((linesCleanup == GodotError.OK) to "$linesCleanup"),
+  )
+
+  val walkDir = "$dir/walk"
+  val made = DirAccess.makeDirRecursiveAbsolute(walkDir)
+  FileAccess.open("$walkDir/a.txt", FileAccess.ModeFlags.WRITE)?.use { it.storeString("a") }
+  FileAccess.open("$walkDir/b.txt", FileAccess.ModeFlags.WRITE)?.use { it.storeString("b") }
+  val walked = mutableListOf<String>()
+  DirAccess.open(walkDir)?.use { d ->
+    if (d.listDirBegin() == GodotError.OK) {
+      while (walked.size < 8) {
+        val name = d.getNext()
+        if (name.isEmpty()) break
+        walked += name
+      }
+      d.listDirEnd()
+    }
+  }
+  val walkCleanup =
+    listOf(
+      DirAccess.removeAbsolute("$walkDir/a.txt"),
+      DirAccess.removeAbsolute("$walkDir/b.txt"),
+      DirAccess.removeAbsolute(walkDir),
+    )
+  checkParts(
+    check,
+    "dir-access(getNext walk of two files returns both: one engine call per getNext)",
+    "makeDir" to ((made == GodotError.OK) to "$made"),
+    "walk" to ((walked.sorted() == listOf("a.txt", "b.txt")) to "$walked"),
+    "cleanup" to (walkCleanup.all { it == GodotError.OK } to "$walkCleanup"),
+  )
 }
 
 private fun <T : RefCounted> newRef(className: String, wrap: (GodotHandle) -> T): T =

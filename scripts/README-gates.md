@@ -94,16 +94,16 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/android_smoke.sh:126` | `"$ADB_BIN" kill-server >/dev/null 2>&1 \|\| true` | justified: the daemon restart is best effort; the retried command on the next loop turn is the check (after 3 attempts adb_retry returns 1). |
 | `scripts/android_smoke.sh:129` | `"$ADB_BIN" start-server >/dev/null 2>&1 \|\| true` | justified: best-effort daemon restart inside adb_retry; the retried command on the next loop turn is the check. |
 | `scripts/android_smoke.sh:138` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
-| `scripts/android_smoke.sh:289` | `grep -E 'No loader found for resource: res://.*\.kt\|_load path=' "$EXPORT_LOG" \| head -5 >&2 \|\| true` | justified: diagnostics only; the next line exits 1 whatever this prints. |
-| `scripts/android_smoke.sh:304` | `adb_retry start-server >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/android_smoke.sh:313` | `"$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the package may simply not be installed; the retried install on the next line is the check. |
-| `scripts/android_smoke.sh:314` | `adb_retry install "$APK_PATH" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/android_smoke.sh:318` | `adb_retry shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the app may not be running yet; the launch below and the pid check after it decide. |
-| `scripts/android_smoke.sh:324` | `adb_retry shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 \|\| true` | justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below. |
-| `scripts/android_smoke.sh:326` | `adb_retry shell wm dismiss-keyguard >/dev/null 2>&1 \|\| true` | justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below. |
-| `scripts/android_smoke.sh:327` | `adb_retry shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/android_smoke.sh:383` | `adb_retry shell screencap -p /sdcard/kanama_android_smoke.png >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/android_smoke.sh:384` | `adb_retry pull /sdcard/kanama_android_smoke.png "$SCREENSHOT" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_smoke.sh:323` | `grep -E 'No loader found for resource: res://.*\.kt\|_load path=' "$EXPORT_LOG" \| head -5 >&2 \|\| true` | justified: diagnostics only; the next line exits 1 whatever this prints. |
+| `scripts/android_smoke.sh:338` | `adb_retry start-server >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_smoke.sh:347` | `"$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the package may simply not be installed; the retried install on the next line is the check. |
+| `scripts/android_smoke.sh:348` | `adb_retry install "$APK_PATH" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_smoke.sh:352` | `adb_retry shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the app may not be running yet; the launch below and the pid check after it decide. |
+| `scripts/android_smoke.sh:358` | `adb_retry shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 \|\| true` | justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below. |
+| `scripts/android_smoke.sh:360` | `adb_retry shell wm dismiss-keyguard >/dev/null 2>&1 \|\| true` | justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below. |
+| `scripts/android_smoke.sh:361` | `adb_retry shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_smoke.sh:425` | `adb_retry shell screencap -p /sdcard/kanama_android_smoke.png >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_smoke.sh:426` | `adb_retry pull /sdcard/kanama_android_smoke.png "$SCREENSHOT" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/api_wrapper_generator_report.py:122` | `except ValueError:` | justified: only the path shown in the report text; no verdict reads it |
 | `scripts/audit_claims.sh:33` | `common_dir="$(git -C "$ROOT_DIR" rev-parse --git-common-dir 2>/dev/null \|\| true)"` | justified: no git (a tarball) just means the sibling-of-this-checkout default below; a wrong guess surfaces as the task-index SKIP. |
 | `scripts/audit_stale_blockers.py:139` | `except (subprocess.CalledProcessError, OSError):` | justified: git is only one way to find the tasks checkout; an absent one is the SKIP path below |
@@ -113,9 +113,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/audit_stale_blockers.py:489` | `except ValueError:` | justified: --list display of the marker age; the audit verdict is already decided |
 | `scripts/audit_wrapper_abi_policy.py:84` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/audit_wrapper_signatures.py:323` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_actual_public_surface.py:122` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
-| `scripts/check_actual_public_surface.py:459` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_actual_public_surface.py:480` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_actual_public_surface.py:121` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
+| `scripts/check_actual_public_surface.py:458` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_actual_public_surface.py:479` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_bootstrap_jdk_resolution.sh:23` | `if ! command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/check_bootstrap_jdk_resolution.sh:31` | `REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null \|\| true)"` | justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2. |
 | `scripts/check_expect_no_defaults.py:155` | `except (Unparsed, ValueError):` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -124,6 +124,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_gate_evidence.py:63` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_gate_evidence.py:76` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_ios_shim_faults.py:276` | `except Exception as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_ios_single_call_returns.py:149` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:180` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:359` | `except (ParseError, OSError) as exc:` | justified: reported as a `parse-error` finding, which fails the gate (never silenced) |
 | `scripts/check_jdk_lookup_parity.sh:42` | `REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null \|\| true)"` | justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2. |
@@ -139,9 +140,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_pt_tag_tables.py:365` | `except ParseError as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_pt_tag_tables.py:367` | `except OSError as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_pt_tag_tables.py:375` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
-| `scripts/check_public_signature_changes.py:996` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1005` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1206` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:997` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1006` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1240` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_assemble.sh:231` | `if command -v codesign >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/export_game_smoke.sh:133` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
@@ -155,10 +156,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/generate_api_wrapper.py:1859` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1864` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1869` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1904` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1867` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1872` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1877` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1912` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_gates_index.py:376` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:420` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:438` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
@@ -207,12 +208,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:2981` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:48` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:207` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:675` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:678` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:680` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:718` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:734` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:747` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:685` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:688` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:690` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:728` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:744` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:757` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:114` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/package_install_smoke.sh:130` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:132` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
@@ -220,16 +221,16 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:27` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:513` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
-| `scripts/runtime_smoke.sh:669` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:673` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
-| `scripts/runtime_smoke.sh:675` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:678` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:679` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
-| `scripts/runtime_smoke.sh:682` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
-| `scripts/runtime_smoke.sh:683` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
-| `scripts/runtime_smoke.sh:692` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:700` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
+| `scripts/runtime_smoke.sh:543` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:700` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:704` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
+| `scripts/runtime_smoke.sh:706` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:709` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:710` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
+| `scripts/runtime_smoke.sh:713` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
+| `scripts/runtime_smoke.sh:714` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
+| `scripts/runtime_smoke.sh:723` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/runtime_smoke.sh:731` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:18` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:25` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -238,9 +239,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/upgrade_godot.sh:129` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
 | `scripts/upgrade_godot.sh:168` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
 | `scripts/upgrade_godot.sh:326` | `diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") >&2 \|\| true` | justified: diff exits 1 on a difference, which is the very thing being printed; the next line exits 1. |
-| `scripts/validate_godot_api.py:230` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/validate_godot_api.py:252` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/validate_godot_api.py:278` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/validate_godot_api.py:232` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/validate_godot_api.py:254` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/validate_godot_api.py:280` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_browser_floor.py:110` | `except FloorError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_browser_floor.py:113` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_budgets.py:203` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -265,27 +266,27 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web/visibility_probe.py:182` | `except OSError:` | justified: the browser-output tail is diagnostics only; this branch returns 2 (INCONCLUSIVE) regardless |
 | `scripts/web_ci_matrix.sh:274` | `continue` | justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set. |
 | `scripts/web_ci_matrix.sh:283` | `continue` | justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set. |
-| `scripts/web_export_smoke.sh:123` | `if [[ -n "$DRIVER_PID" ]] && kill -0 "$DRIVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/web_export_smoke.sh:124` | `kill -TERM -- "-$DRIVER_PID" 2>/dev/null \|\| kill -TERM "$DRIVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
-| `scripts/web_export_smoke.sh:126` | `kill -0 "$DRIVER_PID" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/web_export_smoke.sh:129` | `kill -KILL -- "-$DRIVER_PID" 2>/dev/null \|\| kill -KILL "$DRIVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
-| `scripts/web_export_smoke.sh:131` | `if [[ -n "$SERVER_PID" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/web_export_smoke.sh:132` | `kill -TERM "$SERVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
-| `scripts/web_export_smoke.sh:133` | `wait "$SERVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
-| `scripts/web_export_smoke.sh:157` | `if ! kill -0 "$SERVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/web_export_smoke.sh:188` | `if ! command -v setsid >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/web_export_smoke.sh:209` | `if ! kill -0 "$DRIVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/web_export_smoke.sh:215` | `kill -TERM -- "-$DRIVER_PID" 2>/dev/null \|\| kill -TERM "$DRIVER_PID" 2>/dev/null \|\| true` | justified: killing a driver that timed out; the `fail` just below is the verdict |
-| `scripts/web_export_smoke.sh:217` | `kill -KILL -- "-$DRIVER_PID" 2>/dev/null \|\| kill -KILL "$DRIVER_PID" 2>/dev/null \|\| true` | justified: killing a driver that timed out; the `fail` just below is the verdict |
+| `scripts/web_export_smoke.sh:134` | `if [[ -n "$DRIVER_PID" ]] && kill -0 "$DRIVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/web_export_smoke.sh:135` | `kill -TERM -- "-$DRIVER_PID" 2>/dev/null \|\| kill -TERM "$DRIVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
+| `scripts/web_export_smoke.sh:137` | `kill -0 "$DRIVER_PID" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/web_export_smoke.sh:140` | `kill -KILL -- "-$DRIVER_PID" 2>/dev/null \|\| kill -KILL "$DRIVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
+| `scripts/web_export_smoke.sh:142` | `if [[ -n "$SERVER_PID" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/web_export_smoke.sh:143` | `kill -TERM "$SERVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
+| `scripts/web_export_smoke.sh:144` | `wait "$SERVER_PID" 2>/dev/null \|\| true` | justified: cleanup after the verdict; the process may already be gone |
+| `scripts/web_export_smoke.sh:168` | `if ! kill -0 "$SERVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/web_export_smoke.sh:199` | `if ! command -v setsid >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/web_export_smoke.sh:220` | `if ! kill -0 "$DRIVER_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/web_export_smoke.sh:226` | `kill -TERM -- "-$DRIVER_PID" 2>/dev/null \|\| kill -TERM "$DRIVER_PID" 2>/dev/null \|\| true` | justified: killing a driver that timed out; the `fail` just below is the verdict |
+| `scripts/web_export_smoke.sh:228` | `kill -KILL -- "-$DRIVER_PID" 2>/dev/null \|\| kill -KILL "$DRIVER_PID" 2>/dev/null \|\| true` | justified: killing a driver that timed out; the `fail` just below is the verdict |
 | `scripts/web_fresh_checkout_smoke.sh:97` | `demo_project_dir "$demo" >/dev/null \|\| die "unknown --demo: $demo (expected one of: ${ALL_DEMOS[*]} \| all)"` | justified: not a swallow; `\|\| die` fails the script with a message |
 | `scripts/web_fresh_checkout_smoke.sh:216` | `git -C "$DEMOS_DIR" status --short >&2 \|\| true` | justified: diagnostics; FAILED=1 above already decided |
 | `scripts/web_hand_metric.py:99` | `except OSError:` | justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines |
 | `.github/workflows/package.yml:313` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:330` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
 | `.github/workflows/package.yml:420` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
-| `.github/workflows/web.yml:241` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
-| `.github/workflows/web.yml:294` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
-| `.github/workflows/web.yml:309` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
+| `.github/workflows/web.yml:239` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
+| `.github/workflows/web.yml:292` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
+| `.github/workflows/web.yml:307` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
 
 <!-- audit-table:end -->
 

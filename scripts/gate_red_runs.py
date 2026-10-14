@@ -346,6 +346,18 @@ case("check_hand_copies.py", py("check_hand_copies.py"),
 case("check_ios_shim_faults.py", py("check_ios_shim_faults.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c", '        kanama_ios_fault(__func__, "api-unresolved", NULL);', "        /* red run: guard returns silently */")],
      "returns without calling kanama_ios_fault", "a guarded early return in the iOS shim stops reporting its fault")
+case("check_ios_single_call_returns.py", py("check_ios_single_call_returns.py"),
+     [Create(f"{IOS}/binding/runtime/ZzRedRunReadBack.kt",
+             "package net.multigesture.kanama.binding.runtime\n\n"
+             "private fun redRunDispatch(buf: Long): Long = buf\n\n"
+             "internal fun redRunReadBack(): Long {\n  val len = redRunDispatch(0L)\n  return redRunDispatch(len)\n}\n")],
+     "double-call", "an iOS read-back measures with one call and fills with a second (the method runs twice)")
+case("check_ios_single_call_returns.py (loop)", py("check_ios_single_call_returns.py"),
+     [Create(f"{IOS}/binding/runtime/ZzRedRunReadBack.kt",
+             "package net.multigesture.kanama.binding.runtime\n\n"
+             "private fun redRunDispatch(buf: Long): Long = buf\n\n"
+             "internal fun redRunReadBack(): Long {\n  var cap = 0L\n  while (cap < 4L) {\n    cap = redRunDispatch(cap + 1L)\n  }\n  return cap\n}\n")],
+     "loop-call", "an iOS read-back grows its buffer and calls the entry point again in a loop")
 case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],

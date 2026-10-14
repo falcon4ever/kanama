@@ -64,6 +64,20 @@ the setting (an environment variable cannot reach an Android app). Both require 
 FAIL line, so a demo smoke fails when typed signals do not work on the device. `gate_red_runs.py` has a
 slow case that makes `emit` skip the call.
 
+### Fixed — iOS: a no-arg getter returning a String or an array ran the Godot method twice (task 129 D)
+
+On iOS every no-arg method returning a `String`, `StringName`, `NodePath`, `PackedByteArray`,
+`PackedInt32Array`, `PackedFloat32Array`, `PackedStringArray`, `PackedVector2Array`,
+`PackedColorArray`, a typed `Array` (`Array[StringName]`, `Array[NodePath]`, `Array[int]`,
+`Array[Plane]`) or an `Array`, and every `PackedByteArray` return with arguments, called the method
+twice: once with no buffer to measure the result, once to fill it. A getter with a side effect lost
+its value: `FileAccess.getLine()` skipped every other line and returned `""`, and
+`DirAccess.getNext()` skipped every other entry. Each of these returns now runs the method once
+through the same read-back the other argument shapes use, which parks a long result in C and drains
+it whole. The C no-arg read-back entry points left only for the C self-test are no longer exported.
+A new gate, `scripts/check_ios_single_call_returns.py`, fails when an iOS function names the same
+C entry point twice or calls one in a loop.
+
 ### Changed — `FileAccess` and `DirAccess` are RefCounted classes, as in GDScript (task 129 D) — BREAKING
 
 Desktop, Android and iOS. The last two per-platform classes are generated once from

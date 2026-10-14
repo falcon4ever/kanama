@@ -2379,7 +2379,7 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # no-arg / StringName-arg getters and the owned ClassDB.instantiate decode keep their bodies.
     # PackedInt32Array read-back is wired only for the no-arg getter
     # (ptrcallNoArgsRetPackedInt32List → List<Int> via the size + operator_index_const C
-    # helper, two-call length protocol). Other shapes share the "List<Int>" return token
+    # helper, one ptrcall since task 129 D). Other shapes share the "List<Int>" return token
     # (arg-bearing PackedInt32 returns) but route through helpers not audited yet.
     if not packed_return and not array_blob_return and shape.kotlin_return == "List<Int>" and shape.function != "ptrcallNoArgsRetPackedInt32List":
         return False

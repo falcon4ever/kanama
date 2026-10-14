@@ -64,24 +64,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect_b
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_load_status_with_progress
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_load_status_with_progress_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_node_path
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_node_path_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_color_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_string_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_callable
@@ -91,14 +73,11 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_contain
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_handles
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_handles_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8_static
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_scalar
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_scalar_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
@@ -284,42 +263,6 @@ actual object ObjectCalls {
   // `_dispatch` body and a `<symbol>_static` sibling in ios/bootstrap/kanama_ios_shim.c, and the
   // dispatchers below are the ONE place in this file that names the guarded symbol — enforced by
   // scripts/check_ios_static_dispatch.py.
-
-  private fun ptrcallNoArgsRetStringDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<ByteVar>?,
-    bufSize: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_string_static(methodBind, outBuf, bufSize)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_string(methodBind, instance, outBuf, bufSize)
-    }
-
-  private fun ptrcallNoArgsRetStringNameDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<ByteVar>?,
-    bufSize: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_string_name_static(methodBind, outBuf, bufSize)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_string_name(methodBind, instance, outBuf, bufSize)
-    }
-
-  private fun ptrcallNoArgsRetNodePathDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<ByteVar>?,
-    bufSize: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_node_path_static(methodBind, outBuf, bufSize)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_node_path(methodBind, instance, outBuf, bufSize)
-    }
 
   private fun ptrcallRetUtf8Dispatch(
     methodBind: Long,
@@ -528,36 +471,6 @@ actual object ObjectCalls {
       )
     }
 
-  private fun ptrcallRetVariantArrayBlobDispatch(
-    methodBind: Long,
-    instance: Long,
-    argTypes: CValuesRef<IntVar>?,
-    argPtrs: CValuesRef<COpaquePointerVar>?,
-    argCount: Int,
-    outBuf: CValuesRef<ByteVar>?,
-    bufSize: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_ret_variant_array_blob_static(
-        methodBind,
-        argTypes,
-        argPtrs,
-        argCount,
-        outBuf,
-        bufSize,
-      )
-    } else {
-      kanama_ios_godot_ptrcall_ret_variant_array_blob(
-        methodBind,
-        instance,
-        argTypes,
-        argPtrs,
-        argCount,
-        outBuf,
-        bufSize,
-      )
-    }
-
   private fun ptrcallRetRaycastDictDispatch(
     methodBind: Long,
     instance: Long,
@@ -615,105 +528,6 @@ actual object ObjectCalls {
         argCount,
         outHandles,
         cap,
-      )
-    }
-
-  private fun ptrcallNoArgsRetPackedInt32ArrayDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<IntVar>?,
-    bufCap: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_static(methodBind, outBuf, bufCap)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(methodBind, instance, outBuf, bufCap)
-    }
-
-  private fun ptrcallNoArgsRetPackedFloat32ArrayDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<FloatVar>?,
-    bufCap: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_static(methodBind, outBuf, bufCap)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
-        methodBind,
-        instance,
-        outBuf,
-        bufCap,
-      )
-    }
-
-  private fun ptrcallNoArgsRetPackedVector2ArrayDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<FloatVar>?,
-    bufCap: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_static(methodBind, outBuf, bufCap)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
-        methodBind,
-        instance,
-        outBuf,
-        bufCap,
-      )
-    }
-
-  private fun ptrcallNoArgsRetPackedColorArrayDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<FloatVar>?,
-    bufCap: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_static(methodBind, outBuf, bufCap)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(methodBind, instance, outBuf, bufCap)
-    }
-
-  private fun ptrcallNoArgsRetPackedStringArrayDispatch(
-    methodBind: Long,
-    instance: Long,
-    outBuf: CValuesRef<ByteVar>?,
-    bufSize: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_static(methodBind, outBuf, bufSize)
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
-        methodBind,
-        instance,
-        outBuf,
-        bufSize,
-      )
-    }
-
-  private fun ptrcallNoArgsRetTypedArrayBlobDispatch(
-    methodBind: Long,
-    instance: Long,
-    elemKind: Int,
-    outBuf: CValuesRef<ByteVar>?,
-    bufSize: Long,
-  ): Long =
-    if (instance == 0L) {
-      kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_static(
-        methodBind,
-        elemKind,
-        outBuf,
-        bufSize,
-      )
-    } else {
-      kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
-        methodBind,
-        instance,
-        elemKind,
-        outBuf,
-        bufSize,
       )
     }
 
@@ -966,47 +780,26 @@ actual object ObjectCalls {
       Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
     }
 
-  // String return: a Godot String can't ride the fixed ret_out of the generic
-  // dispatch, so it routes through the dedicated C helper. Two-call protocol —
-  // measure the UTF-8 byte length (NULL buffer), then allocate and fill. Safe to
-  // call twice because the wired methods are pure getters. string_to_utf8_chars
-  // writes no null terminator, so decode exactly `len` bytes.
+  // A no-arg String / StringName / NodePath return goes through [ptrcallRetUtf8] like every other
+  // arg shape, so the method runs ONCE (task 129 D). The old no-arg helpers measured with a NULL
+  // buffer and called again to fill: two engine calls per Kotlin call, so a getter with a side
+  // effect lost its value (FileAccess.get_line and DirAccess.get_next consumed a line / an entry on
+  // the measuring call and returned ""). check_ios_single_call_returns.py keeps it that way.
   actual fun ptrcallNoArgsRetString(methodBind: MemorySegment, instance: MemorySegment): String =
-    memScoped {
-      val len = ptrcallNoArgsRetStringDispatch(methodBind.address(), instance.address(), null, 0L)
-      if (len <= 0L) {
-        ""
-      } else {
-        val buf = allocArray<ByteVar>(len)
-        ptrcallNoArgsRetStringDispatch(methodBind.address(), instance.address(), buf, len)
-        buf.readBytes(len.toInt()).decodeToString()
-      }
-    }
+    ptrcallRetUtf8(methodBind, instance, null, null, 0, PT_STRING)
 
-  // StringName return: GDExtension has no StringName->utf8, so the dedicated C helper
-  // converts the returned StringName to a String (String(from: StringName) ctor) and
-  // UTF-8 encodes it. Same two-call length protocol as ptrcallNoArgsRetString.
   actual fun ptrcallNoArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): String = memScoped {
-    val len = ptrcallNoArgsRetStringNameDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (len <= 0L) {
-      ""
-    } else {
-      val buf = allocArray<ByteVar>(len)
-      ptrcallNoArgsRetStringNameDispatch(methodBind.address(), instance.address(), buf, len)
-      buf.readBytes(len.toInt()).decodeToString()
-    }
-  }
+  ): String = ptrcallRetUtf8(methodBind, instance, null, null, 0, PT_STRING_NAME)
 
   // task 100 (parcel 1) — String / StringName / NodePath return on any audited arg shape. The
   // generated helpers lay out their arg cells exactly as for kanama_ios_godot_ptrcall and hand
   // them here with the return builtin's tag (PT_STRING / PT_STRING_NAME / PT_NODE_PATH). The C
   // entry runs the method ONCE and UTF-8 encodes the return: it fits the inline buffer in the
   // common case; a longer value is parked C-side and drained in full by the second call, so
-  // nothing is truncated (unlike the 1 KiB Object-call decode) and nothing is re-issued (unlike
-  // the no-arg helpers' two-call length protocol, which is only safe for pure getters).
+  // nothing is truncated (unlike the 1 KiB Object-call decode) and nothing is re-issued. The no-arg
+  // String / StringName / NodePath returns use it too since task 129 D (argCount 0).
   fun ptrcallRetUtf8(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -1128,8 +921,8 @@ actual object ObjectCalls {
     argCount: Int,
     packedKind: Int,
     elemBytes: Int,
+    inlineCap: Long = PACKED_INLINE_CAP,
   ): Pair<CPointer<ByteVar>, Int> {
-    val inlineCap = 256L
     val inline = allocArray<ByteVar>(inlineCap * elemBytes)
     val count =
       ptrcallRetPackedDispatch(
@@ -1831,101 +1624,27 @@ actual object ObjectCalls {
     }
   }
 
-  // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
-  // the returned NodePath to a String (String(from: NodePath) ctor) and UTF-8 encodes it,
-  // then we wrap it back into a NodePath. Same two-call length protocol as the String helper.
   actual fun ptrcallNoArgsRetNodePath(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): NodePath = memScoped {
-    val len = ptrcallNoArgsRetNodePathDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (len <= 0L) {
-      NodePath("")
-    } else {
-      val buf = allocArray<ByteVar>(len)
-      ptrcallNoArgsRetNodePathDispatch(methodBind.address(), instance.address(), buf, len)
-      NodePath(buf.readBytes(len.toInt()).decodeToString())
-    }
-  }
+  ): NodePath = NodePath(ptrcallRetUtf8(methodBind, instance, null, null, 0, PT_NODE_PATH))
 
-  // PackedInt32Array return: the C helper reads the array's element count (size builtin)
-  // and copies int32 elements out via operator_index_const. Two-call length protocol like
-  // the String/NodePath helpers — measure the count first, allocate, then fill. The count
-  // is an element count, not a byte size.
+  // The no-arg Packed*Array returns use the single-call any-arg helpers (task 129 D): the method
+  // runs once, a long array is parked C-side and drained whole.
   actual fun ptrcallNoArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): List<Int> = memScoped {
-    val count =
-      ptrcallNoArgsRetPackedInt32ArrayDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (count <= 0L) {
-      emptyList()
-    } else {
-      val buf = allocArray<IntVar>(count)
-      ptrcallNoArgsRetPackedInt32ArrayDispatch(methodBind.address(), instance.address(), buf, count)
-      List(count.toInt()) { buf[it] }
-    }
-  }
+  ): List<Int> = ptrcallRetPackedInt32List(methodBind, instance, null, null, 0)
 
-  // PackedStringArray return: VARIABLE-LENGTH elements. The C helper serializes the strings
-  // into a length-prefixed blob [count:int32][len0:int32][utf8_0][len1:int32][utf8_1]...; we
-  // measure the total byte size, allocate, fill, then decode (all little-endian on arm64).
   actual fun ptrcallNoArgsRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): List<String> = memScoped {
-    val total =
-      ptrcallNoArgsRetPackedStringArrayDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (total < 4L) {
-      emptyList()
-    } else {
-      val buf = allocArray<ByteVar>(total)
-      ptrcallNoArgsRetPackedStringArrayDispatch(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        total,
-      )
-      val bytes = buf.readBytes(total.toInt())
-      fun int32(off: Int): Int =
-        (bytes[off].toInt() and 0xFF) or
-          ((bytes[off + 1].toInt() and 0xFF) shl 8) or
-          ((bytes[off + 2].toInt() and 0xFF) shl 16) or
-          ((bytes[off + 3].toInt() and 0xFF) shl 24)
-      val count = int32(0)
-      var off = 4
-      val out = ArrayList<String>(if (count > 0) count else 0)
-      repeat(count) {
-        val len = int32(off)
-        off += 4
-        out.add(bytes.decodeToString(off, off + len))
-        off += len
-      }
-      out
-    }
-  }
+  ): List<String> = ptrcallRetPackedStringList(methodBind, instance, null, null, 0)
 
-  // PackedFloat32Array return: float32 element variant of ptrcallNoArgsRetPackedInt32List
-  // (same size + operator_index_const + two-call length protocol; 16-byte storage C-side).
   actual fun ptrcallNoArgsRetPackedFloat32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): List<Float> = memScoped {
-    val count =
-      ptrcallNoArgsRetPackedFloat32ArrayDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (count <= 0L) {
-      emptyList()
-    } else {
-      val buf = allocArray<FloatVar>(count)
-      ptrcallNoArgsRetPackedFloat32ArrayDispatch(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        count,
-      )
-      List(count.toInt()) { buf[it] }
-    }
-  }
+  ): List<Float> = ptrcallRetPackedFloat32List(methodBind, instance, null, null, 0)
 
   // PackedFloat32Array arg (build-from-list): copy the List into a flat float buffer; the C
   // helper builds the array (constructor + push_back) and ptrcalls the single-arg void method.
@@ -2118,10 +1837,9 @@ actual object ObjectCalls {
     return desc.ptr
   }
 
-  // Two-call length protocol; a positive sizeHint (Image.getDataSize, FileAccess.get_size)
-  // collapses it to one call — NOTE the measuring call executes the method a second time,
-  // so callers with a cheap size source should pass it. A grown array retries at the
-  // reported count; a short read returns the prefix.
+  // PackedByteArray return on any arg shape through the single-call packed entry (task 129 D): the
+  // method runs once. A positive sizeHint (Image.getDataSize, FileAccess.get_size) sizes the inline
+  // buffer; a longer array is parked C-side and drained whole, never re-requested.
   private fun retByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -2129,38 +1847,18 @@ actual object ObjectCalls {
     argBuilder: MemScope.() -> Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>,
   ): ByteArray = memScoped {
     val (types, ptrs, argc) = argBuilder()
-    var cap = sizeHint
-    if (cap <= 0L) {
-      cap =
-        kanama_ios_godot_ptrcall_ret_packed_byte_array(
-          methodBind.address(),
-          instance.address(),
-          types,
-          ptrs,
-          argc,
-          null,
-          0L,
-        )
-    }
-    while (cap > 0L) {
-      val buf = allocArray<ByteVar>(cap)
-      val count =
-        kanama_ios_godot_ptrcall_ret_packed_byte_array(
-          methodBind.address(),
-          instance.address(),
-          types,
-          ptrs,
-          argc,
-          buf.reinterpret(),
-          cap,
-        )
-      when {
-        count <= 0L -> return@memScoped ByteArray(0)
-        count <= cap -> return@memScoped buf.readBytes(count.toInt())
-        else -> cap = count
-      }
-    }
-    ByteArray(0)
+    val (buf, n) =
+      ptrcallPackedElements(
+        methodBind,
+        instance,
+        types,
+        ptrs,
+        argc,
+        VT_PACKED_BYTE_ARRAY,
+        1,
+        if (sizeHint > 0L) sizeHint else PACKED_INLINE_CAP,
+      )
+    if (n == 0) ByteArray(0) else buf.readBytes(n)
   }
 
   actual fun ptrcallNoArgsRetByteArray(
@@ -2293,52 +1991,14 @@ actual object ObjectCalls {
   }
 
   // Typed builtin Array returns (Phase 2.7g): a no-arg getter returning Array[StringName] /
-  // Array[NodePath] / Array[int] is read back element-by-element through the generic Array
-  // size/get builtins, serialized C-side to a [count]([len][bytes])* blob (two-call length
-  // protocol like the Packed* helpers), then parsed here per element kind.
+  // Array[NodePath] / Array[int] / Array[Plane], read back through the single-call typed-array blob
+  // every arg shape uses (task 129 D; the old no-arg blob ran the method twice).
   private fun <T> retTypedArrayBlob(
     methodBind: MemorySegment,
     instance: MemorySegment,
     elemKind: Int,
     parse: (ByteArray, Int, Int) -> T,
-  ): List<T> = memScoped {
-    val total =
-      ptrcallNoArgsRetTypedArrayBlobDispatch(
-        methodBind.address(),
-        instance.address(),
-        elemKind,
-        null,
-        0L,
-      )
-    if (total < 4L) {
-      emptyList()
-    } else {
-      val buf = allocArray<ByteVar>(total)
-      ptrcallNoArgsRetTypedArrayBlobDispatch(
-        methodBind.address(),
-        instance.address(),
-        elemKind,
-        buf,
-        total,
-      )
-      val bytes = buf.readBytes(total.toInt())
-      fun int32(off: Int): Int =
-        (bytes[off].toInt() and 0xFF) or
-          ((bytes[off + 1].toInt() and 0xFF) shl 8) or
-          ((bytes[off + 2].toInt() and 0xFF) shl 16) or
-          ((bytes[off + 3].toInt() and 0xFF) shl 24)
-      val count = int32(0)
-      var off = 4
-      val out = ArrayList<T>(if (count > 0) count else 0)
-      repeat(count) {
-        val len = int32(off)
-        off += 4
-        out.add(parse(bytes, off, len))
-        off += len
-      }
-      out
-    }
-  }
+  ): List<T> = memScoped { typedList(methodBind, instance, null, null, 0, elemKind, parse) }
 
   // Array[StringName] -> List<String> (group / animation-library name lists). Phase 2.7g.
   actual fun ptrcallNoArgsRetStringNameList(
@@ -2388,42 +2048,17 @@ actual object ObjectCalls {
       Plane.raw(Vector3.raw(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
     }
 
-  // Generic Array -> List<Any?> (Phase 2.7j). The C side serializes each element as a
-  // self-describing [variant_type][len][bytes] record; scalar elements decode to Boolean/Long/
-  // Double/String/NodePath/MemorySegment(handle), non-scalar (Dictionary, nested Array, ...) to
-  // null. Two-call length protocol; args are laid out by the caller's layoutArgs lambda.
+  // Generic Array -> List<Any?> (Phase 2.7j), through the single-call container blob every arg
+  // shape uses (task 129 D; the old variant-array blob ran the method twice). Args are laid out by
+  // the caller's layoutArgs lambda.
   private fun retVariantArrayBlob(
     methodBind: MemorySegment,
     instance: MemorySegment,
     layoutArgs: MemScope.() -> Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>,
   ): List<Any?> = memScoped {
     val (types, ptrs, argc) = layoutArgs()
-    val total =
-      ptrcallRetVariantArrayBlobDispatch(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        argc,
-        null,
-        0L,
-      )
-    if (total < 4L) {
-      emptyList()
-    } else {
-      val b = allocArray<ByteVar>(total)
-      ptrcallRetVariantArrayBlobDispatch(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        argc,
-        b,
-        total,
-      )
-      val bytes = b.readBytes(total.toInt())
-      ContainerBlob(bytes, 0).array()
-    }
+    val bytes = ptrcallContainerBlob(methodBind, instance, types, ptrs, argc, VT_ARRAY)
+    if (bytes.size < 4) emptyList() else ContainerBlob(bytes, 0).array()
   }
 
   actual fun ptrcallNoArgsRetArray(methodBind: MemorySegment, instance: MemorySegment): List<Any?> =
@@ -2973,44 +2608,15 @@ actual object ObjectCalls {
     Unit
   }
 
-  // PackedVector2Array return: each element is 2 float32; the C helper fills count*2 floats.
   actual fun ptrcallNoArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): List<Vector2> = memScoped {
-    val count =
-      ptrcallNoArgsRetPackedVector2ArrayDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (count <= 0L) {
-      emptyList()
-    } else {
-      val buf = allocArray<GodotRealVar>(count * 2)
-      ptrcallNoArgsRetPackedVector2ArrayDispatch(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        count,
-      )
-      List(count.toInt()) { Vector2.raw(buf[it * 2], buf[it * 2 + 1]) }
-    }
-  }
+  ): List<Vector2> = ptrcallRetPackedVector2List(methodBind, instance, null, null, 0)
 
-  // PackedColorArray return: each element is 4 float32 (RGBA); the C helper fills count*4 floats.
   actual fun ptrcallNoArgsRetPackedColorList(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): List<Color> = memScoped {
-    val count =
-      ptrcallNoArgsRetPackedColorArrayDispatch(methodBind.address(), instance.address(), null, 0L)
-    if (count <= 0L) {
-      emptyList()
-    } else {
-      val buf = allocArray<FloatVar>(count * 4)
-      ptrcallNoArgsRetPackedColorArrayDispatch(methodBind.address(), instance.address(), buf, count)
-      List(count.toInt()) {
-        Color.raw(buf[it * 4], buf[it * 4 + 1], buf[it * 4 + 2], buf[it * 4 + 3])
-      }
-    }
-  }
+  ): List<Color> = ptrcallRetPackedColorList(methodBind, instance, null, null, 0)
 
   // ---- typed-object-array (Array[Object]) returns -> List<T> ----
   // GENERIC over the element wrapper via a `fromHandle: (MemorySegment) -> T?` factory passed by
@@ -3100,6 +2706,10 @@ actual object ObjectCalls {
 
   // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
   internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
+
+  // Default inline element capacity of the single-call Packed*Array read-back (longer arrays drain
+  // from the C pending slot).
+  private const val PACKED_INLINE_CAP = 256L
 
   // `<T : Any>` is desktop's bound, which an `actual` must repeat (task 104 step 3 parcel C').
   actual fun <T : Any> ptrcallNoArgsRetTypedObjectList(
@@ -40190,8 +39800,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // PackedInt32Array-return (MeshLibrary.get_item_list): create two items (via the Variant
   // call path — ids 7 and 11), then read the id list back through ptrcallNoArgsRetPackedInt32List
-  // (size + operator_index_const, two-call length protocol). The item-id map is sorted, so the
-  // result is [7, 11] — known, distinct, non-zero values. MeshLibrary is a plain Resource, safe
+  // (size + operator_index_const, one ptrcall with a pending-slot drain). The item-id map is
+  // sorted, so the result is [7, 11] — known, distinct, non-zero values. MeshLibrary is a plain
+  // Resource, safe
   // to construct at init time — unlike a physics body (the only emitted PackedInt32Array getter,
   // CollisionObject2D/3D.get_shape_owners) which segfaults in its constructor this early. Proves
   // the Kotlin -> C -> ptrcall -> read-back path end to end. Phase 2.7c.
@@ -40209,7 +39820,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // Typed-object-array-return (Node.get_children): a fresh parent Node with two child Nodes ->
   // get_children(false) returns [child0, child1] in add order. Exercises the Kotlin generic helper
   // ptrcallWithBoolArgRetTypedObjectList end to end (C Array read-back + handle -> MemorySegment ->
-  // fromHandle, two-call length protocol). The self-test fromHandle is identity (handle
+  // fromHandle, one ptrcall with a pending-slot drain). The self-test fromHandle is identity
+  // (handle
   // passthrough,
   // null-filtered) so we can compare raw addresses without importing the api layer. Plain Node is
   // safe to construct at init time. Phase 2.7d.
