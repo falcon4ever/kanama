@@ -744,8 +744,14 @@ double bit for bit; the transcendental ones can differ from the engine's in the 
 within 2^-52 absolute, since some of its branches subtract from 1). The rest of `GD` runs in the
 engine: printing and
 `pushError`, `str` and the `varTo*` / `bytesTo*` conversions, `typeOf`, `hash`, `weakref`,
-`instanceFromId`, and the random functions, which use Godot's global generator on every platform,
-so `GD.seed(n)` reproduces GDScript's sequence on Web too; each of those is one engine call there.
+`instanceFromId`, and the random functions (`randf`, `randi`, `randfRange`, `randiRange`, `randfn`,
+`seed`, `randomize`, `randFromSeed`); each of those is one engine call there.
+
+The `GD` random functions use Godot's one global generator on every platform, like GDScript and
+C#, so `seed()` from GDScript or from Kotlin gives the same sequence everywhere. On Web each call
+crosses the browser bridge (about 10-30 us), so draw thousands of numbers per frame with care. For
+strict determinism use a dedicated `RandomNumberGenerator` with its own seed: the global generator
+is shared with anything else that draws from it.
 
 ## Global Classes
 

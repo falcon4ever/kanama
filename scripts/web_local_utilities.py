@@ -20,9 +20,8 @@ ONE of the tables below, so a new Godot utility is a reviewed row, never a silen
   mixed types cross.
 * `WEB_ENGINE_UTILITIES`: the engine runs it (name -> why).
 
-RNG is one row away either way: the `rand*` / `seed` / `randomize` rows sit in WEB_ENGINE_UTILITIES
-until the owner picks the engine RNG or a bit-exact RandomPCG port; the port would move them to
-WEB_LOCAL_UTILITIES with bodies calling it.
+RNG (decision 2026-10-14): the `rand*` / `seed` / `randomize` rows are in WEB_ENGINE_UTILITIES, so
+every platform draws from Godot's one global generator.
 """
 
 from __future__ import annotations
@@ -148,7 +147,10 @@ WEB_TEXT_FALLBACK: dict[str, str] = {
     "printt": "\\t", "push_error": "", "push_warning": "",
 }
 
-RNG_PENDING = "RNG: the engine's RandomPCG until the owner picks the engine RNG or a bit-exact Kotlin port"
+RNG_ENGINE = (
+    "engine generator on every platform: one generator shared with GDScript, seeded sequences identical "
+    "everywhere (decision 2026-10-14)"
+)
 WEB_ENGINE_UTILITIES: dict[str, str] = {
     **{name: "text output: the engine's log, console and debugger" for name in (
         "print", "print_rich", "print_verbose", "printerr", "printraw", "prints", "printt", "push_error",
@@ -161,7 +163,7 @@ WEB_ENGINE_UTILITIES: dict[str, str] = {
         "weakref", "instance_from_id", "is_instance_id_valid", "is_instance_valid")},
     **{name: "RID allocation: the engine's counter" for name in ("rid_allocate_id", "rid_from_int64")},
     "step_decimals": "an editor helper with a 32-bit int conversion; not a per-frame call",
-    **{name: RNG_PENDING for name in (
+    **{name: RNG_ENGINE for name in (
         "randf", "randi", "randf_range", "randi_range", "randfn", "randomize", "seed", "rand_from_seed")},
 }
 

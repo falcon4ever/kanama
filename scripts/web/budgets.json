@@ -22,7 +22,7 @@
       "maxPayloadBytes": 47000000,
       "maxCrossingsPerTick": 4.4,
       "maxBuiltinCallsPerTick": 10.5,
-      "builtinCallsBudgetFrom": "2x the 5.26 measured 2026-10-14 (Chrome 155, protocol 35): every builtin call is GD.randf / GD.randfRange on a spawn, which runs Godot's global RandomPCG in the engine until the owner picks the engine RNG or a bit-exact Kotlin port (task 129 E review B1); with the port this is 0 and the ceiling drops to the default.",
+      "builtinCallsBudgetFrom": "2x the 5.26 measured 2026-10-14 (Chrome 155, protocol 35): every builtin call is GD.randf / GD.randfRange on a spawn (about 5 random numbers per tick). The engine's global generator is the RNG on every platform by decision (2026-10-14): one generator shared with GDScript, seeded sequences identical everywhere, so each draw crosses the bridge and this ceiling stays (task 129 E review B1).",
       "minTicksForVerdict": 30,
       "measuredOn": "2026-07-30, macOS arm64, Chrome 150 headless, protocol 15",
       "measured": {

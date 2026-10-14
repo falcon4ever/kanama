@@ -307,6 +307,16 @@ name and arity). The web3d twin (`gd_twin.gd`, `BundleProbe.gdRows`) holds the l
 engine's within each row's bound, and the budget gate counts every remaining synchronous builtin or
 utility crossing per tick (`maxBuiltinCallsPerTick`).
 
+RNG (decision 2026-10-14): the `GD` random functions (`randf`, `randi`, `randfRange`, `randiRange`,
+`randfn`, `seed`, `randomize`, `randFromSeed`) use Godot's global generator on every platform, like
+GDScript and C#, so `seed()` from GDScript or Kotlin gives the same sequence everywhere. On Web each
+call crosses the bridge (about 10-30 us): there is no Web-local generator (the old `WebRandom` is
+gone; the `UTILITY_RANDOMIZE` / `UTILITY_RANDI` / `UTILITY_RANDF` backend arms call `GD`, and the
+rows sit in `WEB_ENGINE_UTILITIES` with that reason). For strict determinism a script uses a
+dedicated `RandomNumberGenerator` with its own seed; the global generator is shared with anything
+else that draws from it. `bunnymark` draws about 5 numbers per tick, which is why its
+`maxBuiltinCallsPerTick` ceiling stays above the default.
+
 **Objects in results keep their handles** (review B2). An object inside a builtin, utility or
 generic-call result (`GD.instanceFromId`, an Array of nodes, a Callable's target) resolves like a
 generic call's object return: its script handle, else the handle already tracking it (retained for

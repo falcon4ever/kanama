@@ -192,7 +192,7 @@ synchronous call each (10-30 us): printing, `pushError` / `pushWarning`, `str`, 
 other conversions, `typeOf`, `hash`, `weakref`, `instanceFromId`, `isInstanceIdValid`, the RID
 helpers, and the random functions, which use Godot's global generator as on desktop, so `GD.seed`
 / `GD.randf` reproduce GDScript's sequence. The Web budget gate now also counts these synchronous
-builtin and utility calls per engine tick (`maxBuiltinCallsPerTick`). The web3d smoke checks 53
+builtin and utility calls per engine tick (`maxBuiltinCallsPerTick`). The web3d smoke checks 55
 `GD` / `Mathf` results against a GDScript twin within each one's bound.
 `GodotCallable` is the shared class on Web too (`call`, `callv`, `callDeferred`, `isValid`,
 `getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,
@@ -213,7 +213,11 @@ Behaviour changes on Web, from the shared code:
   answered 0), and `Mathf.roundToInt` rounds halves away from zero like Godot's `roundi` (it
   rounded them to even).
 - `GD.randiRange` / `GD.randfRange` no longer throw for `from > to`; Godot answers that case.
-- The random sequence after `GD.seed(n)` is Godot's (Web had its own generator).
+- `GD.randf`, `randi`, `randiRange`, `randfRange`, `randfn`, `seed`, `randomize` and `randFromSeed`
+  use Godot's global generator on Web too, as on desktop, Android and iOS: the sequence after
+  `GD.seed(n)` is the one GDScript and C# draw, identical on every platform. Web's own generator
+  (the one behind `randomize` / `randi` / `randf`) is gone. Each draw is one bridge call (about
+  10-30 us).
 - `GodotObject.call(method, ...)` is desktop's: one immediate call that returns the method's
   result. Web's queued `call(method, String)`, `call(method, Double)`,
   `call(method, Vector3, Vector3)`, `callDeferred(method)` and `callDeferred(method, GodotObject)`

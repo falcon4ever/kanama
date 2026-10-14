@@ -22,7 +22,7 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
       "category": "runtime-core",
-      "lines": 519,
+      "lines": 518,
       "raises": [
         "508 -> 513: task 122 item 3 (call() owns RefCounted container elements, documented on GodotObject.call) and task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)",
         "513 -> 519: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"

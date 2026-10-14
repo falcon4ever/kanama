@@ -4,6 +4,7 @@
 package net.multigesture.kanama.web
 
 import kotlin.js.ExperimentalWasmJsInterop
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotBackendSpi
 import net.multigesture.kanama.backend.GodotBasis
@@ -344,7 +345,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-      WebRandom.randomize()
+      GD.randomize()
     }
   }
 
@@ -355,7 +356,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-      return WebRandom.randi()
+      return GD.randi()
     }
   }
 
@@ -366,7 +367,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     requireOpcode(descriptor, callSite)
     return webFreedAware {
       require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-      return WebRandom.randf()
+      return GD.randf()
     }
   }
 

@@ -61,6 +61,13 @@ func gd_value(index: int) -> float:
 		50: return max(1.5, 2.5, -1.0)
 		51: return clamp(0.0, 3.0, 1.0)
 		52: return float(min(4, -2, 9))
+		# Engine RNG parity (decision 2026-10-14): after the same seed, Kotlin's GD draws what GDScript draws.
+		53:
+			seed(12345)
+			return float(randi())
+		54:
+			seed(7)
+			return randf_range(-5.0, 5.0) + float(randi_range(-100, 100))
 	return NAN
 
 func gd_text(index: int) -> String:

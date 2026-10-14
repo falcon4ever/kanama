@@ -142,7 +142,7 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
    * each row is (ulp bound, Kotlin call), the bound the row's utility carries in that table (0:
    * bit-exact; 1: a libm transcendental; 2: linear_to_db; `ease`'s table bound is absolute, so its
    * rows keep the 1 ulp these inputs reach and [sweepsWithinBounds] checks the table's). Bit 0 = every
-   * row within its bound, no row but the engine-RNG one reaching the bridge's builtin-call channel,
+   * row within its bound, no row but the engine-RNG ones reaching the bridge's builtin-call channel,
    * and the composite sweeps within their bounds (a mismatch prints the row), bit 1 = str, bit 2 =
    * isInstanceValid / instanceFromId.
    */
@@ -205,11 +205,21 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         0 to { GD.max(1.5, 2.5, -1.0) as Double },
         0 to { GD.clamp(0.0 as Any?, 3.0, 1.0) as Double },
         0 to { (GD.min(4L, -2L, 9L) as Long).toDouble() },
+        // Engine RNG parity (decision 2026-10-14): the same seed draws the same numbers as GDScript.
+        0 to {
+          GD.seed(12345L)
+          GD.randi().toDouble()
+        },
+        0 to {
+          GD.seed(7L)
+          GD.randfRange(-5.0, 5.0) + GD.randiRange(-100L, 100L).toDouble()
+        },
       )
     var mask = 1L
-    // The rows that still cross by design: 8 (`GD.seed` + `GD.randf`, the engine RNG). Every other
-    // row must not reach the bridge's builtin-call channel at all (fix round 2: a silent crossing).
-    val engineCalls = mapOf(8 to 2L)
+    // The rows that still cross by design: the engine RNG ones (8: `GD.seed` + `GD.randf`; 53: seed +
+    // randi; 54: seed + randfRange + randiRange). Every other row must not reach the bridge's
+    // builtin-call channel at all (fix round 2: a silent crossing).
+    val engineCalls = mapOf(8 to 2L, 53 to 2L, 54 to 3L)
     rows.forEachIndexed { index, (bound, case) ->
       val twin = WebExperimentalGenericCall.callImmediate(twin(), "gd_value", listOf(index.toLong())).asDouble()
       val callsBefore = twinLong("builtin_calls")

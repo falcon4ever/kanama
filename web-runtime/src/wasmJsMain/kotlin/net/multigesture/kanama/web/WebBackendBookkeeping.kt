@@ -403,34 +403,3 @@ internal fun clearWebPositionSnapshot(objectId: Int) {
   targetPosition3Snapshots.remove(objectId)
   renderingMethodSnapshots.remove(objectId)
 }
-
-// ---------------------------------------------------------------------------
-// Pure-Kotlin RNG backing the @GlobalScope utility opcodes (no bridge crossing).
-// ---------------------------------------------------------------------------
-
-internal object WebRandom {
-  private var state = 0x9e3779b97f4a7c15UL
-
-  fun randomize() {
-    var seed = webRandomSeed().toLong().toULong() xor 0x9e3779b97f4a7c15UL
-    seed = (seed xor (seed shr 30)) * 0xbf58476d1ce4e5b9UL
-    seed = (seed xor (seed shr 27)) * 0x94d049bb133111ebUL
-    state = (seed xor (seed shr 31)).takeUnless { it == 0UL } ?: 0x2545f4914f6cdd1dUL
-  }
-
-  fun randi(): Long {
-    var next = state
-    next = next xor (next shl 13)
-    next = next xor (next shr 7)
-    next = next xor (next shl 17)
-    state = next
-    return (next and 0xffff_ffffUL).toLong()
-  }
-
-  fun randf(): Double = randi().toDouble() / 4_294_967_295.0
-}
-
-private fun webRandomSeed(): Double =
-  js(
-    "((globalThis.crypto && globalThis.crypto.getRandomValues) ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Date.now()) + performance.now()"
-  )
