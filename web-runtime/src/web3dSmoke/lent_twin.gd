@@ -19,6 +19,7 @@ signal capped(obj: Object)
 signal renew(obj: Object)
 signal paused_lend(obj: Object)
 signal adopted(obj: Object)
+signal paused_adopt(obj: Object)
 
 var body: Node3D
 var plain: Node
@@ -48,6 +49,13 @@ var paused_base := 0
 var paused_result := -1
 var paused_lent_after := 0
 var adopted_nodes: Array[Node] = []
+var minter: Node
+var minted_node: Node
+var adopt_frame := -1
+var adopt_base := 0
+var adopt_with := 0
+var adopt_after := 0
+var adopt_result := -1
 
 
 func _ready() -> void:
@@ -342,6 +350,60 @@ func free_adopted(_unused: int) -> int:
 	adopted_nodes.clear()
 	return 1
 
+## The sweep's connection to process_frame gone, as after the proxy that made it was freed.
+func _unhook() -> void:
+	var hook := KanamaWebHandles.sweep_hook
+	var tree := get_tree()
+	if hook.is_valid() and tree.process_frame.is_connected(hook):
+		tree.process_frame.disconnect(hook)
+	KanamaWebHandles.sweep_hook = Callable()
+
+
+## L18: with the sweep unhooked, a short-lived LentKeeper proxy is the first to lend (a mint, so it
+## makes the connection) and is freed at once, taking the connection with it. Returns the lent
+## handles before the lend.
+func emit_minter(_unused: int) -> int:
+	var base := counter("liveLent")
+	_unhook()
+	minter = load(KanamaWebHandles.proxy_paths["LentKeeper"]).new()
+	# A sibling, so its "../LentTwin" finds this node.
+	get_parent().add_child(minter)
+	minter.call("arm_escape", 0)
+	minted_node = Node.new()
+	minted_node.name = "LentMinted"
+	add_child(minted_node)
+	escape.emit(minted_node)
+	minter.free()
+	minter = null
+	return base
+
+
+## L18, later: the lent node is freed with no lend since; the sweep must be connected again.
+func free_minted(_unused: int) -> int:
+	minted_node.free()
+	minted_node = null
+	return 1
+
+
+## L19: with the sweep unhooked and the tree paused (no proxy processes), a handle a script created
+## is taken over by a dispatch (no mint), and the node freed. `_process` reads the lent handles 6
+## frames later and resumes the tree. 1 = the takeover lent it and the sweep released it paused.
+func emit_paused_adopt(node: Node) -> int:
+	adopt_base = counter("liveLent")
+	_unhook()
+	paused_adopt.emit(node)
+	adopt_with = counter("liveLent")
+	adopt_frame = Engine.get_process_frames()
+	adopt_result = -1
+	get_tree().paused = true
+	node.free()
+	return adopt_base
+
+
+func paused_adopt_state(which: int) -> int:
+	return adopt_result if which == 0 else (adopt_base if which == 1 else (adopt_with if which == 2 else adopt_after))
+
+
 func _process(_delta: float) -> void:
 	var frame := Engine.get_process_frames()
 	if renew_frame >= 0:
@@ -357,4 +419,9 @@ func _process(_delta: float) -> void:
 		var released := paused_lent_after == paused_base - 2
 		paused_result = 1 if released and paused_rc.get_ref() == null else 0
 		paused_frame = -1
+		get_tree().paused = false
+	if adopt_frame >= 0 and frame >= adopt_frame + 6:
+		adopt_after = counter("liveLent")
+		adopt_result = 1 if adopt_with == adopt_base + 1 and adopt_after == adopt_base else 0
+		adopt_frame = -1
 		get_tree().paused = false

@@ -747,7 +747,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     lentLongFreedHandleIsIllegalState: (lentC & 2) === 2,
     // L13: a new dispatch of a RefCounted renews its 2 frames.
     lentRefCountedGraceRenewed: (lentC & 4) === 4,
-    // L14: 256 nodes handed over then freed at once drain within 10 frames (32 checked a frame).
+    // L14: 256 nodes handed over then freed at once drain within K + 3 frames (32 checked a frame,
+    // K = ceil(lent / 32)).
     lentBurstDrains: (lentC & 8) === 8,
     // L15: freed objects are released and RefCounted demoted while the tree is paused.
     lentSweepRunsWhilePaused: (lentC & 16) === 16,
@@ -757,6 +758,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L17: once the engine frees a taken-over AudioStreamPlayer, its release drops the bridge's
     // audio state, and a use throws the freed-instance error.
     lentAdoptedReleaseDropsKindState: (lentC & 64) === 64,
+    // L18: the proxy that made the sweep's connection (the first to lend) is freed; a node lent
+    // before is freed later and its handle is still released (a processing proxy connects again).
+    lentSweepSurvivesItsHookHolder: (lentC & 128) === 128,
+    // L19: a takeover (not a mint) of a handle a script created connects the sweep when nothing
+    // else does: the tree is paused, and the freed node's handle is released while paused.
+    lentTakeoverConnectsSweep: (lentC & 256) === 256,
     // L10: handing over an already-seen object costs no GDScript->JS call for a plain Node and one
     // (its transform snapshot) for a Node3D; the old lending cost two for every dispatch.
     lentDispatchCost: lentCost[0] <= 10 && lentCost[1] <= 1010,

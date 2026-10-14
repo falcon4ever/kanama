@@ -4562,6 +4562,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif (flags & 2) != 0:")
     appendLine("\t\tKanamaWebHandles.lent[handle] = true")
     appendLine("\t\tKanamaWebHandles.lent_ring.append(object.get_instance_id())")
+    appendLine("\t\tif not KanamaWebHandles.sweep_hook.is_valid():")
+    appendLine("\t\t\t_kanama_hook_sweep()")
     appendLine("\telif not KanamaWebHandles.lent.has(handle):")
     appendLine("\t\t$TRACK(handle, object)")
     appendLine("\t\tKanamaWebHandles.lent[handle] = true")

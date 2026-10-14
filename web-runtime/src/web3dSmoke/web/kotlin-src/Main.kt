@@ -1499,7 +1499,7 @@ class Main(godotObject: GodotHandle) :
   /**
    * The lent-argument rows (see LentProbe): the objects a dispatch hands Kotlin, stored, compared,
    * freed and counted. [lentProbe] arms them; they run over the next frames, [lentProbeDone] says
-   * when, then [lentMaskA] (65535), [lentMaskB] (65535), [lentMaskC] (127) and [lentCost] are the
+   * when, then [lentMaskA] (65535), [lentMaskB] (65535), [lentMaskC] (511) and [lentCost] are the
    * results.
    */
   fun lentProbe(value: Long): Long =

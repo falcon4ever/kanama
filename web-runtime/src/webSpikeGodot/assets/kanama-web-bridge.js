@@ -1689,8 +1689,9 @@
             continue;
           }
         }
-        if (slot.kind === "Sprite2D") this.objectFrees += 1;
-        this.forgetHandleKindState(handle, slot, handleOwner);
+        // A lent node whose queue_free applied was counted then (opcode 15): not again here.
+        if (slot.kind === "Sprite2D" && !slot.freeQueued) this.objectFrees += 1;
+        this.forgetHandleKindState(handle, slot, handleOwner, slot.freeQueued === true);
         this.eraseObjectHandleEntry(handle, owner);
         this.api.kanamaWebDiscardBrowserHandle(handle);
         this.retireBrowserSlot(handle, slot);
@@ -1701,10 +1702,10 @@
      * The per-kind state a released browser handle leaves behind: the owner teardown's release and
      * the sweep's release of an engine-freed (possibly adopted lookup) handle both drop it.
      */
-    forgetHandleKindState(handle, slot, owner) {
+    forgetHandleKindState(handle, slot, owner, freeCounted = false) {
       if (slot.kind === "AudioStreamPlayer") {
         this.audioPlayerStates.delete(handle);
-        this.match3AudioPlayerFrees += 1;
+        if (!freeCounted) this.match3AudioPlayerFrees += 1;
       }
       if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
       if (slot.kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {

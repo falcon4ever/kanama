@@ -437,7 +437,11 @@ Web, two exceptions for a `RefCounted`, below). So a handler can keep its argume
 (`lastHit = body`) and use it frames later, and `body == player` is `true` when both are the same
 node, on Web as on desktop. Using it after the engine freed the object throws the
 `IllegalStateException` "Invalid access to previously freed instance", which a script can catch. A
-node you `queueFree()` stays usable until the end of the frame, as in GDScript.
+node you receive as an argument and `queueFree()` stays usable until the end of the frame, as in
+GDScript. **Web limit:** a node you looked up (`getNode<Sprite2D>("Coin")`) or got as a call's
+result is released as soon as you `queueFree()` it, so using that value afterwards, even in the same
+frame, throws "Stale Kanama Web browser handle" where desktop keeps it usable until the end of the
+frame. Read what you need from it before you call `queueFree()`, or `queueFree()` last.
 
 **Web limits for a `RefCounted` argument** (an `InputEvent`, a `Resource`). Desktop, Android and iOS
 keep one alive until you `close()` it or the garbage collector releases it. On Web:

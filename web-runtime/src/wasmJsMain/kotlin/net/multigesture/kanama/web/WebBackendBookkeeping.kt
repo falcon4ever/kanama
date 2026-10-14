@@ -237,9 +237,13 @@ internal fun registerConstructedNode(token: Int, className: String): GodotHandle
 internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
   check(handle > 0) { "Kanama Web browser handle must be positive" }
   freedBrowserHandles.remove(handle)
-  lentBrowserHandles.remove(handle)
   val previous = browserHandles[handle]
-  if (previous == null) browserHandles[handle] = kind
+  if (previous == null) {
+    // A fresh registration is not lent; a repeat one (the bridge re-announcing a handle Kotlin
+    // knows) keeps the mark the lend set.
+    lentBrowserHandles.remove(handle)
+    browserHandles[handle] = kind
+  }
   check(previous == null || previous == kind) {
     "Kanama Web browser handle=$handle already has kind=$previous, requested=$kind"
   }
@@ -269,6 +273,22 @@ internal fun requireWebNodeHandle(handle: Int) {
 }
 
 internal fun containsWebBrowserHandle(handle: Int): Boolean = browserHandles.containsKey(handle)
+
+/**
+ * The liveness check a call on [token] makes before it crosses (the generated backend's
+ * `requireLive`, and [WebExperimentalGenericCall.callImmediate]): a freed script-backed object, or
+ * a lent browser handle whose object the engine freed, reads like desktop's freed instance; any
+ * other handle Kotlin no longer registers is a stale one. All are script errors.
+ */
+internal fun requireLiveWebHandle(token: Int) {
+  if (!instances.isLiveOrConstructing(token)) {
+    // Task 138 item 22: a freed script-backed object reads like desktop's freed instance.
+    check(!instances.wasFreed(token)) { webFreedScriptMessage(token) }
+    // Task 138 item 32: so does a lent browser handle whose object the engine freed.
+    check(!wasFreedWebBrowserHandle(token)) { webFreedHandleMessage(token) }
+    check(containsWebBrowserHandle(token)) { "Stale Kanama Web browser handle=$token" }
+  }
+}
 
 /**
  * Node.queue_free bookkeeping: release a browser NODE handle and its mirrored snapshots.

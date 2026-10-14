@@ -58,7 +58,7 @@ import net.multigesture.kanama.types.Vector3
  * - L9: 8192 = `queueFree()` on a method's object argument works (no throw, the node is gone),
  *   16384 = a later use throws desktop's "previously freed instance" IllegalStateException.
  *
- * [maskC] (L11-L17, 127 when healthy):
+ * [maskC] (L11-L19, 511 when healthy):
  * - L11: 1 = one node handed to a handler twice in one frame, the first call `queueFree()`s it:
  *   the second call reads its name (the node lives to the end of the frame, as on desktop), and
  *   a use after the frame throws the freed-instance error.
@@ -67,7 +67,8 @@ import net.multigesture.kanama.types.Vector3
  * - L13: 4 = a RefCounted only Kotlin keeps, handed over again 2 frames later: the second dispatch
  *   renews its 2 frames (alive 4 frames after the first), then it is freed and a use throws.
  * - L14: 8 = 256 nodes handed over and kept, then freed at once: the lent handles are back to the
- *   baseline within 10 frames (the sweep checks 32 a frame: K = ceil(lent handles / 32) frames).
+ *   baseline within K + 3 frames (the sweep checks 32 a frame: K = ceil(lent handles / 32), 9 for
+ *   the ~263 this row holds, so 12 frames).
  * - L15: 16 = while the tree is paused (no Kanama script processes) a freed node's handle and a
  *   RefCounted only Kotlin keeps are still released within 6 frames.
  * - L16: 32 = a Sprite2D this script created, moved by the twin and handed over: the argument is
@@ -75,6 +76,13 @@ import net.multigesture.kanama.types.Vector3
  *   of a handle it takes over, whatever its bridge kind).
  * - L17: 64 = an AudioStreamPlayer this script created, handed over, then freed by the engine:
  *   the release drops the bridge's audio state for it, and a use throws the freed-instance error.
+ * - L18: 128 = the sweep's connection to the frame signal is gone and a short-lived proxy (a
+ *   LentKeeper made at run time) is the first to lend, so it makes the connection, and is freed. A
+ *   lent node is freed later with no lend in between: its handle is released within K + 3 frames
+ *   (a processing proxy connects the sweep again).
+ * - L19: 256 = the sweep's connection is gone and the tree is paused (no proxy processes); a handle
+ *   this script created is taken over by a dispatch (not a mint), the node freed: the takeover
+ *   made the connection, so the handle is released while paused.
  *
  * [lentCost] (L10): the lending's GDScript->JS calls and the microseconds per 1000 dispatches of
  * an already-seen plain Node and Node3D.
@@ -119,6 +127,7 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
   private val pausedArgs = mutableListOf<GodotObject>()
   private val adoptedArgs = mutableListOf<GodotObject>()
   private var adoptedRead: Vector2? = null
+  private val pausedAdoptArgs = mutableListOf<GodotObject>()
 
   @OnInput
   fun onInput(event: InputEvent) {
@@ -287,6 +296,7 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
         }.getOrNull()
       }
     }
+    twin.signal("paused_adopt").connectObject(self) { pausedAdoptArgs += it }
     val keeper = self.requireAs("../LentEscapeA", ::Node)
     keeper.call("arm_escape", 0L)
 
@@ -487,15 +497,20 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     val lentBase = counter("liveLent")
     val liveBase = counter("liveBrowserHandleCount")
     val lent = twinLong("emit_burst", 256L)
+    // The sweep checks SWEEP_PER_FRAME handles a frame: K frames drain what is lent; 3 frames' margin.
+    val frames = drainFrames(counter("liveLent"))
     twin.call("burst_free", 0L)
-    MainThread.postAfterFrames(10) {
+    MainThread.postAfterFrames(frames) {
       val lentAfter = counter("liveLent")
       val liveAfter = counter("liveBrowserHandleCount")
       if (lent == 256L && lentAfter <= lentBase && liveAfter <= liveBase) maskC = maskC or 8L
-      else note("L14 burst of $lent: lent $lentBase -> $lentAfter, live $liveBase -> $liveAfter")
+      else note("L14 burst of $lent: lent $lentBase -> $lentAfter, live $liveBase -> $liveAfter after $frames frames")
       pausedRows()
     }
   }
+
+  /** K + 3: the frames in which the sweep (32 handles a frame) is allowed to drain [lent] handles. */
+  private fun drainFrames(lent: Long): Int = ((lent + SWEEP_PER_FRAME - 1) / SWEEP_PER_FRAME).toInt() + 3
 
   /** L15: the sweep runs while the tree is paused. The twin resumes it 6 frames later. */
   private fun pausedRows() {
@@ -538,8 +553,42 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
       } else {
         note("L17 audio states $statesBefore -> $statesWith -> $statesAfter")
       }
+      mintedRows()
+    }
+  }
+
+  /** L18: the proxy that made the sweep's connection is freed; a later free is still released. */
+  private fun mintedRows() {
+    val twin = twin()
+    val base = twinLong("emit_minter")
+    MainThread.postAfterFrames(3) {
+      val lentWith = counter("liveLent")
+      twin.call("free_minted", 0L)
+      MainThread.postAfterFrames(drainFrames(lentWith)) {
+        val after = counter("liveLent")
+        if (lentWith == base + 1 && after == base) maskC = maskC or 128L
+        else note("L18 lent $base -> $lentWith -> $after after ${drainFrames(lentWith)} frames")
+        pausedAdoptRows()
+      }
+    }
+  }
+
+  /** L19: a takeover makes the sweep's connection when nothing else does. */
+  private fun pausedAdoptRows() {
+    val twin = twin()
+    val sprite = Sprite2D.create()
+    twin.addChild(sprite)
+    twin.call("emit_paused_adopt", sprite)
+    // Coroutines do not resume while the tree is paused: this runs once the twin resumed it.
+    MainThread.postAfterFrames(1) {
+      val result = twinLong("paused_adopt_state", 0L)
+      if (result == 1L && pausedAdoptArgs.size == 1) {
+        maskC = maskC or 256L
+      } else {
+        note("L19 paused takeover: result=$result lent ${twinLong("paused_adopt_state", 1L)} -> ${twinLong("paused_adopt_state", 2L)} -> ${twinLong("paused_adopt_state", 3L)}")
+      }
       // Why a row failed: the driver traces it.
-      twin().call("publish_notes", notes.joinToString(" | "))
+      twin.call("publish_notes", notes.joinToString(" | "))
       done = 1L
     }
   }
@@ -559,3 +608,6 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     }
   }
 }
+
+/** The lent handles the sweep checks each frame (the emitter's FRAME_SWEEP_BUDGET). */
+private const val SWEEP_PER_FRAME = 32L

@@ -1756,6 +1756,18 @@ class WebScriptCodeEmitterTest {
       proxy,
     )
     assertFalse(proxy.contains("\t\t_kanama_sweep_frame()"), proxy)
+    // A takeover (a handle a script created, lent from now on) joins the ring like a mint, so it
+    // connects the sweep too when nothing else does (a paused tree has no processing proxy).
+    assertTrue(
+      proxy.contains(
+        "\tif (flags & 2) != 0:\n" +
+          "\t\tKanamaWebHandles.lent[handle] = true\n" +
+          "\t\tKanamaWebHandles.lent_ring.append(object.get_instance_id())\n" +
+          "\t\tif not KanamaWebHandles.sweep_hook.is_valid():\n" +
+          "\t\t\t_kanama_hook_sweep()\n"
+      ),
+      proxy,
+    )
     // A queued command on a freed LENT object leaves its handle to the sweep (released as freed),
     // instead of erasing it from the index without a release.
     assertTrue(

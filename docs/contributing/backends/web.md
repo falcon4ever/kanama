@@ -467,8 +467,12 @@ skipped and reported (see the freed-target ladder) but leaves the handle to the 
 handle is remembered as freed (the bridge's `freedHandles`, Kotlin's `freedBrowserHandles`, the last
 4096 each), so its later use throws "Invalid access to previously freed instance", desktop's error.
 A use of one freed longer ago than that is still an `IllegalStateException`, worded as a stale
-handle ("Stale Kanama Web browser handle", or the bridge's "No Kanama Web proxy owns handle" for a
-call by name); `lentLongFreedHandleIsIllegalState` pins it.
+handle ("Stale Kanama Web browser handle"): the typed calls make Kotlin's liveness check
+(`requireLive`: freed first, then stale) before crossing, and `WebExperimentalGenericCall.callImmediate`
+makes the same one, so a call by name reads the same. `webFreedAware` does not turn the bridge's own
+"No Kanama Web proxy owns handle" into a script error: a handle Kotlin still registers that the
+bridge no longer owns is a bookkeeping disagreement and stays a fatal page error;
+`lentLongFreedHandleIsIllegalState` pins the script-visible side.
 
 *Kotlin `queueFree()` of a lent node.* The node lives to the end of the frame, as on desktop, so the
 lent handle stays: the bridge keeps its slot (marked `freeQueued`) and Kotlin its registration

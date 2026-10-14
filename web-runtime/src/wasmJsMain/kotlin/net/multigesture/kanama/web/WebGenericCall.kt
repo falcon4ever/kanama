@@ -56,6 +56,10 @@ object WebExperimentalGenericCall {
     method: String,
     args: List<Any?> = emptyList(),
   ): WebGenericCallResult {
+    // The typed calls' liveness check (freed first, then stale), made in Kotlin before crossing:
+    // a handle the bridge no longer owns is a script error here, and one the two sides disagree
+    // about stays the bridge's fatal "No Kanama Web proxy owns handle".
+    requireLiveWebHandle(target.handle.value)
     commands.flush()
     val packed = buildString {
       append(method)
