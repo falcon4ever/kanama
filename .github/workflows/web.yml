@@ -52,7 +52,7 @@ env:
   # Task 64: thirdperson single-source slice 2 (kanama-demos#34 merge).
   # Task 64: adds the converged Icone (demos#40), which calls PropertyTweener.from -- an arm
   # that only exists from kanama#204 onward. Both sides pin together or neither is green.
-  DEMOS_REF: 4e7cc167597c6924ed234109e93fc89a62cf12c6
+  DEMOS_REF: 0e506bb0c2472f2b9acc15498e0904164400a0a3
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
