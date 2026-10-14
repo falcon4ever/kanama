@@ -33,6 +33,10 @@ object VariantConverters {
     GodotFFI.lookup("variant_get_type", FunctionDescriptor.of(JAVA_INT, ADDRESS))
   }
 
+  private val getObjectInstanceId by lazy {
+    GodotFFI.lookup("variant_get_object_instance_id", FunctionDescriptor.of(JAVA_LONG, ADDRESS))
+  }
+
   private val fromType = ConcurrentHashMap<Int, MethodHandle>()
   private val toType = ConcurrentHashMap<Int, MethodHandle>()
 
@@ -107,4 +111,11 @@ object VariantConverters {
 
   /** Godot's `Variant::Type` of [variant] as its integer id (no enum lookup). */
   fun variantTypeId(variant: MemorySegment): Int = getType.invoke(variant) as Int
+
+  /**
+   * The instance id an OBJECT [variant] holds (0 for any other type), read from the Variant, so it
+   * is safe when the object was freed. Negative = bit 63 set = a RefCounted (Godot's
+   * `ObjectID::is_ref_counted`).
+   */
+  fun objectInstanceIdOf(variant: MemorySegment): Long = getObjectInstanceId.invoke(variant) as Long
 }

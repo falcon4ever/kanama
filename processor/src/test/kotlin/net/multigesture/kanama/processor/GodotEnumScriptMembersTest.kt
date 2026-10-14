@@ -330,10 +330,10 @@ class GodotEnumScriptMembersTest {
     assertEquals(emptyList(), errors)
     assertEquals(emptyList(), warnings.filter { "EnumFixture" in it })
     has(
-      "KanamaIosScriptProperty(\"mode\", 2, 2, \"Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4\", 65542, \"Node.ProcessMode\")"
+      "KanamaIosScriptProperty(\"mode\", 2, 2, \"Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4\", 65542, \"Node.ProcessMode\""
     )
     has(
-      "KanamaIosScriptProperty(\"messages\", 2, 6, \"Messages:1,Messages Physics:2,Messages All:3\", 518, \"Node.ProcessThreadMessages\")"
+      "KanamaIosScriptProperty(\"messages\", 2, 6, \"Messages:1,Messages Physics:2,Messages All:3\", 518, \"Node.ProcessThreadMessages\""
     )
     has("0 -> { script.mode = $modeFq(value); true }")
     has("0 -> script.mode.value")

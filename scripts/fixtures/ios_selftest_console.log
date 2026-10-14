@@ -1,0 +1,5 @@
+[kanama][ios] bootstrap: runtime library loaded
+[kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed
+[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7
+[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 25 passed, 0 failed faults=7 expected=7
+[kanama][ios] up

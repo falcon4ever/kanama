@@ -183,6 +183,10 @@ internal data class IosProperty(
   // qualified name for a Godot-enum property, as on desktop). Empty keeps the runtime's own
   // object-property rule.
   val className: String = "",
+  // Task 138 item 8: the property's default as getProperty would return it (the initializer
+  // literal desktop's registrar uses, typed and converted by [scalarGetExpression]); empty when
+  // the generator read no literal. Answers Script._get_property_default_value on iOS.
+  val defaultExpression: String = "",
 )
 
 internal data class IosSignal(val godotName: String, val kotlinName: String)
@@ -319,8 +323,11 @@ internal class IosScriptCodeEmitter(
       script.properties.forEach { property ->
         val className =
           if (property.className.isEmpty()) "" else ", ${kotlinString(property.className)}"
+        val default =
+          if (property.defaultExpression.isEmpty()) ""
+          else ", defaultValue = ${property.defaultExpression}"
         builder.appendLine(
-          "                KanamaIosScriptProperty(${kotlinString(property.godotName)}, ${property.godotVariantType}, ${property.hint}, ${kotlinString(property.hintString)}, ${property.usage}$className),"
+          "                KanamaIosScriptProperty(${kotlinString(property.godotName)}, ${property.godotVariantType}, ${property.hint}, ${kotlinString(property.hintString)}, ${property.usage}$className$default),"
         )
       }
       builder.appendLine("            ),")
@@ -1159,7 +1166,32 @@ internal class IosScriptCodeEmitter(
       isMutable = isMutable,
       arrayElementGodotEnum = if (isList) arrayElementGodotEnum else null,
       className = godotEnum?.godotKey.orEmpty(),
+      defaultExpression =
+        iosDefaultExpression(
+          defaultLiteral,
+          isList,
+          isObject || customScript.isNotEmpty(),
+          scalarGetExpression,
+        ),
     )
+  }
+
+  /**
+   * Task 138 item 8: the default value for a scalar or value-type @Export, from the same literal
+   * the desktop registrar declares as `default<Name>` (typed the same way, so an integer literal of
+   * a Long property stays a Long), converted the way getProperty converts the live field. Objects
+   * and lists have no default literal on desktop either.
+   */
+  private fun ScriptPropertyModel.iosDefaultExpression(
+    literal: String?,
+    isList: Boolean,
+    isObjectLike: Boolean,
+    getExpression: String,
+  ): String {
+    if (literal == null || isList || isObjectLike || getExpression.isEmpty()) return ""
+    val kotlinType = enumFqName ?: godotEnum?.kotlinFqName ?: narrow?.kotlinType ?: type.kotlinType
+    val converted = getExpression.replace("script.$kotlinName", "default")
+    return "run { val default: $kotlinType = $literal; $converted }"
   }
 
   /** Maps a [TypeMapping] to its Godot Variant::Type integer (engine enum). */

@@ -69,6 +69,8 @@ ALLOWED_MULTI: dict[str, str] = {
 # Function -> why it may run an engine call where it can repeat (a lambda / loop). Loop sites are
 # otherwise forbidden. Printed on every run; a stale entry fails the gate.
 ALLOWED_LOOPS: dict[str, str] = {
+    "callContainerElementsRow": "self-test: get_string on each DISTINCT RegEx match object of one search_all result, one engine call per element; the search itself runs once",
+    "kanamaIosRuntimeObjectCallsSelfTestFrame": "self-test: reaches callContainerElementsRow, whose lambda is one search_all call per row (three rows) and whose per-element get_string runs once per distinct match",
     "kanamaIosRuntimeObjectCallsSelfTest": "self-test: repeat(3) put_u8 / a fixed list of signal names, each iteration a distinct input row",
     "scriptInstanceRefcountIncremented": "onIncremented { referenceCount(..) }: the lambda runs once per engine callback",
     "scriptInstanceRefcountDecremented": "onDecremented { referenceCount(..) }: the lambda runs once per engine callback",

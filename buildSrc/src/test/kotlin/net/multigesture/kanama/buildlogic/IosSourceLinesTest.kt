@@ -346,4 +346,18 @@ class IosSourceLinesTest {
       IosSourceLines.displayPath(probePath, listOf(File(probePath))) { false },
     )
   }
+
+  @Test
+  fun noSourceRootWritesTheEmptyTableWithoutReadingTheLibrary() {
+    val dir = kotlin.io.path.createTempDirectory("kanama-source-lines").toFile()
+    try {
+      val table = File(dir, "out/kanama_ios_source_lines_table.inc")
+      val counts =
+        IosSourceLines.write(File(dir, "missing.a"), emptyList(), table, File(dir, "work"), "/none")
+      assertEquals(0 to 0, counts)
+      assertEquals(IosSourceLines.render(emptyList()), table.readText())
+    } finally {
+      dir.deleteRecursively()
+    }
+  }
 }

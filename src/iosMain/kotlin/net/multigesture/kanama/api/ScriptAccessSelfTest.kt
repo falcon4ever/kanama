@@ -2,12 +2,10 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.ios.KanamaIosRuntime
+import net.multigesture.kanama.ios.ScopeProbeScript
 
 // KANAMA-IOS-HANDWRITTEN: [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime.
 private class ScriptAccessSelfTestScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
-
-/** The Kotlin object of the runtime's built-in scope-probe script (`SCOPE_PROBE_SCRIPT_PATH`). */
-internal class ScopeProbeScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
 
 /**
  * Task 133 self-test rows, run by `kanamaIosRuntimeObjectCallsSelfTestFrame` once the SceneTree is

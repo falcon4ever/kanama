@@ -184,4 +184,47 @@ class IosScriptPropertyParityTest {
         "(actual: '${r.setterRhs("readonlyTags")}')",
     )
   }
+
+  /**
+   * Task 138 item 8: the iOS registry carries each @Export's default (the initializer literal the
+   * desktop registrar declares as `default<Name>`, typed the same way and converted like
+   * getProperty), so the iOS Script answers `_get_property_default_value` instead of NIL for every
+   * property. A property without a readable literal, an object and a list carry none.
+   */
+  @Test
+  fun scalarDefaultsReachTheIosRegistry() {
+    val r =
+      emit(
+        scalarProp("count", TypeMapping.INT).copy(defaultLiteral = "99L"),
+        scalarProp("speed", TypeMapping.FLOAT).copy(defaultLiteral = "5.1"),
+        scalarProp("label", TypeMapping.STRING).copy(defaultLiteral = "\"from_kt\""),
+        scalarProp("motion", TypeMapping.VECTOR2)
+          .copy(defaultLiteral = "net.multigesture.kanama.types.Vector2(1.0, 2.0)"),
+        scalarProp("armed", TypeMapping.BOOL),
+        objectProp("target"),
+        stringListProp("tags"),
+      )
+    assertEquals(emptyList(), r.errors)
+    fun propertyLine(name: String) =
+      r.source.lines().single { it.contains("KanamaIosScriptProperty(\"$name\"") }
+    assertTrue(
+      propertyLine("count").contains("defaultValue = run { val default: Long = 99L; default }"),
+      propertyLine("count"),
+    )
+    assertTrue(
+      propertyLine("speed").contains("defaultValue = run { val default: Double = 5.1; default }"),
+      propertyLine("speed"),
+    )
+    assertTrue(
+      propertyLine("label").contains("val default: String = \"from_kt\""),
+      propertyLine("label"),
+    )
+    assertTrue(
+      propertyLine("motion").contains("net.multigesture.kanama.types.Vector2(1.0, 2.0)"),
+      propertyLine("motion"),
+    )
+    for (name in listOf("armed", "target", "tags")) {
+      assertFalse(propertyLine(name).contains("defaultValue"), propertyLine(name))
+    }
+  }
 }

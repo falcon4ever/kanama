@@ -7691,13 +7691,6 @@ expect object ObjectCalls {
     values: List<Any?>,
   )
 
-  fun ptrcallWithStringNameArrayArgsRetVariantScalar(
-    methodBind: RawSegment,
-    instance: RawSegment,
-    method: String,
-    arguments: List<Any?>,
-  ): Any?
-
   fun ptrcallWithStringNameArrayBoolArgs(
     methodBind: RawSegment,
     instance: RawSegment,

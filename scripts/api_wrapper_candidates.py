@@ -3155,11 +3155,6 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
     (("StringName", "Vector2"), "void"): CallShape("ptrcallWithStringNameAndVector2Arg", "Unit"),
     (("StringName", "bool"), "void"): CallShape("ptrcallWithStringNameAndBoolArg", "Unit"),
     (("StringName", "Array"), "void"): CallShape("ptrcallWithStringNameArrayArgs", "Unit"),
-    (("StringName", "Array"), "Variant"): CallShape(
-        "ptrcallWithStringNameArrayArgsRetVariantScalar",
-        "Any?",
-        "null",
-    ),
     (("StringName", "Array", "bool"), "void"): CallShape("ptrcallWithStringNameArrayBoolArgs", "Unit"),
     (("StringName", "bool", "Array"), "void"): CallShape("ptrcallWithStringNameBoolArrayArgs", "Unit"),
     (("StringName", "bool"), "bool"): CallShape("ptrcallWithStringNameAndBoolArgRetBool", "Boolean", "false"),

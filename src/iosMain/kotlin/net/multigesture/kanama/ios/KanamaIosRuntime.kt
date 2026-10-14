@@ -28,9 +28,11 @@ import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.SignalArgReader
 import net.multigesture.kanama.api.SignalArgumentException
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
@@ -65,6 +67,13 @@ import net.multigesture.kanama.types.Vector4
 import net.multigesture.kanama.types.Vector4i
 import net.multigesture.kanama.types.basisFromRows
 
+/**
+ * The Kotlin object of the runtime's built-in scope-probe script (`SCOPE_PROBE_SCRIPT_PATH`), which
+ * the frame-1 self-test reads. Here, not in ScriptAccessSelfTest.kt, because the runtime registers
+ * the probe in every build and the self-test files are compiled only on request (task 138 item 24).
+ */
+internal class ScopeProbeScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
+
 internal data class KanamaIosScriptMethod(val name: String, val argumentCount: Int = 0)
 
 internal data class KanamaIosScriptProperty(
@@ -79,6 +88,10 @@ internal data class KanamaIosScriptProperty(
   // PropertyInfo.class_name when the generator knows it (task 128 B: a Godot-enum property names
   // its enum, `Node.ProcessMode`). Empty falls back to the object-property rule below.
   val className: String = "",
+  // The @Export's default (task 138 item 8): its initializer literal, in the form getProperty
+  // returns, when the generator could read one (desktop's registrar has the same literal);
+  // [KanamaIosNoProperty] when not. Script._get_property_default_value answers it.
+  val defaultValue: Any? = KanamaIosNoProperty,
 )
 
 internal data class KanamaIosScriptSignal(val name: String)
@@ -333,6 +346,14 @@ internal object KanamaIosRuntime {
 
   fun scriptResourcePropertyUsage(handle: Long, propertyIndex: Int): Int =
     scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.usage ?: 6
+
+  /** The @Export default of [propertyIndex], or [KanamaIosNoProperty] (task 138 item 8). */
+  fun scriptResourcePropertyDefault(handle: Long, propertyIndex: Int): Any? {
+    val property =
+      scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)
+        ?: return KanamaIosNoProperty
+    return property.defaultValue
+  }
 
   // task 64 iOS mirror — PropertyInfo.class_name for object-typed exports.
   // Same policy as the desktop generator (KanamaProcessor.scriptPropertyClassName):
@@ -1117,7 +1138,7 @@ internal object KanamaIosRuntime {
 
   private class ScopeProbeBridge(ownerObject: Long) : KanamaIosScriptBridge {
     override val scriptInstance: Any? =
-      net.multigesture.kanama.api.ScopeProbeScript(
+      ScopeProbeScript(
         net.multigesture.kanama.api.GodotHandle(
           java.lang.foreign.MemorySegment.ofAddress(ownerObject)
         )
@@ -1298,6 +1319,72 @@ fun kanamaIosRuntimeScriptResourcePropertyHintString(
 @CName("kanama_ios_runtime_script_resource_property_usage")
 fun kanamaIosRuntimeScriptResourcePropertyUsage(scriptHandle: Long, propertyIndex: Int): Int =
   KanamaIosRuntime.scriptResourcePropertyUsage(scriptHandle, propertyIndex)
+
+/**
+ * Task 113: how many custom Callables the C shim created for each lambda callback id are still
+ * alive. One closure can back several (the disconnect temp, a second connect Godot refuses or only
+ * counts with `CONNECT_REFERENCE_COUNTED`), so it is released from [IosCallableRegistry] when the
+ * LAST of them is freed, not the first, which dropped the closure of a connection still live.
+ */
+internal object IosCallableLifetimes {
+  private val live = HashMap<Long, Int>()
+
+  /** A Callable freed after its closure was gone: a redundant one (task 113 row 6 counts it). */
+  var staleReleases: Int = 0
+    private set
+
+  fun created(callbackId: Long) {
+    live[callbackId] = (live[callbackId] ?: 0) + 1
+  }
+
+  fun freed(callbackId: Long) {
+    val left = (live[callbackId] ?: 1) - 1
+    if (left > 0) {
+      live[callbackId] = left
+      return
+    }
+    live.remove(callbackId)
+    if (IosCallableRegistry.entry(callbackId) == null) staleReleases++
+    IosCallableRegistry.release(callbackId)
+  }
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_callable_created")
+fun kanamaIosRuntimeCallableCreated(callbackId: Long) {
+  IosCallableLifetimes.created(callbackId)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_callable_freed")
+fun kanamaIosRuntimeCallableFreed(callbackId: Long) {
+  IosCallableLifetimes.freed(callbackId)
+}
+
+/**
+ * Script._get_property_default_value (task 138 item 8): the @Export's default, PT-tagged like a
+ * script instance get. 0 when the generator knew no default (the C side then answers none).
+ */
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_default")
+fun kanamaIosRuntimeScriptResourcePropertyDefault(
+  scriptHandle: Long,
+  propertyIndex: Int,
+  retTag: CPointer<IntVar>?,
+  retBuf: CPointer<ByteVar>?,
+): Int {
+  retTag?.set(0, IOS_PT_VOID)
+  return try {
+    val value = KanamaIosRuntime.scriptResourcePropertyDefault(scriptHandle, propertyIndex)
+    if (value === KanamaIosNoProperty) return 0
+    encodeIosReturn(value, retTag, retBuf)
+    if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+  } catch (t: Throwable) {
+    IosScriptErrors.report(t, "property default")
+    retTag?.set(0, IOS_PT_VOID)
+    0
+  }
+}
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_resource_property_class_name")
@@ -1580,6 +1667,8 @@ private const val IOS_PT_ARRAY = 30
 // BUILD-tagged Variant ARG (task 100, parcel 7): the desc {tag, ptr} boxed by the dispatch. Must
 // match KANAMA_IOS_PT_VARIANT (38) at the end of the C PT enum and PT_VARIANT in the generator.
 internal const val IOS_PT_VARIANT = 38
+// Inbound-only container argument cell, one blob record (task 122 item 4).
+private const val IOS_PT_VARIANT_RECORD = 42
 private const val IOS_PT_PACKED_BYTE_ARRAY = 31
 private const val IOS_PT_PACKED_INT32_ARRAY = 32
 private const val IOS_PT_PACKED_INT64_ARRAY = 33
@@ -1747,16 +1836,14 @@ internal fun encodeIosRawValue(value: Any?, out: CPointer<ByteVar>): Int {
 
 // Decodes one PT-tagged inbound call arg (see kanama_ios_script_instance_call). OBJECT yields the
 // raw int64 handle; the generated callV branch wraps it in the declared GodotObject subtype. A
-// Variant type the shim does not marshal (an `Any?` parameter receiving a Dictionary, task 131 N7)
-// throws, naming the type, like a typed signal argument does: the call is reported as a script
-// error instead of the method silently seeing null.
+// container (an `Any?` parameter receiving a Dictionary, task 131 N7) arrives as one blob record
+// since task 122 item 4. A Variant type the shim still does not marshal (Callable, Signal) throws,
+// naming the type, like a typed signal argument does: the call is reported as a script error
+// instead of the method silently seeing null.
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
   if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
-    throw IllegalArgumentException(
-      "a script method argument of Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not " +
-        "marshalled on iOS yet"
-    )
+    throw IllegalArgumentException("a script method argument ${iosArgFailure(tag)}")
   }
   if (ptr == null) {
     return null
@@ -1786,6 +1873,12 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     IOS_PT_NODE_PATH -> NodePath(ptr.toKString())
     // Task 131 N7: a RID argument of a script method (typed signals read it the same way).
     IOS_PT_RID -> RID(ptr.reinterpret<LongVar>()[0])
+    // Task 122 item 4: an Array/Dictionary/Packed*Array argument, one blob record decoded by the
+    // container-return reader (its 8-byte header carries the payload length).
+    IOS_PT_VARIANT_RECORD -> {
+      val n = ptr.reinterpret<IntVar>()
+      ObjectCalls.decodeVariantRecord(ptr.readBytes(8 + n[1]))
+    }
     else -> decodeIosRawValue(tag, ptr)
   }
 }
@@ -1841,7 +1934,7 @@ internal class IosSignalArgReader : SignalArgReader {
   private fun mismatch(index: Int, expected: String, tag: Int): Nothing =
     throw SignalArgumentException(
       if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
-        "argument ${index + 1}: Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not marshalled on iOS yet (expected $expected)"
+        "argument ${index + 1}: ${iosArgFailure(tag)} (expected $expected)"
       } else {
         "argument ${index + 1}: expected $expected, got iOS tag $tag"
       }
@@ -1897,6 +1990,20 @@ internal class IosSignalArgReader : SignalArgReader {
  * (KANAMA_IOS_ARG_UNMARSHALLED_BASE).
  */
 private const val IOS_ARG_UNMARSHALLED_BASE = 1000
+
+/**
+ * The Variant-type tag base for a container argument whose blob the shim could not allocate
+ * (KANAMA_IOS_ARG_ENCODE_OOM_BASE): an out-of-memory report, not a "not marshalled" one.
+ */
+private const val IOS_ARG_ENCODE_OOM_BASE = 2000
+
+/** The failure text for a tag at or above [IOS_ARG_UNMARSHALLED_BASE], naming the Variant type. */
+private fun iosArgFailure(tag: Int): String =
+  if (tag >= IOS_ARG_ENCODE_OOM_BASE) {
+    "of Variant type ${tag - IOS_ARG_ENCODE_OOM_BASE} ran out of memory while it was encoded on iOS"
+  } else {
+    "of Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not marshalled on iOS yet"
+  }
 
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, length: Int): Any? {
@@ -2754,16 +2861,18 @@ internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
 }
 
 // OBJECTCALLS-SELFTEST hook for an `Any?` script-method argument (task 131 N7): the decoded value
-// of an INT64 cell, and the message of the error an unmarshalled Variant type (a Dictionary, 27)
-// raises instead of decoding to null.
+// of an INT64 cell, and the messages of the two errors a tag with no cell raises instead of
+// decoding to null: a Variant type the shim does not marshal (a Callable, 25) and a container whose
+// blob the shim could not allocate (an Array, 28, reported as out of memory), joined by " | ".
 @OptIn(ExperimentalForeignApi::class)
 internal fun kanamaIosAnyCallArgSelfTest(): Pair<Any?, String?> = memScoped {
   val cell = alloc<LongVar>()
   cell.value = 0x1_0000_0003L
   val decoded = decodeIosCallArg(IOS_PT_INT64, cell.ptr.reinterpret())
   val refused =
-    runCatching { decodeIosCallArg(IOS_ARG_UNMARSHALLED_BASE + 27, null) }.exceptionOrNull()
-  decoded to refused?.message
+    runCatching { decodeIosCallArg(IOS_ARG_UNMARSHALLED_BASE + 25, null) }.exceptionOrNull()
+  val oom = runCatching { decodeIosCallArg(IOS_ARG_ENCODE_OOM_BASE + 28, null) }.exceptionOrNull()
+  decoded to "${refused?.message} | ${oom?.message}"
 }
 
 // OBJECTCALLS-SELFTEST hook for a RID script-method argument (task 131 N7): the cell

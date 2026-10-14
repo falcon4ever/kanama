@@ -376,7 +376,9 @@ instead of `FAULT`:
 [kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_blob: pending-protocol g_pending_blob
 ```
 
-A debug build's self-test deliberately makes seven bad calls — one lookup with a wrong
+Your game's own builds carry no self-test: it is a Kanama test hook, compiled only into a build
+made with `-PkanamaIosSelfTest=true` (Kanama's device runners pass it), so the lines below appear
+only in such a run. The self-test deliberately makes seven bad calls — one lookup with a wrong
 hash, one call through the resulting null bind, and five takes from a pending slot that
 has already been drained (one per pending buffer: the UTF-8 string slot twice, then the
 packed, container-blob and array-blob slots) — so a healthy debug run ends with
@@ -392,14 +394,16 @@ to stdout and the fault lines go to stderr, and the device console (`devicectl
 the seven `FAULT-PROBE` lines routinely appear after the `end` marker. The tag on the
 line and the `faults=`/`expected=` count are what to trust.
 
-Release builds run no self-test at all, so a healthy release run prints no FAULT line
-and neither `OBJECTCALLS SELFTEST` summary line — there is no `faults=`/`expected=` pair
-to read, rather than a pair reading `0`.
+A build without the self-test (every build of your game, and every release build) prints
+no FAULT-PROBE line and no `OBJECTCALLS SELFTEST` summary line — there is no
+`faults=`/`expected=` pair to read, rather than a pair reading `0`; any `FAULT` line is
+still a real fault.
 
 `kanama-demos/scripts/ios_device_run.sh` fails the device run when the captured console
 contains any `[kanama][ios][c] FAULT ` line, when a summary line's `faults=` does not
-equal its `expected=`, or when the self-test ran (the `PTRCALL SELFTEST MATRIX` line is
-there) but printed no summary line. `FAULT-PROBE` lines do not fail it by themselves —
+equal its `expected=`, or when a summary line is missing (the runner builds the
+self-test in, so it requires `PTRCALL SELFTEST MATRIX`, `OBJECTCALLS SELFTEST` and
+`OBJECTCALLS SELFTEST (frame 1)`, each with `0 failed`). `FAULT-PROBE` lines do not fail it by themselves —
 the count does that if there are more or fewer than seven. To re-check an existing log
 by hand:
 

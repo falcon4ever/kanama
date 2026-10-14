@@ -175,6 +175,11 @@ check_absent "Leaked instance: AudioStreamWAV"
 check_absent "Leaked instance: BoxMesh"
 check_absent "Leaked instance: BoxShape3D"
 check "SelfSmoke self_class=Node3D same_object=true"
+# task 122 item 3 -- the RefCounted elements of an Object.call container result are owning wrappers
+# (alive after the call, one reference each, freed by their one close()).
+check "SelfSmoke call_container_elements count=3 strings=1,2,3 owned=true refcounts=1,1,1 released=true"
+# ... and through callv, which takes the same owned path (it used to keep them borrowed).
+check "SelfSmoke callv_container_elements count=3 strings=1,2,3 owned=true refcounts=1,1,1 released=true"
 # issue #38 — newScriptInstance() creates a script-backed custom resource from Kotlin
 # at runtime: the instance is live, saves (owned reference survives the transient Ref<>
 # inside ResourceSaver.save), and the saved .tres references the SmokeResource.kt script

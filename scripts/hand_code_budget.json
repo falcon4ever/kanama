@@ -22,7 +22,10 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
       "category": "runtime-core",
-      "lines": 508,
+      "lines": 513,
+      "raises": [
+        "508 -> 513: task 122 item 3 (call() owns RefCounted container elements, documented on GodotObject.call) and task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)"
+      ],
       "reason": "lifetime root GodotObject (Object); its enum region is generated"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {
@@ -103,15 +106,16 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
-      "lines": 148,
+      "lines": 151,
       "raises": [
-        "137 -> 148: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+        "137 -> 148: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
+        "148 -> 151: task 113 (iOS SignalConnection.close() skips a connection Godot already dropped)"
       ],
       "reason": "signal plumbing actual"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt": {
       "category": "transitional",
-      "lines": 132,
+      "lines": 127,
       "parcel": "none left in task 129: what stays is the IosGodot cinterop seam, IosCallableRegistry and the C-shim callable entry points (task 129 D moved KanamaScope, kotlinScriptInstance and ManualGodotLifetimeApi to common)",
       "reason": "per-platform hand file the generator should emit"
     },
@@ -122,7 +126,7 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt": {
       "category": "runtime-core",
-      "lines": 99,
+      "lines": 97,
       "reason": "iOS device self-test of the script-access paths"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {

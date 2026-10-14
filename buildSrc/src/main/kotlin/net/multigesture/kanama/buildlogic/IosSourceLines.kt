@@ -294,7 +294,9 @@ object IosSourceLines {
   /**
    * Writes the table of the debug Kotlin/Native [runtimeLib] for the game files under [sourceRoots]
    * to [table]. Fails when a source root has no code in the library: a table without the game's
-   * functions would only make every report line 0. Returns the function and row counts.
+   * functions would only make every report line 0. Returns the function and row counts. No source
+   * root (a build without game scripts or the self-test probe, task 138 item 24) writes the empty
+   * table without reading the library.
    */
   fun write(
     runtimeLib: File,
@@ -304,6 +306,11 @@ object IosSourceLines {
     developerDir: String,
   ): Pair<Int, Int> {
     val roots = sourceRoots.map { it.absoluteFile.normalize() }
+    if (roots.isEmpty()) {
+      table.parentFile.mkdirs()
+      table.writeText(render(emptyList()))
+      return 0 to 0
+    }
     val gameFiles =
       roots.flatMap { root ->
         root.walkTopDown().filter { it.isFile && it.extension == "kt" }.toList()
