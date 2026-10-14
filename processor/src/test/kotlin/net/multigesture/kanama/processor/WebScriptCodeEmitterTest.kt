@@ -1742,9 +1742,27 @@ class WebScriptCodeEmitterTest {
       proxy,
     )
     assertTrue(proxy.contains("\t\t\t\t_kanama_object_handles[handle] = [weakref(held)]"), proxy)
-    // Every frame (once across the proxies) the sweep walks the lent handles.
+    // Every frame (once across the proxies) the sweep walks the lent handles: it rides
+    // SceneTree.process_frame, so it runs while the tree is paused or no script processes; a
+    // processing proxy only reconnects it, and costs one size check while nothing is lent.
+    assertTrue(proxy.contains("\ttree.process_frame.connect(KanamaWebHandles.sweep_hook)"), proxy)
     assertTrue(
-      proxy.contains("\t\t_kanama_sweep_frame()\n\t\t_kanama_refresh_self_snapshots()"),
+      proxy.contains(
+        "\tif _kanama_handle != 0:\n" +
+          "\t\tif KanamaWebHandles.lent_ring.size() > 0 and not KanamaWebHandles.sweep_hook.is_valid():\n" +
+          "\t\t\t_kanama_hook_sweep()\n" +
+          "\t\t_kanama_refresh_self_snapshots()"
+      ),
+      proxy,
+    )
+    assertFalse(proxy.contains("\t\t_kanama_sweep_frame()"), proxy)
+    // A queued command on a freed LENT object leaves its handle to the sweep (released as freed),
+    // instead of erasing it from the index without a release.
+    assertTrue(
+      proxy.contains(
+        "\t\t\t\telif not KanamaWebHandles.lent.has(object_handle):\n" +
+          "\t\t\t\t\t_kanama_untrack(object_handle)"
+      ),
       proxy,
     )
 

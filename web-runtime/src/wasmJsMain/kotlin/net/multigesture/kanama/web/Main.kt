@@ -276,6 +276,14 @@ fun kanamaWebDiscardBrowserHandle(objectHandle: Int): Int =
   if (discardWebBrowserHandle(objectHandle)) 1 else 0
 
 /**
+ * Task 138 item 32: [lent] 1 marks a browser handle lent for its object's lifetime, 0 unmarks it. 1
+ * when the handle is a NODE (its transform snapshot can load).
+ */
+@JsExport
+fun kanamaWebSetLentHandle(objectHandle: Int, lent: Int): Int =
+  if (setWebLentHandle(objectHandle, lent == 1)) 1 else 0
+
+/**
  * Task 138 item 32: a lent handle the proxy's sweep released because the engine freed its object; a
  * later use throws desktop's freed-instance error.
  */

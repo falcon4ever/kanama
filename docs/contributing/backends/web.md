@@ -421,8 +421,11 @@ owner). The handle is released with its last holder; freeing the script that rou
 to a remaining holder, so the others keep calling it. Retiring a handle also erases its entry in the
 proxies' shared `_kanama_object_handles` dictionary (through any installed proxy's release
 callback), so a later lookup of the same object mints a fresh handle instead of finding a dead one.
-A node freed from Kotlin (`queueFree`) stays a script error for every holder (`IllegalStateException:
-Stale Kanama Web browser handle=...`, catchable in the script).
+A node freed from Kotlin (`queueFree`) through a looked-up handle stays a script error for every
+holder (`IllegalStateException: Stale Kanama Web browser handle=...`, catchable in the script): the
+handle is released when the free is queued, so it is stale at once, also for the rest of that frame
+(a dispatch of the same node later in the frame hands Kotlin that released handle). A lent handle
+(below) does not have this gap.
 
 **One handle per object: the instance-id index.** Every browser handle the proxies enter into the
 shared `_kanama_object_handles` for an object goes through `_kanama_track` (and leaves through
@@ -446,30 +449,50 @@ Node2D, Node3D or Control argument carries its transform snapshot, refreshed on 
 same call, so `body.position` reads the current value inside the handler (a stored one read later
 reads its last refresh, the rule for every non-self node).
 
-*Engine frees: the sweep.* The engine frees objects without telling Kotlin, so every proxy's
-`_process` / `_physics_process` runs `_kanama_sweep_frame`: once per process frame across the proxies
-(one static size check while nothing is lent), it checks up to 32 lent handles from a ring cursor
-(`KanamaWebHandles.lent_ring`); a handle whose object is gone (`is_instance_id_valid`, or a dead weak
-entry) is untracked and released in one `bridge.releaseFreedHandles` call. Each new lend also checks
-the lend before it and one ring entry, which keeps create / hand over / free churn bounded (the
-web3d row `lentHandlesBounded`: 500 rounds stay within 34 handles of the baseline). A released
-handle is remembered as freed (the bridge's `freedHandles`, Kotlin's `freedBrowserHandles`, 4096
-each), so its later use throws "Invalid access to previously freed instance", desktop's error, not a
-stale-handle one.
+*Engine frees: the sweep.* The engine frees objects without telling Kotlin, so a sweep runs once
+per process frame: `_kanama_sweep_frame` is connected to `SceneTree.process_frame`
+(`KanamaWebHandles.sweep_hook`), which fires every frame even while the tree is paused, a script
+called `set_process(false)` or only non-Node scripts exist. The proxy that lends connects it; Godot
+drops the connection with that proxy, and the next lend or any processing proxy's `_process`
+connects it again (one size check per proxy while nothing is lent). It checks up to 32 lent handles
+from a ring cursor (`KanamaWebHandles.lent_ring`); a handle whose object is gone
+(`is_instance_id_valid`, or a dead weak entry) is untracked and released in one
+`bridge.releaseFreedHandles` call, which drops the slot's per-kind state too (an adopted
+`AudioStreamPlayer`'s audio state, a `Resource`'s path) as an owner teardown does. So K lent handles
+whose objects die at once are all released within ⌈K / 32⌉ frames (`lentBurstDrains`: 256 within 10).
+Each new lend also checks the lend before it and one ring entry, which keeps create / hand over /
+free churn bounded (the web3d row `lentHandlesBounded`: 500 rounds stay within 34 handles of the
+baseline). Nothing else retires a lent handle: a queued command whose target the engine freed is
+skipped and reported (see the freed-target ladder) but leaves the handle to the sweep. A released
+handle is remembered as freed (the bridge's `freedHandles`, Kotlin's `freedBrowserHandles`, the last
+4096 each), so its later use throws "Invalid access to previously freed instance", desktop's error.
+A use of one freed longer ago than that is still an `IllegalStateException`, worded as a stale
+handle ("Stale Kanama Web browser handle", or the bridge's "No Kanama Web proxy owns handle" for a
+call by name); `lentLongFreedHandleIsIllegalState` pins it.
+
+*Kotlin `queueFree()` of a lent node.* The node lives to the end of the frame, as on desktop, so the
+lent handle stays: the bridge keeps its slot (marked `freeQueued`) and Kotlin its registration
+(`setWebLentHandle` / `kanamaWebSetLentHandle` mark lent handles on both sides). A second dispatch of
+the node in the same frame reads it; once the engine freed it the sweep releases the handle as freed
+and a use is the freed-instance error (`lentKotlinQueueFree`, `lentQueueFreedNodeLivesToFrameEnd`).
 
 *RefCounted arguments: 2 frames, then weak.* A lent `RefCounted` (an `InputEvent`, a `Resource`) is
 held strongly for its dispatch and the next 2 process frames (`KanamaWebHandles.grace`; a new
 dispatch of it renews them), then the sweep demotes its entry to a `[WeakRef]`: it lives while Godot
-holds it anywhere, and a use after it was freed is the freed-instance error. Holding it strongly for
+holds it anywhere, and a use after it was freed is the freed-instance error (`lentRefCountedGraceRenewed`
+pins the renewal). Holding it strongly for
 good would pin one `InputEvent` per input event; desktop instead keeps it until the Kotlin wrapper is
 closed or collected, which Web cannot observe yet (releasing through the browser's garbage collector
 is tracked in [#332](https://github.com/falcon4ever/kanama/issues/332)). A call's result naming a lent `RefCounted`
 (`GD.instanceFromId(event.instanceId)`) makes it owned by the calling script (`ownLentHandle`), like
-any object result. A `RefCounted` a script already owns keeps its owner when it is lent. The web3d
-`LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
-`lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,
-`lentHandlesBounded`, `lentRefCountedGracePeriod`, `lentRefCountedExpiry`, `lentNodeSnapshotReads`,
-`lentKotlinQueueFree`, `lentDispatchCost`) pin all of it; `lentDispatchCost` holds a seen plain Node
+any object result. A `RefCounted` a script already owns keeps its owner when it is lent, so a copy
+another script stored is valid only while that owner holds it (released with the owner, a later use
+is the stale-handle error). The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`,
+`lentArgumentIdentity`, `lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`,
+`lentEngineFreeIsFreedInstance`, `lentHandlesBounded`, `lentRefCountedGracePeriod`,
+`lentRefCountedExpiry`, `lentNodeSnapshotReads`, `lentKotlinQueueFree`, `lentDispatchCost`,
+`lentQueueFreedNodeLivesToFrameEnd`, `lentLongFreedHandleIsIllegalState`,
+`lentRefCountedGraceRenewed`, `lentBurstDrains`, `lentSweepRunsWhilePaused`) pin all of it; `lentDispatchCost` holds a seen plain Node
 argument at 0 lending JS calls per dispatch and a Node3D at 1 (the old per-dispatch lend cost 2).
 The web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (`Main.share_probe`) pins the rule.
 

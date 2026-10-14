@@ -937,6 +937,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("static var ring_cursor: int = 0")
             appendLine("static var sweep_frame: int = -1")
             appendLine("static var grace: Dictionary = {}")
+            appendLine(
+              "# The sweep's connection to SceneTree.process_frame (see _kanama_hook_sweep): invalid"
+            )
+            appendLine("# until a proxy lends, and again once that proxy is freed.")
+            appendLine("static var sweep_hook: Callable = Callable()")
             appendLine()
             appendLine("# Task 129 E: one parsed Expression per utility function and arity (see")
             appendLine("# _kanama_web_utility_call), shared by every proxy.")
@@ -2614,8 +2619,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine()
     appendLine("func _process(delta: float) -> void:")
     appendLine("\tif _kanama_handle != 0:")
-    // Task 138 item 32: retire the lent handles whose object the engine freed (once per frame).
-    appendLine("\t\t_kanama_sweep_frame()")
+    // Task 138 item 32: the sweep runs from SceneTree.process_frame; a processing proxy only
+    // reconnects it when the proxy that connected it is gone (one size check while nothing is
+    // lent).
+    appendLine(
+      "\t\tif KanamaWebHandles.lent_ring.size() > 0 and not KanamaWebHandles.sweep_hook.is_valid():"
+    )
+    appendLine("\t\t\t_kanama_hook_sweep()")
     appendLine("\t\t_kanama_refresh_self_snapshots()")
     if (particlesAttachment) {
       appendLine("\t\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
@@ -2647,7 +2657,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         // write-through can keep this mirror coherent — only an engine read-back can.
         appendLine("\t\t_kanama_refresh_self_snapshots()")
       }
-      appendLine("\t\t_kanama_sweep_frame()")
       if (model.attachTo == "CharacterBody3D") {
         // Post-slide velocity refresh: the script reads self.velocity each tick, and after
         // move_and_slide the engine's velocity differs from the last written value.
@@ -2773,7 +2782,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tif typeof(target_held) == TYPE_OBJECT:")
     appendLine("\t\t\t\tif is_instance_valid(target_held):")
     appendLine("\t\t\t\t\ttarget_object = target_held")
-    appendLine("\t\t\t\telse:")
+    appendLine("\t\t\t\telif not KanamaWebHandles.lent.has(object_handle):")
+    // Task 138 item 32: only a handle that is not lent is erased here. A lent one lives with its
+    // object, so the sweep retires it as freed (releasing its bridge slot and Kotlin's
+    // registration, and recording the free); erased here it would leave the index without a
+    // release, and the slot would leak until the last script goes. Either way the command resolves
+    // to null below and is skipped as a freed instance.
     appendLine("\t\t\t\t\t$UNTRACK(object_handle)")
     // Task 88 (finding 4): a queue_free'd node stays ALIVE until the end of the frame, and
     // Godot (and the desktop backend) keep it callable for that window. The queue_free arm
@@ -4560,6 +4574,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t# Each mint also checks the lend before it and one ring entry: churn stays bounded."
     )
     appendLine("\t\t$SWEEP($MINT_SWEEP_BUDGET, true)")
+    appendLine("\t\tif not KanamaWebHandles.sweep_hook.is_valid():")
+    appendLine("\t\t\t_kanama_hook_sweep()")
     appendLine("\treturn handle")
     appendLine()
     appendLine("func $SWEEP(budget: int, recent := false) -> void:")
@@ -4616,14 +4632,42 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tfreed.append(str(handle))")
     appendLine("\treturn true")
     appendLine()
+    appendLine("func _kanama_hook_sweep() -> void:")
+    appendLine(
+      "\t# The sweep rides SceneTree.process_frame, which fires every frame even while the tree is"
+    )
+    appendLine(
+      "\t# paused or no script processes: freed objects are released and lent RefCounted demoted"
+    )
+    appendLine(
+      "\t# regardless. One connection, made by a proxy that lends; Godot drops it with that proxy,"
+    )
+    appendLine("\t# and the next lend or any processing proxy makes it again.")
+    appendLine("\tvar tree := Engine.get_main_loop() as SceneTree")
+    appendLine("\tif tree == null or _kanama_handle == 0:")
+    appendLine("\t\treturn")
+    appendLine("\tKanamaWebHandles.sweep_hook = Callable(self, \"_kanama_sweep_frame\")")
+    appendLine("\ttree.process_frame.connect(KanamaWebHandles.sweep_hook)")
+    appendLine()
     appendLine("func _kanama_sweep_frame() -> void:")
     appendLine(
-      "\t# Once per process frame across every proxy, and nothing at all while nothing is lent."
+      "\t# Once per process frame (process_frame, see above), and one size check while nothing is lent."
     )
-    appendLine("\tvar frame := Engine.get_process_frames()")
+    appendLine("\tif KanamaWebHandles.lent_ring.size() == 0:")
+    appendLine("\t\treturn")
+    appendLine("\tif _kanama_handle == 0:")
     appendLine(
-      "\tif KanamaWebHandles.lent_ring.size() > 0 and KanamaWebHandles.sweep_frame != frame:"
+      "\t\t# This proxy is going away: hand the sweep to the next lend or processing proxy."
     )
+    appendLine("\t\tvar tree := Engine.get_main_loop() as SceneTree")
+    appendLine(
+      "\t\tif tree != null and tree.process_frame.is_connected(KanamaWebHandles.sweep_hook):"
+    )
+    appendLine("\t\t\ttree.process_frame.disconnect(KanamaWebHandles.sweep_hook)")
+    appendLine("\t\tKanamaWebHandles.sweep_hook = Callable()")
+    appendLine("\t\treturn")
+    appendLine("\tvar frame := Engine.get_process_frames()")
+    appendLine("\tif KanamaWebHandles.sweep_frame != frame:")
     appendLine("\t\tKanamaWebHandles.sweep_frame = frame")
     appendLine("\t\t$SWEEP($FRAME_SWEEP_BUDGET)")
     appendLine()

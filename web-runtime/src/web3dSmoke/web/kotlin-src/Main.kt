@@ -1499,7 +1499,8 @@ class Main(godotObject: GodotHandle) :
   /**
    * The lent-argument rows (see LentProbe): the objects a dispatch hands Kotlin, stored, compared,
    * freed and counted. [lentProbe] arms them; they run over the next frames, [lentProbeDone] says
-   * when, then [lentMaskA] (65535), [lentMaskB] (65535) and [lentCost] are the results.
+   * when, then [lentMaskA] (65535), [lentMaskB] (65535), [lentMaskC] (127) and [lentCost] are the
+   * results.
    */
   fun lentProbe(value: Long): Long =
     WebExperimentalGenericCall.callImmediate(lentProbeNode(), "lent_arm", listOf(0L)).asLong()
@@ -1509,6 +1510,8 @@ class Main(godotObject: GodotHandle) :
   fun lentMaskA(value: Long): Long = lentSays("lent_mask_a", 0L)
 
   fun lentMaskB(value: Long): Long = lentSays("lent_mask_b", 0L)
+
+  fun lentMaskC(value: Long): Long = lentSays("lent_mask_c", 0L)
 
   /** 0/1: lend calls per 1000 dispatches of a seen Node / Node3D; 2/3: microseconds per 1000. */
   fun lentCost(value: Long): Long = lentSays("lent_cost", value)

@@ -3,6 +3,7 @@ package web3d
 import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -10,9 +11,12 @@ import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Node2D
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.SignalArgType
+import net.multigesture.kanama.api.Sprite2D
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -38,8 +42,10 @@ import net.multigesture.kanama.types.Vector3
  *
  * [maskB] (L5-L9, 65535 when healthy):
  * - L5 the engine frees a stored argument: 1 = `free()` and 2 = `queue_free()` make a use throw
- *   desktop's "previously freed instance" IllegalStateException; 4 = the live lent handles and 8 =
- *   the live browser handles are back where they were within 4 frames.
+ *   desktop's "previously freed instance" IllegalStateException (`free()`: at once, and again once
+ *   the handle was released); 4 = the live lent handles and 8 = the live browser handles are back
+ *   where they were within 4 frames, although a setter was queued on the freed node in the frame
+ *   it was freed (a turret's target died this frame).
  * - L6 bounded: 16 = 500 rounds of create / hand over / free keep at most 34 lent handles alive
  *   above the baseline, 32 = back to the baseline after, 64 = 1000 dispatches of one node take one
  *   handle.
@@ -50,7 +56,25 @@ import net.multigesture.kanama.types.Vector3
  * - L8 snapshot: 2048 = `position` of a Node3D argument reads the node's value, 4096 = after the
  *   twin moved it, the next argument reads the new one.
  * - L9: 8192 = `queueFree()` on a method's object argument works (no throw, the node is gone),
- *   16384 = a later use throws an IllegalStateException that is not a handle-kind failure.
+ *   16384 = a later use throws desktop's "previously freed instance" IllegalStateException.
+ *
+ * [maskC] (L11-L17, 127 when healthy):
+ * - L11: 1 = one node handed to a handler twice in one frame, the first call `queueFree()`s it:
+ *   the second call reads its name (the node lives to the end of the frame, as on desktop), and
+ *   a use after the frame throws the freed-instance error.
+ * - L12: 2 = a stored argument freed before 4200 more freed lent handles (more than the bridge and
+ *   Kotlin remember) still throws an IllegalStateException, typed and through `call`.
+ * - L13: 4 = a RefCounted only Kotlin keeps, handed over again 2 frames later: the second dispatch
+ *   renews its 2 frames (alive 4 frames after the first), then it is freed and a use throws.
+ * - L14: 8 = 256 nodes handed over and kept, then freed at once: the lent handles are back to the
+ *   baseline within 10 frames (the sweep checks 32 a frame: K = ceil(lent handles / 32) frames).
+ * - L15: 16 = while the tree is paused (no Kanama script processes) a freed node's handle and a
+ *   RefCounted only Kotlin keeps are still released within 6 frames.
+ * - L16: 32 = a Sprite2D this script created, moved by the twin and handed over: the argument is
+ *   the created value and its `position` reads the moved one (the dispatch refreshes the snapshot
+ *   of a handle it takes over, whatever its bridge kind).
+ * - L17: 64 = an AudioStreamPlayer this script created, handed over, then freed by the engine:
+ *   the release drops the bridge's audio state for it, and a use throws the freed-instance error.
  *
  * [lentCost] (L10): the lending's GDScript->JS calls and the microseconds per 1000 dispatches of
  * an already-seen plain Node and Node3D.
@@ -87,6 +111,14 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
   private var churnCount = 0L
   private var kotlinFreed: Node? = null
   private var kotlinFreeFailure: String? = null
+  private var maskC = 0L
+  private val twiceArgs = mutableListOf<GodotObject>()
+  private var twiceRead: String? = null
+  private var cappedArg: GodotObject? = null
+  private val renewArgs = mutableListOf<GodotObject>()
+  private val pausedArgs = mutableListOf<GodotObject>()
+  private val adoptedArgs = mutableListOf<GodotObject>()
+  private var adoptedRead: Vector2? = null
 
   @OnInput
   fun onInput(event: InputEvent) {
@@ -117,6 +149,8 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
   fun lentMaskA(value: Long): Long = maskA
 
   fun lentMaskB(value: Long): Long = maskB
+
+  fun lentMaskC(value: Long): Long = maskC
 
   fun lentDone(value: Long): Long = done
 
@@ -229,6 +263,30 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
       churnKept = runCatching { GD.instanceFromId(arg.instanceId) }.getOrNull() ?: arg
     }
     twin.signal("cost").connectObject(self) { _ -> churnCount++ }
+    twin.signal("twice").connectObject(self) { arg ->
+      twiceArgs += arg
+      if (twiceArgs.size == 1) {
+        runCatching { Node(arg.handle).queueFree() }.onFailure {
+          note("L11 queueFree: ${it::class.simpleName}: ${it.message?.take(120)}")
+        }
+      } else {
+        twiceRead = runCatching { Node(arg.handle).getName() }.getOrElse {
+          note("L11 second read: ${it::class.simpleName}: ${it.message?.take(120)}")
+          null
+        }
+      }
+    }
+    twin.signal("capped").connectObject(self) { cappedArg = it }
+    twin.signal("renew").connectObject(self) { renewArgs += it }
+    twin.signal("paused_lend").connectObject(self) { pausedArgs += it }
+    twin.signal("adopted").connectObject(self) { arg ->
+      adoptedArgs += arg
+      if (adoptedArgs.size == 1) {
+        adoptedRead = runCatching { Node2D(arg.handle).getPosition() }.onFailure {
+          note("L16 position: ${it::class.simpleName}: ${it.message?.take(120)}")
+        }.getOrNull()
+      }
+    }
     val keeper = self.requireAs("../LentEscapeA", ::Node)
     keeper.call("arm_escape", 0L)
 
@@ -312,9 +370,19 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
     val liveBefore = counter("liveBrowserHandleCount")
     runCatching { twin.call("emit_doomed", 0L) }.onFailure { note("L5 emit: ${it.message?.take(120)}") }
     runCatching { twin.call("free_doomed", 0L) }
-    // `free()` is immediate: the first stored node is gone now.
-    if (doomedArgs.size == 2 && throwsFreed("L5 free") { doomedArgs[0].call("get_name") }) maskB = maskB or 1L
+    // A setter queued on the node the engine just freed (a turret's target died this frame): it is
+    // skipped and reported as the freed instance, and the handle must still be released below.
+    if (doomedArgs.size == 2) {
+      runCatching { Node(doomedArgs[0].handle).setProcessMode(Node.ProcessMode.DISABLED) }.onFailure {
+        note("L5 queued setter: ${it::class.simpleName}: ${it.message?.take(120)}")
+      }
+    }
+    // `free()` is immediate: the first stored node is gone now (this call applies the setter first).
+    val freedAtOnce = doomedArgs.size == 2 && throwsFreed("L5 free") { doomedArgs[0].call("get_name") }
     MainThread.postAfterFrames(4) {
+      if (freedAtOnce && throwsFreed("L5 free, released") { Node(doomedArgs[0].handle).getName() }) {
+        maskB = maskB or 1L
+      }
       if (doomedArgs.size == 2 && throwsFreed("L5 queue_free") { doomedArgs[1].call("get_name") }) {
         maskB = maskB or 2L
       }
@@ -360,13 +428,119 @@ class LentProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::No
       MainThread.postAfterFrames(3) {
         if (kotlinFreeFailure == null && twinLong("kotlin_freed_gone") == 1L) maskB = maskB or 8192L
         else note("L9 gone=${twinLong("kotlin_freed_gone")}")
-        val use = runCatching { kotlinFreed?.getName() }.exceptionOrNull()
-        if (use is IllegalStateException && use.message?.contains("kind=") != true) maskB = maskB or 16384L
-        else note("L9 use: ${use?.let { "${it::class.simpleName}: ${it.message?.take(120)}" }}")
-        // Why a row failed: the driver traces it.
-        twin().call("publish_notes", notes.joinToString(" | "))
-        done = 1L
+        val freedNode = kotlinFreed
+        if (freedNode != null && throwsFreed("L9 use") { freedNode.getName() }) maskB = maskB or 16384L
+        twiceRows()
       }
+    }
+  }
+
+  /** L11, then L12. */
+  private fun twiceRows() {
+    val twin = twin()
+    runCatching { twin.call("emit_twice", 0L) }.onFailure { note("L11 emit: ${it.message?.take(120)}") }
+    val readInFrame = twiceRead == "LentTwice" && twiceArgs.size == 2 && twiceArgs[0] == twiceArgs[1]
+    if (!readInFrame) note("L11 read in frame: $twiceRead (${twiceArgs.size} dispatches)")
+    MainThread.postAfterFrames(3) {
+      val gone = twinLong("twice_gone") == 1L
+      if (!gone) note("L11: the node was not freed")
+      if (readInFrame && gone && throwsFreed("L11 after") { Node(twiceArgs[0].handle).getName() }) {
+        maskC = maskC or 1L
+      }
+      cappedRows()
+    }
+  }
+
+  /** L12: more freed lent handles than the bridge and Kotlin remember. */
+  private fun cappedRows() {
+    val twin = twin()
+    runCatching { twin.call("emit_capped", 4200L) }.onFailure { note("L12 emit: ${it.message?.take(120)}") }
+    val first = cappedArg
+    val typed = runCatching { Node(checkNotNull(first).handle).getName() }.exceptionOrNull()
+    val generic = runCatching { checkNotNull(first).call("get_name") }.exceptionOrNull()
+    if (first != null && typed is IllegalStateException && generic is IllegalStateException) maskC = maskC or 2L
+    else note("L12 typed=${typed?.let { "${it::class.simpleName}: ${it.message?.take(100)}" }} generic=${generic?.let { "${it::class.simpleName}: ${it.message?.take(100)}" }}")
+    MainThread.postAfterFrames(2) { renewRows() }
+  }
+
+  /** L13: a second dispatch renews a RefCounted's 2 frames. */
+  private fun renewRows() {
+    twin().call("emit_renew", 0L)
+    MainThread.postAfterFrames(10) {
+      val twin = twin()
+      val alive = twinLong("renew_state", 0L)
+      val gone = twinLong("renew_state", 1L)
+      if (alive == 1L && gone == 1L && renewArgs.size == 2 && renewArgs[0] == renewArgs[1] &&
+        throwsFreed("L13 after") { renewArgs[0].call("get_class") }
+      ) {
+        maskC = maskC or 4L
+      } else {
+        note("L13 alive at +4=$alive gone by +8=$gone dispatches=${renewArgs.size}")
+      }
+      burstRows()
+    }
+  }
+
+  /** L14: a burst of lends, then all freed at once. */
+  private fun burstRows() {
+    val twin = twin()
+    val lentBase = counter("liveLent")
+    val liveBase = counter("liveBrowserHandleCount")
+    val lent = twinLong("emit_burst", 256L)
+    twin.call("burst_free", 0L)
+    MainThread.postAfterFrames(10) {
+      val lentAfter = counter("liveLent")
+      val liveAfter = counter("liveBrowserHandleCount")
+      if (lent == 256L && lentAfter <= lentBase && liveAfter <= liveBase) maskC = maskC or 8L
+      else note("L14 burst of $lent: lent $lentBase -> $lentAfter, live $liveBase -> $liveAfter")
+      pausedRows()
+    }
+  }
+
+  /** L15: the sweep runs while the tree is paused. The twin resumes it 6 frames later. */
+  private fun pausedRows() {
+    twin().call("emit_paused", 0L)
+    // Coroutines do not resume while the tree is paused: this runs once the twin resumed it.
+    MainThread.postAfterFrames(1) {
+      val result = twinLong("paused_state", 0L)
+      if (result == 1L && pausedArgs.size == 2 && throwsFreed("L15 node") { pausedArgs[0].call("get_name") }) {
+        maskC = maskC or 16L
+      } else {
+        note("L15 paused: result=$result lent ${twinLong("paused_state", 1L)} -> ${twinLong("paused_state", 2L)}")
+      }
+      adoptedRows()
+    }
+  }
+
+  /** L16 / L17: handles this script created, taken over by a dispatch. */
+  private fun adoptedRows() {
+    val twin = twin()
+    val statesBefore = counter("audioPlayerStates.size")
+    val sprite = Sprite2D.create()
+    val player = AudioStreamPlayer.create()
+    twin.addChild(sprite)
+    twin.addChild(player)
+    twin.call("emit_adopted", sprite, 9L)
+    twin.call("emit_adopted", player, 0L)
+    if (adoptedArgs.size == 2 && adoptedArgs[0] == sprite && adoptedRead == Vector2(9.0, 5.0)) {
+      maskC = maskC or 32L
+    } else {
+      note("L16 ${adoptedArgs.size} dispatches, same=${adoptedArgs.firstOrNull() == sprite}, read $adoptedRead")
+    }
+    val statesWith = counter("audioPlayerStates.size")
+    twin.call("free_adopted", 0L)
+    MainThread.postAfterFrames(3) {
+      val statesAfter = counter("audioPlayerStates.size")
+      if (adoptedArgs.size == 2 && statesWith == statesBefore + 1 && statesAfter == statesBefore &&
+        throwsFreed("L17 use") { adoptedArgs[1].call("get_name") }
+      ) {
+        maskC = maskC or 64L
+      } else {
+        note("L17 audio states $statesBefore -> $statesWith -> $statesAfter")
+      }
+      // Why a row failed: the driver traces it.
+      twin().call("publish_notes", notes.joinToString(" | "))
+      done = 1L
     }
   }
 

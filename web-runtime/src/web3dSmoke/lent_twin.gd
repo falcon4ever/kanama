@@ -14,6 +14,11 @@ signal moved(obj: Object)
 signal doomed(obj: Object)
 signal churn(obj: Object)
 signal cost(obj: Object)
+signal twice(obj: Object)
+signal capped(obj: Object)
+signal renew(obj: Object)
+signal paused_lend(obj: Object)
+signal adopted(obj: Object)
 
 var body: Node3D
 var plain: Node
@@ -28,9 +33,26 @@ var doomed_queue: Node
 var doomed_kotlin: WeakRef
 var churn_max_lent := 0
 var churn_max_live := 0
+var twice_node: WeakRef
+var renew_rc: WeakRef
+var renew_frame := -1
+var renew_alive := -1
+var renew_gone := -1
+var burst_nodes: Array[Node] = []
+var burst_base := 0
+var burst_max := 0
+var paused_node: Node
+var paused_rc: WeakRef
+var paused_frame := -1
+var paused_base := 0
+var paused_result := -1
+var paused_lent_after := 0
+var adopted_nodes: Array[Node] = []
 
 
 func _ready() -> void:
+	# The paused-tree row (L15) counts frames here while every Kanama script is paused.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	body = Node3D.new()
 	body.name = "LentBody"
 	body.position = Vector3(1.0, 2.0, 3.0)
@@ -209,3 +231,130 @@ func measure_cost(kind: int, rounds: int) -> PackedInt64Array:
 	var elapsed := Time.get_ticks_usec() - started
 	var calls := counter("lendBridgeCalls") - calls_before
 	return PackedInt64Array([calls * 1000 / rounds, elapsed * 1000 / rounds])
+
+
+## L11: one node handed to the same handler twice in one frame; the first call frees it from
+## Kotlin (`queueFree()`), the second reads it (desktop: the node lives to the end of the frame).
+func emit_twice(_unused: int) -> int:
+	var node := Node.new()
+	node.name = "LentTwice"
+	add_child(node)
+	twice_node = weakref(node)
+	twice.emit(node)
+	twice.emit(node)
+	return 1
+
+
+func twice_gone(_unused: int) -> int:
+	return 1 if twice_node != null and twice_node.get_ref() == null else 0
+
+
+## L12: one node handed over and freed, then `rounds` more created, handed over and freed: more
+## freed handles than the bridge and Kotlin remember (4096).
+func emit_capped(rounds: int) -> int:
+	var first := Node.new()
+	first.name = "LentCapped"
+	add_child(first)
+	capped.emit(first)
+	first.free()
+	for round in rounds:
+		var node := Node.new()
+		add_child(node)
+		cost.emit(node)
+		node.free()
+	return rounds
+
+
+## L13: a RefCounted nobody keeps, handed over now and again 2 frames later (the twin finds it
+## through a weak reference): the second dispatch renews its 2 frames. `_process` records whether it
+## is alive 4 frames after the first dispatch and gone by 8.
+func emit_renew(_unused: int) -> int:
+	var fresh := Resource.new()
+	fresh.resource_name = "LentRenewed"
+	renew_rc = weakref(fresh)
+	renew_frame = Engine.get_process_frames()
+	renew.emit(fresh)
+	return renew_frame
+
+
+func renew_state(which: int) -> int:
+	return renew_alive if which == 0 else renew_gone
+
+
+## L14: `count` fresh nodes handed over and kept, then all freed at once (`burst_free`).
+## Returns the handles the burst minted.
+func emit_burst(count: int) -> int:
+	burst_base = counter("lentMints")
+	for index in count:
+		var node := Node.new()
+		add_child(node)
+		burst_nodes.append(node)
+		cost.emit(node)
+	burst_max = counter("lentMints")
+	return burst_max - burst_base
+
+
+func burst_free(_unused: int) -> int:
+	for node in burst_nodes:
+		node.free()
+	burst_nodes.clear()
+	return 1
+
+
+## L15: a node and a RefCounted nobody keeps handed over, then the tree is paused (no Kanama script
+## processes) and the node freed; `_process` (this node runs while paused) reads the live lent
+## handles 6 frames later and resumes the tree. 1 = both handles were released while paused.
+func emit_paused(_unused: int) -> int:
+	paused_node = Node.new()
+	paused_node.name = "LentPaused"
+	add_child(paused_node)
+	paused_lend.emit(paused_node)
+	var fresh := Resource.new()
+	paused_rc = weakref(fresh)
+	paused_lend.emit(fresh)
+	fresh = null
+	paused_base = counter("liveLent")
+	paused_frame = Engine.get_process_frames()
+	paused_result = -1
+	get_tree().paused = true
+	paused_node.free()
+	return paused_base
+
+
+func paused_state(which: int) -> int:
+	return paused_result if which == 0 else (paused_base if which == 1 else paused_lent_after)
+
+
+## L16 / L17: a node a Kotlin script created (its handle is that script's, tracked before any
+## dispatch) handed over: the dispatch takes the handle over for the node's lifetime. A Node2D is
+## moved first, so the handler's read shows whether the dispatch refreshed its snapshot.
+func emit_adopted(node: Node, x: int) -> int:
+	if node is Node2D:
+		(node as Node2D).position = Vector2(float(x), 5.0)
+	adopted_nodes.append(node)
+	adopted.emit(node)
+	return 1
+
+
+func free_adopted(_unused: int) -> int:
+	for node in adopted_nodes:
+		node.free()
+	adopted_nodes.clear()
+	return 1
+
+func _process(_delta: float) -> void:
+	var frame := Engine.get_process_frames()
+	if renew_frame >= 0:
+		if frame == renew_frame + 2 and renew_rc.get_ref() != null:
+			renew.emit(renew_rc.get_ref())
+		elif frame >= renew_frame + 4 and renew_alive < 0:
+			renew_alive = 1 if renew_rc.get_ref() != null else 0
+		elif frame >= renew_frame + 8:
+			renew_gone = 1 if renew_rc.get_ref() == null else 0
+			renew_frame = -1
+	if paused_frame >= 0 and frame >= paused_frame + 6:
+		paused_lent_after = counter("liveLent")
+		var released := paused_lent_after == paused_base - 2
+		paused_result = 1 if released and paused_rc.get_ref() == null else 0
+		paused_frame = -1
+		get_tree().paused = false

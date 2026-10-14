@@ -1443,6 +1443,8 @@
       slot.kind = kind;
       slot.live = true;
       slot.lent = false;
+      slot.snapshots = false;
+      slot.freeQueued = false;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
       this.freedHandles.delete(handle);
       this.handleOwners.set(handle, owner);
@@ -1467,32 +1469,39 @@
         handle = this.allocateBrowserHandle(node ? "Node" : "Object", owner);
         if (node) this.api.kanamaWebAdoptNodeHandle(handle);
         else this.api.kanamaWebAdoptObjectHandle(handle);
-        this.countLent(this.browserHandleSlot(handle));
+        this.countLent(handle, this.browserHandleSlot(handle));
         this.lentMints += 1;
       } else if ((flags & 2) !== 0) {
         const slot = this.browserHandleSlot(handle);
         if (slot && !slot.lent) {
           this.forgetSharedHandle(handle);
-          this.countLent(slot);
+          this.countLent(handle, slot);
           this.lentAdopts += 1;
         }
       }
-      // A snapshot needs a NODE handle; an object tracked under another kind keeps none.
-      if ((flags & 12) !== 0 && this.browserHandleSlot(handle)?.kind === "Node") {
+      // A snapshot needs a handle Kotlin knows as a NODE (whatever the bridge's own kind label: a
+      // lookup's "Node", a constructed "Sprite2D" or "MeshInstance3D"); any other keeps none.
+      if ((flags & 12) !== 0 && this.browserHandleSlot(handle)?.snapshots) {
         if ((flags & 8) !== 0) this.refreshNode3DSnapshot(handle, a0, a1, a2, a3, a4, a5, a6, a7, a8);
         else this.refreshNode2DSnapshot(handle, a0, a1, a2, a3, a4, a5, a6, a7, a8);
       }
       return handle;
     },
-    /** A slot now holds a lent handle: counted until it is retired, however it is retired. */
-    countLent(slot) {
+    /**
+     * A slot now holds a lent handle: counted until it is retired, however it is retired. Kotlin
+     * marks it too (its `queueFree()` then keeps the handle until the engine frees the node) and
+     * says whether it is a NODE, the handles whose transform snapshot a lend refreshes.
+     */
+    countLent(handle, slot) {
       slot.lent = true;
+      slot.snapshots = this.api.kanamaWebSetLentHandle(handle, 1) === 1;
       this.liveLent += 1;
       this.maxLiveLent = Math.max(this.maxLiveLent, this.liveLent);
     },
-    uncountLent(slot) {
+    uncountLent(handle, slot) {
       if (!slot.lent) return;
       slot.lent = false;
+      this.api.kanamaWebSetLentHandle(handle, 0);
       this.lentReleases += 1;
       this.liveLent -= 1;
     },
@@ -1504,6 +1513,7 @@
       const slot = this.browserHandleSlot(handle);
       if (!slot?.lent) return;
       slot.lent = false;
+      this.api.kanamaWebSetLentHandle(handle, 0);
       this.liveLent -= 1;
       this.lentOwned += 1;
       this.handleOwners.set(handle, owner);
@@ -1520,6 +1530,11 @@
         const handle = Number(text);
         const slot = this.browserHandleSlot(handle);
         if (!slot) continue;
+        // A node freed by a queued `queueFree()` had its per-kind state dropped when that applied.
+        if (!slot.freeQueued) {
+          if (slot.kind === "Sprite2D") this.objectFrees += 1;
+          this.forgetHandleKindState(handle, slot, this.handleOwners.get(handle));
+        }
         this.api.kanamaWebDiscardFreedHandle(handle);
         this.retireBrowserSlot(handle, slot);
         this.freedHandles.add(handle);
@@ -1561,7 +1576,7 @@
     },
     /** Frees a live slot: the one place a browser handle stops being live. */
     retireBrowserSlot(handle, slot) {
-      this.uncountLent(slot);
+      this.uncountLent(handle, slot);
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
@@ -1675,22 +1690,26 @@
           }
         }
         if (slot.kind === "Sprite2D") this.objectFrees += 1;
-        if (slot.kind === "AudioStreamPlayer") {
-          this.audioPlayerStates.delete(handle);
-          this.match3AudioPlayerFrees += 1;
-        }
-        if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
-        if (
-          slot.kind === "SceneTree" &&
-          this.sceneTreeHandlesByOwner.get(handleOwner) === handle
-        ) {
-          this.sceneTreeHandlesByOwner.delete(handleOwner);
-        }
+        this.forgetHandleKindState(handle, slot, handleOwner);
         this.eraseObjectHandleEntry(handle, owner);
         this.api.kanamaWebDiscardBrowserHandle(handle);
         this.retireBrowserSlot(handle, slot);
       }
       this.sceneTreeHandlesByOwner.delete(owner);
+    },
+    /**
+     * The per-kind state a released browser handle leaves behind: the owner teardown's release and
+     * the sweep's release of an engine-freed (possibly adopted lookup) handle both drop it.
+     */
+    forgetHandleKindState(handle, slot, owner) {
+      if (slot.kind === "AudioStreamPlayer") {
+        this.audioPlayerStates.delete(handle);
+        this.match3AudioPlayerFrees += 1;
+      }
+      if (slot.kind === "Resource") this.resourcePathByHandle.delete(handle);
+      if (slot.kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
+        this.sceneTreeHandlesByOwner.delete(owner);
+      }
     },
     isBrowserHandleLive(handle) {
       return this.browserHandleSlot(handle) ? 1 : 0;
@@ -3146,7 +3165,15 @@
             this.audioPlayerStates.delete(this.lastFreedObjectHandle);
             this.match3AudioPlayerFrees += 1;
           }
-          if (slot) this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
+          if (slot?.lent) {
+            // Task 138 item 32: a lent node lives with its object. The node stays callable to the
+            // end of the frame (a second dispatch of it this frame reads it, as on desktop), so its
+            // slot -- and Kotlin's registration -- stay until the engine frees it and the sweep
+            // releases the handle as freed (a later use: "previously freed instance").
+            slot.freeQueued = true;
+          } else if (slot) {
+            this.releaseBrowserHandle(this.lastFreedObjectHandle, slot.kind);
+          }
           this.objectFrees += 1;
         }
         wordOffset += commandWordCount(opcode);

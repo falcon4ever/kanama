@@ -48,6 +48,13 @@ private val freedBrowserHandles = LinkedHashSet<Int>()
 
 private const val FREED_HANDLES_REMEMBERED = 4096
 
+/**
+ * Task 138 item 32: the browser handles lent for their object's lifetime (the bridge marks them,
+ * [setWebLentHandle]). Kotlin's `queueFree()` on one keeps it registered: the node lives to the end
+ * of the frame, and the proxy's sweep releases the handle as freed once the engine freed it.
+ */
+private val lentBrowserHandles = mutableSetOf<Int>()
+
 internal enum class WebBrowserHandleKind {
   RESOURCE,
   NODE,
@@ -230,6 +237,7 @@ internal fun registerConstructedNode(token: Int, className: String): GodotHandle
 internal fun registerWebBrowserHandle(handle: Int, kind: WebBrowserHandleKind) {
   check(handle > 0) { "Kanama Web browser handle must be positive" }
   freedBrowserHandles.remove(handle)
+  lentBrowserHandles.remove(handle)
   val previous = browserHandles[handle]
   if (previous == null) browserHandles[handle] = kind
   check(previous == null || previous == kind) {
@@ -241,6 +249,7 @@ internal fun unregisterWebBrowserHandle(handle: Int, expectedKind: WebBrowserHan
   // Every release of a handle token (queue_free, resource / collision / constructed / tracked
   // object release) drops what the wrappers kept per token, which may later name another object.
   WebHandleCache.forget(handle)
+  lentBrowserHandles.remove(handle)
   val actual = browserHandles.remove(handle)
   check(actual == expectedKind) {
     "Kanama Web browser handle=$handle has kind=$actual, expected=$expectedKind"
@@ -270,10 +279,22 @@ internal fun containsWebBrowserHandle(handle: Int): Boolean = browserHandles.con
  * Player queue_frees itself from body_entered, then ticks once more).
  */
 internal fun onWebQueueFree(objectId: Int) {
-  if (!instances.isLiveOrConstructing(objectId)) {
+  // A lent handle (task 138 item 32) stays registered: the node lives to the end of the frame, as
+  // on desktop, and the sweep releases the handle as freed once the engine freed it.
+  if (!instances.isLiveOrConstructing(objectId) && objectId !in lentBrowserHandles) {
     clearWebPositionSnapshot(objectId)
     unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
   }
+}
+
+/**
+ * Marks ([lent]) or unmarks a browser handle lent for its object's lifetime (the bridge, when a
+ * lend mints or takes over a handle, and when the handle is retired or becomes a script's owned
+ * result). True when Kotlin knows it as a NODE, whose transform snapshot a lend refreshes.
+ */
+internal fun setWebLentHandle(handle: Int, lent: Boolean): Boolean {
+  if (lent) lentBrowserHandles.add(handle) else lentBrowserHandles.remove(handle)
+  return browserHandles[handle] == WebBrowserHandleKind.NODE
 }
 
 /**
@@ -283,6 +304,7 @@ internal fun onWebQueueFree(objectId: Int) {
 internal fun discardWebBrowserHandle(handle: Int, freed: Boolean = false): Boolean {
   clearWebPositionSnapshot(handle)
   WebHandleCache.forget(handle)
+  lentBrowserHandles.remove(handle)
   if (
     freed && freedBrowserHandles.add(handle) && freedBrowserHandles.size > FREED_HANDLES_REMEMBERED
   ) {

@@ -432,22 +432,34 @@ keeps your reference (the object stays usable for `isOpen()`, `getError()`).
 
 **On every platform, a Godot object you receive (a signal or callback argument, a lookup, a call's
 result) is one value per object, valid for as long as the object lives: a `Node` or plain `Object`
-until it is freed, a `RefCounted` while Godot or one of your owned references still holds it.** So
-a handler can keep its argument (`lastHit = body`) and use it frames later, and `body == player` is
-`true` when both are the same node, on Web as on desktop. Using it after the engine freed the
-object throws the `IllegalStateException` "Invalid access to previously freed instance", which a
-script can catch.
+until it is freed, a `RefCounted` while Godot or one of your owned references still holds it** (on
+Web, two exceptions for a `RefCounted`, below). So a handler can keep its argument
+(`lastHit = body`) and use it frames later, and `body == player` is `true` when both are the same
+node, on Web as on desktop. Using it after the engine freed the object throws the
+`IllegalStateException` "Invalid access to previously freed instance", which a script can catch. A
+node you `queueFree()` stays usable until the end of the frame, as in GDScript.
 
-**One Web limit: a `RefCounted` that only your Kotlin code keeps.** On Web, a `RefCounted` argument
-(an `InputEvent`, a `Resource`) that nothing but your Kotlin code holds stays valid for the call and
-the next 2 frames, which covers an `await()` that resumes a frame later and keeping "the last event"
-for the next frame. After that it lives only while Godot holds it (a node, a resource, a GDScript
-variable, one of your owned references), and a use after it was freed throws "Invalid access to
-previously freed instance". Desktop, Android and iOS keep it alive until you `close()` it or the
-garbage collector releases it. To keep one longer on Web, keep a Godot reference to it, or resolve an
-owned reference inside the handler: `kept = GD.instanceFromId(event.instanceId)` is a call's result,
-so it is owned by your script and lives until the script is freed. This limit will be lifted when
-Web can release objects through the browser's garbage collector (tracked in
+**Web limits for a `RefCounted` argument** (an `InputEvent`, a `Resource`). Desktop, Android and iOS
+keep one alive until you `close()` it or the garbage collector releases it. On Web:
+
+- **One that only your Kotlin code keeps** stays valid for the call and the next 2 frames (a new
+  dispatch of it starts the 2 frames again), which covers an `await()` that resumes a frame later
+  and keeping "the last event" for the next frame. After that it lives only while Godot holds it (a
+  node, a resource, a GDScript variable, one of your owned references), and a use after it was freed
+  throws "Invalid access to previously freed instance".
+- **One that another of your scripts owns** (that script created it, or resolved it as below) is
+  handed to you as that script's reference: your copy is valid while that script holds it, and once
+  that script is freed a use throws an `IllegalStateException` ("Stale Kanama Web browser handle").
+
+To keep one longer on Web, keep a Godot reference to it, or resolve an owned reference inside the
+handler: `kept = GD.instanceFromId(event.instanceId)` is a call's result, so it is owned by your
+script and lives until the script is freed (or you `close()` it, where its type has `close()`).
+Each reference you resolve stays that long, so resolve only what you keep: resolving every event a
+handler receives keeps every one of them alive until the script goes. To remember something about
+the last event, copy the values you need (`lastKey = event.keycode`) instead of keeping the event.
+On Web the owned reference and the argument are one handle, so `close()` on it ends the argument
+too; close it only when you are done with both. These limits will be lifted when Web can release
+objects through the browser's garbage collector (tracked in
 [#332](https://github.com/falcon4ever/kanama/issues/332)).
 
 ### Which category is it?

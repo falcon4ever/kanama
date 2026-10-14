@@ -65,14 +65,17 @@ is one value per object, valid for as long as the object lives. A kept `Node` or
 argument answers until the node is freed, then a use throws "Invalid access to previously freed
 instance", as on desktop; `body.position` inside a handler reads the node's position (it used to
 fail with "Missing Web Node3D.get_position snapshot"), and `body.queueFree()` on an argument works
-(it used to fail a handle-kind check). Handing over an object a script already saw costs no extra
-bridge call (a Node2D / Node3D / Control: one, its transform), where every dispatch used to cost two.
+(it used to fail a handle-kind check) and leaves the node usable to the end of the frame, as on
+desktop. Handing over an object a script already saw costs no extra bridge call (a Node2D / Node3D /
+Control: one, its transform), where every dispatch used to cost two.
 
-One Web limit remains, documented in [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive):
+Web limits remain for a `RefCounted`, documented in [Objects you receive](docs/game-dev/godot-api.md#objects-you-receive):
 a `RefCounted` argument (an `InputEvent`, a `Resource`) that only your Kotlin code keeps stays valid
 for the call and the next 2 frames, then lives only while Godot holds it; desktop keeps it until you
 `close()` it. Keep a Godot reference to it, or `GD.instanceFromId(event.instanceId)` inside the
-handler (an owned result), to keep it longer. Lifting it is tracked in
+handler (an owned result, which then lives until the script is freed: resolve only what you keep),
+to keep it longer. A `RefCounted` another of your scripts owns is valid while that script holds it.
+Lifting both is tracked in
 [#332](https://github.com/falcon4ever/kanama/issues/332). The Web bridge protocol is 36.
 
 ### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)

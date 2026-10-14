@@ -526,9 +526,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
   const lentA = await callMain("lent_mask_a");
   const lentB = await callMain("lent_mask_b");
+  const lentC = await callMain("lent_mask_c");
   const lentCost = [];
   for (let index = 0; index < 4; index += 1) lentCost.push(await callMain("lent_cost", index));
-  trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} cost=${lentCost.join(",")}`);
+  trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} maskC=${lentC} cost=${lentCost.join(",")}`);
   trace(`lent notes: ${await evaluate("String(globalThis.KanamaWebLentNotes ?? '')")}`);
   const readLeakAfter = () =>
     evaluate(
@@ -558,9 +559,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   const expectedScriptErrors = Object.keys(expectedSites);
   // ...plus the queued setters on a node the engine freed: FreedHolder.freed_setter (one), the
   // two batches of FreedHolder.freed_batch (one each) and FreedHolder.freed_script_late's setter on
-  // a script-backed node freed in the same batch (one). Each is reported once as a script error
-  // naming the freed instance, and none is counted among the deliberate throws.
-  const freedSetterReports = 4;
+  // a script-backed node freed in the same batch (one), and LentProbe's setter on a lent node the
+  // engine freed in the same frame (one, L5). Each is reported once as a script error naming the
+  // freed instance, and none is counted among the deliberate throws.
+  const freedSetterReports = 5;
   const expectedReportTotal = expectedScriptErrors.length + freedSetterReports;
   let errorSnap = null;
   const errorDeadline = Math.min(deadline, Date.now() + 10_000);
@@ -722,7 +724,8 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L4: a value stored by the script that received it outlives that script.
     lentArgumentOutlivesItsReceiver: (lentA & 32768) === 32768,
     // L5: once the engine frees it (free / queue_free), a use throws desktop's "previously freed
-    // instance", and the handles are back where they were.
+    // instance", and the handles are back where they were, even when a setter was queued on the
+    // freed node in the frame it was freed.
     lentEngineFreeIsFreedInstance: (lentB & 15) === 15,
     // L6: 500 create / hand over / free rounds stay bounded and drain; one node handed over 1000
     // times mints one handle.
@@ -734,8 +737,26 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     lentRefCountedExpiry: (lentB & 34560) === 34560,
     // L8: a Node3D argument's `position` reads the node's current value.
     lentNodeSnapshotReads: (lentB & 6144) === 6144,
-    // L9: `queueFree()` on an argument works; a later use is a clean IllegalStateException.
+    // L9: `queueFree()` on an argument works; a later use throws "previously freed instance".
     lentKotlinQueueFree: (lentB & 24576) === 24576,
+    // L11: after a handler's `queueFree()`, a second dispatch of the node in the same frame reads it
+    // (the node lives to the end of the frame, as on desktop).
+    lentQueueFreedNodeLivesToFrameEnd: (lentC & 1) === 1,
+    // L12: a use of a handle freed more than the 4096 remembered frees ago still throws an
+    // IllegalStateException (typed and through call), not a bridge error.
+    lentLongFreedHandleIsIllegalState: (lentC & 2) === 2,
+    // L13: a new dispatch of a RefCounted renews its 2 frames.
+    lentRefCountedGraceRenewed: (lentC & 4) === 4,
+    // L14: 256 nodes handed over then freed at once drain within 10 frames (32 checked a frame).
+    lentBurstDrains: (lentC & 8) === 8,
+    // L15: freed objects are released and RefCounted demoted while the tree is paused.
+    lentSweepRunsWhilePaused: (lentC & 16) === 16,
+    // L16: a handle a script created and a dispatch takes over refreshes its snapshot (a Sprite2D's
+    // position reads the moved value) and is the created value.
+    lentAdoptedNodeSnapshot: (lentC & 32) === 32,
+    // L17: once the engine frees a taken-over AudioStreamPlayer, its release drops the bridge's
+    // audio state, and a use throws the freed-instance error.
+    lentAdoptedReleaseDropsKindState: (lentC & 64) === 64,
     // L10: handing over an already-seen object costs no GDScript->JS call for a plain Node and one
     // (its transform snapshot) for a Node3D; the old lending cost two for every dispatch.
     lentDispatchCost: lentCost[0] <= 10 && lentCost[1] <= 1010,

@@ -267,11 +267,18 @@ internal inline fun <T> webFreedAware(block: () -> T): T =
   } catch (error: JsException) {
     val message = error.message.orEmpty()
     val at = message.indexOf(FREED_INSTANCE_MESSAGE)
-    if (at < 0) throw error
-    throw IllegalStateException(message.substring(at), error)
+    if (at >= 0) throw IllegalStateException(message.substring(at), error)
+    // A handle no proxy owns any more: one released long ago (an engine free older than the ones
+    // remembered, task 138 item 32) or never valid. A script error like the stale-handle check of
+    // the typed calls, not a bridge failure.
+    val stale = message.indexOf(NO_PROXY_OWNS_MESSAGE)
+    if (stale >= 0) throw IllegalStateException(message.substring(stale), error)
+    throw error
   }
 
 private const val FREED_INSTANCE_MESSAGE = "Invalid access to previously freed instance"
+
+private const val NO_PROXY_OWNS_MESSAGE = "No Kanama Web proxy owns handle"
 
 /**
  * Task 138 item 32: the message for a call on a lent handle whose object the engine freed, the
