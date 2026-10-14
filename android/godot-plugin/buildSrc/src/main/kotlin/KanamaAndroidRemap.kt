@@ -203,12 +203,17 @@ object KanamaAndroidRemap {
      * Line comments AND block comments/KDoc: what the audits below assert is about CODE, and the
      * remapped sources carry KDoc that quotes the very things they forbid -- `java.lang.foreign`
      * when it explains the PanamaPort rewrite, `expect`/`actual` when it explains the seam.
-     * String literals are not tracked: a block-comment opener inside a string literal is
-     * vanishingly rare here, and treating it as a comment can only make the audit stricter than
-     * the code it reads, never blind to it.
+     *
+     * String and character literals are tracked (task 119 finding 13): a block-comment opener or a
+     * double slash inside one is text, not a comment. Without that a string holding an opener
+     * blinded the audit for every later line of the file (a block comment that never closes), and
+     * a URL string hid the rest of its line. A string's own text stays in the output: a forbidden fragment inside a literal is
+     * still reported. `"""` raw strings may span lines. `scripts/check_android_remap_sources.py`
+     * mirrors this function; keep them in step.
      */
     fun strippedSourceLines(lines: List<String>): List<String> {
         var inBlockComment = false
+        var inRawString = false
         return lines.map { line ->
             val out = StringBuilder()
             var i = 0
@@ -221,6 +226,48 @@ object KanamaAndroidRemap {
                         i++
                     }
                     continue
+                }
+                if (inRawString) {
+                    if (line.startsWith("\"\"\"", i)) {
+                        inRawString = false
+                        out.append("\"\"\"")
+                        i += 3
+                    } else {
+                        out.append(line[i])
+                        i++
+                    }
+                    continue
+                }
+                if (line.startsWith("\"\"\"", i)) {
+                    inRawString = true
+                    out.append("\"\"\"")
+                    i += 3
+                    continue
+                }
+                if (line[i] == '"') {
+                    // A string literal ends on its own line unless it is a raw string.
+                    out.append('"')
+                    i++
+                    while (i < line.length) {
+                        val c = line[i]
+                        out.append(c)
+                        i++
+                        if (c == '\\' && i < line.length) {
+                            out.append(line[i])
+                            i++
+                        } else if (c == '"') {
+                            break
+                        }
+                    }
+                    continue
+                }
+                if (line[i] == '\'') {
+                    val literal = CHAR_LITERAL.find(line, i)
+                    if (literal != null && literal.range.first == i) {
+                        out.append(literal.value)
+                        i += literal.value.length
+                        continue
+                    }
                 }
                 if (line.startsWith("/*", i)) {
                     inBlockComment = true
@@ -236,6 +283,9 @@ object KanamaAndroidRemap {
             out.toString()
         }
     }
+
+    /** A Kotlin character literal: `'a'`, `'"'`, `'\n'`, `'\u0041'`. */
+    private val CHAR_LITERAL = Regex("""'(?:\\[^']+|[^\\'])'""")
 
     /** Post-remap audit of a generated Android source tree (stale desktop APIs, bad rewrites). */
     fun auditGeneratedSources(root: File, label: String) {

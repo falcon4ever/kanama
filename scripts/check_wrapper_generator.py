@@ -22,12 +22,14 @@ from generate_api_wrapper import (
     IOS_OBJECTCALLS,
     IOS_ONLY_GENERATED,
     IOS_UNSUPPORTED_CLASSES,
+    OBJECTCALLS_EXPECT,
     PER_PLATFORM_WRAPPERS,
     SHARED_HAND_ROOT_FILES,
     TYPES_DIR,
     TreeResult,
+    formatted_code_key,
     generated_companion_paths,
-    ios_generated_member_names,
+    ios_generated_region_key,
     regenerate_tree,
     strip_comments,
     whitespace_insensitive,
@@ -519,10 +521,15 @@ def check_single_tree(tree: TreeResult) -> int:
         committed = path.read_text(encoding="utf-8")
         if rel == _rel(IOS_OBJECTCALLS):
             # This file is HAND-WRITTEN outside its GENERATED MEMBERS region and ktfmt reformats the
-            # region after every regen, so compare the region's member set, not the bytes: a helper
-            # added or dropped is drift, layout is not. The member names and their parameter names
-            # are held to desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
-            same = ios_generated_member_names(committed) == ios_generated_member_names(content)
+            # region after every regen, so compare the region with ktfmt's changes normalised away
+            # (`ios_generated_region_key`): a helper, a body or a PT_* tag value that differs is
+            # drift, layout is not. The member names and their parameter names are also held to
+            # desktop's by scripts/check_objectcalls_parity.py, a local_ci stage.
+            same = ios_generated_region_key(committed) == ios_generated_region_key(content)
+        elif rel == _rel(OBJECTCALLS_EXPECT):
+            # Under ktfmt like any hand-formatted source (the generator emits it unwrapped), so
+            # compare with ktfmt's changes normalised away, as for the iOS region above.
+            same = formatted_code_key(committed) == formatted_code_key(content)
         elif rel.endswith(".md"):
             same = committed == content
         elif (ROOT / rel).parent == TYPES_DIR:
@@ -562,6 +569,20 @@ def check_single_tree(tree: TreeResult) -> int:
     if ios_copies and not IOS_COPIES_PENDING_DELETION:
         rc = 1
         print(f"[wrapper_generator] FAIL {len(ios_copies)} shared classes also have an iOS copy under {_rel(IOS_API_DIR)}: {ios_copies[:20]}", file=sys.stderr)
+
+    unexplained = unexplained_platform_files(tree)
+    if unexplained:
+        rc = 1
+        print(f"[wrapper_generator] FAIL {len(unexplained)} unexplained file(s) in a platform api directory:", file=sys.stderr)
+        for problem in unexplained:
+            print(f"    {problem}", file=sys.stderr)
+
+    missing_hand = missing_platform_hand_files()
+    if missing_hand:
+        rc = 1
+        print(f"[wrapper_generator] FAIL {len(missing_hand)} listed platform hand file(s) no longer exist:", file=sys.stderr)
+        for problem in missing_hand:
+            print(f"    {problem}", file=sys.stderr)
 
     stale_roots = stale_hand_root_copies()
     if stale_roots:
@@ -613,6 +634,62 @@ _ROOT_DECLARATION_RE = re.compile(
     + "|".join(SHARED_HAND_ROOT_FILES)
     + r")\b"
 )
+
+
+# The hand-written files that may sit in a platform's api directory (task 119 finding 34). A wrapper
+# class is generated once into the shared tree, or listed in PER_PLATFORM_WRAPPERS; everything else
+# here is platform glue with a stated job. A file in neither list (a retired wrapper restored by a
+# merge, a copy pasted back) compiled and passed every gate before this check.
+PLATFORM_HAND_FILES: dict[str, dict[str, str]] = {
+    "desktop": {
+        "GodotSignal": "actual of the shared GodotSignal expect",
+        "MainThread": "actual of the shared MainThread expect",
+        "ScriptResources": "desktop's script-resource wrappers",
+        "ScriptRuntime": "desktop's script runtime seam",
+    },
+    "iOS": {
+        "GodotSignal": "actual of the shared GodotSignal expect",
+        "MainThread": "actual of the shared MainThread expect",
+        "IosGodotApi": "the iOS host's entry glue",
+        "ScriptAccessSelfTest": "the iOS script-access self-test",
+        "ScriptResources": "iOS's script-resource wrappers",
+        "ScriptRuntime": "iOS's script runtime seam",
+    },
+}
+
+
+def unexplained_platform_files(tree: TreeResult) -> list[str]:
+    """Files in a platform api directory that are neither generated (`tree.files`), nor a
+    PER_PLATFORM_WRAPPERS class, nor a listed hand file (task 119 finding 34)."""
+    problems: list[str] = []
+    for label, directory in (("desktop", DESKTOP_API_DIR), ("iOS", IOS_API_DIR)):
+        for path in sorted(directory.glob("*.kt")):
+            if _rel(path) in tree.files or path.stem in PER_PLATFORM_WRAPPERS:
+                continue
+            if path.stem in PLATFORM_HAND_FILES[label]:
+                continue
+            problems.append(
+                f"{_rel(path)}: not generated, not in PER_PLATFORM_WRAPPERS and not a listed "
+                f"{label} hand file (PLATFORM_HAND_FILES in scripts/check_wrapper_generator.py) "
+                "-- a stale copy of a retired wrapper? delete it"
+            )
+    return problems
+
+
+def missing_platform_hand_files() -> list[str]:
+    """The reverse of [unexplained_platform_files]: a PLATFORM_HAND_FILES entry whose file no longer
+    exists. A retired hand file stays listed, so the list would keep excusing a later file of that
+    name (a stale copy restored by a merge) that nothing generates."""
+    problems: list[str] = []
+    for label, directory in (("desktop", DESKTOP_API_DIR), ("iOS", IOS_API_DIR)):
+        for name in sorted(PLATFORM_HAND_FILES[label]):
+            if not (directory / f"{name}.kt").exists():
+                problems.append(
+                    f"{_rel(directory)}/{name}.kt: listed as a {label} hand file in "
+                    "PLATFORM_HAND_FILES (scripts/check_wrapper_generator.py) but the file does "
+                    "not exist -- remove the entry, or restore the file"
+                )
+    return problems
 
 
 def stale_hand_root_copies() -> list[str]:

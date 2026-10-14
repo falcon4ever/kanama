@@ -11345,7 +11345,7 @@ GodotObject: fun propertyCanRevert(property: String): Boolean
 GodotObject: fun propertyGetRevert(property: String): Any?
 GodotObject: fun removeMeta(name: String)
 GodotObject: fun removeUserSignal(signal: String)
-GodotObject: fun set(property: String, value: Any?): Long
+GodotObject: fun set(property: String, value: Any?)
 GodotObject: fun setBlockSignals(enable: Boolean)
 GodotObject: fun setDeferred(property: String, value: Any?)
 GodotObject: fun setIndexed(propertyPath: NodePath, value: Any?)

@@ -45,11 +45,28 @@ internal data class MethodModel(
   val propertyKotlinName: String? = null,
   /** Set when the return is a Godot enum value class (task 128 B); [returnType] is then INT. */
   val returnGodotEnum: GodotEnumRef? = null,
+  /**
+   * True for a `GodotObject?` return: the Kotlin type keeps its `?` and the glue writes null (nil).
+   */
+  val returnNullable: Boolean = false,
 ) {
   /** Neutral: the Kotlin type the return surfaces as, or null for `Unit`. */
   val returnKotlinType: String?
-    get() = returnGodotEnum?.kotlinFqName ?: returnType?.kotlinType
+    get() =
+      returnGodotEnum?.kotlinFqName
+        ?: returnType?.kotlinType?.let {
+          if (returnNullable && returnType == TypeMapping.OBJECT) it.asNullableType() else it
+        }
+
+  /** [returnKotlinType] as the nullable type the `target:` helper returns, or null for `Unit`. */
+  val nullableReturnKotlinType: String?
+    get() = returnKotlinType?.asNullableType()
 }
+
+/**
+ * Appends `?` unless the type already ends in one (`GodotObject?` must not become `GodotObject??`).
+ */
+internal fun String.asNullableType(): String = if (endsWith("?")) this else "$this?"
 
 internal data class RpcModel(
   val mode: Int,

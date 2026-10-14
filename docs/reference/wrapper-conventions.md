@@ -19,7 +19,7 @@ it differs. Not covered here: the [annotations](../game-dev/scripts.md) you writ
 `show_message`, is in [Functions Godot Can Call](../game-dev/scripts.md#functions-godot-can-call)),
 the builtin value types' own methods (`Vector3.lerp`, `Basis.inverse`), and `@Tool` /
 editor-only APIs. The signature gate reaches further than these rules: it also holds the value
-types, each platform's own classes and the Web facades to a snapshot (see
+types, the annotations, each platform's own classes and the Web facades to a snapshot (see
 [Source breaks](#source-breaks)).
 
 | Area | Current rule | Planned |
@@ -341,7 +341,10 @@ Kept by: the drift gate.
   in `KOTLIN_DEFAULT_EXPRESSION_OVERRIDES`, such as `Node3D.lookAt(target, up = Vector3.UP)`).
 - A default the generator cannot express is a **required** parameter:
   `CanvasItem.drawTexture(texture, position, modulate)` needs the `Color` Godot defaults to white.
-  Adding such a default later is not a break.
+  Adding such a default later is not a break. Every such case is listed under "Godot Defaults Not
+  Expressed" in the [generator report](generated/wrapper-generator-report.md#godot-defaults-not-expressed)
+  (`parameter_default_expression` records them); `api_wrapper_generator_report.py --check` fails
+  when the list and the page disagree, so a new required parameter is visible in a pull request.
 - An `expect` declaration (the seams the shared tree names, such as `GodotSignal`) carries no
   default argument; it has overloads instead (`signal.connect(target, method)` and
   `connect(target, method, flags)`), because the Android build compiles without the `expect` file.
@@ -503,6 +506,7 @@ per declaration, one file per surface (every source directory is read recursivel
 | `jvm.txt`, `ios.txt` | `src/jvmMain/.../api`, `src/iosMain/.../api` | what each native platform declares on its own: the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the `actual`s, and on desktop the name constants (`GD` and `Mathf` are common since task 129 B) |
 | `web.txt` | `web-runtime/.../api` | the Web wrappers, generated and hand-written |
 | `web-types.txt` | `web-runtime/.../types` | the Web value types |
+| `annotations.txt` | `annotations/.../annotations` | the script annotations and their parameters (`@ScriptClass`, `@Export`, `@Rpc`, ...) |
 
 A line records the owner, kind, name, receiver, type parameters and `where` clauses, parameter
 names and types, whether each parameter has a default (not the default's value), the return or

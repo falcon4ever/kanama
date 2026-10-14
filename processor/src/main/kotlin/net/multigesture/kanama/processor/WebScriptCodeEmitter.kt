@@ -1049,7 +1049,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         appendLine("    instance.${method.kotlinName}($argNames)")
         appendLine()
         appendLine(
-          "  fun ${method.kotlinName}(target: net.multigesture.kanama.api.GodotObject$params): $returnType? ="
+          "  fun ${method.kotlinName}(target: net.multigesture.kanama.api.GodotObject$params): ${method.nullableReturnKotlinType} ="
         )
         appendLine(
           "    target.kotlinScriptInstance<$fq>()?.let { ${method.kotlinName}(it$helperArgs) }"

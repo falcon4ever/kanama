@@ -288,6 +288,9 @@ case("check_actual_public_surface.py", py("check_actual_public_surface.py"),
 case("check_android_remap_sources.py", py("check_android_remap_sources.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", "package net.multigesture.kanama\nfun zz() = Files.readString(x)\n")],
      "forbidden after the Android remap", "a runtime source uses a fragment the Android remap cannot compile")
+case("check_android_remap_sources.py (string literal)", py("check_android_remap_sources.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", 'package net.multigesture.kanama\nval zzText: String = "a block-comment opener inside a string: /*"\nfun zz() = Files.readString(x)\n')],
+     "forbidden after the Android remap", "a string literal holding a block-comment opener no longer blinds the audit to the rest of the file (task 119 finding 13)")
 case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sources.py"),
      [Edit("android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap.kt",
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
@@ -456,6 +459,9 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
      "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
+case("check_public_signature_changes.py (annotations)", py("check_public_signature_changes.py"),
+     [Edit("annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt", "annotation class GodotName(val name: String)", "annotation class GodotName(val name: String, val extra: Int)")],
+     "unannounced source break", "a parameter is added to a script annotation (annotations/ is a snapshotted surface, task 137 item 9)")
 case("check_typed_enums.py", py("check_typed_enums.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Long) {")],
      "typed_enums] FAIL", "an enum parameter goes back to a raw Long")
@@ -478,6 +484,20 @@ case("check_web_typed_enums.py", py("check_web_typed_enums.py"),
 case("check_wrapper_generator.py", py("check_wrapper_generator.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode ) {")],
      "single-tree drift-gate", "a generated wrapper is hand-edited (one stray space)")
+
+case("check_wrapper_generator.py (stale platform file)", py("check_wrapper_generator.py"),
+     [Create(f"{JVM}/net/multigesture/kanama/api/SceneTreeHandle.kt", "package net.multigesture.kanama.api\n\nclass SceneTreeHandle\n")],
+     "unexplained file(s) in a platform api directory", "a retired per-platform wrapper is restored under src/jvmMain/.../api: it compiles, but nothing generates or lists it (task 119 finding 34)")
+case("check_wrapper_generator.py (missing hand file)", py("check_wrapper_generator.py"),
+     [Delete(f"{IOS}/api/ScriptAccessSelfTest.kt")],
+     "listed platform hand file(s) no longer exist", "a file listed in PLATFORM_HAND_FILES is deleted: the list would keep excusing a later file of that name")
+case("check_wrapper_generator.py (iOS region body)", py("check_wrapper_generator.py"),
+     [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RID, ret.ptr)\n      RID(ret.value)",
+           "      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT, ret.ptr)\n      RID(ret.value)")],
+     "single-tree drift-gate", "a generated iOS ObjectCalls helper keeps its name and parameters but its body (here a PT_* tag) changes: the region is compared by content, not by member names (task 119 finding 4)")
+case("check_wrapper_generator.py (expect ObjectCalls)", py("check_wrapper_generator.py"),
+     [Append(f"{COMMON}/binding/runtime/ObjectCalls.expect.kt", "\nval redRunHandEdit = 1\n")],
+     "ObjectCalls.expect.kt", "the generated `expect object ObjectCalls` file is hand-edited (it is in the drift compare since task 119 finding 25)")
 
 # ---- audit_* -----------------------------------------------------------------------------------------------
 case("audit_api_wrapper_inheritance.py", py("audit_api_wrapper_inheritance.py"),
@@ -563,6 +583,9 @@ for name, args, target, expect, how in [
     ("generate_web_wrappers.py --check", ("generate_web_wrappers.py", "--check"), f"{WEBGEN}/Node.kt", "FAIL", "a generated Web wrapper is hand-edited"),
 ]:
     case(name, py(*args), [Append(target, "\nval redRunHandEdit = 1\n" if target.endswith(".kt") else "\nred run: hand edit\n")], expect, how)
+case("api_wrapper_generator_report.py --check (dropped default)", py("api_wrapper_generator_report.py", "--markdown", f"{GEN}/wrapper-generator-report.md", "--check"),
+     [Edit("scripts/generate_api_wrapper.py", '    ("Node3D", "look_at", "up"): "Vector3.UP",\n', "")],
+     "FAIL stale markdown", "a Godot default the generator expressed is dropped: the parameter turns required and the report's \"Godot Defaults Not Expressed\" list no longer matches")
 case("generate_api_shell_wrappers.py --fail-if-candidates", py("generate_api_shell_wrappers.py", "--from-skip-report", "build/wrapper-generator/skips.txt", "--dry-run", "--fail-if-candidates"),
      [Delete(f"{COMMON}/api/Curve2D.kt"),
       Append("build/wrapper-generator/skips.txt", "\nCurve2D.foo object return wrapper is missing for Curve2D\n")],

@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from generate_api_wrapper import (
+    DROPPED_DEFAULTS,
     render_draft,
     render_property,
     render_signal_constants,
@@ -91,6 +92,7 @@ def render_markdown(
     skip_categories: Counter[str],
     helper_shapes: Counter[str],
     draft_dir: Path,
+    dropped_defaults: dict[tuple[str, str, str], tuple[str, str]],
 ) -> str:
     total_classes = len(reports)
     total_methods = sum(report.total_methods for report in reports)
@@ -230,6 +232,31 @@ def render_markdown(
         f"{report.skipped_methods} |"
         for report in largest
     )
+
+    lines.extend(
+        [
+            "",
+            "## Godot Defaults Not Expressed",
+            "",
+            "Godot gives these parameters a default value that the generator cannot write as a Kotlin default"
+            " argument, so the generated parameter is **required** (Rule 9 of the"
+            " [Generated API Conventions](../wrapper-conventions.md#9-defaults-and-overloads)). Giving one"
+            " a default later is not a source break. A new row here is a new required parameter in a"
+            " signature, and a row that disappears gained its default.",
+            "",
+            f"{len(dropped_defaults)} parameters, by Godot default:",
+            "",
+            "| Godot default | Parameters |",
+            "| --- | ---: |",
+        ],
+    )
+    by_default = Counter(f"{kind}: `{default}`" for kind, default in dropped_defaults.values())
+    lines.extend(f"| {label} | {count} |" for label, count in sorted(by_default.items(), key=lambda item: (-item[1], item[0])))
+    lines.extend(["", "| Class | Method | Parameter | Godot default |", "| --- | --- | --- | --- |"])
+    lines.extend(
+        f"| {class_name} | `{method}` | `{parameter}` | `{default}` |"
+        for (class_name, method, parameter), (_kind, default) in sorted(dropped_defaults.items())
+    )
     lines.append("")
     return "\n".join(lines)
 
@@ -299,7 +326,7 @@ def main() -> int:
     )
 
     if args.markdown:
-        markdown = render_markdown(reports, skip_reasons, skip_categories, helper_shapes, args.output_dir)
+        markdown = render_markdown(reports, skip_reasons, skip_categories, helper_shapes, args.output_dir, dict(DROPPED_DEFAULTS))
         if args.check:
             if not args.markdown.exists() or args.markdown.read_text(encoding="utf-8") != markdown:
                 print(f"[wrapper_generator_report] FAIL stale markdown: {args.markdown}")

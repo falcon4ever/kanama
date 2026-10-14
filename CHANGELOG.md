@@ -113,6 +113,61 @@ On iOS a container nested more than 8 levels deep, or holding an element type th
 encoder does not carry (a `Vector3i` inside an `Array`), delivers `null` for that element; and a
 container the shim cannot allocate is reported as out of memory rather than "not marshalled".
 
+### Changed — wrapper and Android gates hold what they claimed to (task 119 batch B)
+
+Gate and tooling fixes, no change to the API a script sees. The drift gate compares the iOS
+`ObjectCalls` GENERATED MEMBERS region by content (comments, spacing, `;` and trailing commas
+normalised) instead of by member names, so a body-only or `PT_*` tag change is drift, and
+`--write-tree` writes it. `ObjectCalls.expect.kt` is generated and ktfmt-formatted like the iOS region,
+and the drift gate compares it the same way (comments, spacing, `;` and trailing commas normalised,
+string literals compared as written). A file in `src/jvmMain/.../api` or `src/iosMain/.../api` that is neither generated, nor a
+`PER_PLATFORM_WRAPPERS` class, nor a listed hand file (a retired wrapper restored by a merge) fails the
+drift gate. The generator, the parity gate and the expect writer share one parameter parser
+(`split_params`, `parameter_names`). The Android remap audit (`KanamaAndroidRemap.strippedSourceLines`
+and its mirror in `check_android_remap_sources.py`) knows string literals, so a block-comment opener
+inside a string no longer blinds it for the rest of the file. `scripts/android_smoke.sh` and
+`scripts/android_export_minified.sh` share `scripts/android_common.sh` (log checks, demo-script build,
+desktop addon, build-template install) instead of two drifting copies. Each has a case in
+`scripts/gate_red_runs.py`.
+
+### Fixed — Desktop and Android: a script property or argument of the wrong Variant type is an error, not a zero value (task 138 item 9)
+
+A `@RegisterProperty`/`@RegisterFunction` value of type `Quaternion`, `Basis`, `Rect2`, `Rect2i`,
+`AABB`, `Plane`, `Transform2D`, `Transform3D`, `Projection`, `Vector4`, `Vector4i` or `RID` that
+received a Variant of another type (or `null`) silently became that type's zero or identity value
+(`as? T ?: ZERO`). The generated decode now calls `BuiltinTypes.readVariantValue<T>`, which fails
+with `Expected Quaternion for property 'rot' but the Variant holds Vector2`, naming the property or
+argument, the expected and the actual type, like the "Expected X argument" error of the object
+arguments. iOS and Web decode these types through tagged or packed components, not a Variant cast, and
+have no such fallback.
+
+### Fixed — Desktop: a registered function returning `GodotObject?` compiles (task 119 finding 31)
+
+`@RegisterFunction fun target(): GodotObject?` made the generated registrar fail to compile
+("expected `GodotObject`, actual `GodotObject?`"): the return lost its `?`. It keeps it now, and the
+glue writes `null` as nil.
+
+### Changed — `GodotObject.set` returns `Unit`; the signature gate also holds the annotations (task 137 items 7, 9)
+
+Desktop, Android and iOS. `GodotObject.set(property, value)` returned a `Long` that was always `0`;
+Godot's `Object.set` returns nothing, and the Web wrapper already returned `Unit`. It returns `Unit`
+now. Nothing in Kanama read the value; a script that did (`val r = node.set("x", 1)`) must drop it.
+
+- **Source break:** `GodotObject.set` returns `Unit` instead of `Long`.
+
+The signature gate (`scripts/check_public_signature_changes.py`) gains an `annotations` surface
+(`api-snapshots/annotations.txt`): the annotations a script is written with and their parameters are
+public API, and task 133 B had changed them without the gate seeing it.
+
+### Changed — the generator report lists every Godot default the wrappers cannot express (task 137 item 5)
+
+A Godot default the generator cannot write as a Kotlin default argument (`CanvasItem.drawTexture`'s
+`modulate = Color(1, 1, 1, 1)`, a `Callable()`, an Object `null`, ...) makes the parameter required.
+That was silent. `docs/reference/generated/wrapper-generator-report.md` now has a "Godot Defaults Not
+Expressed" section with every case (294 parameters today), and the report check fails when the list
+changes without the page being regenerated, so a new required parameter, or a default that is
+gained, shows up in the pull request. Expressing the defaults is a separate, additive change.
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed
