@@ -8694,6 +8694,9 @@ static void kanama_ios_variant_to_vector2i(GDExtensionConstVariantPtr variant, i
 // no cell (Callable, Signal) is tagged KANAMA_IOS_ARG_UNMARSHALLED_BASE + type, and the Kotlin
 // decode fails naming that type instead of reading null.
 #define KANAMA_IOS_ARG_UNMARSHALLED_BASE 1000
+// A container argument whose blob could not be allocated: KANAMA_IOS_ARG_ENCODE_OOM_BASE + type, so
+// the Kotlin decode reports the out-of-memory instead of "not marshalled".
+#define KANAMA_IOS_ARG_ENCODE_OOM_BASE 2000
 
 typedef struct {
     int32_t tags[KANAMA_IOS_PTRCALL_MAX_ARGS];
@@ -8860,8 +8863,9 @@ static void kanama_ios_marshal_variant_args(
                 kanama_ios_blob_encode_variant(&b, (uint8_t *)(intptr_t)v, 0);
                 if (b.oom || b.buf == NULL) {
                     free(b.buf);
-                    // No cell: the Kotlin decode names the type instead of reading a null.
-                    tags[i] = KANAMA_IOS_ARG_UNMARSHALLED_BASE + (int32_t)vt;
+                    // No cell: the Kotlin decode reports the out-of-memory, naming the type, instead
+                    // of reading a null.
+                    tags[i] = KANAMA_IOS_ARG_ENCODE_OOM_BASE + (int32_t)vt;
                     break;
                 }
                 strs[i] = b.buf; // freed by kanama_ios_free_arg_cells

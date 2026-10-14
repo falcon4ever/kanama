@@ -109,6 +109,10 @@ elements of such an argument are borrowed (the emitter's Variant holds them for 
 desktop. Self-test rows `lambda-args(...)` cover String, Vector3, Color, Array, Dictionary and a
 value type (`Vector3i`).
 
+On iOS a container nested more than 8 levels deep, or holding an element type the shared container
+encoder does not carry (a `Vector3i` inside an `Array`), delivers `null` for that element; and a
+container the shim cannot allocate is reported as out of memory rather than "not marshalled".
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed

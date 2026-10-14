@@ -1843,10 +1843,7 @@ internal fun encodeIosRawValue(value: Any?, out: CPointer<ByteVar>): Int {
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
   if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
-    throw IllegalArgumentException(
-      "a script method argument of Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not " +
-        "marshalled on iOS yet"
-    )
+    throw IllegalArgumentException("a script method argument ${iosArgFailure(tag)}")
   }
   if (ptr == null) {
     return null
@@ -1937,7 +1934,7 @@ internal class IosSignalArgReader : SignalArgReader {
   private fun mismatch(index: Int, expected: String, tag: Int): Nothing =
     throw SignalArgumentException(
       if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
-        "argument ${index + 1}: Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not marshalled on iOS yet (expected $expected)"
+        "argument ${index + 1}: ${iosArgFailure(tag)} (expected $expected)"
       } else {
         "argument ${index + 1}: expected $expected, got iOS tag $tag"
       }
@@ -1993,6 +1990,20 @@ internal class IosSignalArgReader : SignalArgReader {
  * (KANAMA_IOS_ARG_UNMARSHALLED_BASE).
  */
 private const val IOS_ARG_UNMARSHALLED_BASE = 1000
+
+/**
+ * The Variant-type tag base for a container argument whose blob the shim could not allocate
+ * (KANAMA_IOS_ARG_ENCODE_OOM_BASE): an out-of-memory report, not a "not marshalled" one.
+ */
+private const val IOS_ARG_ENCODE_OOM_BASE = 2000
+
+/** The failure text for a tag at or above [IOS_ARG_UNMARSHALLED_BASE], naming the Variant type. */
+private fun iosArgFailure(tag: Int): String =
+  if (tag >= IOS_ARG_ENCODE_OOM_BASE) {
+    "of Variant type ${tag - IOS_ARG_ENCODE_OOM_BASE} ran out of memory while it was encoded on iOS"
+  } else {
+    "of Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not marshalled on iOS yet"
+  }
 
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, length: Int): Any? {
@@ -2850,16 +2861,18 @@ internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
 }
 
 // OBJECTCALLS-SELFTEST hook for an `Any?` script-method argument (task 131 N7): the decoded value
-// of an INT64 cell, and the message of the error an unmarshalled Variant type (a Dictionary, 27)
-// raises instead of decoding to null.
+// of an INT64 cell, and the messages of the two errors a tag with no cell raises instead of
+// decoding to null: a Variant type the shim does not marshal (a Callable, 25) and a container whose
+// blob the shim could not allocate (an Array, 28, reported as out of memory), joined by " | ".
 @OptIn(ExperimentalForeignApi::class)
 internal fun kanamaIosAnyCallArgSelfTest(): Pair<Any?, String?> = memScoped {
   val cell = alloc<LongVar>()
   cell.value = 0x1_0000_0003L
   val decoded = decodeIosCallArg(IOS_PT_INT64, cell.ptr.reinterpret())
   val refused =
-    runCatching { decodeIosCallArg(IOS_ARG_UNMARSHALLED_BASE + 27, null) }.exceptionOrNull()
-  decoded to refused?.message
+    runCatching { decodeIosCallArg(IOS_ARG_UNMARSHALLED_BASE + 25, null) }.exceptionOrNull()
+  val oom = runCatching { decodeIosCallArg(IOS_ARG_ENCODE_OOM_BASE + 28, null) }.exceptionOrNull()
+  decoded to "${refused?.message} | ${oom?.message}"
 }
 
 // OBJECTCALLS-SELFTEST hook for a RID script-method argument (task 131 N7): the cell

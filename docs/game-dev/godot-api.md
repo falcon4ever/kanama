@@ -430,9 +430,16 @@ keeps your reference (the object stays usable for `isOpen()`, `getError()`).
 | Category | What it covers | What to do |
 |---|---|---|
 | **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), every `RefCounted` element of an `Array`/`Dictionary` that `call(...)` (or `callv`, `callDeferred`, `callThreadSafe`, `ClassDB.classCallStatic`, `GodotCallable.call`/`callv`) returns, the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), the checked casts to a `RefCounted` class (`res.cast<Texture2D>()`, `castOrNull`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper |
-| **Borrowed view** | A wrapper *you* build over a raw handle you already have: `Resource.fromHandle(...)`, a wrapper constructor (`Mesh(other.handle)`), a script's own `self` | Keep the wrapper you got the handle from while you use the view: the view takes no reference. `close()` on it releases nothing (debug builds warn) |
+| **Borrowed view** | A wrapper *you* build over a raw handle you already have: `Resource.fromHandle(...)`, a wrapper constructor (`Mesh(other.handle)`), a script's own `self`, and the `RefCounted` elements of a container (`Array`/`Dictionary`) that arrives as an argument of a signal lambda or a script method (including an `Any?` parameter): the caller's Variant holds them for the call, so do not `close()` them or keep them past it | Keep the wrapper you got the handle from while you use the view: the view takes no reference. `close()` on it releases nothing (debug builds warn) |
 | **Engine-owned, live** | A running `Tween` (from `createTween()` or an element of `getProcessedTweens()`), anything living in the scene tree | To **stop** it use the Godot lifecycle (`kill()`, `queueFree()`): `close()` never stops it. Your wrapper of a tween is still an owned `+1` — close it when you stop using that wrapper (see below) |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
+
+**iOS container arguments.** A container that arrives as an argument of a signal lambda or a
+script method (`Any?` parameter included) is decoded to a `List`/`Map` of scalars. On iOS a container
+nested more than 8 levels deep, or an element type the container encoder does not carry (for example
+a `Vector3i` inside an `Array`), arrives as `null` inside that container; the encoder is shared with
+container returns, so this applies to them too. The argument itself is never silently dropped: a
+Variant type iOS does not marshal at all (`Callable`, `Signal`) fails the call naming the type.
 
 **Tweens, precisely.** The `SceneTree` holds its own reference to every tween it
 processes, so a tween runs until it finishes or is killed whatever your wrappers

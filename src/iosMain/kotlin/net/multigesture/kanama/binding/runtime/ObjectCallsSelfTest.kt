@@ -2483,8 +2483,10 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // the shim does not marshal fails the call loudly instead of arriving as null.
   val (anyArg, anyRefused) = net.multigesture.kanama.ios.kanamaIosAnyCallArgSelfTest()
   check(
-    "call-arg(Any?: Long decoded, Dictionary refused) got=$anyArg refused=$anyRefused",
-    anyArg == 0x1_0000_0003L && anyRefused?.contains("Variant type 27") == true,
+    "call-arg(Any?: Long decoded, Callable refused, container OOM reported) got=$anyArg refused=$anyRefused",
+    anyArg == 0x1_0000_0003L &&
+      anyRefused?.contains("Variant type 25 is not marshalled") == true &&
+      anyRefused.contains("Variant type 28 ran out of memory") == true,
   )
 
   // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a

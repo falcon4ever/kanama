@@ -166,7 +166,13 @@ Four rules of the bridge (three about ownership), each with its self-test rows:
   `PT_VARIANT_RECORD`, which `decodeIosCallArg` reads with the container-return reader
   (`ObjectCalls.decodeVariantRecord`); its Object elements stay borrowed (the caller's Variant holds
   them for the call). A type with no cell (Callable, Signal) arrives tagged
-  `KANAMA_IOS_ARG_UNMARSHALLED_BASE + type` and the decode throws naming it, never a silent null.
+  `KANAMA_IOS_ARG_UNMARSHALLED_BASE + type` and the decode throws naming it, never a silent null;
+  a container whose blob cannot be allocated arrives tagged `KANAMA_IOS_ARG_ENCODE_OOM_BASE + type`
+  and the decode reports the out-of-memory. Limits of the shared blob encoder (it also encodes
+  container returns): a container nested more than `KANAMA_IOS_BLOB_MAX_DEPTH` (8) levels, and an
+  element type it has no case for (a Vector3i inside an Array, ...), are encoded with byteLen 0 and
+  arrive as `null` inside the container. This is documented, not loud: making it loud means a
+  fault flag on the blob and a Kotlin error path shared with the returns.
   Rows: `lambda-args(...)` (scene init: String, Vector3, Color, Array, Dictionary, Vector3i).
 - **A script property's default is its initializer (task 138 item 8).** The iOS registry carries
   `KanamaIosScriptProperty.defaultValue`, emitted by KSP from the literal desktop's registrar

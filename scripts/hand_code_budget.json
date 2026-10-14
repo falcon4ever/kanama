@@ -115,7 +115,7 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt": {
       "category": "transitional",
-      "lines": 132,
+      "lines": 127,
       "parcel": "none left in task 129: what stays is the IosGodot cinterop seam, IosCallableRegistry and the C-shim callable entry points (task 129 D moved KanamaScope, kotlinScriptInstance and ManualGodotLifetimeApi to common)",
       "reason": "per-platform hand file the generator should emit"
     },
