@@ -38,9 +38,6 @@ func _ready() -> void:
 	plain = Node.new()
 	plain.name = "LentPlain"
 	add_child(plain)
-	escapee = Node.new()
-	escapee.name = "LentEscapee"
-	add_child(escapee)
 
 
 ## Why a LentProbe row failed, for the driver's trace.
@@ -87,7 +84,12 @@ func emit_inner(_unused: int) -> int:
 	return 1
 
 
+## L4: a node made here, so the only handle it ever gets is the one LentKeeper's dispatch lends
+## (a lookup or a get_children result would route it through another script).
 func emit_escape(_unused: int) -> int:
+	escapee = Node.new()
+	escapee.name = "LentEscapee"
+	add_child(escapee)
 	escape.emit(escapee)
 	return 1
 
