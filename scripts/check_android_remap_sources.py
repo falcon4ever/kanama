@@ -71,14 +71,22 @@ def parse_remap(text: str) -> tuple[list[tuple[str, str]], list[str]]:
 
 CHAR_LITERAL = re.compile(r"'(?:\\[^']+|[^\\'])'")
 
+# The open lexical contexts of strip_comments, innermost last: a string, a raw string, or (>= 0) a
+# `${ ... }` template expression holding the number of braces opened inside it so far.
+STRING_CONTEXT = -1
+RAW_STRING_CONTEXT = -2
+
 
 def strip_comments(lines: list[str]) -> list[str]:
-    """Mirror of KanamaAndroidRemap.strippedSourceLines: line and block comments, with string and
-    character literals tracked (a `/*` or `//` inside one is text; `\"\"\"` raw strings span lines).
-    Keep the two in step (task 119 finding 13)."""
+    """Mirror of KanamaAndroidRemap.strippedSourceLines, line for line: line and block comments, with
+    string and character literals tracked (a `/*` or `//` inside one is text; `\"\"\"` raw strings span
+    lines) and `${ ... }` template expressions nested (task 138 item 28: in `"${"/*"}"` the inner
+    literal is its own string, so the `/*` is text and the later lines stay visible; a template may
+    span lines, a regular string open at the end of its line is dropped). Keep the two in step
+    (task 119 finding 13)."""
     out_lines: list[str] = []
     in_block = False
-    in_raw = False
+    contexts: list[int] = []
     for line in lines:
         out = []
         i = 0
@@ -90,32 +98,46 @@ def strip_comments(lines: list[str]) -> list[str]:
                 else:
                     i += 1
                 continue
-            if in_raw:
+            top = contexts[-1] if contexts else None
+            if top == RAW_STRING_CONTEXT:
                 if line.startswith('"""', i):
-                    in_raw = False
+                    contexts.pop()
                     out.append('"""')
                     i += 3
+                elif line.startswith("${", i):
+                    contexts.append(0)
+                    out.append("${")
+                    i += 2
                 else:
                     out.append(line[i])
                     i += 1
                 continue
+            if top == STRING_CONTEXT:
+                c = line[i]
+                if c == "\\" and i + 1 < len(line):
+                    out.append(c + line[i + 1])
+                    i += 2
+                elif c == '"':
+                    contexts.pop()
+                    out.append(c)
+                    i += 1
+                elif line.startswith("${", i):
+                    contexts.append(0)
+                    out.append("${")
+                    i += 2
+                else:
+                    out.append(c)
+                    i += 1
+                continue
             if line.startswith('"""', i):
-                in_raw = True
+                contexts.append(RAW_STRING_CONTEXT)
                 out.append('"""')
                 i += 3
                 continue
             if line[i] == '"':
+                contexts.append(STRING_CONTEXT)
                 out.append('"')
                 i += 1
-                while i < len(line):
-                    c = line[i]
-                    out.append(c)
-                    i += 1
-                    if c == "\\" and i < len(line):
-                        out.append(line[i])
-                        i += 1
-                    elif c == '"':
-                        break
                 continue
             if line[i] == "'":
                 literal = CHAR_LITERAL.match(line, i)
@@ -129,8 +151,20 @@ def strip_comments(lines: list[str]) -> list[str]:
                 continue
             if line.startswith("//", i):
                 break
+            if top is not None:
+                # Inside a template expression: count its braces; its own `}` closes it.
+                if line[i] == "{":
+                    contexts[-1] = top + 1
+                elif line[i] == "}":
+                    if top == 0:
+                        contexts.pop()
+                    else:
+                        contexts[-1] = top - 1
             out.append(line[i])
             i += 1
+        # A regular string literal ends on its own line unless it is a raw string.
+        while contexts and contexts[-1] == STRING_CONTEXT:
+            contexts.pop()
         out_lines.append("".join(out))
     return out_lines
 

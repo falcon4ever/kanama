@@ -241,6 +241,11 @@ stage "JVM unit tests + kanama-common-api contract"
 stage "buildSrc unit tests + formatting"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR/buildSrc" test ktfmtCheck
 
+stage "Android remap buildSrc unit tests (task 138 item 28)"
+# android/godot-plugin/buildSrc holds the PanamaPort remap and its comment stripper; its Python mirror
+# (check_android_remap_sources.py, below) is held to the same inputs.
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR/android/godot-plugin/buildSrc" test
+
 stage "public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
   README.md AGENTS.md CLAUDE.md docs CONTRIBUTING.md templates example_project; then

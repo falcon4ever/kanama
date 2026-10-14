@@ -208,12 +208,24 @@ object KanamaAndroidRemap {
      * double slash inside one is text, not a comment. Without that a string holding an opener
      * blinded the audit for every later line of the file (a block comment that never closes), and
      * a URL string hid the rest of its line. A string's own text stays in the output: a forbidden fragment inside a literal is
-     * still reported. `"""` raw strings may span lines. `scripts/check_android_remap_sources.py`
-     * mirrors this function; keep them in step.
+     * still reported. `"""` raw strings may span lines.
+     *
+     * Template expressions nest (task 138 item 28): inside `"${ ... }"` the text is code again, so
+     * a string literal there starts and ends its own literal, and the `}` that closes the template
+     * (counting the braces opened inside it) returns to the enclosing string. Without that,
+     * a template whose inner literal held a block-comment opener ended the outer string at the inner
+     * quote and read the opener as a comment start, hiding every later line (KDoc cannot quote it:
+     * Kotlin block comments nest). A template may also span lines, so the open contexts are kept
+     * across lines; a regular string that is still open at the end of its line is dropped.
+     * `scripts/check_android_remap_sources.py` mirrors this function line for line; keep them in
+     * step (the unit test and the Python gate's red runs pin the same inputs).
      */
     fun strippedSourceLines(lines: List<String>): List<String> {
         var inBlockComment = false
-        var inRawString = false
+        // The open lexical contexts, innermost last; empty is the file's own top-level code. A value
+        // is STRING_CONTEXT, RAW_STRING_CONTEXT, or (>= 0) a `${ ... }` template expression holding
+        // the number of braces opened inside it so far.
+        val contexts = mutableListOf<Int>()
         return lines.map { line ->
             val out = StringBuilder()
             var i = 0
@@ -227,38 +239,51 @@ object KanamaAndroidRemap {
                     }
                     continue
                 }
-                if (inRawString) {
+                val top = contexts.lastOrNull()
+                if (top == RAW_STRING_CONTEXT) {
                     if (line.startsWith("\"\"\"", i)) {
-                        inRawString = false
+                        contexts.removeAt(contexts.lastIndex)
                         out.append("\"\"\"")
                         i += 3
+                    } else if (line.startsWith("\${", i)) {
+                        contexts.add(0)
+                        out.append("\${")
+                        i += 2
                     } else {
                         out.append(line[i])
                         i++
                     }
                     continue
                 }
+                if (top == STRING_CONTEXT) {
+                    val c = line[i]
+                    if (c == '\\' && i + 1 < line.length) {
+                        out.append(c).append(line[i + 1])
+                        i += 2
+                    } else if (c == '"') {
+                        contexts.removeAt(contexts.lastIndex)
+                        out.append(c)
+                        i++
+                    } else if (line.startsWith("\${", i)) {
+                        contexts.add(0)
+                        out.append("\${")
+                        i += 2
+                    } else {
+                        out.append(c)
+                        i++
+                    }
+                    continue
+                }
                 if (line.startsWith("\"\"\"", i)) {
-                    inRawString = true
+                    contexts.add(RAW_STRING_CONTEXT)
                     out.append("\"\"\"")
                     i += 3
                     continue
                 }
                 if (line[i] == '"') {
-                    // A string literal ends on its own line unless it is a raw string.
+                    contexts.add(STRING_CONTEXT)
                     out.append('"')
                     i++
-                    while (i < line.length) {
-                        val c = line[i]
-                        out.append(c)
-                        i++
-                        if (c == '\\' && i < line.length) {
-                            out.append(line[i])
-                            i++
-                        } else if (c == '"') {
-                            break
-                        }
-                    }
                     continue
                 }
                 if (line[i] == '\'') {
@@ -277,12 +302,26 @@ object KanamaAndroidRemap {
                 if (line.startsWith("//", i)) {
                     break
                 }
+                if (top != null) {
+                    // Inside a template expression: count its braces; its own `}` closes it.
+                    if (line[i] == '{') {
+                        contexts[contexts.lastIndex] = top + 1
+                    } else if (line[i] == '}') {
+                        if (top == 0) contexts.removeAt(contexts.lastIndex)
+                        else contexts[contexts.lastIndex] = top - 1
+                    }
+                }
                 out.append(line[i])
                 i++
             }
+            // A regular string literal ends on its own line unless it is a raw string.
+            while (contexts.lastOrNull() == STRING_CONTEXT) contexts.removeAt(contexts.lastIndex)
             out.toString()
         }
     }
+
+    private const val STRING_CONTEXT = -1
+    private const val RAW_STRING_CONTEXT = -2
 
     /** A Kotlin character literal: `'a'`, `'"'`, `'\n'`, `'\u0041'`. */
     private val CHAR_LITERAL = Regex("""'(?:\\[^']+|[^\\'])'""")
