@@ -100,18 +100,19 @@ EOF
 # self-tests are compiled only into a -PkanamaIosSelfTest=true build, which this script makes; a console
 # without them means the build lost the flag or the app never reached its first frame, and fails.
 # `--check-selftest-log LOG` runs only this check on a saved console log (its red runs need no device).
+# It uses grep -E, not rg: CI runs those red runs on Linux, which has no ripgrep.
 selftest_verdict() {
-  if rg -q 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [1-9][0-9]* failed' "$@"; then
+  if grep -Eq 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [1-9][0-9]* failed' "$@"; then
     echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
     # justified: printing the evidence; the return 1 on the next line is the verdict.
-    rg 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$@" >&2 || true
+    grep -E 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$@" >&2 || true
     return 1
   fi
   local summary
   for summary in 'PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed' \
                  'OBJECTCALLS SELFTEST: [0-9]+ passed, 0 failed' \
                  'OBJECTCALLS SELFTEST \(frame 1\): [0-9]+ passed, 0 failed'; do
-    if ! rg -q "$summary" "$@"; then
+    if ! grep -Eq "$summary" "$@"; then
       echo "[ios_visual_smoke] runtime self-test summary missing: /$summary/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true has none)" >&2
       return 1
     fi
