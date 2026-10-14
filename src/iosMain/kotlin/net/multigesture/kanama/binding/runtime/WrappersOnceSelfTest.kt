@@ -549,9 +549,15 @@ private fun cursorReadRows(check: (String, Boolean) -> Unit, dir: String) {
     it.storeLine("one")
     it.storeLine("two")
   }
+  // The cursor is read after EACH getLine: "one\n" is 4 bytes, so a getLine that ran the engine
+  // method twice would leave it at 8 after the first call, not 4: the cursor proves the count of
+  // engine calls independently of the values read.
   val lines =
     FileAccess.open(path, FileAccess.ModeFlags.READ)?.use { file ->
-      listOf(file.getLine(), file.getLine(), file.getPosition().toString())
+      val first = file.getLine()
+      val afterFirst = file.getPosition().toString()
+      val second = file.getLine()
+      listOf(first, second, afterFirst, file.getPosition().toString())
     }
   val linesCleanup = DirAccess.removeAbsolute(path)
   checkParts(
@@ -559,7 +565,8 @@ private fun cursorReadRows(check: (String, Boolean) -> Unit, dir: String) {
     "file-access(getLine twice reads one then two: one engine call per getLine)",
     "first" to ((lines?.get(0) == "one") to "${lines?.get(0)}"),
     "second" to ((lines?.get(1) == "two") to "${lines?.get(1)}"),
-    "position" to ((lines?.get(2) == "8") to "${lines?.get(2)}"),
+    "position after one getLine" to ((lines?.get(2) == "4") to "${lines?.get(2)}"),
+    "position after two getLine" to ((lines?.get(3) == "8") to "${lines?.get(3)}"),
     "cleanup" to ((linesCleanup == GodotError.OK) to "$linesCleanup"),
   )
 

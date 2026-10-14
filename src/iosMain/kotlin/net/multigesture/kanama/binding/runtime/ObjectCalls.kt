@@ -39216,7 +39216,7 @@ private fun runFaultProbesInProbeMode(n3: MemorySegment, check: (String, Boolean
   check("fault-probe(null-bind counted)", ObjectCalls.faultCount() == faultsBeforeProbes + raised)
   check("fault-probe(null-bind reason)", ObjectCalls.lastFault().contains("null-bind"))
 
-  // Probes 3-7: take from a DRAINED pending slot. The Kotlin two-call read-back takes only after a
+  // Probes 3-7: take from a DRAINED pending slot. The Kotlin read-back takes only after a
   // producer parked something (every `take_pending_*` call outside this block sits in the `else`
   // branch that the producer's own over-capacity length selected), so "nothing pending" is a
   // protocol violation by construction — which is exactly what each of these five asks for. Each
@@ -39800,7 +39800,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // PackedInt32Array-return (MeshLibrary.get_item_list): create two items (via the Variant
   // call path — ids 7 and 11), then read the id list back through ptrcallNoArgsRetPackedInt32List
-  // (size + operator_index_const, one ptrcall with a pending-slot drain). The item-id map is
+  // (ptrcallRetPackedInt32List -> ..._ptrcall_ret_packed: one ptrcall, a long list drained from the
+  // pending slot). The item-id map is
   // sorted, so the result is [7, 11] — known, distinct, non-zero values. MeshLibrary is a plain
   // Resource, safe
   // to construct at init time — unlike a physics body (the only emitted PackedInt32Array getter,
@@ -41949,8 +41950,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check("typed-array-ret(get_groups==[kgrp])", groups == listOf("kgrp"))
 
   // Typed Array[int] return (Phase 2.7g). A freshly constructed (treeless) Node is an orphan, so
-  // get_orphan_node_ids() contains its instance id — exercises ptrcallNoArgsRetLongList (int64
-  // blob).
+  // get_orphan_node_ids() contains its instance id — exercises ptrcallNoArgsRetLongList, which
+  // reads the int64 blob through retTypedArrayBlob: one engine call (task 129 D).
   val orphan = ObjectCalls.constructObject("Node")
   val orphanId =
     ObjectCalls.ptrcallNoArgsRetLong(
@@ -42933,8 +42934,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // task 117 P2' follow-up 2 — the shared-tree statics that do NOT marshal through the generic
   // ptrcall entry point. Their helpers end in a SPECIALISED C entry (ret_utf8, ret_variant_scalar,
-  // no_args_ret_packed_string_array, no_args_ret_string, no_args_ret_string_name, object_call),
-  // each of which kept its own null-instance guard, so these thirteen call sites stayed silent
+  // ret_array_blob, object_call; since task 129 D the no-arg String / StringName / NodePath
+  // returns share ret_utf8), each of which kept its own null-instance guard, so these thirteen call
+  // sites stayed silent
   // no-ops after the generic dispatcher landed. Every entry point below now has a `_dispatch`
   // body and a `_static` sibling in the shim, reached through its private *Dispatch function
   // here; a regression fails these rows on device rather than returning ""/empty/default.
@@ -42952,7 +42954,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
 
     // GLTFDocument.getSupportedGltfExtensions -> ptrcallNoArgsRetPackedStringList ->
-    // ..._ptrcall_no_args_ret_packed_string_array. Same helper, same NULL_SEGMENT static marker as
+    // ptrcallRetPackedStringList -> ..._ptrcall_ret_array_blob. Same helper, same NULL_SEGMENT
+    // static marker as
     // the ShaderIncludeDB.listBuiltInIncludeFiles row it replaces (task 117 P2' follow-up 5) — but
     // a value the no-op path cannot produce. Godot hard-codes this set in
     // GLTFDocument::get_supported_gltf_extensions_hashset (modules/gltf/gltf_document.cpp:6968),
@@ -42972,7 +42975,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
 
     // ptrcallWithStringArgRetString -> callWithVariantArgs -> kanama_ios_godot_object_call, the
-    // last of the six entry points the thirteen sites reach, through the shared-tree static
+    // last of the four entry points the thirteen sites reach, through the shared-tree static
     // FileAccess.getSha256 (FileAccess is generated once since task 129 D). The dispatch route is
     // objectCallDispatch -> kanama_ios_godot_object_call_static. It replaces
     // ShaderIncludeDB.getBuiltInIncludeFile, whose "non-empty source" was the no-op answer under
@@ -42993,15 +42996,17 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       check("shared-static(FileAccess.get_sha256 alphabet) (res://project.binary missing)", false)
     }
 
-    // Resource.generateSceneUniqueId -> ptrcallNoArgsRetString -> ..._no_args_ret_string.
+    // Resource.generateSceneUniqueId -> ptrcallNoArgsRetString -> ptrcallRetUtf8 ->
+    // ..._ptrcall_ret_utf8.
     // Documented to be letters a-y and digits 0-8 only, so a non-empty result is the assertion.
     check(
       "shared-static(Resource.generateSceneUniqueId -> non-empty)",
       net.multigesture.kanama.api.Resource.generateSceneUniqueId().isNotEmpty(),
     )
 
-    // MultiplayerAPI.getDefaultInterface -> ptrcallNoArgsRetStringName ->
-    // ..._no_args_ret_string_name. SceneMultiplayer ships in every non-headless-server build.
+    // MultiplayerAPI.getDefaultInterface -> ptrcallNoArgsRetStringName -> ptrcallRetUtf8
+    // (PT_STRING_NAME)
+    // -> ..._ptrcall_ret_utf8. SceneMultiplayer ships in every non-headless-server build.
     check(
       "shared-static(MultiplayerAPI.getDefaultInterface == SceneMultiplayer)",
       net.multigesture.kanama.api.MultiplayerAPI.getDefaultInterface() == "SceneMultiplayer",

@@ -2596,202 +2596,6 @@ void kanama_ios_godot_ptrcall_string_arg(
     kanama_ios_destroy_string(&string_storage);
 }
 
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
-                         : "g_object_method_bind_ptrcall");
-        return -1;
-    }
-
-    // ptrcall writes the returned Godot String (a single 8-byte CowData pointer on
-    // 64-bit; 0 for the empty string) into this cell — same storage convention as
-    // kanama_ios_init_string.
-    uint64_t string_storage = 0;
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        &string_storage
-    );
-
-    // string_to_utf8_chars: NULL buffer => measure only; otherwise writes up to
-    // buf_size bytes (no null terminator) and returns the FULL byte length.
-    int64_t length = (int64_t)g_string_to_utf8_chars(
-        (GDExtensionConstStringPtr)&string_storage,
-        (out_buf != NULL && buf_size > 0) ? out_buf : NULL,
-        (out_buf != NULL && buf_size > 0) ? buf_size : 0
-    );
-
-    kanama_ios_destroy_string(&string_storage);
-    return length;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_string(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(
-        method_bind, instance, out_buf, buf_size);
-}
-
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL ||
-        g_string_from_string_name_constructor == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
-                         : g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
-                         : "g_string_from_string_name_constructor");
-        return -1;
-    }
-
-    // ptrcall writes the returned Godot StringName (an 8-byte interned pointer) here.
-    uint64_t string_name_storage = 0;
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        &string_name_storage
-    );
-
-    // No GDExtension StringName->utf8 exists, so build a String(from: StringName)
-    // and UTF-8 encode that (same path as the String-return helper).
-    uint64_t string_storage = 0;
-    const GDExtensionConstTypePtr ctor_args[1] = {
-        (GDExtensionConstTypePtr)&string_name_storage,
-    };
-    g_string_from_string_name_constructor(
-        (GDExtensionUninitializedTypePtr)&string_storage, ctor_args);
-
-    int64_t length = (int64_t)g_string_to_utf8_chars(
-        (GDExtensionConstStringPtr)&string_storage,
-        (out_buf != NULL && buf_size > 0) ? out_buf : NULL,
-        (out_buf != NULL && buf_size > 0) ? buf_size : 0
-    );
-
-    kanama_ios_destroy_string(&string_storage);
-    kanama_ios_destroy_string_name(&string_name_storage);
-    return length;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
-        method_bind, instance, out_buf, buf_size);
-}
-
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL ||
-        g_string_from_node_path_constructor == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
-                         : g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
-                         : "g_string_from_node_path_constructor");
-        return -1;
-    }
-
-    // ptrcall writes the returned Godot NodePath (an 8-byte CowData pointer) here.
-    uint64_t node_path_storage = 0;
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        &node_path_storage
-    );
-
-    // No GDExtension NodePath->utf8 exists, so build a String(from: NodePath) and UTF-8
-    // encode that (same path as the StringName-return helper).
-    uint64_t string_storage = 0;
-    const GDExtensionConstTypePtr ctor_args[1] = {
-        (GDExtensionConstTypePtr)&node_path_storage,
-    };
-    g_string_from_node_path_constructor(
-        (GDExtensionUninitializedTypePtr)&string_storage, ctor_args);
-
-    int64_t length = (int64_t)g_string_to_utf8_chars(
-        (GDExtensionConstStringPtr)&string_storage,
-        (out_buf != NULL && buf_size > 0) ? out_buf : NULL,
-        (out_buf != NULL && buf_size > 0) ? buf_size : 0
-    );
-
-    kanama_ios_destroy_string(&string_storage);
-    kanama_ios_destroy_node_path(&node_path_storage);
-    return length;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
-        method_bind, instance, out_buf, buf_size);
-}
-
 // task 100 (parcel 1) — String / StringName / NodePath returns on every audited arg shape.
 // The generated ObjectCalls helpers lay out the arg cells exactly as for kanama_ios_godot_ptrcall;
 // the return rides its own 8-byte cell (all three builtins are a single pointer on 64-bit), is
@@ -2987,78 +2791,6 @@ static void kanama_ios_cache_packed_int32_methods(void) {
     }
 }
 
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    int32_t *out_buf,
-    int64_t buf_cap
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_object_method_bind_ptrcall == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
-        return -1;
-    }
-    kanama_ios_cache_packed_int32_methods();
-    if (g_packed_int32_array_size_method == NULL ||
-        g_packed_int32_array_operator_index_const == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_packed_int32_array_size_method == NULL ? "g_packed_int32_array_size_method"
-                         : "g_packed_int32_array_operator_index_const");
-        return -1;
-    }
-
-    // PackedInt32Array's opaque size is 16 bytes in the 64-bit GDExtension ABI — NOT 8 like
-    // String/NodePath. The macro sizes the slot from KANAMA_IOS_PACKED_ARRAY_OPAQUE_SIZE and
-    // static-asserts it, so the ptrcall return-encode can't overflow the stack.
-    KANAMA_IOS_PACKED_ARRAY_STORAGE(array_storage);
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        array_storage
-    );
-
-    int64_t count = 0;
-    g_packed_int32_array_size_method(array_storage, NULL, &count, 0);
-
-    if (out_buf != NULL && buf_cap > 0 && count > 0) {
-        int64_t n = (count < buf_cap) ? count : buf_cap;
-        for (int64_t i = 0; i < n; i++) {
-            const int32_t *elem =
-                g_packed_int32_array_operator_index_const(array_storage, (GDExtensionInt)i);
-            out_buf[i] = (elem != NULL) ? *elem : 0;
-        }
-    }
-
-    if (g_packed_int32_array_destructor != NULL) {
-        g_packed_int32_array_destructor(array_storage);
-    }
-    return count;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
-    int64_t method_bind,
-    int64_t instance,
-    int32_t *out_buf,
-    int64_t buf_cap
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
-        method_bind, instance, out_buf, buf_cap);
-}
-
 // Lazily resolve the PackedFloat32Array read-back trio. Mirror of the int32 variant.
 static void kanama_ios_cache_packed_float32_methods(void) {
     if (g_packed_float32_array_destructor == NULL && g_variant_get_ptr_destructor != NULL) {
@@ -3095,75 +2827,6 @@ static void kanama_ios_cache_packed_float32_methods(void) {
         );
         kanama_ios_destroy_string_name(&name_storage);
     }
-}
-
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    float *out_buf,
-    int64_t buf_cap
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_object_method_bind_ptrcall == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
-        return -1;
-    }
-    kanama_ios_cache_packed_float32_methods();
-    if (g_packed_float32_array_size_method == NULL ||
-        g_packed_float32_array_operator_index_const == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_packed_float32_array_size_method == NULL ? "g_packed_float32_array_size_method"
-                         : "g_packed_float32_array_operator_index_const");
-        return -1;
-    }
-
-    KANAMA_IOS_PACKED_ARRAY_STORAGE(array_storage);
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        array_storage
-    );
-
-    int64_t count = 0;
-    g_packed_float32_array_size_method(array_storage, NULL, &count, 0);
-
-    if (out_buf != NULL && buf_cap > 0 && count > 0) {
-        int64_t n = (count < buf_cap) ? count : buf_cap;
-        for (int64_t i = 0; i < n; i++) {
-            const float *elem =
-                g_packed_float32_array_operator_index_const(array_storage, (GDExtensionInt)i);
-            out_buf[i] = (elem != NULL) ? *elem : 0.0f;
-        }
-    }
-
-    if (g_packed_float32_array_destructor != NULL) {
-        g_packed_float32_array_destructor(array_storage);
-    }
-    return count;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
-    int64_t method_bind,
-    int64_t instance,
-    float *out_buf,
-    int64_t buf_cap
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatch(
-        method_bind, instance, out_buf, buf_cap);
 }
 
 // PackedFloat32Array ARG (build-from-list): construct an empty array, push_back each element
@@ -3287,76 +2950,6 @@ static void kanama_ios_cache_packed_vector2_methods(void) {
     }
 }
 
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    float *out_buf,
-    int64_t buf_cap
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_object_method_bind_ptrcall == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
-        return -1;
-    }
-    kanama_ios_cache_packed_vector2_methods();
-    if (g_packed_vector2_array_size_method == NULL ||
-        g_packed_vector2_array_operator_index_const == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_packed_vector2_array_size_method == NULL ? "g_packed_vector2_array_size_method"
-                         : "g_packed_vector2_array_operator_index_const");
-        return -1;
-    }
-
-    KANAMA_IOS_PACKED_ARRAY_STORAGE(array_storage);
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        array_storage
-    );
-
-    int64_t count = 0;
-    g_packed_vector2_array_size_method(array_storage, NULL, &count, 0);
-
-    if (out_buf != NULL && buf_cap > 0 && count > 0) {
-        int64_t n = (count < buf_cap) ? count : buf_cap;
-        for (int64_t i = 0; i < n; i++) {
-            const float *elem = (const float *)g_packed_vector2_array_operator_index_const(
-                array_storage, (GDExtensionInt)i);
-            out_buf[i * 2] = (elem != NULL) ? elem[0] : 0.0f;
-            out_buf[i * 2 + 1] = (elem != NULL) ? elem[1] : 0.0f;
-        }
-    }
-
-    if (g_packed_vector2_array_destructor != NULL) {
-        g_packed_vector2_array_destructor(array_storage);
-    }
-    return count;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
-    int64_t method_bind,
-    int64_t instance,
-    float *out_buf,
-    int64_t buf_cap
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatch(
-        method_bind, instance, out_buf, buf_cap);
-}
-
 // Lazily resolve the PackedColorArray read-back trio.
 static void kanama_ios_cache_packed_color_methods(void) {
     if (g_packed_color_array_destructor == NULL && g_variant_get_ptr_destructor != NULL) {
@@ -3392,77 +2985,6 @@ static void kanama_ios_cache_packed_color_methods(void) {
         );
         kanama_ios_destroy_string_name(&name_storage);
     }
-}
-
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    float *out_buf,
-    int64_t buf_cap
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_object_method_bind_ptrcall == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
-        return -1;
-    }
-    kanama_ios_cache_packed_color_methods();
-    if (g_packed_color_array_size_method == NULL ||
-        g_packed_color_array_operator_index_const == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_packed_color_array_size_method == NULL ? "g_packed_color_array_size_method"
-                         : "g_packed_color_array_operator_index_const");
-        return -1;
-    }
-
-    KANAMA_IOS_PACKED_ARRAY_STORAGE(array_storage);
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        array_storage
-    );
-
-    int64_t count = 0;
-    g_packed_color_array_size_method(array_storage, NULL, &count, 0);
-
-    if (out_buf != NULL && buf_cap > 0 && count > 0) {
-        int64_t n = (count < buf_cap) ? count : buf_cap;
-        for (int64_t i = 0; i < n; i++) {
-            const float *elem = (const float *)g_packed_color_array_operator_index_const(
-                array_storage, (GDExtensionInt)i);
-            for (int c = 0; c < 4; c++) {
-                out_buf[i * 4 + c] = (elem != NULL) ? elem[c] : 0.0f;
-            }
-        }
-    }
-
-    if (g_packed_color_array_destructor != NULL) {
-        g_packed_color_array_destructor(array_storage);
-    }
-    return count;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
-    int64_t method_bind,
-    int64_t instance,
-    float *out_buf,
-    int64_t buf_cap
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
-        method_bind, instance, out_buf, buf_cap);
 }
 
 // Build a BUILD-tagged Packed*Array arg (Vector2/Color) into a 16-byte cell from a flat float
@@ -4276,66 +3798,6 @@ int64_t kanama_ios_godot_take_pending_blob(
     }
     kanama_ios_drop_pending_blob();
     return len;
-}
-
-// C-side only since task 129 D: the C self-test's no-arg read-backs, which measure (NULL
-// buffer) and then fill, so they call the method twice and suit pure getters only. Kotlin
-// reads every return through the single-call ptrcall_ret_* entries (task 129 D).
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (g_object_method_bind_ptrcall == NULL || g_string_to_utf8_chars == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
-                         : "g_string_to_utf8_chars");
-        return -1;
-    }
-    kanama_ios_cache_packed_string_methods();
-    if (g_packed_string_array_size_method == NULL ||
-        g_packed_string_array_operator_index_const == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_packed_string_array_size_method == NULL ? "g_packed_string_array_size_method"
-                         : "g_packed_string_array_operator_index_const");
-        return -1;
-    }
-
-    KANAMA_IOS_PACKED_ARRAY_STORAGE(array_storage);
-    g_object_method_bind_ptrcall(
-        (GDExtensionMethodBindPtr)(intptr_t)method_bind,
-        (GDExtensionObjectPtr)(intptr_t)instance,
-        NULL,
-        array_storage
-    );
-
-    int64_t total = kanama_ios_encode_packed_string_blob(array_storage, out_buf, buf_size);
-
-    if (g_packed_string_array_destructor != NULL) {
-        g_packed_string_array_destructor(array_storage);
-    }
-    return total;
-}
-
-static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
-    int64_t method_bind,
-    int64_t instance,
-    char *out_buf,
-    int64_t buf_size
-) {
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    return kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch(
-        method_bind, instance, out_buf, buf_size);
 }
 
 // Resolves the generic Array size/get/destructor builtins; defined later in the file.
@@ -10532,9 +9994,9 @@ static void kanama_ios_ptrcall_selftest(void) {
             fflush(stderr);
         }
         char class_buf[64];
-        int64_t class_len = kanama_ios_godot_ptrcall_no_args_ret_string(
+        int64_t class_len = kanama_ios_godot_ptrcall_ret_utf8(
             kanama_ios_godot_get_method_bind("Object", "get_class", 201670096),
-            node2d_str, class_buf, (int64_t)sizeof(class_buf));
+            node2d_str, NULL, NULL, 0, KANAMA_IOS_PT_STRING, class_buf, (int64_t)sizeof(class_buf));
         KANAMA_IOS_ST_CHECK("string-ret get_class==Node2D",
             class_len == 6 && strncmp(class_buf, "Node2D", 6) == 0);
     }
@@ -11028,9 +10490,9 @@ static void kanama_ios_ptrcall_selftest(void) {
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node", "set_name", 3304788590),
             node_sn, nt, na, 1, KANAMA_IOS_PT_VOID, NULL);
         char name_buf[64];
-        int64_t name_len = kanama_ios_godot_ptrcall_no_args_ret_string_name(
+        int64_t name_len = kanama_ios_godot_ptrcall_ret_utf8(
             kanama_ios_godot_get_method_bind("Node", "get_name", 2002593661),
-            node_sn, name_buf, (int64_t)sizeof(name_buf));
+            node_sn, NULL, NULL, 0, KANAMA_IOS_PT_STRING_NAME, name_buf, (int64_t)sizeof(name_buf));
         KANAMA_IOS_ST_CHECK("string-name-ret get_name==KanamaSN",
             name_len == 8 && strncmp(name_buf, "KanamaSN", 8) == 0);
     }
@@ -11046,18 +10508,18 @@ static void kanama_ios_ptrcall_selftest(void) {
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("GPUParticles2D", "set_sub_emitter", 1348162250),
             gp_np, npt, npa, 1, KANAMA_IOS_PT_VOID, NULL);
         char np_buf[64];
-        int64_t np_len = kanama_ios_godot_ptrcall_no_args_ret_node_path(
+        int64_t np_len = kanama_ios_godot_ptrcall_ret_utf8(
             kanama_ios_godot_get_method_bind("GPUParticles2D", "get_sub_emitter", 4075236667),
-            gp_np, np_buf, (int64_t)sizeof(np_buf));
+            gp_np, NULL, NULL, 0, KANAMA_IOS_PT_NODE_PATH, np_buf, (int64_t)sizeof(np_buf));
         KANAMA_IOS_ST_CHECK("node-path-ret get_sub_emitter==../Emitter",
             np_len == 10 && strncmp(np_buf, "../Emitter", 10) == 0);
     }
 
     // PackedInt32Array-return: MeshLibrary.create_item(7)/create_item(11) -> get_item_list()
     // returns [7, 11] (the item-id map is sorted ascending). Exercises the PackedInt32Array
-    // ptrcall return end-to-end (size builtin + operator_index_const + destructor, two-call
-    // length protocol) with known, distinct, non-zero element values. MeshLibrary is a plain
-    // Resource — safe to construct at extension-init time (no server/tree dependency), unlike
+    // ptrcall return end-to-end (size builtin + operator_index_const + destructor, read back
+    // through the single-call ptrcall_ret_packed) with known, distinct, non-zero element values.
+    // MeshLibrary is a plain Resource — safe to construct at extension-init time (no server/tree dependency), unlike
     // the only EMITTED PackedInt32Array getter (CollisionObject2D/3D.get_shape_owners), whose
     // physics-body instance segfaults in its PhysicsServer-touching constructor this early.
     // The buffer is prefilled with a -1 sentinel so real element writes are distinguishable
@@ -11074,16 +10536,16 @@ static void kanama_ios_ptrcall_selftest(void) {
         kanama_ios_godot_ptrcall(bind_create, ml, it, a11, 1, KANAMA_IOS_PT_VOID, NULL);
         int32_t items[8];
         for (int i = 0; i < 8; i++) { items[i] = -1; }
-        int64_t item_count = kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
+        int64_t item_count = kanama_ios_godot_ptrcall_ret_packed(
             kanama_ios_godot_get_method_bind("MeshLibrary", "get_item_list", 1930428628),
-            ml, items, 8);
+            ml, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_INT32_ARRAY, items, 8);
         KANAMA_IOS_ST_CHECK("packed-int32-ret get_item_list==[7,11]",
             item_count == 2 && items[0] == 7 && items[1] == 11);
     }
 
     // Typed-object-array return: a fresh parent Node with two child Nodes -> get_children(false)
     // returns [child0, child1] in add order. Exercises the Array[Object] ptrcall return end-to-end
-    // (8-byte Array opaque + size/get builtins + variant_to_object, two-call length protocol)
+    // (8-byte Array opaque + size/get builtins + variant_to_object, one engine call)
     // driven through the generic dispatcher's bool arg. Plain Node is safe to construct at
     // extension-init time (no tree/server dependency), unlike the physics-body get_overlapping_*
     // getters whose instances segfault this early. The buffer is prefilled with a -1 sentinel so
@@ -11177,9 +10639,9 @@ static void kanama_ios_ptrcall_selftest(void) {
         int64_t grad = kanama_ios_godot_construct_object("Gradient");
         float offsets[8];
         for (int i = 0; i < 8; i++) { offsets[i] = -1.0f; }
-        int64_t off_count = kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
+        int64_t off_count = kanama_ios_godot_ptrcall_ret_packed(
             kanama_ios_godot_get_method_bind("Gradient", "get_offsets", 675695659),
-            grad, offsets, 8);
+            grad, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY, offsets, 8);
         KANAMA_IOS_ST_CHECK("packed-float32-ret get_offsets==[0,1]",
             off_count == 2 && offsets[0] == 0.0f && offsets[1] == 1.0f);
     }
@@ -11196,9 +10658,9 @@ static void kanama_ios_ptrcall_selftest(void) {
             grad_a, in_offsets, 3);
         float back[8];
         for (int i = 0; i < 8; i++) { back[i] = -1.0f; }
-        int64_t back_count = kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
+        int64_t back_count = kanama_ios_godot_ptrcall_ret_packed(
             kanama_ios_godot_get_method_bind("Gradient", "get_offsets", 675695659),
-            grad_a, back, 8);
+            grad_a, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY, back, 8);
         KANAMA_IOS_ST_CHECK("packed-float32-arg set/get_offsets==[0.25,0.5,0.75]",
             back_count == 3 && back[0] == 0.25f && back[1] == 0.5f && back[2] == 0.75f);
     }
@@ -11220,8 +10682,9 @@ static void kanama_ios_ptrcall_selftest(void) {
         kanama_ios_godot_ptrcall(bind_add, line, at, a1, 2, KANAMA_IOS_PT_VOID, NULL);
         float pts[16];
         for (int i = 0; i < 16; i++) { pts[i] = -1.0f; }
-        int64_t pt_count = kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
-            kanama_ios_godot_get_method_bind("Line2D", "get_points", 2961356807), line, pts, 8);
+        int64_t pt_count = kanama_ios_godot_ptrcall_ret_packed(
+            kanama_ios_godot_get_method_bind("Line2D", "get_points", 2961356807),
+            line, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY, pts, 8);
         KANAMA_IOS_ST_CHECK("packed-vector2-ret get_points==[(1.5,2.5),(3.5,4.5)]",
             pt_count == 2 && pts[0] == 1.5f && pts[1] == 2.5f && pts[2] == 3.5f && pts[3] == 4.5f);
     }
@@ -11233,8 +10696,9 @@ static void kanama_ios_ptrcall_selftest(void) {
         int64_t grad_c = kanama_ios_godot_construct_object("Gradient");
         float cols[16];
         for (int i = 0; i < 16; i++) { cols[i] = -1.0f; }
-        int64_t col_count = kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
-            kanama_ios_godot_get_method_bind("Gradient", "get_colors", 1392750486), grad_c, cols, 4);
+        int64_t col_count = kanama_ios_godot_ptrcall_ret_packed(
+            kanama_ios_godot_get_method_bind("Gradient", "get_colors", 1392750486),
+            grad_c, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY, cols, 4);
         KANAMA_IOS_ST_CHECK("packed-color-ret get_colors==[black,white]",
             col_count == 2 &&
             cols[0] == 0.0f && cols[1] == 0.0f && cols[2] == 0.0f && cols[3] == 1.0f &&
@@ -11259,9 +10723,9 @@ static void kanama_ios_ptrcall_selftest(void) {
         kanama_ios_godot_ptrcall(bind_add, tr, mt, ma1, 3, KANAMA_IOS_PT_VOID, NULL);
 
         char blob[256];
-        int64_t total = kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
+        int64_t total = kanama_ios_godot_ptrcall_ret_array_blob(
             kanama_ios_godot_get_method_bind("Translation", "get_message_list", 1139954409),
-            tr, blob, (int64_t)sizeof(blob));
+            tr, NULL, NULL, 0, KANAMA_IOS_BLOB_PACKED_STRING_ARRAY, 0, blob, (int64_t)sizeof(blob));
         // Decode [count][len0][utf8_0][len1][utf8_1]... and check both keys are present.
         int found_hello = 0;
         int found_bye = 0;
@@ -11301,8 +10765,9 @@ static void kanama_ios_ptrcall_selftest(void) {
             line2, pt, pa, 1, KANAMA_IOS_PT_VOID, NULL);
         float pts_out[16];
         for (int i = 0; i < 16; i++) { pts_out[i] = -1.0f; }
-        int64_t pn = kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
-            kanama_ios_godot_get_method_bind("Line2D", "get_points", 2961356807), line2, pts_out, 8);
+        int64_t pn = kanama_ios_godot_ptrcall_ret_packed(
+            kanama_ios_godot_get_method_bind("Line2D", "get_points", 2961356807),
+            line2, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY, pts_out, 8);
         KANAMA_IOS_ST_CHECK("packed-vector2-arg set/get_points==[(1.5,2.5),(3.5,4.5)]",
             pn == 2 && pts_out[0] == 1.5f && pts_out[1] == 2.5f &&
             pts_out[2] == 3.5f && pts_out[3] == 4.5f);
@@ -11321,8 +10786,9 @@ static void kanama_ios_ptrcall_selftest(void) {
             grad2, ct, ca, 1, KANAMA_IOS_PT_VOID, NULL);
         float cols_out[16];
         for (int i = 0; i < 16; i++) { cols_out[i] = -1.0f; }
-        int64_t cn = kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
-            kanama_ios_godot_get_method_bind("Gradient", "get_colors", 1392750486), grad2, cols_out, 4);
+        int64_t cn = kanama_ios_godot_ptrcall_ret_packed(
+            kanama_ios_godot_get_method_bind("Gradient", "get_colors", 1392750486),
+            grad2, NULL, NULL, 0, KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY, cols_out, 4);
         KANAMA_IOS_ST_CHECK("packed-color-arg set/get_colors==[red,green]",
             cn == 2 &&
             cols_out[0] == 1.0f && cols_out[1] == 0.0f && cols_out[2] == 0.0f && cols_out[3] == 1.0f &&
@@ -11344,9 +10810,9 @@ static void kanama_ios_ptrcall_selftest(void) {
         kanama_ios_godot_ptrcall(kanama_ios_godot_get_method_bind("Node", "set_scene_file_path", 83702148),
             snode, tt, ta, 1, KANAMA_IOS_PT_VOID, NULL);
         char text_buf[64];
-        int64_t text_len = kanama_ios_godot_ptrcall_no_args_ret_string(
+        int64_t text_len = kanama_ios_godot_ptrcall_ret_utf8(
             kanama_ios_godot_get_method_bind("Node", "get_scene_file_path", 201670096),
-            snode, text_buf, (int64_t)sizeof(text_buf));
+            snode, NULL, NULL, 0, KANAMA_IOS_PT_STRING, text_buf, (int64_t)sizeof(text_buf));
         KANAMA_IOS_ST_CHECK("string-arg set/get_scene_file_path==HelloKanama",
             text_len == 11 && strncmp(text_buf, "HelloKanama", 11) == 0);
     }

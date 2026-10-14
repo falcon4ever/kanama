@@ -65,10 +65,10 @@ Negative tests (task 118: every gate ships with its way to make it fail). `--shi
 gate at a scratch copy, so a defect can be re-introduced without touching the tree:
 
   1. raw-call. In `ObjectCalls.kt`, replace one dispatcher call with the raw entry point, e.g. in
-     `ptrcallNoArgsRetString`
+     `ptrcallRetUtf8`
 
-         -        ptrcallNoArgsRetStringDispatch(
-         +        kanama_ios_godot_ptrcall_no_args_ret_string(
+         -      ptrcallRetUtf8Dispatch(
+         +      kanama_ios_godot_ptrcall_ret_utf8(
 
      and re-run: the gate reports `raw-call` for that line and exits 1.
   2. shim-raw-call. In a scratch copy of the shim, put the `:4626` defect back -- inside
