@@ -21,6 +21,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/scripts/gate_skip.sh"
 # shellcheck source=scripts/android_apk_id.sh
 source "$ROOT_DIR/scripts/android_apk_id.sh"
+ANDROID_TAG="[android_minified]"
+# shellcheck source=scripts/android_common.sh
+source "$ROOT_DIR/scripts/android_common.sh"
 
 usage() {
   cat <<'EOF'
@@ -95,37 +98,6 @@ export GODOT_ANDROID_KEYSTORE_RELEASE_PATH="$KEYSTORE"
 export GODOT_ANDROID_KEYSTORE_RELEASE_USER="$KEYSTORE_USER"
 export GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD="$KEYSTORE_PASSWORD"
 
-check_log() {
-  local pattern="$1"
-  if ! rg -q "$pattern" "$LOG_FILE"; then
-    echo "[android_minified] missing log pattern: $pattern" >&2
-    echo "[android_minified] log tail:" >&2
-    tail -n 200 "$LOG_FILE" >&2
-    exit 1
-  fi
-}
-
-check_log_absent() {
-  local pattern="$1"
-  if rg -q "$pattern" "$LOG_FILE"; then
-    echo "[android_minified] unexpected log pattern: $pattern" >&2
-    echo "[android_minified] log tail:" >&2
-    tail -n 200 "$LOG_FILE" >&2
-    exit 1
-  fi
-}
-
-set_gradle_property() {
-  local file="$1"
-  local key="$2"
-  local value="$3"
-  if [[ -f "$file" ]] && grep -q "^$key=" "$file"; then
-    /usr/bin/sed -i '' "s|^$key=.*|$key=$value|" "$file"
-  else
-    printf '\n%s=%s\n' "$key" "$value" >>"$file"
-  fi
-}
-
 cleanup() {
   if [[ "${PACKAGE_LAUNCHED:-0}" == "1" ]]; then
     # justified: cleanup after the verdict; the app may already have exited.
@@ -141,81 +113,18 @@ echo "[android_minified] demo: $DEMO_DIR"
 # mavenLocal (whatever main last published). The Android scripts AAR below takes its registrars from the
 # same checkout's processor (`:project-scripts:kspKotlin`), so a branch's API or processor change is what
 # gets built and exported.
-if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
-  echo "[android_minified] build demo scripts (against $ROOT_DIR)"
-  if [[ -n "${KANAMA_DEMO_JAVA_HOME:-}" ]]; then
-    JAVA_HOME="$KANAMA_DEMO_JAVA_HOME" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" :project-scripts:jar \
-      "-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src"
-  else
-    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" :project-scripts:jar \
-      "-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src"
-  fi
-fi
+build_demo_scripts
 
 echo "[android_minified] build + install Kanama AAR"
 ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
   "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar \
   -PkanamaAndroidDemoDir="$DEMO_DIR"
 
-# Task 116: the export runs in the DESKTOP editor, which needs the desktop Kanama addon to load the
-# project's .kt scripts; without it every exported scene ships with no script properties (task 106).
-# Installed after the AAR so installAddonJar preserves the Android .gdextension entries.
-echo "[android_minified] install desktop addon (export-time editor)"
-addon_args=("-PkanamaProjectDir=$DEMO_DIR")
-if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
-  addon_args+=("-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src")
-fi
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar "${addon_args[@]}"
+# Task 116: installed after the AAR so installAddonJar preserves the Android .gdextension entries.
+install_desktop_addon
 
 # 1) Install/refresh the Godot Android build template (regenerates build.gradle).
-echo "[android_minified] install android build template"
-# In 4.7.2 this installs nothing on its own (task 116), so its exit status is not the verdict: the
-# build.gradle check below is, and installs the template by hand when this left it missing. Keep the
-# output and show it when the command failed, instead of discarding it (task 118).
-TEMPLATE_LOG="${APK_PATH%.apk}.install-template.log"
-if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --install-android-build-template --quit >"$TEMPLATE_LOG" 2>&1; then
-  echo "[android_minified] note: --install-android-build-template exited non-zero (output below; the build.gradle check decides):" >&2
-  tail -n 20 "$TEMPLATE_LOG" >&2
-fi
-
-BUILD_GRADLE="$DEMO_DIR/android/build/build.gradle"
-if [[ ! -f "$BUILD_GRADLE" ]]; then
-  # Task 116: in 4.7.2 that command installs nothing on its own (it only takes effect combined with
-  # an export), and the R8 patch below needs the template BEFORE the export. Do what the editor's
-  # installer does: android/.build_version, android/build/.gdignore, unzip android_source.zip.
-  # The templates directory and android/.build_version must equal Godot's VERSION_FULL_CONFIG
-  # ("4.7.2.stable", "4.8.stable", "4.7.2.stable.mono"); `godot --version` cannot be cut into that
-  # reliably (an X.Y.0 release prints no patch, a mono build adds a segment), so read the pin the
-  # repo already owns, as ios_template_preflight.sh does.
-  godot_version="$(sed -n 's/^kanamaGodotVersion=//p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
-  if [[ -z "$godot_version" ]]; then
-    echo "[android_minified] kanamaGodotVersion missing from $ROOT_DIR/gradle.properties" >&2
-    exit 1
-  fi
-  templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
-  if [[ -z "$templates_root" ]]; then
-    if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then
-      templates_root="$HOME/Library/Application Support/Godot/export_templates"
-    else
-      templates_root="${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates"
-    fi
-  fi
-  android_source="$templates_root/$godot_version/android_source.zip"
-  if [[ ! -f "$android_source" ]]; then
-    echo "[android_minified] android build template not installed and $android_source is missing" >&2
-    exit 1
-  fi
-  echo "[android_minified] installing the android build template by hand from $android_source"
-  mkdir -p "$DEMO_DIR/android/build"
-  : >"$DEMO_DIR/android/build/.gdignore"
-  printf '%s\n' "$godot_version" >"$DEMO_DIR/android/.build_version"
-  unzip -q -o "$android_source" -d "$DEMO_DIR/android/build"
-fi
-if [[ ! -f "$BUILD_GRADLE" ]]; then
-  echo "[android_minified] generated build.gradle not found: $BUILD_GRADLE" >&2
-  echo "[android_minified] is gradle_build/use_gradle_build=true in the export preset?" >&2
-  exit 1
-fi
+ensure_android_build_template
 
 # 2) Inject minify into the generated build.gradle (idempotent, marker-guarded).
 #    Re-opens the existing release buildType, so we don't depend on the template's

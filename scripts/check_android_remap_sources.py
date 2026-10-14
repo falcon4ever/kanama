@@ -69,10 +69,16 @@ def parse_remap(text: str) -> tuple[list[tuple[str, str]], list[str]]:
     return rules, fragments
 
 
+CHAR_LITERAL = re.compile(r"'(?:\\[^']+|[^\\'])'")
+
+
 def strip_comments(lines: list[str]) -> list[str]:
-    """Mirror of KanamaAndroidRemap.strippedSourceLines (line and block comments)."""
+    """Mirror of KanamaAndroidRemap.strippedSourceLines: line and block comments, with string and
+    character literals tracked (a `/*` or `//` inside one is text; `\"\"\"` raw strings span lines).
+    Keep the two in step (task 119 finding 13)."""
     out_lines: list[str] = []
     in_block = False
+    in_raw = False
     for line in lines:
         out = []
         i = 0
@@ -84,6 +90,39 @@ def strip_comments(lines: list[str]) -> list[str]:
                 else:
                     i += 1
                 continue
+            if in_raw:
+                if line.startswith('"""', i):
+                    in_raw = False
+                    out.append('"""')
+                    i += 3
+                else:
+                    out.append(line[i])
+                    i += 1
+                continue
+            if line.startswith('"""', i):
+                in_raw = True
+                out.append('"""')
+                i += 3
+                continue
+            if line[i] == '"':
+                out.append('"')
+                i += 1
+                while i < len(line):
+                    c = line[i]
+                    out.append(c)
+                    i += 1
+                    if c == "\\" and i < len(line):
+                        out.append(line[i])
+                        i += 1
+                    elif c == '"':
+                        break
+                continue
+            if line[i] == "'":
+                literal = CHAR_LITERAL.match(line, i)
+                if literal:
+                    out.append(literal.group(0))
+                    i = literal.end()
+                    continue
             if line.startswith("/*", i):
                 in_block = True
                 i += 2

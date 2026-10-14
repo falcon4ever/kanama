@@ -379,10 +379,9 @@ open class GodotObject(val handle: GodotHandle) {
     fun get(property: String): Any? =
         ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.objectGetBind, segment, property)
 
-    fun set(property: String, value: Any?): Long {
+    fun set(property: String, value: Any?) {
         ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.objectSetBind, segment, property, value)
         ObjectRuntime.onPropertySet(segment, property, value)
-        return 0L
     }
 
     fun setDeferred(property: String, value: Any?) {

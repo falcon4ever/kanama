@@ -1914,6 +1914,33 @@ def kotlin_enum_default_expression(default_value: str | None, logical_kind: str,
     return enum_constant_expression(type_name, number)
 
 
+# Godot defaults the generator cannot express as a Kotlin default (task 137 item 5, Rule 9): the
+# parameter is REQUIRED instead. Filled while the wrappers render, keyed by (class, Godot method,
+# Godot parameter) -> (logical kind, Godot default text), and listed in the generator report
+# (`docs/reference/generated/wrapper-generator-report.md`, drift-gated), so a new case, or a case
+# that gets a default, shows up in a pull request instead of silently changing a signature.
+DROPPED_DEFAULTS: dict[tuple[str, str, str], tuple[str, str]] = {}
+
+
+def parameter_default_expression(
+    class_name: str,
+    method_name: str,
+    raw_name: str,
+    kind: str,
+    type_name: str,
+    default_value: str | None,
+) -> str | None:
+    """The Kotlin default for one Godot parameter, or None (and the case recorded in
+    [DROPPED_DEFAULTS]) when Godot has a default this generator cannot express."""
+    default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method_name, raw_name), default_value)
+    expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
+        (class_name, method_name, raw_name),
+    ) or kotlin_enum_default_expression(default_value, kind, type_name)
+    if expression is None and default_value is not None:
+        DROPPED_DEFAULTS[(class_name, method_name, raw_name)] = (kind, default_value)
+    return expression
+
+
 def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape | None:
     logical_args = method.logical_arg_kinds(object_types)
     logical_return = method.logical_return_kind(object_types)
@@ -2767,10 +2794,9 @@ def render_method(
         method.argument_defaults,
         strict=True,
     ):
-        default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
-        default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
-            (class_name, method.name, raw_name),
-        ) or kotlin_enum_default_expression(default_value, kind, type_name)
+        default_expression = parameter_default_expression(
+            class_name, method.name, raw_name, kind, type_name, default_value
+        )
         type_text = kotlin_parameter_type(
             class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
         )
@@ -2868,10 +2894,9 @@ def render_vararg_method(
         method.argument_defaults,
         strict=True,
     ):
-        default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
-        default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
-            (class_name, method.name, raw_name),
-        ) or kotlin_enum_default_expression(default_value, kind, type_name)
+        default_expression = parameter_default_expression(
+            class_name, method.name, raw_name, kind, type_name, default_value
+        )
         type_text = kotlin_parameter_type(
             class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
         )
@@ -4212,7 +4237,7 @@ def desktop_objectcalls_declarations() -> list[tuple[str, str]]:
     member needs. Both ObjectCalls files are ktfmt-formatted, so a member starts at exactly two
     spaces (see `check_objectcalls_parity.py`, which relies on the same invariant).
     """
-    src = DESKTOP_OBJECTCALLS.read_text(encoding="utf-8")
+    src = strip_comments(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))
     out: list[tuple[str, str]] = []
     for match in re.finditer(
         r"^  (?:actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", src, re.MULTILINE
@@ -4338,14 +4363,6 @@ def _inject_ios_helper_import(content: str) -> str:
     return "".join(lines)
 
 
-# A member function declaration: the `actual` modifier (if any) and the name. Whitespace-tolerant on
-# purpose: ktfmt may break a long generic parameter list, and the previous, stricter spelling of this
-# regex silently missed three wrapped helpers, which made every regen rewrite the generated file raw
-# (task 104 parcel A). The modifier is part of the compared unit since parcel C' -- a member that
-# loses its `actual` no longer actualizes the `expect object` member, which is drift.
-IOS_MEMBER_NAME_RE = re.compile(r"\b(actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(")
-
-
 def expect_member_keys(members: list[str]) -> set[tuple[str, tuple[str, ...]]]:
     """(name, parameter names) for each rendered `expect` member -- the key an `actual` must match."""
     keys: set[tuple[str, tuple[str, ...]]] = set()
@@ -4353,13 +4370,7 @@ def expect_member_keys(members: list[str]) -> set[tuple[str, tuple[str, ...]]]:
         match = re.match(r"\s*fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", member)
         if match is None:
             raise SystemExit(f"cannot key expect member: {member[:80]}")
-        params = _split_top_level(_read_parens(member, match.end() - 1))
-        keys.add(
-            (
-                match.group(1),
-                tuple(p.split(":", 1)[0].strip().split()[-1] for p in params if p.strip()),
-            )
-        )
+        keys.add((match.group(1), parameter_names(member, match.end() - 1)))
     return keys
 
 
@@ -4375,11 +4386,7 @@ def mark_actual_members(text: str, keys: set[tuple[str, tuple[str, ...]]]) -> tu
     position = 0
     for match in re.finditer(r"^  fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", text, re.MULTILINE):
         open_paren = match.end() - 1
-        params = _split_top_level(_read_parens(text, open_paren))
-        key = (
-            match.group(1),
-            tuple(p.split(":", 1)[0].strip().split()[-1] for p in params if p.strip()),
-        )
+        key = (match.group(1), parameter_names(text, open_paren))
         if key not in keys:
             continue
         out.append(text[position : match.start() + 2])
@@ -4414,18 +4421,49 @@ def ios_generated_region(source: str) -> str:
     return source[start:end]
 
 
-def ios_generated_member_names(source: str) -> set[str]:
-    """Helper names (with their `actual` modifier) inside the GENERATED MEMBERS region of an iOS
-    `ObjectCalls.kt`.
+def formatted_code_key(source: str) -> str:
+    """The comparison key of generated code that ktfmt re-formats: comments dropped, every space and
+    newline dropped, the `;` and trailing commas ktfmt adds or removes dropped. Two sources with the
+    same key differ only in what ktfmt changes, so a statement, an argument, a name or a constant
+    that differs shows up (task 119 findings 1/4/24: the iOS region was compared by member NAMES).
 
-    The drift gate and `--write-tree`'s skip both compare THIS set rather than the region's bytes:
-    the file is ktfmt-formatted (it is hand-written outside the region), so layout is not drift but
-    a helper appearing or disappearing is.
+    String-aware: comments are stripped by [strip_comments] and the whitespace / `;` / trailing-comma
+    normalisation applies to the code between string literals only, so a literal's contents (a `//`
+    in a URL, a `;` or a space in a message) are compared as written."""
+    pieces: list[str] = []
+    code: list[str] = []
+
+    def flush_code() -> None:
+        text = re.sub(r"\s+", "", "".join(code)).replace(";", "")
+        pieces.append(re.sub(r",(?=[)\]}])", "", text))
+        code.clear()
+
+    src = strip_comments(source)
+    i, n = 0, len(src)
+    while i < n:
+        ch = src[i]
+        if ch != '"':
+            code.append(ch)
+            i += 1
+            continue
+        flush_code()
+        j = i + 1
+        while j < n and src[j] != '"':
+            j += 2 if src[j] == "\\" else 1
+        pieces.append(src[i : j + 1])
+        i = j + 1
+    flush_code()
+    return "".join(pieces)
+
+
+def ios_generated_region_key(source: str) -> str:
+    """[formatted_code_key] of the GENERATED MEMBERS region of an iOS `ObjectCalls.kt`.
+
+    The file is hand-written outside the region and ktfmt formats it, region included, so the drift
+    gate and `--write-tree`'s skip compare THIS key rather than the region's bytes: layout is not
+    drift, but a helper, a body or a `PT_*` tag value that changed is.
     """
-    return {
-        ("actual " if match.group(1) else "") + match.group(2)
-        for match in IOS_MEMBER_NAME_RE.finditer(ios_generated_region(source))
-    }
+    return formatted_code_key(ios_generated_region(source))
 
 
 def splice_ios_generated_members(source: str, region: str) -> str:
@@ -4445,15 +4483,14 @@ def desktop_objectcalls_signatures() -> dict[str, tuple[str, ...]]:
     worse trade. Overloads that disagree on names are dropped rather than guessed at; the parity
     gate (scripts/check_objectcalls_parity.py) reports whatever this cannot resolve.
     """
-    src = DESKTOP_OBJECTCALLS.read_text(encoding="utf-8")
+    src = strip_comments(DESKTOP_OBJECTCALLS.read_text(encoding="utf-8"))
     signatures: dict[str, tuple[str, ...]] = {}
     ambiguous: set[str] = set()
     for match in re.finditer(
         r"^  (?:actual\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", src, re.MULTILINE
     ):
         name = match.group(1)
-        params = _split_top_level(_read_parens(src, match.end() - 1))
-        signature = tuple(param.split(":", 1)[0].strip().split()[-1] for param in params if param)
+        signature = parameter_names(src, match.end() - 1)
         if name in signatures and signatures[name] != signature:
             ambiguous.add(name)
         signatures[name] = signature
@@ -4463,35 +4500,62 @@ def desktop_objectcalls_signatures() -> dict[str, tuple[str, ...]]:
 
 
 def _read_parens(src: str, open_paren: int) -> str:
-    """The text inside the parenthesis pair whose '(' is at [open_paren]."""
-    depth = 0
-    for i in range(open_paren, len(src)):
-        if src[i] == "(":
-            depth += 1
-        elif src[i] == ")":
-            depth -= 1
-            if depth == 0:
-                return src[open_paren + 1 : i]
-    raise ValueError(f"unbalanced '(' at offset {open_paren}")
+    """The text inside the parenthesis pair whose '(' is at [open_paren] (strings are skipped)."""
+    return src[open_paren + 1 : match_closer(src, open_paren)]
 
 
-def _split_top_level(params: str) -> list[str]:
-    """Split a Kotlin parameter list on top-level commas ('->' is not a closing angle bracket)."""
+def split_params(params: str) -> list[str]:
+    """Split a Kotlin parameter list on top-level commas.
+
+    THE parameter splitter of the ObjectCalls tooling (task 119 finding 9: the generator, the
+    parity gate and the deleted BuiltinCalls gate each had their own). Function-type parameters
+    (`wrapper: (MemorySegment) -> T?`) do not close a generic at their `>`, and a string literal
+    (a default value) is skipped whole.
+    """
     out: list[str] = []
     depth = 0
     current = ""
-    for i, ch in enumerate(params):
-        if ch in "(<[":
+    in_string = False
+    i = 0
+    while i < len(params):
+        ch = params[i]
+        if in_string:
+            current += ch
+            if ch == "\\" and i + 1 < len(params):
+                current += params[i + 1]
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch in "(<[":
             depth += 1
-        elif ch in ")]" or (ch == ">" and params[i - 1 : i] != "-"):
+        elif ch in ")]":
+            depth -= 1
+        elif ch == ">" and params[i - 1 : i] != "-":
             depth -= 1
         elif ch == "," and depth == 0:
             out.append(current.strip())
             current = ""
+            i += 1
             continue
         current += ch
+        i += 1
     out.append(current.strip())
-    return [param for param in out if param]
+    return [p for p in out if p]
+
+
+def parameter_names(src: str, open_paren: int) -> tuple[str, ...]:
+    """Parameter names, in order, of the parameter list whose '(' is at [open_paren]:
+    `vararg name: T`, `noinline name: T` and `name: T = default` all give `name`."""
+    names: list[str] = []
+    for param in split_params(_read_parens(src, open_paren)):
+        head = param.split(":", 1)[0].strip()
+        names.append(head.split()[-1] if head else "")
+    return tuple(names)
 
 
 def _to_extension(member: str, receiver: str) -> str:
@@ -5510,7 +5574,10 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             # `actual` on the region members that actualize an `expect object ObjectCalls` member
             # (task 104 step 3 parcel C'): the iOS-only overloads in the same region stay plain,
             # which is why the marker keys on the parameter names and not just the helper name.
-            _, expect_members = render_objectcalls_expect()
+            expect_content, expect_members = render_objectcalls_expect()
+            # The `expect object ObjectCalls` file is generated, then ktfmt-formatted; the drift gate
+            # and the skip below compare it by `formatted_code_key` (task 119 finding 25).
+            files[_rel(OBJECTCALLS_EXPECT)] = expect_content
             region, marked = mark_actual_members(
                 render_ios_objectcalls(registry, unnamed), expect_member_keys(expect_members)
             )
@@ -6418,13 +6485,6 @@ def tree_main(args: argparse.Namespace) -> int:
             target.write_text(content, encoding="utf-8")
         print(f"{summary} -> {args.regen_tree}")
     if args.write_tree:
-        expect_content, expect_members = render_objectcalls_expect()
-        OBJECTCALLS_EXPECT.parent.mkdir(parents=True, exist_ok=True)
-        OBJECTCALLS_EXPECT.write_text(expect_content, encoding="utf-8")
-        print(
-            f"[generate_api_wrapper] expect ObjectCalls: {len(expect_members)} member(s) -> "
-            f"{_rel(OBJECTCALLS_EXPECT)}"
-        )
         written = 0
         for rel_path, content in tree.files.items():
             target = ROOT / rel_path
@@ -6432,12 +6492,20 @@ def tree_main(args: argparse.Namespace) -> int:
             if (
                 target == IOS_OBJECTCALLS
                 and target.exists()
-                and ios_generated_member_names(target.read_text(encoding="utf-8"))
-                == ios_generated_member_names(content)
+                and ios_generated_region_key(target.read_text(encoding="utf-8"))
+                == ios_generated_region_key(content)
             ):
                 # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
-                # hand-written outside it), so leave the formatted copy alone when the member set is
-                # unchanged -- the drift gate compares the same set for the same reason.
+                # hand-written outside it), so leave the formatted copy alone when the region
+                # differs only in what ktfmt changes -- the drift gate compares the same key.
+                continue
+            if (
+                target == OBJECTCALLS_EXPECT
+                and target.exists()
+                and formatted_code_key(target.read_text(encoding="utf-8")) == formatted_code_key(content)
+            ):
+                # The expect file is ktfmt-formatted; keep the formatted copy when a regen differs
+                # only in what ktfmt changes (the drift gate compares the same key).
                 continue
             if (
                 target.parent == TYPES_DIR

@@ -47,6 +47,7 @@ from pathlib import Path
 # the same way, so the direction stays cycle-free.
 from generate_api_wrapper import (
     match_closer,
+    parameter_names,
     referenced_objectcalls_helpers,
     strip_comments,
 )
@@ -82,59 +83,6 @@ MEMBER_RE = re.compile(
 EXTENSION_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s*)?ObjectCalls\s*\.\s*(?P<name>[A-Za-z0-9_]+)\s*\(")
 
 Signature = tuple[str, ...]
-
-
-def split_params(params: str) -> list[str]:
-    """Split a parameter list on top-level commas.
-
-    Local rather than shared with the BuiltinCalls gate because these helpers take function-type
-    parameters (`wrapper: (MemorySegment) -> T?`): the `>` of an arrow must not close a generic.
-    """
-    out: list[str] = []
-    depth = 0
-    current = ""
-    in_string = False
-    i = 0
-    while i < len(params):
-        ch = params[i]
-        if in_string:
-            current += ch
-            if ch == "\\" and i + 1 < len(params):
-                current += params[i + 1]
-                i += 2
-                continue
-            if ch == '"':
-                in_string = False
-            i += 1
-            continue
-        if ch == '"':
-            in_string = True
-        elif ch in "(<[":
-            depth += 1
-        elif ch in ")]":
-            depth -= 1
-        elif ch == ">" and params[i - 1 : i] != "-":
-            depth -= 1
-        elif ch == "," and depth == 0:
-            out.append(current.strip())
-            current = ""
-            i += 1
-            continue
-        current += ch
-        i += 1
-    out.append(current.strip())
-    return [p for p in out if p]
-
-
-def parameter_names(src: str, open_paren: int) -> Signature:
-    """Parameter names, in order, of the parameter list whose '(' is at [open_paren]."""
-    close = match_closer(src, open_paren)
-    names: list[str] = []
-    for param in split_params(src[open_paren + 1 : close]):
-        # `vararg name: T`, `noinline name: T`, `name: T = default`.
-        head = param.split(":", 1)[0].strip()
-        names.append(head.split()[-1] if head else "")
-    return tuple(names)
 
 
 def parse_members(path: Path) -> dict[str, list[Signature]]:
