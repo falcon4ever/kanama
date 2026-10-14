@@ -1382,7 +1382,8 @@ object BuiltinTypes {
    * generated registrars live in the game's module; game code does not call it.
    */
   @JvmStatic
-  fun objectValueSegment(value: GodotObject): MemorySegment = FreedObjectChecks.valueSegment(value)
+  fun objectValueSegment(value: GodotObject?): MemorySegment =
+    if (value == null) MemorySegment.NULL else FreedObjectChecks.valueSegment(value)
 
   /**
    * The Godot object a custom-script-typed value ([script], whose owner is [owner]) stands for when
@@ -1412,7 +1413,7 @@ object BuiltinTypes {
    * was freed (task 131 item 2). Public for the generated registrars only.
    */
   @JvmStatic
-  fun initObjectValueVariant(ret: MemorySegment, value: GodotObject) {
+  fun initObjectValueVariant(ret: MemorySegment, value: GodotObject?) {
     Arena.ofConfined().use { arena -> initVariantFromAny(ret, value, arena) }
   }
 

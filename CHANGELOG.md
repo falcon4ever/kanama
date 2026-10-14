@@ -124,6 +124,12 @@ argument, the expected and the actual type, like the "Expected X argument" error
 arguments. iOS and Web decode these types through tagged or packed components, not a Variant cast, and
 have no such fallback.
 
+### Fixed — Desktop: a registered function returning `GodotObject?` compiles (task 119 finding 31)
+
+`@RegisterFunction fun target(): GodotObject?` made the generated registrar fail to compile
+("expected `GodotObject`, actual `GodotObject?`"): the return lost its `?`. It keeps it now, and the
+glue writes `null` as nil.
+
 ### Changed — `GodotObject.set` returns `Unit`; the signature gate also holds the annotations (task 137 items 7, 9)
 
 Desktop, Android and iOS. `GodotObject.set(property, value)` returned a `Long` that was always `0`;

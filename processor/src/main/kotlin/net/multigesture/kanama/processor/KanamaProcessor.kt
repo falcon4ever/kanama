@@ -799,6 +799,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       kind = MethodKind.REGULAR,
       rpc = buildRpcModel(annotated),
       returnGodotEnum = returnEnum?.ref,
+      returnNullable = resolvedReturn?.nullability == Nullability.NULLABLE,
     )
   }
 
