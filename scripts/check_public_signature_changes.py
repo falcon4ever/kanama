@@ -1233,6 +1233,26 @@ def describe_changes(removed: Counter, added: Counter, compat: Counter, limit: i
     return out
 
 
+# Members Web must declare exactly as the common (desktop/Android/iOS) tree does (task 129 E review
+# S3): same overload set, same parameter and return types. A Web-only overload of one of these names
+# would silently take a call that compiles on desktop and give it other semantics (a Unit return).
+WEB_PARITY_MEMBERS: dict[str, tuple[str, ...]] = {
+    "GodotObject": ("fun call", "fun callv", "fun callDeferred", "fun getMethodArgumentCount", "property instanceId"),
+}
+
+
+def web_parity_problems(current: dict[str, "SurfaceResult"]) -> list[str]:
+    problems: list[str] = []
+    for owner, members in WEB_PARITY_MEMBERS.items():
+        for member in members:
+            key = f"{owner}: {member}"
+            common = sorted(line for line in current["common"].lines if member_key(line) == key)
+            web = sorted(line for line in current["web"].lines if member_key(line) == key)
+            if common != web:
+                problems.append(f"{key}: common declares {common or 'nothing'}, Web declares {web or 'nothing'}")
+    return problems
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--root", type=Path, default=ROOT, help="repository root (a scratch copy for red runs)")
@@ -1247,6 +1267,13 @@ def main() -> int:
         current = {surface.name: surface_lines(root, surface) for surface in SURFACES}
     except ParseError as error:
         print(f"{TAG} FAIL cannot read the surface: {error}", file=sys.stderr)
+        return 1
+    parity = web_parity_problems(current)
+    if parity:
+        print(f"{TAG} FAIL the Web surface differs from the common one where it must match "
+              "(WEB_PARITY_MEMBERS):", file=sys.stderr)
+        for line in parity:
+            print(f"    {line}", file=sys.stderr)
         return 1
     markers, has_unreleased = unreleased_markers(root / CHANGELOG)
     marker_text = "\n".join(text for _, text in markers)

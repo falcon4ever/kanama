@@ -70,3 +70,11 @@ func gd_text(index: int) -> String:
 		2: return "{a}-{b}".format({"a": 1, "b": "x"})
 		3: return "{0}+{1}".format([2, 3.5])
 	return ""
+
+## Task 129 E review B2: the bridge's live browser handles (the leak row reads it around N calls).
+func live_handles(_unused: int) -> int:
+	return int(JavaScriptBridge.eval("globalThis.KanamaWebBridge.liveBrowserHandleCount"))
+
+## Task 129 E review S1: the live lambda-connection guards.
+func guard_count(_unused: int) -> int:
+	return KanamaWebHandles.signal_guards.size()

@@ -706,10 +706,14 @@ WRAPPER_POLICY: dict[int, dict] = {
     35: {"ret": "Unit"},
     148: {"ret": "Unit", "tail_names": ["value"]},
     196: {"ret": "Unit", "tail_names": ["value"]},
-    105: {"tail_names": ["argument"], "doc": "Dynamic one-String-argument method call (e.g. a native GDScript autoload's play(path))."},
-    132: {"tail_names": ["value"], "doc": "Dynamic one-Double-argument method call (the FPS's damage(amount) on ray hits)."},
-    191: {"tail_names": ["first", "second"], "doc": "Dynamic two-Vector3 dispatch (the corpus's damage(impact, force) convention)."},
-    281: {"tail_names": ["argument"]},
+    # Task 129 E review S3: the queued typed `call` shapes stay in the contract but are internal, so
+    # the public `call` is desktop's Variant one (same overloads, same `Any?` return).
+    105: {"name": "callQueued", "visibility": "internal", "tail_names": ["argument"], "doc": "Queued dynamic one-String-argument method call (the Variant return is discarded)."},
+    132: {"name": "callQueued", "visibility": "internal", "tail_names": ["value"], "doc": "Queued dynamic one-Double-argument method call (the Variant return is discarded)."},
+    191: {"name": "callQueued", "visibility": "internal", "tail_names": ["first", "second"], "doc": "Queued dynamic two-Vector3 method call (the Variant return is discarded)."},
+    # Task 129 E review S3: internal, so the public `callDeferred` is desktop's Variant one.
+    280: {"name": "callDeferredQueued", "visibility": "internal"},
+    281: {"name": "callDeferredQueued", "visibility": "internal", "tail_names": ["argument"]},
     # Object.get / set_indexed restricted to one value type each; the descriptor name says which.
     149: {"name": "getObjectProperty", "doc": "Object.get restricted to object-valued properties; non-objects resolve to null."},
     233: {"name": "getVector2", "doc": "Vector2-valued property read (the robot's aim blend position)."},
@@ -860,32 +864,6 @@ CLASS_POLICY: dict[str, dict] = {
   }
 
   /**
-   * Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as a
-   * List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first.
-   * A call whose arguments match a typed overload above takes that overload instead.
-   */
-  fun call(method: String, vararg args: Any?): Any? = webGenericCall(this, method, args.toList())
-
-  /** Desktop's `callv`: [call] with the arguments as one list. */
-  fun callv(method: String, arguments: List<Any?>): Any? = webGenericCall(this, method, arguments)
-
-  /** Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch. */
-  fun callDeferred(method: String, vararg args: Any?) {
-    webGenericQueue(this, "call_deferred", listOf<Any?>(method) + args)
-  }
-
-  fun getMethodArgumentCount(method: String): Long =
-    webGenericCall(this, "get_method_argument_count", listOf(method)) as Long
-
-  /**
-   * The engine instance id. Web reads it from the engine on each access (desktop captures it at
-   * construction), so it fails like any other call on a freed object; [GD.isInstanceValid] does not
-   * go through it.
-   */
-  val instanceId: Long
-    get() = webGenericCall(this, "get_instance_id", emptyList()) as Long
-
-  /**
    * The liveness test behind the shared [GD.isInstanceValid] (task 129 E): a live script or a live
    * browser handle, answered without crossing to the engine.
    */
@@ -973,12 +951,6 @@ internal object WebWindowSettings {
   fun setProcessInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
-
-  /**
-   * The window this node lives in: Web has exactly one, the root window (a generated `Window`, a
-   * `Viewport` as on desktop, task 129 E), or null for a node outside the tree as on desktop.
-   */
-  fun getWindow(): Window? = if (isInsideTree()) getTree().getRoot() else null
 
   /**
    * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,
@@ -1958,6 +1930,89 @@ def emit_release(godot_name: str, class_policy: dict) -> list[str]:
     ]
 
 
+# Object methods Web runs as one generic Variant call (task 129 E review S7), rendered from
+# extension_api.json's signature like the opcode members: Godot method -> (mode, Kotlin name,
+# parameter renames, KDoc). Modes: "forward" -- the first argument names the method the call runs,
+# the rest are its arguments, one immediate generic call (it flushes the queue and returns the
+# decoded Variant); "immediate" -- the method itself as one immediate generic call; "queued" -- one
+# queued generic call (runs after the batch; answers null, as Godot's deferred call does);
+# "cached" -- a property read with one immediate call the first time, then kept (desktop captures
+# it at construction, so it still answers after the object is freed).
+WEB_GENERIC_METHODS: dict[str, dict[str, tuple[str, str, dict[str, str], str]]] = {
+    "Object": {
+        "call": ("forward", "call", {}, "Desktop's Variant `call` (task 138 item 2): any arguments, the result decoded (an Array as\n   * a List, a Dictionary as a Map). An immediate generic call, so it flushes queued commands first."),
+        "callv": ("forward", "callv", {"arg_array": "arguments"}, "Desktop's `callv`: [call] with the arguments as one list."),
+        "call_deferred": ("queued", "callDeferred", {}, "Desktop's Variant `call_deferred`: queued, so it runs at idle time after this batch."),
+        "get_method_argument_count": ("immediate", "getMethodArgumentCount", {}, ""),
+        "get_instance_id": ("cached", "instanceId", {}, "The engine instance id, read once and then kept (desktop captures it at construction), so it\n   * still answers after the object is freed."),
+    },
+    # Review N2: Godot's own answer (a popup's window too), one immediate call.
+    "Node": {
+        "get_window": ("immediate", "getWindow", {}, ""),
+    },
+}
+_GENERIC_TYPES = {"Variant": "Any?", "StringName": "String", "String": "String", "Array": "List<Any?>", "int": "Long",
+                  "float": "Double", "bool": "Boolean"}
+
+
+def emit_generic_methods(api: Api, godot_name: str) -> list[str]:
+    """WEB_GENERIC_METHODS' members of [godot_name], from extension_api.json's signatures."""
+    rows = WEB_GENERIC_METHODS.get(godot_name, {})
+    methods = {m["name"]: m for m in api.classes[godot_name].get("methods", [])} if rows else {}
+    lines: list[str] = []
+    for godot, (mode, kotlin, renames, doc) in rows.items():
+        method = methods.get(godot)
+        if method is None:
+            raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: no such method in extension_api.json")
+        params = [(renames.get(a["name"], camel(a["name"])), _GENERIC_TYPES[a["type"]]) for a in method.get("arguments", [])]
+        ret_godot = (method.get("return_value") or {}).get("type")
+        wrap = ""
+        if ret_godot in api.classes:
+            # An object return: the generic call's handle, wrapped as the declared class.
+            ret = f"{kotlin_class_name(ret_godot)}?"
+            wrap = f"(%s as GodotObject?)?.let {{ {kotlin_class_name(ret_godot)}(it.handle) }}"
+        else:
+            ret = _GENERIC_TYPES[ret_godot] if ret_godot else "Unit"
+        decl = [f"{n}: {t}" for n, t in params] + (["vararg args: Any?"] if method.get("is_vararg") else [])
+        values = [n for n, _ in params] + (["*args"] if method.get("is_vararg") else [])
+        cast = "" if ret in ("Any?", "Unit") or wrap else f" as {ret}"
+        if lines:
+            lines.append("")
+        if doc and "\n" not in doc:
+            lines.append(f"  /** {doc} */")
+        elif doc:
+            lines += ["  /**", *[f"   * {line.lstrip(' *')}" for line in doc.split("\n")], "   */"]
+        if mode == "forward":
+            target, rest = params[0][0], values[1:]
+            if method.get("is_vararg"):
+                listed = "args.toList()"
+            else:
+                listed = rest[0]
+            lines.append(f"  fun {kotlin}({', '.join(decl)}): {ret} = webGenericCall(this, {target}, {listed}){cast}")
+        elif mode == "immediate":
+            call = f'webGenericCall(this, "{godot}", listOf({", ".join(values)}))'
+            lines.append(f"  fun {kotlin}({', '.join(decl)}): {ret} =")
+            lines.append(f"    {wrap % call if wrap else call + cast}")
+        elif mode == "queued":
+            listed = f"listOf<Any?>({', '.join(values)})" if not method.get("is_vararg") else f"listOf<Any?>({', '.join(values[:-1])}) + args"
+            lines.append(f"  fun {kotlin}({', '.join(decl)}): {ret} {{")
+            lines.append(f'    webGenericQueue(this, "{godot}", {listed})')
+            if ret != "Unit":
+                lines.append("    return null")
+            lines.append("  }")
+        elif mode == "cached":
+            if params or method.get("is_vararg"):
+                raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: a cached property takes no arguments")
+            field = f"cached{kotlin[0].upper()}{kotlin[1:]}"
+            lines.append(f"  val {kotlin}: {ret}")
+            lines.append(f'    get() = {field} ?: (webGenericCall(this, "{godot}", emptyList()){cast}).also {{ {field} = it }}')
+            lines.append("")
+            lines.append(f"  private var {field}: {ret}? = null")
+        else:
+            raise GenerationError(f"WEB_GENERIC_METHODS[{godot_name}] {godot}: unknown mode {mode}")
+    return lines
+
+
 def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) -> str:
     api = tree.api
     name = kotlin_class_name(godot_name)
@@ -1997,6 +2052,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
     sections: list[list[str]] = [m.body for m in members]
     if class_policy.get("custom"):
         sections.append(class_policy["custom"].strip("\n").split("\n"))
+    sections.append(emit_generic_methods(api, godot_name))
     sections.append(emit_release(godot_name, class_policy))
     sections.append(emit_signals(api, godot_name, set(tree.classes)))
     sections.append(emit_class_enums(api, godot_name) if godot_name in api.classes else [])

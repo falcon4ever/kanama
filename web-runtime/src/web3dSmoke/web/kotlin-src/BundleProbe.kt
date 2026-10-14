@@ -21,6 +21,8 @@ import net.multigesture.kanama.web.WebExperimentalGenericCall
 class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
   @Signal("pair") fun pair(value: Long) = Unit
 
+  @Signal("solo") fun solo(value: Long) = Unit
+
   private var firstFired = 0L
   private var secondFired = 0L
   private var methodFired = 0L
@@ -196,11 +198,11 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     var mask = 1L
     rows.forEachIndexed { index, (bound, case) ->
       val twin = WebExperimentalGenericCall.callImmediate(twin(), "gd_value", listOf(index.toLong())).asDouble()
-      val kotlin = case()
-      val ulps = kotlin.math.abs(kotlin.toRawBits() - twin.toRawBits())
+      val local = case()
+      val ulps = kotlin.math.abs(local.toRawBits() - twin.toRawBits())
       if (ulps > bound) {
         mask = mask and 1L.inv()
-        GD.print("gd twin row $index: Kotlin $kotlin vs engine $twin ($ulps ulps, bound $bound)")
+        GD.print("gd twin row $index: Kotlin $local vs engine $twin ($ulps ulps, bound $bound)")
       }
     }
     if (GD.str(1L, "a", 2.5) == twinText(1)) mask = mask or 2L
@@ -212,6 +214,58 @@ class BundleProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     }
     return mask
   }
+
+  /**
+   * Task 129 E review B2: objects in a call's result keep the handle that already tracks them. 1 =
+   * twenty rounds of the triggers (`GD.instanceFromId`, an Array result of `call("get_children")`,
+   * an object result of `call`, getConnections' lambda guards) leave the live browser handles where
+   * one warm round left them; 2 = `GD.instanceFromId(id) == ` the node; 4 =
+   * `call("get_children")[i] == getChild(i)`.
+   */
+  fun handleRows(value: Long): Long {
+    val parent = checkNotNull(self.getParent())
+    val twin = twin()
+    val round = {
+      GD.instanceFromId(twin.instanceId)
+      parent.call("get_children")
+      twin.call("get_parent")
+      self.signal("pair").getConnections()
+    }
+    round()
+    val before = twinLong("live_handles")
+    repeat(20) { round() }
+    val after = twinLong("live_handles")
+    var mask = 0L
+    if (after == before) mask = mask or 1L else GD.print("handle rows: live handles $before -> $after")
+    if (GD.instanceFromId(twin.instanceId) == twin) mask = mask or 2L
+    val kids = parent.call("get_children") as List<*>
+    val index = kids.indexOfFirst { it == twin }
+    if (index >= 0 && kids[index] == parent.getChild(index)) mask = mask or 4L
+    return mask
+  }
+
+  private var guardsBefore = 0L
+
+  /**
+   * Task 129 E review S1, first half: a lambda connection from this script's `solo` signal to the
+   * script-backed GuardReceiver (its receiver), then the receiver is freed. 1 = it connected and
+   * its guard is live.
+   */
+  fun guardReceiverConnect(value: Long): Long {
+    guardsBefore = twinLong("guard_count")
+    val receiver = self.requireAs("../GuardReceiver", ::Node)
+    val connected = self.signal("solo").connectLong(receiver) { _ -> Unit }
+    val live = self.signal("solo").hasConnections() && twinLong("guard_count") == guardsBefore + 1
+    receiver.queueFree()
+    return if (connected == GodotError.OK && live) 1L else 0L
+  }
+
+  /** After the frees: 1 = the connection ended with its receiver and no guard remains. */
+  fun guardReceiverAfter(value: Long): Long =
+    if (!self.signal("solo").hasConnections() && twinLong("guard_count") == guardsBefore) 1L else 0L
+
+  private fun twinLong(method: String): Long =
+    WebExperimentalGenericCall.callImmediate(twin(), method, listOf(0L)).asLong()
 
   private fun twin(): Node = self.requireAs("../GdTwin", ::Node)
 

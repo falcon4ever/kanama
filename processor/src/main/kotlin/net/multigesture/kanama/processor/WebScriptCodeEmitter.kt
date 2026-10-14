@@ -217,6 +217,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /** Task 134 D1 review S3: close one await, and every await a freed script was delivering. */
     internal const val DROP_AWAIT = "_kanama_drop_await"
     internal const val DROP_ROUTED_AWAITS = "_kanama_drop_routed_awaits"
+    internal const val DROP_ROUTED_GUARDS = "_kanama_drop_routed_guards"
     /** Task 134 D1: the object-query arm and helper that run one builtin (value-type) method. */
     internal const val BUILTIN_CALL_OPCODE = 1003
     /**
@@ -2664,6 +2665,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\treturn")
     appendLine("\tvar freed_handle := _kanama_handle")
     appendLine("\t$DROP_ROUTED_AWAITS(freed_handle)")
+    appendLine("\t$DROP_ROUTED_GUARDS(freed_handle)")
     appendLine("\t_kanama_bridge.free(_kanama_handle)")
     appendLine("\t_kanama_clear_callbacks()")
     appendLine("\t_kanama_handle = 0")
@@ -2724,6 +2726,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\ttarget_object = self")
     appendLine("\t\telse:")
     appendLine("\t\t\tvar target_held: Variant = _kanama_object_handles.get(object_handle)")
+    appendLine("\t\t\tif target_held is Array:")
+    appendLine("\t\t\t\ttarget_held = target_held[0].get_ref()")
     // A freed Object Variant compares EQUAL to null in Godot 4, so a `!= null` gate never reached
     // the erase below. The type is tested instead: an Object entry that is no longer valid is
     // retired here, an absent entry (Nil) is simply not resolved.
@@ -4202,6 +4206,28 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tif watcher == null or watcher.router_handle == router_handle:")
     appendLine("\t\t\t$DROP_AWAIT(callback_id)")
     appendLine()
+    appendLine("func $DROP_ROUTED_GUARDS(router_handle: int) -> void:")
+    appendLine(
+      "\t# This script is being freed (task 129 E review S1): its lambda connections end with it, as"
+    )
+    appendLine(
+      "\t# Godot ends a connection whose target is freed. Each guard is marked done and disconnected,"
+    )
+    appendLine("\t# so hasConnections() is false and the emitter no longer holds it.")
+    appendLine("\tfor callback_id in KanamaWebHandles.signal_guards.keys():")
+    appendLine("\t\tvar ref: WeakRef = KanamaWebHandles.signal_guards[callback_id]")
+    appendLine("\t\tvar guard = ref.get_ref()")
+    appendLine("\t\tif guard != null and guard.router_handle != router_handle:")
+    appendLine("\t\t\tcontinue")
+    appendLine("\t\tKanamaWebHandles.signal_guards.erase(callback_id)")
+    appendLine("\t\tif guard == null:")
+    appendLine("\t\t\tcontinue")
+    appendLine("\t\tguard.done = true")
+    appendLine("\t\tvar source := instance_from_id(guard.source_id)")
+    appendLine("\t\tvar own := Callable(guard, \"fire\").bind(guard.callback_id, guard)")
+    appendLine("\t\tif source != null and source.is_connected(guard.signal_name, own):")
+    appendLine("\t\t\tsource.disconnect(guard.signal_name, own)")
+    appendLine()
     appendLine("class $SIGNAL_GUARD extends RefCounted:")
     appendLine("\t# Held only by its connection: dies with the emitter (or a disconnect) and then")
     appendLine("\t# tells Kotlin to drop the callback entry. It is also the connection's callable")
@@ -4407,6 +4433,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif handle == _kanama_handle:")
     appendLine("\t\treturn self")
     appendLine("\tvar held: Variant = _kanama_object_handles.get(handle)")
+    appendLine("\tif held is Array:")
+    appendLine("\t\theld = held[0].get_ref()")
     appendLine("\tif not is_instance_valid(held):")
     appendLine("\t\treturn null")
     appendLine("\treturn held")
@@ -4421,11 +4449,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t# a handle of 0 or the script's own is never gone.")
     appendLine("\tif handle == 0 or handle == _kanama_handle:")
     appendLine("\t\treturn false")
-    appendLine("\treturn not is_instance_valid(_kanama_object_handles.get(handle))")
+    appendLine("\treturn _kanama_live_object(handle) == null")
     appendLine()
     appendLine("func _kanama_object_query(args: Array) -> int:")
     appendLine("\tvar opcode := int(args[0])")
     appendLine("\tvar object_handle := int(args[1])")
+    // Review N8: the builtin / utility call is the hottest arm and needs no receiver: first.
+    appendLine("\tif opcode == $BUILTIN_CALL_OPCODE:")
+    appendLine("\t\t# Task 134 D1: one value-type (builtin) method or utility function run by the engine.")
+    appendLine("\t\t_kanama_bridge.recordImmediateStringResult($BUILTIN_CALL(String(args[2])))")
+    appendLine("\t\t_kanama_bridge.recordImmediateLongResult(1)")
+    appendLine("\t\treturn 1")
     appendLine("\tif opcode == $FREED_CHECK_OPCODE:")
     appendLine(
       "\t\t# Task 138 item 3: is the object behind this handle gone (freed by the engine, or its entry"
@@ -4441,6 +4475,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvar gone := 0")
     appendLine("\t\tif object_handle != _kanama_handle:")
     appendLine("\t\t\tvar held: Variant = _kanama_object_handles.get(object_handle)")
+    appendLine("\t\t\tif held is Array:")
+    appendLine("\t\t\t\theld = held[0].get_ref()")
     appendLine("\t\t\tif held == null or not is_instance_valid(held):")
     appendLine("\t\t\t\tgone = 1")
     appendLine("\t\t_kanama_bridge.recordImmediateLongResult(gone)")
@@ -5150,10 +5186,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t\t_kanama_bridge.recordImmediateStringResult(_kanama_generic_encode_result(generic_call_result))"
     )
     appendLine("\t\t\tresult = 1")
-    appendLine("\t\telif opcode == $BUILTIN_CALL_OPCODE:")
-    appendLine("\t\t\t# Task 134 D1: one value-type (builtin) method run by the engine.")
-    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult($BUILTIN_CALL(String(args[2])))")
-    appendLine("\t\t\tresult = 1")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
     appendLine()
@@ -5185,7 +5217,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\treturn \"E:%s takes %d argument(s), the call passed %d\" % [parts[1], method.get_argument_count(), call_args.size()]"
     )
     appendLine("\tvar no_handles: Array[int] = []")
-    appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(method.callv(call_args), no_handles)")
+    appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(method.callv(call_args), no_handles, true)")
     appendLine()
     appendLine("func $UTILITY_CALL(parts: PackedStringArray) -> String:")
     appendLine(
@@ -5214,7 +5246,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif expression.has_execute_failed():")
     appendLine("\t\treturn \"E:%s: %s\" % [parts[1], expression.get_error_text()]")
     appendLine("\tvar no_handles: Array[int] = []")
-    appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(result, no_handles)")
+    appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(result, no_handles, true)")
     appendLine()
     appendLine("func _kanama_generic_decode_arg(generic_packed_arg: String) -> Variant:")
     appendLine("\t# EXPERIMENTAL (task 76 spike): one `typeTag:value` generic-call argument.")
@@ -5293,7 +5325,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t# `<Variant.Type>:<payload>` Variant; an object inside reuses a held handle.")
     appendLine("\t\tvar generic_container_handles: Array[int] = []")
     appendLine(
-      "\t\treturn \"v\\u001f%s\" % ${WebValueTypes.PACK_VARIANT}(generic_value, generic_container_handles)"
+      "\t\treturn \"v\\u001f%s\" % ${WebValueTypes.PACK_VARIANT}(generic_value, generic_container_handles, true)"
     )
     appendLine("\tif generic_value is Object:")
     appendLine("\t\tvar generic_object := generic_value as Object")

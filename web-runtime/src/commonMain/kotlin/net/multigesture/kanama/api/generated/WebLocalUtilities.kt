@@ -99,6 +99,106 @@ internal object WebLocalUtilities {
       else -> -1
     }
 
+  /**
+   * The Variant type frame-form utility [name] returns (0 for void), or -1 (a Variant) for the
+   * others, which `UtilityCalls.call` decodes by the type the generated GD passes.
+   */
+  fun frameReturnType(name: String): Int =
+    when (name) {
+      "absf" -> 3
+      "absi" -> 2
+      "acos" -> 3
+      "acosh" -> 3
+      "angle_difference" -> 3
+      "asin" -> 3
+      "asinh" -> 3
+      "atan" -> 3
+      "atan2" -> 3
+      "atanh" -> 3
+      "bezier_derivative" -> 3
+      "bezier_interpolate" -> 3
+      "ceilf" -> 3
+      "ceili" -> 2
+      "clampf" -> 3
+      "clampi" -> 2
+      "cos" -> 3
+      "cosh" -> 3
+      "cubic_interpolate" -> 3
+      "cubic_interpolate_angle" -> 3
+      "cubic_interpolate_angle_in_time" -> 3
+      "cubic_interpolate_in_time" -> 3
+      "db_to_linear" -> 3
+      "deg_to_rad" -> 3
+      "ease" -> 3
+      "exp" -> 3
+      "floorf" -> 3
+      "floori" -> 2
+      "fmod" -> 3
+      "fposmod" -> 3
+      "inverse_lerp" -> 3
+      "is_equal_approx" -> 1
+      "is_finite" -> 1
+      "is_inf" -> 1
+      "is_instance_id_valid" -> 1
+      "is_nan" -> 1
+      "is_zero_approx" -> 1
+      "lerp_angle" -> 3
+      "lerpf" -> 3
+      "linear_to_db" -> 3
+      "log" -> 3
+      "maxf" -> 3
+      "maxi" -> 2
+      "minf" -> 3
+      "mini" -> 2
+      "move_toward" -> 3
+      "nearest_po2" -> 2
+      "pingpong" -> 3
+      "posmod" -> 2
+      "pow" -> 3
+      "rad_to_deg" -> 3
+      "randf" -> 3
+      "randf_range" -> 3
+      "randfn" -> 3
+      "randi" -> 2
+      "randi_range" -> 2
+      "randomize" -> 0
+      "remap" -> 3
+      "rid_allocate_id" -> 2
+      "rotate_toward" -> 3
+      "roundf" -> 3
+      "roundi" -> 2
+      "seed" -> 0
+      "signf" -> 3
+      "signi" -> 2
+      "sin" -> 3
+      "sinh" -> 3
+      "smoothstep" -> 3
+      "snappedf" -> 3
+      "snappedi" -> 2
+      "sqrt" -> 3
+      "step_decimals" -> 2
+      "tan" -> 3
+      "tanh" -> 3
+      "wrapf" -> 3
+      "wrapi" -> 2
+      else -> -1
+    }
+
+  /** The separator text utility [name] prints its values with, or null for the others. */
+  fun textSeparator(name: String): String? =
+    when (name) {
+      "print" -> ""
+      "print_rich" -> ""
+      "print_verbose" -> ""
+      "printerr" -> ""
+      "printraw" -> ""
+      "prints" -> " "
+      "printt" -> "\t"
+      "push_error" -> ""
+      "push_warning" -> ""
+      else -> null
+    }
+
   /** Runs utility [id] on the frame's slots 1..N into its return slot; false: the engine's. */
   fun call(f: BuiltinFrame, id: Int): Boolean {
     when (id) {

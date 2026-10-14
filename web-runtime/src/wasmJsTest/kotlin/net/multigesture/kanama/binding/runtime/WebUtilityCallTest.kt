@@ -97,6 +97,16 @@ class WebUtilityCallTest {
     assertEquals(listOf("0", "str_to_var", "2", ""), request.split('\u001F').take(4))
   }
 
+  /** Review N9: printing before any proxy is installed prints here; anything else fails loud. */
+  @Test
+  fun textUtilitiesPrintWithoutAProxy() {
+    webBuiltinTransportForTests = { "E:no proxy is installed" }
+    GD.print("before", 1L)
+    GD.pushError("early")
+    val error = assertFailsWith<IllegalStateException> { GD.str(1L) }
+    assertTrue("no proxy" in error.message!!, error.message)
+  }
+
   @Test
   fun aProxyFailureFailsLoud() {
     webBuiltinTransportForTests = { "E:no utility function randf taking 0 argument(s)" }

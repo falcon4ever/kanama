@@ -505,7 +505,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ).then(Number);
   let bundleAfter = await readBundleAfter();
   const bundleDeadline = Math.min(deadline, Date.now() + 10_000);
-  while (bundleAfter !== 7 && Date.now() < bundleDeadline) {
+  while (bundleAfter !== 15 && Date.now() < bundleDeadline) {
     await delay(150);
     bundleAfter = await readBundleAfter();
   }
@@ -682,12 +682,14 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     bundleSignalsAndCallables: bundleProbe === 65535,
     // Task 138 item 2: Map/List arguments and Array/Dictionary results (bits 1-32); task 129 E: the
     // shared GD (Web-local utilities) against its GDScript twin within each row's ulp bound, str,
-    // and isInstanceValid / instanceFromId (bits 64-256).
-    bundleContainersAndGd: bundleValues === 511,
+    // and isInstanceValid / instanceFromId (bits 64-256); review B2: objects in results keep their
+    // tracked handle -- no growth over twenty rounds, and identity holds (bits 512-2048).
+    bundleContainersAndGd: bundleValues === 4095,
     // callDeferred ran (1); task 138 item 22: a freed script-backed node throws desktop's
     // freed-instance error (2), and its late queued setter was skipped and reported (counted in
-    // freedSetterReports); frames kept running (4).
-    bundleAfterFrames: bundleAfter === 7,
+    // freedSetterReports); frames kept running (4); review S1: a lambda connection ended with its
+    // freed receiver -- hasConnections() false, no guard left (8).
+    bundleAfterFrames: bundleAfter === 15,
     // Task 131 item 14: every deliberate throw (function, signal handler, _process, coroutine) was
     // contained -- the call came back, the script still answers, the frame loop kept running and no
     // other bridge fault appeared.

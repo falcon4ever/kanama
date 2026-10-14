@@ -206,6 +206,9 @@ script = ExtResource("15_bundle")
 [node name="GdTwin" type="Node" parent="."]
 script = ExtResource("16_twin")
 
+[node name="GuardReceiver" type="Node" parent="."]
+script = ExtResource("17_fscript")
+
 [node name="ThrowingConstructor" type="Node" parent="."]
 script = ExtResource("12_tctor")
 

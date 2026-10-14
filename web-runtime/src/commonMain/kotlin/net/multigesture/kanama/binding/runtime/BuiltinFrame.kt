@@ -43,6 +43,12 @@ internal class BuiltinMethod(val variantType: Int, val name: String, val hash: L
 internal class UtilityFunction(val name: String, @Suppress("unused") val hash: Long) {
   /** [WebLocalUtilities]' id for this function, or -1 when only the engine runs it. */
   internal val localId: Int = WebLocalUtilities.idOf(name)
+
+  /** The Variant type a frame-form call returns (0 for void; -1 for the Variant-form ones). */
+  internal val returnType: Int = WebLocalUtilities.frameReturnType(name)
+
+  /** A text utility's separator ([WebLocalUtilities.textSeparator]), null for the others. */
+  internal val textSeparator: String? = WebLocalUtilities.textSeparator(name)
 }
 
 private val frames = ArrayList<BuiltinFrame>()

@@ -187,12 +187,6 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   fun setProcessUnhandledInput(@Suppress("UNUSED_PARAMETER") enable: Boolean) = Unit
 
   /**
-   * The window this node lives in: Web has exactly one, the root window (a generated `Window`, a
-   * `Viewport` as on desktop, task 129 E), or null for a node outside the tree as on desktop.
-   */
-  fun getWindow(): Window? = if (isInsideTree()) getTree().getRoot() else null
-
-  /**
    * Web narrows Godot's Variant-array `propagate_call` to the one form the corpus uses,
    * `propagate_call("set", [property, bool])` -- opcode 279 carries a typed (StringName, bool)
    * pair. Any other method, argument shape or `parentFirst` fails loud instead of silently
@@ -209,6 +203,9 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
       )
     }
   }
+
+  fun getWindow(): Window? =
+    (webGenericCall(this, "get_window", listOf()) as GodotObject?)?.let { Window(it.handle) }
 
   /** Signal `ready`; see [TypedSignal]. */
   val ready: Signal0

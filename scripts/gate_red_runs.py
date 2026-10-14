@@ -462,6 +462,11 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
 case("check_public_signature_changes.py (annotations)", py("check_public_signature_changes.py"),
      [Edit("annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt", "annotation class GodotName(val name: String)", "annotation class GodotName(val name: String, val extra: Int)")],
      "unannounced source break", "a parameter is added to a script annotation (annotations/ is a snapshotted surface, task 137 item 9)")
+
+case("check_public_signature_changes.py (Web parity)", py("check_public_signature_changes.py"),
+     [Edit("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated/GodotObject.kt",
+           "  internal fun callQueued(method: String, value: Double) {", "  fun call(method: String, value: Double) {")],
+     "WEB_PARITY_MEMBERS", "Web declares a `call` overload desktop does not have (a Unit-returning queued call hides the Variant `call`, task 129 E review S3)")
 case("check_typed_enums.py", py("check_typed_enums.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Long) {")],
      "typed_enums] FAIL", "an enum parameter goes back to a raw Long")

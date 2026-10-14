@@ -132,6 +132,13 @@ WEB_LOCAL_VARIANT_UTILITIES: dict[str, tuple[str | None, str | None, int | None]
     "wrap": ("Mathf.wrap(d[0], d[1], d[2])", None, 3),
 }
 
+# The text utilities Kotlin prints itself when no proxy is installed yet (review N9: a GD.print
+# before any script is ready must not throw): name -> separator between the values.
+WEB_TEXT_FALLBACK: dict[str, str] = {
+    "print": "", "print_rich": "", "print_verbose": "", "printerr": "", "printraw": "", "prints": " ",
+    "printt": "\\t", "push_error": "", "push_warning": "",
+}
+
 RNG_PENDING = "RNG: the engine's RandomPCG until the owner picks the engine RNG or a bit-exact Kotlin port"
 WEB_ENGINE_UTILITIES: dict[str, str] = {
     **{name: "text output: the engine's log, console and debugger" for name in (
@@ -355,6 +362,8 @@ def check_web_local_utilities(api_path: Path) -> list[str]:
             problems.append(f"utility {name}: in {homes or 'no table'}; list it in exactly one of {list(tables)}")
     for table, names in tables.items():
         problems += [f"{table} {n}: not a utility function in extension_api.json" for n in sorted(names - set(functions))]
+    problems += [f"WEB_TEXT_FALLBACK {n}: not a text utility in WEB_ENGINE_UTILITIES" for n in sorted(WEB_TEXT_FALLBACK)
+                 if not WEB_ENGINE_UTILITIES.get(n, "").startswith("text output")]
     for name, (bound, reason, body, _guard) in WEB_LOCAL_UTILITIES.items():
         fn = functions.get(name)
         if fn is None:
@@ -423,6 +432,17 @@ def render_web_local_utilities(api_path: Path, header: str) -> str:
         lines.append("      }")
         boxed_arms.append("\n".join(lines))
 
+    # Review N5: the Variant type each frame-form utility returns (0: void), so a nil answer from the
+    # engine fails loud instead of reading as 0.
+    frame_types = {"float": 3, "int": 2, "bool": 1, "void": 0}
+    returns = sorted(
+        (name, frame_types[fn.get("return_type", "void")])
+        for name, fn in functions.items()
+        if not fn["is_vararg"]
+        and all(a["type"] in _KOTLIN for a in fn.get("arguments", []))
+        and fn.get("return_type", "void") in frame_types
+    )
+    return_lines = [f'      "{name}" -> {t}' for name, t in returns]
     return "\n".join(
         [
             header.rstrip("\n"),
@@ -448,6 +468,23 @@ def render_web_local_utilities(api_path: Path, header: str) -> str:
             "    when (name) {",
             *id_lines,
             "      else -> -1",
+            "    }",
+            "",
+            "  /**",
+            "   * The Variant type frame-form utility [name] returns (0 for void), or -1 (a Variant) for the",
+            "   * others, which `UtilityCalls.call` decodes by the type the generated GD passes.",
+            "   */",
+            "  fun frameReturnType(name: String): Int =",
+            "    when (name) {",
+            *return_lines,
+            "      else -> -1",
+            "    }",
+            "",
+            "  /** The separator text utility [name] prints its values with, or null for the others. */",
+            "  fun textSeparator(name: String): String? =",
+            "    when (name) {",
+            *[f'      "{name}" -> "{sep}"' for name, sep in sorted(WEB_TEXT_FALLBACK.items())],
+            "      else -> null",
             "    }",
             "",
             "  /** Runs utility [id] on the frame's slots 1..N into its return slot; false: the engine's. */",

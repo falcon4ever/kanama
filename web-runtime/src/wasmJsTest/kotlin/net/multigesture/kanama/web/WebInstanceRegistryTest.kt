@@ -131,4 +131,16 @@ class WebInstanceRegistryTest {
     val second = registry.reserve(scriptId = 1)
     assertTrue((first and 0xffff) != (second and 0xffff))
   }
+
+  /** Task 129 E review N1: only a generation the slot has reached reads as freed. */
+  @Test
+  fun aFutureGenerationOfAnExistingSlotIsNotAFreedScript() {
+    val registry = registry()
+    val handle = registry.reserve(scriptId = 1)
+    registry.construct(handle, ::passThrough)
+    registry.free(handle)
+    assertTrue(registry.wasFreed(handle))
+    val future = handle + (1 shl 16)
+    assertFalse(registry.wasFreed(future))
+  }
 }

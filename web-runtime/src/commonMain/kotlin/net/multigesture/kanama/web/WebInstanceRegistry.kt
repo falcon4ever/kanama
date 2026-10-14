@@ -102,13 +102,16 @@ internal class WebInstanceRegistry(
 
   /**
    * True for a script handle whose script was freed (task 138 item 22): a script-namespace handle
-   * of a slot this registry minted that is no longer live or constructing. A browser handle, 0, or
-   * a slot this registry never had is not one.
+   * of a slot this registry minted that is no longer live or constructing. A browser handle, 0, a
+   * slot this registry never had, or a generation the slot has not reached yet (never minted, so a
+   * corrupt handle, which stays fatal) is not one.
    */
   fun wasFreed(handle: Int): Boolean {
     if (handle <= 0 || handle and BROWSER_NAMESPACE != 0) return false
     val slotIndex = slotIndex(handle)
-    if (slotIndex == 0 || slotIndex >= slots.size || generation(handle) == 0) return false
+    if (slotIndex == 0 || slotIndex >= slots.size) return false
+    val generation = generation(handle)
+    if (generation == 0 || generation > slots[slotIndex].generation) return false
     return !isLiveOrConstructing(handle)
   }
 

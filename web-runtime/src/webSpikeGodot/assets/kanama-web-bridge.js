@@ -2269,7 +2269,9 @@
         owner = this.activeOwnerHandle;
       }
       if (!owner) owner = this.objectQueryCallbacks.keys().next().value ?? 0;
-      if (!owner) throw new Error("Kanama Web builtin call: no proxy is installed to run it");
+      // No proxy yet (a GD.print before any script is ready): Kotlin prints a text utility itself
+      // and fails loud for anything else (review N9).
+      if (!owner) return "E:no proxy is installed";
       this.builtinCalls += 1;
       return this.immediateStringQuery(KANAMA_WEB_OPCODE_BUILTIN_CALL, owner, String(packed));
     },
@@ -2826,12 +2828,18 @@
         if (groupCommands === 0) return;
         const callback = this.applyCallbacks.get(groupOwner);
         if (!callback && this.isFreedScriptHandle(groupOwner)) {
-          // Task 138 item 22: an earlier group of this batch freed the owning script, so every
-          // command it owned targets a freed object: each is skipped and reported, as
-          // skipFreedCommand does for an engine-freed browser handle.
+          // Task 138 item 22: an earlier group of this batch freed the owning script, so no proxy
+          // can apply its commands: each is skipped and reported, as skipFreedCommand does for an
+          // engine-freed browser handle. Only a command on the script's own node targets a freed
+          // instance; one on another (live) object is reported as dropped with its script.
           let at = groupStart;
           for (let index = 0; index < groupCommands; index += 1) {
-            this.recordFreedSkip(words[at], words[at + 1], words[at + 3]);
+            const message =
+              words[at + 1] === groupOwner
+                ? FREED_INSTANCE_MESSAGE(words[at + 1])
+                : `Kanama Web command on handle=${words[at + 1]} skipped: the script that queued it ` +
+                  `(handle=${groupOwner}) was freed earlier in the same batch`;
+            this.recordFreedSkip(words[at], words[at + 1], words[at + 3], message);
             skippedFreed += 1;
             skippedIndices.add(groupFirstIndex + index);
             at += commandWordCount(words[at]);
@@ -3033,11 +3041,11 @@
       this.recordFreedSkip(opcode, handle, genericArgsId);
       return true;
     },
-    recordFreedSkip(opcode, handle, genericArgsId) {
+    recordFreedSkip(opcode, handle, genericArgsId, message = FREED_INSTANCE_MESSAGE(handle)) {
       // The skipped command's staged generic-call arguments would never be consumed by its
       // applier arm; drop them or a per-frame call on a freed node fills the staging map.
       if (opcode === 1001) this.stagedGenericArgs.delete(genericArgsId);
-      this.freedCommandSkips.push(FREED_INSTANCE_MESSAGE(handle));
+      this.freedCommandSkips.push(message);
     },
     /** Task 138 item 22: a script handle (bit 30 clear) whose script Kotlin has freed. */
     isFreedScriptHandle(handle) {

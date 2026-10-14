@@ -35,7 +35,7 @@ data class GodotCallable(
     /** Godot's `Callable.get_object`: the target, or null once it is freed. */
     fun getObject(): GodotObject? = if (GD.isInstanceValid(target)) target else null
 
-    /** Godot's `Callable.get_object_id`: the target's instance id, also once it is freed (as in Godot). */
+    /** Godot's `Callable.get_object_id` (Web: read on first use, then kept; native: at wrap). */
     fun getObjectId(): Long = target.instanceId
 
     /** Godot's `Callable.get_argument_count`: [method]'s argument count on the target. */

@@ -67,13 +67,11 @@ internal fun webRemoteUtilityCall(frame: BuiltinFrame, fn: UtilityFunction, argc
   if (result.startsWith("E:")) {
     error("Godot utility function ${fn.name} failed on Web: ${result.substring(2)}")
   }
-  storeFrameResult(
-    frame,
-    result,
-    "utility function ${fn.name}",
-    WebBuiltinSignatures.VARIANT_RETURN,
-  )
+  storeFrameResult(frame, result, "utility function ${fn.name}", fn.returnType)
 }
+
+/** The bridge's answer when no proxy is installed to run a builtin call (review N9). */
+private const val NO_PROXY = "E:no proxy is installed"
 
 /** The static flag that marks a utility-function call on the builtin opcode (task 129 E). */
 private const val UTILITY_FLAG = '2'
@@ -154,6 +152,19 @@ internal object UtilityCalls {
     val packed = buildString {
       append("0").append(US).append(fn.name).append(US).append(UTILITY_FLAG).append(US)
       for (arg in args) append(US).append(WebPackedValues.encodeVariant(arg))
+    }
+    val separator = fn.textSeparator
+    if (separator != null) {
+      // Review N9: a text utility before any proxy is installed prints here, as the Web GD did.
+      val result = webBuiltinTransportForTests?.invoke(packed) ?: webBuiltinTransport(packed)
+      if (result == NO_PROXY) {
+        println(args.joinToString(separator) { it.toString() })
+        return null
+      }
+      if (result.startsWith("E:")) {
+        error("Godot utility function ${fn.name} failed on Web: ${result.substring(2)}")
+      }
+      return decodeReturn(result, "utility function ${fn.name}", retType)
     }
     return decodeReturn(
       transport(packed, "utility function ${fn.name}"),

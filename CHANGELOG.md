@@ -171,24 +171,51 @@ gained, shows up in the pull request. Expressing the defaults is a separate, add
 ### Changed — Web compiles the shared `GD`, `Mathf` and `GodotCallable` (task 129 E, task 138 items 2 and 4)
 
 Web kept its own `GD` (16 members) and `Mathf` (18). It now compiles the same generated `GD` as
-desktop and iOS (every Godot utility function, with the typed overloads) and the same `Mathf`. A
-`GD` call that needs the engine crosses the Web bridge: Godot runs the utility function by name (the
-builtin opcode's utility form, one cached `Expression` per function and arity), so `GD.sin`,
-`GD.str`, `GD.varToStr` and `GD.seed` / `GD.randf` answer exactly what GDScript answers (the
-random functions now use Godot's global generator, as on desktop). `Mathf`'s arithmetic stays in
-Kotlin. The web3d smoke checks fourteen `GD` / `Mathf` results bit for bit against a GDScript twin.
+desktop and iOS (every Godot utility function, with the typed overloads) and the same `Mathf`. The
+math utilities run in Kotlin, with no bridge crossing: every `Mathf` member and `GD`'s arithmetic,
+rounding, interpolation and transcendental functions (`GD.lerpf`, `GD.floori`, `GD.sin`, `GD.pow`,
+`GD.ease`, `GD.dbToLinear`, ...; the Variant forms `GD.abs`, `GD.max`, `GD.clamp`, ... on `Double`
+or `Long` arguments). The arithmetic ones return GDScript's double bit for bit; the transcendental
+ones are within one ulp of the engine's (the browser's math library is not the engine's libm).
+`scripts/web_local_utilities.py` lists which utility runs where. The rest crosses the bridge, one
+synchronous call each (10-30 us): printing, `pushError` / `pushWarning`, `str`, `varToStr` and the
+other conversions, `typeOf`, `hash`, `weakref`, `instanceFromId`, `isInstanceIdValid`, the RID
+helpers, and the random functions, which use Godot's global generator as on desktop, so `GD.seed`
+/ `GD.randf` reproduce GDScript's sequence. The Web budget gate now also counts these synchronous
+builtin and utility calls per engine tick (`maxBuiltinCallsPerTick`). The web3d smoke checks 53
+`GD` / `Mathf` results against a GDScript twin within each one's bound.
 `GodotCallable` is the shared class on Web too (`call`, `callv`, `callDeferred`, `isValid`,
 `getObject`, `getArgumentCount`), `GodotSignal` gains `isConnected`, `getConnections`,
 `hasConnections`, `getObject`, `getObjectId`, `disconnect` and `emit`, and `GodotObject` gains the
 Variant `call(method, vararg args)`, `callv`, `callDeferred(method, vararg args)`,
-`getMethodArgumentCount` and `instanceId`. The Web bridge now carries a `List` / `Map` argument
-(`godotFormat`) and an `Array` / `Dictionary` / `Callable` / `Signal` result.
+`getMethodArgumentCount` and `instanceId` (read once, then kept, as desktop keeps the id it
+captured). The Web bridge now carries a `List` / `Map` argument (`godotFormat`) and an `Array` /
+`Dictionary` / `Callable` / `Signal` result; an object in a result keeps the handle that already
+tracks it, so a repeated `GD.instanceFromId` or `call("get_children")` neither grows the handle
+table nor changes identity (`call("get_children")[0] == getChild(0)`).
+
+Behaviour changes on Web, from the shared code:
+- `Mathf.inverseLerp(from, to, weight)` with `to == from` answers Godot's NaN / infinity (it
+  answered 0), and `Mathf.roundToInt` rounds halves away from zero like Godot's `roundi` (it
+  rounded them to even).
+- `GD.randiRange` / `GD.randfRange` no longer throw for `from > to`; Godot answers that case.
+- The random sequence after `GD.seed(n)` is Godot's (Web had its own generator).
+- `GodotObject.call(method, ...)` is desktop's: one immediate call that returns the method's
+  result. Web's queued `call(method, String)`, `call(method, Double)`,
+  `call(method, Vector3, Vector3)`, `callDeferred(method)` and `callDeferred(method, GodotObject)`
+  overloads, which returned `Unit` and hid the Variant ones, are gone.
 - **Source break:** `GD` and `Mathf` on Web take the shared signatures: `GD.print(message)` is
-  `GD.print(vararg values)`, `Mathf.isEqualApprox` uses Godot's tolerance instead of `1e-6`, and
-  `Mathf.PI` / `Mathf.TAU` are `const`. The Web-only spellings sources import by name
+  `GD.print(vararg values)`, `Mathf.isEqualApprox` uses Godot's tolerance instead of `1e-6`,
+  `Mathf.PI` / `Mathf.TAU` are `const`, and the parameters are named as on desktop
+  (`Mathf.pow(x, y)`, was `pow(value, exponent)`; `Mathf.inverseLerp(from, to, weight)`, was
+  `inverseLerp(from, to, value)`). The Web-only spellings sources import by name
   (`net.multigesture.kanama.api.radToDeg`, `randf`, `randi`, `randomize`, `pushError`, `Basis`)
   are kept. `Window` on Web is a generated `Viewport` subclass (its `handle` is the inherited
   `GodotObject.handle`; see below).
+- **Source break:** `GodotObject` and `top-level` on Web: the typed `call` / `callDeferred`
+  overloads above and their top-level `GodotObject.call` / `GodotObject.callDeferred` extensions
+  are removed; the Variant `call(method, vararg args): Any?` and
+  `callDeferred(method, vararg args): Any?` take those calls, as on desktop.
 
 ### Changed — Web `Window` is a generated `Viewport` subclass (task 129 E, inventory row 10)
 

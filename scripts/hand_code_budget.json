@@ -233,7 +233,7 @@
         "456 -> 505: task 134 D1: callback registry for any-arity delivery (dispatchArgs), await watcher release reasons (router vs emitter freed), connectAwait, and the webEmitSignalGeneric expect moved here from the transitional WebGodotApi.kt",
         "505 -> 508: task 131 item 12: the registry exposes a per-owner entry count for the leak probe",
         "508 -> 509: task 131 review fixes: the registry runs the user's lambda through userScript so only user failures are contained",
-        "509 -> 556: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+        "509 -> 556: task 138 item 2: GodotSignal's desktop queries on Web (isConnected, getConnections, hasConnections, getObject, getObjectId, disconnect, emit) and the webGenericCall / webGenericQueue expect seams the generated Object members call"
       ],
       "reason": "Web signal plumbing"
     },
@@ -251,7 +251,7 @@
       "lines": 77,
       "raises": [
         "62 -> 70: task 134 D1: the webEmitSignalGeneric actual (emit_signal with any arguments as one immediate generic call)",
-        "70 -> 77: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+        "70 -> 77: task 138 item 2: the webGenericCall / webGenericQueue actuals over WebExperimentalGenericCall"
       ],
       "reason": "Wasm JS bridge entry points"
     }
@@ -263,7 +263,7 @@
     "generate_api_wrapper.GD_MEMBER_SECTIONS[is_instance_valid]": {
       "lines": 8,
       "raises": [
-        "7 -> 8: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+        "7 -> 8: task 129 E: the comment names Web's liveness test (GodotObject.isInstanceLive)"
       ]
     },
     "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": {
@@ -342,7 +342,7 @@
       "lines": 50
     },
     "generate_web_wrappers.CLASS_POLICY[Node].custom": {
-      "lines": 53
+      "lines": 47
     },
     "generate_web_wrappers.CLASS_POLICY[Node].top_level": {
       "lines": 17
@@ -351,9 +351,9 @@
       "lines": 2
     },
     "generate_web_wrappers.CLASS_POLICY[Object].custom": {
-      "lines": 84,
+      "lines": 58,
       "raises": [
-        "49 -> 84: task 129 E / 138 items 2, 22: Web compiles the shared GD/Mathf/GodotCallable (GodotObject.isInstanceLive seam, Web Variant call/callv/callDeferred/instanceId for GodotCallable, generic-call seams and GodotSignal queries); the hand Window facade becomes a generated Viewport subclass"
+        "49 -> 58: task 129 E: GodotObject.isInstanceLive on Web (the shared GD.isInstanceValid's seam, answered from the handle tables); the Variant call/callv/callDeferred/getMethodArgumentCount/instanceId members are generated (WEB_GENERIC_METHODS, review S7: 84 -> 58)"
       ]
     },
     "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": {
