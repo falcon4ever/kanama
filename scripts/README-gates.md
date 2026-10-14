@@ -256,9 +256,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/validate_godot_api.py:280` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_browser_floor.py:110` | `except FloorError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/check_browser_floor.py:113` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/check_budgets.py:367` | `except BudgetError:` | justified: the raise IS the expected outcome; the flag below turns its absence into a failure |
-| `scripts/web/check_budgets.py:423` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/web/check_budgets.py:450` | `except BudgetError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/web/check_budgets.py:400` | `except BudgetError:` | justified: the raise IS the expected outcome; the flag below turns its absence into a failure |
+| `scripts/web/check_budgets.py:412` | `except BudgetError:` | justified: the raise IS the expected outcome; the flag below turns its absence into a failure |
+| `scripts/web/check_budgets.py:473` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/web/check_budgets.py:500` | `except BudgetError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/coverage_report.py:48` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/web/demos.sh:142` | `[[ "$1" == "spike" ]] \|\| kanama_web_demo_project_dir "$1" >/dev/null 2>&1` | justified: a probe; the registry lookup's exit status is the answer (unknown demo), its stdout/stderr are noise. |
 | `scripts/web/result_schema.py:235` | `except (OSError, json.JSONDecodeError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |

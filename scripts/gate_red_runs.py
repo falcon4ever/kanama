@@ -834,6 +834,18 @@ case("check_budgets.py --self-test (per-tick cap)", py("web/check_budgets.py", "
 case("check_budgets.py --self-test (record-only engine)", py("web/check_budgets.py", "--self-test"),
      [Edit("scripts/web/check_budgets.py", "        violations += check_builtin_calls(demo, measured, budgets, limits)\n        return violations\n", "        return violations\n")],
      "fps pre-fix builtin calls on record-only safari: expected red", "a record-only engine (Safari) stops grading builtin calls (review N6)")
+case("check_budgets.py --self-test (too few ticks, per tick)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", '            return [too_few_ticks_message("builtin calls per tick", ticks, limits)]', "            return []")],
+     "on record-only safari: expected red", "the per-tick builtin-call gate passes a run with too few ticks ungraded again (Safari skips the crossings check that used to report it)")
+case("check_budgets.py --self-test (too few ticks, per simulated second)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", '        return [too_few_ticks_message("builtin calls per simulated second", ticks, limits)]', "        return []")],
+     "bunnymark, 10 ticks (graded per simulated second) on record-only safari: expected red", "the per-simulated-second builtin-call gate passes a run with too few ticks ungraded again")
+case("check_budgets.py --self-test (both ceilings at demo level)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/check_budgets.py", "    if all(key in limits for key in BUILTIN_KEYS):\n", "    if False:\n")],
+     "must be a budget error for engine", "an engine naming one builtin-call ceiling silently drops the other of a demo that declared both")
+case("check_budgets.py --self-test (default cap margin)", py("web/check_budgets.py", "--self-test"),
+     [Edit("scripts/web/budgets.json", '"defaultMaxBuiltinCallsPerTick": 0.5,', '"defaultMaxBuiltinCallsPerTick": 0.45,')],
+     "under 1.9x the highest measured run", "the per-tick default sinks below 1.9x the CI runner's fps measurement (0.26 per tick)")
 case("web/bridge_simtime_selftest.mjs", ["node", "scripts/web/bridge_simtime_selftest.mjs"],
      [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "      if (this.simProcessRafTick !== this.rafTick) {\n", "      if (true) {\n")],
      "scripted node(s): simSeconds", "the bridge adds the _process delta once per scripted handle again: simSeconds scales with the number of scripted nodes (dodge's mobs made it 4-7x game time)")
