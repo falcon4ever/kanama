@@ -68,6 +68,16 @@ export async function collectPerformance(evaluate) {
         // crossing each; the per-tick ones run in Kotlin). Reported, not budgeted yet.
         builtinCalls: bridge.builtinCalls ?? 0,
         builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
+        // The handles lent to Kotlin for dispatch arguments (signal / input / method object
+        // arguments): how many were minted and released, the most alive at once, and the
+        // GDScript->JS calls the lending cost. Reported, not budgeted.
+        lentMints: bridge.lentMints ?? 0,
+        lentReleases: bridge.lentReleases ?? 0,
+        maxLiveLent: bridge.maxLiveLent ?? 0,
+        maxLiveBrowserHandles: bridge.maxLiveBrowserHandles ?? 0,
+        lendBridgeCalls: bridge.lendBridgeCalls ?? 0,
+        lendBridgeCallsPerTick:
+          ticks > 0 ? Math.round(((bridge.lendBridgeCalls ?? 0) / ticks) * 100) / 100 : 0,
       };
     })()`);
   } catch {

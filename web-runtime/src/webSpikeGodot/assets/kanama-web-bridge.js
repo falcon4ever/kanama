@@ -296,6 +296,15 @@
     objectFrees: 0,
     liveBrowserHandleCount: 0,
     maxLiveBrowserHandles: 0,
+    // The handles lent to Kotlin for a dispatch's object arguments (a signal argument, `_input`'s
+    // event, a method's object argument): minted, released, live now and at most, and the
+    // GDScript->JS calls the lending made (the dispatch-cost measure; the dispatch itself is not
+    // counted). Every driver's performance section reports them.
+    lentMints: 0,
+    lentReleases: 0,
+    liveLent: 0,
+    maxLiveLent: 0,
+    lendBridgeCalls: 0,
     lastConstructedObjectHandle: 0,
     lastFreedObjectHandle: 0,
     objectHandleGenerationAdvanced: false,
@@ -1414,6 +1423,7 @@
         slot.generation >= BROWSER_HANDLE_GENERATION_MASK ? 1 : slot.generation + 1;
       slot.kind = kind;
       slot.live = true;
+      slot.lent = false;
       const handle = BROWSER_HANDLE_NAMESPACE | (slot.generation << 16) | slotIndex;
       this.handleOwners.set(handle, owner);
       this.liveBrowserHandleCount += 1;
@@ -1421,11 +1431,27 @@
       return handle;
     },
     allocateTransientObjectHandle(owner) {
+      this.lendBridgeCalls += 1;
       const handle = this.allocateBrowserHandle("Object", owner);
       this.api.kanamaWebAdoptObjectHandle(handle);
+      this.countLent(this.browserHandleSlot(handle));
       return handle;
     },
+    /** A slot now holds a lent handle: counted until it is retired, however it is retired. */
+    countLent(slot) {
+      slot.lent = true;
+      this.lentMints += 1;
+      this.liveLent += 1;
+      this.maxLiveLent = Math.max(this.maxLiveLent, this.liveLent);
+    },
+    uncountLent(slot) {
+      if (!slot.lent) return;
+      slot.lent = false;
+      this.lentReleases += 1;
+      this.liveLent -= 1;
+    },
     releaseTransientObjectHandle(handle) {
+      this.lendBridgeCalls += 1;
       // The dispatched callback may have torn down the handle's owner (ui_accept retry
       // reloads the scene, freeing every node and releasing the owner's handles — this
       // transient among them). Already-released is fine; only release a live handle.
@@ -1455,6 +1481,7 @@
       if (kind === "SceneTree" && this.sceneTreeHandlesByOwner.get(owner) === handle) {
         this.sceneTreeHandlesByOwner.delete(owner);
       }
+      this.uncountLent(slot);
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
@@ -1571,6 +1598,7 @@
         }
         this.eraseObjectHandleEntry(handle, owner);
         this.api.kanamaWebDiscardBrowserHandle(handle);
+        this.uncountLent(slot);
         slot.live = false;
         slot.kind = null;
         this.handleOwners.delete(handle);
@@ -3384,6 +3412,11 @@
         objectFrees: this.objectFrees,
         maxLiveBrowserHandles: this.maxLiveBrowserHandles,
         liveBrowserHandles: this.liveBrowserHandleCount,
+        lentMints: this.lentMints,
+        lentReleases: this.lentReleases,
+        liveLent: this.liveLent,
+        maxLiveLent: this.maxLiveLent,
+        lendBridgeCalls: this.lendBridgeCalls,
         lastConstructedObjectHandle: this.lastConstructedObjectHandle,
         lastFreedObjectHandle: this.lastFreedObjectHandle,
         objectHandleGenerationAdvanced: this.objectHandleGenerationAdvanced,
