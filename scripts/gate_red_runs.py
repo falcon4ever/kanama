@@ -358,6 +358,42 @@ case("check_ios_single_call_returns.py (loop)", py("check_ios_single_call_return
              "private fun redRunDispatch(buf: Long): Long = buf\n\n"
              "internal fun redRunReadBack(): Long {\n  var cap = 0L\n  while (cap < 4L) {\n    cap = redRunDispatch(cap + 1L)\n  }\n  return cap\n}\n")],
      "loop-call", "an iOS read-back grows its buffer and calls the entry point again in a loop")
+def _single_call_case(label, body, expected, desc):
+    """A red run of check_ios_single_call_returns.py: [body] is the Kotlin that runs the engine method twice."""
+    case(f"check_ios_single_call_returns.py ({label})", py("check_ios_single_call_returns.py"),
+         [Create(f"{IOS}/binding/runtime/ZzRedRunBypass.kt",
+                 "package net.multigesture.kanama.binding.runtime\n\n"
+                 "private fun redRunDispatch(buf: Long): Long = buf\n\n" + body)],
+         expected, desc)
+
+
+_single_call_case(
+    "higher-level helper twice",
+    "internal fun redRunTwice(): String {\n"
+    "  val first = ObjectCalls.ptrcallRetUtf8(0L, 0L, 0L, 0L)\n  return first + ObjectCalls.ptrcallRetUtf8(0L, 0L, 0L, 0L)\n}\n"
+    "internal fun redRunTwiceNoArgs(m: RawSegment, i: RawSegment): String =\n"
+    "  ObjectCalls.ptrcallNoArgsRetString(m, i) + ObjectCalls.ptrcallNoArgsRetString(m, i)\n",
+    "double-call", "a higher-level single-call helper (ptrcallRetUtf8 / ptrcallNoArgsRetString) is called twice in one function")
+_single_call_case(
+    "List(n) lambda",
+    "internal fun redRunList(n: Int): List<Long> = List(n) { redRunDispatch(it.toLong()) }\n",
+    "loop-call", "an entry point runs inside a List(n) { .. } initializer lambda")
+_single_call_case(
+    "map lambda",
+    "internal fun redRunMap(n: Int): List<Long> = (0 until n).map { redRunDispatch(it.toLong()) }\n"
+    "internal fun redRunMapIndexed(n: Int) = (0 until n).mapIndexed { i, _ -> redRunDispatch(i.toLong()) }\n"
+    "internal fun redRunForEach(n: Int) { (0 until n).forEach { redRunDispatch(it.toLong()) } }\n"
+    "internal fun redRunRepeat(n: Int) { repeat(n) { redRunDispatch(1L) } }\n",
+    "inside a lambda of", "an entry point runs inside a map / mapIndexed / forEach / repeat lambda")
+_single_call_case(
+    "brace-less loops",
+    "internal fun redRunFor(n: Int) {\n  for (i in 0 until n) redRunDispatch(i.toLong())\n}\n"
+    "internal fun redRunWhile(n: Int) {\n  var i = 0\n  while (i < n)\n    i += redRunDispatch(1L).toInt()\n}\n",
+    "inside a for loop", "an entry point is the body of a brace-less for / while")
+_single_call_case(
+    "callable-reference alias",
+    "internal fun redRunAlias() {\n  val call = ::redRunDispatch\n  call(1L)\n  call(2L)\n}\n",
+    "alias ", "an entry point is aliased with a callable reference and called twice through the alias")
 case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],
