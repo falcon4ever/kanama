@@ -218,8 +218,9 @@ Behaviour changes on Web, from the shared code:
 - **Source break:** `GodotObject` and `top-level` on Web: the typed `call` / `callDeferred`
   overloads above are removed, and the Variant `call(method, vararg args): Any?` and
   `callDeferred(method, vararg args): Any?` take those calls, as on desktop. The top-level
-  `GodotObject.call` / `GodotObject.callDeferred` extensions Web sources import by name are kept,
-  in the Variant form.
+  `GodotObject.call` / `GodotObject.callDeferred` extensions Web sources imported by name are
+  removed too: delete `import net.multigesture.kanama.api.call` (and `.callDeferred`); the member
+  takes the call.
 
 ### Changed — Web `Window` is a generated `Viewport` subclass (task 129 E, inventory row 10)
 
