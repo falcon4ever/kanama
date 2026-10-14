@@ -94,6 +94,40 @@ performance gate.
 EOF
 }
 
+# The runtime self-tests' verdict (tasks 118, 129 A, 138 item 24), on every Kanama launch: no FAIL line and no
+# summary with a failed count, any phase (the frame-1 lines carry a parenthesised phase); and all three summaries
+# PRESENT with 0 failed: the C ptrcall matrix, the scene-init ObjectCalls summary and the frame-1 one. The
+# self-tests are compiled only into a -PkanamaIosSelfTest=true build, which this script makes; a console
+# without them means the build lost the flag or the app never reached its first frame, and fails.
+# `--check-selftest-log LOG` runs only this check on a saved console log (its red runs need no device).
+selftest_verdict() {
+  if rg -q 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [1-9][0-9]* failed' "$@"; then
+    echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
+    # justified: printing the evidence; the return 1 on the next line is the verdict.
+    rg 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$@" >&2 || true
+    return 1
+  fi
+  local summary
+  for summary in 'PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed' \
+                 'OBJECTCALLS SELFTEST: [0-9]+ passed, 0 failed' \
+                 'OBJECTCALLS SELFTEST \(frame 1\): [0-9]+ passed, 0 failed'; do
+    if ! rg -q "$summary" "$@"; then
+      echo "[ios_visual_smoke] runtime self-test summary missing: /$summary/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true has none)" >&2
+      return 1
+    fi
+  done
+  echo "[ios_visual_smoke] runtime self-tests (ptrcall matrix + ObjectCalls scene init + frame 1) all passed"
+}
+
+if [[ "${1:-}" == "--check-selftest-log" ]]; then
+  if [[ ! -f "${2:-}" ]]; then
+    echo "usage: scripts/ios_visual_smoke.sh --check-selftest-log CONSOLE_LOG" >&2
+    exit 2
+  fi
+  selftest_verdict "$2" && exit 0
+  exit 1
+fi
+
 godot_bin="${KANAMA_GODOT_BIN:-/Applications/Godot.app/Contents/MacOS/Godot}"
 xcode_developer_dir="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 device_udid="${KANAMA_IOS_DEVICE:-${KANAMA_IOS_SIMULATOR_UDID:-}}"
@@ -2336,6 +2370,9 @@ if [[ -z "$godot_project_baseline_dir" ]]; then
     installIosAddon
     "-PkanamaIosProjectDir=$project_dir"
     "-PkanamaXcodeDeveloperDir=$xcode_developer_dir"
+    # Task 138 item 24: the runtime self-tests are compiled only into a build that asks for them
+    # (users' builds carry none); the verdict below requires their summaries on every launch.
+    "-PkanamaIosSelfTest=true"
   )
   if [[ "$physical_device" -eq 1 ]]; then
     install_ios_addon_args+=("-PkanamaIosXcframeworkMode=device")
@@ -2703,11 +2740,7 @@ fi
 # once reported exit 0 over `OBJECTCALLS SELFTEST FAIL:` and `2 failed`). The optional parenthesised phase covers
 # the frame-1 lines (`OBJECTCALLS SELFTEST (frame 1) FAIL:`, `... (frame 1): 24 passed, 1 failed`), which the
 # phase-less patterns let through (task 129 A's first iPhone run printed PASS over one).
-if [[ -z "$godot_project_baseline_dir" ]] &&
-   rg -q 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [1-9][0-9]* failed' "$stderr_log" "$stdout_log"; then
-  echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
-  # justified: printing the evidence; the exit 1 on the next line is the verdict.
-  rg 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 || true
+if [[ -z "$godot_project_baseline_dir" ]] && ! selftest_verdict "$stderr_log" "$stdout_log"; then
   exit 1
 fi
 
@@ -2746,22 +2779,6 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] project script value-type NodePath property delivered"
   else
     echo "[ios_visual_smoke] project script value-type NodePath property missing" >&2
-    exit 1
-  fi
-  # Runtime self-tests (task 118, found by task 121's first device run): a FAIL line or a non-zero
-  # failed count in either self-test fails the gate. Before, only the presence of the ObjectCalls
-  # summary line was checked, so "197 passed, 1 failed" printed OK.
-  if rg -q 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [1-9][0-9]* failed' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
-    # justified: printing the evidence; the exit 1 on the next line is the verdict.
-    rg 'SELFTEST( \([^)]*\))? FAIL:|SELFTEST( MATRIX| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 || true
-    exit 1
-  fi
-  if rg -q 'PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed' "$stderr_log" "$stdout_log" \
-    && rg -q 'OBJECTCALLS SELFTEST: [0-9]+ passed, 0 failed' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] runtime self-tests (ptrcall matrix + ObjectCalls) all passed"
-  else
-    echo "[ios_visual_smoke] runtime self-test summary missing (ptrcall matrix / ObjectCalls)" >&2
     exit 1
   fi
   # Task 106: the scene-stored PackedScene @Export survived the export's text->binary

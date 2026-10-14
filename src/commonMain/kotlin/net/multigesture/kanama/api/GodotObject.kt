@@ -341,8 +341,13 @@ open class GodotObject(val handle: GodotHandle) {
      *   use the typed wrapper method instead (an owned `+1` you close), or `ClassDB.instantiate`,
      *   whose owned decode path retains before the Variant is destroyed.
      *
+     * The `RefCounted` ELEMENTS of an `Array`/`Dictionary` result are the exception: each is an
+     * owned `RefCounted` wrapper (`+1`, released by `close()` or the garbage collector), so a
+     * factory's fresh elements (`RegEx.search_all`, `call("make_items")`) stay alive (task 122).
+     *
      * The same applies to every Variant-path read on this class: [callDeferred], [callv], [get],
-     * [getMeta], [getScript]. Typed wrapper getters (`getMesh()`, `getAnimation(...)`) are the
+     * [getMeta], [getScript] ([callDeferred] also owns container elements; the reads keep them
+     * borrowed, the object still holds them). Typed wrapper getters (`getMesh()`, `getAnimation(...)`) are the
      * other convention — an owned `+1` the caller closes. Both are spelled out in
      * `docs/game-dev/godot-api.md` "Resource Ownership" and, for the ABI, in
      * `docs/contributing/wrapper-maintenance.md` "RefCounted Return Ownership".

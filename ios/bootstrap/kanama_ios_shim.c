@@ -72,6 +72,14 @@ extern void kanama_ios_runtime_script_resource_property_class_name(
     char *buffer,
     int32_t buffer_size
 );
+// Task 138 item 8: an @Export's default value (its initializer literal, as desktop's registrar has
+// it) PT-tagged into ret_tag/ret_buf like a script instance get; 0 = no default known.
+extern int32_t kanama_ios_runtime_script_resource_property_default(
+    int64_t script_handle,
+    int32_t property_index,
+    int32_t *ret_tag,
+    void *ret_buf
+);
 extern int32_t kanama_ios_runtime_script_resource_signal_count(int64_t script_handle);
 extern void kanama_ios_runtime_script_resource_signal_name(
     int64_t script_handle,
@@ -193,11 +201,27 @@ extern int32_t kanama_ios_runtime_dispatch_callable(
     int32_t argument_count
 );
 extern void kanama_ios_runtime_release_callable(int64_t callback_id);
+// Task 113: one call per custom Callable created for callback_id (connect, and the disconnect
+// temp) and one per Callable freed (kanama_ios_callable_free); the runtime releases the closure
+// when the LAST Callable of its id is gone, not the first (a refused second connect's temp, a
+// reference-counted connect).
+extern void kanama_ios_runtime_callable_created(int64_t callback_id);
+extern void kanama_ios_runtime_callable_freed(int64_t callback_id);
+// Task 138 item 24: the runtime self-tests (the C ptrcall matrix below and the Kotlin OBJECTCALLS
+// rows, scene init + frame 1) are a Kanama test hook. build.gradle.kts defines
+// KANAMA_IOS_SELFTEST=1 only for the DEBUG shim of a -PkanamaIosSelfTest=true build (Kanama's
+// device runners pass it), and only that build compiles the Kotlin side; every other build,
+// release included, neither runs nor carries them.
+#ifndef KANAMA_IOS_SELFTEST
+#define KANAMA_IOS_SELFTEST 0
+#endif
+#if KANAMA_IOS_SELFTEST
 extern void kanama_ios_runtime_objectcalls_selftest(void);
 // Second phase of the same self-test, run once on the first frame instead of at scene-level
 // extension init: it holds the rows whose singleton the engine registers later
 // (register_server_singletons() — the RenderingServer and friends).
 extern void kanama_ios_runtime_objectcalls_selftest_frame(void);
+#endif
 
 typedef enum {
     KANAMA_IOS_CLASS_SCRIPT_LANGUAGE = 1,
@@ -229,6 +253,8 @@ typedef enum {
     KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_CREATE,
     KANAMA_IOS_VIRTUAL_SCRIPT_HAS_METHOD,
     KANAMA_IOS_VIRTUAL_SCRIPT_HAS_SIGNAL,
+    KANAMA_IOS_VIRTUAL_SCRIPT_HAS_PROPERTY_DEFAULT,
+    KANAMA_IOS_VIRTUAL_SCRIPT_GET_PROPERTY_DEFAULT,
     KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT,
     KANAMA_IOS_VIRTUAL_SCRIPT_RPC_CONFIG,
     KANAMA_IOS_VIRTUAL_RESOURCE_GET_TYPE,
@@ -390,6 +416,7 @@ static GDExtensionInterfaceGetVariantFromTypeConstructor g_get_variant_from_type
 static GDExtensionInterfaceGetVariantToTypeConstructor g_get_variant_to_type_constructor = NULL;
 static GDExtensionInterfaceVariantDestroy g_variant_destroy = NULL;
 static GDExtensionInterfaceVariantGetType g_variant_get_type = NULL;
+static GDExtensionInterfaceVariantGetObjectInstanceId g_variant_get_object_instance_id = NULL;
 static GDExtensionInterfaceVariantNewNil g_variant_new_nil = NULL;
 static GDExtensionPtrDestructor g_string_name_destructor = NULL;
 static GDExtensionPtrDestructor g_string_destructor = NULL;
@@ -427,6 +454,7 @@ static GDExtensionMethodBindPtr g_node_set_process_shortcut_input_bind = NULL;
 static GDExtensionMethodBindPtr g_node_set_process_unhandled_key_input_bind = NULL;
 static GDExtensionMethodBindPtr g_object_is_class_bind = NULL;
 static GDExtensionMethodBindPtr g_ref_counted_reference_bind = NULL;
+static GDExtensionMethodBindPtr g_ref_counted_unreference_bind = NULL;
 static GDExtensionMethodBindPtr g_resource_loader_load_bind = NULL;
 static GDExtensionMethodBindPtr g_object_emit_signal_bind = NULL;
 static GDExtensionMethodBindPtr g_object_connect_bind = NULL;
@@ -969,6 +997,12 @@ static int kanama_ios_resolve_godot_api(void) {
     // instance id at construction and validity is answered by the ObjectDB lookup, never by
     // dereferencing the possibly-freed object pointer. Optional like the entry above.
     g_object_get_instance_from_id = (GDExtensionInterfaceObjectGetInstanceFromId)kanama_ios_lookup("object_get_instance_from_id");
+    // Task 122 item 3: whether a container element is a RefCounted, read from the Variant (bit 63
+    // of its ObjectID), so a freed Node in the container is never dereferenced. Optional like the
+    // entries above: without it the elements stay borrowed.
+    g_variant_get_object_instance_id = (GDExtensionInterfaceVariantGetObjectInstanceId)kanama_ios_lookup(
+        "variant_get_object_instance_id"
+    );
     // Task 131: a contained Kotlin exception is reported as a Godot script error (Output panel,
     // Errors tab, device log) through kanama_ios_report_script_error. Optional like the two
     // entries above: without it the Kotlin side still prints its stderr trace.
@@ -1819,7 +1853,7 @@ static void kanama_ios_destroy_packed_arg(int32_t tag, uint64_t *cell);
 static void kanama_ios_cache_packed_byte_methods(void);
 static int32_t kanama_ios_decode_variant_scalar(
     uint8_t *ret_variant, int64_t *out_int, double *out_double, char *out_str, int64_t out_str_size,
-    int64_t *out_str_len, int32_t *out_is_refcounted);
+    int64_t *out_str_len, int32_t *out_is_refcounted, int32_t own_elements);
 // PackedStringArray BUILD-tagged arg (task 100, parcel 4): built from the string blob by the task-13
 // blob builder, defined after the dispatch.
 static void kanama_ios_build_packed_string_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
@@ -2401,7 +2435,7 @@ static int32_t kanama_ios_boxed_return(
                 if (destroy != NULL) destroy((GDExtensionTypePtr)ret_cell);
             }
             result = kanama_ios_decode_variant_scalar(
-                ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted);
+                ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted, 0);
             g_variant_destroy((GDExtensionVariantPtr)ret_variant);
             break;
         }
@@ -3820,6 +3854,16 @@ typedef struct {
     int64_t len;
     int64_t cap;
     int oom;
+    // Task 122 item 3: set by the Object.call family only (kanama_ios_godot_object_call's
+    // own_elements). An OBJECT record whose object is a RefCounted is then retained while the
+    // container still holds it and carries a ninth payload byte, 1 = Kotlin receives that +1 as an
+    // owning wrapper (0 = borrowed, as without the flag). Every retained object is listed here
+    // until the blob is handed over, so a blob that never reaches Kotlin (OOM, a pending slot
+    // dropped undrained) releases what it took.
+    int retain_refcounted;
+    GDExtensionObjectPtr *retained;
+    int32_t retained_count;
+    int32_t retained_cap;
 } KanamaIosBlob;
 static void kanama_ios_blob_encode_packed(KanamaIosBlob *b, int32_t vtype, uint8_t *variant);
 
@@ -3860,6 +3904,70 @@ static void kanama_ios_blob_patch_i32(KanamaIosBlob *b, int64_t at, int32_t v) {
     if (!b->oom && at + 4 <= b->len) {
         memcpy(b->buf + at, &v, 4);
     }
+}
+
+// Release the references a blob took (task 122 item 3) and free the list: RefCounted.unreference,
+// and object_destroy when that dropped the count to zero (desktop's releaseRefCounted).
+static void kanama_ios_release_retained(GDExtensionObjectPtr *objects, int32_t count) {
+    if (objects == NULL) {
+        return;
+    }
+    GDExtensionMethodBindPtr unreference_bind = kanama_ios_get_method_bind_cached(
+        &g_ref_counted_unreference_bind, "RefCounted", "unreference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+    for (int32_t i = 0; i < count; i++) {
+        if (unreference_bind == NULL) {
+            kanama_ios_fault(__func__, "null-bind", "RefCounted.unreference");
+            break;
+        }
+        GDExtensionBool last = 0;
+        g_object_method_bind_ptrcall(unreference_bind, objects[i], NULL, &last);
+        if (last) {
+            g_object_destroy(objects[i]);
+        }
+    }
+    free(objects);
+}
+
+// The OBJECT record's owned byte for `variant` when the blob retains (task 122 item 3): takes a
+// reference to a RefCounted element and lists it; returns 1 when it did. The element's class comes
+// from its ObjectID (bit 63 = RefCounted) and its pointer from ObjectDB, never from the pointer
+// the Variant stores, which is stale for a freed Node.
+static int kanama_ios_blob_retain_element(KanamaIosBlob *b, uint8_t *variant, GDExtensionObjectPtr *io_object) {
+    if (g_variant_get_object_instance_id == NULL || g_object_get_instance_from_id == NULL) {
+        return 0;
+    }
+    uint64_t id = (uint64_t)g_variant_get_object_instance_id((GDExtensionConstVariantPtr)variant);
+    if (id == 0 || (id & (UINT64_C(1) << 63)) == 0) {
+        return 0;
+    }
+    GDExtensionObjectPtr live = g_object_get_instance_from_id((GDObjectInstanceID)id);
+    if (live == NULL) {
+        return 0;
+    }
+    GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
+        &g_ref_counted_reference_bind, "RefCounted", "reference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+    if (reference_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", "RefCounted.reference");
+        return 0;
+    }
+    if (b->retained_count == b->retained_cap) {
+        int32_t ncap = (b->retained_cap > 0) ? b->retained_cap * 2 : 8;
+        GDExtensionObjectPtr *grown =
+            (GDExtensionObjectPtr *)realloc(b->retained, (size_t)ncap * sizeof(GDExtensionObjectPtr));
+        if (grown == NULL) {
+            // No room to list it: do not take a reference that nothing could release. The blob is
+            // marked OOM, so the whole result is dropped (and the listed references released).
+            b->oom = 1;
+            return 0;
+        }
+        b->retained = grown;
+        b->retained_cap = ncap;
+    }
+    GDExtensionBool referenced = 0;
+    g_object_method_bind_ptrcall(reference_bind, live, NULL, &referenced);
+    b->retained[b->retained_count++] = live;
+    *io_object = live;
+    return 1;
 }
 
 // Append a Godot String's utf8 bytes (no length prefix; the caller wrote one if it needs it).
@@ -3926,13 +4034,20 @@ static void kanama_ios_blob_encode_variant(KanamaIosBlob *b, uint8_t *variant, i
         case KANAMA_IOS_VARIANT_TYPE_OBJECT: {
             GDExtensionObjectPtr o = NULL;
             if (g_variant_to_object != NULL) g_variant_to_object(&o, variant);
+            // Elements are BORROWED handles on every path but the Object.call family's (desktop
+            // parity: readArrayScalars). There (b->retain_refcounted, task 122 item 3) a RefCounted
+            // element is retained here, while the container still holds it, in this single encode
+            // pass, and its record carries the owned byte; the generated *RetArray wrappers and
+            // the measure-then-fill path never set the flag.
+            uint8_t owned = 0;
+            if (b->retain_refcounted) {
+                owned = (uint8_t)kanama_ios_blob_retain_element(b, variant, &o);
+            }
             int64_t h = (int64_t)(intptr_t)o;
             kanama_ios_blob_put(b, &h, 8);
-            // Elements are BORROWED handles (desktop parity: readArrayScalars). A RefCounted element
-            // whose only reference lives in the returned container dies with the return Variant —
-            // task 122 records the owning design (owned flag threaded through object_call, one
-            // encode pass) as the follow-up; an unconditional reference() here leaked on every
-            // generated *RetArray wrapper and double-counted on the measure-then-fill path.
+            if (b->retain_refcounted) {
+                kanama_ios_blob_put(b, &owned, 1);
+            }
             break;
         }
         case KANAMA_IOS_VARIANT_TYPE_STRING: {
@@ -4165,6 +4280,10 @@ static int kanama_ios_ptrcall_encode_container(
 
 static char *g_pending_container_blob = NULL;
 static int64_t g_pending_container_len = 0;
+// The references a parked blob took (task 122 item 3): handed to Kotlin with the blob by the take
+// below, released when the blob is dropped undrained.
+static GDExtensionObjectPtr *g_pending_container_retained = NULL;
+static int32_t g_pending_container_retained_count = 0;
 
 static void kanama_ios_drop_pending_container_blob(void) {
     if (g_pending_container_blob != NULL) {
@@ -4172,16 +4291,28 @@ static void kanama_ios_drop_pending_container_blob(void) {
         g_pending_container_blob = NULL;
     }
     g_pending_container_len = 0;
+    // Detach before releasing: an unreference that frees an object can run script code that
+    // parks a new blob here.
+    GDExtensionObjectPtr *retained = g_pending_container_retained;
+    int32_t retained_count = g_pending_container_retained_count;
+    g_pending_container_retained = NULL;
+    g_pending_container_retained_count = 0;
+    kanama_ios_release_retained(retained, retained_count);
 }
 
 // Hand a finished blob to the caller: copied into out_buf when it fits (and freed), otherwise
 // parked in the single pending slot for kanama_ios_godot_take_pending_container_blob. Returns the
 // blob's full length, or -1 on encoder OOM (blob freed, nothing parked). The one writer of the
 // pending slot besides the drop above (task 121 unified the two producers).
+// The references the blob took (task 122 item 3) travel with it: released on OOM, handed to
+// Kotlin with an inline blob, parked with a parked one.
 static int64_t kanama_ios_blob_deliver_or_park(KanamaIosBlob *b, char *out_buf, int64_t buf_size) {
     if (b->oom) {
         free(b->buf);
         b->buf = NULL;
+        kanama_ios_release_retained(b->retained, b->retained_count);
+        b->retained = NULL;
+        b->retained_count = 0;
         return -1;
     }
     int64_t len = b->len;
@@ -4190,11 +4321,16 @@ static int64_t kanama_ios_blob_deliver_or_park(KanamaIosBlob *b, char *out_buf, 
             memcpy(out_buf, b->buf, (size_t)len);
         }
         free(b->buf);
+        free(b->retained);
     } else {
         g_pending_container_blob = b->buf;
         g_pending_container_len = len;
+        g_pending_container_retained = b->retained;
+        g_pending_container_retained_count = b->retained_count;
     }
     b->buf = NULL;
+    b->retained = NULL;
+    b->retained_count = 0;
     return len;
 }
 
@@ -4282,6 +4418,10 @@ int64_t kanama_ios_godot_take_pending_container_blob(
     if (out_buf != NULL && n > 0) {
         memcpy(out_buf, g_pending_container_blob, (size_t)n);
     }
+    // The blob's references go to Kotlin with its bytes (task 122 item 3): forget, do not release.
+    free(g_pending_container_retained);
+    g_pending_container_retained = NULL;
+    g_pending_container_retained_count = 0;
     kanama_ios_drop_pending_container_blob();
     return len;
 }
@@ -6298,7 +6438,8 @@ int64_t kanama_ios_godot_ptrcall_ret_callable_static(
 // out_double, String/StringName/NodePath -> utf8 in out_str (or parked, see above), Object ->
 // handle in out_int (retained + reported when out_is_refcounted is non-NULL, the owned decode),
 // Vector2/Vector2i/Vector3/Color -> raw component bytes in out_str, Array/Dictionary/Packed*Array
-// -> one blob record in out_str (or parked, task 121). Anything else leaves the outs zero and
+// -> one blob record in out_str (or parked, task 121), its RefCounted elements retained and marked
+// owned when own_elements is non-zero (task 122 item 3). Anything else leaves the outs zero and
 // Kotlin surfaces null, matching desktop's RetVariantScalar. Returns the Variant type.
 // Shared by kanama_ios_godot_object_call and kanama_ios_godot_ptrcall_ret_variant_scalar; the
 // caller destroys ret_variant afterwards.
@@ -6309,7 +6450,8 @@ static int32_t kanama_ios_decode_variant_scalar(
     char *out_str,
     int64_t out_str_size,
     int64_t *out_str_len,
-    int32_t *out_is_refcounted
+    int32_t *out_is_refcounted,
+    int32_t own_elements
 ) {
     int32_t ret_type = (int32_t)g_variant_get_type(ret_variant);
     switch (ret_type) {
@@ -6452,6 +6594,9 @@ static int32_t kanama_ios_decode_variant_scalar(
             // empty out_str and surfaced null (the third-person smoke's _force_loop read).
             kanama_ios_drop_pending_container_blob();
             KanamaIosBlob b = { NULL, 0, 0, 0 };
+            // Task 122 item 3: the Object.call family retains its RefCounted elements here, while
+            // ret_variant still holds them (the caller destroys it after this returns).
+            b.retain_refcounted = own_elements;
             kanama_ios_blob_encode_variant(&b, ret_variant, 0);
             int64_t len = kanama_ios_blob_deliver_or_park(&b, out_str, out_str_size);
             if (out_str_len != NULL) *out_str_len = (len < 0) ? 0 : len;
@@ -6810,7 +6955,7 @@ static int32_t kanama_ios_godot_ptrcall_ret_variant_scalar_dispatch(
     kanama_ios_godot_ptrcall_dispatch(
         method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_RET_VARIANT_CELL, ret_variant);
     int32_t ret_type = kanama_ios_decode_variant_scalar(
-        ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, NULL);
+        ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, NULL, 0);
     g_variant_destroy((GDExtensionVariantPtr)ret_variant);
     return ret_type;
 }
@@ -6886,7 +7031,8 @@ static int32_t kanama_ios_godot_object_call_dispatch(
     char *out_str,
     int64_t out_str_size,
     int64_t *out_str_len,
-    int32_t *out_is_refcounted
+    int32_t *out_is_refcounted,
+    int32_t own_elements
 ) {
     if (out_int != NULL) *out_int = 0;
     if (out_double != NULL) *out_double = 0.0;
@@ -6938,7 +7084,8 @@ static int32_t kanama_ios_godot_object_call_dispatch(
     int32_t ret_type = KANAMA_IOS_VARIANT_TYPE_NIL;
     if (call_ok) {
         ret_type = kanama_ios_decode_variant_scalar(
-            ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted);
+            ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted,
+            own_elements);
     }
 
     g_variant_destroy(ret_variant);
@@ -6971,7 +7118,8 @@ int32_t kanama_ios_godot_object_call(
     char *out_str,
     int64_t out_str_size,
     int64_t *out_str_len,
-    int32_t *out_is_refcounted
+    int32_t *out_is_refcounted,
+    int32_t own_elements
 ) {
     // Null-instance rejection, kept verbatim from before the _dispatch split: the
     // out-parameter preamble is repeated here because callers decode the out-parameters
@@ -6986,7 +7134,7 @@ int32_t kanama_ios_godot_object_call(
     }
     return kanama_ios_godot_object_call_dispatch(
         method_bind, instance, arg_tags, arg_ptrs, arg_count, out_int, out_double, out_str,
-        out_str_size, out_str_len, out_is_refcounted);
+        out_str_size, out_str_len, out_is_refcounted, own_elements);
 }
 
 // Static-method sibling of kanama_ios_godot_object_call: the same body with a NULL instance, for
@@ -7002,11 +7150,12 @@ int32_t kanama_ios_godot_object_call_static(
     char *out_str,
     int64_t out_str_size,
     int64_t *out_str_len,
-    int32_t *out_is_refcounted
+    int32_t *out_is_refcounted,
+    int32_t own_elements
 ) {
     return kanama_ios_godot_object_call_dispatch(
         method_bind, 0, arg_tags, arg_ptrs, arg_count, out_int, out_double, out_str, out_str_size,
-        out_str_len, out_is_refcounted);
+        out_str_len, out_is_refcounted, own_elements);
 }
 
 // task 43 — ClassDB.instantiate: the return Variant holds the SOLE reference to the freshly
@@ -7796,8 +7945,12 @@ static void *kanama_ios_virtual_for_script(GDExtensionConstStringNamePtr name) {
     if (kanama_ios_string_name_eq(name, g_name__get_method_info)) return (void *)KANAMA_IOS_VIRTUAL_DICTIONARY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__is_tool)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
     if (kanama_ios_string_name_eq(name, g_name__has_script_signal)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_HAS_SIGNAL;
-    if (kanama_ios_string_name_eq(name, g_name__has_property_default_value)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
-    if (kanama_ios_string_name_eq(name, g_name__get_property_default_value)) return (void *)KANAMA_IOS_VIRTUAL_VARIANT_NIL;
+    if (kanama_ios_string_name_eq(name, g_name__has_property_default_value)) {
+        return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_HAS_PROPERTY_DEFAULT;
+    }
+    if (kanama_ios_string_name_eq(name, g_name__get_property_default_value)) {
+        return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_GET_PROPERTY_DEFAULT;
+    }
     if (kanama_ios_string_name_eq(name, g_name__update_exports)) return (void *)KANAMA_IOS_VIRTUAL_VOID;
     if (kanama_ios_string_name_eq(name, g_name__get_script_method_list)) return (void *)KANAMA_IOS_VIRTUAL_ARRAY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__get_script_property_list)) return (void *)KANAMA_IOS_VIRTUAL_ARRAY_EMPTY;
@@ -7967,6 +8120,34 @@ static void kanama_ios_call_virtual_with_data(
                 has_signal = kanama_ios_script_signal_index(extension_instance, signal_name) >= 0 ? 1 : 0;
             }
             *((uint8_t *)ret) = has_signal;
+            break;
+        }
+        case KANAMA_IOS_VIRTUAL_SCRIPT_HAS_PROPERTY_DEFAULT:
+        case KANAMA_IOS_VIRTUAL_SCRIPT_GET_PROPERTY_DEFAULT: {
+            // Task 138 item 8: Script._has/_get_property_default_value answer the @Export's
+            // initializer (desktop's registrar parity), so a packed scene leaves a property at its
+            // default out and property_get_revert has a value. Before, every property had none.
+            // args[0] points at the StringName itself (see _has_script_signal).
+            int is_has = id == KANAMA_IOS_VIRTUAL_SCRIPT_HAS_PROPERTY_DEFAULT;
+            int32_t found = 0;
+            int32_t ret_tag = KANAMA_IOS_PT_VOID;
+            _Alignas(16) uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
+            memset(ret_buf, 0, sizeof(ret_buf));
+            int32_t property_index = (args != NULL && args[0] != NULL)
+                ? kanama_ios_script_property_index(extension_instance, (GDExtensionConstStringNamePtr)args[0])
+                : -1;
+            if (property_index >= 0 && extension_instance != NULL) {
+                found = kanama_ios_runtime_script_resource_property_default(
+                    extension_instance->script_handle, property_index, &ret_tag, ret_buf);
+            }
+            int has_default = found && ret_tag != KANAMA_IOS_PT_VOID;
+            if (is_has) {
+                *((uint8_t *)ret) = has_default ? 1 : 0;
+            } else if (has_default) {
+                kanama_ios_pt_return_to_variant(ret_tag, ret_buf, (uint8_t *)ret);
+            } else {
+                kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)ret);
+            }
             break;
         }
         case KANAMA_IOS_VIRTUAL_SCRIPT_METHOD_ARG_COUNT:
@@ -8280,10 +8461,10 @@ static void kanama_ios_callable_trampoline(
 );
 
 // Called by Godot when the last copy of the custom callable is destroyed (e.g.
-// the connection is removed or the emitting object is freed). Releases the
-// Kotlin-side callback so it can be garbage collected.
+// the connection is removed or the emitting object is freed). The Kotlin-side callback is
+// released when the last Callable of its id is gone (task 113, kanama_ios_runtime_callable_freed).
 static void kanama_ios_callable_free(void *callable_userdata) {
-    kanama_ios_runtime_release_callable((int64_t)(intptr_t)callable_userdata);
+    kanama_ios_runtime_callable_freed((int64_t)(intptr_t)callable_userdata);
 }
 
 int64_t kanama_ios_godot_object_connect_callable(
@@ -8331,6 +8512,7 @@ int64_t kanama_ios_godot_object_connect_callable(
     uint8_t callable_value[24];
     memset(callable_value, 0, sizeof(callable_value));
     g_callable_custom_create2((GDExtensionUninitializedTypePtr)callable_value, &info);
+    kanama_ios_runtime_callable_created(callback_id);
 
     uint8_t callable_variant[24];
     memset(callable_variant, 0, sizeof(callable_variant));
@@ -8384,8 +8566,9 @@ int64_t kanama_ios_godot_object_connect_callable(
 // the SAME call_func + callback_id userdata as kanama_ios_godot_object_connect_callable. With no
 // hash/equal funcs, Godot uses (call_func, callable_userdata) as the Callable identity, so the
 // recreated Callable compares equal to the connected one and disconnect removes it. free_func fires
-// (idempotently — IosCallableRegistry.release is a HashMap.remove) for both the removed original and
-// this temp. Returns 0 on a clean dispatch, -1 otherwise.
+// for both the removed original and this temp, each counted down (task 113), so a disconnect Godot
+// refuses or only counts down (CONNECT_REFERENCE_COUNTED) keeps the callback.
+// Returns 0 on a clean dispatch, -1 otherwise.
 //
 // The temp MUST carry the receiver's ObjectID too (task 108). Object::_disconnect reads
 // `p_callable.get_object()` from the Callable it is GIVEN — not from the stored slot — and only
@@ -8438,6 +8621,7 @@ int32_t kanama_ios_godot_object_disconnect_callable(
     uint8_t callable_value[24];
     memset(callable_value, 0, sizeof(callable_value));
     g_callable_custom_create2((GDExtensionUninitializedTypePtr)callable_value, &info);
+    kanama_ios_runtime_callable_created(callback_id);
 
     uint8_t callable_variant[24];
     uint8_t signal_variant[24];
@@ -9686,7 +9870,7 @@ static void kanama_ios_frame(void) {
     if (g_main_loop_callback_frame_count < INT_MAX) {
         g_main_loop_callback_frame_count++;
     }
-#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
+#if KANAMA_IOS_SELFTEST
     // First-frame phase of the Kotlin ObjectCalls self-test: the rows whose singleton does not
     // exist yet at scene-level extension init (Godot adds the server singletons in
     // register_server_singletons(), long after initialize_extensions(INITIALIZATION_LEVEL_SCENE)).
@@ -9700,7 +9884,7 @@ static void kanama_ios_frame(void) {
             kanama_ios_runtime_objectcalls_selftest_frame();
         }
     }
-#endif // KANAMA_IOS_DEBUG_VARIANT_CHECKS
+#endif // KANAMA_IOS_SELFTEST
     kanama_ios_runtime_frame();
 }
 
@@ -9724,13 +9908,13 @@ static void kanama_ios_register_main_loop_callbacks(void) {
     fprintf(stderr, "[kanama][ios][c] registered main loop frame callback\n");
 }
 
-#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
-// Debug-build guardrail: the generic ptrcall dispatch has no runtime error check of
+#if KANAMA_IOS_SELFTEST
+// Self-test build guardrail: the generic ptrcall dispatch has no runtime error check of
 // its own (a wrong type tag silently reads/writes the wrong bytes), so we validate
 // it at scene init with a type-coverage round-trip matrix against real Godot —
 // every PT tag the platformer needs, with known expected values. Critically covers
 // the float32-vs-float64 and int32 width distinctions (the AudioStreamPlayer-class
-// bug). Runs once at startup; debug builds only. Test objects are intentionally
+// bug). Runs once at startup; KANAMA_IOS_SELFTEST builds only. Test objects are intentionally
 // leaked (a handful, one-time) to keep the probe simple and safe.
 static void kanama_ios_ptrcall_selftest(void) {
     int pass = 0;
@@ -11003,7 +11187,7 @@ static void kanama_ios_ptrcall_selftest(void) {
         memset(buf, 0, sizeof(buf));
         int64_t slen = 0;
         int32_t rt = kanama_ios_godot_object_call(call_bind, node3d, ct, ca, 1,
-            NULL, NULL, buf, (int64_t)sizeof(buf), &slen, NULL);
+            NULL, NULL, buf, (int64_t)sizeof(buf), &slen, NULL, 0);
         KANAMA_IOS_ST_CHECK("variant-call get_class==Node3D",
             rt == KANAMA_IOS_VARIANT_TYPE_STRING && slen == 6 && strncmp(buf, "Node3D", 6) == 0);
     }
@@ -11016,11 +11200,11 @@ static void kanama_ios_ptrcall_selftest(void) {
         int64_t meta_val = 4242;
         const void *sa[3] = { "set_meta", "kanama_call", &meta_val };
         int32_t st[3] = { KANAMA_IOS_PT_STRING, KANAMA_IOS_PT_STRING, KANAMA_IOS_PT_INT64 };
-        kanama_ios_godot_object_call(call_bind, node3d, st, sa, 3, NULL, NULL, NULL, 0, NULL, NULL);
+        kanama_ios_godot_object_call(call_bind, node3d, st, sa, 3, NULL, NULL, NULL, 0, NULL, NULL, 0);
         const void *ga[2] = { "get_meta", "kanama_call" };
         int32_t gt[2] = { KANAMA_IOS_PT_STRING, KANAMA_IOS_PT_STRING };
         int64_t got = 0;
-        int32_t rt = kanama_ios_godot_object_call(call_bind, node3d, gt, ga, 2, &got, NULL, NULL, 0, NULL, NULL);
+        int32_t rt = kanama_ios_godot_object_call(call_bind, node3d, gt, ga, 2, &got, NULL, NULL, 0, NULL, NULL, 0);
         KANAMA_IOS_ST_CHECK("variant-call set_meta/get_meta int round-trip",
             rt == KANAMA_IOS_VARIANT_TYPE_INT && got == 4242);
     }
@@ -11391,7 +11575,7 @@ static void kanama_ios_ptrcall_selftest(void) {
     // Also exercise the full Kotlin ObjectCalls path (Kotlin -> generic dispatch -> Godot).
     kanama_ios_runtime_objectcalls_selftest();
 }
-#endif // KANAMA_IOS_DEBUG_VARIANT_CHECKS
+#endif // KANAMA_IOS_SELFTEST
 
 // Force the AVAudioSession category to Ambient so game audio tracks the
 // Ring/Silent switch deterministically (plays in Ring, muted in Silent, mixes
@@ -11466,7 +11650,7 @@ static void kanama_ios_initialize(void *userdata, GDExtensionInitializationLevel
         kanama_ios_register_script_language();
         kanama_ios_register_resource_loader();
         kanama_ios_register_main_loop_callbacks();
-#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
+#if KANAMA_IOS_SELFTEST
         kanama_ios_ptrcall_selftest();
 #endif
     }

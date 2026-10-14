@@ -778,6 +778,11 @@ int32_t kanama_ios_godot_object_disconnect_callable(
  * retained before the Variant destroy and *out_is_refcounted is set to 1 so the caller
  * owns that +1 (release via RefCounted close()/unreference). Non-RefCounted returns stay
  * borrowed and leave the flag 0.
+ *
+ * own_elements (task 122 item 3, the Object.call family): non-zero retains every RefCounted
+ * ELEMENT of a container result (nested ones included) while the return Variant still holds it;
+ * its blob record carries a ninth payload byte, 1 = the caller owns that +1. Zero keeps the
+ * elements borrowed (8-byte records).
  */
 int32_t kanama_ios_godot_object_call(
     int64_t method_bind,
@@ -790,7 +795,8 @@ int32_t kanama_ios_godot_object_call(
     char *out_str,
     int64_t out_str_size,
     int64_t *out_str_len,
-    int32_t *out_is_refcounted
+    int32_t *out_is_refcounted,
+    int32_t own_elements
 );
 
 /*
@@ -808,7 +814,8 @@ int32_t kanama_ios_godot_object_call_static(
     char *out_str,
     int64_t out_str_size,
     int64_t *out_str_len,
-    int32_t *out_is_refcounted
+    int32_t *out_is_refcounted,
+    int32_t own_elements
 );
 
 /*

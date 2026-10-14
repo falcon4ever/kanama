@@ -111,6 +111,16 @@ val configuredIosScriptDirs =
     .orElse(providers.gradleProperty("kanamaProjectScriptsDirs"))
     .orElse(providers.gradleProperty("kanamaProjectScriptsDir"))
 
+// Task 138 item 24: the iOS runtime self-tests (the C ptrcall matrix and the Kotlin OBJECTCALLS
+// rows, scene init + frame 1) are a Kanama test hook, not part of a user's game. They are compiled
+// only into a build made with -PkanamaIosSelfTest=true, which Kanama's device runners pass
+// (ios_visual_smoke.sh, kanama-demos ios_device_run.sh), and then only into the DEBUG shim: a
+// release xcframework never runs them. Without the property the Kotlin side (every `*SelfTest.kt`
+// and the script-error probe) is not compiled at all.
+val kanamaIosSelfTest =
+  providers.gradleProperty("kanamaIosSelfTest").map { it.trim() == "true" }.orElse(false)
+val iosSelfTestSources = listOf("**/*SelfTest.kt", "**/KanamaIosScriptErrorProbe.kt")
+
 val kanamaRealPrecision = providers.gradleProperty("kanamaPrecision").orElse("single")
 
 fun kanamaRealIsDouble(selected: String): Boolean =
@@ -312,7 +322,10 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     // Kotlin/Native runtime: ObjectCalls, BuiltinCalls, the java.* shims, the per-platform
     // wrappers). Spelled out rather than left to the default hierarchy template, which is also
     // what lets its metadata compilation be disabled by name below.
-    val iosMain by creating { dependsOn(commonMain) }
+    val iosMain by creating {
+      dependsOn(commonMain)
+      if (!kanamaIosSelfTest.get()) kotlin.exclude(iosSelfTestSources)
+    }
     // Both iOS targets refine iosMain and compile the consumer project's scripts, identically.
     for (name in listOf("iosArm64Main", "iosSimulatorArm64Main")) {
       named(name) {
@@ -1628,6 +1641,7 @@ fun registerCompileIosCTask(
   outputObjectPath: Provider<RegularFile>,
   sourceLinesTask: TaskProvider<*>? = null,
   sourceLinesTable: Provider<Directory>? = null,
+  defines: List<String> = emptyList(),
 ) =
   tasks.register<Exec>(name) {
     group = "ios"
@@ -1638,6 +1652,7 @@ fun registerCompileIosCTask(
     inputs.dir(iosHeaderDir)
     inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
     inputs.property("kanamaIosMinVersion", iosMinimumDeploymentTarget)
+    inputs.property("defines", defines)
     if (sourceLinesTask != null && sourceLinesTable != null) {
       dependsOn(sourceLinesTask)
       inputs.dir(sourceLinesTable)
@@ -1669,6 +1684,7 @@ fun registerCompileIosCTask(
           iosHeaderDir.asFile.absolutePath,
         ) +
           table.orEmpty() +
+          defines.map { "-D$it" } +
           listOf("-c", source.asFile.absolutePath, "-o", outputObject.absolutePath)
       )
       environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
@@ -1783,6 +1799,13 @@ fun registerCombineIosLibTask(
       minVersionFlag,
       iosShimSource,
       shimObject,
+      // Task 138 item 24: the C ptrcall matrix and the calls into the Kotlin self-test, in a debug
+      // shim of a -PkanamaIosSelfTest=true build only.
+      defines =
+        listOf(
+          "KANAMA_IOS_SELFTEST=" +
+            if (buildType == "debug" && kanamaIosSelfTest.get()) "1" else "0"
+        ),
     )
   val compileSourceLines =
     registerCompileIosCTask(
@@ -1840,9 +1863,13 @@ fun registerIosSourceLinesTask(name: String, sdk: String, target: String): TaskP
     description = "Map the debug $sdk library's game functions to their Kotlin lines."
     dependsOn(tasks.named("linkDebugStatic${target.replaceFirstChar { it.uppercase() }}"))
     val runtimeLib = iosRuntimeStaticLib(target, "debug")
+    // The self-test's script-error probe is compiled only into a -PkanamaIosSelfTest=true build.
     val sourceRoots =
       iosScriptDirs(configuredIosScriptDirs.orNull).map { file(it) } +
-        file("src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosScriptErrorProbe.kt")
+        listOfNotNull(
+          file("src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosScriptErrorProbe.kt")
+            .takeIf { kanamaIosSelfTest.get() }
+        )
     val outputDir = iosBuildDir.map { it.dir("source-lines/$sdk/debug") }
     val developerDir = xcodeDeveloperDir
     inputs.file(runtimeLib)

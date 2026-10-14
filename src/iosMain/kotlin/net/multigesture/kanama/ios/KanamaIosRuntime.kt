@@ -28,9 +28,11 @@ import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.SignalArgReader
 import net.multigesture.kanama.api.SignalArgumentException
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
@@ -65,6 +67,13 @@ import net.multigesture.kanama.types.Vector4
 import net.multigesture.kanama.types.Vector4i
 import net.multigesture.kanama.types.basisFromRows
 
+/**
+ * The Kotlin object of the runtime's built-in scope-probe script (`SCOPE_PROBE_SCRIPT_PATH`), which
+ * the frame-1 self-test reads. Here, not in ScriptAccessSelfTest.kt, because the runtime registers
+ * the probe in every build and the self-test files are compiled only on request (task 138 item 24).
+ */
+internal class ScopeProbeScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
+
 internal data class KanamaIosScriptMethod(val name: String, val argumentCount: Int = 0)
 
 internal data class KanamaIosScriptProperty(
@@ -79,6 +88,10 @@ internal data class KanamaIosScriptProperty(
   // PropertyInfo.class_name when the generator knows it (task 128 B: a Godot-enum property names
   // its enum, `Node.ProcessMode`). Empty falls back to the object-property rule below.
   val className: String = "",
+  // The @Export's default (task 138 item 8): its initializer literal, in the form getProperty
+  // returns, when the generator could read one (desktop's registrar has the same literal);
+  // [KanamaIosNoProperty] when not. Script._get_property_default_value answers it.
+  val defaultValue: Any? = KanamaIosNoProperty,
 )
 
 internal data class KanamaIosScriptSignal(val name: String)
@@ -333,6 +346,14 @@ internal object KanamaIosRuntime {
 
   fun scriptResourcePropertyUsage(handle: Long, propertyIndex: Int): Int =
     scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)?.usage ?: 6
+
+  /** The @Export default of [propertyIndex], or [KanamaIosNoProperty] (task 138 item 8). */
+  fun scriptResourcePropertyDefault(handle: Long, propertyIndex: Int): Any? {
+    val property =
+      scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex)
+        ?: return KanamaIosNoProperty
+    return property.defaultValue
+  }
 
   // task 64 iOS mirror — PropertyInfo.class_name for object-typed exports.
   // Same policy as the desktop generator (KanamaProcessor.scriptPropertyClassName):
@@ -1117,7 +1138,7 @@ internal object KanamaIosRuntime {
 
   private class ScopeProbeBridge(ownerObject: Long) : KanamaIosScriptBridge {
     override val scriptInstance: Any? =
-      net.multigesture.kanama.api.ScopeProbeScript(
+      ScopeProbeScript(
         net.multigesture.kanama.api.GodotHandle(
           java.lang.foreign.MemorySegment.ofAddress(ownerObject)
         )
@@ -1298,6 +1319,72 @@ fun kanamaIosRuntimeScriptResourcePropertyHintString(
 @CName("kanama_ios_runtime_script_resource_property_usage")
 fun kanamaIosRuntimeScriptResourcePropertyUsage(scriptHandle: Long, propertyIndex: Int): Int =
   KanamaIosRuntime.scriptResourcePropertyUsage(scriptHandle, propertyIndex)
+
+/**
+ * Task 113: how many custom Callables the C shim created for each lambda callback id are still
+ * alive. One closure can back several (the disconnect temp, a second connect Godot refuses or only
+ * counts with `CONNECT_REFERENCE_COUNTED`), so it is released from [IosCallableRegistry] when the
+ * LAST of them is freed, not the first, which dropped the closure of a connection still live.
+ */
+internal object IosCallableLifetimes {
+  private val live = HashMap<Long, Int>()
+
+  /** A Callable freed after its closure was gone: a redundant one (task 113 row 6 counts it). */
+  var staleReleases: Int = 0
+    private set
+
+  fun created(callbackId: Long) {
+    live[callbackId] = (live[callbackId] ?: 0) + 1
+  }
+
+  fun freed(callbackId: Long) {
+    val left = (live[callbackId] ?: 1) - 1
+    if (left > 0) {
+      live[callbackId] = left
+      return
+    }
+    live.remove(callbackId)
+    if (IosCallableRegistry.entry(callbackId) == null) staleReleases++
+    IosCallableRegistry.release(callbackId)
+  }
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_callable_created")
+fun kanamaIosRuntimeCallableCreated(callbackId: Long) {
+  IosCallableLifetimes.created(callbackId)
+}
+
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_callable_freed")
+fun kanamaIosRuntimeCallableFreed(callbackId: Long) {
+  IosCallableLifetimes.freed(callbackId)
+}
+
+/**
+ * Script._get_property_default_value (task 138 item 8): the @Export's default, PT-tagged like a
+ * script instance get. 0 when the generator knew no default (the C side then answers none).
+ */
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_resource_property_default")
+fun kanamaIosRuntimeScriptResourcePropertyDefault(
+  scriptHandle: Long,
+  propertyIndex: Int,
+  retTag: CPointer<IntVar>?,
+  retBuf: CPointer<ByteVar>?,
+): Int {
+  retTag?.set(0, IOS_PT_VOID)
+  return try {
+    val value = KanamaIosRuntime.scriptResourcePropertyDefault(scriptHandle, propertyIndex)
+    if (value === KanamaIosNoProperty) return 0
+    encodeIosReturn(value, retTag, retBuf)
+    if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+  } catch (t: Throwable) {
+    IosScriptErrors.report(t, "property default")
+    retTag?.set(0, IOS_PT_VOID)
+    0
+  }
+}
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_resource_property_class_name")

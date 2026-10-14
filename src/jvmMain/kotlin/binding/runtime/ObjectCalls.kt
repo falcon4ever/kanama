@@ -444,7 +444,8 @@ actual object ObjectCalls {
    * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
    * in the return Variant. With the borrowed decode the handle would die when this function
    * destroys the return Variant in its `finally`. `owned = true` retains RefCounted results before
-   * that destroy and hands back the owning [net.multigesture.kanama.api.RefCounted] wrapper.
+   * that destroy and hands back the owning [net.multigesture.kanama.api.RefCounted] wrapper. The
+   * RefCounted ELEMENTS of a container result are owning wrappers either way (task 122 item 3).
    */
   private fun callWithVariantArgs(
     methodBind: MemorySegment,
@@ -495,10 +496,13 @@ actual object ObjectCalls {
           "Object.call failed: error_type=$errorType argument=$argument expected=$expected"
         }
 
+        // Task 122 item 3: the RefCounted elements of a container result are retained before the
+        // `finally` below destroys the return Variant (owning wrappers), on both paths; a factory
+        // returning fresh resources in an Array (`call("make_items")`) held them only there.
         return if (owned) {
-          BuiltinTypes.readVariantScalarOwned(retVariant, arena)
+          BuiltinTypes.readVariantScalarOwned(retVariant, arena, ownElements = true)
         } else {
-          BuiltinTypes.readVariantScalar(retVariant, arena)
+          BuiltinTypes.readVariantScalar(retVariant, arena, ownElements = true)
         }
       } finally {
         for (i in 0 until initialized) {

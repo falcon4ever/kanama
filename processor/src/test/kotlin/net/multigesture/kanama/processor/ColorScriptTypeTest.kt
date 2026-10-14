@@ -142,8 +142,16 @@ class ColorScriptTypeTest {
       )
     val source = emitter.registrySource()
     assertTrue(errors.isEmpty(), errors.toString())
-    assertTrue(source.contains("KanamaIosScriptProperty(\"tint\", 20, 0, \"\", 6)"), source)
-    assertTrue(source.contains("KanamaIosScriptProperty(\"solid\", 20, 21, \"\", 6)"))
+    assertTrue(source.contains("KanamaIosScriptProperty(\"tint\", 20, 0, \"\", 6"), source)
+    // Task 138 item 8: the default literal reaches the iOS registry.
+    assertTrue(
+      source.contains(
+        "defaultValue = run { val default: net.multigesture.kanama.types.Color = " +
+          "net.multigesture.kanama.types.Color(1.0, 0.5, 0.25, 1.0); default }"
+      ),
+      source,
+    )
+    assertTrue(source.contains("KanamaIosScriptProperty(\"solid\", 20, 21, \"\", 6"))
     assertTrue(source.contains("as net.multigesture.kanama.types.Color"), "the call arg decodes")
   }
 

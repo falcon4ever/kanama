@@ -39,6 +39,48 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — iOS: the runtime self-tests no longer run or ship in users' builds (task 138 item 24)
+
+The iOS self-tests (the C `PTRCALL SELFTEST MATRIX` and the Kotlin `OBJECTCALLS SELFTEST` rows at
+scene init and on frame 1) ran in every iOS build, release exports included, and their code shipped
+in every game. They are now a Kanama test hook: compiled only into a build made with
+`-PkanamaIosSelfTest=true` (Kanama's device runners pass it: `scripts/ios_visual_smoke.sh`, and the
+demos' `scripts/ios_device_run.sh`, which `ios_device_gate.sh` requires), and then only into the
+debug shim. Without the property no `*SelfTest.kt` is compiled. The runners now REQUIRE all three
+summaries (`PTRCALL SELFTEST MATRIX`, `OBJECTCALLS SELFTEST`, `OBJECTCALLS SELFTEST (frame 1)`, each
+`0 failed`): a console without them fails. `ios_visual_smoke.sh --check-selftest-log LOG` runs that
+verdict on a saved console log.
+
+### Fixed — RefCounted elements of an `Object.call` container result survive the call (task 122 item 3)
+
+`node.call("make_items")` (any `Object.call`-family call: `call`, `callDeferred`, `callThreadSafe`,
+`callGroup`, `GDScript.new`, `ClassDB.classCallStatic`) returning an `Array` or `Dictionary` whose
+`RefCounted` elements had their only reference in that container (`RegEx.search_all`, a factory)
+handed back views of objects already freed, on desktop and iOS. Those elements are now owning
+`RefCounted` wrappers, one reference each, released by `close()` or by the garbage collector, like
+the elements of a typed `Array` a generated method returns. An object result itself keeps its
+documented contract (a borrowed view for `call`). Property reads (`get`, `getMeta`) keep borrowed
+elements: the object still holds them.
+
+### Fixed — iOS: script properties report their default value (task 138 item 8)
+
+The iOS script answered "no default" for every `@Export`, so a scene packed at runtime stored every
+script property and `property_get_revert` had nothing to offer. It now answers the initializer the
+desktop registrar uses (scalars, `String`, `NodePath`, the vector and color types, Kotlin and Godot
+enums), from the same literal.
+
+### Fixed — iOS: a lambda connection's closure lives as long as any Callable of it (task 113)
+
+The custom-Callable lifetime matrix (seven `OBJECTCALLS SELFTEST callable-lifetime` rows: every
+order of connect, disconnect, emit and freeing the emitter and the receiver, a reference-counted
+double connect and a one-shot) found two faults. `close()` on a one-shot connection that had
+already fired called `Object.disconnect`, which printed Godot's "Attempt to disconnect a nonexistent
+connection" error; it is now a no-op. And the bridge released a closure when the FIRST Callable of it
+was freed, so a closure connected twice with `CONNECT_REFERENCE_COUNTED` and disconnected once (or
+whose second connect Godot refused) left a live connection that fired nothing; it is now released
+with the last one. `GodotSignal.connect` registers a new closure per connect, so only the bridge's
+own callers could reach the second one.
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed

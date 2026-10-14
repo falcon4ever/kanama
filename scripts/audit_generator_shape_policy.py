@@ -671,9 +671,9 @@ ALLOWED_TOKEN_WRAPS = {
 # Borrowed constructions that are correct, each with its reason.
 ALLOWED_BORROWED_CONSTRUCTIONS = {
     # The iOS self-test builds raw probe objects it destroys or hands to an owning helper itself.
-    ("ObjectCalls.kt", "listOf(RefCounted(GodotHandle(typedNodeA)), RefCounted(GodotHandle(typedNodeB)))"),
-    ("ObjectCalls.kt", "RefCounted(GodotHandle(it))"),
-    ("ObjectCalls.kt", 'net.multigesture.kanama.api.Resource(GodotHandle(ObjectCalls.constructObject("Resource")))'),
+    ("ObjectCallsSelfTest.kt", "listOf(RefCounted(GodotHandle(typedNodeA)), RefCounted(GodotHandle(typedNodeB)))"),
+    ("ObjectCallsSelfTest.kt", "RefCounted(GodotHandle(it))"),
+    ("ObjectCallsSelfTest.kt", 'net.multigesture.kanama.api.Resource(GodotHandle(ObjectCalls.constructObject("Resource")))'),
 }
 
 

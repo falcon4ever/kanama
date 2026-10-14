@@ -598,6 +598,11 @@ case("runtime_smoke.sh (progress read-back)", ["bash", "scripts/runtime_smoke.sh
       Edit(JVM_OBJECT_CALLS, '?: error("ResourceLoader.load_threaded_get_status wrote no progress into its out-Array")', "?: 0.0")],
      "missing pattern", "the threaded-load progress is never read back from Godot's out-Array (a silent 0.0): a LOADED request must report 1.0",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("runtime_smoke.sh (call container elements)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(JVM_OBJECT_CALLS, "BuiltinTypes.readVariantScalar(retVariant, arena, ownElements = true)",
+           "BuiltinTypes.readVariantScalar(retVariant, arena, ownElements = false)")],
+     "missing pattern", "the RefCounted elements of an Object.call container result come back borrowed again (task 122 item 3): RegEx.search_all's fresh matches die with the return Variant",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
      "SIGNAL SELFTEST: [1-9][0-9]* passed, 0 failed", "a typed `emit(...)` never reaches Godot (the emit frame skips emit_signal): the first-frame self-test must report failures, not pass",
