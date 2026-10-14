@@ -1277,7 +1277,7 @@ _NOT_ON_WEB = (
 )
 _WEB_SET = (
     "Web's typed set(propertyPath, ...) runs Object.set_indexed and returns Unit; desktop's set(property, Any?) "
-    "runs Object.set and returns the Error, so set(\"position:x\", 5.0) writes the component on Web and "
+    "runs Object.set and returns Unit, so set(\"position:x\", 5.0) writes the component on Web and "
     "nothing on desktop"
 )
 _WEB_SET_DEFERRED = "Web's setDeferred takes only a Boolean (its one queued arm); desktop's takes any Variant"
@@ -1334,7 +1334,7 @@ WEB_GODOT_OBJECT_DRIFT: dict[str, str] = {
     },
     "desktop-only GodotObject: fun get(property: String): Any?":
         "Web has no Variant get(property): only the typed reads (getVector2, getObjectProperty)",
-    "desktop-only GodotObject: fun set(property: String, value: Any?): Long": _WEB_SET,
+    "desktop-only GodotObject: fun set(property: String, value: Any?)": _WEB_SET,
     **{f"web-only GodotObject: fun set(propertyPath: String, value: {t})": _WEB_SET
        for t in ("Double", "GodotEnumValue", "Long", "String", "Vector2")},
     "desktop-only GodotObject: fun setDeferred(property: String, value: Any?)": _WEB_SET_DEFERRED,
