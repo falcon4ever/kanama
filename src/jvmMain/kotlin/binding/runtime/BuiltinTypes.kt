@@ -315,28 +315,107 @@ object BuiltinTypes {
    * Decode [variant] as the value type [T] for a script property or argument. A Variant of another
    * type (or Nil) is an error naming [what], the expected and the actual type — never a silent zero
    * value (task 138 item 9). The exception stays inside the setter/dispatch containment, like the
-   * "Expected X argument" error of the object arguments.
+   * "Expected X argument" error of the object arguments. A script property runs
+   * [readAssignableVariant] first, so it sees only a Variant of its own type here.
    */
   inline fun <reified T : Any> readVariantValue(
     variant: MemorySegment,
     arena: Arena,
     what: String,
-  ): T = decodeVariantValue(readVariantScalar(variant, arena), T::class.java, what)
-
-  /** The checked cast behind [readVariantValue]; separate so a host test can drive it directly. */
-  fun <T : Any> decodeVariantValue(value: Any?, expected: Class<T>, what: String): T {
-    @Suppress("UNCHECKED_CAST") if (expected.isInstance(value)) return value as T
-    val actual =
-      when (value) {
-        null -> "null (Nil)"
-        is Long -> "int"
-        is Double -> "float"
-        is Boolean -> "bool"
-        is String -> "String"
-        else -> value::class.simpleName ?: value.javaClass.name
-      }
-    error("Expected ${expected.simpleName} for $what but the Variant holds $actual")
+  ): T {
+    val value = readVariantScalar(variant, arena)
+    return if (value is T) value
+    else decodeVariantValue(value, T::class.java, what, VariantConverters.variantTypeId(variant))
   }
+
+  /**
+   * The checked cast behind [readVariantValue]; separate so a host test can drive it directly.
+   * [actualTypeId] is the Variant's `Variant::Type`: the message names Godot's type (`Array`,
+   * `Object`), as GDScript and the iOS runtime do, not the Kotlin class it decoded to.
+   */
+  fun <T : Any> decodeVariantValue(
+    value: Any?,
+    expected: Class<T>,
+    what: String,
+    actualTypeId: Int,
+  ): T {
+    @Suppress("UNCHECKED_CAST") if (expected.isInstance(value)) return value as T
+    error(VariantTypeNames.assignmentError(expected.simpleName, actualTypeId, what))
+  }
+
+  /**
+   * GDScript's rule for giving a typed script property a Variant of another type
+   * (`GDScriptInstance::set`), around the property's decode: the Variant is used as it is when it
+   * already is [expected]; otherwise `Variant::construct(expected, variant)` converts it (int and
+   * float both ways, a String parsed to a number, a Vector2i to a Vector2, a Basis to a Quaternion,
+   * a Vector3 to a Plane, a packed array to an Array, ...) and [decode] reads the converted
+   * Variant, which is destroyed afterwards. When the engine has no such conversion (Nil, a Vector2
+   * for a Vector3, a Dictionary for an int) it is an error naming [what], the expected and the
+   * actual type, never a silent zero or empty value (task 138 items 26 and 27); the exception stays
+   * inside the setter containment.
+   *
+   * The value is converted once (a bad colour name is reported once, as GDScript reports it), and
+   * the same-type common case is one `variant_get_type` and nothing allocated.
+   */
+  inline fun <R> readAssignableVariant(
+    variant: MemorySegment,
+    expected: VariantType,
+    what: String,
+    decode: (MemorySegment) -> R,
+  ): R {
+    if (VariantConverters.variantTypeId(variant) == expected.id) return decode(variant)
+    val converted = convertAssignable(variant, expected, what)
+    try {
+      return decode(converted.variant)
+    } finally {
+      converted.close()
+    }
+  }
+
+  /** A Variant [readAssignableVariant] constructed; [close] destroys it and frees its memory. */
+  @PublishedApi
+  internal class ConvertedVariant(private val arena: Arena, val variant: MemorySegment) :
+    AutoCloseable {
+    override fun close() {
+      try {
+        variantDestroy.invoke(variant)
+      } finally {
+        arena.close()
+      }
+    }
+  }
+
+  /** `Variant::construct(expected, variant)`, or the refusal of [readAssignableVariant]. */
+  @PublishedApi
+  internal fun convertAssignable(
+    variant: MemorySegment,
+    expected: VariantType,
+    what: String,
+  ): ConvertedVariant {
+    val arena = Arena.ofConfined()
+    val out: MemorySegment
+    val ok: Boolean
+    try {
+      out = arena.allocate(VARIANT_SIZE, 8L)
+      ok = VariantConverters.construct(expected, variant, out, arena)
+    } catch (t: Throwable) {
+      arena.close()
+      throw t
+    }
+    // The engine placement-news the base Variant before it constructs, so `out` is a Variant to
+    // destroy whether or not the construction succeeded.
+    val converted = ConvertedVariant(arena, out)
+    if (ok) return converted
+    converted.close()
+    error(variantAssignmentError(expected, VariantConverters.variantTypeId(variant), what))
+  }
+
+  /** The message of [readAssignableVariant]'s refusal; pure, so a host test can pin it. */
+  fun variantAssignmentError(expected: VariantType, actualId: Int, what: String): String =
+    VariantTypeNames.assignmentError(expected.id, actualId, what)
+
+  /** Godot's name for a `Variant::Type` id, as GDScript prints it (`int`, `Vector2`, ...). */
+  fun variantTypeLabel(id: Int): String = VariantTypeNames.label(id)
 
   /**
    * Owned scalar decode for calls that mint a fresh object whose sole reference lives in the return

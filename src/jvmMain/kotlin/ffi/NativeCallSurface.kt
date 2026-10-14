@@ -79,6 +79,10 @@ object NativeCallSurface {
       "builtin_method_lookup" to FunctionDescriptor.of(ADDRESS, JAVA_INT, ADDRESS, JAVA_LONG),
       // variant_get_type
       "variant_type_probe" to FunctionDescriptor.of(JAVA_INT, ADDRESS),
+      // variant_construct -- the conversion GDScript applies to a wrong-typed script property
+      // value (task 138 item 26)
+      "variant_build_call" to
+        FunctionDescriptor.ofVoid(JAVA_INT, ADDRESS, ADDRESS, JAVA_INT, ADDRESS),
       // object_get_instance_id -- captured once per wrapper construction (task 98)
       "instance_id_probe" to FunctionDescriptor.of(JAVA_LONG, ADDRESS),
       // object_get_instance_from_id -- the freed-object check before a wrapper call (task 131);

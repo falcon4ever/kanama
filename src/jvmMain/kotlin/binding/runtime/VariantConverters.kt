@@ -1,5 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
+import java.lang.foreign.Arena
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout.ADDRESS
@@ -107,6 +108,33 @@ object VariantConverters {
   fun variantTypeOf(variant: MemorySegment): VariantType? {
     val id = variantTypeId(variant)
     return VariantType.entries.firstOrNull { it.id == id }
+  }
+
+  private val construct by lazy {
+    GodotFFI.lookup(
+      "variant_construct",
+      FunctionDescriptor.ofVoid(JAVA_INT, ADDRESS, ADDRESS, JAVA_INT, ADDRESS),
+    )
+  }
+
+  /**
+   * `Variant::construct([type], [variant])` into [out] (uninitialized, `BuiltinTypes.VARIANT_SIZE`
+   * bytes): the conversion GDScript applies to a value of another type that it assigns to a typed
+   * script property (see `BuiltinTypes.readAssignableVariant`). True when it succeeded. [out] is a
+   * valid Variant either way (the engine placement-news it first); the caller destroys it.
+   */
+  fun construct(
+    type: VariantType,
+    variant: MemorySegment,
+    out: MemorySegment,
+    arena: Arena,
+  ): Boolean {
+    val args = arena.allocate(ADDRESS.byteSize(), 8L)
+    args.set(ADDRESS, 0L, variant)
+    // GDExtensionCallError { int32 error; int32 argument; int32 expected; }, error == 0 is OK.
+    val error = arena.allocate(12L, 4L)
+    construct.invoke(type.id, out, args, 1, error)
+    return error.get(JAVA_INT, 0L) == 0
   }
 
   /** Godot's `Variant::Type` of [variant] as its integer id (no enum lookup). */
