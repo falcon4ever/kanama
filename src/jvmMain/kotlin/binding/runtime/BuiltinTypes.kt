@@ -312,6 +312,33 @@ object BuiltinTypes {
     variantToScalar(variant, arena, ownElements)
 
   /**
+   * Decode [variant] as the value type [T] for a script property or argument. A Variant of another
+   * type (or Nil) is an error naming [what], the expected and the actual type — never a silent zero
+   * value (task 138 item 9). The exception stays inside the setter/dispatch containment, like the
+   * "Expected X argument" error of the object arguments.
+   */
+  inline fun <reified T : Any> readVariantValue(
+    variant: MemorySegment,
+    arena: Arena,
+    what: String,
+  ): T = decodeVariantValue(readVariantScalar(variant, arena), T::class.java, what)
+
+  /** The checked cast behind [readVariantValue]; separate so a host test can drive it directly. */
+  fun <T : Any> decodeVariantValue(value: Any?, expected: Class<T>, what: String): T {
+    if (expected.isInstance(value)) return expected.cast(value)
+    val actual =
+      when (value) {
+        null -> "null (Nil)"
+        is Long -> "int"
+        is Double -> "float"
+        is Boolean -> "bool"
+        is String -> "String"
+        else -> value::class.simpleName ?: value.javaClass.name
+      }
+    error("Expected ${expected.simpleName} for $what but the Variant holds $actual")
+  }
+
+  /**
    * Owned scalar decode for calls that mint a fresh object whose sole reference lives in the return
    * Variant (ClassDB.instantiate). The borrowed [readVariantScalar] decode would hand back a handle
    * that dies when the caller destroys the Variant. Retain RefCounted results before that destroy

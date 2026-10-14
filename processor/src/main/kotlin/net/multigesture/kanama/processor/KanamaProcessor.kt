@@ -5416,7 +5416,12 @@ internal class ScriptCodeEmitter(
    * appropriate Kotlin type. For simple scalars this is inline; for String or multi-step types it
    * uses a block form.
    */
-  private fun variantReadExpr(type: TypeMapping, variantPtr: String, localName: String): String =
+  private fun variantReadExpr(
+    type: TypeMapping,
+    variantPtr: String,
+    localName: String,
+    what: String = "",
+  ): String =
     when (type) {
       TypeMapping.INT ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(JAVA_LONG); VariantConverters.variantToType(VariantType.INT).invoke(d, $variantPtr); d.get(JAVA_LONG, 0) }"
@@ -5439,9 +5444,9 @@ internal class ScriptCodeEmitter(
       TypeMapping.COLOR ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(16L, 4L); VariantConverters.variantToType(VariantType.COLOR).invoke(d, $variantPtr); net.multigesture.kanama.types.Color(d.get(JAVA_FLOAT, 0).toDouble(), d.get(JAVA_FLOAT, 4).toDouble(), d.get(JAVA_FLOAT, 8).toDouble(), d.get(JAVA_FLOAT, 12).toDouble()) }"
       TypeMapping.QUATERNION ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Quaternion ?: net.multigesture.kanama.types.Quaternion.IDENTITY }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.Quaternion>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.BASIS ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Basis ?: net.multigesture.kanama.types.Basis.IDENTITY }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.Basis>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.OBJECT ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(ADDRESS); VariantConverters.variantToType(VariantType.OBJECT).invoke(d, $variantPtr); net.multigesture.kanama.api.GodotObject(d.get(ADDRESS, 0)) }"
       TypeMapping.ARRAY ->
@@ -5454,7 +5459,8 @@ internal class ScriptCodeEmitter(
       TypeMapping.VARIANT ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) }"
       // task 29 return-only shapes: never validated as args, but the when must be exhaustive —
-      // decode via readVariantScalar with the family's typed cast (zero value on mismatch).
+      // decode via readVariantScalar with the family's typed cast (a mismatch is an error naming
+      // the property/argument).
       TypeMapping.PACKED_BYTE_ARRAY ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? ByteArray ?: ByteArray(0) }"
       TypeMapping.PACKED_INT32_ARRAY ->
@@ -5474,23 +5480,23 @@ internal class ScriptCodeEmitter(
       TypeMapping.DICTIONARY ->
         "val $localName = Arena.ofConfined().use { a -> @Suppress(\"UNCHECKED_CAST\") (BuiltinTypes.readVariantScalar($variantPtr, a) as? Map<String, Any?> ?: emptyMap()) }"
       TypeMapping.RID ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.RID ?: net.multigesture.kanama.types.RID.EMPTY }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.RID>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.RECT2 ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Rect2 ?: net.multigesture.kanama.types.Rect2.ZERO }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.Rect2>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.AABB ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.AABB ?: net.multigesture.kanama.types.AABB.ZERO }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.AABB>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.TRANSFORM2D ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Transform2D ?: net.multigesture.kanama.types.Transform2D.IDENTITY }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.Transform2D>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.TRANSFORM3D ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Transform3D ?: net.multigesture.kanama.types.Transform3D.IDENTITY }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.Transform3D>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       TypeMapping.PROJECTION ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Projection ?: net.multigesture.kanama.types.Projection.IDENTITY }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<net.multigesture.kanama.types.Projection>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
       // Task 133 value types: decoded by the runtime's Variant reader, like Quaternion / Basis.
       TypeMapping.RECT2I,
       TypeMapping.VECTOR4,
       TypeMapping.VECTOR4I,
       TypeMapping.PLANE ->
-        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? ${type.kotlinType} ?: ${type.kotlinLiteralZero} }"
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantValue<${type.kotlinType}>($variantPtr, a, \"${kotlinStringLiteral(what)}\") }"
     }
 
   /**
@@ -5568,7 +5574,8 @@ internal class ScriptCodeEmitter(
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantLongList($variantPtr, a).map { i -> $fq.entries[i.toInt().coerceIn(0, $fq.entries.lastIndex)] } }"
       }
       property.mapKeyKotlinType != null -> mapReadPropertyExpr(property, variantPtr, localName)
-      else -> variantReadExpr(property.type, variantPtr, localName)
+      else ->
+        variantReadExpr(property.type, variantPtr, localName, "property '${property.godotName}'")
     }
 
   /**
@@ -5712,7 +5719,7 @@ internal class ScriptCodeEmitter(
         }
       }
     } else {
-      variantReadExpr(arg.type, variantPtr, localName)
+      variantReadExpr(arg.type, variantPtr, localName, "argument '${arg.name}'")
     }
 
   /**

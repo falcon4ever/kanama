@@ -2,6 +2,7 @@ package net.multigesture.kanama.processor
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
@@ -181,11 +182,13 @@ class ValueTypeScriptTypesTest {
         name,
       )
       assertTrue(source.contains("Signals.Arg(VariantType.${type.name}, v)"), name)
+      // Task 138 item 9: a wrong-typed Variant is an error naming the property, never a zero value.
       assertTrue(
-        source.contains("BuiltinTypes.readVariantScalar(") &&
-          source.contains("as? ${type.kotlinType}"),
+        source.contains("BuiltinTypes.readVariantValue<${type.kotlinType}>(") &&
+          source.contains("\"property '$name'\")"),
         name,
       )
+      assertFalse(source.contains("as? ${type.kotlinType} ?:"), name)
     }
     assertTrue(
       source.contains("private var defaultTransform3d: $t.Transform3D = $t.Transform3D.IDENTITY")

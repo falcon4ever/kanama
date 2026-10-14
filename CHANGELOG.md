@@ -113,6 +113,17 @@ On iOS a container nested more than 8 levels deep, or holding an element type th
 encoder does not carry (a `Vector3i` inside an `Array`), delivers `null` for that element; and a
 container the shim cannot allocate is reported as out of memory rather than "not marshalled".
 
+### Fixed — Desktop: a script property or argument of the wrong Variant type is an error, not a zero value (task 138 item 9)
+
+A `@RegisterProperty`/`@RegisterFunction` value of type `Quaternion`, `Basis`, `Rect2`, `Rect2i`,
+`AABB`, `Plane`, `Transform2D`, `Transform3D`, `Projection`, `Vector4`, `Vector4i` or `RID` that
+received a Variant of another type (or `null`) silently became that type's zero or identity value
+(`as? T ?: ZERO`). The generated decode now calls `BuiltinTypes.readVariantValue<T>`, which fails
+with `Expected Quaternion for property 'rot' but the Variant holds Vector2`, naming the property or
+argument, the expected and the actual type, like the "Expected X argument" error of the object
+arguments. iOS and Web decode these types through tagged or packed components, not a Variant cast, and
+have no such fallback.
+
 ### Added — a typed-signal self-test for the Kanama smokes, desktop and Android (task 138 item 23)
 
 The Android-only typed-emit failure below lived five days because no Android smoke needed a typed
