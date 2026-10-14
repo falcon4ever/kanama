@@ -18,6 +18,8 @@ const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
 // instead of the settled one. The run must go RED -- a gate only ever observed
 // passing is not evidence that it discriminates.
 const FALSIFY = process.env.KANAMA_WEB_T81_FALSIFY ?? "";
+// Early game overs the driver restarts through before the run counts as suspect (see restartAfterEarlyGameOver).
+const MAX_ROUND_RESTARTS = 3;
 const START = Date.now();
 const trace = (msg) => {
   if (DEBUG) process.stderr.write(`[dodge ${((Date.now() - START) / 1000).toFixed(1)}s] ${msg}\n`);
@@ -227,13 +229,21 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   // A hit is gameplay, not a bridge fault, so when the round ends before enough mobs have
   // spawned, start another round (new_game) and keep counting -- the instantiation counter
   // is cumulative across rounds.
+  //
+  // The restarts are a budget, not a free pass. A healthy run ends a round early about 10-15% of
+  // the time, so it needs 0-1 restarts and three in a row happen about 0.2% of the time. A run that
+  // uses all MAX_ROUND_RESTARTS is more likely a build where the player dies on the first mob
+  // (an instant-kill bug): the cumulative mob counter would still reach 4 across the restarts and
+  // every other check would pass. `restartBudgetNotExhausted` below fails that run.
   let gameOversSeen = 0;
   let roundRestarts = 0;
+  const earlyGameOvers = []; // mobs spawned so far (cumulative) at each early game over that was restarted
   const restartAfterEarlyGameOver = async (snap, p) => {
     if (snap.gameOvers <= gameOversSeen) return false;
     gameOversSeen = snap.gameOvers;
-    if (p.mobInstantiations >= 4 || roundRestarts >= 3) return false;
+    if (p.mobInstantiations >= 4 || roundRestarts >= MAX_ROUND_RESTARTS) return false;
     roundRestarts += 1;
+    earlyGameOvers.push(p.mobInstantiations);
     trace(`game over after ${p.mobInstantiations} mob(s): new round ${roundRestarts}`);
     await callMain(evaluate, "new_game");
     return true;
@@ -324,6 +334,9 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     // at 1.0 (task 72 measured exactly that); a healthy run sits near 0. This is
     // the SHORT-run form of what the soak gate needs ten minutes to see.
     noPerMobHandleRetention: worstRetention <= 0.5,
+    // Fewer than MAX_ROUND_RESTARTS early game overs: a build where every round ends on the first
+    // mob uses them all, and must not pass on the mobs spawned across those rounds.
+    restartBudgetNotExhausted: roundRestarts < MAX_ROUND_RESTARTS,
     noCallbackFaults: peak.callbackErrors === 0 && settled.callbackErrors === 0 && settled.failure === null,
   };
 
@@ -335,6 +348,12 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   const boundaryErrors = [];
   if (peak.callbackErrors !== 0) boundaryErrors.push(`callbackErrors=${peak.callbackErrors}`);
   if (settled.failure !== null) boundaryErrors.push(`failure: ${settled.failure}`);
+  if (roundRestarts >= MAX_ROUND_RESTARTS) {
+    boundaryErrors.push(
+      `dodge restart budget exhausted: ${roundRestarts} early game overs, after ${earlyGameOvers.join(", ")} mob(s) spawned so far ` +
+        `(a healthy run needs 0-1 restarts); the player may be dying on the first mob (instant-kill bug)`,
+    );
+  }
 
   return {
     protocolVersion,
@@ -353,6 +372,8 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       kotlinToGodotCalls: peak.crossings,
       mobInstantiations: peak.mobInstantiations,
       mobAddChildCommands: peak.mobAddChildCommands,
+      // New rounds started after an early game over (0-1 when healthy; the check fails at 3).
+      roundRestarts,
       // Worst per-mob handle retention, x100 so the envelope stays integer-friendly
       // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
       // handle per spawn.

@@ -791,6 +791,11 @@ if [[ $skip_web -eq 0 ]]; then
     stage "web bridge simulated-clock self-test"
     node "$ROOT_DIR/scripts/web/bridge_simtime_selftest.mjs"
 
+    # The dodge driver's round restarts are a budget: a build that kills the player on the first mob of every
+    # round must fail instead of passing on the mobs spawned across the restarts (tooling bundle fix round 2).
+    stage "web dodge restart-budget self-test"
+    node "$ROOT_DIR/scripts/web/dodge_restart_selftest.mjs"
+
     # Correctness lint over the same drivers (task 86: an unused variable held
     # the Safari envelope's performance section back for two weeks). Pinned
     # install: npm ci against the committed scripts/web lockfile.
