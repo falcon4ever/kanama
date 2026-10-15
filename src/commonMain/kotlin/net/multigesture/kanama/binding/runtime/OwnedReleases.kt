@@ -2,6 +2,7 @@ package net.multigesture.kanama.binding.runtime
 
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.AtomicLong
+import kotlin.concurrent.atomics.AtomicReference
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.decrementAndFetch
 import kotlin.concurrent.atomics.incrementAndFetch
@@ -187,7 +188,9 @@ internal object OwnedReleases {
     OwnedReleaseCleaner.cancel(registration)
   }
 
-  private val warnedBorrowedCloses = HashSet<String>()
+  // close() runs on any thread: the warned set is replaced by compare-and-set, never mutated in
+  // place.
+  private val warnedBorrowedCloses = AtomicReference(emptySet<String>())
 
   /**
    * close() on a wrapper that holds no reference of its own (a borrowed view): nothing to release.
@@ -197,7 +200,11 @@ internal object OwnedReleases {
   fun warnBorrowedClose(wrapper: RefCounted) {
     if (!debugBuild) return
     val name = wrapper::class.simpleName ?: "RefCounted"
-    if (!warnedBorrowedCloses.add(name)) return
+    while (true) {
+      val warned = warnedBorrowedCloses.load()
+      if (name in warned) return
+      if (warnedBorrowedCloses.compareAndSet(warned, warned + name)) break
+    }
     warn(
       "close() on a borrowed $name view (fromHandle or a wrapper constructor) releases nothing: " +
         "the view took no reference. Close the wrapper you got from the API instead."

@@ -712,7 +712,9 @@ thread ([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
 The release always runs on the main thread, and a wrapper stays reachable until
 its last call has returned, so it is never released while a worker, or the
 main thread, is still calling through it. `close()` (`use { }`) still releases
-early, from any thread.
+early, from any thread. A view you built over a handle (`fromHandle`, a wrapper
+constructor) takes no reference of its own: it is valid only while the wrapper
+that owns the object is.
 
 Kanama performs **no thread-affinity checks**. A wrapper method called from a
 `Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine

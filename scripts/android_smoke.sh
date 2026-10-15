@@ -319,7 +319,15 @@ check_log_absent "SIGNAL SELFTEST: [0-9]+ passed, [1-9][0-9]* failed"
 # on above: owned wrappers a worker thread drops are released (or the row says the fallback is off, as on
 # Android 8-12, which has no java.lang.ref.Cleaner), 5 s of worker calls through fresh owned wrappers
 # while every frame collects end without a fault, and the getter microbench line (the fence's cost on ART).
-check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: (created=10000 released=10000 leaked=0 |skipped )"
+# The GC fallback exists from Android 13 (API 33, java.lang.ref.Cleaner): there the row must release every
+# wrapper and the stress row must run; "skipped" is accepted only below API 33.
+device_sdk="$(adb_retry shell getprop ro.build.version.sdk | tr -d '\r[:space:]')"
+if [[ "$device_sdk" =~ ^[0-9]+$ ]] && (( device_sdk >= 33 )); then
+  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: created=10000 released=10000 leaked=0 "
+  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker GC stress: seconds=[0-9]+ calls=[1-9][0-9]* faults=0"
+else
+  check_log "\\[kanama\\] OWNERSHIP SELFTEST worker-owned GC releases: (created=10000 released=10000 leaked=0 |skipped )"
+fi
 check_log "\\[kanama\\] OWNERSHIP SELFTEST getter microbench ns/call: fence_off=[0-9.]+ fence_on=[0-9.]+ "
 check_log "\\[kanama\\] OWNERSHIP SELFTEST: [1-9][0-9]* passed, 0 failed"
 check_log_absent "OWNERSHIP SELFTEST FAIL"
