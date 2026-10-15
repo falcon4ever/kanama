@@ -531,6 +531,22 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   for (let index = 0; index < 4; index += 1) lentCost.push(await callMain("lent_cost", index));
   trace(`lent: done=${lentDone} maskA=${lentA} maskB=${lentB} maskC=${lentC} cost=${lentCost.join(",")}`);
   trace(`lent notes: ${await evaluate("String(globalThis.KanamaWebLentNotes ?? '')")}`);
+  // The RefCounted-ownership rows (see OwnProbe): a RefCounted held only by Kotlin lives while a
+  // wrapper of it is reachable, until close(); released once the browser collects the wrappers. The
+  // rows run over up to ~450 frames (O2/O6 wait for a collection: gc() on Chrome, allocation on
+  // Firefox).
+  await callMain("own_probe");
+  let ownDone = await callMain("own_probe_done");
+  const ownDeadline = Math.min(deadline, Date.now() + 40_000);
+  while (ownDone !== 1 && Date.now() < ownDeadline) {
+    await delay(150);
+    ownDone = await callMain("own_probe_done");
+  }
+  const ownMask = await callMain("own_mask");
+  const ownCost = [];
+  for (let index = 0; index < 4; index += 1) ownCost.push(await callMain("own_cost", index));
+  trace(`own: done=${ownDone} mask=${ownMask} cost=${ownCost.join(",")}`);
+  trace(`own notes: ${await evaluate("String(globalThis.KanamaWebOwnNotes ?? '')")}`);
   const readLeakAfter = () =>
     evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("leak_probe_after")}, 0)`,
@@ -764,6 +780,23 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // L19: a takeover (not a mint) of a handle a script created connects the sweep when nothing
     // else does: the tree is paused, and the freed node's handle is released while paused.
     lentTakeoverConnectsSweep: (lentC & 256) === 256,
+    // O1: a RefCounted only Kotlin keeps (a signal argument on either arm, an input event) still
+    // answers 2, 30 and 120 frames after its dispatch, and the object lives.
+    rcHeldByKotlinOutlives: ownDone === 1 && (ownMask & 7) === 7,
+    // O2: once Kotlin drops them and the browser collects, the objects are gone and their handles
+    // released (lent handles and pinned RefCounted back to the baseline, rcReleasedByGc counted).
+    rcReleasedWhenCollected: (ownMask & 8) === 8,
+    // O3: close() on a RefCounted's one wrapper releases it at once; another wrapper of the same
+    // object stays valid; a use of the closed wrapper throws "RefCounted handle is closed".
+    rcCloseReleasesNow: (ownMask & 112) === 112,
+    // O5: a RefCounted argument a script stored outlives that script.
+    rcOutlivesItsReceiver: (ownMask & 128) === 128,
+    // O6: a resource a script loaded into a companion outlives the script, and is released once
+    // dropped and collected.
+    rcResultOutlivesItsScript: (ownMask & 768) === 768,
+    // O10: handing over an already-seen InputEvent costs at most one JS call (the wrapper's
+    // registration); a plain Node still none.
+    rcDispatchCost: ownCost[0] >= 0 && ownCost[0] <= 1010 && ownCost[1] >= 0 && ownCost[1] <= 10,
     // L10: handing over an already-seen object costs no GDScript->JS call for a plain Node and one
     // (its transform snapshot) for a Node3D; the old lending cost two for every dispatch.
     lentDispatchCost: lentCost[0] <= 10 && lentCost[1] <= 1010,
@@ -961,6 +994,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
       lentCallsPer1000Node3D: Math.max(0, lentCost[1]),
       lentMicrosPer1000PlainNode: Math.max(0, lentCost[2]),
       lentMicrosPer1000Node3D: Math.max(0, lentCost[3]),
+      // O10: the lending's GDScript->JS calls plus wrapper registrations, and microseconds, per 1000
+      // dispatches of a seen InputEvent and plain Node.
+      ownCallsPer1000InputEvent: Math.max(0, ownCost[0]),
+      ownCallsPer1000PlainNode: Math.max(0, ownCost[1]),
+      ownMicrosPer1000InputEvent: Math.max(0, ownCost[2]),
+      ownMicrosPer1000PlainNode: Math.max(0, ownCost[3]),
       genericVsTypedRatioX100:
         generic.typedMs > 0 ? Math.max(0, Math.round((generic.genericMs / generic.typedMs) * 100)) : 0,
     },
