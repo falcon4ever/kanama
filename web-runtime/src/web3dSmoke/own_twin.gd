@@ -15,12 +15,16 @@ var weak: Dictionary = {}
 var keeper: Node
 var cost_event: InputEventKey
 var cost_node: Node
+var button: Button
 
 
 func _ready() -> void:
 	cost_node = Node.new()
 	cost_node.name = "OwnCostNode"
 	add_child(cost_node)
+	button = Button.new()
+	button.name = "OwnButton"
+	add_child(button)
 
 
 ## Why an OwnProbe row failed, for the driver's trace.
@@ -74,6 +78,11 @@ func emit_held(_unused: int) -> int:
 func emit_close(round: int) -> int:
 	own_close.emit(_fresh("o3_%d" % round))
 	return 1
+
+
+## O3b: 1 when OwnButton holds a ButtonGroup (the handler's queued set reached it before close()).
+func button_has_group(_unused: int) -> int:
+	return 1 if button.button_group != null else 0
 
 
 ## O5 / O6: a LentKeeper made at run time (a sibling, so its "../OwnTwin" finds this node).

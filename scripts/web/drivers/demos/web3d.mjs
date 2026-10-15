@@ -792,6 +792,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // O3: close() on a RefCounted's one wrapper releases it at once; another wrapper of the same
     // object stays valid; a use of the closed wrapper throws "RefCounted handle is closed".
     rcCloseReleasesNow: (ownMask & 112) === 112,
+    // O3b: `ButtonGroup.create().use { button.buttonGroup = it }`: the queued set reaches the engine
+    // before the close releases the handle, so the button keeps the group (desktop's order).
+    rcCloseAfterQueuedSet: (ownMask & 1024) === 1024,
     // O5: a RefCounted argument a script stored outlives that script.
     rcOutlivesItsReceiver: (ownMask & 128) === 128,
     // O6: a resource a script loaded into a companion outlives the script, and is released once

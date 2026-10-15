@@ -2,6 +2,8 @@ package web3d
 
 import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.Button
+import net.multigesture.kanama.api.ButtonGroup
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEvent
@@ -19,7 +21,7 @@ import net.multigesture.kanama.api.SignalArgType
  * references holds it, and `close()` ends your reference early. Main's `own_probe` arms [ownArm];
  * the rows run over the following frames and [ownDone] says when they are finished.
  *
- * [mask] (the O rows of the ownership design; 1023 when healthy):
+ * [mask] (the O rows of the ownership design; 2047 when healthy):
  * - O1 `rcHeldByKotlinOutlives`: a RefCounted only Kotlin keeps answers 2, 30 and 120 frames after
  *   its dispatch, and the object still lives: 1 = the one-object signal arm, 2 = the packed arm,
  *   4 = `_input`'s event.
@@ -31,6 +33,9 @@ import net.multigesture.kanama.api.SignalArgType
  *   wrapper releases it (the object is gone a frame later); 32 = a second wrapper of the same object
  *   made before the close still answers after it; 64 = a use of the closed wrapper throws
  *   "RefCounted handle is closed".
+ * - O3b `rcCloseAfterQueuedSet`: 1024 = `ButtonGroup.create().use { button.buttonGroup = it }` (the
+ *   set is queued, the close is not): a frame later the button still has the group, as on desktop,
+ *   where the set reached the engine before the close.
  * - O5 `rcOutlivesItsReceiver`: 128 = a RefCounted argument a keeper script stored, read 30 frames
  *   after the keeper was freed.
  * - O6 `rcResultOutlivesItsScript`: 256 = a resource a keeper script loaded into its companion, read
@@ -114,6 +119,7 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     listOfNotNull(oneArg, twoArg, inputArg).forEach { o1Handles += it.handle.value }
     if (o1Handles.size != 3) note("O1 stored ${o1Handles.size} of 3 arguments")
     closeRows()
+    queuedSetRow()
     keeperRows()
     MainThread.postAfterFrames(2) { checkHeld(2) }
     MainThread.postAfterFrames(30) { checkHeld(30) }
@@ -168,6 +174,16 @@ class OwnProbe(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Nod
     MainThread.postAfterFrames(1) {
       if (!alive("o3_0")) mask = mask or 16L else note("O3 the closed object still lives")
       if (resourceAnswers("O3 second wrapper", closeSecond) && alive("o3_1")) mask = mask or 32L
+    }
+  }
+
+  /** O3b: a queued set that hands a RefCounted to the engine applies before its close() releases. */
+  private fun queuedSetRow() {
+    val button = twin().requireAs("OwnButton", ::Button)
+    ButtonGroup.create().use { button.buttonGroup = it }
+    MainThread.postAfterFrames(1) {
+      if (twinLong("button_has_group") == 1L) mask = mask or 1024L
+      else note("O3b the button lost the ButtonGroup closed after its queued set")
     }
   }
 
