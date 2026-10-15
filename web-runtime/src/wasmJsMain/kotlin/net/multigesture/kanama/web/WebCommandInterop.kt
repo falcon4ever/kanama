@@ -23,20 +23,38 @@ internal class WebCommandBuffer(capacity: Int) {
   private val words = WebInt32Array(capacity * MAX_WORDS_PER_COMMAND)
   private var commandCount = 0
   private var wordCount = 0
+  /** Bumped whenever the queue empties (a flush applies it, a clear drops it). */
+  private var epoch = 0
 
   fun clear() {
     commandCount = 0
     wordCount = 0
+    epoch += 1
   }
 
   /** The queue's extent now, for [rollbackTo]: commands appended after it can be dropped alone. */
-  fun checkpoint(): Long = (commandCount.toLong() shl 32) or wordCount.toLong()
+  fun checkpoint(): Checkpoint = Checkpoint(epoch, commandCount, wordCount)
 
-  /** Drops every command appended since [checkpoint], keeping the ones queued before it. */
-  fun rollbackTo(checkpoint: Long) {
-    commandCount = (checkpoint ushr 32).toInt()
-    wordCount = (checkpoint and 0xffffffffL).toInt()
+  /**
+   * Drops every command appended since [checkpoint], keeping the ones queued before it. If the
+   * queue emptied in between (a flush applied the ones before it), what it holds now was all
+   * appended since: it is dropped whole, never rewound over words already applied.
+   */
+  fun rollbackTo(checkpoint: Checkpoint) {
+    if (checkpoint.epoch != epoch) {
+      clear()
+      return
+    }
+    commandCount = checkpoint.commandCount
+    wordCount = checkpoint.wordCount
   }
+
+  class Checkpoint
+  internal constructor(
+    internal val epoch: Int,
+    internal val commandCount: Int,
+    internal val wordCount: Int,
+  )
 
   fun appendScalarMutation(objectHandle: Int, value: Int) {
     val offset = reserve(WORDS_SCALAR_OR_VECTOR)
