@@ -271,7 +271,6 @@
     handleOwners: new Map(),
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
-    viewportHandlesByOwner: new Map(),
     rootHandlesByOwner: new Map(),
     commandStringNamesByValue: new Map(),
     commandStringNamesById: new Map(),
@@ -2307,18 +2306,12 @@
         }
         this.sceneTreeHandlesByOwner.delete(owner);
       }
-      // Per-frame get_viewport (City-Builder's mouse-ray cursor) must not mint a handle
-      // per call: reuse the owner's viewport handle like the SceneTree above.
+      // Per-frame get_viewport (City-Builder's mouse-ray cursor) does not mint a handle per call:
+      // the applier answers the viewport's existing handle (answersTracked below). No per-script
+      // cache: two receivers can be in different viewports.
       const isViewport = opcode === 19;
-      if (isViewport) {
-        const existing = this.viewportHandlesByOwner.get(owner);
-        if (existing !== undefined && this.browserHandleSlot(existing)?.kind === "Node") {
-          return existing;
-        }
-        this.viewportHandlesByOwner.delete(owner);
-      }
-      // Per-shot SceneTree.get_root (the robot laser parents its blast under the root)
-      // follows the same per-owner reuse rule as get_viewport.
+      // Per-shot SceneTree.get_root (the robot laser parents its blast under the root) reuses the
+      // script's root handle: there is one root.
       const isRoot = opcode === 250;
       if (isRoot) {
         const existing = this.rootHandlesByOwner.get(owner);
@@ -2422,8 +2415,6 @@
       } else if (isSceneTree) {
         this.sceneTreeHandlesByOwner.set(owner, result);
         if (result === resultHandle) this.match3SceneTreeHandlesCreated += 1;
-      } else if (isViewport) {
-        this.viewportHandlesByOwner.set(owner, result);
       } else if (isRoot) {
         this.rootHandlesByOwner.set(owner, result);
       }
